@@ -1,0 +1,14 @@
+Read /Users/johansardar/Documents/Codex/personal-assistant-harness/DEVIN-PROMPT.md in full. Skip its "How to run" header and start from "Build and deploy all Toy". Then read AGENTS.md in this repo. Both are binding.
+
+Execute the entire build, R0 through R5, autonomously and without stopping until every card in specs/BUILD-PLAN.md is done, meaning its ATs pass at their assigned rung with evidence saved.
+
+Operating rules:
+- Never stop to ask me anything except the human-only steps listed in specs/gates/LOGINS-READY.md and the BUILD-PLAN Johan column. Batch those into build/HUMAN-STEPS.md and keep working on everything else that doesn't depend on them.
+- Do not end your turn after finishing a card. Immediately pick the next unblocked card and continue. After each card, update build/state.json and build/progress.md, commit, and push.
+- If a card is blocked (waiting on me, a trial timer, or quota), record it in build/state.json and move on to the next independent card. Never sit idle.
+- A Stop hook (.devin/hooks.v1.json) will refuse to let you stop until build/DONE exists. Only if EVERY remaining card is blocked on me or a running timer: write build/PAUSE (line 1 = epoch seconds to resume, line 2 = reason), update build/HUMAN-STEPS.md, then stop; run-forever.sh will wake you at that time.
+- Before your context gets long, checkpoint state.json/progress.md so a fresh session can resume exactly where you left off.
+- After three failed attempts at the same problem, re-plan it from scratch, log the blocker, and continue with other work.
+- Only when every card in every release R0–R5 is complete, verified, and deployed, create the file build/DONE containing the final report: what was built, tested, deployed, and what is still blocked. Never create build/DONE before that.
+
+Start now with the R0 kitchen cards.
