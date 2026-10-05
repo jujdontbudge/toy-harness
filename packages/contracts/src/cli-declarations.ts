@@ -44,7 +44,7 @@ const release = (required = false): CliArgument => choice("release", releaseSche
 const declaration = <CommandId extends string>(commandId: CommandId, owner: CliDeclaration["owner"], operation: string, access: CliDeclaration["access"], firstRelease: CliDeclaration["firstRelease"], args: CliArgument[]) => cliDeclarationSchema.extend({ id: z.literal(commandId) }).parse({
   id: commandId, owner, operation, access, firstRelease,
   implementation: ["help", "version", "status", "doctor"].includes(commandId) ? "built" : "specified",
-  ownerSchemas: ["help", "version", "status", "doctor"].includes(commandId) ? "registered" : "pending",
+  ownerSchemas: ["help", "version", "status", "doctor", "stack.up", "stack.down", "clock.show", "clock.freeze", "clock.resume", "clock.advance", "probe.run", "probe.show"].includes(commandId) ? "registered" : "pending",
   inputSchemaId: `urn:toy:contracts:v1:CliInputV1:${commandId}`,
   outputSchemaId: `urn:toy:contracts:v1:CliResultV1:${commandId}`,
   dataSchemaId: `urn:toy:contracts:v1:CliDataV1:${commandId}`,

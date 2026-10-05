@@ -1,6 +1,6 @@
 import { createHash, randomUUID } from "node:crypto";
 import { mkdir, readFile, readdir, rm, rmdir, stat, writeFile } from "node:fs/promises";
-import { resolve } from "node:path";
+import { relative, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 
 const root = resolve(import.meta.dirname, "..");
@@ -187,23 +187,19 @@ try {
 }
 
 execute("post-fixture-static-gates", "npm", ["run", "check"]);
+const contractInputPaths = (await readdir(resolve(root, "packages/contracts/src"), { recursive: true, withFileTypes: true }))
+  .filter((entry) => entry.isFile() && entry.name.endsWith(".ts"))
+  .map((entry) => relative(root, resolve(entry.parentPath, entry.name)).replaceAll("\\", "/"))
+  .sort();
 const policyGeneratorPaths = [
+  ...contractInputPaths,
+  "tests/acceptance-index.json",
   ".dependency-cruiser.cjs",
   "architecture/modules.json",
   "eslint.config.mjs",
   "package-lock.json",
   "package.json",
   "packages/contracts/package.json",
-  "packages/contracts/src/cli.ts",
-  "packages/contracts/src/cli-declarations.ts",
-  "packages/contracts/src/control-evidence.ts",
-  "packages/contracts/src/sources.ts",
-  "packages/contracts/src/ops-registry.ts",
-  "packages/contracts/src/ops.ts",
-  "packages/contracts/src/attention.ts",
-  "packages/contracts/src/publisher.ts",
-  "packages/contracts/src/public.ts",
-  "packages/contracts/src/primitives.ts",
   "packages/contracts/tsconfig.json",
   "pyproject.toml",
   "pyrightconfig.json",

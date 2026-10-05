@@ -3,6 +3,11 @@ import { digestSchema, instantSchema, moduleIdSchema, revisionSchema, uuidSchema
 import { cliAccessSchema, cliArgumentKindSchema, cliArgumentSchema, cliCommandIdSchema, cliDeclarationSchema, cliEnvironmentSchema } from "./cli-declarations.js";
 import { observationEvidenceRefSchema, recordRefSchema } from "./control-evidence.js";
 import { controlStatusInputSchema, controlStatusSchema, doctorInputSchema, doctorReportSchema } from "./ops.js";
+import {
+  clockAdvanceOperationSchema, registeredProbeInputSchema, registeredProbeOperationSchema, registeredProbeShowInputSchema,
+  testClockAdvanceInputSchema, testClockFreezeInputSchema, testClockReceiptSchema, testClockResumeInputSchema, testClockShowInputSchema,
+  testClockStateSchema, testStackDownInputSchema, testStackOperationSchema, testStackUpInputSchema
+} from "./test-control.js";
 export * from "./cli-declarations.js";
 
 export const cliHelpSchema = z.strictObject({
@@ -51,7 +56,19 @@ export const cliHelpResultSchema = cliEnvelopeSchema.extend({ commandId: z.liter
 export const cliVersionResultSchema = cliEnvelopeSchema.extend({ commandId: z.literal("version"), ok: z.literal(true), data: cliVersionSchema });
 export const cliStatusResultSchema = cliEnvelopeSchema.extend({ commandId: z.literal("status"), ok: z.literal(true), data: controlStatusSchema });
 export const cliDoctorResultSchema = cliEnvelopeSchema.extend({ commandId: z.literal("doctor"), ok: z.literal(true), data: doctorReportSchema });
-export const cliResultSchema = z.union([cliFailureSchema, cliHelpResultSchema, cliVersionResultSchema, cliStatusResultSchema, cliDoctorResultSchema]);
+export const cliStackUpResultSchema = cliEnvelopeSchema.extend({ commandId: z.literal("stack.up"), ok: z.literal(true), data: testStackOperationSchema });
+export const cliStackDownResultSchema = cliEnvelopeSchema.extend({ commandId: z.literal("stack.down"), ok: z.literal(true), data: testStackOperationSchema });
+export const cliClockShowResultSchema = cliEnvelopeSchema.extend({ commandId: z.literal("clock.show"), ok: z.literal(true), data: testClockStateSchema });
+export const cliClockFreezeResultSchema = cliEnvelopeSchema.extend({ commandId: z.literal("clock.freeze"), ok: z.literal(true), data: testClockReceiptSchema });
+export const cliClockResumeResultSchema = cliEnvelopeSchema.extend({ commandId: z.literal("clock.resume"), ok: z.literal(true), data: testClockReceiptSchema });
+export const cliClockAdvanceResultSchema = cliEnvelopeSchema.extend({ commandId: z.literal("clock.advance"), ok: z.literal(true), data: clockAdvanceOperationSchema });
+export const cliProbeRunResultSchema = cliEnvelopeSchema.extend({ commandId: z.literal("probe.run"), ok: z.literal(true), data: registeredProbeOperationSchema });
+export const cliProbeShowResultSchema = cliEnvelopeSchema.extend({ commandId: z.literal("probe.show"), ok: z.literal(true), data: registeredProbeOperationSchema });
+export const cliResultSchema = z.union([
+  cliFailureSchema, cliHelpResultSchema, cliVersionResultSchema, cliStatusResultSchema, cliDoctorResultSchema,
+  cliStackUpResultSchema, cliStackDownResultSchema, cliClockShowResultSchema, cliClockFreezeResultSchema,
+  cliClockResumeResultSchema, cliClockAdvanceResultSchema, cliProbeRunResultSchema, cliProbeShowResultSchema
+]);
 export type CliResult = z.infer<typeof cliResultSchema>;
 export type CliFailure = z.infer<typeof cliFailureSchema>;
 export type CliEnvironment = z.infer<typeof cliEnvironmentSchema>;
@@ -63,11 +80,27 @@ export const cliHelpCommandResultSchema = z.union([cliHelpResultSchema, cliFailu
 export const cliVersionCommandResultSchema = z.union([cliVersionResultSchema, cliFailureSchema.extend({ commandId: z.literal("version") })]);
 export const cliStatusCommandResultSchema = z.union([cliStatusResultSchema, cliFailureSchema.extend({ commandId: z.literal("status") })]);
 export const cliDoctorCommandResultSchema = z.union([cliDoctorResultSchema, cliFailureSchema.extend({ commandId: z.literal("doctor") })]);
+export const cliStackUpCommandResultSchema = z.union([cliStackUpResultSchema, cliFailureSchema.extend({ commandId: z.literal("stack.up") })]);
+export const cliStackDownCommandResultSchema = z.union([cliStackDownResultSchema, cliFailureSchema.extend({ commandId: z.literal("stack.down") })]);
+export const cliClockShowCommandResultSchema = z.union([cliClockShowResultSchema, cliFailureSchema.extend({ commandId: z.literal("clock.show") })]);
+export const cliClockFreezeCommandResultSchema = z.union([cliClockFreezeResultSchema, cliFailureSchema.extend({ commandId: z.literal("clock.freeze") })]);
+export const cliClockResumeCommandResultSchema = z.union([cliClockResumeResultSchema, cliFailureSchema.extend({ commandId: z.literal("clock.resume") })]);
+export const cliClockAdvanceCommandResultSchema = z.union([cliClockAdvanceResultSchema, cliFailureSchema.extend({ commandId: z.literal("clock.advance") })]);
+export const cliProbeRunCommandResultSchema = z.union([cliProbeRunResultSchema, cliFailureSchema.extend({ commandId: z.literal("probe.run") })]);
+export const cliProbeShowCommandResultSchema = z.union([cliProbeShowResultSchema, cliFailureSchema.extend({ commandId: z.literal("probe.show") })]);
 export const cliCommandSchemas = {
   help: { input: cliHelpInputSchema, data: cliHelpSchema, result: cliHelpCommandResultSchema },
   version: { input: cliVersionInputSchema, data: cliVersionSchema, result: cliVersionCommandResultSchema },
   status: { input: controlStatusInputSchema, data: controlStatusSchema, result: cliStatusCommandResultSchema },
-  doctor: { input: doctorInputSchema, data: doctorReportSchema, result: cliDoctorCommandResultSchema }
+  doctor: { input: doctorInputSchema, data: doctorReportSchema, result: cliDoctorCommandResultSchema },
+  "stack.up": { input: testStackUpInputSchema, data: testStackOperationSchema, result: cliStackUpCommandResultSchema },
+  "stack.down": { input: testStackDownInputSchema, data: testStackOperationSchema, result: cliStackDownCommandResultSchema },
+  "clock.show": { input: testClockShowInputSchema, data: testClockStateSchema, result: cliClockShowCommandResultSchema },
+  "clock.freeze": { input: testClockFreezeInputSchema, data: testClockReceiptSchema, result: cliClockFreezeCommandResultSchema },
+  "clock.resume": { input: testClockResumeInputSchema, data: testClockReceiptSchema, result: cliClockResumeCommandResultSchema },
+  "clock.advance": { input: testClockAdvanceInputSchema, data: clockAdvanceOperationSchema, result: cliClockAdvanceCommandResultSchema },
+  "probe.run": { input: registeredProbeInputSchema, data: registeredProbeOperationSchema, result: cliProbeRunCommandResultSchema },
+  "probe.show": { input: registeredProbeShowInputSchema, data: registeredProbeOperationSchema, result: cliProbeShowCommandResultSchema }
 };
 export type CliInputV1<C extends keyof typeof cliCommandSchemas> = z.infer<(typeof cliCommandSchemas)[C]["input"]>;
 export type CliDataV1<C extends keyof typeof cliCommandSchemas> = z.infer<(typeof cliCommandSchemas)[C]["data"]>;
@@ -81,5 +114,13 @@ export const cliSchemaInventory = {
   CliHelpResult: cliHelpResultSchema, CliVersionResult: cliVersionResultSchema, CliStatusResult: cliStatusResultSchema, CliDoctorResult: cliDoctorResultSchema, CliResult: cliResultSchema,
   CliHelpInput: cliHelpInputSchema, CliVersionInput: cliVersionInputSchema,
   CliHelpCommandResult: cliHelpCommandResultSchema, CliVersionCommandResult: cliVersionCommandResultSchema,
-  CliStatusCommandResult: cliStatusCommandResultSchema, CliDoctorCommandResult: cliDoctorCommandResultSchema
+  CliStatusCommandResult: cliStatusCommandResultSchema, CliDoctorCommandResult: cliDoctorCommandResultSchema,
+  CliStackUpResult: cliStackUpResultSchema, CliStackDownResult: cliStackDownResultSchema,
+  CliClockShowResult: cliClockShowResultSchema, CliClockFreezeResult: cliClockFreezeResultSchema,
+  CliClockResumeResult: cliClockResumeResultSchema, CliClockAdvanceResult: cliClockAdvanceResultSchema,
+  CliProbeRunResult: cliProbeRunResultSchema, CliProbeShowResult: cliProbeShowResultSchema,
+  CliStackUpCommandResult: cliStackUpCommandResultSchema, CliStackDownCommandResult: cliStackDownCommandResultSchema,
+  CliClockShowCommandResult: cliClockShowCommandResultSchema, CliClockFreezeCommandResult: cliClockFreezeCommandResultSchema,
+  CliClockResumeCommandResult: cliClockResumeCommandResultSchema, CliClockAdvanceCommandResult: cliClockAdvanceCommandResultSchema,
+  CliProbeRunCommandResult: cliProbeRunCommandResultSchema, CliProbeShowCommandResult: cliProbeShowCommandResultSchema
 };

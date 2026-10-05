@@ -4,7 +4,7 @@ import { createHash, randomUUID } from "node:crypto";
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import test from "node:test";
-import { cliCommandSchemas, cliDeclarations, cliResultSchema, releaseSchema, schemaBundleArtifacts, schemaBundleDigest, serviceIdSchema } from "@toy/contracts";
+import { cliCommandSchemas, cliDeclarations, cliResultSchema, registeredCliProbeInventory, releaseSchema, schemaBundleArtifacts, schemaBundleDigest, serviceIdSchema } from "@toy/contracts";
 
 const root = resolve(import.meta.dirname, "../..");
 const attemptId = new Date().toISOString().replaceAll(":", "-") + "-" + randomUUID();
@@ -80,6 +80,8 @@ try {
       assert.ok(result?.ok && result.commandId === "help");
       cliCommandSchemas.help.result.parse(result);
       assert.deepEqual(result.data.commands, cliDeclarations);
+      assert.deepEqual(result.data.commands.filter((entry) => entry.ownerSchemas === "registered").map((entry) => entry.id).sort(), Object.keys(cliCommandSchemas).sort());
+      assert.equal(new Set(registeredCliProbeInventory.map((entry) => entry.id)).size, registeredCliProbeInventory.length);
       for (const artifact of schemaBundleArtifacts) {
         const bytes = await readFile(join(fixture, "node_modules/@toy/contracts", artifact.path.replace("packages/contracts/", "")));
         assert.equal(createHash("sha256").update(bytes).digest("hex"), artifact.digest);
@@ -135,6 +137,26 @@ try {
         const result = invoke("life-ref-" + kind, ["life", "get", "life://" + kind + "/550e8400-e29b-41d4-a716-446655440000", "--json"], 5);
         assert.ok(result && !result.ok && result.error.code === "NOT_IMPLEMENTED");
       }
+    });
+    await suite.test("registered stack and probe schemas reject unregistered selectors before dispatch", () => {
+      const requestId = "550e8400-e29b-41d4-a716-446655440000";
+      const testStack = ["--env", "test", "--stack", requestId];
+      const invalid = [
+        ["--env", "test", "stack", "up", "--release", "R0", "--request-id", requestId, "--world", "unknown-world", "--json"],
+        [...testStack, "probe", "run", "AT-unregistered-1", "--request-id", requestId, "--json"],
+        [...testStack, "probe", "run", "AT-user-sim-1", "--request-id", requestId, "--json"],
+        [...testStack, "probe", "run", "AT-cli-4", "--request-id", requestId, "--case", "unknown-case", "--json"]
+      ];
+      for (const [index, args] of invalid.entries()) {
+        const result = invoke("unregistered-selector-" + index, args, 2);
+        assert.ok(result && !result.ok && result.error.code === "INVALID_INPUT");
+      }
+      const probe = invoke("registered-probe-unavailable", [...testStack, "probe", "run", "AT-cli-4", "--request-id", requestId, "--case", "native-entry", "--json"], 5);
+      assert.ok(probe && !probe.ok && probe.error.code === "DEPENDENCY_UNAVAILABLE");
+      cliCommandSchemas["probe.run"].result.parse(probe);
+      const stack = invoke("registered-world-unavailable", ["--env", "test", "stack", "up", "--release", "R0", "--request-id", requestId, "--world", "r0-bootstrap", "--json"], 5);
+      assert.ok(stack && !stack.ok && stack.error.code === "DEPENDENCY_UNAVAILABLE");
+      cliCommandSchemas["stack.up"].result.parse(stack);
     });
     await suite.test("uninstalled status and doctor preserve incomplete inventory and fail closed", () => {
       for (const release of releaseSchema.options) {

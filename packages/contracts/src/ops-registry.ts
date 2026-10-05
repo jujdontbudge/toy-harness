@@ -16,11 +16,20 @@ export const opsControlReadInventory = [
   declaration("read.attention", "attention", "attention.snapshot"), declaration("read.quota", "ops", "status"),
   declaration("read.cadence", "self-improvement", "review.slots"), declaration("read.release", "ops", "release.status")
 ];
-export const registeredCheckIdSchema = z.enum(opsControlReadInventory.map((entry) => entry.id));
+export const testStackCheckInventory = [
+  declaration("bootstrap.signature", "ops", "stack.up"), declaration("bootstrap.native-entry", "ops", "stack.up"),
+  declaration("bootstrap.inherited-child", "ops", "stack.up"), declaration("bootstrap.fs-denial", "ops", "stack.up"),
+  declaration("bootstrap.network-denial", "ops", "stack.up"), declaration("bootstrap.keychain-denial", "ops", "stack.up"),
+  declaration("bootstrap.container-isolation", "ops", "stack.up"),
+  declaration("bootstrap.postgres-unix", "ops", "stack.up"), declaration("bootstrap.controller-peer", "ops", "stack.up"),
+  declaration("bootstrap.resource-admission", "ops", "stack.up"), declaration("bootstrap.cleanup", "ops", "stack.down")
+];
+export const registeredCheckIdSchema = z.enum([...opsControlReadInventory, ...testStackCheckInventory].map((entry) => entry.id));
 export const opsControlProbeDeclarationSchema = z.strictObject({
   id: registeredCheckIdSchema, owner: moduleIdSchema, nextCommandId: cliCommandIdSchema
 });
 for (const entry of opsControlReadInventory) opsControlProbeDeclarationSchema.parse(entry);
+for (const entry of testStackCheckInventory) opsControlProbeDeclarationSchema.parse(entry);
 export type OpsControlProbeDeclarationV1 = z.infer<typeof opsControlProbeDeclarationSchema>;
 export type RegisteredCheckIdV1 = z.infer<typeof registeredCheckIdSchema>;
 export const opsRegistrySchemaInventory = { ServiceId: serviceIdSchema, OpsControlProbeDeclarationV1: opsControlProbeDeclarationSchema, RegisteredCheckIdV1: registeredCheckIdSchema };

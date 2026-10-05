@@ -6,6 +6,7 @@ import { opsRegistrySchemaInventory } from "./ops-registry.js";
 import { opsSchemaInventory } from "./ops.js";
 import { attentionSchemaInventory } from "./attention.js";
 import { publisherSchemaInventory } from "./publisher.js";
+import { testControlSchemaInventory } from "./test-control.js";
 
 export * from "./primitives.js";
 export * from "./cli.js";
@@ -16,5 +17,6 @@ export * from "./ops-registry.js";
 export * from "./ops.js";
 export * from "./attention.js";
 export * from "./publisher.js";
+export * from "./test-control.js";
 
-export const schemaInventory = { ...primitiveSchemaInventory, ...cliSchemaInventory, ...controlEvidenceSchemaInventory, ...sourceSchemaInventory, ...opsRegistrySchemaInventory, ...opsSchemaInventory, ...attentionSchemaInventory, ...publisherSchemaInventory };
+export const schemaInventory = { ...primitiveSchemaInventory, ...cliSchemaInventory, ...controlEvidenceSchemaInventory, ...sourceSchemaInventory, ...opsRegistrySchemaInventory, ...opsSchemaInventory, ...attentionSchemaInventory, ...publisherSchemaInventory, ...testControlSchemaInventory };

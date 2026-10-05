@@ -66,6 +66,9 @@ export const controlStatusSchema = z.strictObject({
 export const opsControlContextSchema = z.strictObject({
   environment: cliEnvironmentSchema, invocationId: uuidSchema, timeoutMs: z.int().min(1000).max(120000)
 });
+export const operationRefSchema = z.strictObject({
+  operationId: uuidSchema, state: z.enum(["queued", "running", "succeeded", "failed", "blocked"]), acceptedAt: instantSchema
+});
 export type ServiceStatus = z.infer<typeof serviceStatusSchema>;
 export type BackupDestinationStatus = z.infer<typeof backupDestinationStatusSchema>;
 export type QuotaWindow = z.infer<typeof quotaWindowSchema>;
@@ -81,10 +84,12 @@ export type DoctorInputV1 = z.infer<typeof doctorInputSchema>;
 export type SourceHealthV1 = z.infer<typeof sourceHealthSchema>;
 export type ControlStatusV1 = z.infer<typeof controlStatusSchema>;
 export type OpsControlContextV1 = z.infer<typeof opsControlContextSchema>;
+export type OperationRef = z.infer<typeof operationRefSchema>;
 export const opsSchemaInventory = {
   ServiceStatus: serviceStatusSchema, BackupDestinationStatus: backupDestinationStatusSchema, QuotaWindow: quotaWindowSchema,
   SubscriptionStatus: subscriptionStatusSchema, OpsStatus: opsStatusSchema, QuotaAdmissionViewV1: quotaAdmissionViewSchema,
   CadenceSlotState: cadenceSlotStateSchema, CadencePeriodV1: cadencePeriodSchema, CadenceCoverageV1: cadenceCoverageSchema,
   DoctorReportV1: doctorReportSchema, ControlStatusInputV1: controlStatusInputSchema, DoctorInputV1: doctorInputSchema,
-  SourceHealthV1: sourceHealthSchema, ControlStatusV1: controlStatusSchema, OpsControlContextV1: opsControlContextSchema
+  SourceHealthV1: sourceHealthSchema, ControlStatusV1: controlStatusSchema, OpsControlContextV1: opsControlContextSchema,
+  OperationRef: operationRefSchema
 };

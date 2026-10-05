@@ -139,6 +139,18 @@ const run = async (): Promise<CliResult> => {
   if (declaration.access === "test" && kind === "prod" || commandId === "attention.preview" && values.has("at") && kind === "prod") return failure("TEST_ONLY", 3, declaration.owner);
   if (commandId === "stack.up" && stack !== undefined) return failure("INVALID_INPUT", 2);
   if (kind === "test" && commandId !== "stack.up" && stack === undefined) return failure("INVALID_INPUT", 2);
+  const requestId = values.get("request-id");
+  const waitMs = Number(values.get("wait-ms") ?? 0);
+  if (commandId === "stack.up" && !cliCommandSchemas["stack.up"].input.safeParse({
+    release: values.get("release"), requestId, world: values.get("world"), clock: values.get("clock") ?? "fake", model: values.get("model") ?? "fake", waitMs
+  }).success) return failure("INVALID_INPUT", 2);
+  if (commandId === "stack.down" && !cliCommandSchemas["stack.down"].input.safeParse({ requestId, waitMs }).success) return failure("INVALID_INPUT", 2);
+  if (commandId === "clock.show" && !cliCommandSchemas["clock.show"].input.safeParse({}).success) return failure("INVALID_INPUT", 2);
+  if (commandId === "clock.freeze" && !cliCommandSchemas["clock.freeze"].input.safeParse({ at: values.get("at"), requestId }).success) return failure("INVALID_INPUT", 2);
+  if (commandId === "clock.resume" && !cliCommandSchemas["clock.resume"].input.safeParse({ requestId }).success) return failure("INVALID_INPUT", 2);
+  if (commandId === "clock.advance" && !cliCommandSchemas["clock.advance"].input.safeParse({ by: values.get("by"), requestId, waitMs }).success) return failure("INVALID_INPUT", 2);
+  if (commandId === "probe.run" && !cliCommandSchemas["probe.run"].input.safeParse({ probeId: operands[0], requestId, caseId: values.get("case") }).success) return failure("INVALID_INPUT", 2);
+  if (commandId === "probe.show" && !cliCommandSchemas["probe.show"].input.safeParse({ operationId: operands[0] }).success) return failure("INVALID_INPUT", 2);
   if (commandId === "status" || commandId === "doctor") {
     if (kind === "test") return failure("ATTESTATION_INVALID", 5, "ops");
     const selectedRelease = values.get("release");
@@ -163,6 +175,7 @@ const renderHuman = (result: CliResult): string => {
   if (result.commandId === "version") return `Toy ${result.data.cliVersion} / contracts ${result.data.contractsVersion}\nExecutable ${result.data.executableDigest}\nPackage ${result.data.packageDigest}\nSchemas ${result.data.schemaDigest}\n`;
   if (result.commandId === "status") return `${result.environment.kind}: ${result.data.requiredRelease}; coverage ${result.data.complete ? "complete" : "incomplete"}\n` + JSON.stringify(result.data, null, 2) + "\n";
   if (result.commandId === "doctor") return `${result.environment.kind}: ${result.data.requiredRelease}; ${result.data.verdict}; coverage ${result.data.complete ? "complete" : "incomplete"}\n` + JSON.stringify(result.data, null, 2) + "\n";
+  if (result.commandId !== "help") return `${result.environment.kind}: ${result.commandId}\n` + JSON.stringify(result.data, null, 2) + "\n";
   const lines = ["Toy command inventory", "Usage: toy [--env prod|test] [--stack UUID] [--json] [--timeout-ms N] <command> [arguments]", "Common: --help; --version; --env defaults prod; --timeout-ms defaults 30000 (1000–120000)", ""];
   for (const entry of result.data.commands) {
     const operands = entry.arguments.map((argument) => {

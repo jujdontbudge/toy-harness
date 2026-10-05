@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "toy.bootstrap-lifecycle-review.v1",
+  "generatedAt": "2026-10-05T04:36:13.820385Z",
+  "reviewer": "/root/r0_native_bootstrap_design",
+  "model": "gpt-6-luna",
+  "reasoning": "max",
+  "reviewedSnapshotSha256": "be46d7d84d86d4241ce836692b2dfb77a77768aeccb95bc6782a3093741399f8",
+  "parentRevisedSnapshotSha256": "f4f7eb2034441adc941f2f951c956baabbc029500c14c6a9829611e53951c02b",
+  "scope": "Independent read-only review of the written native persistent lifecycle; parent changes are recorded separately",
+  "verdict": "CHANGES_REQUIRED_BEFORE_RUNTIME_IMPLEMENTATION",
+  "acceptanceComplete": false,
+  "runtimeObserved": false,
+  "findings": [
+    {
+      "id": "external-controller-supervision",
+      "source": "specs/ops.md:274",
+      "correctionRung": 1,
+      "parentCorrection": "Ephemeral caller-UID launchd foreground controller, current real lease, fenced crash recovery and mandatory descendant cleanup; no persistent helper admitted before proof"
+    },
+    {
+      "id": "owner-authorization-not-peer-uid-alone",
+      "source": "specs/cli.md:429,433",
+      "correctionRung": 1,
+      "parentCorrection": "Every operation and status/show read requires existing owner capability plus current stack/generation attestation, in addition to kernel peer credentials"
+    },
+    {
+      "id": "container-isolation-readiness",
+      "source": "specs/cli.md:420",
+      "correctionRung": 1,
+      "parentCorrection": "Distinct registered bootstrap.container-isolation cell covers identity, cross-stack isolation and cleanup"
+    }
+  ],
+  "parentCorrectionsStatus": "APPLIED_TO_WRITTEN_INTERFACE_AND_REGISTRY_ONLY",
+  "pending": [
+    "Independent re-review of revised implementation when available",
+    "Native entry and inherited-child runtime",
+    "PostgreSQL AF_UNIX in same sandbox",
+    "External supervisor crash/recovery and complete descendant cleanup",
+    "Actual R0.04-R0.05 service identity gates"
+  ]
+}

@@ -1345,6 +1345,17 @@ public enum RegisteredCheckIdV1: String, Codable, CaseIterable, Sendable {
     case `readQuota` = "read.quota"
     case `readCadence` = "read.cadence"
     case `readRelease` = "read.release"
+    case `bootstrapSignature` = "bootstrap.signature"
+    case `bootstrapNativeEntry` = "bootstrap.native-entry"
+    case `bootstrapInheritedChild` = "bootstrap.inherited-child"
+    case `bootstrapFsDenial` = "bootstrap.fs-denial"
+    case `bootstrapNetworkDenial` = "bootstrap.network-denial"
+    case `bootstrapKeychainDenial` = "bootstrap.keychain-denial"
+    case `bootstrapContainerIsolation` = "bootstrap.container-isolation"
+    case `bootstrapPostgresUnix` = "bootstrap.postgres-unix"
+    case `bootstrapControllerPeer` = "bootstrap.controller-peer"
+    case `bootstrapResourceAdmission` = "bootstrap.resource-admission"
+    case `bootstrapCleanup` = "bootstrap.cleanup"
 }
 
 public enum AcceptanceStateV1: String, Codable, CaseIterable, Sendable {
@@ -3008,6 +3019,14 @@ public enum CliResult: Codable, Sendable {
     case variant2(CliVersionResult)
     case variant3(CliStatusResult)
     case variant4(CliDoctorResult)
+    case variant5(CliStackUpResult)
+    case variant6(CliStackDownResult)
+    case variant7(CliClockShowResult)
+    case variant8(CliClockFreezeResult)
+    case variant9(CliClockResumeResult)
+    case variant10(CliClockAdvanceResult)
+    case variant11(CliProbeRunResult)
+    case variant12(CliProbeShowResult)
     public init(from decoder: any Decoder) throws {
         let container = try decoder.singleValueContainer()
         if let value = try? container.decode(CliFailure.self) { self = .variant0(value); return }
@@ -3015,6 +3034,14 @@ public enum CliResult: Codable, Sendable {
         if let value = try? container.decode(CliVersionResult.self) { self = .variant2(value); return }
         if let value = try? container.decode(CliStatusResult.self) { self = .variant3(value); return }
         if let value = try? container.decode(CliDoctorResult.self) { self = .variant4(value); return }
+        if let value = try? container.decode(CliStackUpResult.self) { self = .variant5(value); return }
+        if let value = try? container.decode(CliStackDownResult.self) { self = .variant6(value); return }
+        if let value = try? container.decode(CliClockShowResult.self) { self = .variant7(value); return }
+        if let value = try? container.decode(CliClockFreezeResult.self) { self = .variant8(value); return }
+        if let value = try? container.decode(CliClockResumeResult.self) { self = .variant9(value); return }
+        if let value = try? container.decode(CliClockAdvanceResult.self) { self = .variant10(value); return }
+        if let value = try? container.decode(CliProbeRunResult.self) { self = .variant11(value); return }
+        if let value = try? container.decode(CliProbeShowResult.self) { self = .variant12(value); return }
         throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "No contract union member matched."))
     }
     public func encode(to encoder: any Encoder) throws {
@@ -3025,8 +3052,1617 @@ public enum CliResult: Codable, Sendable {
         case .variant2(let value): try container.encode(value)
         case .variant3(let value): try container.encode(value)
         case .variant4(let value): try container.encode(value)
+        case .variant5(let value): try container.encode(value)
+        case .variant6(let value): try container.encode(value)
+        case .variant7(let value): try container.encode(value)
+        case .variant8(let value): try container.encode(value)
+        case .variant9(let value): try container.encode(value)
+        case .variant10(let value): try container.encode(value)
+        case .variant11(let value): try container.encode(value)
+        case .variant12(let value): try container.encode(value)
         }
     }
+}
+
+public struct CliStackUpResult: Codable, Sendable {
+    public let `schemaVersion`: CliHelpV1CompatibilityWireVersionsItem
+    public let `commandId`: CliStackUpResultCommandId
+    public let `invocationId`: UUID
+    public let `generatedAt`: Instant
+    public let `cliVersion`: CliVersionV1CliVersion
+    public let `contractsVersion`: CliVersionV1CliVersion
+    public let `schemaDigest`: Digest
+    public let `environment`: CliEnvironment
+    public let `meta`: CliMetadata
+    public let `ok`: CliHelpResultOk
+    public let `data`: TestStackOperationV1
+    public init(`schemaVersion`: CliHelpV1CompatibilityWireVersionsItem, `commandId`: CliStackUpResultCommandId, `invocationId`: UUID, `generatedAt`: Instant, `cliVersion`: CliVersionV1CliVersion, `contractsVersion`: CliVersionV1CliVersion, `schemaDigest`: Digest, `environment`: CliEnvironment, `meta`: CliMetadata, `ok`: CliHelpResultOk, `data`: TestStackOperationV1) {
+        self.`schemaVersion` = `schemaVersion`
+        self.`commandId` = `commandId`
+        self.`invocationId` = `invocationId`
+        self.`generatedAt` = `generatedAt`
+        self.`cliVersion` = `cliVersion`
+        self.`contractsVersion` = `contractsVersion`
+        self.`schemaDigest` = `schemaDigest`
+        self.`environment` = `environment`
+        self.`meta` = `meta`
+        self.`ok` = `ok`
+        self.`data` = `data`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["schemaVersion", "commandId", "invocationId", "generatedAt", "cliVersion", "contractsVersion", "schemaDigest", "environment", "meta", "ok", "data"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`schemaVersion` = try container.decode(CliHelpV1CompatibilityWireVersionsItem.self, forKey: ToyCodingKey("schemaVersion"))
+        self.`commandId` = try container.decode(CliStackUpResultCommandId.self, forKey: ToyCodingKey("commandId"))
+        self.`invocationId` = try container.decode(UUID.self, forKey: ToyCodingKey("invocationId"))
+        self.`generatedAt` = try container.decode(Instant.self, forKey: ToyCodingKey("generatedAt"))
+        self.`cliVersion` = try container.decode(CliVersionV1CliVersion.self, forKey: ToyCodingKey("cliVersion"))
+        self.`contractsVersion` = try container.decode(CliVersionV1CliVersion.self, forKey: ToyCodingKey("contractsVersion"))
+        self.`schemaDigest` = try container.decode(Digest.self, forKey: ToyCodingKey("schemaDigest"))
+        self.`environment` = try container.decode(CliEnvironment.self, forKey: ToyCodingKey("environment"))
+        self.`meta` = try container.decode(CliMetadata.self, forKey: ToyCodingKey("meta"))
+        self.`ok` = try container.decode(CliHelpResultOk.self, forKey: ToyCodingKey("ok"))
+        self.`data` = try container.decode(TestStackOperationV1.self, forKey: ToyCodingKey("data"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`schemaVersion`, forKey: ToyCodingKey("schemaVersion"))
+        try container.encode(`commandId`, forKey: ToyCodingKey("commandId"))
+        try container.encode(`invocationId`, forKey: ToyCodingKey("invocationId"))
+        try container.encode(`generatedAt`, forKey: ToyCodingKey("generatedAt"))
+        try container.encode(`cliVersion`, forKey: ToyCodingKey("cliVersion"))
+        try container.encode(`contractsVersion`, forKey: ToyCodingKey("contractsVersion"))
+        try container.encode(`schemaDigest`, forKey: ToyCodingKey("schemaDigest"))
+        try container.encode(`environment`, forKey: ToyCodingKey("environment"))
+        try container.encode(`meta`, forKey: ToyCodingKey("meta"))
+        try container.encode(`ok`, forKey: ToyCodingKey("ok"))
+        try container.encode(`data`, forKey: ToyCodingKey("data"))
+    }
+}
+
+public enum CliStackUpResultCommandId: String, Codable, CaseIterable, Sendable {
+    case `stackUp` = "stack.up"
+}
+
+public struct TestStackOperationV1: Codable, Sendable {
+    public let `operation`: OperationRef
+    public let `requestId`: UUID
+    public let `stackId`: Optional<UUID>
+    public let `result`: Optional<TestStackViewV1>
+    public let `links`: EvidenceLinksV1
+    public init(`operation`: OperationRef, `requestId`: UUID, `stackId`: Optional<UUID>, `result`: Optional<TestStackViewV1>, `links`: EvidenceLinksV1) {
+        self.`operation` = `operation`
+        self.`requestId` = `requestId`
+        self.`stackId` = `stackId`
+        self.`result` = `result`
+        self.`links` = `links`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["operation", "requestId", "stackId", "result", "links"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`operation` = try container.decode(OperationRef.self, forKey: ToyCodingKey("operation"))
+        self.`requestId` = try container.decode(UUID.self, forKey: ToyCodingKey("requestId"))
+        self.`stackId` = try container.decode(Optional<UUID>.self, forKey: ToyCodingKey("stackId"))
+        self.`result` = try container.decode(Optional<TestStackViewV1>.self, forKey: ToyCodingKey("result"))
+        self.`links` = try container.decode(EvidenceLinksV1.self, forKey: ToyCodingKey("links"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`operation`, forKey: ToyCodingKey("operation"))
+        try container.encode(`requestId`, forKey: ToyCodingKey("requestId"))
+        try container.encode(`stackId`, forKey: ToyCodingKey("stackId"))
+        try container.encode(`result`, forKey: ToyCodingKey("result"))
+        try container.encode(`links`, forKey: ToyCodingKey("links"))
+    }
+}
+
+public struct OperationRef: Codable, Sendable {
+    public let `operationId`: UUID
+    public let `state`: OperationRefState
+    public let `acceptedAt`: Instant
+    public init(`operationId`: UUID, `state`: OperationRefState, `acceptedAt`: Instant) {
+        self.`operationId` = `operationId`
+        self.`state` = `state`
+        self.`acceptedAt` = `acceptedAt`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["operationId", "state", "acceptedAt"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`operationId` = try container.decode(UUID.self, forKey: ToyCodingKey("operationId"))
+        self.`state` = try container.decode(OperationRefState.self, forKey: ToyCodingKey("state"))
+        self.`acceptedAt` = try container.decode(Instant.self, forKey: ToyCodingKey("acceptedAt"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`operationId`, forKey: ToyCodingKey("operationId"))
+        try container.encode(`state`, forKey: ToyCodingKey("state"))
+        try container.encode(`acceptedAt`, forKey: ToyCodingKey("acceptedAt"))
+    }
+}
+
+public enum OperationRefState: String, Codable, CaseIterable, Sendable {
+    case `queued` = "queued"
+    case `running` = "running"
+    case `succeeded` = "succeeded"
+    case `failed` = "failed"
+    case `blocked` = "blocked"
+}
+
+public struct TestStackViewV1: Codable, Sendable {
+    public let `stackId`: UUID
+    public let `release`: Release
+    public let `manifestDigest`: Digest
+    public let `clock`: TestStackClockV1
+    public let `model`: TestStackModelV1
+    public let `ready`: Bool
+    public let `components`: [CheckViewV1]
+    public let `ownedResourceRefs`: [RecordRef]
+    public let `evidenceLocation`: UUID
+    public let `teardown`: Optional<TestStackTeardownV1>
+    public init(`stackId`: UUID, `release`: Release, `manifestDigest`: Digest, `clock`: TestStackClockV1, `model`: TestStackModelV1, `ready`: Bool, `components`: [CheckViewV1], `ownedResourceRefs`: [RecordRef], `evidenceLocation`: UUID, `teardown`: Optional<TestStackTeardownV1>) {
+        self.`stackId` = `stackId`
+        self.`release` = `release`
+        self.`manifestDigest` = `manifestDigest`
+        self.`clock` = `clock`
+        self.`model` = `model`
+        self.`ready` = `ready`
+        self.`components` = `components`
+        self.`ownedResourceRefs` = `ownedResourceRefs`
+        self.`evidenceLocation` = `evidenceLocation`
+        self.`teardown` = `teardown`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["stackId", "release", "manifestDigest", "clock", "model", "ready", "components", "ownedResourceRefs", "evidenceLocation", "teardown"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`stackId` = try container.decode(UUID.self, forKey: ToyCodingKey("stackId"))
+        self.`release` = try container.decode(Release.self, forKey: ToyCodingKey("release"))
+        self.`manifestDigest` = try container.decode(Digest.self, forKey: ToyCodingKey("manifestDigest"))
+        self.`clock` = try container.decode(TestStackClockV1.self, forKey: ToyCodingKey("clock"))
+        self.`model` = try container.decode(TestStackModelV1.self, forKey: ToyCodingKey("model"))
+        self.`ready` = try container.decode(Bool.self, forKey: ToyCodingKey("ready"))
+        self.`components` = try container.decode([CheckViewV1].self, forKey: ToyCodingKey("components"))
+        self.`ownedResourceRefs` = try container.decode([RecordRef].self, forKey: ToyCodingKey("ownedResourceRefs"))
+        self.`evidenceLocation` = try container.decode(UUID.self, forKey: ToyCodingKey("evidenceLocation"))
+        self.`teardown` = try container.decode(Optional<TestStackTeardownV1>.self, forKey: ToyCodingKey("teardown"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`stackId`, forKey: ToyCodingKey("stackId"))
+        try container.encode(`release`, forKey: ToyCodingKey("release"))
+        try container.encode(`manifestDigest`, forKey: ToyCodingKey("manifestDigest"))
+        try container.encode(`clock`, forKey: ToyCodingKey("clock"))
+        try container.encode(`model`, forKey: ToyCodingKey("model"))
+        try container.encode(`ready`, forKey: ToyCodingKey("ready"))
+        try container.encode(`components`, forKey: ToyCodingKey("components"))
+        try container.encode(`ownedResourceRefs`, forKey: ToyCodingKey("ownedResourceRefs"))
+        try container.encode(`evidenceLocation`, forKey: ToyCodingKey("evidenceLocation"))
+        try container.encode(`teardown`, forKey: ToyCodingKey("teardown"))
+    }
+}
+
+public enum TestStackClockV1: String, Codable, CaseIterable, Sendable {
+    case `fake` = "fake"
+    case `real` = "real"
+}
+
+public enum TestStackModelV1: String, Codable, CaseIterable, Sendable {
+    case `fake` = "fake"
+    case `supported` = "supported"
+}
+
+public struct TestStackTeardownV1: Codable, Sendable {
+    public let `stackId`: UUID
+    public let `checkpointRefs`: [RecordRef]
+    public let `fenceRefs`: [RecordRef]
+    public let `stoppedResourceRefs`: [RecordRef]
+    public let `retainedArtifactRefs`: [RecordRef]
+    public let `unresolvedResourceRefs`: [RecordRef]
+    public let `complete`: Bool
+    public init(`stackId`: UUID, `checkpointRefs`: [RecordRef], `fenceRefs`: [RecordRef], `stoppedResourceRefs`: [RecordRef], `retainedArtifactRefs`: [RecordRef], `unresolvedResourceRefs`: [RecordRef], `complete`: Bool) {
+        self.`stackId` = `stackId`
+        self.`checkpointRefs` = `checkpointRefs`
+        self.`fenceRefs` = `fenceRefs`
+        self.`stoppedResourceRefs` = `stoppedResourceRefs`
+        self.`retainedArtifactRefs` = `retainedArtifactRefs`
+        self.`unresolvedResourceRefs` = `unresolvedResourceRefs`
+        self.`complete` = `complete`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["stackId", "checkpointRefs", "fenceRefs", "stoppedResourceRefs", "retainedArtifactRefs", "unresolvedResourceRefs", "complete"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`stackId` = try container.decode(UUID.self, forKey: ToyCodingKey("stackId"))
+        self.`checkpointRefs` = try container.decode([RecordRef].self, forKey: ToyCodingKey("checkpointRefs"))
+        self.`fenceRefs` = try container.decode([RecordRef].self, forKey: ToyCodingKey("fenceRefs"))
+        self.`stoppedResourceRefs` = try container.decode([RecordRef].self, forKey: ToyCodingKey("stoppedResourceRefs"))
+        self.`retainedArtifactRefs` = try container.decode([RecordRef].self, forKey: ToyCodingKey("retainedArtifactRefs"))
+        self.`unresolvedResourceRefs` = try container.decode([RecordRef].self, forKey: ToyCodingKey("unresolvedResourceRefs"))
+        self.`complete` = try container.decode(Bool.self, forKey: ToyCodingKey("complete"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`stackId`, forKey: ToyCodingKey("stackId"))
+        try container.encode(`checkpointRefs`, forKey: ToyCodingKey("checkpointRefs"))
+        try container.encode(`fenceRefs`, forKey: ToyCodingKey("fenceRefs"))
+        try container.encode(`stoppedResourceRefs`, forKey: ToyCodingKey("stoppedResourceRefs"))
+        try container.encode(`retainedArtifactRefs`, forKey: ToyCodingKey("retainedArtifactRefs"))
+        try container.encode(`unresolvedResourceRefs`, forKey: ToyCodingKey("unresolvedResourceRefs"))
+        try container.encode(`complete`, forKey: ToyCodingKey("complete"))
+    }
+}
+
+public struct CliStackDownResult: Codable, Sendable {
+    public let `schemaVersion`: CliHelpV1CompatibilityWireVersionsItem
+    public let `commandId`: CliStackDownResultCommandId
+    public let `invocationId`: UUID
+    public let `generatedAt`: Instant
+    public let `cliVersion`: CliVersionV1CliVersion
+    public let `contractsVersion`: CliVersionV1CliVersion
+    public let `schemaDigest`: Digest
+    public let `environment`: CliEnvironment
+    public let `meta`: CliMetadata
+    public let `ok`: CliHelpResultOk
+    public let `data`: TestStackOperationV1
+    public init(`schemaVersion`: CliHelpV1CompatibilityWireVersionsItem, `commandId`: CliStackDownResultCommandId, `invocationId`: UUID, `generatedAt`: Instant, `cliVersion`: CliVersionV1CliVersion, `contractsVersion`: CliVersionV1CliVersion, `schemaDigest`: Digest, `environment`: CliEnvironment, `meta`: CliMetadata, `ok`: CliHelpResultOk, `data`: TestStackOperationV1) {
+        self.`schemaVersion` = `schemaVersion`
+        self.`commandId` = `commandId`
+        self.`invocationId` = `invocationId`
+        self.`generatedAt` = `generatedAt`
+        self.`cliVersion` = `cliVersion`
+        self.`contractsVersion` = `contractsVersion`
+        self.`schemaDigest` = `schemaDigest`
+        self.`environment` = `environment`
+        self.`meta` = `meta`
+        self.`ok` = `ok`
+        self.`data` = `data`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["schemaVersion", "commandId", "invocationId", "generatedAt", "cliVersion", "contractsVersion", "schemaDigest", "environment", "meta", "ok", "data"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`schemaVersion` = try container.decode(CliHelpV1CompatibilityWireVersionsItem.self, forKey: ToyCodingKey("schemaVersion"))
+        self.`commandId` = try container.decode(CliStackDownResultCommandId.self, forKey: ToyCodingKey("commandId"))
+        self.`invocationId` = try container.decode(UUID.self, forKey: ToyCodingKey("invocationId"))
+        self.`generatedAt` = try container.decode(Instant.self, forKey: ToyCodingKey("generatedAt"))
+        self.`cliVersion` = try container.decode(CliVersionV1CliVersion.self, forKey: ToyCodingKey("cliVersion"))
+        self.`contractsVersion` = try container.decode(CliVersionV1CliVersion.self, forKey: ToyCodingKey("contractsVersion"))
+        self.`schemaDigest` = try container.decode(Digest.self, forKey: ToyCodingKey("schemaDigest"))
+        self.`environment` = try container.decode(CliEnvironment.self, forKey: ToyCodingKey("environment"))
+        self.`meta` = try container.decode(CliMetadata.self, forKey: ToyCodingKey("meta"))
+        self.`ok` = try container.decode(CliHelpResultOk.self, forKey: ToyCodingKey("ok"))
+        self.`data` = try container.decode(TestStackOperationV1.self, forKey: ToyCodingKey("data"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`schemaVersion`, forKey: ToyCodingKey("schemaVersion"))
+        try container.encode(`commandId`, forKey: ToyCodingKey("commandId"))
+        try container.encode(`invocationId`, forKey: ToyCodingKey("invocationId"))
+        try container.encode(`generatedAt`, forKey: ToyCodingKey("generatedAt"))
+        try container.encode(`cliVersion`, forKey: ToyCodingKey("cliVersion"))
+        try container.encode(`contractsVersion`, forKey: ToyCodingKey("contractsVersion"))
+        try container.encode(`schemaDigest`, forKey: ToyCodingKey("schemaDigest"))
+        try container.encode(`environment`, forKey: ToyCodingKey("environment"))
+        try container.encode(`meta`, forKey: ToyCodingKey("meta"))
+        try container.encode(`ok`, forKey: ToyCodingKey("ok"))
+        try container.encode(`data`, forKey: ToyCodingKey("data"))
+    }
+}
+
+public enum CliStackDownResultCommandId: String, Codable, CaseIterable, Sendable {
+    case `stackDown` = "stack.down"
+}
+
+public struct CliClockShowResult: Codable, Sendable {
+    public let `schemaVersion`: CliHelpV1CompatibilityWireVersionsItem
+    public let `commandId`: CliClockShowResultCommandId
+    public let `invocationId`: UUID
+    public let `generatedAt`: Instant
+    public let `cliVersion`: CliVersionV1CliVersion
+    public let `contractsVersion`: CliVersionV1CliVersion
+    public let `schemaDigest`: Digest
+    public let `environment`: CliEnvironment
+    public let `meta`: CliMetadata
+    public let `ok`: CliHelpResultOk
+    public let `data`: TestClockStateV1
+    public init(`schemaVersion`: CliHelpV1CompatibilityWireVersionsItem, `commandId`: CliClockShowResultCommandId, `invocationId`: UUID, `generatedAt`: Instant, `cliVersion`: CliVersionV1CliVersion, `contractsVersion`: CliVersionV1CliVersion, `schemaDigest`: Digest, `environment`: CliEnvironment, `meta`: CliMetadata, `ok`: CliHelpResultOk, `data`: TestClockStateV1) {
+        self.`schemaVersion` = `schemaVersion`
+        self.`commandId` = `commandId`
+        self.`invocationId` = `invocationId`
+        self.`generatedAt` = `generatedAt`
+        self.`cliVersion` = `cliVersion`
+        self.`contractsVersion` = `contractsVersion`
+        self.`schemaDigest` = `schemaDigest`
+        self.`environment` = `environment`
+        self.`meta` = `meta`
+        self.`ok` = `ok`
+        self.`data` = `data`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["schemaVersion", "commandId", "invocationId", "generatedAt", "cliVersion", "contractsVersion", "schemaDigest", "environment", "meta", "ok", "data"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`schemaVersion` = try container.decode(CliHelpV1CompatibilityWireVersionsItem.self, forKey: ToyCodingKey("schemaVersion"))
+        self.`commandId` = try container.decode(CliClockShowResultCommandId.self, forKey: ToyCodingKey("commandId"))
+        self.`invocationId` = try container.decode(UUID.self, forKey: ToyCodingKey("invocationId"))
+        self.`generatedAt` = try container.decode(Instant.self, forKey: ToyCodingKey("generatedAt"))
+        self.`cliVersion` = try container.decode(CliVersionV1CliVersion.self, forKey: ToyCodingKey("cliVersion"))
+        self.`contractsVersion` = try container.decode(CliVersionV1CliVersion.self, forKey: ToyCodingKey("contractsVersion"))
+        self.`schemaDigest` = try container.decode(Digest.self, forKey: ToyCodingKey("schemaDigest"))
+        self.`environment` = try container.decode(CliEnvironment.self, forKey: ToyCodingKey("environment"))
+        self.`meta` = try container.decode(CliMetadata.self, forKey: ToyCodingKey("meta"))
+        self.`ok` = try container.decode(CliHelpResultOk.self, forKey: ToyCodingKey("ok"))
+        self.`data` = try container.decode(TestClockStateV1.self, forKey: ToyCodingKey("data"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`schemaVersion`, forKey: ToyCodingKey("schemaVersion"))
+        try container.encode(`commandId`, forKey: ToyCodingKey("commandId"))
+        try container.encode(`invocationId`, forKey: ToyCodingKey("invocationId"))
+        try container.encode(`generatedAt`, forKey: ToyCodingKey("generatedAt"))
+        try container.encode(`cliVersion`, forKey: ToyCodingKey("cliVersion"))
+        try container.encode(`contractsVersion`, forKey: ToyCodingKey("contractsVersion"))
+        try container.encode(`schemaDigest`, forKey: ToyCodingKey("schemaDigest"))
+        try container.encode(`environment`, forKey: ToyCodingKey("environment"))
+        try container.encode(`meta`, forKey: ToyCodingKey("meta"))
+        try container.encode(`ok`, forKey: ToyCodingKey("ok"))
+        try container.encode(`data`, forKey: ToyCodingKey("data"))
+    }
+}
+
+public enum CliClockShowResultCommandId: String, Codable, CaseIterable, Sendable {
+    case `clockShow` = "clock.show"
+}
+
+public struct TestClockStateV1: Codable, Sendable {
+    public let `stackId`: UUID
+    public let `revision`: Revision
+    public let `virtualWall`: Instant
+    public let `awakeSeconds`: UInt64String
+    public let `activeSeconds`: UInt64String
+    public let `realMonotonicMs`: UInt64String
+    public let `frozen`: Bool
+    public let `pendingWorkRefs`: [RecordRef]
+    public let `coverage`: CadenceCoverageV1
+    public init(`stackId`: UUID, `revision`: Revision, `virtualWall`: Instant, `awakeSeconds`: UInt64String, `activeSeconds`: UInt64String, `realMonotonicMs`: UInt64String, `frozen`: Bool, `pendingWorkRefs`: [RecordRef], `coverage`: CadenceCoverageV1) {
+        self.`stackId` = `stackId`
+        self.`revision` = `revision`
+        self.`virtualWall` = `virtualWall`
+        self.`awakeSeconds` = `awakeSeconds`
+        self.`activeSeconds` = `activeSeconds`
+        self.`realMonotonicMs` = `realMonotonicMs`
+        self.`frozen` = `frozen`
+        self.`pendingWorkRefs` = `pendingWorkRefs`
+        self.`coverage` = `coverage`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["stackId", "revision", "virtualWall", "awakeSeconds", "activeSeconds", "realMonotonicMs", "frozen", "pendingWorkRefs", "coverage"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`stackId` = try container.decode(UUID.self, forKey: ToyCodingKey("stackId"))
+        self.`revision` = try container.decode(Revision.self, forKey: ToyCodingKey("revision"))
+        self.`virtualWall` = try container.decode(Instant.self, forKey: ToyCodingKey("virtualWall"))
+        self.`awakeSeconds` = try container.decode(UInt64String.self, forKey: ToyCodingKey("awakeSeconds"))
+        self.`activeSeconds` = try container.decode(UInt64String.self, forKey: ToyCodingKey("activeSeconds"))
+        self.`realMonotonicMs` = try container.decode(UInt64String.self, forKey: ToyCodingKey("realMonotonicMs"))
+        self.`frozen` = try container.decode(Bool.self, forKey: ToyCodingKey("frozen"))
+        self.`pendingWorkRefs` = try container.decode([RecordRef].self, forKey: ToyCodingKey("pendingWorkRefs"))
+        self.`coverage` = try container.decode(CadenceCoverageV1.self, forKey: ToyCodingKey("coverage"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`stackId`, forKey: ToyCodingKey("stackId"))
+        try container.encode(`revision`, forKey: ToyCodingKey("revision"))
+        try container.encode(`virtualWall`, forKey: ToyCodingKey("virtualWall"))
+        try container.encode(`awakeSeconds`, forKey: ToyCodingKey("awakeSeconds"))
+        try container.encode(`activeSeconds`, forKey: ToyCodingKey("activeSeconds"))
+        try container.encode(`realMonotonicMs`, forKey: ToyCodingKey("realMonotonicMs"))
+        try container.encode(`frozen`, forKey: ToyCodingKey("frozen"))
+        try container.encode(`pendingWorkRefs`, forKey: ToyCodingKey("pendingWorkRefs"))
+        try container.encode(`coverage`, forKey: ToyCodingKey("coverage"))
+    }
+}
+
+public struct CliClockFreezeResult: Codable, Sendable {
+    public let `schemaVersion`: CliHelpV1CompatibilityWireVersionsItem
+    public let `commandId`: CliClockFreezeResultCommandId
+    public let `invocationId`: UUID
+    public let `generatedAt`: Instant
+    public let `cliVersion`: CliVersionV1CliVersion
+    public let `contractsVersion`: CliVersionV1CliVersion
+    public let `schemaDigest`: Digest
+    public let `environment`: CliEnvironment
+    public let `meta`: CliMetadata
+    public let `ok`: CliHelpResultOk
+    public let `data`: TestClockReceiptV1
+    public init(`schemaVersion`: CliHelpV1CompatibilityWireVersionsItem, `commandId`: CliClockFreezeResultCommandId, `invocationId`: UUID, `generatedAt`: Instant, `cliVersion`: CliVersionV1CliVersion, `contractsVersion`: CliVersionV1CliVersion, `schemaDigest`: Digest, `environment`: CliEnvironment, `meta`: CliMetadata, `ok`: CliHelpResultOk, `data`: TestClockReceiptV1) {
+        self.`schemaVersion` = `schemaVersion`
+        self.`commandId` = `commandId`
+        self.`invocationId` = `invocationId`
+        self.`generatedAt` = `generatedAt`
+        self.`cliVersion` = `cliVersion`
+        self.`contractsVersion` = `contractsVersion`
+        self.`schemaDigest` = `schemaDigest`
+        self.`environment` = `environment`
+        self.`meta` = `meta`
+        self.`ok` = `ok`
+        self.`data` = `data`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["schemaVersion", "commandId", "invocationId", "generatedAt", "cliVersion", "contractsVersion", "schemaDigest", "environment", "meta", "ok", "data"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`schemaVersion` = try container.decode(CliHelpV1CompatibilityWireVersionsItem.self, forKey: ToyCodingKey("schemaVersion"))
+        self.`commandId` = try container.decode(CliClockFreezeResultCommandId.self, forKey: ToyCodingKey("commandId"))
+        self.`invocationId` = try container.decode(UUID.self, forKey: ToyCodingKey("invocationId"))
+        self.`generatedAt` = try container.decode(Instant.self, forKey: ToyCodingKey("generatedAt"))
+        self.`cliVersion` = try container.decode(CliVersionV1CliVersion.self, forKey: ToyCodingKey("cliVersion"))
+        self.`contractsVersion` = try container.decode(CliVersionV1CliVersion.self, forKey: ToyCodingKey("contractsVersion"))
+        self.`schemaDigest` = try container.decode(Digest.self, forKey: ToyCodingKey("schemaDigest"))
+        self.`environment` = try container.decode(CliEnvironment.self, forKey: ToyCodingKey("environment"))
+        self.`meta` = try container.decode(CliMetadata.self, forKey: ToyCodingKey("meta"))
+        self.`ok` = try container.decode(CliHelpResultOk.self, forKey: ToyCodingKey("ok"))
+        self.`data` = try container.decode(TestClockReceiptV1.self, forKey: ToyCodingKey("data"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`schemaVersion`, forKey: ToyCodingKey("schemaVersion"))
+        try container.encode(`commandId`, forKey: ToyCodingKey("commandId"))
+        try container.encode(`invocationId`, forKey: ToyCodingKey("invocationId"))
+        try container.encode(`generatedAt`, forKey: ToyCodingKey("generatedAt"))
+        try container.encode(`cliVersion`, forKey: ToyCodingKey("cliVersion"))
+        try container.encode(`contractsVersion`, forKey: ToyCodingKey("contractsVersion"))
+        try container.encode(`schemaDigest`, forKey: ToyCodingKey("schemaDigest"))
+        try container.encode(`environment`, forKey: ToyCodingKey("environment"))
+        try container.encode(`meta`, forKey: ToyCodingKey("meta"))
+        try container.encode(`ok`, forKey: ToyCodingKey("ok"))
+        try container.encode(`data`, forKey: ToyCodingKey("data"))
+    }
+}
+
+public enum CliClockFreezeResultCommandId: String, Codable, CaseIterable, Sendable {
+    case `clockFreeze` = "clock.freeze"
+}
+
+public struct TestClockReceiptV1: Codable, Sendable {
+    public let `requestId`: UUID
+    public let `before`: TestClockStateV1
+    public let `after`: TestClockStateV1
+    public let `barrierRef`: RecordRef
+    public init(`requestId`: UUID, `before`: TestClockStateV1, `after`: TestClockStateV1, `barrierRef`: RecordRef) {
+        self.`requestId` = `requestId`
+        self.`before` = `before`
+        self.`after` = `after`
+        self.`barrierRef` = `barrierRef`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["requestId", "before", "after", "barrierRef"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`requestId` = try container.decode(UUID.self, forKey: ToyCodingKey("requestId"))
+        self.`before` = try container.decode(TestClockStateV1.self, forKey: ToyCodingKey("before"))
+        self.`after` = try container.decode(TestClockStateV1.self, forKey: ToyCodingKey("after"))
+        self.`barrierRef` = try container.decode(RecordRef.self, forKey: ToyCodingKey("barrierRef"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`requestId`, forKey: ToyCodingKey("requestId"))
+        try container.encode(`before`, forKey: ToyCodingKey("before"))
+        try container.encode(`after`, forKey: ToyCodingKey("after"))
+        try container.encode(`barrierRef`, forKey: ToyCodingKey("barrierRef"))
+    }
+}
+
+public struct CliClockResumeResult: Codable, Sendable {
+    public let `schemaVersion`: CliHelpV1CompatibilityWireVersionsItem
+    public let `commandId`: CliClockResumeResultCommandId
+    public let `invocationId`: UUID
+    public let `generatedAt`: Instant
+    public let `cliVersion`: CliVersionV1CliVersion
+    public let `contractsVersion`: CliVersionV1CliVersion
+    public let `schemaDigest`: Digest
+    public let `environment`: CliEnvironment
+    public let `meta`: CliMetadata
+    public let `ok`: CliHelpResultOk
+    public let `data`: TestClockReceiptV1
+    public init(`schemaVersion`: CliHelpV1CompatibilityWireVersionsItem, `commandId`: CliClockResumeResultCommandId, `invocationId`: UUID, `generatedAt`: Instant, `cliVersion`: CliVersionV1CliVersion, `contractsVersion`: CliVersionV1CliVersion, `schemaDigest`: Digest, `environment`: CliEnvironment, `meta`: CliMetadata, `ok`: CliHelpResultOk, `data`: TestClockReceiptV1) {
+        self.`schemaVersion` = `schemaVersion`
+        self.`commandId` = `commandId`
+        self.`invocationId` = `invocationId`
+        self.`generatedAt` = `generatedAt`
+        self.`cliVersion` = `cliVersion`
+        self.`contractsVersion` = `contractsVersion`
+        self.`schemaDigest` = `schemaDigest`
+        self.`environment` = `environment`
+        self.`meta` = `meta`
+        self.`ok` = `ok`
+        self.`data` = `data`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["schemaVersion", "commandId", "invocationId", "generatedAt", "cliVersion", "contractsVersion", "schemaDigest", "environment", "meta", "ok", "data"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`schemaVersion` = try container.decode(CliHelpV1CompatibilityWireVersionsItem.self, forKey: ToyCodingKey("schemaVersion"))
+        self.`commandId` = try container.decode(CliClockResumeResultCommandId.self, forKey: ToyCodingKey("commandId"))
+        self.`invocationId` = try container.decode(UUID.self, forKey: ToyCodingKey("invocationId"))
+        self.`generatedAt` = try container.decode(Instant.self, forKey: ToyCodingKey("generatedAt"))
+        self.`cliVersion` = try container.decode(CliVersionV1CliVersion.self, forKey: ToyCodingKey("cliVersion"))
+        self.`contractsVersion` = try container.decode(CliVersionV1CliVersion.self, forKey: ToyCodingKey("contractsVersion"))
+        self.`schemaDigest` = try container.decode(Digest.self, forKey: ToyCodingKey("schemaDigest"))
+        self.`environment` = try container.decode(CliEnvironment.self, forKey: ToyCodingKey("environment"))
+        self.`meta` = try container.decode(CliMetadata.self, forKey: ToyCodingKey("meta"))
+        self.`ok` = try container.decode(CliHelpResultOk.self, forKey: ToyCodingKey("ok"))
+        self.`data` = try container.decode(TestClockReceiptV1.self, forKey: ToyCodingKey("data"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`schemaVersion`, forKey: ToyCodingKey("schemaVersion"))
+        try container.encode(`commandId`, forKey: ToyCodingKey("commandId"))
+        try container.encode(`invocationId`, forKey: ToyCodingKey("invocationId"))
+        try container.encode(`generatedAt`, forKey: ToyCodingKey("generatedAt"))
+        try container.encode(`cliVersion`, forKey: ToyCodingKey("cliVersion"))
+        try container.encode(`contractsVersion`, forKey: ToyCodingKey("contractsVersion"))
+        try container.encode(`schemaDigest`, forKey: ToyCodingKey("schemaDigest"))
+        try container.encode(`environment`, forKey: ToyCodingKey("environment"))
+        try container.encode(`meta`, forKey: ToyCodingKey("meta"))
+        try container.encode(`ok`, forKey: ToyCodingKey("ok"))
+        try container.encode(`data`, forKey: ToyCodingKey("data"))
+    }
+}
+
+public enum CliClockResumeResultCommandId: String, Codable, CaseIterable, Sendable {
+    case `clockResume` = "clock.resume"
+}
+
+public struct CliClockAdvanceResult: Codable, Sendable {
+    public let `schemaVersion`: CliHelpV1CompatibilityWireVersionsItem
+    public let `commandId`: CliClockAdvanceResultCommandId
+    public let `invocationId`: UUID
+    public let `generatedAt`: Instant
+    public let `cliVersion`: CliVersionV1CliVersion
+    public let `contractsVersion`: CliVersionV1CliVersion
+    public let `schemaDigest`: Digest
+    public let `environment`: CliEnvironment
+    public let `meta`: CliMetadata
+    public let `ok`: CliHelpResultOk
+    public let `data`: ClockAdvanceOperationV1
+    public init(`schemaVersion`: CliHelpV1CompatibilityWireVersionsItem, `commandId`: CliClockAdvanceResultCommandId, `invocationId`: UUID, `generatedAt`: Instant, `cliVersion`: CliVersionV1CliVersion, `contractsVersion`: CliVersionV1CliVersion, `schemaDigest`: Digest, `environment`: CliEnvironment, `meta`: CliMetadata, `ok`: CliHelpResultOk, `data`: ClockAdvanceOperationV1) {
+        self.`schemaVersion` = `schemaVersion`
+        self.`commandId` = `commandId`
+        self.`invocationId` = `invocationId`
+        self.`generatedAt` = `generatedAt`
+        self.`cliVersion` = `cliVersion`
+        self.`contractsVersion` = `contractsVersion`
+        self.`schemaDigest` = `schemaDigest`
+        self.`environment` = `environment`
+        self.`meta` = `meta`
+        self.`ok` = `ok`
+        self.`data` = `data`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["schemaVersion", "commandId", "invocationId", "generatedAt", "cliVersion", "contractsVersion", "schemaDigest", "environment", "meta", "ok", "data"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`schemaVersion` = try container.decode(CliHelpV1CompatibilityWireVersionsItem.self, forKey: ToyCodingKey("schemaVersion"))
+        self.`commandId` = try container.decode(CliClockAdvanceResultCommandId.self, forKey: ToyCodingKey("commandId"))
+        self.`invocationId` = try container.decode(UUID.self, forKey: ToyCodingKey("invocationId"))
+        self.`generatedAt` = try container.decode(Instant.self, forKey: ToyCodingKey("generatedAt"))
+        self.`cliVersion` = try container.decode(CliVersionV1CliVersion.self, forKey: ToyCodingKey("cliVersion"))
+        self.`contractsVersion` = try container.decode(CliVersionV1CliVersion.self, forKey: ToyCodingKey("contractsVersion"))
+        self.`schemaDigest` = try container.decode(Digest.self, forKey: ToyCodingKey("schemaDigest"))
+        self.`environment` = try container.decode(CliEnvironment.self, forKey: ToyCodingKey("environment"))
+        self.`meta` = try container.decode(CliMetadata.self, forKey: ToyCodingKey("meta"))
+        self.`ok` = try container.decode(CliHelpResultOk.self, forKey: ToyCodingKey("ok"))
+        self.`data` = try container.decode(ClockAdvanceOperationV1.self, forKey: ToyCodingKey("data"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`schemaVersion`, forKey: ToyCodingKey("schemaVersion"))
+        try container.encode(`commandId`, forKey: ToyCodingKey("commandId"))
+        try container.encode(`invocationId`, forKey: ToyCodingKey("invocationId"))
+        try container.encode(`generatedAt`, forKey: ToyCodingKey("generatedAt"))
+        try container.encode(`cliVersion`, forKey: ToyCodingKey("cliVersion"))
+        try container.encode(`contractsVersion`, forKey: ToyCodingKey("contractsVersion"))
+        try container.encode(`schemaDigest`, forKey: ToyCodingKey("schemaDigest"))
+        try container.encode(`environment`, forKey: ToyCodingKey("environment"))
+        try container.encode(`meta`, forKey: ToyCodingKey("meta"))
+        try container.encode(`ok`, forKey: ToyCodingKey("ok"))
+        try container.encode(`data`, forKey: ToyCodingKey("data"))
+    }
+}
+
+public enum CliClockAdvanceResultCommandId: String, Codable, CaseIterable, Sendable {
+    case `clockAdvance` = "clock.advance"
+}
+
+public struct ClockAdvanceOperationV1: Codable, Sendable {
+    public let `operation`: OperationRef
+    public let `requestId`: UUID
+    public let `stackId`: Optional<UUID>
+    public let `result`: Optional<TestClockReceiptV1>
+    public let `links`: EvidenceLinksV1
+    public let `requestedThrough`: Instant
+    public let `reachedAt`: Instant
+    public let `barrier`: ClockAdvanceOperationV1Barrier
+    public let `unsettledRefs`: [RecordRef]
+    public init(`operation`: OperationRef, `requestId`: UUID, `stackId`: Optional<UUID>, `result`: Optional<TestClockReceiptV1>, `links`: EvidenceLinksV1, `requestedThrough`: Instant, `reachedAt`: Instant, `barrier`: ClockAdvanceOperationV1Barrier, `unsettledRefs`: [RecordRef]) {
+        self.`operation` = `operation`
+        self.`requestId` = `requestId`
+        self.`stackId` = `stackId`
+        self.`result` = `result`
+        self.`links` = `links`
+        self.`requestedThrough` = `requestedThrough`
+        self.`reachedAt` = `reachedAt`
+        self.`barrier` = `barrier`
+        self.`unsettledRefs` = `unsettledRefs`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["operation", "requestId", "stackId", "result", "links", "requestedThrough", "reachedAt", "barrier", "unsettledRefs"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`operation` = try container.decode(OperationRef.self, forKey: ToyCodingKey("operation"))
+        self.`requestId` = try container.decode(UUID.self, forKey: ToyCodingKey("requestId"))
+        self.`stackId` = try container.decode(Optional<UUID>.self, forKey: ToyCodingKey("stackId"))
+        self.`result` = try container.decode(Optional<TestClockReceiptV1>.self, forKey: ToyCodingKey("result"))
+        self.`links` = try container.decode(EvidenceLinksV1.self, forKey: ToyCodingKey("links"))
+        self.`requestedThrough` = try container.decode(Instant.self, forKey: ToyCodingKey("requestedThrough"))
+        self.`reachedAt` = try container.decode(Instant.self, forKey: ToyCodingKey("reachedAt"))
+        self.`barrier` = try container.decode(ClockAdvanceOperationV1Barrier.self, forKey: ToyCodingKey("barrier"))
+        self.`unsettledRefs` = try container.decode([RecordRef].self, forKey: ToyCodingKey("unsettledRefs"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`operation`, forKey: ToyCodingKey("operation"))
+        try container.encode(`requestId`, forKey: ToyCodingKey("requestId"))
+        try container.encode(`stackId`, forKey: ToyCodingKey("stackId"))
+        try container.encode(`result`, forKey: ToyCodingKey("result"))
+        try container.encode(`links`, forKey: ToyCodingKey("links"))
+        try container.encode(`requestedThrough`, forKey: ToyCodingKey("requestedThrough"))
+        try container.encode(`reachedAt`, forKey: ToyCodingKey("reachedAt"))
+        try container.encode(`barrier`, forKey: ToyCodingKey("barrier"))
+        try container.encode(`unsettledRefs`, forKey: ToyCodingKey("unsettledRefs"))
+    }
+}
+
+public enum ClockAdvanceOperationV1Barrier: String, Codable, CaseIterable, Sendable {
+    case `settled` = "settled"
+    case `pending` = "pending"
+    case `blocked` = "blocked"
+}
+
+public struct CliProbeRunResult: Codable, Sendable {
+    public let `schemaVersion`: CliHelpV1CompatibilityWireVersionsItem
+    public let `commandId`: CliProbeRunResultCommandId
+    public let `invocationId`: UUID
+    public let `generatedAt`: Instant
+    public let `cliVersion`: CliVersionV1CliVersion
+    public let `contractsVersion`: CliVersionV1CliVersion
+    public let `schemaDigest`: Digest
+    public let `environment`: CliEnvironment
+    public let `meta`: CliMetadata
+    public let `ok`: CliHelpResultOk
+    public let `data`: RegisteredProbeOperationV1
+    public init(`schemaVersion`: CliHelpV1CompatibilityWireVersionsItem, `commandId`: CliProbeRunResultCommandId, `invocationId`: UUID, `generatedAt`: Instant, `cliVersion`: CliVersionV1CliVersion, `contractsVersion`: CliVersionV1CliVersion, `schemaDigest`: Digest, `environment`: CliEnvironment, `meta`: CliMetadata, `ok`: CliHelpResultOk, `data`: RegisteredProbeOperationV1) {
+        self.`schemaVersion` = `schemaVersion`
+        self.`commandId` = `commandId`
+        self.`invocationId` = `invocationId`
+        self.`generatedAt` = `generatedAt`
+        self.`cliVersion` = `cliVersion`
+        self.`contractsVersion` = `contractsVersion`
+        self.`schemaDigest` = `schemaDigest`
+        self.`environment` = `environment`
+        self.`meta` = `meta`
+        self.`ok` = `ok`
+        self.`data` = `data`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["schemaVersion", "commandId", "invocationId", "generatedAt", "cliVersion", "contractsVersion", "schemaDigest", "environment", "meta", "ok", "data"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`schemaVersion` = try container.decode(CliHelpV1CompatibilityWireVersionsItem.self, forKey: ToyCodingKey("schemaVersion"))
+        self.`commandId` = try container.decode(CliProbeRunResultCommandId.self, forKey: ToyCodingKey("commandId"))
+        self.`invocationId` = try container.decode(UUID.self, forKey: ToyCodingKey("invocationId"))
+        self.`generatedAt` = try container.decode(Instant.self, forKey: ToyCodingKey("generatedAt"))
+        self.`cliVersion` = try container.decode(CliVersionV1CliVersion.self, forKey: ToyCodingKey("cliVersion"))
+        self.`contractsVersion` = try container.decode(CliVersionV1CliVersion.self, forKey: ToyCodingKey("contractsVersion"))
+        self.`schemaDigest` = try container.decode(Digest.self, forKey: ToyCodingKey("schemaDigest"))
+        self.`environment` = try container.decode(CliEnvironment.self, forKey: ToyCodingKey("environment"))
+        self.`meta` = try container.decode(CliMetadata.self, forKey: ToyCodingKey("meta"))
+        self.`ok` = try container.decode(CliHelpResultOk.self, forKey: ToyCodingKey("ok"))
+        self.`data` = try container.decode(RegisteredProbeOperationV1.self, forKey: ToyCodingKey("data"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`schemaVersion`, forKey: ToyCodingKey("schemaVersion"))
+        try container.encode(`commandId`, forKey: ToyCodingKey("commandId"))
+        try container.encode(`invocationId`, forKey: ToyCodingKey("invocationId"))
+        try container.encode(`generatedAt`, forKey: ToyCodingKey("generatedAt"))
+        try container.encode(`cliVersion`, forKey: ToyCodingKey("cliVersion"))
+        try container.encode(`contractsVersion`, forKey: ToyCodingKey("contractsVersion"))
+        try container.encode(`schemaDigest`, forKey: ToyCodingKey("schemaDigest"))
+        try container.encode(`environment`, forKey: ToyCodingKey("environment"))
+        try container.encode(`meta`, forKey: ToyCodingKey("meta"))
+        try container.encode(`ok`, forKey: ToyCodingKey("ok"))
+        try container.encode(`data`, forKey: ToyCodingKey("data"))
+    }
+}
+
+public enum CliProbeRunResultCommandId: String, Codable, CaseIterable, Sendable {
+    case `probeRun` = "probe.run"
+}
+
+public struct RegisteredProbeOperationV1: Codable, Sendable {
+    public let `operation`: OperationRef
+    public let `requestId`: UUID
+    public let `stackId`: Optional<UUID>
+    public let `result`: Optional<RegisteredProbeReportV1>
+    public let `links`: EvidenceLinksV1
+    public let `probeId`: RegisteredCliProbeIdV1
+    public let `binding`: ArtifactBindingV1
+    public let `caseManifestDigest`: Digest
+    public init(`operation`: OperationRef, `requestId`: UUID, `stackId`: Optional<UUID>, `result`: Optional<RegisteredProbeReportV1>, `links`: EvidenceLinksV1, `probeId`: RegisteredCliProbeIdV1, `binding`: ArtifactBindingV1, `caseManifestDigest`: Digest) {
+        self.`operation` = `operation`
+        self.`requestId` = `requestId`
+        self.`stackId` = `stackId`
+        self.`result` = `result`
+        self.`links` = `links`
+        self.`probeId` = `probeId`
+        self.`binding` = `binding`
+        self.`caseManifestDigest` = `caseManifestDigest`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["operation", "requestId", "stackId", "result", "links", "probeId", "binding", "caseManifestDigest"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`operation` = try container.decode(OperationRef.self, forKey: ToyCodingKey("operation"))
+        self.`requestId` = try container.decode(UUID.self, forKey: ToyCodingKey("requestId"))
+        self.`stackId` = try container.decode(Optional<UUID>.self, forKey: ToyCodingKey("stackId"))
+        self.`result` = try container.decode(Optional<RegisteredProbeReportV1>.self, forKey: ToyCodingKey("result"))
+        self.`links` = try container.decode(EvidenceLinksV1.self, forKey: ToyCodingKey("links"))
+        self.`probeId` = try container.decode(RegisteredCliProbeIdV1.self, forKey: ToyCodingKey("probeId"))
+        self.`binding` = try container.decode(ArtifactBindingV1.self, forKey: ToyCodingKey("binding"))
+        self.`caseManifestDigest` = try container.decode(Digest.self, forKey: ToyCodingKey("caseManifestDigest"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`operation`, forKey: ToyCodingKey("operation"))
+        try container.encode(`requestId`, forKey: ToyCodingKey("requestId"))
+        try container.encode(`stackId`, forKey: ToyCodingKey("stackId"))
+        try container.encode(`result`, forKey: ToyCodingKey("result"))
+        try container.encode(`links`, forKey: ToyCodingKey("links"))
+        try container.encode(`probeId`, forKey: ToyCodingKey("probeId"))
+        try container.encode(`binding`, forKey: ToyCodingKey("binding"))
+        try container.encode(`caseManifestDigest`, forKey: ToyCodingKey("caseManifestDigest"))
+    }
+}
+
+public struct RegisteredProbeReportV1: Codable, Sendable {
+    public let `probeId`: RegisteredCliProbeIdV1
+    public let `caseManifestDigest`: Digest
+    public let `cases`: [CheckViewV1]
+    public let `state`: AcceptanceStateV1
+    public let `complete`: Bool
+    public let `links`: EvidenceLinksV1
+    public init(`probeId`: RegisteredCliProbeIdV1, `caseManifestDigest`: Digest, `cases`: [CheckViewV1], `state`: AcceptanceStateV1, `complete`: Bool, `links`: EvidenceLinksV1) {
+        self.`probeId` = `probeId`
+        self.`caseManifestDigest` = `caseManifestDigest`
+        self.`cases` = `cases`
+        self.`state` = `state`
+        self.`complete` = `complete`
+        self.`links` = `links`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["probeId", "caseManifestDigest", "cases", "state", "complete", "links"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`probeId` = try container.decode(RegisteredCliProbeIdV1.self, forKey: ToyCodingKey("probeId"))
+        self.`caseManifestDigest` = try container.decode(Digest.self, forKey: ToyCodingKey("caseManifestDigest"))
+        self.`cases` = try container.decode([CheckViewV1].self, forKey: ToyCodingKey("cases"))
+        self.`state` = try container.decode(AcceptanceStateV1.self, forKey: ToyCodingKey("state"))
+        self.`complete` = try container.decode(Bool.self, forKey: ToyCodingKey("complete"))
+        self.`links` = try container.decode(EvidenceLinksV1.self, forKey: ToyCodingKey("links"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`probeId`, forKey: ToyCodingKey("probeId"))
+        try container.encode(`caseManifestDigest`, forKey: ToyCodingKey("caseManifestDigest"))
+        try container.encode(`cases`, forKey: ToyCodingKey("cases"))
+        try container.encode(`state`, forKey: ToyCodingKey("state"))
+        try container.encode(`complete`, forKey: ToyCodingKey("complete"))
+        try container.encode(`links`, forKey: ToyCodingKey("links"))
+    }
+}
+
+public enum RegisteredCliProbeIdV1: String, Codable, CaseIterable, Sendable {
+    case `aTActivityFocus1` = "AT-activity-focus-1"
+    case `aTActivityFocus10` = "AT-activity-focus-10"
+    case `aTActivityFocus11` = "AT-activity-focus-11"
+    case `aTActivityFocus12` = "AT-activity-focus-12"
+    case `aTActivityFocus13` = "AT-activity-focus-13"
+    case `aTActivityFocus14` = "AT-activity-focus-14"
+    case `aTActivityFocus18` = "AT-activity-focus-18"
+    case `aTActivityFocus19` = "AT-activity-focus-19"
+    case `aTActivityFocus2` = "AT-activity-focus-2"
+    case `aTActivityFocus20` = "AT-activity-focus-20"
+    case `aTActivityFocus21` = "AT-activity-focus-21"
+    case `aTActivityFocus22` = "AT-activity-focus-22"
+    case `aTActivityFocus23` = "AT-activity-focus-23"
+    case `aTActivityFocus24` = "AT-activity-focus-24"
+    case `aTActivityFocus25` = "AT-activity-focus-25"
+    case `aTActivityFocus26` = "AT-activity-focus-26"
+    case `aTActivityFocus27` = "AT-activity-focus-27"
+    case `aTActivityFocus3` = "AT-activity-focus-3"
+    case `aTActivityFocus33` = "AT-activity-focus-33"
+    case `aTActivityFocus34` = "AT-activity-focus-34"
+    case `aTActivityFocus35` = "AT-activity-focus-35"
+    case `aTActivityFocus36` = "AT-activity-focus-36"
+    case `aTActivityFocus37` = "AT-activity-focus-37"
+    case `aTActivityFocus38` = "AT-activity-focus-38"
+    case `aTActivityFocus39` = "AT-activity-focus-39"
+    case `aTActivityFocus4` = "AT-activity-focus-4"
+    case `aTActivityFocus40` = "AT-activity-focus-40"
+    case `aTActivityFocus41` = "AT-activity-focus-41"
+    case `aTActivityFocus42` = "AT-activity-focus-42"
+    case `aTActivityFocus43` = "AT-activity-focus-43"
+    case `aTActivityFocus44` = "AT-activity-focus-44"
+    case `aTActivityFocus45` = "AT-activity-focus-45"
+    case `aTActivityFocus46` = "AT-activity-focus-46"
+    case `aTActivityFocus47` = "AT-activity-focus-47"
+    case `aTActivityFocus48` = "AT-activity-focus-48"
+    case `aTActivityFocus49` = "AT-activity-focus-49"
+    case `aTActivityFocus5` = "AT-activity-focus-5"
+    case `aTActivityFocus50` = "AT-activity-focus-50"
+    case `aTActivityFocus51` = "AT-activity-focus-51"
+    case `aTActivityFocus52` = "AT-activity-focus-52"
+    case `aTActivityFocus53` = "AT-activity-focus-53"
+    case `aTActivityFocus54` = "AT-activity-focus-54"
+    case `aTActivityFocus58` = "AT-activity-focus-58"
+    case `aTActivityFocus6` = "AT-activity-focus-6"
+    case `aTActivityFocus60` = "AT-activity-focus-60"
+    case `aTActivityFocus61` = "AT-activity-focus-61"
+    case `aTActivityFocus62` = "AT-activity-focus-62"
+    case `aTActivityFocus63` = "AT-activity-focus-63"
+    case `aTActivityFocus64` = "AT-activity-focus-64"
+    case `aTActivityFocus65` = "AT-activity-focus-65"
+    case `aTActivityFocus66` = "AT-activity-focus-66"
+    case `aTActivityFocus67` = "AT-activity-focus-67"
+    case `aTActivityFocus68` = "AT-activity-focus-68"
+    case `aTActivityFocus7` = "AT-activity-focus-7"
+    case `aTActivityFocus70` = "AT-activity-focus-70"
+    case `aTActivityFocus75` = "AT-activity-focus-75"
+    case `aTActivityFocus78` = "AT-activity-focus-78"
+    case `aTActivityFocus8` = "AT-activity-focus-8"
+    case `aTActivityFocus80` = "AT-activity-focus-80"
+    case `aTActivityFocus81` = "AT-activity-focus-81"
+    case `aTActivityFocus83` = "AT-activity-focus-83"
+    case `aTActivityFocus84` = "AT-activity-focus-84"
+    case `aTActivityFocus85` = "AT-activity-focus-85"
+    case `aTActivityFocus86` = "AT-activity-focus-86"
+    case `aTActivityFocus9` = "AT-activity-focus-9"
+    case `aTAdhdFeatures103` = "AT-adhd-features-103"
+    case `aTAdhdFeatures104` = "AT-adhd-features-104"
+    case `aTAdhdFeatures106` = "AT-adhd-features-106"
+    case `aTAdhdFeatures107` = "AT-adhd-features-107"
+    case `aTAdhdFeatures108` = "AT-adhd-features-108"
+    case `aTAdhdFeatures109` = "AT-adhd-features-109"
+    case `aTAdhdFeatures14` = "AT-adhd-features-14"
+    case `aTAdhdFeatures17` = "AT-adhd-features-17"
+    case `aTAdhdFeatures32` = "AT-adhd-features-32"
+    case `aTAdhdFeatures33` = "AT-adhd-features-33"
+    case `aTAdhdFeatures34` = "AT-adhd-features-34"
+    case `aTAdhdFeatures35` = "AT-adhd-features-35"
+    case `aTAdhdFeatures36` = "AT-adhd-features-36"
+    case `aTAdhdFeatures37` = "AT-adhd-features-37"
+    case `aTAdhdFeatures38` = "AT-adhd-features-38"
+    case `aTAdhdFeatures5` = "AT-adhd-features-5"
+    case `aTAdhdFeatures62` = "AT-adhd-features-62"
+    case `aTAdhdFeatures64` = "AT-adhd-features-64"
+    case `aTAdhdFeatures66` = "AT-adhd-features-66"
+    case `aTAdhdFeatures67` = "AT-adhd-features-67"
+    case `aTAdhdFeatures78` = "AT-adhd-features-78"
+    case `aTAdhdFeatures79` = "AT-adhd-features-79"
+    case `aTAdhdFeatures81` = "AT-adhd-features-81"
+    case `aTAdhdFeatures82` = "AT-adhd-features-82"
+    case `aTAdhdFeatures84` = "AT-adhd-features-84"
+    case `aTAdhdFeatures87` = "AT-adhd-features-87"
+    case `aTAdhdFeatures88` = "AT-adhd-features-88"
+    case `aTAdhdFeatures89` = "AT-adhd-features-89"
+    case `aTAdhdFeatures90` = "AT-adhd-features-90"
+    case `aTAdhdFeatures91` = "AT-adhd-features-91"
+    case `aTAdhdFeatures92` = "AT-adhd-features-92"
+    case `aTAdhdFeatures94` = "AT-adhd-features-94"
+    case `aTAdhdFeatures95` = "AT-adhd-features-95"
+    case `aTAttention2` = "AT-attention-2"
+    case `aTAttention21` = "AT-attention-21"
+    case `aTAttention28` = "AT-attention-28"
+    case `aTAttention3` = "AT-attention-3"
+    case `aTAttention35` = "AT-attention-35"
+    case `aTAttention43` = "AT-attention-43"
+    case `aTAttention50` = "AT-attention-50"
+    case `aTAttention51` = "AT-attention-51"
+    case `aTAttention52` = "AT-attention-52"
+    case `aTAttention53` = "AT-attention-53"
+    case `aTAttention54` = "AT-attention-54"
+    case `aTAttention55` = "AT-attention-55"
+    case `aTAttention56` = "AT-attention-56"
+    case `aTAttention57` = "AT-attention-57"
+    case `aTAttention58` = "AT-attention-58"
+    case `aTAttention59` = "AT-attention-59"
+    case `aTAttention60` = "AT-attention-60"
+    case `aTAttention61` = "AT-attention-61"
+    case `aTAttention62` = "AT-attention-62"
+    case `aTAttention63` = "AT-attention-63"
+    case `aTAttention64` = "AT-attention-64"
+    case `aTAttention65` = "AT-attention-65"
+    case `aTAttention66` = "AT-attention-66"
+    case `aTAttention67` = "AT-attention-67"
+    case `aTAttention68` = "AT-attention-68"
+    case `aTAttention70` = "AT-attention-70"
+    case `aTAttention72` = "AT-attention-72"
+    case `aTAttention75` = "AT-attention-75"
+    case `aTAttention76` = "AT-attention-76"
+    case `aTAttention77` = "AT-attention-77"
+    case `aTAttention78` = "AT-attention-78"
+    case `aTAttention89` = "AT-attention-89"
+    case `aTAttention90` = "AT-attention-90"
+    case `aTAuthority10` = "AT-authority-10"
+    case `aTAuthority11` = "AT-authority-11"
+    case `aTAuthority12` = "AT-authority-12"
+    case `aTAuthority29` = "AT-authority-29"
+    case `aTAuthority31` = "AT-authority-31"
+    case `aTAuthority32` = "AT-authority-32"
+    case `aTAuthority34` = "AT-authority-34"
+    case `aTAuthority35` = "AT-authority-35"
+    case `aTAuthority36` = "AT-authority-36"
+    case `aTAuthority37` = "AT-authority-37"
+    case `aTAuthority39` = "AT-authority-39"
+    case `aTAuthority40` = "AT-authority-40"
+    case `aTAuthority41` = "AT-authority-41"
+    case `aTAuthority42` = "AT-authority-42"
+    case `aTAuthority43` = "AT-authority-43"
+    case `aTAuthority44` = "AT-authority-44"
+    case `aTAuthority45` = "AT-authority-45"
+    case `aTAuthority48` = "AT-authority-48"
+    case `aTAuthority49` = "AT-authority-49"
+    case `aTAuthority57` = "AT-authority-57"
+    case `aTAuthority59` = "AT-authority-59"
+    case `aTAuthority60` = "AT-authority-60"
+    case `aTAuthority61` = "AT-authority-61"
+    case `aTAuthority69` = "AT-authority-69"
+    case `aTAuthority70` = "AT-authority-70"
+    case `aTAuthority71` = "AT-authority-71"
+    case `aTAuthority73` = "AT-authority-73"
+    case `aTAuthority74` = "AT-authority-74"
+    case `aTAuthority77` = "AT-authority-77"
+    case `aTAuthority78` = "AT-authority-78"
+    case `aTAuthority8` = "AT-authority-8"
+    case `aTCli1` = "AT-cli-1"
+    case `aTCli10` = "AT-cli-10"
+    case `aTCli11` = "AT-cli-11"
+    case `aTCli12` = "AT-cli-12"
+    case `aTCli13` = "AT-cli-13"
+    case `aTCli14` = "AT-cli-14"
+    case `aTCli15` = "AT-cli-15"
+    case `aTCli16` = "AT-cli-16"
+    case `aTCli17` = "AT-cli-17"
+    case `aTCli18` = "AT-cli-18"
+    case `aTCli19` = "AT-cli-19"
+    case `aTCli2` = "AT-cli-2"
+    case `aTCli20` = "AT-cli-20"
+    case `aTCli21` = "AT-cli-21"
+    case `aTCli22` = "AT-cli-22"
+    case `aTCli23` = "AT-cli-23"
+    case `aTCli24` = "AT-cli-24"
+    case `aTCli25` = "AT-cli-25"
+    case `aTCli26` = "AT-cli-26"
+    case `aTCli27` = "AT-cli-27"
+    case `aTCli28` = "AT-cli-28"
+    case `aTCli29` = "AT-cli-29"
+    case `aTCli3` = "AT-cli-3"
+    case `aTCli30` = "AT-cli-30"
+    case `aTCli31` = "AT-cli-31"
+    case `aTCli32` = "AT-cli-32"
+    case `aTCli33` = "AT-cli-33"
+    case `aTCli34` = "AT-cli-34"
+    case `aTCli35` = "AT-cli-35"
+    case `aTCli36` = "AT-cli-36"
+    case `aTCli37` = "AT-cli-37"
+    case `aTCli38` = "AT-cli-38"
+    case `aTCli4` = "AT-cli-4"
+    case `aTCli5` = "AT-cli-5"
+    case `aTCli6` = "AT-cli-6"
+    case `aTCli7` = "AT-cli-7"
+    case `aTCli8` = "AT-cli-8"
+    case `aTCli9` = "AT-cli-9"
+    case `aTClientApps14` = "AT-client-apps-14"
+    case `aTClientApps16` = "AT-client-apps-16"
+    case `aTClientApps21` = "AT-client-apps-21"
+    case `aTClientApps22` = "AT-client-apps-22"
+    case `aTClientApps23` = "AT-client-apps-23"
+    case `aTClientApps26` = "AT-client-apps-26"
+    case `aTClientApps28` = "AT-client-apps-28"
+    case `aTClientApps29` = "AT-client-apps-29"
+    case `aTClientApps3` = "AT-client-apps-3"
+    case `aTClientApps30` = "AT-client-apps-30"
+    case `aTClientApps31` = "AT-client-apps-31"
+    case `aTClientApps32` = "AT-client-apps-32"
+    case `aTClientApps33` = "AT-client-apps-33"
+    case `aTClientApps41` = "AT-client-apps-41"
+    case `aTClientApps42` = "AT-client-apps-42"
+    case `aTClientApps43` = "AT-client-apps-43"
+    case `aTClientApps44` = "AT-client-apps-44"
+    case `aTClientApps45` = "AT-client-apps-45"
+    case `aTClientApps46` = "AT-client-apps-46"
+    case `aTClientApps47` = "AT-client-apps-47"
+    case `aTClientApps48` = "AT-client-apps-48"
+    case `aTClientApps49` = "AT-client-apps-49"
+    case `aTClientApps5` = "AT-client-apps-5"
+    case `aTClientApps50` = "AT-client-apps-50"
+    case `aTClientApps54` = "AT-client-apps-54"
+    case `aTClientApps57` = "AT-client-apps-57"
+    case `aTClientApps65` = "AT-client-apps-65"
+    case `aTClientApps68` = "AT-client-apps-68"
+    case `aTClientApps69` = "AT-client-apps-69"
+    case `aTClientApps72` = "AT-client-apps-72"
+    case `aTClientApps73` = "AT-client-apps-73"
+    case `aTClientApps74` = "AT-client-apps-74"
+    case `aTClientApps75` = "AT-client-apps-75"
+    case `aTClientApps78` = "AT-client-apps-78"
+    case `aTClientApps79` = "AT-client-apps-79"
+    case `aTHands1` = "AT-hands-1"
+    case `aTHands10` = "AT-hands-10"
+    case `aTHands11` = "AT-hands-11"
+    case `aTHands12` = "AT-hands-12"
+    case `aTHands13` = "AT-hands-13"
+    case `aTHands14` = "AT-hands-14"
+    case `aTHands15` = "AT-hands-15"
+    case `aTHands17` = "AT-hands-17"
+    case `aTHands2` = "AT-hands-2"
+    case `aTHands24` = "AT-hands-24"
+    case `aTHands25` = "AT-hands-25"
+    case `aTHands3` = "AT-hands-3"
+    case `aTHands32` = "AT-hands-32"
+    case `aTHands33` = "AT-hands-33"
+    case `aTHands34` = "AT-hands-34"
+    case `aTHands35` = "AT-hands-35"
+    case `aTHands36` = "AT-hands-36"
+    case `aTHands37` = "AT-hands-37"
+    case `aTHands38` = "AT-hands-38"
+    case `aTHands39` = "AT-hands-39"
+    case `aTHands4` = "AT-hands-4"
+    case `aTHands40` = "AT-hands-40"
+    case `aTHands41` = "AT-hands-41"
+    case `aTHands42` = "AT-hands-42"
+    case `aTHands43` = "AT-hands-43"
+    case `aTHands45` = "AT-hands-45"
+    case `aTHands49` = "AT-hands-49"
+    case `aTHands5` = "AT-hands-5"
+    case `aTHands51` = "AT-hands-51"
+    case `aTHands52` = "AT-hands-52"
+    case `aTHands53` = "AT-hands-53"
+    case `aTHands54` = "AT-hands-54"
+    case `aTHands55` = "AT-hands-55"
+    case `aTHands56` = "AT-hands-56"
+    case `aTHands57` = "AT-hands-57"
+    case `aTHands59` = "AT-hands-59"
+    case `aTHands6` = "AT-hands-6"
+    case `aTHands60` = "AT-hands-60"
+    case `aTHands61` = "AT-hands-61"
+    case `aTHands62` = "AT-hands-62"
+    case `aTHands63` = "AT-hands-63"
+    case `aTHands64` = "AT-hands-64"
+    case `aTHands65` = "AT-hands-65"
+    case `aTHands66` = "AT-hands-66"
+    case `aTHands7` = "AT-hands-7"
+    case `aTHands70` = "AT-hands-70"
+    case `aTHands72` = "AT-hands-72"
+    case `aTHands73` = "AT-hands-73"
+    case `aTHands74` = "AT-hands-74"
+    case `aTHands75` = "AT-hands-75"
+    case `aTHands77` = "AT-hands-77"
+    case `aTHands78` = "AT-hands-78"
+    case `aTHands79` = "AT-hands-79"
+    case `aTHands8` = "AT-hands-8"
+    case `aTHands80` = "AT-hands-80"
+    case `aTHands81` = "AT-hands-81"
+    case `aTHands83` = "AT-hands-83"
+    case `aTHands84` = "AT-hands-84"
+    case `aTHands85` = "AT-hands-85"
+    case `aTHands86` = "AT-hands-86"
+    case `aTHands9` = "AT-hands-9"
+    case `aTHermesConfig1` = "AT-hermes-config-1"
+    case `aTHermesConfig100` = "AT-hermes-config-100"
+    case `aTHermesConfig101` = "AT-hermes-config-101"
+    case `aTHermesConfig102` = "AT-hermes-config-102"
+    case `aTHermesConfig103` = "AT-hermes-config-103"
+    case `aTHermesConfig12` = "AT-hermes-config-12"
+    case `aTHermesConfig15` = "AT-hermes-config-15"
+    case `aTHermesConfig16` = "AT-hermes-config-16"
+    case `aTHermesConfig19` = "AT-hermes-config-19"
+    case `aTHermesConfig25` = "AT-hermes-config-25"
+    case `aTHermesConfig27` = "AT-hermes-config-27"
+    case `aTHermesConfig28` = "AT-hermes-config-28"
+    case `aTHermesConfig29` = "AT-hermes-config-29"
+    case `aTHermesConfig31` = "AT-hermes-config-31"
+    case `aTHermesConfig33` = "AT-hermes-config-33"
+    case `aTHermesConfig34` = "AT-hermes-config-34"
+    case `aTHermesConfig35` = "AT-hermes-config-35"
+    case `aTHermesConfig36` = "AT-hermes-config-36"
+    case `aTHermesConfig37` = "AT-hermes-config-37"
+    case `aTHermesConfig38` = "AT-hermes-config-38"
+    case `aTHermesConfig39` = "AT-hermes-config-39"
+    case `aTHermesConfig40` = "AT-hermes-config-40"
+    case `aTHermesConfig42` = "AT-hermes-config-42"
+    case `aTHermesConfig43` = "AT-hermes-config-43"
+    case `aTHermesConfig48` = "AT-hermes-config-48"
+    case `aTHermesConfig49` = "AT-hermes-config-49"
+    case `aTHermesConfig50` = "AT-hermes-config-50"
+    case `aTHermesConfig53` = "AT-hermes-config-53"
+    case `aTHermesConfig59` = "AT-hermes-config-59"
+    case `aTHermesConfig60` = "AT-hermes-config-60"
+    case `aTHermesConfig61` = "AT-hermes-config-61"
+    case `aTHermesConfig65` = "AT-hermes-config-65"
+    case `aTHermesConfig68` = "AT-hermes-config-68"
+    case `aTHermesConfig69` = "AT-hermes-config-69"
+    case `aTHermesConfig75` = "AT-hermes-config-75"
+    case `aTHermesConfig76` = "AT-hermes-config-76"
+    case `aTHermesConfig77` = "AT-hermes-config-77"
+    case `aTHermesConfig78` = "AT-hermes-config-78"
+    case `aTHermesConfig79` = "AT-hermes-config-79"
+    case `aTHermesConfig80` = "AT-hermes-config-80"
+    case `aTHermesConfig81` = "AT-hermes-config-81"
+    case `aTHermesConfig82` = "AT-hermes-config-82"
+    case `aTHermesConfig83` = "AT-hermes-config-83"
+    case `aTHermesConfig84` = "AT-hermes-config-84"
+    case `aTHermesConfig85` = "AT-hermes-config-85"
+    case `aTHermesConfig86` = "AT-hermes-config-86"
+    case `aTHermesConfig87` = "AT-hermes-config-87"
+    case `aTHermesConfig88` = "AT-hermes-config-88"
+    case `aTHermesConfig89` = "AT-hermes-config-89"
+    case `aTHermesConfig90` = "AT-hermes-config-90"
+    case `aTHermesConfig91` = "AT-hermes-config-91"
+    case `aTHermesConfig92` = "AT-hermes-config-92"
+    case `aTHermesConfig93` = "AT-hermes-config-93"
+    case `aTHermesConfig94` = "AT-hermes-config-94"
+    case `aTHermesConfig95` = "AT-hermes-config-95"
+    case `aTHermesConfig96` = "AT-hermes-config-96"
+    case `aTHermesConfig97` = "AT-hermes-config-97"
+    case `aTHermesConfig98` = "AT-hermes-config-98"
+    case `aTHermesConfig99` = "AT-hermes-config-99"
+    case `aTLifestore15` = "AT-lifestore-15"
+    case `aTLifestore16` = "AT-lifestore-16"
+    case `aTLifestore17` = "AT-lifestore-17"
+    case `aTLifestore2` = "AT-lifestore-2"
+    case `aTLifestore20` = "AT-lifestore-20"
+    case `aTLifestore21` = "AT-lifestore-21"
+    case `aTLifestore23` = "AT-lifestore-23"
+    case `aTLifestore24` = "AT-lifestore-24"
+    case `aTLifestore25` = "AT-lifestore-25"
+    case `aTLifestore26` = "AT-lifestore-26"
+    case `aTLifestore27` = "AT-lifestore-27"
+    case `aTLifestore3` = "AT-lifestore-3"
+    case `aTLifestore34` = "AT-lifestore-34"
+    case `aTLifestore37` = "AT-lifestore-37"
+    case `aTLifestore38` = "AT-lifestore-38"
+    case `aTLifestore39` = "AT-lifestore-39"
+    case `aTLifestore40` = "AT-lifestore-40"
+    case `aTLifestore41` = "AT-lifestore-41"
+    case `aTLifestore43` = "AT-lifestore-43"
+    case `aTLifestore44` = "AT-lifestore-44"
+    case `aTLifestore45` = "AT-lifestore-45"
+    case `aTLifestore47` = "AT-lifestore-47"
+    case `aTLifestore48` = "AT-lifestore-48"
+    case `aTLifestore49` = "AT-lifestore-49"
+    case `aTLifestore50` = "AT-lifestore-50"
+    case `aTLifestore51` = "AT-lifestore-51"
+    case `aTLifestore52` = "AT-lifestore-52"
+    case `aTLifestore53` = "AT-lifestore-53"
+    case `aTLifestore54` = "AT-lifestore-54"
+    case `aTLifestore55` = "AT-lifestore-55"
+    case `aTLifestore56` = "AT-lifestore-56"
+    case `aTLifestore61` = "AT-lifestore-61"
+    case `aTLifestore62` = "AT-lifestore-62"
+    case `aTLifestore63` = "AT-lifestore-63"
+    case `aTLifestore64` = "AT-lifestore-64"
+    case `aTLifestore65` = "AT-lifestore-65"
+    case `aTLifestore66` = "AT-lifestore-66"
+    case `aTLifestore67` = "AT-lifestore-67"
+    case `aTLifestore70` = "AT-lifestore-70"
+    case `aTLifestore71` = "AT-lifestore-71"
+    case `aTLifestore72` = "AT-lifestore-72"
+    case `aTLifestore73` = "AT-lifestore-73"
+    case `aTLifestore74` = "AT-lifestore-74"
+    case `aTObligations100` = "AT-obligations-100"
+    case `aTObligations101` = "AT-obligations-101"
+    case `aTObligations18` = "AT-obligations-18"
+    case `aTObligations19` = "AT-obligations-19"
+    case `aTObligations22` = "AT-obligations-22"
+    case `aTObligations26` = "AT-obligations-26"
+    case `aTObligations27` = "AT-obligations-27"
+    case `aTObligations28` = "AT-obligations-28"
+    case `aTObligations3` = "AT-obligations-3"
+    case `aTObligations4` = "AT-obligations-4"
+    case `aTObligations5` = "AT-obligations-5"
+    case `aTObligations50` = "AT-obligations-50"
+    case `aTObligations51` = "AT-obligations-51"
+    case `aTObligations52` = "AT-obligations-52"
+    case `aTObligations53` = "AT-obligations-53"
+    case `aTObligations54` = "AT-obligations-54"
+    case `aTObligations55` = "AT-obligations-55"
+    case `aTObligations56` = "AT-obligations-56"
+    case `aTObligations57` = "AT-obligations-57"
+    case `aTObligations58` = "AT-obligations-58"
+    case `aTObligations59` = "AT-obligations-59"
+    case `aTObligations60` = "AT-obligations-60"
+    case `aTObligations72` = "AT-obligations-72"
+    case `aTObligations73` = "AT-obligations-73"
+    case `aTObligations74` = "AT-obligations-74"
+    case `aTObligations75` = "AT-obligations-75"
+    case `aTObligations76` = "AT-obligations-76"
+    case `aTObligations82` = "AT-obligations-82"
+    case `aTObligations83` = "AT-obligations-83"
+    case `aTObligations86` = "AT-obligations-86"
+    case `aTObligations90` = "AT-obligations-90"
+    case `aTObligations92` = "AT-obligations-92"
+    case `aTObligations93` = "AT-obligations-93"
+    case `aTObligations95` = "AT-obligations-95"
+    case `aTObligations99` = "AT-obligations-99"
+    case `aTOps1` = "AT-ops-1"
+    case `aTOps10` = "AT-ops-10"
+    case `aTOps11` = "AT-ops-11"
+    case `aTOps12` = "AT-ops-12"
+    case `aTOps13` = "AT-ops-13"
+    case `aTOps14` = "AT-ops-14"
+    case `aTOps15` = "AT-ops-15"
+    case `aTOps16` = "AT-ops-16"
+    case `aTOps17` = "AT-ops-17"
+    case `aTOps18` = "AT-ops-18"
+    case `aTOps19` = "AT-ops-19"
+    case `aTOps2` = "AT-ops-2"
+    case `aTOps20` = "AT-ops-20"
+    case `aTOps21` = "AT-ops-21"
+    case `aTOps22` = "AT-ops-22"
+    case `aTOps23` = "AT-ops-23"
+    case `aTOps24` = "AT-ops-24"
+    case `aTOps25` = "AT-ops-25"
+    case `aTOps27` = "AT-ops-27"
+    case `aTOps29` = "AT-ops-29"
+    case `aTOps30` = "AT-ops-30"
+    case `aTOps31` = "AT-ops-31"
+    case `aTOps33` = "AT-ops-33"
+    case `aTOps34` = "AT-ops-34"
+    case `aTOps35` = "AT-ops-35"
+    case `aTOps36` = "AT-ops-36"
+    case `aTOps37` = "AT-ops-37"
+    case `aTOps38` = "AT-ops-38"
+    case `aTOps39` = "AT-ops-39"
+    case `aTOps40` = "AT-ops-40"
+    case `aTOps41` = "AT-ops-41"
+    case `aTOps42` = "AT-ops-42"
+    case `aTOps43` = "AT-ops-43"
+    case `aTOps44` = "AT-ops-44"
+    case `aTOps45` = "AT-ops-45"
+    case `aTOps46` = "AT-ops-46"
+    case `aTOps47` = "AT-ops-47"
+    case `aTOps49` = "AT-ops-49"
+    case `aTOps5` = "AT-ops-5"
+    case `aTOps50` = "AT-ops-50"
+    case `aTOps51` = "AT-ops-51"
+    case `aTOps52` = "AT-ops-52"
+    case `aTOps53` = "AT-ops-53"
+    case `aTOps54` = "AT-ops-54"
+    case `aTOps55` = "AT-ops-55"
+    case `aTOps56` = "AT-ops-56"
+    case `aTOps57` = "AT-ops-57"
+    case `aTOps58` = "AT-ops-58"
+    case `aTOps59` = "AT-ops-59"
+    case `aTOps60` = "AT-ops-60"
+    case `aTOps61` = "AT-ops-61"
+    case `aTOps62` = "AT-ops-62"
+    case `aTOps63` = "AT-ops-63"
+    case `aTOps64` = "AT-ops-64"
+    case `aTOps66` = "AT-ops-66"
+    case `aTOps69` = "AT-ops-69"
+    case `aTOps70` = "AT-ops-70"
+    case `aTOps71` = "AT-ops-71"
+    case `aTOps72` = "AT-ops-72"
+    case `aTOps73` = "AT-ops-73"
+    case `aTOps74` = "AT-ops-74"
+    case `aTOps75` = "AT-ops-75"
+    case `aTOps76` = "AT-ops-76"
+    case `aTOps77` = "AT-ops-77"
+    case `aTOps78` = "AT-ops-78"
+    case `aTOps79` = "AT-ops-79"
+    case `aTOps80` = "AT-ops-80"
+    case `aTOps81` = "AT-ops-81"
+    case `aTOps82` = "AT-ops-82"
+    case `aTOps84` = "AT-ops-84"
+    case `aTOps85` = "AT-ops-85"
+    case `aTOps86` = "AT-ops-86"
+    case `aTOps9` = "AT-ops-9"
+    case `aTRESEARCHREGISTER1` = "AT-RESEARCH-REGISTER-1"
+    case `aTRESEARCHREGISTER10` = "AT-RESEARCH-REGISTER-10"
+    case `aTRESEARCHREGISTER11` = "AT-RESEARCH-REGISTER-11"
+    case `aTRESEARCHREGISTER12` = "AT-RESEARCH-REGISTER-12"
+    case `aTRESEARCHREGISTER14` = "AT-RESEARCH-REGISTER-14"
+    case `aTRESEARCHREGISTER17` = "AT-RESEARCH-REGISTER-17"
+    case `aTRESEARCHREGISTER2` = "AT-RESEARCH-REGISTER-2"
+    case `aTRESEARCHREGISTER20` = "AT-RESEARCH-REGISTER-20"
+    case `aTRESEARCHREGISTER21` = "AT-RESEARCH-REGISTER-21"
+    case `aTRESEARCHREGISTER22` = "AT-RESEARCH-REGISTER-22"
+    case `aTRESEARCHREGISTER23` = "AT-RESEARCH-REGISTER-23"
+    case `aTRESEARCHREGISTER3` = "AT-RESEARCH-REGISTER-3"
+    case `aTRESEARCHREGISTER4` = "AT-RESEARCH-REGISTER-4"
+    case `aTRESEARCHREGISTER6` = "AT-RESEARCH-REGISTER-6"
+    case `aTRESEARCHREGISTER7` = "AT-RESEARCH-REGISTER-7"
+    case `aTRESEARCHREGISTER8` = "AT-RESEARCH-REGISTER-8"
+    case `aTSelfImprovement11` = "AT-self-improvement-11"
+    case `aTSelfImprovement13` = "AT-self-improvement-13"
+    case `aTSelfImprovement15` = "AT-self-improvement-15"
+    case `aTSelfImprovement16` = "AT-self-improvement-16"
+    case `aTSelfImprovement18` = "AT-self-improvement-18"
+    case `aTSelfImprovement19` = "AT-self-improvement-19"
+    case `aTSelfImprovement20` = "AT-self-improvement-20"
+    case `aTSelfImprovement21` = "AT-self-improvement-21"
+    case `aTSelfImprovement22` = "AT-self-improvement-22"
+    case `aTSelfImprovement23` = "AT-self-improvement-23"
+    case `aTSelfImprovement24` = "AT-self-improvement-24"
+    case `aTSelfImprovement36` = "AT-self-improvement-36"
+    case `aTSelfImprovement37` = "AT-self-improvement-37"
+    case `aTSelfImprovement38` = "AT-self-improvement-38"
+    case `aTSelfImprovement39` = "AT-self-improvement-39"
+    case `aTSelfImprovement40` = "AT-self-improvement-40"
+    case `aTSelfImprovement41` = "AT-self-improvement-41"
+    case `aTSelfImprovement42` = "AT-self-improvement-42"
+    case `aTSelfImprovement43` = "AT-self-improvement-43"
+    case `aTSelfImprovement44` = "AT-self-improvement-44"
+    case `aTSelfImprovement45` = "AT-self-improvement-45"
+    case `aTSelfImprovement46` = "AT-self-improvement-46"
+    case `aTSelfImprovement49` = "AT-self-improvement-49"
+    case `aTSelfImprovement50` = "AT-self-improvement-50"
+    case `aTSelfImprovement53` = "AT-self-improvement-53"
+    case `aTSelfImprovement54` = "AT-self-improvement-54"
+    case `aTSelfImprovement55` = "AT-self-improvement-55"
+    case `aTSelfImprovement56` = "AT-self-improvement-56"
+    case `aTSelfImprovement57` = "AT-self-improvement-57"
+    case `aTSelfImprovement58` = "AT-self-improvement-58"
+    case `aTSelfImprovement59` = "AT-self-improvement-59"
+    case `aTSelfImprovement60` = "AT-self-improvement-60"
+    case `aTSelfImprovement61` = "AT-self-improvement-61"
+    case `aTSelfImprovement65` = "AT-self-improvement-65"
+    case `aTSelfImprovement68` = "AT-self-improvement-68"
+    case `aTSelfImprovement69` = "AT-self-improvement-69"
+    case `aTSelfImprovement70` = "AT-self-improvement-70"
+    case `aTSelfImprovement71` = "AT-self-improvement-71"
+    case `aTSelfImprovement72` = "AT-self-improvement-72"
+    case `aTSelfImprovement74` = "AT-self-improvement-74"
+    case `aTSelfImprovement75` = "AT-self-improvement-75"
+    case `aTSelfImprovement77` = "AT-self-improvement-77"
+    case `aTSelfImprovement78` = "AT-self-improvement-78"
+    case `aTSelfImprovement79` = "AT-self-improvement-79"
+    case `aTSelfImprovement80` = "AT-self-improvement-80"
+    case `aTSelfImprovement81` = "AT-self-improvement-81"
+    case `aTSelfImprovement83` = "AT-self-improvement-83"
+    case `aTSelfImprovement86` = "AT-self-improvement-86"
+    case `aTSelfImprovement88` = "AT-self-improvement-88"
+    case `aTSelfImprovement89` = "AT-self-improvement-89"
+    case `aTSelfImprovement91` = "AT-self-improvement-91"
+    case `aTSelfImprovement95` = "AT-self-improvement-95"
+    case `aTSelfImprovement96` = "AT-self-improvement-96"
+    case `aTSelfImprovement97` = "AT-self-improvement-97"
+    case `aTSelfImprovement98` = "AT-self-improvement-98"
+    case `aTSources113` = "AT-sources-113"
+    case `aTSources114` = "AT-sources-114"
+    case `aTSources124` = "AT-sources-124"
+    case `aTSources128` = "AT-sources-128"
+    case `aTSources130` = "AT-sources-130"
+    case `aTSources132` = "AT-sources-132"
+    case `aTSources138` = "AT-sources-138"
+    case `aTSources143` = "AT-sources-143"
+    case `aTSources150` = "AT-sources-150"
+    case `aTSources153` = "AT-sources-153"
+    case `aTSources159` = "AT-sources-159"
+    case `aTSources163` = "AT-sources-163"
+    case `aTSources164` = "AT-sources-164"
+    case `aTSources165` = "AT-sources-165"
+    case `aTSources166` = "AT-sources-166"
+    case `aTSources167` = "AT-sources-167"
+    case `aTSources168` = "AT-sources-168"
+    case `aTSources169` = "AT-sources-169"
+    case `aTSources170` = "AT-sources-170"
+    case `aTSources171` = "AT-sources-171"
+    case `aTSources172` = "AT-sources-172"
+    case `aTSources173` = "AT-sources-173"
+    case `aTSources174` = "AT-sources-174"
+    case `aTSources175` = "AT-sources-175"
+    case `aTSources176` = "AT-sources-176"
+    case `aTSources177` = "AT-sources-177"
+    case `aTSources178` = "AT-sources-178"
+    case `aTSources188` = "AT-sources-188"
+    case `aTSources189` = "AT-sources-189"
+    case `aTSources190` = "AT-sources-190"
+    case `aTSources191` = "AT-sources-191"
+    case `aTSources192` = "AT-sources-192"
+    case `aTSources193` = "AT-sources-193"
+    case `aTSources194` = "AT-sources-194"
+    case `aTSources195` = "AT-sources-195"
+    case `aTSources196` = "AT-sources-196"
+    case `aTSources197` = "AT-sources-197"
+    case `aTSources203` = "AT-sources-203"
+    case `aTSources205` = "AT-sources-205"
+    case `aTSources206` = "AT-sources-206"
+    case `aTSources208` = "AT-sources-208"
+    case `aTSources209` = "AT-sources-209"
+    case `aTSources210` = "AT-sources-210"
+    case `aTSources213` = "AT-sources-213"
+    case `aTSources216` = "AT-sources-216"
+    case `aTSources219` = "AT-sources-219"
+    case `aTSources25` = "AT-sources-25"
+    case `aTSources26` = "AT-sources-26"
+    case `aTSources27` = "AT-sources-27"
+    case `aTSources31` = "AT-sources-31"
+    case `aTSources32` = "AT-sources-32"
+    case `aTSources33` = "AT-sources-33"
+    case `aTSources36` = "AT-sources-36"
+    case `aTSources40` = "AT-sources-40"
+    case `aTSources41` = "AT-sources-41"
+    case `aTSources54` = "AT-sources-54"
+    case `aTSources77` = "AT-sources-77"
+    case `aTSources90` = "AT-sources-90"
+    case `aTSources92` = "AT-sources-92"
+    case `aTSources96` = "AT-sources-96"
+    case `aTSources97` = "AT-sources-97"
+    case `aTUserSim53` = "AT-user-sim-53"
+    case `aTUserSim54` = "AT-user-sim-54"
+    case `aTUserSim55` = "AT-user-sim-55"
+    case `aTUserSim56` = "AT-user-sim-56"
+    case `aTUserSim60` = "AT-user-sim-60"
+    case `aTUserSim66` = "AT-user-sim-66"
+    case `aTUserSim67` = "AT-user-sim-67"
+    case `aTUserSim68` = "AT-user-sim-68"
+    case `aTUserSim69` = "AT-user-sim-69"
+    case `aTUserSim71` = "AT-user-sim-71"
+    case `aTUserSim72` = "AT-user-sim-72"
+    case `aTUserSim73` = "AT-user-sim-73"
+    case `aTUserSim75` = "AT-user-sim-75"
+    case `aTUserSim77` = "AT-user-sim-77"
+    case `aTUserSim79` = "AT-user-sim-79"
+    case `aTWorkflows1` = "AT-workflows-1"
+    case `aTWorkflows10` = "AT-workflows-10"
+    case `aTWorkflows11` = "AT-workflows-11"
+    case `aTWorkflows2` = "AT-workflows-2"
+    case `aTWorkflows49` = "AT-workflows-49"
+    case `aTWorkflows50` = "AT-workflows-50"
+    case `aTWorkflows58` = "AT-workflows-58"
+}
+
+public struct ArtifactBindingV1: Codable, Sendable {
+    public let `releaseDigest`: Digest
+    public let `controlDigest`: Digest
+    public let `schemaDigest`: Digest
+    public let `fixtureDigest`: Optional<Digest>
+    public init(`releaseDigest`: Digest, `controlDigest`: Digest, `schemaDigest`: Digest, `fixtureDigest`: Optional<Digest>) {
+        self.`releaseDigest` = `releaseDigest`
+        self.`controlDigest` = `controlDigest`
+        self.`schemaDigest` = `schemaDigest`
+        self.`fixtureDigest` = `fixtureDigest`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["releaseDigest", "controlDigest", "schemaDigest", "fixtureDigest"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`releaseDigest` = try container.decode(Digest.self, forKey: ToyCodingKey("releaseDigest"))
+        self.`controlDigest` = try container.decode(Digest.self, forKey: ToyCodingKey("controlDigest"))
+        self.`schemaDigest` = try container.decode(Digest.self, forKey: ToyCodingKey("schemaDigest"))
+        self.`fixtureDigest` = try container.decode(Optional<Digest>.self, forKey: ToyCodingKey("fixtureDigest"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`releaseDigest`, forKey: ToyCodingKey("releaseDigest"))
+        try container.encode(`controlDigest`, forKey: ToyCodingKey("controlDigest"))
+        try container.encode(`schemaDigest`, forKey: ToyCodingKey("schemaDigest"))
+        try container.encode(`fixtureDigest`, forKey: ToyCodingKey("fixtureDigest"))
+    }
+}
+
+public struct CliProbeShowResult: Codable, Sendable {
+    public let `schemaVersion`: CliHelpV1CompatibilityWireVersionsItem
+    public let `commandId`: CliProbeShowResultCommandId
+    public let `invocationId`: UUID
+    public let `generatedAt`: Instant
+    public let `cliVersion`: CliVersionV1CliVersion
+    public let `contractsVersion`: CliVersionV1CliVersion
+    public let `schemaDigest`: Digest
+    public let `environment`: CliEnvironment
+    public let `meta`: CliMetadata
+    public let `ok`: CliHelpResultOk
+    public let `data`: RegisteredProbeOperationV1
+    public init(`schemaVersion`: CliHelpV1CompatibilityWireVersionsItem, `commandId`: CliProbeShowResultCommandId, `invocationId`: UUID, `generatedAt`: Instant, `cliVersion`: CliVersionV1CliVersion, `contractsVersion`: CliVersionV1CliVersion, `schemaDigest`: Digest, `environment`: CliEnvironment, `meta`: CliMetadata, `ok`: CliHelpResultOk, `data`: RegisteredProbeOperationV1) {
+        self.`schemaVersion` = `schemaVersion`
+        self.`commandId` = `commandId`
+        self.`invocationId` = `invocationId`
+        self.`generatedAt` = `generatedAt`
+        self.`cliVersion` = `cliVersion`
+        self.`contractsVersion` = `contractsVersion`
+        self.`schemaDigest` = `schemaDigest`
+        self.`environment` = `environment`
+        self.`meta` = `meta`
+        self.`ok` = `ok`
+        self.`data` = `data`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["schemaVersion", "commandId", "invocationId", "generatedAt", "cliVersion", "contractsVersion", "schemaDigest", "environment", "meta", "ok", "data"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`schemaVersion` = try container.decode(CliHelpV1CompatibilityWireVersionsItem.self, forKey: ToyCodingKey("schemaVersion"))
+        self.`commandId` = try container.decode(CliProbeShowResultCommandId.self, forKey: ToyCodingKey("commandId"))
+        self.`invocationId` = try container.decode(UUID.self, forKey: ToyCodingKey("invocationId"))
+        self.`generatedAt` = try container.decode(Instant.self, forKey: ToyCodingKey("generatedAt"))
+        self.`cliVersion` = try container.decode(CliVersionV1CliVersion.self, forKey: ToyCodingKey("cliVersion"))
+        self.`contractsVersion` = try container.decode(CliVersionV1CliVersion.self, forKey: ToyCodingKey("contractsVersion"))
+        self.`schemaDigest` = try container.decode(Digest.self, forKey: ToyCodingKey("schemaDigest"))
+        self.`environment` = try container.decode(CliEnvironment.self, forKey: ToyCodingKey("environment"))
+        self.`meta` = try container.decode(CliMetadata.self, forKey: ToyCodingKey("meta"))
+        self.`ok` = try container.decode(CliHelpResultOk.self, forKey: ToyCodingKey("ok"))
+        self.`data` = try container.decode(RegisteredProbeOperationV1.self, forKey: ToyCodingKey("data"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`schemaVersion`, forKey: ToyCodingKey("schemaVersion"))
+        try container.encode(`commandId`, forKey: ToyCodingKey("commandId"))
+        try container.encode(`invocationId`, forKey: ToyCodingKey("invocationId"))
+        try container.encode(`generatedAt`, forKey: ToyCodingKey("generatedAt"))
+        try container.encode(`cliVersion`, forKey: ToyCodingKey("cliVersion"))
+        try container.encode(`contractsVersion`, forKey: ToyCodingKey("contractsVersion"))
+        try container.encode(`schemaDigest`, forKey: ToyCodingKey("schemaDigest"))
+        try container.encode(`environment`, forKey: ToyCodingKey("environment"))
+        try container.encode(`meta`, forKey: ToyCodingKey("meta"))
+        try container.encode(`ok`, forKey: ToyCodingKey("ok"))
+        try container.encode(`data`, forKey: ToyCodingKey("data"))
+    }
+}
+
+public enum CliProbeShowResultCommandId: String, Codable, CaseIterable, Sendable {
+    case `probeShow` = "probe.show"
 }
 
 public struct CliHelpInput: Codable, Sendable {
@@ -3371,6 +5007,622 @@ public struct CliDoctorCommandResultVariant1: Codable, Sendable {
     }
 }
 
+public enum CliStackUpCommandResult: Codable, Sendable {
+    case variant0(CliStackUpResult)
+    case variant1(CliStackUpCommandResultVariant1)
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        if let value = try? container.decode(CliStackUpResult.self) { self = .variant0(value); return }
+        if let value = try? container.decode(CliStackUpCommandResultVariant1.self) { self = .variant1(value); return }
+        throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "No contract union member matched."))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.singleValueContainer()
+        switch self {
+        case .variant0(let value): try container.encode(value)
+        case .variant1(let value): try container.encode(value)
+        }
+    }
+}
+
+public struct CliStackUpCommandResultVariant1: Codable, Sendable {
+    public let `schemaVersion`: CliHelpV1CompatibilityWireVersionsItem
+    public let `commandId`: CliStackUpResultCommandId
+    public let `invocationId`: UUID
+    public let `generatedAt`: Instant
+    public let `cliVersion`: CliVersionV1CliVersion
+    public let `contractsVersion`: CliVersionV1CliVersion
+    public let `schemaDigest`: Digest
+    public let `environment`: CliEnvironment
+    public let `meta`: CliMetadata
+    public let `ok`: CliFailureOk
+    public let `error`: CliError
+    public init(`schemaVersion`: CliHelpV1CompatibilityWireVersionsItem, `commandId`: CliStackUpResultCommandId, `invocationId`: UUID, `generatedAt`: Instant, `cliVersion`: CliVersionV1CliVersion, `contractsVersion`: CliVersionV1CliVersion, `schemaDigest`: Digest, `environment`: CliEnvironment, `meta`: CliMetadata, `ok`: CliFailureOk, `error`: CliError) {
+        self.`schemaVersion` = `schemaVersion`
+        self.`commandId` = `commandId`
+        self.`invocationId` = `invocationId`
+        self.`generatedAt` = `generatedAt`
+        self.`cliVersion` = `cliVersion`
+        self.`contractsVersion` = `contractsVersion`
+        self.`schemaDigest` = `schemaDigest`
+        self.`environment` = `environment`
+        self.`meta` = `meta`
+        self.`ok` = `ok`
+        self.`error` = `error`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["schemaVersion", "commandId", "invocationId", "generatedAt", "cliVersion", "contractsVersion", "schemaDigest", "environment", "meta", "ok", "error"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`schemaVersion` = try container.decode(CliHelpV1CompatibilityWireVersionsItem.self, forKey: ToyCodingKey("schemaVersion"))
+        self.`commandId` = try container.decode(CliStackUpResultCommandId.self, forKey: ToyCodingKey("commandId"))
+        self.`invocationId` = try container.decode(UUID.self, forKey: ToyCodingKey("invocationId"))
+        self.`generatedAt` = try container.decode(Instant.self, forKey: ToyCodingKey("generatedAt"))
+        self.`cliVersion` = try container.decode(CliVersionV1CliVersion.self, forKey: ToyCodingKey("cliVersion"))
+        self.`contractsVersion` = try container.decode(CliVersionV1CliVersion.self, forKey: ToyCodingKey("contractsVersion"))
+        self.`schemaDigest` = try container.decode(Digest.self, forKey: ToyCodingKey("schemaDigest"))
+        self.`environment` = try container.decode(CliEnvironment.self, forKey: ToyCodingKey("environment"))
+        self.`meta` = try container.decode(CliMetadata.self, forKey: ToyCodingKey("meta"))
+        self.`ok` = try container.decode(CliFailureOk.self, forKey: ToyCodingKey("ok"))
+        self.`error` = try container.decode(CliError.self, forKey: ToyCodingKey("error"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`schemaVersion`, forKey: ToyCodingKey("schemaVersion"))
+        try container.encode(`commandId`, forKey: ToyCodingKey("commandId"))
+        try container.encode(`invocationId`, forKey: ToyCodingKey("invocationId"))
+        try container.encode(`generatedAt`, forKey: ToyCodingKey("generatedAt"))
+        try container.encode(`cliVersion`, forKey: ToyCodingKey("cliVersion"))
+        try container.encode(`contractsVersion`, forKey: ToyCodingKey("contractsVersion"))
+        try container.encode(`schemaDigest`, forKey: ToyCodingKey("schemaDigest"))
+        try container.encode(`environment`, forKey: ToyCodingKey("environment"))
+        try container.encode(`meta`, forKey: ToyCodingKey("meta"))
+        try container.encode(`ok`, forKey: ToyCodingKey("ok"))
+        try container.encode(`error`, forKey: ToyCodingKey("error"))
+    }
+}
+
+public enum CliStackDownCommandResult: Codable, Sendable {
+    case variant0(CliStackDownResult)
+    case variant1(CliStackDownCommandResultVariant1)
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        if let value = try? container.decode(CliStackDownResult.self) { self = .variant0(value); return }
+        if let value = try? container.decode(CliStackDownCommandResultVariant1.self) { self = .variant1(value); return }
+        throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "No contract union member matched."))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.singleValueContainer()
+        switch self {
+        case .variant0(let value): try container.encode(value)
+        case .variant1(let value): try container.encode(value)
+        }
+    }
+}
+
+public struct CliStackDownCommandResultVariant1: Codable, Sendable {
+    public let `schemaVersion`: CliHelpV1CompatibilityWireVersionsItem
+    public let `commandId`: CliStackDownResultCommandId
+    public let `invocationId`: UUID
+    public let `generatedAt`: Instant
+    public let `cliVersion`: CliVersionV1CliVersion
+    public let `contractsVersion`: CliVersionV1CliVersion
+    public let `schemaDigest`: Digest
+    public let `environment`: CliEnvironment
+    public let `meta`: CliMetadata
+    public let `ok`: CliFailureOk
+    public let `error`: CliError
+    public init(`schemaVersion`: CliHelpV1CompatibilityWireVersionsItem, `commandId`: CliStackDownResultCommandId, `invocationId`: UUID, `generatedAt`: Instant, `cliVersion`: CliVersionV1CliVersion, `contractsVersion`: CliVersionV1CliVersion, `schemaDigest`: Digest, `environment`: CliEnvironment, `meta`: CliMetadata, `ok`: CliFailureOk, `error`: CliError) {
+        self.`schemaVersion` = `schemaVersion`
+        self.`commandId` = `commandId`
+        self.`invocationId` = `invocationId`
+        self.`generatedAt` = `generatedAt`
+        self.`cliVersion` = `cliVersion`
+        self.`contractsVersion` = `contractsVersion`
+        self.`schemaDigest` = `schemaDigest`
+        self.`environment` = `environment`
+        self.`meta` = `meta`
+        self.`ok` = `ok`
+        self.`error` = `error`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["schemaVersion", "commandId", "invocationId", "generatedAt", "cliVersion", "contractsVersion", "schemaDigest", "environment", "meta", "ok", "error"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`schemaVersion` = try container.decode(CliHelpV1CompatibilityWireVersionsItem.self, forKey: ToyCodingKey("schemaVersion"))
+        self.`commandId` = try container.decode(CliStackDownResultCommandId.self, forKey: ToyCodingKey("commandId"))
+        self.`invocationId` = try container.decode(UUID.self, forKey: ToyCodingKey("invocationId"))
+        self.`generatedAt` = try container.decode(Instant.self, forKey: ToyCodingKey("generatedAt"))
+        self.`cliVersion` = try container.decode(CliVersionV1CliVersion.self, forKey: ToyCodingKey("cliVersion"))
+        self.`contractsVersion` = try container.decode(CliVersionV1CliVersion.self, forKey: ToyCodingKey("contractsVersion"))
+        self.`schemaDigest` = try container.decode(Digest.self, forKey: ToyCodingKey("schemaDigest"))
+        self.`environment` = try container.decode(CliEnvironment.self, forKey: ToyCodingKey("environment"))
+        self.`meta` = try container.decode(CliMetadata.self, forKey: ToyCodingKey("meta"))
+        self.`ok` = try container.decode(CliFailureOk.self, forKey: ToyCodingKey("ok"))
+        self.`error` = try container.decode(CliError.self, forKey: ToyCodingKey("error"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`schemaVersion`, forKey: ToyCodingKey("schemaVersion"))
+        try container.encode(`commandId`, forKey: ToyCodingKey("commandId"))
+        try container.encode(`invocationId`, forKey: ToyCodingKey("invocationId"))
+        try container.encode(`generatedAt`, forKey: ToyCodingKey("generatedAt"))
+        try container.encode(`cliVersion`, forKey: ToyCodingKey("cliVersion"))
+        try container.encode(`contractsVersion`, forKey: ToyCodingKey("contractsVersion"))
+        try container.encode(`schemaDigest`, forKey: ToyCodingKey("schemaDigest"))
+        try container.encode(`environment`, forKey: ToyCodingKey("environment"))
+        try container.encode(`meta`, forKey: ToyCodingKey("meta"))
+        try container.encode(`ok`, forKey: ToyCodingKey("ok"))
+        try container.encode(`error`, forKey: ToyCodingKey("error"))
+    }
+}
+
+public enum CliClockShowCommandResult: Codable, Sendable {
+    case variant0(CliClockShowResult)
+    case variant1(CliClockShowCommandResultVariant1)
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        if let value = try? container.decode(CliClockShowResult.self) { self = .variant0(value); return }
+        if let value = try? container.decode(CliClockShowCommandResultVariant1.self) { self = .variant1(value); return }
+        throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "No contract union member matched."))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.singleValueContainer()
+        switch self {
+        case .variant0(let value): try container.encode(value)
+        case .variant1(let value): try container.encode(value)
+        }
+    }
+}
+
+public struct CliClockShowCommandResultVariant1: Codable, Sendable {
+    public let `schemaVersion`: CliHelpV1CompatibilityWireVersionsItem
+    public let `commandId`: CliClockShowResultCommandId
+    public let `invocationId`: UUID
+    public let `generatedAt`: Instant
+    public let `cliVersion`: CliVersionV1CliVersion
+    public let `contractsVersion`: CliVersionV1CliVersion
+    public let `schemaDigest`: Digest
+    public let `environment`: CliEnvironment
+    public let `meta`: CliMetadata
+    public let `ok`: CliFailureOk
+    public let `error`: CliError
+    public init(`schemaVersion`: CliHelpV1CompatibilityWireVersionsItem, `commandId`: CliClockShowResultCommandId, `invocationId`: UUID, `generatedAt`: Instant, `cliVersion`: CliVersionV1CliVersion, `contractsVersion`: CliVersionV1CliVersion, `schemaDigest`: Digest, `environment`: CliEnvironment, `meta`: CliMetadata, `ok`: CliFailureOk, `error`: CliError) {
+        self.`schemaVersion` = `schemaVersion`
+        self.`commandId` = `commandId`
+        self.`invocationId` = `invocationId`
+        self.`generatedAt` = `generatedAt`
+        self.`cliVersion` = `cliVersion`
+        self.`contractsVersion` = `contractsVersion`
+        self.`schemaDigest` = `schemaDigest`
+        self.`environment` = `environment`
+        self.`meta` = `meta`
+        self.`ok` = `ok`
+        self.`error` = `error`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["schemaVersion", "commandId", "invocationId", "generatedAt", "cliVersion", "contractsVersion", "schemaDigest", "environment", "meta", "ok", "error"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`schemaVersion` = try container.decode(CliHelpV1CompatibilityWireVersionsItem.self, forKey: ToyCodingKey("schemaVersion"))
+        self.`commandId` = try container.decode(CliClockShowResultCommandId.self, forKey: ToyCodingKey("commandId"))
+        self.`invocationId` = try container.decode(UUID.self, forKey: ToyCodingKey("invocationId"))
+        self.`generatedAt` = try container.decode(Instant.self, forKey: ToyCodingKey("generatedAt"))
+        self.`cliVersion` = try container.decode(CliVersionV1CliVersion.self, forKey: ToyCodingKey("cliVersion"))
+        self.`contractsVersion` = try container.decode(CliVersionV1CliVersion.self, forKey: ToyCodingKey("contractsVersion"))
+        self.`schemaDigest` = try container.decode(Digest.self, forKey: ToyCodingKey("schemaDigest"))
+        self.`environment` = try container.decode(CliEnvironment.self, forKey: ToyCodingKey("environment"))
+        self.`meta` = try container.decode(CliMetadata.self, forKey: ToyCodingKey("meta"))
+        self.`ok` = try container.decode(CliFailureOk.self, forKey: ToyCodingKey("ok"))
+        self.`error` = try container.decode(CliError.self, forKey: ToyCodingKey("error"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`schemaVersion`, forKey: ToyCodingKey("schemaVersion"))
+        try container.encode(`commandId`, forKey: ToyCodingKey("commandId"))
+        try container.encode(`invocationId`, forKey: ToyCodingKey("invocationId"))
+        try container.encode(`generatedAt`, forKey: ToyCodingKey("generatedAt"))
+        try container.encode(`cliVersion`, forKey: ToyCodingKey("cliVersion"))
+        try container.encode(`contractsVersion`, forKey: ToyCodingKey("contractsVersion"))
+        try container.encode(`schemaDigest`, forKey: ToyCodingKey("schemaDigest"))
+        try container.encode(`environment`, forKey: ToyCodingKey("environment"))
+        try container.encode(`meta`, forKey: ToyCodingKey("meta"))
+        try container.encode(`ok`, forKey: ToyCodingKey("ok"))
+        try container.encode(`error`, forKey: ToyCodingKey("error"))
+    }
+}
+
+public enum CliClockFreezeCommandResult: Codable, Sendable {
+    case variant0(CliClockFreezeResult)
+    case variant1(CliClockFreezeCommandResultVariant1)
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        if let value = try? container.decode(CliClockFreezeResult.self) { self = .variant0(value); return }
+        if let value = try? container.decode(CliClockFreezeCommandResultVariant1.self) { self = .variant1(value); return }
+        throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "No contract union member matched."))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.singleValueContainer()
+        switch self {
+        case .variant0(let value): try container.encode(value)
+        case .variant1(let value): try container.encode(value)
+        }
+    }
+}
+
+public struct CliClockFreezeCommandResultVariant1: Codable, Sendable {
+    public let `schemaVersion`: CliHelpV1CompatibilityWireVersionsItem
+    public let `commandId`: CliClockFreezeResultCommandId
+    public let `invocationId`: UUID
+    public let `generatedAt`: Instant
+    public let `cliVersion`: CliVersionV1CliVersion
+    public let `contractsVersion`: CliVersionV1CliVersion
+    public let `schemaDigest`: Digest
+    public let `environment`: CliEnvironment
+    public let `meta`: CliMetadata
+    public let `ok`: CliFailureOk
+    public let `error`: CliError
+    public init(`schemaVersion`: CliHelpV1CompatibilityWireVersionsItem, `commandId`: CliClockFreezeResultCommandId, `invocationId`: UUID, `generatedAt`: Instant, `cliVersion`: CliVersionV1CliVersion, `contractsVersion`: CliVersionV1CliVersion, `schemaDigest`: Digest, `environment`: CliEnvironment, `meta`: CliMetadata, `ok`: CliFailureOk, `error`: CliError) {
+        self.`schemaVersion` = `schemaVersion`
+        self.`commandId` = `commandId`
+        self.`invocationId` = `invocationId`
+        self.`generatedAt` = `generatedAt`
+        self.`cliVersion` = `cliVersion`
+        self.`contractsVersion` = `contractsVersion`
+        self.`schemaDigest` = `schemaDigest`
+        self.`environment` = `environment`
+        self.`meta` = `meta`
+        self.`ok` = `ok`
+        self.`error` = `error`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["schemaVersion", "commandId", "invocationId", "generatedAt", "cliVersion", "contractsVersion", "schemaDigest", "environment", "meta", "ok", "error"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`schemaVersion` = try container.decode(CliHelpV1CompatibilityWireVersionsItem.self, forKey: ToyCodingKey("schemaVersion"))
+        self.`commandId` = try container.decode(CliClockFreezeResultCommandId.self, forKey: ToyCodingKey("commandId"))
+        self.`invocationId` = try container.decode(UUID.self, forKey: ToyCodingKey("invocationId"))
+        self.`generatedAt` = try container.decode(Instant.self, forKey: ToyCodingKey("generatedAt"))
+        self.`cliVersion` = try container.decode(CliVersionV1CliVersion.self, forKey: ToyCodingKey("cliVersion"))
+        self.`contractsVersion` = try container.decode(CliVersionV1CliVersion.self, forKey: ToyCodingKey("contractsVersion"))
+        self.`schemaDigest` = try container.decode(Digest.self, forKey: ToyCodingKey("schemaDigest"))
+        self.`environment` = try container.decode(CliEnvironment.self, forKey: ToyCodingKey("environment"))
+        self.`meta` = try container.decode(CliMetadata.self, forKey: ToyCodingKey("meta"))
+        self.`ok` = try container.decode(CliFailureOk.self, forKey: ToyCodingKey("ok"))
+        self.`error` = try container.decode(CliError.self, forKey: ToyCodingKey("error"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`schemaVersion`, forKey: ToyCodingKey("schemaVersion"))
+        try container.encode(`commandId`, forKey: ToyCodingKey("commandId"))
+        try container.encode(`invocationId`, forKey: ToyCodingKey("invocationId"))
+        try container.encode(`generatedAt`, forKey: ToyCodingKey("generatedAt"))
+        try container.encode(`cliVersion`, forKey: ToyCodingKey("cliVersion"))
+        try container.encode(`contractsVersion`, forKey: ToyCodingKey("contractsVersion"))
+        try container.encode(`schemaDigest`, forKey: ToyCodingKey("schemaDigest"))
+        try container.encode(`environment`, forKey: ToyCodingKey("environment"))
+        try container.encode(`meta`, forKey: ToyCodingKey("meta"))
+        try container.encode(`ok`, forKey: ToyCodingKey("ok"))
+        try container.encode(`error`, forKey: ToyCodingKey("error"))
+    }
+}
+
+public enum CliClockResumeCommandResult: Codable, Sendable {
+    case variant0(CliClockResumeResult)
+    case variant1(CliClockResumeCommandResultVariant1)
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        if let value = try? container.decode(CliClockResumeResult.self) { self = .variant0(value); return }
+        if let value = try? container.decode(CliClockResumeCommandResultVariant1.self) { self = .variant1(value); return }
+        throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "No contract union member matched."))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.singleValueContainer()
+        switch self {
+        case .variant0(let value): try container.encode(value)
+        case .variant1(let value): try container.encode(value)
+        }
+    }
+}
+
+public struct CliClockResumeCommandResultVariant1: Codable, Sendable {
+    public let `schemaVersion`: CliHelpV1CompatibilityWireVersionsItem
+    public let `commandId`: CliClockResumeResultCommandId
+    public let `invocationId`: UUID
+    public let `generatedAt`: Instant
+    public let `cliVersion`: CliVersionV1CliVersion
+    public let `contractsVersion`: CliVersionV1CliVersion
+    public let `schemaDigest`: Digest
+    public let `environment`: CliEnvironment
+    public let `meta`: CliMetadata
+    public let `ok`: CliFailureOk
+    public let `error`: CliError
+    public init(`schemaVersion`: CliHelpV1CompatibilityWireVersionsItem, `commandId`: CliClockResumeResultCommandId, `invocationId`: UUID, `generatedAt`: Instant, `cliVersion`: CliVersionV1CliVersion, `contractsVersion`: CliVersionV1CliVersion, `schemaDigest`: Digest, `environment`: CliEnvironment, `meta`: CliMetadata, `ok`: CliFailureOk, `error`: CliError) {
+        self.`schemaVersion` = `schemaVersion`
+        self.`commandId` = `commandId`
+        self.`invocationId` = `invocationId`
+        self.`generatedAt` = `generatedAt`
+        self.`cliVersion` = `cliVersion`
+        self.`contractsVersion` = `contractsVersion`
+        self.`schemaDigest` = `schemaDigest`
+        self.`environment` = `environment`
+        self.`meta` = `meta`
+        self.`ok` = `ok`
+        self.`error` = `error`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["schemaVersion", "commandId", "invocationId", "generatedAt", "cliVersion", "contractsVersion", "schemaDigest", "environment", "meta", "ok", "error"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`schemaVersion` = try container.decode(CliHelpV1CompatibilityWireVersionsItem.self, forKey: ToyCodingKey("schemaVersion"))
+        self.`commandId` = try container.decode(CliClockResumeResultCommandId.self, forKey: ToyCodingKey("commandId"))
+        self.`invocationId` = try container.decode(UUID.self, forKey: ToyCodingKey("invocationId"))
+        self.`generatedAt` = try container.decode(Instant.self, forKey: ToyCodingKey("generatedAt"))
+        self.`cliVersion` = try container.decode(CliVersionV1CliVersion.self, forKey: ToyCodingKey("cliVersion"))
+        self.`contractsVersion` = try container.decode(CliVersionV1CliVersion.self, forKey: ToyCodingKey("contractsVersion"))
+        self.`schemaDigest` = try container.decode(Digest.self, forKey: ToyCodingKey("schemaDigest"))
+        self.`environment` = try container.decode(CliEnvironment.self, forKey: ToyCodingKey("environment"))
+        self.`meta` = try container.decode(CliMetadata.self, forKey: ToyCodingKey("meta"))
+        self.`ok` = try container.decode(CliFailureOk.self, forKey: ToyCodingKey("ok"))
+        self.`error` = try container.decode(CliError.self, forKey: ToyCodingKey("error"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`schemaVersion`, forKey: ToyCodingKey("schemaVersion"))
+        try container.encode(`commandId`, forKey: ToyCodingKey("commandId"))
+        try container.encode(`invocationId`, forKey: ToyCodingKey("invocationId"))
+        try container.encode(`generatedAt`, forKey: ToyCodingKey("generatedAt"))
+        try container.encode(`cliVersion`, forKey: ToyCodingKey("cliVersion"))
+        try container.encode(`contractsVersion`, forKey: ToyCodingKey("contractsVersion"))
+        try container.encode(`schemaDigest`, forKey: ToyCodingKey("schemaDigest"))
+        try container.encode(`environment`, forKey: ToyCodingKey("environment"))
+        try container.encode(`meta`, forKey: ToyCodingKey("meta"))
+        try container.encode(`ok`, forKey: ToyCodingKey("ok"))
+        try container.encode(`error`, forKey: ToyCodingKey("error"))
+    }
+}
+
+public enum CliClockAdvanceCommandResult: Codable, Sendable {
+    case variant0(CliClockAdvanceResult)
+    case variant1(CliClockAdvanceCommandResultVariant1)
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        if let value = try? container.decode(CliClockAdvanceResult.self) { self = .variant0(value); return }
+        if let value = try? container.decode(CliClockAdvanceCommandResultVariant1.self) { self = .variant1(value); return }
+        throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "No contract union member matched."))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.singleValueContainer()
+        switch self {
+        case .variant0(let value): try container.encode(value)
+        case .variant1(let value): try container.encode(value)
+        }
+    }
+}
+
+public struct CliClockAdvanceCommandResultVariant1: Codable, Sendable {
+    public let `schemaVersion`: CliHelpV1CompatibilityWireVersionsItem
+    public let `commandId`: CliClockAdvanceResultCommandId
+    public let `invocationId`: UUID
+    public let `generatedAt`: Instant
+    public let `cliVersion`: CliVersionV1CliVersion
+    public let `contractsVersion`: CliVersionV1CliVersion
+    public let `schemaDigest`: Digest
+    public let `environment`: CliEnvironment
+    public let `meta`: CliMetadata
+    public let `ok`: CliFailureOk
+    public let `error`: CliError
+    public init(`schemaVersion`: CliHelpV1CompatibilityWireVersionsItem, `commandId`: CliClockAdvanceResultCommandId, `invocationId`: UUID, `generatedAt`: Instant, `cliVersion`: CliVersionV1CliVersion, `contractsVersion`: CliVersionV1CliVersion, `schemaDigest`: Digest, `environment`: CliEnvironment, `meta`: CliMetadata, `ok`: CliFailureOk, `error`: CliError) {
+        self.`schemaVersion` = `schemaVersion`
+        self.`commandId` = `commandId`
+        self.`invocationId` = `invocationId`
+        self.`generatedAt` = `generatedAt`
+        self.`cliVersion` = `cliVersion`
+        self.`contractsVersion` = `contractsVersion`
+        self.`schemaDigest` = `schemaDigest`
+        self.`environment` = `environment`
+        self.`meta` = `meta`
+        self.`ok` = `ok`
+        self.`error` = `error`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["schemaVersion", "commandId", "invocationId", "generatedAt", "cliVersion", "contractsVersion", "schemaDigest", "environment", "meta", "ok", "error"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`schemaVersion` = try container.decode(CliHelpV1CompatibilityWireVersionsItem.self, forKey: ToyCodingKey("schemaVersion"))
+        self.`commandId` = try container.decode(CliClockAdvanceResultCommandId.self, forKey: ToyCodingKey("commandId"))
+        self.`invocationId` = try container.decode(UUID.self, forKey: ToyCodingKey("invocationId"))
+        self.`generatedAt` = try container.decode(Instant.self, forKey: ToyCodingKey("generatedAt"))
+        self.`cliVersion` = try container.decode(CliVersionV1CliVersion.self, forKey: ToyCodingKey("cliVersion"))
+        self.`contractsVersion` = try container.decode(CliVersionV1CliVersion.self, forKey: ToyCodingKey("contractsVersion"))
+        self.`schemaDigest` = try container.decode(Digest.self, forKey: ToyCodingKey("schemaDigest"))
+        self.`environment` = try container.decode(CliEnvironment.self, forKey: ToyCodingKey("environment"))
+        self.`meta` = try container.decode(CliMetadata.self, forKey: ToyCodingKey("meta"))
+        self.`ok` = try container.decode(CliFailureOk.self, forKey: ToyCodingKey("ok"))
+        self.`error` = try container.decode(CliError.self, forKey: ToyCodingKey("error"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`schemaVersion`, forKey: ToyCodingKey("schemaVersion"))
+        try container.encode(`commandId`, forKey: ToyCodingKey("commandId"))
+        try container.encode(`invocationId`, forKey: ToyCodingKey("invocationId"))
+        try container.encode(`generatedAt`, forKey: ToyCodingKey("generatedAt"))
+        try container.encode(`cliVersion`, forKey: ToyCodingKey("cliVersion"))
+        try container.encode(`contractsVersion`, forKey: ToyCodingKey("contractsVersion"))
+        try container.encode(`schemaDigest`, forKey: ToyCodingKey("schemaDigest"))
+        try container.encode(`environment`, forKey: ToyCodingKey("environment"))
+        try container.encode(`meta`, forKey: ToyCodingKey("meta"))
+        try container.encode(`ok`, forKey: ToyCodingKey("ok"))
+        try container.encode(`error`, forKey: ToyCodingKey("error"))
+    }
+}
+
+public enum CliProbeRunCommandResult: Codable, Sendable {
+    case variant0(CliProbeRunResult)
+    case variant1(CliProbeRunCommandResultVariant1)
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        if let value = try? container.decode(CliProbeRunResult.self) { self = .variant0(value); return }
+        if let value = try? container.decode(CliProbeRunCommandResultVariant1.self) { self = .variant1(value); return }
+        throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "No contract union member matched."))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.singleValueContainer()
+        switch self {
+        case .variant0(let value): try container.encode(value)
+        case .variant1(let value): try container.encode(value)
+        }
+    }
+}
+
+public struct CliProbeRunCommandResultVariant1: Codable, Sendable {
+    public let `schemaVersion`: CliHelpV1CompatibilityWireVersionsItem
+    public let `commandId`: CliProbeRunResultCommandId
+    public let `invocationId`: UUID
+    public let `generatedAt`: Instant
+    public let `cliVersion`: CliVersionV1CliVersion
+    public let `contractsVersion`: CliVersionV1CliVersion
+    public let `schemaDigest`: Digest
+    public let `environment`: CliEnvironment
+    public let `meta`: CliMetadata
+    public let `ok`: CliFailureOk
+    public let `error`: CliError
+    public init(`schemaVersion`: CliHelpV1CompatibilityWireVersionsItem, `commandId`: CliProbeRunResultCommandId, `invocationId`: UUID, `generatedAt`: Instant, `cliVersion`: CliVersionV1CliVersion, `contractsVersion`: CliVersionV1CliVersion, `schemaDigest`: Digest, `environment`: CliEnvironment, `meta`: CliMetadata, `ok`: CliFailureOk, `error`: CliError) {
+        self.`schemaVersion` = `schemaVersion`
+        self.`commandId` = `commandId`
+        self.`invocationId` = `invocationId`
+        self.`generatedAt` = `generatedAt`
+        self.`cliVersion` = `cliVersion`
+        self.`contractsVersion` = `contractsVersion`
+        self.`schemaDigest` = `schemaDigest`
+        self.`environment` = `environment`
+        self.`meta` = `meta`
+        self.`ok` = `ok`
+        self.`error` = `error`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["schemaVersion", "commandId", "invocationId", "generatedAt", "cliVersion", "contractsVersion", "schemaDigest", "environment", "meta", "ok", "error"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`schemaVersion` = try container.decode(CliHelpV1CompatibilityWireVersionsItem.self, forKey: ToyCodingKey("schemaVersion"))
+        self.`commandId` = try container.decode(CliProbeRunResultCommandId.self, forKey: ToyCodingKey("commandId"))
+        self.`invocationId` = try container.decode(UUID.self, forKey: ToyCodingKey("invocationId"))
+        self.`generatedAt` = try container.decode(Instant.self, forKey: ToyCodingKey("generatedAt"))
+        self.`cliVersion` = try container.decode(CliVersionV1CliVersion.self, forKey: ToyCodingKey("cliVersion"))
+        self.`contractsVersion` = try container.decode(CliVersionV1CliVersion.self, forKey: ToyCodingKey("contractsVersion"))
+        self.`schemaDigest` = try container.decode(Digest.self, forKey: ToyCodingKey("schemaDigest"))
+        self.`environment` = try container.decode(CliEnvironment.self, forKey: ToyCodingKey("environment"))
+        self.`meta` = try container.decode(CliMetadata.self, forKey: ToyCodingKey("meta"))
+        self.`ok` = try container.decode(CliFailureOk.self, forKey: ToyCodingKey("ok"))
+        self.`error` = try container.decode(CliError.self, forKey: ToyCodingKey("error"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`schemaVersion`, forKey: ToyCodingKey("schemaVersion"))
+        try container.encode(`commandId`, forKey: ToyCodingKey("commandId"))
+        try container.encode(`invocationId`, forKey: ToyCodingKey("invocationId"))
+        try container.encode(`generatedAt`, forKey: ToyCodingKey("generatedAt"))
+        try container.encode(`cliVersion`, forKey: ToyCodingKey("cliVersion"))
+        try container.encode(`contractsVersion`, forKey: ToyCodingKey("contractsVersion"))
+        try container.encode(`schemaDigest`, forKey: ToyCodingKey("schemaDigest"))
+        try container.encode(`environment`, forKey: ToyCodingKey("environment"))
+        try container.encode(`meta`, forKey: ToyCodingKey("meta"))
+        try container.encode(`ok`, forKey: ToyCodingKey("ok"))
+        try container.encode(`error`, forKey: ToyCodingKey("error"))
+    }
+}
+
+public enum CliProbeShowCommandResult: Codable, Sendable {
+    case variant0(CliProbeShowResult)
+    case variant1(CliProbeShowCommandResultVariant1)
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        if let value = try? container.decode(CliProbeShowResult.self) { self = .variant0(value); return }
+        if let value = try? container.decode(CliProbeShowCommandResultVariant1.self) { self = .variant1(value); return }
+        throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "No contract union member matched."))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.singleValueContainer()
+        switch self {
+        case .variant0(let value): try container.encode(value)
+        case .variant1(let value): try container.encode(value)
+        }
+    }
+}
+
+public struct CliProbeShowCommandResultVariant1: Codable, Sendable {
+    public let `schemaVersion`: CliHelpV1CompatibilityWireVersionsItem
+    public let `commandId`: CliProbeShowResultCommandId
+    public let `invocationId`: UUID
+    public let `generatedAt`: Instant
+    public let `cliVersion`: CliVersionV1CliVersion
+    public let `contractsVersion`: CliVersionV1CliVersion
+    public let `schemaDigest`: Digest
+    public let `environment`: CliEnvironment
+    public let `meta`: CliMetadata
+    public let `ok`: CliFailureOk
+    public let `error`: CliError
+    public init(`schemaVersion`: CliHelpV1CompatibilityWireVersionsItem, `commandId`: CliProbeShowResultCommandId, `invocationId`: UUID, `generatedAt`: Instant, `cliVersion`: CliVersionV1CliVersion, `contractsVersion`: CliVersionV1CliVersion, `schemaDigest`: Digest, `environment`: CliEnvironment, `meta`: CliMetadata, `ok`: CliFailureOk, `error`: CliError) {
+        self.`schemaVersion` = `schemaVersion`
+        self.`commandId` = `commandId`
+        self.`invocationId` = `invocationId`
+        self.`generatedAt` = `generatedAt`
+        self.`cliVersion` = `cliVersion`
+        self.`contractsVersion` = `contractsVersion`
+        self.`schemaDigest` = `schemaDigest`
+        self.`environment` = `environment`
+        self.`meta` = `meta`
+        self.`ok` = `ok`
+        self.`error` = `error`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["schemaVersion", "commandId", "invocationId", "generatedAt", "cliVersion", "contractsVersion", "schemaDigest", "environment", "meta", "ok", "error"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`schemaVersion` = try container.decode(CliHelpV1CompatibilityWireVersionsItem.self, forKey: ToyCodingKey("schemaVersion"))
+        self.`commandId` = try container.decode(CliProbeShowResultCommandId.self, forKey: ToyCodingKey("commandId"))
+        self.`invocationId` = try container.decode(UUID.self, forKey: ToyCodingKey("invocationId"))
+        self.`generatedAt` = try container.decode(Instant.self, forKey: ToyCodingKey("generatedAt"))
+        self.`cliVersion` = try container.decode(CliVersionV1CliVersion.self, forKey: ToyCodingKey("cliVersion"))
+        self.`contractsVersion` = try container.decode(CliVersionV1CliVersion.self, forKey: ToyCodingKey("contractsVersion"))
+        self.`schemaDigest` = try container.decode(Digest.self, forKey: ToyCodingKey("schemaDigest"))
+        self.`environment` = try container.decode(CliEnvironment.self, forKey: ToyCodingKey("environment"))
+        self.`meta` = try container.decode(CliMetadata.self, forKey: ToyCodingKey("meta"))
+        self.`ok` = try container.decode(CliFailureOk.self, forKey: ToyCodingKey("ok"))
+        self.`error` = try container.decode(CliError.self, forKey: ToyCodingKey("error"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`schemaVersion`, forKey: ToyCodingKey("schemaVersion"))
+        try container.encode(`commandId`, forKey: ToyCodingKey("commandId"))
+        try container.encode(`invocationId`, forKey: ToyCodingKey("invocationId"))
+        try container.encode(`generatedAt`, forKey: ToyCodingKey("generatedAt"))
+        try container.encode(`cliVersion`, forKey: ToyCodingKey("cliVersion"))
+        try container.encode(`contractsVersion`, forKey: ToyCodingKey("contractsVersion"))
+        try container.encode(`schemaDigest`, forKey: ToyCodingKey("schemaDigest"))
+        try container.encode(`environment`, forKey: ToyCodingKey("environment"))
+        try container.encode(`meta`, forKey: ToyCodingKey("meta"))
+        try container.encode(`ok`, forKey: ToyCodingKey("ok"))
+        try container.encode(`error`, forKey: ToyCodingKey("error"))
+    }
+}
+
 public struct CapabilityManifest: Codable, Sendable {
     public let `provider`: String
     public let `adapterVersion`: String
@@ -3588,4 +5840,276 @@ public enum QuietSource: String, Codable, CaseIterable, Sendable {
     case `sleepFocus` = "sleep_focus"
     case `focusSnapshot` = "focus_snapshot"
     case `wearableConfirmation` = "wearable_confirmation"
+}
+
+public enum RegisteredTestWorldV1: String, Codable, CaseIterable, Sendable {
+    case `r0Bootstrap` = "r0-bootstrap"
+}
+
+public enum RegisteredTestCaseV1: String, Codable, CaseIterable, Sendable {
+    case `nativeEntry` = "native-entry"
+    case `nativeDenials` = "native-denials"
+    case `postgresUnix` = "postgres-unix"
+    case `stackLifecycle` = "stack-lifecycle"
+}
+
+public typealias ElapsedDurationV1 = String
+
+public struct TestStackUpInputV1: Codable, Sendable {
+    public let `release`: Release
+    public let `requestId`: UUID
+    public let `world`: Optional<RegisteredTestWorldV1>
+    public let `clock`: TestStackClockV1
+    public let `model`: TestStackModelV1
+    public let `waitMs`: Int64
+    public init(`release`: Release, `requestId`: UUID, `world`: Optional<RegisteredTestWorldV1>, `clock`: TestStackClockV1, `model`: TestStackModelV1, `waitMs`: Int64) {
+        self.`release` = `release`
+        self.`requestId` = `requestId`
+        self.`world` = `world`
+        self.`clock` = `clock`
+        self.`model` = `model`
+        self.`waitMs` = `waitMs`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["release", "requestId", "world", "clock", "model", "waitMs"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`release` = try container.decode(Release.self, forKey: ToyCodingKey("release"))
+        self.`requestId` = try container.decode(UUID.self, forKey: ToyCodingKey("requestId"))
+        self.`world` = container.contains(ToyCodingKey("world")) ? try container.decode(RegisteredTestWorldV1.self, forKey: ToyCodingKey("world")) : nil
+        self.`clock` = try container.decode(TestStackClockV1.self, forKey: ToyCodingKey("clock"))
+        self.`model` = try container.decode(TestStackModelV1.self, forKey: ToyCodingKey("model"))
+        self.`waitMs` = try container.decode(Int64.self, forKey: ToyCodingKey("waitMs"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`release`, forKey: ToyCodingKey("release"))
+        try container.encode(`requestId`, forKey: ToyCodingKey("requestId"))
+        try container.encodeIfPresent(`world`, forKey: ToyCodingKey("world"))
+        try container.encode(`clock`, forKey: ToyCodingKey("clock"))
+        try container.encode(`model`, forKey: ToyCodingKey("model"))
+        try container.encode(`waitMs`, forKey: ToyCodingKey("waitMs"))
+    }
+}
+
+public struct TestStackDownInputV1: Codable, Sendable {
+    public let `requestId`: UUID
+    public let `waitMs`: Int64
+    public init(`requestId`: UUID, `waitMs`: Int64) {
+        self.`requestId` = `requestId`
+        self.`waitMs` = `waitMs`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["requestId", "waitMs"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`requestId` = try container.decode(UUID.self, forKey: ToyCodingKey("requestId"))
+        self.`waitMs` = try container.decode(Int64.self, forKey: ToyCodingKey("waitMs"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`requestId`, forKey: ToyCodingKey("requestId"))
+        try container.encode(`waitMs`, forKey: ToyCodingKey("waitMs"))
+    }
+}
+
+public struct TestClockFreezeInputV1: Codable, Sendable {
+    public let `at`: Instant
+    public let `requestId`: UUID
+    public init(`at`: Instant, `requestId`: UUID) {
+        self.`at` = `at`
+        self.`requestId` = `requestId`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["at", "requestId"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`at` = try container.decode(Instant.self, forKey: ToyCodingKey("at"))
+        self.`requestId` = try container.decode(UUID.self, forKey: ToyCodingKey("requestId"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`at`, forKey: ToyCodingKey("at"))
+        try container.encode(`requestId`, forKey: ToyCodingKey("requestId"))
+    }
+}
+
+public struct TestClockResumeInputV1: Codable, Sendable {
+    public let `requestId`: UUID
+    public init(`requestId`: UUID) {
+        self.`requestId` = `requestId`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["requestId"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`requestId` = try container.decode(UUID.self, forKey: ToyCodingKey("requestId"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`requestId`, forKey: ToyCodingKey("requestId"))
+    }
+}
+
+public struct TestClockAdvanceInputV1: Codable, Sendable {
+    public let `by`: ElapsedDurationV1
+    public let `requestId`: UUID
+    public let `waitMs`: Int64
+    public init(`by`: ElapsedDurationV1, `requestId`: UUID, `waitMs`: Int64) {
+        self.`by` = `by`
+        self.`requestId` = `requestId`
+        self.`waitMs` = `waitMs`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["by", "requestId", "waitMs"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`by` = try container.decode(ElapsedDurationV1.self, forKey: ToyCodingKey("by"))
+        self.`requestId` = try container.decode(UUID.self, forKey: ToyCodingKey("requestId"))
+        self.`waitMs` = try container.decode(Int64.self, forKey: ToyCodingKey("waitMs"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`by`, forKey: ToyCodingKey("by"))
+        try container.encode(`requestId`, forKey: ToyCodingKey("requestId"))
+        try container.encode(`waitMs`, forKey: ToyCodingKey("waitMs"))
+    }
+}
+
+public struct RegisteredProbeInputV1: Codable, Sendable {
+    public let `probeId`: RegisteredCliProbeIdV1
+    public let `requestId`: UUID
+    public let `caseId`: Optional<RegisteredTestCaseV1>
+    public init(`probeId`: RegisteredCliProbeIdV1, `requestId`: UUID, `caseId`: Optional<RegisteredTestCaseV1>) {
+        self.`probeId` = `probeId`
+        self.`requestId` = `requestId`
+        self.`caseId` = `caseId`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["probeId", "requestId", "caseId"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`probeId` = try container.decode(RegisteredCliProbeIdV1.self, forKey: ToyCodingKey("probeId"))
+        self.`requestId` = try container.decode(UUID.self, forKey: ToyCodingKey("requestId"))
+        self.`caseId` = container.contains(ToyCodingKey("caseId")) ? try container.decode(RegisteredTestCaseV1.self, forKey: ToyCodingKey("caseId")) : nil
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`probeId`, forKey: ToyCodingKey("probeId"))
+        try container.encode(`requestId`, forKey: ToyCodingKey("requestId"))
+        try container.encodeIfPresent(`caseId`, forKey: ToyCodingKey("caseId"))
+    }
+}
+
+public struct RegisteredProbeShowInputV1: Codable, Sendable {
+    public let `operationId`: UUID
+    public init(`operationId`: UUID) {
+        self.`operationId` = `operationId`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["operationId"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`operationId` = try container.decode(UUID.self, forKey: ToyCodingKey("operationId"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`operationId`, forKey: ToyCodingKey("operationId"))
+    }
+}
+
+public struct NativeProcessIdentityV1: Codable, Sendable {
+    public let `pid`: Int64
+    public let `parentPid`: Int64
+    public let `uid`: Int64
+    public let `gid`: Int64
+    public let `birthSeconds`: UInt64String
+    public let `birthMicroseconds`: Int64
+    public init(`pid`: Int64, `parentPid`: Int64, `uid`: Int64, `gid`: Int64, `birthSeconds`: UInt64String, `birthMicroseconds`: Int64) {
+        self.`pid` = `pid`
+        self.`parentPid` = `parentPid`
+        self.`uid` = `uid`
+        self.`gid` = `gid`
+        self.`birthSeconds` = `birthSeconds`
+        self.`birthMicroseconds` = `birthMicroseconds`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["pid", "parentPid", "uid", "gid", "birthSeconds", "birthMicroseconds"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`pid` = try container.decode(Int64.self, forKey: ToyCodingKey("pid"))
+        self.`parentPid` = try container.decode(Int64.self, forKey: ToyCodingKey("parentPid"))
+        self.`uid` = try container.decode(Int64.self, forKey: ToyCodingKey("uid"))
+        self.`gid` = try container.decode(Int64.self, forKey: ToyCodingKey("gid"))
+        self.`birthSeconds` = try container.decode(UInt64String.self, forKey: ToyCodingKey("birthSeconds"))
+        self.`birthMicroseconds` = try container.decode(Int64.self, forKey: ToyCodingKey("birthMicroseconds"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`pid`, forKey: ToyCodingKey("pid"))
+        try container.encode(`parentPid`, forKey: ToyCodingKey("parentPid"))
+        try container.encode(`uid`, forKey: ToyCodingKey("uid"))
+        try container.encode(`gid`, forKey: ToyCodingKey("gid"))
+        try container.encode(`birthSeconds`, forKey: ToyCodingKey("birthSeconds"))
+        try container.encode(`birthMicroseconds`, forKey: ToyCodingKey("birthMicroseconds"))
+    }
+}
+
+public struct NativeEntryReceiptV1: Codable, Sendable {
+    public let `protocol`: NativeEntryReceiptV1Protocol
+    public let `parent`: NativeProcessIdentityV1
+    public let `child`: Optional<NativeProcessIdentityV1>
+    public let `entered`: CliHelpResultOk
+    public let `inheritedChildEntered`: Bool
+    public let `containerHomeReady`: Bool
+    public init(`protocol`: NativeEntryReceiptV1Protocol, `parent`: NativeProcessIdentityV1, `child`: Optional<NativeProcessIdentityV1>, `entered`: CliHelpResultOk, `inheritedChildEntered`: Bool, `containerHomeReady`: Bool) {
+        self.`protocol` = `protocol`
+        self.`parent` = `parent`
+        self.`child` = `child`
+        self.`entered` = `entered`
+        self.`inheritedChildEntered` = `inheritedChildEntered`
+        self.`containerHomeReady` = `containerHomeReady`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["protocol", "parent", "child", "entered", "inheritedChildEntered", "containerHomeReady"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`protocol` = try container.decode(NativeEntryReceiptV1Protocol.self, forKey: ToyCodingKey("protocol"))
+        self.`parent` = try container.decode(NativeProcessIdentityV1.self, forKey: ToyCodingKey("parent"))
+        self.`child` = try container.decode(Optional<NativeProcessIdentityV1>.self, forKey: ToyCodingKey("child"))
+        self.`entered` = try container.decode(CliHelpResultOk.self, forKey: ToyCodingKey("entered"))
+        self.`inheritedChildEntered` = try container.decode(Bool.self, forKey: ToyCodingKey("inheritedChildEntered"))
+        self.`containerHomeReady` = try container.decode(Bool.self, forKey: ToyCodingKey("containerHomeReady"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`protocol`, forKey: ToyCodingKey("protocol"))
+        try container.encode(`parent`, forKey: ToyCodingKey("parent"))
+        try container.encode(`child`, forKey: ToyCodingKey("child"))
+        try container.encode(`entered`, forKey: ToyCodingKey("entered"))
+        try container.encode(`inheritedChildEntered`, forKey: ToyCodingKey("inheritedChildEntered"))
+        try container.encode(`containerHomeReady`, forKey: ToyCodingKey("containerHomeReady"))
+    }
+}
+
+public enum NativeEntryReceiptV1Protocol: String, Codable, CaseIterable, Sendable {
+    case `toyBootstrapNativeV1` = "toy.bootstrap-native.v1"
 }
