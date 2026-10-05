@@ -8,9 +8,13 @@
   "scripts": {
     "build": "tsc -b",
     "typecheck": "tsc -b --pretty false",
-    "boundaries": "depcruise --config .dependency-cruiser.cjs packages cli",
+    "boundaries": "depcruise --config .dependency-cruiser.cjs packages cli tests",
     "python:check": "pyright && .venv/bin/ruff check python && PYTHONPATH=python .venv/bin/lint-imports",
-    "check": "npm run typecheck && npm run boundaries && npm run python:check",
+    "lint": "node scripts/run-eslint.mjs && node scripts/check-source-policy.mjs && .venv/bin/python scripts/check-python-policy.py && node scripts/check-contract-ownership.mjs && node scripts/check-contract-pin.mjs && node scripts/check-int-registry.mjs",
+    "contracts:generate": "tsc -b packages/contracts --pretty false && node scripts/generate-contracts.mjs",
+    "contracts:check": "tsc -b packages/contracts --pretty false && node scripts/generate-contracts.mjs --check && tsc --ignoreConfig --noEmit --strict --noUncheckedIndexedAccess --target ES2024 --module NodeNext --moduleResolution NodeNext packages/contracts/generated/types.ts && swiftc -typecheck -sdk /Library/Developer/CommandLineTools/SDKs/MacOSX26.5.sdk swift/ToyContracts/Contracts.swift",
+    "check": "npm run typecheck && node scripts/typecheck-tests.mjs && npm run boundaries && npm run python:check && npm run lint && npm run contracts:check",
+    "check:k2": "node scripts/check-k2.mjs",
     "check:foundations": "node scripts/check-foundations.mjs"
   },
   "devDependencies": {

@@ -2,9 +2,9 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-05T02:24:01.193Z",
+  "updatedAt": "2026-10-05T03:08:51.536Z",
   "phase": "R0 kitchen",
-  "activeCard": "R0.K2",
+  "activeCard": "R0.K3",
   "cardCount": 83,
   "acceptanceCount": 1425,
   "cards": {
@@ -21,31 +21,51 @@
       ],
       "pendingConditions": [
         "Complete K4 CLI/generator/map static assertion",
-        "Independent OS filesystem protection at R0.04–05"
+        "Independent OS filesystem protection at R0.04\u201305"
       ],
       "requiredATs": [
         "AT-hermes-config-101"
       ],
       "lastVerification": {
         "evidence": "build/evidence/R0.K1/foundations.json",
-        "checks": 11,
+        "attemptId": "2026-10-05T03-04-33-885Z-a2bdbf3f-1828-4801-85c4-52f405abb4a0",
+        "checks": 14,
         "verdict": "PASS",
         "acceptanceComplete": false,
         "noFixtureArtifacts": true
       }
     },
     "R0.K2": {
-      "implementation": "NOT_IMPLEMENTED",
-      "acceptance": "PENDING",
+      "implementation": "AVAILABLE",
+      "acceptance": "PENDING_K4",
       "sourceRowHash": "2d1d892604dfc951d155102e58f97c5657a873a125a0c288b5af28ee01ad6f95",
       "dependsOn": "R0.K1 implementation available",
-      "evidence": [],
+      "evidence": [
+        "build/evidence/R0.K2/bootstrap.json",
+        "build/evidence/R0.K2/integration-review.json",
+        "specs/gates/B02-R0-selection.json"
+      ],
       "requiredATs": [
         "AT-hermes-config-101"
-      ]
+      ],
+      "pendingATs": [
+        "AT-hermes-config-101"
+      ],
+      "pendingConditions": [
+        "Complete K4 CLI/compiler/lint/codegen/map assertion",
+        "Runtime generated-schema agreement at R0.10/R1",
+        "Independent actual-identity and native-launcher protection at R0.04\u201305"
+      ],
+      "lastVerification": {
+        "evidence": "build/evidence/R0.K2/bootstrap.json",
+        "attemptId": "2026-10-05T03-07-18-280Z-8bf64cc8-227c-4194-9c13-495461050138",
+        "checks": 29,
+        "verdict": "PASS",
+        "acceptanceComplete": false
+      }
     },
     "R0.K3": {
-      "implementation": "NOT_IMPLEMENTED",
+      "implementation": "IN_PROGRESS",
       "acceptance": "PENDING",
       "sourceRowHash": "aea9e7c31c24a6feb29dfb8050e1524938f8779899696e604c66835496ba6946",
       "dependsOn": "R0.K2 implementation available",
@@ -60,7 +80,14 @@
         "AT-cli-6",
         "AT-cli-9",
         "AT-hermes-config-100"
-      ]
+      ],
+      "preparation": {
+        "status": "UNEXPORTED_DRAFT",
+        "path": "packages/contracts/src/cli.ts",
+        "declarations": 53,
+        "ownerSchemas": "PENDING",
+        "acceptanceComplete": false
+      }
     },
     "R0.K4a": {
       "implementation": "NOT_IMPLEMENTED",
@@ -324,7 +351,7 @@
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
       "sourceRowHash": "d77a05745e5e9fe403fd751ff619ff18ce583a01f3587c473aee7ca3e349a9f8",
-      "dependsOn": "R0.07–13 complete",
+      "dependsOn": "R0.07\u201313 complete",
       "evidence": [],
       "requiredATs": [
         "AT-RESEARCH-REGISTER-1",
@@ -460,7 +487,7 @@
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
       "sourceRowHash": "6e8c4e9d5e84c920fca3c2a7a6710f738df8fe6222a3b1b7f398fcbe24319f27",
-      "dependsOn": "Preparation: R0.14, R0.K4, canonical skill registry additions; completion: R1.16–18, CLI-07b/08",
+      "dependsOn": "Preparation: R0.14, R0.K4, canonical skill registry additions; completion: R1.16\u201318, CLI-07b/08",
       "evidence": [],
       "requiredATs": [
         "AT-hermes-config-102",
@@ -943,7 +970,7 @@
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
       "sourceRowHash": "aa24bfddba2b656e71d62ddcb7ed3c95d43ce6f61d2a0fae27c541ea40880fac",
-      "dependsOn": "R1.07, R1.12, R1.16, R1.19–21",
+      "dependsOn": "R1.07, R1.12, R1.16, R1.19\u201321",
       "evidence": [],
       "requiredATs": [
         "AT-RESEARCH-REGISTER-18",
@@ -1068,7 +1095,7 @@
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
       "sourceRowHash": "7b00dca41ae63a4b1572fe2bc14b67e6744f14d054afeb3f08024a418e6ffd8c",
-      "dependsOn": "R1.15–25",
+      "dependsOn": "R1.15\u201325",
       "evidence": [],
       "requiredATs": [
         "AT-adhd-features-89",
@@ -1165,7 +1192,7 @@
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
       "sourceRowHash": "00e89c6ed0a6e6ba2403e859afdc55d94f6caaac3f3a4e683e021df7aa4fb9bb",
-      "dependsOn": "R1.27–29",
+      "dependsOn": "R1.27\u201329",
       "evidence": [],
       "requiredATs": [
         "AT-authority-45",
@@ -1205,7 +1232,7 @@
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
       "sourceRowHash": "bb53421817319cfbe92d288b18320167467d18a9f7f197efb4dc0120250a6312",
-      "dependsOn": "R1.27–31",
+      "dependsOn": "R1.27\u201331",
       "evidence": [],
       "requiredATs": [
         "AT-attention-88",
@@ -1238,7 +1265,7 @@
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
       "sourceRowHash": "386729eb45edc1e27d9ef15cc447df371ac5adf04ccc3cc4fc09ba1ea9dc8b7b",
-      "dependsOn": "R1.32–33; full duration",
+      "dependsOn": "R1.32\u201333; full duration",
       "evidence": [],
       "requiredATs": [
         "AT-RESEARCH-REGISTER-1",
@@ -1999,7 +2026,7 @@
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
       "sourceRowHash": "6f86d7615617bb34ebd1e9f24c02a45dd44692159d013ceeff71c748eda3af36",
-      "dependsOn": "R1.34–36; each account's policy gate",
+      "dependsOn": "R1.34\u201336; each account's policy gate",
       "evidence": [],
       "requiredATs": [
         "AT-authority-15",
@@ -2028,7 +2055,7 @@
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
       "sourceRowHash": "b4e59d09f6a0b8629ab95055eaaa38180c250e72d9606a377b78ca8e71961738",
-      "dependsOn": "R1.34–37",
+      "dependsOn": "R1.34\u201337",
       "evidence": [],
       "requiredATs": [
         "AT-RESEARCH-REGISTER-1",
@@ -2987,7 +3014,7 @@
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
       "sourceRowHash": "737805625e86ef7714332ab74d14dc9d5399786040ba1d1cb220484ff40d0ad4",
-      "dependsOn": "R2.02–05",
+      "dependsOn": "R2.02\u201305",
       "evidence": [],
       "requiredATs": [
         "AT-adhd-features-100",
@@ -3056,7 +3083,7 @@
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
       "sourceRowHash": "639a795e51c8423a2274cbcf1316baf3a652239db7dad7f26f875ef8594bd861",
-      "dependsOn": "R2.01–07",
+      "dependsOn": "R2.01\u201307",
       "evidence": [],
       "requiredATs": [
         "AT-RESEARCH-REGISTER-1",
@@ -4240,7 +4267,7 @@
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
       "sourceRowHash": "e58754317885919123491647f7dc883af21ee5810ac555e2a90a6d7b358d2dba",
-      "dependsOn": "R3.02; R3.03–04 if enabled",
+      "dependsOn": "R3.02; R3.03\u201304 if enabled",
       "evidence": [],
       "requiredATs": [
         "AT-RESEARCH-REGISTER-1",
@@ -5650,7 +5677,7 @@
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
       "sourceRowHash": "58d5440137c61fdb769521afda978a2913cd63e771e60daa8081de2d0355241a",
-      "dependsOn": "R4.01–06, applicable branch",
+      "dependsOn": "R4.01\u201306, applicable branch",
       "evidence": [],
       "requiredATs": [
         "AT-RESEARCH-REGISTER-1",
@@ -7083,7 +7110,7 @@
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
       "sourceRowHash": "1cee48b3d91ea8f93fe7275f75b85f1d42d888de988874e48b82557f55755464",
-      "dependsOn": "R5.01–03; distinct pilot admission",
+      "dependsOn": "R5.01\u201303; distinct pilot admission",
       "evidence": [],
       "requiredATs": [
         "AT-lifestore-31",
@@ -7096,7 +7123,7 @@
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
       "sourceRowHash": "e5ca4da25e4a8082907205cca23c85faee38691e64a3415b2a0e5713346abd20",
-      "dependsOn": "R5.01–03; R5.04 if enabled",
+      "dependsOn": "R5.01\u201303; R5.04 if enabled",
       "evidence": [],
       "requiredATs": [
         "AT-RESEARCH-REGISTER-1",
@@ -8537,9 +8564,18 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Implement R0.K2 lint, generated TS/Python/Swift schemas, drift and INT registry enforcement; retain AT-hermes-config-101 pending until K4",
+  "nextAction": "Implement K3 strict CLI contracts and compound DTO generation, compiled help/version/parser, owner status and guarded stack/probe ports; retain actual identity/launcher gates pending R0.04\u201305",
   "previousTurnClassification": "no progress: authoritative initial implementation checkout had no build checkpoint or application code",
-  "failures": [],
+  "failures": [
+    {
+      "id": "K1.integration-public-entry-fixture",
+      "condition": "Fixture imported @toy/ops instead of its declared @toy/ops/public entry",
+      "unchangedAttempts": 1,
+      "status": "RESOLVED",
+      "resolution": "Use the sole declared public package export; all 14 foundation checks pass",
+      "evidence": "build/evidence/R0.K1/foundations.json"
+    }
+  ],
   "specIndex": {
     "masterCards": 83,
     "ATs": 1425,
@@ -8552,19 +8588,21 @@
     "arch": "arm64",
     "memoryBytes": 8589934592,
     "node": "24.21.0",
-    "npm": "11.19.0"
+    "npm": "11.19.0",
+    "swiftCompiler": "6.3.3",
+    "contractsSwiftSDK": "/Library/Developer/CommandLineTools/SDKs/MacOSX26.5.sdk"
   },
   "admission": {
     "concurrentChildren": 0,
     "maximumChildren": 1,
-    "memoryAvailablePercent": 64,
+    "memoryAvailablePercent": 66,
     "swapUsedMiB": 1727,
     "semanticStackAdmitted": false
   },
   "currentTurnClassification": "progress",
   "cliCards": {
     "CLI-01": {
-      "implementation": "NOT_IMPLEMENTED",
+      "implementation": "IN_PROGRESS",
       "acceptance": "PENDING",
       "sourceRowHash": "0ec034559d0d22e42a7362483a3839d8cd2b470eee8a6439667cbe1fa61b2b5f",
       "requiredATs": [
@@ -18683,19 +18721,18 @@
       "evidence": []
     }
   },
-  "activeWorker": {
-    "id": "/root/r0_k2",
-    "model": "gpt-6-luna",
-    "reasoning": "max",
-    "statusObserved": "running",
-    "ownedCard": "R0.K2",
-    "handle": "collaboration agent /root/r0_k2",
-    "nextObservation": "collaboration.list_agents; read worker handoff; do not launch a duplicate"
-  },
+  "activeWorker": null,
   "coordinator": {
     "threadId": "01a109d1-2f67-7643-9677-404a83617cf8",
     "lockFile": "build/coordinator.lock",
     "lockKind": "exclusive session marker; not process-liveness evidence"
   },
-  "pullRequest": "https://github.com/JohanSardar/toy-harness/pull/1"
+  "pullRequest": "https://github.com/JohanSardar/toy-harness/pull/1",
+  "lastWorker": {
+    "id": "/root/r0_k2",
+    "model": "gpt-6-luna",
+    "reasoning": "max",
+    "ownedCard": "R0.K2",
+    "status": "complete handoff; integration accepted for implementation availability only"
+  }
 }

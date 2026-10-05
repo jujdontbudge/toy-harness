@@ -21,3 +21,15 @@ One gpt-6-luna/max worker owns the independent K2 lint/codegen card under frozen
 ## K1 verification-fixture cleanup and K3 boundary
 
 A negative TypeScript fixture exposed compiler emission into dist on failed checks. The shared compiler now forbids emission on errors, and the bootstrap gate removes outputs belonging to fixtures it actually created. All eleven checks pass again, with fresh evidence and no fixture artifacts remaining in cli/dist or packages. K1 acceptance remains pending the complete K4 assertion. The K3 public boundary is written in docs/adr/0003-cli-bootstrap.md; its implementation waits for K2 availability. Draft integration PR: https://github.com/JohanSardar/toy-harness/pull/1.
+
+## K2 integration review and K3 contract preparation
+
+The parent review found and corrected total uint64 validation, template-comment detection, failed-fixture cleanup and static receipt freshness issues. The worker is rerunning the gate with exclusive fixture ownership, empty-directory cleanup and per-attempt reports. Generated Swift contracts compile using the already installed macOS 26.5 SDK with Swift 6.3.3; the default macOS 27 SDK is incompatible. No system SDK selection, toolchain installation or existing service was changed. K2 availability is still awaiting the coherent handoff and fresh integration gate.
+
+The unexported K3 contract draft records all 53 CLI command declarations and strict offline help/version/failure shapes. Its map rows are preparation only. Owner request/result schemas, generator support for compound shapes, executable behavior and all CLI acceptance remain pending.
+
+## R0.K2 — implementation available; K3 started
+
+Fresh parent integration gates pass: 14 foundation checks and 29 K2 static/codegen checks. Public entry boundaries now derive from the owner graph, accept declared compiled public interfaces and reject private contracts/peer/test imports. The source policy rejects template-hidden comments, typing aliases and unmarked pytest discovery; fixture cleanup preserves unowned changes. Generated TS/Python/Swift primitive artifacts and explicit Draft 2020-12 JSON schemas pass drift and compilation checks. Per-attempt receipts and source/generated hashes are retained. Research B02 records Zod 4.6.5 latest-tag metadata and locked integrity.
+
+K2 is AVAILABLE for same-release integration, with the whole AT-hermes-config-101 still pending K4. Product/test JavaScript is denied; tooling JavaScript strict checking remains limited as documented. Compound schema projections and every runtime/identity/launcher acceptance remain open. K3 / CLI-01 is in progress. Existing recorded service PIDs remain present, memory reports 66% available and swap is stable at 1,727 MiB; no disposable stack, production cutover or deployment has occurred.
