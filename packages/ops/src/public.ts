@@ -9,6 +9,7 @@ import type {
 } from "@toy/contracts";
 export type { ModuleId } from "@toy/contracts";
 import { recordBlockedBootstrapUp } from "./bootstrap-journal.js";
+import { measureBootstrapResources } from "./bootstrap-resources.js";
 
 const unavailableSnapshot = (release: Release, context: OpsControlContextV1): ControlStatusV1 => {
   opsControlContextSchema.parse(context);
@@ -36,13 +37,29 @@ export const OpsControlRead = {
     const request = controlStatusInputSchema.parse(input);
     return Promise.resolve(unavailableSnapshot(request.release ?? "R0", context));
   },
-  doctor(input: DoctorInputV1, context: OpsControlContextV1): Promise<DoctorReportV1> {
+  async doctor(input: DoctorInputV1, context: OpsControlContextV1): Promise<DoctorReportV1> {
+    const started = process.hrtime.bigint();
     const request = doctorInputSchema.parse(input);
     const snapshot = unavailableSnapshot(request.release ?? "R0", context);
-    return Promise.resolve(doctorReportSchema.parse({
-      requiredRelease: snapshot.requiredRelease, deep: request.deep, checks: snapshot.probes, verdict: "NOT_IMPLEMENTED",
+    const checks = [...snapshot.probes];
+    if (request.deep) {
+      const measured = await measureBootstrapResources(context.timeoutMs - Number((process.hrtime.bigint() - started) / 1000000n));
+      checks.push(checkViewSchema.parse({
+        id: "bootstrap.resource-admission", owner: "ops", state: "BLOCKED", checkedAt: measured.measuredAt,
+        reasonCode: measured.reasons.join(","), nextCommandId: "stack.up", links: { recordRefs: [], observations: [], artifactDigests: [] },
+        prerequisite: JSON.stringify({
+          samples: measured.samples, completeMeasurements: measured.completeMeasurements, requiredFreeBytes: measured.requiredFreeBytes,
+          minimumFreeBytes: measured.minimumFreeBytes, stabilityWindowNanoseconds: measured.stabilityWindowNanoseconds,
+          maximumSwapGrowthBytes: measured.maximumSwapGrowthBytes, normalPressureObserved: measured.normalPressureObserved,
+          swapStable: measured.swapStable, headroomSatisfied: measured.headroomSatisfied, physicalFitSatisfied: measured.physicalFitSatisfied,
+          resourcePermitIssued: measured.resourcePermitIssued, admissionState: measured.admissionState
+        })
+      }));
+    }
+    return doctorReportSchema.parse({
+      requiredRelease: snapshot.requiredRelease, deep: request.deep, checks, verdict: "NOT_IMPLEMENTED",
       complete: false, links: { recordRefs: [], observations: [], artifactDigests: [] }
-    }));
+    });
   }
 };
 

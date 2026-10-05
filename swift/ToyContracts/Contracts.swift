@@ -6993,3 +6993,164 @@ public enum BootstrapOperationRecordV1State: String, Codable, CaseIterable, Send
 public enum BootstrapOperationRecordV1ErrorCode: String, Codable, CaseIterable, Sendable {
     case `dEPENDENCYUNAVAILABLE` = "DEPENDENCY_UNAVAILABLE"
 }
+
+public struct BootstrapResourceSampleV1: Codable, Sendable {
+    public let `observedAt`: Instant
+    public let `monotonicNanoseconds`: UInt64String
+    public let `physicalBytes`: Optional<UInt64String>
+    public let `freeBytes`: Optional<UInt64String>
+    public let `processAvailableBytes`: Optional<UInt64String>
+    public let `pressure`: OpsStatusMemoryPressure
+    public let `swapTotalBytes`: Optional<UInt64String>
+    public let `swapUsedBytes`: Optional<UInt64String>
+    public let `swapPageSize`: Optional<UInt64String>
+    public init(`observedAt`: Instant, `monotonicNanoseconds`: UInt64String, `physicalBytes`: Optional<UInt64String>, `freeBytes`: Optional<UInt64String>, `processAvailableBytes`: Optional<UInt64String>, `pressure`: OpsStatusMemoryPressure, `swapTotalBytes`: Optional<UInt64String>, `swapUsedBytes`: Optional<UInt64String>, `swapPageSize`: Optional<UInt64String>) {
+        self.`observedAt` = `observedAt`
+        self.`monotonicNanoseconds` = `monotonicNanoseconds`
+        self.`physicalBytes` = `physicalBytes`
+        self.`freeBytes` = `freeBytes`
+        self.`processAvailableBytes` = `processAvailableBytes`
+        self.`pressure` = `pressure`
+        self.`swapTotalBytes` = `swapTotalBytes`
+        self.`swapUsedBytes` = `swapUsedBytes`
+        self.`swapPageSize` = `swapPageSize`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["observedAt", "monotonicNanoseconds", "physicalBytes", "freeBytes", "processAvailableBytes", "pressure", "swapTotalBytes", "swapUsedBytes", "swapPageSize"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`observedAt` = try container.decode(Instant.self, forKey: ToyCodingKey("observedAt"))
+        self.`monotonicNanoseconds` = try container.decode(UInt64String.self, forKey: ToyCodingKey("monotonicNanoseconds"))
+        self.`physicalBytes` = try container.decode(Optional<UInt64String>.self, forKey: ToyCodingKey("physicalBytes"))
+        self.`freeBytes` = try container.decode(Optional<UInt64String>.self, forKey: ToyCodingKey("freeBytes"))
+        self.`processAvailableBytes` = try container.decode(Optional<UInt64String>.self, forKey: ToyCodingKey("processAvailableBytes"))
+        self.`pressure` = try container.decode(OpsStatusMemoryPressure.self, forKey: ToyCodingKey("pressure"))
+        self.`swapTotalBytes` = try container.decode(Optional<UInt64String>.self, forKey: ToyCodingKey("swapTotalBytes"))
+        self.`swapUsedBytes` = try container.decode(Optional<UInt64String>.self, forKey: ToyCodingKey("swapUsedBytes"))
+        self.`swapPageSize` = try container.decode(Optional<UInt64String>.self, forKey: ToyCodingKey("swapPageSize"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`observedAt`, forKey: ToyCodingKey("observedAt"))
+        try container.encode(`monotonicNanoseconds`, forKey: ToyCodingKey("monotonicNanoseconds"))
+        try container.encode(`physicalBytes`, forKey: ToyCodingKey("physicalBytes"))
+        try container.encode(`freeBytes`, forKey: ToyCodingKey("freeBytes"))
+        try container.encode(`processAvailableBytes`, forKey: ToyCodingKey("processAvailableBytes"))
+        try container.encode(`pressure`, forKey: ToyCodingKey("pressure"))
+        try container.encode(`swapTotalBytes`, forKey: ToyCodingKey("swapTotalBytes"))
+        try container.encode(`swapUsedBytes`, forKey: ToyCodingKey("swapUsedBytes"))
+        try container.encode(`swapPageSize`, forKey: ToyCodingKey("swapPageSize"))
+    }
+}
+
+public enum BootstrapResourceReasonV1: String, Codable, CaseIterable, Sendable {
+    case `mEASUREMENTUNAVAILABLE` = "MEASUREMENT_UNAVAILABLE"
+    case `nORMALPRESSUREREQUIRED` = "NORMAL_PRESSURE_REQUIRED"
+    case `sTABLESWAPREQUIRED` = "STABLE_SWAP_REQUIRED"
+    case `aVAILABLEMEMORYTOOLOW` = "AVAILABLE_MEMORY_TOO_LOW"
+    case `pHYSICALRAMFITREQUIRED` = "PHYSICAL_RAM_FIT_REQUIRED"
+    case `hEAVYWORKOWNERUNAVAILABLE` = "HEAVY_WORK_OWNER_UNAVAILABLE"
+    case `aGGREGATEENFORCEMENTUNAVAILABLE` = "AGGREGATE_ENFORCEMENT_UNAVAILABLE"
+    case `tIMEOUT` = "TIMEOUT"
+}
+
+public struct BootstrapResourcePreflightV1: Codable, Sendable {
+    public let `schemaVersion`: BootstrapResourcePreflightV1SchemaVersion
+    public let `measuredAt`: Instant
+    public let `samples`: [BootstrapResourceSampleV1]
+    public let `completeMeasurements`: Bool
+    public let `provisionalAggregateCeilingBytes`: BootstrapResourcePreflightV1ProvisionalAggregateCeilingBytes
+    public let `marginBytes`: BootstrapResourcePreflightV1MarginBytes
+    public let `requiredFreeBytes`: BootstrapResourcePreflightV1RequiredFreeBytes
+    public let `minimumFreeBytes`: Optional<UInt64String>
+    public let `stabilityWindowNanoseconds`: UInt64String
+    public let `maximumSwapGrowthBytes`: Optional<UInt64String>
+    public let `normalPressureObserved`: Bool
+    public let `swapStable`: Bool
+    public let `headroomSatisfied`: Bool
+    public let `physicalFitSatisfied`: Bool
+    public let `reasons`: [BootstrapResourceReasonV1]
+    public let `resourcePermitIssued`: CliFailureOk
+    public let `admissionState`: BootstrapOperationRecordV1State
+    public init(`schemaVersion`: BootstrapResourcePreflightV1SchemaVersion, `measuredAt`: Instant, `samples`: [BootstrapResourceSampleV1], `completeMeasurements`: Bool, `provisionalAggregateCeilingBytes`: BootstrapResourcePreflightV1ProvisionalAggregateCeilingBytes, `marginBytes`: BootstrapResourcePreflightV1MarginBytes, `requiredFreeBytes`: BootstrapResourcePreflightV1RequiredFreeBytes, `minimumFreeBytes`: Optional<UInt64String>, `stabilityWindowNanoseconds`: UInt64String, `maximumSwapGrowthBytes`: Optional<UInt64String>, `normalPressureObserved`: Bool, `swapStable`: Bool, `headroomSatisfied`: Bool, `physicalFitSatisfied`: Bool, `reasons`: [BootstrapResourceReasonV1], `resourcePermitIssued`: CliFailureOk, `admissionState`: BootstrapOperationRecordV1State) {
+        self.`schemaVersion` = `schemaVersion`
+        self.`measuredAt` = `measuredAt`
+        self.`samples` = `samples`
+        self.`completeMeasurements` = `completeMeasurements`
+        self.`provisionalAggregateCeilingBytes` = `provisionalAggregateCeilingBytes`
+        self.`marginBytes` = `marginBytes`
+        self.`requiredFreeBytes` = `requiredFreeBytes`
+        self.`minimumFreeBytes` = `minimumFreeBytes`
+        self.`stabilityWindowNanoseconds` = `stabilityWindowNanoseconds`
+        self.`maximumSwapGrowthBytes` = `maximumSwapGrowthBytes`
+        self.`normalPressureObserved` = `normalPressureObserved`
+        self.`swapStable` = `swapStable`
+        self.`headroomSatisfied` = `headroomSatisfied`
+        self.`physicalFitSatisfied` = `physicalFitSatisfied`
+        self.`reasons` = `reasons`
+        self.`resourcePermitIssued` = `resourcePermitIssued`
+        self.`admissionState` = `admissionState`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["schemaVersion", "measuredAt", "samples", "completeMeasurements", "provisionalAggregateCeilingBytes", "marginBytes", "requiredFreeBytes", "minimumFreeBytes", "stabilityWindowNanoseconds", "maximumSwapGrowthBytes", "normalPressureObserved", "swapStable", "headroomSatisfied", "physicalFitSatisfied", "reasons", "resourcePermitIssued", "admissionState"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`schemaVersion` = try container.decode(BootstrapResourcePreflightV1SchemaVersion.self, forKey: ToyCodingKey("schemaVersion"))
+        self.`measuredAt` = try container.decode(Instant.self, forKey: ToyCodingKey("measuredAt"))
+        self.`samples` = try container.decode([BootstrapResourceSampleV1].self, forKey: ToyCodingKey("samples"))
+        self.`completeMeasurements` = try container.decode(Bool.self, forKey: ToyCodingKey("completeMeasurements"))
+        self.`provisionalAggregateCeilingBytes` = try container.decode(BootstrapResourcePreflightV1ProvisionalAggregateCeilingBytes.self, forKey: ToyCodingKey("provisionalAggregateCeilingBytes"))
+        self.`marginBytes` = try container.decode(BootstrapResourcePreflightV1MarginBytes.self, forKey: ToyCodingKey("marginBytes"))
+        self.`requiredFreeBytes` = try container.decode(BootstrapResourcePreflightV1RequiredFreeBytes.self, forKey: ToyCodingKey("requiredFreeBytes"))
+        self.`minimumFreeBytes` = try container.decode(Optional<UInt64String>.self, forKey: ToyCodingKey("minimumFreeBytes"))
+        self.`stabilityWindowNanoseconds` = try container.decode(UInt64String.self, forKey: ToyCodingKey("stabilityWindowNanoseconds"))
+        self.`maximumSwapGrowthBytes` = try container.decode(Optional<UInt64String>.self, forKey: ToyCodingKey("maximumSwapGrowthBytes"))
+        self.`normalPressureObserved` = try container.decode(Bool.self, forKey: ToyCodingKey("normalPressureObserved"))
+        self.`swapStable` = try container.decode(Bool.self, forKey: ToyCodingKey("swapStable"))
+        self.`headroomSatisfied` = try container.decode(Bool.self, forKey: ToyCodingKey("headroomSatisfied"))
+        self.`physicalFitSatisfied` = try container.decode(Bool.self, forKey: ToyCodingKey("physicalFitSatisfied"))
+        self.`reasons` = try container.decode([BootstrapResourceReasonV1].self, forKey: ToyCodingKey("reasons"))
+        self.`resourcePermitIssued` = try container.decode(CliFailureOk.self, forKey: ToyCodingKey("resourcePermitIssued"))
+        self.`admissionState` = try container.decode(BootstrapOperationRecordV1State.self, forKey: ToyCodingKey("admissionState"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`schemaVersion`, forKey: ToyCodingKey("schemaVersion"))
+        try container.encode(`measuredAt`, forKey: ToyCodingKey("measuredAt"))
+        try container.encode(`samples`, forKey: ToyCodingKey("samples"))
+        try container.encode(`completeMeasurements`, forKey: ToyCodingKey("completeMeasurements"))
+        try container.encode(`provisionalAggregateCeilingBytes`, forKey: ToyCodingKey("provisionalAggregateCeilingBytes"))
+        try container.encode(`marginBytes`, forKey: ToyCodingKey("marginBytes"))
+        try container.encode(`requiredFreeBytes`, forKey: ToyCodingKey("requiredFreeBytes"))
+        try container.encode(`minimumFreeBytes`, forKey: ToyCodingKey("minimumFreeBytes"))
+        try container.encode(`stabilityWindowNanoseconds`, forKey: ToyCodingKey("stabilityWindowNanoseconds"))
+        try container.encode(`maximumSwapGrowthBytes`, forKey: ToyCodingKey("maximumSwapGrowthBytes"))
+        try container.encode(`normalPressureObserved`, forKey: ToyCodingKey("normalPressureObserved"))
+        try container.encode(`swapStable`, forKey: ToyCodingKey("swapStable"))
+        try container.encode(`headroomSatisfied`, forKey: ToyCodingKey("headroomSatisfied"))
+        try container.encode(`physicalFitSatisfied`, forKey: ToyCodingKey("physicalFitSatisfied"))
+        try container.encode(`reasons`, forKey: ToyCodingKey("reasons"))
+        try container.encode(`resourcePermitIssued`, forKey: ToyCodingKey("resourcePermitIssued"))
+        try container.encode(`admissionState`, forKey: ToyCodingKey("admissionState"))
+    }
+}
+
+public enum BootstrapResourcePreflightV1SchemaVersion: String, Codable, CaseIterable, Sendable {
+    case `toyBootstrapResourcePreflightV1` = "toy.bootstrap-resource-preflight.v1"
+}
+
+public enum BootstrapResourcePreflightV1ProvisionalAggregateCeilingBytes: String, Codable, CaseIterable, Sendable {
+    case `value0` = "1073741824"
+}
+
+public enum BootstrapResourcePreflightV1MarginBytes: String, Codable, CaseIterable, Sendable {
+    case `value0` = "536870912"
+}
+
+public enum BootstrapResourcePreflightV1RequiredFreeBytes: String, Codable, CaseIterable, Sendable {
+    case `value0` = "1610612736"
+}

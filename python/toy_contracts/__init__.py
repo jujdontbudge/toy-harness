@@ -22,6 +22,9 @@ from toy_contracts.generated import (
     BootstrapJournalOwnerV1,
     BootstrapJournalStateV1,
     BootstrapOperationRecordV1,
+    BootstrapResourcePreflightV1,
+    BootstrapResourceReasonV1,
+    BootstrapResourceSampleV1,
     BootstrapUpRequestV1,
     CadenceCoverageV1,
     CadencePeriodV1,
@@ -285,4 +288,7 @@ __all__ = [
     "BootstrapJournalStateV1",
     "BootstrapUpRequestV1",
     "BootstrapOperationRecordV1",
+    "BootstrapResourceSampleV1",
+    "BootstrapResourceReasonV1",
+    "BootstrapResourcePreflightV1",
 ]

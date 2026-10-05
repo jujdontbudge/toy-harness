@@ -1,6 +1,6 @@
 # K3 native test-stack lifecycle
 
-Status: written interface and bounded implementation plan only. No controller, launcher, signature, database or stack has been created. ADR 0006's runtime predicates remain unresolved. This extends existing Ops and the registered test controller; it creates no permanent CLI service, account, gateway, production datastore or privileged path.
+Status: written runtime interface and compiled native preparation. ADR 0014 admits real terminal-blocked request identities in the private bootstrap SQLite journal; ADR 0015 measures bounded host resource prerequisites without issuing a permit. No executable controller, admitted App Sandbox signing, PostgreSQL or runtime stack has been created. ADR 0006's runtime predicates remain unresolved. This extends existing Ops and the registered test controller; it creates no permanent CLI service, account, gateway, production datastore or privileged path.
 
 ## Public ownership
 

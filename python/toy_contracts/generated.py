@@ -2650,3 +2650,60 @@ BootstrapOperationRecordV1State = Literal[
 BootstrapOperationRecordV1ErrorCode = Literal[
     "DEPENDENCY_UNAVAILABLE",
 ]
+
+class BootstrapResourceSampleV1(TypedDict):
+    observedAt: "Instant"
+    monotonicNanoseconds: "UInt64String"
+    physicalBytes: Optional["UInt64String"]
+    freeBytes: Optional["UInt64String"]
+    processAvailableBytes: Optional["UInt64String"]
+    pressure: "OpsStatusMemoryPressure"
+    swapTotalBytes: Optional["UInt64String"]
+    swapUsedBytes: Optional["UInt64String"]
+    swapPageSize: Optional["UInt64String"]
+
+BootstrapResourceReasonV1 = Literal[
+    "MEASUREMENT_UNAVAILABLE",
+    "NORMAL_PRESSURE_REQUIRED",
+    "STABLE_SWAP_REQUIRED",
+    "AVAILABLE_MEMORY_TOO_LOW",
+    "PHYSICAL_RAM_FIT_REQUIRED",
+    "HEAVY_WORK_OWNER_UNAVAILABLE",
+    "AGGREGATE_ENFORCEMENT_UNAVAILABLE",
+    "TIMEOUT",
+]
+
+class BootstrapResourcePreflightV1(TypedDict):
+    schemaVersion: "BootstrapResourcePreflightV1SchemaVersion"
+    measuredAt: "Instant"
+    samples: list["BootstrapResourceSampleV1"]
+    completeMeasurements: bool
+    provisionalAggregateCeilingBytes: "BootstrapResourcePreflightV1ProvisionalAggregateCeilingBytes"
+    marginBytes: "BootstrapResourcePreflightV1MarginBytes"
+    requiredFreeBytes: "BootstrapResourcePreflightV1RequiredFreeBytes"
+    minimumFreeBytes: Optional["UInt64String"]
+    stabilityWindowNanoseconds: "UInt64String"
+    maximumSwapGrowthBytes: Optional["UInt64String"]
+    normalPressureObserved: bool
+    swapStable: bool
+    headroomSatisfied: bool
+    physicalFitSatisfied: bool
+    reasons: list["BootstrapResourceReasonV1"]
+    resourcePermitIssued: "CliFailureOk"
+    admissionState: "BootstrapOperationRecordV1State"
+
+BootstrapResourcePreflightV1SchemaVersion = Literal[
+    "toy.bootstrap-resource-preflight.v1",
+]
+
+BootstrapResourcePreflightV1ProvisionalAggregateCeilingBytes = Literal[
+    "1073741824",
+]
+
+BootstrapResourcePreflightV1MarginBytes = Literal[
+    "536870912",
+]
+
+BootstrapResourcePreflightV1RequiredFreeBytes = Literal[
+    "1610612736",
+]

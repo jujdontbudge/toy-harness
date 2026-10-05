@@ -2,7 +2,7 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-05T16:36:46.812Z",
+  "updatedAt": "2026-10-05T16:51:09.095Z",
   "phase": "R0 kitchen",
   "activeCard": "R0.K3",
   "cardCount": 83,
@@ -58,7 +58,7 @@
       ],
       "lastVerification": {
         "evidence": "build/evidence/R0.K2/bootstrap.json",
-        "attemptId": "2026-10-05T16-07-56-101Z-619e510a-2309-4ee1-afcf-a06ebe774b2e",
+        "attemptId": "2026-10-05T16-49-12-815Z-b22fbdc0-f807-4702-b347-32d321645dad",
         "checks": 29,
         "verdict": "PASS",
         "acceptanceComplete": false
@@ -82,7 +82,8 @@
         "build/evidence/R0.K3/resource-accounting-research.json",
         "build/evidence/R0.K3/native-compile-recovery.json",
         "build/evidence/R0.K3/operation-journal.json",
-        "build/evidence/R0.K3/supervisor-review-corrections.json"
+        "build/evidence/R0.K3/supervisor-review-corrections.json",
+        "build/evidence/R0.K3/resource-preflight.json"
       ],
       "requiredATs": [
         "AT-cli-1",
@@ -125,6 +126,13 @@
           "durableBlockedOperationAdmissionAvailable": true,
           "durableRuntimeOperationAdmissionAvailable": false,
           "reviewCorrections": "COMPILED_RUNTIME_PROOF_PENDING"
+        },
+        "resourcePreflight": {
+          "status": "CLI_VERIFIED_READ_ONLY_MEASUREMENT_ADMISSION_BLOCKED",
+          "publicInterface": "OpsControlRead.doctor",
+          "evidence": "build/evidence/R0.K3/resource-preflight.json",
+          "runtimePermitAvailable": false,
+          "acceptanceComplete": false
         }
       },
       "pendingConditions": [
@@ -140,9 +148,9 @@
       ],
       "lastVerification": {
         "evidence": "build/evidence/R0.K3/bootstrap.json",
-        "checks": 8,
-        "compiledPackedInvocations": 106,
-        "verdict": "PASS_BLOCKED_JOURNAL_OFFLINE_AND_NATIVE_COMPILE_SUBSETS",
+        "checks": 9,
+        "compiledPackedInvocations": 107,
+        "verdict": "PASS_BLOCKED_JOURNAL_RESOURCE_OFFLINE_AND_NATIVE_COMPILE_SUBSETS",
         "acceptanceComplete": false,
         "receiptPrivacyPolicy": "VALIDATED_OUTPUT_ONLY_NO_ARGUMENTS"
       }
@@ -8669,7 +8677,20 @@
   },
   "trialDeadlines": [],
   "humanSteps": "build/HUMAN-STEPS.md",
-  "blockers": [],
+  "blockers": [
+    {
+      "id": "K3.bootstrap-resource-headroom",
+      "kind": "MEASURED_PREREQUISITE",
+      "observedAt": "2026-10-05T16:49:10.519Z",
+      "evidence": "build/evidence/R0.K3/resource-preflight.json",
+      "condition": "Minimum conservative free bytes 155549696 below 1610612736; sole lease, aggregate enforcement and foreground admission remain unavailable",
+      "blocks": [
+        "New child admission",
+        "Disposable native runtime admission"
+      ],
+      "nextAction": "Continue bounded local owner implementation; remeasure through toy doctor --deep without stopping production services"
+    }
+  ],
   "deployment": {
     "performed": false,
     "preservedServices": [
@@ -8677,7 +8698,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Implement the Ops internal resource preflight from conservative byte counters, exact pressure flags and real swap-stability samples; unknown measurements block. Then implement the exclusive heavy lease and external whole-attempt native signing/launch/reconciliation, with an explicit journal migration/online backup if new durable state is required. Current blocked-request identities are CLI verified; all native execution and complete AT gates remain pending.",
+  "nextAction": "Freeze and implement the single external Ops attempt owner: whole-attempt deadline, sole heavy-work lease bound to request/generation and process incarnation, durable fencing/recovery and backup-before-migration. Current CLI-measured headroom blocks child/native runtime admission; remeasure through toy doctor --deep before execution. Preserve all services. Full K3, actual identities, PostgreSQL, assigned-rung ATs, real elapsed trials/soaks and authorized R0–R5 deployment remain pending.",
   "previousTurnClassification": "progress: current native supervisor compilation and independent R0.09 storage preparation",
   "failures": [
     {
@@ -8711,6 +8732,14 @@
       "status": "RESOLVED",
       "resolution": "Keep the finite conflict table as a const tuple; fresh complete K2 baseline and post-fixture checks pass",
       "evidence": "build/evidence/R0.K2/attempts/2026-10-05T16-25-44-635Z-1ac98bd1-d57c-49ef-8834-eccd62b80555.json"
+    },
+    {
+      "id": "K3.resource-physical-fit-predicate",
+      "condition": "Initial physical-fit predicate compared only ceiling plus margin with total RAM, omitting the existing non-free complement",
+      "unchangedAttempts": 1,
+      "status": "RESOLVED",
+      "resolution": "Owner predicate now constrains the conservative existing physical complement plus stack reserve; CLI checks validate the projected predicate. Swap stability also bounds both total and used growth.",
+      "evidence": "build/evidence/R0.K3/resource-preflight.json"
     }
   ],
   "specIndex": {
@@ -8732,12 +8761,25 @@
   "admission": {
     "concurrentChildren": 0,
     "maximumChildren": 1,
-    "swapUsedMiB": 1503,
     "semanticStackAdmitted": false,
-    "observedAt": "2026-10-05T16:32:29.585Z",
-    "memorystatusPercentage": 56,
-    "availableBytesVerified": false,
-    "measurementEvidence": "build/evidence/R0.K3/resource-accounting-research.json"
+    "observedAt": "2026-10-05T16:49:10.519Z",
+    "availableBytesVerified": true,
+    "measurementEvidence": "build/evidence/R0.K3/resource-preflight.json",
+    "historicalSnapshot": {
+      "observedAt": "2026-10-05T16:32:29.585Z",
+      "memorystatusPercentage": 56,
+      "swapUsedMiB": 1503,
+      "availableBytesVerified": false
+    },
+    "measurementMeaning": "Conservative free-byte counter; process.availableMemory diagnostic only; no capacity or resource permit",
+    "minimumFreeBytes": "155549696",
+    "requiredFreeBytes": "1610612736",
+    "pressure": "normal",
+    "maximumSwapGrowthBytes": "0",
+    "headroomSatisfied": false,
+    "physicalFitSatisfied": false,
+    "resourcePermitIssued": false,
+    "childAdmission": false
   },
   "currentTurnClassification": "progress",
   "cliCards": {
@@ -18879,14 +18921,14 @@
     "status": "completed; both native source findings corrected and compiled, actual R0.05 denial acceptance pending"
   },
   "continuationAssessment": {
-    "generatedAt": "2026-10-05T16:36:46.812Z",
+    "generatedAt": "2026-10-05T16:51:09.095Z",
     "classification": "progress",
     "evidence": [
-      "build/evidence/R0.K3/operation-journal.json",
-      "build/evidence/R0.K3/supervisor-review-corrections.json",
+      "build/evidence/R0.K3/resource-preflight.json",
+      "build/evidence/R0.K3/bootstrap.json",
       "build/evidence/R0.K3/native-build.json",
-      "build/evidence/R0.K3/bootstrap.json"
+      "build/evidence/R0.K2/bootstrap.json"
     ],
-    "reason": "Real SQLite blocked-request identities and conflict/concurrency semantics verified by packed CLI; independent R0.05 findings repaired at type/protocol rung and compiled. All whole ATs and runtime gates remain pending."
+    "reason": "Real CLI resource measurements and short real deadline verified; physical complement and allocated/used swap growth predicates corrected in owner code. Fresh 9 CLI/107 invocations, 29 static checks and current native artifact/source readbacks pass; all whole acceptance and runtime gates remain pending."
   }
 }

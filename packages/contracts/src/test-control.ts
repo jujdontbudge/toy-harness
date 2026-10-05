@@ -128,6 +128,25 @@ export const bootstrapOperationRecordSchema = z.strictObject({
   acceptedAt: instantSchema, state: z.literal("blocked"), errorCode: z.literal("DEPENDENCY_UNAVAILABLE"),
   nativeExecutionPerformed: z.literal(false), resourcePermitIssued: z.literal(false)
 });
+export const bootstrapResourceSampleSchema = z.strictObject({
+  observedAt: instantSchema, monotonicNanoseconds: uint64Schema, physicalBytes: uint64Schema.nullable(),
+  freeBytes: uint64Schema.nullable(), processAvailableBytes: uint64Schema.nullable(),
+  pressure: z.enum(["normal", "warning", "critical", "unknown"]),
+  swapTotalBytes: uint64Schema.nullable(), swapUsedBytes: uint64Schema.nullable(), swapPageSize: uint64Schema.nullable()
+});
+export const bootstrapResourceReasonSchema = z.enum([
+  "MEASUREMENT_UNAVAILABLE", "NORMAL_PRESSURE_REQUIRED", "STABLE_SWAP_REQUIRED", "AVAILABLE_MEMORY_TOO_LOW",
+  "PHYSICAL_RAM_FIT_REQUIRED", "HEAVY_WORK_OWNER_UNAVAILABLE", "AGGREGATE_ENFORCEMENT_UNAVAILABLE", "TIMEOUT"
+]);
+export const bootstrapResourcePreflightSchema = z.strictObject({
+  schemaVersion: z.literal("toy.bootstrap-resource-preflight.v1"), measuredAt: instantSchema,
+  samples: z.array(bootstrapResourceSampleSchema).max(3), completeMeasurements: z.boolean(),
+  provisionalAggregateCeilingBytes: z.literal("1073741824"), marginBytes: z.literal("536870912"),
+  requiredFreeBytes: z.literal("1610612736"), minimumFreeBytes: uint64Schema.nullable(),
+  stabilityWindowNanoseconds: uint64Schema, maximumSwapGrowthBytes: uint64Schema.nullable(),
+  normalPressureObserved: z.boolean(), swapStable: z.boolean(), headroomSatisfied: z.boolean(), physicalFitSatisfied: z.boolean(),
+  reasons: z.array(bootstrapResourceReasonSchema), resourcePermitIssued: z.literal(false), admissionState: z.literal("blocked")
+});
 export type RegisteredCliProbeIdV1 = z.infer<typeof registeredCliProbeIdSchema>;
 export type RegisteredTestCaseV1 = z.infer<typeof registeredTestCaseSchema>;
 export type ArtifactBindingV1 = z.infer<typeof artifactBindingSchema>;
@@ -159,6 +178,9 @@ export type BootstrapJournalOwnerV1 = z.infer<typeof bootstrapJournalOwnerSchema
 export type BootstrapJournalStateV1 = z.infer<typeof bootstrapJournalStateSchema>;
 export type BootstrapUpRequestV1 = z.infer<typeof bootstrapUpRequestSchema>;
 export type BootstrapOperationRecordV1 = z.infer<typeof bootstrapOperationRecordSchema>;
+export type BootstrapResourceSampleV1 = z.infer<typeof bootstrapResourceSampleSchema>;
+export type BootstrapResourceReasonV1 = z.infer<typeof bootstrapResourceReasonSchema>;
+export type BootstrapResourcePreflightV1 = z.infer<typeof bootstrapResourcePreflightSchema>;
 export const testControlSchemaInventory = {
   RegisteredCliProbeIdV1: registeredCliProbeIdSchema, RegisteredTestWorldV1: registeredTestWorldSchema,
   RegisteredTestCaseV1: registeredTestCaseSchema, TestStackClockV1: testStackClockSchema, TestStackModelV1: testStackModelSchema,
@@ -176,5 +198,7 @@ export const testControlSchemaInventory = {
   NativeSupervisorRequestV1: nativeSupervisorRequestSchema, NativeSignatureObservationV1: nativeSignatureObservationSchema,
   NativeSupervisorReceiptV1: nativeSupervisorReceiptSchema,
   BootstrapJournalOwnerV1: bootstrapJournalOwnerSchema, BootstrapJournalStateV1: bootstrapJournalStateSchema,
-  BootstrapUpRequestV1: bootstrapUpRequestSchema, BootstrapOperationRecordV1: bootstrapOperationRecordSchema
+  BootstrapUpRequestV1: bootstrapUpRequestSchema, BootstrapOperationRecordV1: bootstrapOperationRecordSchema,
+  BootstrapResourceSampleV1: bootstrapResourceSampleSchema, BootstrapResourceReasonV1: bootstrapResourceReasonSchema,
+  BootstrapResourcePreflightV1: bootstrapResourcePreflightSchema
 };

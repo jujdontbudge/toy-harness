@@ -143,3 +143,6 @@ export type BootstrapJournalOwnerV1 = z.infer<typeof schemaInventory.BootstrapJo
 export type BootstrapJournalStateV1 = z.infer<typeof schemaInventory.BootstrapJournalStateV1>;
 export type BootstrapUpRequestV1 = z.infer<typeof schemaInventory.BootstrapUpRequestV1>;
 export type BootstrapOperationRecordV1 = z.infer<typeof schemaInventory.BootstrapOperationRecordV1>;
+export type BootstrapResourceSampleV1 = z.infer<typeof schemaInventory.BootstrapResourceSampleV1>;
+export type BootstrapResourceReasonV1 = z.infer<typeof schemaInventory.BootstrapResourceReasonV1>;
+export type BootstrapResourcePreflightV1 = z.infer<typeof schemaInventory.BootstrapResourcePreflightV1>;
