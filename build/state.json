@@ -2,7 +2,7 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-05T04:12:44.008Z",
+  "updatedAt": "2026-10-05T04:26:49.035367Z",
   "phase": "R0 kitchen",
   "activeCard": "R0.K3",
   "cardCount": 83,
@@ -72,7 +72,9 @@
       "evidence": [
         "build/evidence/R0.K3/bootstrap.json",
         "build/evidence/R0.K3/contract-review.json",
-        "build/evidence/R0.K3/diagnostic-review.json"
+        "build/evidence/R0.K3/diagnostic-review.json",
+        "build/evidence/R0.K3/receipt-privacy.json",
+        "build/evidence/R0.K3/diagnostic-inventory-design.json"
       ],
       "requiredATs": [
         "AT-cli-1",
@@ -108,7 +110,8 @@
         "checks": 6,
         "compiledPackedInvocations": 88,
         "verdict": "PASS_OFFLINE_AND_UNAVAILABLE_DIAGNOSTIC_SUBSETS",
-        "acceptanceComplete": false
+        "acceptanceComplete": false,
+        "receiptPrivacyPolicy": "VALIDATED_OUTPUT_ONLY_NO_ARGUMENTS"
       }
     },
     "R0.K4a": {
@@ -18782,7 +18785,7 @@
     "id": "/root/r0_native_bootstrap_design",
     "model": "gpt-6-luna",
     "reasoning": "max",
-    "ownedScope": "Strict diagnostic inventory reconciliation design; owns only ADR 0009 and design evidence"
+    "ownedScope": "Read-only review of ADR 0010 native persistent stack lifecycle"
   },
   "coordinator": {
     "threadId": "01a109d1-2f67-7643-9677-404a83617cf8",
@@ -18794,7 +18797,7 @@
     "id": "/root/r0_native_bootstrap_design",
     "model": "gpt-6-luna",
     "reasoning": "max",
-    "ownedScope": "Written native bootstrap launcher design",
-    "status": "complete; conditional design only, no runtime or AT claim"
+    "ownedScope": "ADR 0009 strict diagnostic inventory reconciliation",
+    "status": "complete; proposal only, no runtime or acceptance claim"
   }
 }

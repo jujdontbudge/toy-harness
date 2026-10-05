@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "toy.bootstrap-cli.v1",
+  "schemaVersion": "toy.bootstrap-cli.v2",
   "card": "R0.K3",
   "attemptId": "2026-10-05T03-26-45.093Z-8a735c86-545d-4d3b-aab1-b091858c733f",
   "generatedAt": "2026-10-05T03:26:51.141Z",
@@ -10,665 +10,505 @@
   "receipts": [
     {
       "id": "help-json",
-      "args": [
-        "--help",
-        "--json"
-      ],
+      "argumentCount": 2,
       "exitCode": 0,
+      "stdoutBytes": 42188,
+      "stderrBytes": 0,
       "stdout": "{\"schemaVersion\":\"toy.cli.v1\",\"commandId\":\"help\",\"invocationId\":\"ad96a230-5ccc-4ff1-b01e-2b7458ac4849\",\"generatedAt\":\"2026-10-05T03:26:47.217Z\",\"cliVersion\":\"1.0.0\",\"contractsVersion\":\"1.0.0\",\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"environment\":{\"kind\":\"prod\",\"instanceId\":null,\"stackId\":null},\"meta\":{\"exitCode\":0,\"releaseDigest\":null,\"controlDigest\":null,\"evaluatedAt\":null,\"operationId\":null,\"effectState\":\"none\",\"recordRefs\":[],\"evidence\":[]},\"ok\":true,\"data\":{\"group\":null,\"commands\":[{\"id\":\"help\",\"owner\":\"contracts\",\"operation\":\"CliHelpV1\",\"access\":\"read\",\"firstRelease\":\"R0\",\"implementation\":\"available\",\"ownerSchemas\":\"registered\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:help\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:help\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:help\",\"featureIds\":[\"control.help\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"group\",\"kind\":\"registered\",\"positional\":true,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"version\",\"owner\":\"contracts\",\"operation\":\"CliVersionV1\",\"access\":\"read\",\"firstRelease\":\"R0\",\"implementation\":\"available\",\"ownerSchemas\":\"registered\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:version\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:version\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:version\",\"featureIds\":[\"control.version\"],\"requirementIds\":[\"0.17\"],\"arguments\":[]},{\"id\":\"status\",\"owner\":\"ops\",\"operation\":\"OpsControlRead.status\",\"access\":\"read\",\"firstRelease\":\"R0\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:status\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:status\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:status\",\"featureIds\":[\"control.status\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"release\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"R0\",\"R1\",\"R2\",\"R3\",\"R4\",\"R5\"],\"minimum\":null,\"maximum\":null}]},{\"id\":\"doctor\",\"owner\":\"ops\",\"operation\":\"OpsControlRead.doctor\",\"access\":\"read\",\"firstRelease\":\"R0\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:doctor\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:doctor\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:doctor\",\"featureIds\":[\"control.doctor\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"release\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"R0\",\"R1\",\"R2\",\"R3\",\"R4\",\"R5\"],\"minimum\":null,\"maximum\":null},{\"name\":\"deep\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"capture\",\"owner\":\"obligations\",\"operation\":\"Obligations.capture\",\"access\":\"guarded\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:capture\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:capture\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:capture\",\"featureIds\":[\"control.capture\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"input\",\"kind\":\"input\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"due\",\"owner\":\"obligations\",\"operation\":\"Obligations.due\",\"access\":\"read\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:due\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:due\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:due\",\"featureIds\":[\"control.due\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"view\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"due\",\"open\",\"waiting\",\"upcoming\",\"resolved\"],\"minimum\":null,\"maximum\":null},{\"name\":\"owner\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"johan\",\"toy\",\"all\"],\"minimum\":null,\"maximum\":null},{\"name\":\"through\",\"kind\":\"Instant\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"limit\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":1,\"maximum\":100},{\"name\":\"cursor\",\"kind\":\"text\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"obligations.show\",\"owner\":\"obligations\",\"operation\":\"Obligations.due\",\"access\":\"read\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:obligations.show\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:obligations.show\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:obligations.show\",\"featureIds\":[\"control.obligations.show\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"commitment-id\",\"kind\":\"UUID\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"obligations.resolve\",\"owner\":\"obligations\",\"operation\":\"Obligations.resolve\",\"access\":\"guarded\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:obligations.resolve\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:obligations.resolve\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:obligations.resolve\",\"featureIds\":[\"control.obligations.resolve\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"commitment-id\",\"kind\":\"UUID\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"input\",\"kind\":\"input\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"obligations.defer\",\"owner\":\"obligations\",\"operation\":\"Obligations.defer\",\"access\":\"guarded\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:obligations.defer\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:obligations.defer\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:obligations.defer\",\"featureIds\":[\"control.obligations.defer\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"commitment-id\",\"kind\":\"UUID\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"input\",\"kind\":\"input\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"obligations.satisfy\",\"owner\":\"obligations\",\"operation\":\"Obligations.satisfy\",\"access\":\"guarded\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:obligations.satisfy\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:obligations.satisfy\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:obligations.satisfy\",\"featureIds\":[\"control.obligations.satisfy\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"dependency-id\",\"kind\":\"UUID\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"input\",\"kind\":\"input\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"attention.snapshot\",\"owner\":\"attention\",\"operation\":\"AttentionRead.snapshot\",\"access\":\"read\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:attention.snapshot\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:attention.snapshot\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:attention.snapshot\",\"featureIds\":[\"control.attention.snapshot\"],\"requirementIds\":[\"0.17\"],\"arguments\":[]},{\"id\":\"attention.preview\",\"owner\":\"attention\",\"operation\":\"AttentionControlRead.preview\",\"access\":\"read\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:attention.preview\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:attention.preview\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:attention.preview\",\"featureIds\":[\"control.attention.preview\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"commitment\",\"kind\":\"UUID\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"at\",\"kind\":\"Instant\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"horizon\",\"kind\":\"Duration\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"attention.simulate-ack\",\"owner\":\"attention\",\"operation\":\"TestIngressControl.ack\",\"access\":\"test\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:attention.simulate-ack\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:attention.simulate-ack\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:attention.simulate-ack\",\"featureIds\":[\"control.attention.simulate-ack\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"input\",\"kind\":\"input\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"human-fixture\",\"kind\":\"registered\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"authority.pending\",\"owner\":\"authority\",\"operation\":\"AuthorityControlRead.pending\",\"access\":\"read\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:authority.pending\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:authority.pending\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:authority.pending\",\"featureIds\":[\"control.authority.pending\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"limit\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":1,\"maximum\":100},{\"name\":\"cursor\",\"kind\":\"text\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"authority.outbox\",\"owner\":\"authority\",\"operation\":\"AuthorityControlRead.outbox\",\"access\":\"read\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:authority.outbox\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:authority.outbox\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:authority.outbox\",\"featureIds\":[\"control.authority.outbox\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"action\",\"kind\":\"UUID\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"state\",\"kind\":\"registered\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"limit\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":1,\"maximum\":100},{\"name\":\"cursor\",\"kind\":\"text\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"authority.status\",\"owner\":\"authority\",\"operation\":\"Authority.status\",\"access\":\"read\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:authority.status\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:authority.status\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:authority.status\",\"featureIds\":[\"control.authority.status\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"action-id\",\"kind\":\"UUID\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"authority.receipts\",\"owner\":\"authority\",\"operation\":\"Authority.receipts\",\"access\":\"read\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:authority.receipts\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:authority.receipts\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:authority.receipts\",\"featureIds\":[\"control.authority.receipts\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"action-id\",\"kind\":\"UUID\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"authority.review\",\"owner\":\"authority\",\"operation\":\"AuthorityControlRead.reviewLink\",\"access\":\"read\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:authority.review\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:authority.review\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:authority.review\",\"featureIds\":[\"control.authority.review\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"card-id\",\"kind\":\"UUID\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"open\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"sources.health\",\"owner\":\"sources\",\"operation\":\"Sources.inventory\",\"access\":\"read\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:sources.health\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:sources.health\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:sources.health\",\"featureIds\":[\"control.sources.health\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"source-id\",\"kind\":\"UUID\",\"positional\":true,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"sources.sync.now\",\"owner\":\"sources\",\"operation\":\"Sources.sync\",\"access\":\"guarded\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:sources.sync.now\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:sources.sync.now\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:sources.sync.now\",\"featureIds\":[\"control.sources.sync.now\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"source-id\",\"kind\":\"UUID\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"request-id\",\"kind\":\"UUID\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"mode\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"incremental\",\"reconcile\",\"backfill\"],\"minimum\":null,\"maximum\":null},{\"name\":\"budget-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":1000,\"maximum\":120000},{\"name\":\"wait-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":0,\"maximum\":120000}]},{\"id\":\"sources.cursor\",\"owner\":\"sources\",\"operation\":\"SourcesControlRead.cursor\",\"access\":\"read\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:sources.cursor\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:sources.cursor\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:sources.cursor\",\"featureIds\":[\"control.sources.cursor\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"source-id\",\"kind\":\"UUID\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"partition\",\"kind\":\"UUID\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"life.search\",\"owner\":\"lifestore\",\"operation\":\"LifeStore.search\",\"access\":\"read\",\"firstRelease\":\"R2\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:life.search\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:life.search\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:life.search\",\"featureIds\":[\"control.life.search\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"query\",\"kind\":\"text\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":1,\"maximum\":512},{\"name\":\"mode\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"web\",\"literal\"],\"minimum\":null,\"maximum\":null},{\"name\":\"filters-input\",\"kind\":\"input\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"limit\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":1,\"maximum\":50},{\"name\":\"cursor\",\"kind\":\"text\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"life.timeline\",\"owner\":\"lifestore\",\"operation\":\"LifeStore.timeline\",\"access\":\"read\",\"firstRelease\":\"R2\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:life.timeline\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:life.timeline\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:life.timeline\",\"featureIds\":[\"control.life.timeline\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"from\",\"kind\":\"Instant\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"to\",\"kind\":\"Instant\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"time-basis\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"event\",\"recorded\"],\"minimum\":null,\"maximum\":null},{\"name\":\"granularity\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"raw\",\"hour\",\"day\"],\"minimum\":null,\"maximum\":null},{\"name\":\"order\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"asc\",\"desc\"],\"minimum\":null,\"maximum\":null},{\"name\":\"filters-input\",\"kind\":\"input\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"limit\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":1,\"maximum\":200},{\"name\":\"cursor\",\"kind\":\"text\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"life.get\",\"owner\":\"lifestore\",\"operation\":\"LifeStore.get\",\"access\":\"read\",\"firstRelease\":\"R2\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:life.get\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:life.get\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:life.get\",\"featureIds\":[\"control.life.get\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"life-ref\",\"kind\":\"life-ref\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"document\",\"kind\":\"UUID\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"start-byte\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":0,\"maximum\":null},{\"name\":\"end-byte\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":0,\"maximum\":null}]},{\"id\":\"review.slots\",\"owner\":\"self-improvement\",\"operation\":\"RunControlRead.slots\",\"access\":\"read\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:review.slots\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:review.slots\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:review.slots\",\"featureIds\":[\"control.review.slots\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"from\",\"kind\":\"Instant\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"to\",\"kind\":\"Instant\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"job\",\"kind\":\"registered\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"state\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"scheduled\",\"running\",\"swept\",\"reviewed\",\"deferred_quota\",\"deferred_auth\",\"deferred_network\",\"deferred_busy\",\"maintenance\",\"failed\",\"missed\",\"coalesced_after_outage\"],\"minimum\":null,\"maximum\":null},{\"name\":\"limit\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":1,\"maximum\":100},{\"name\":\"cursor\",\"kind\":\"text\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"review.runs\",\"owner\":\"self-improvement\",\"operation\":\"RunControlRead.runs\",\"access\":\"read\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:review.runs\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:review.runs\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:review.runs\",\"featureIds\":[\"control.review.runs\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"slot\",\"kind\":\"UUID\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"from\",\"kind\":\"Instant\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"to\",\"kind\":\"Instant\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"limit\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":1,\"maximum\":100},{\"name\":\"cursor\",\"kind\":\"text\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"review.verdicts\",\"owner\":\"self-improvement\",\"operation\":\"TurnReview.get\",\"access\":\"read\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:review.verdicts\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:review.verdicts\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:review.verdicts\",\"featureIds\":[\"control.review.verdicts\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"run-id\",\"kind\":\"UUID\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"review.request\",\"owner\":\"self-improvement\",\"operation\":\"TurnReview.review\",\"access\":\"guarded\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:review.request\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:review.request\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:review.request\",\"featureIds\":[\"control.review.request\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"run-id\",\"kind\":\"UUID\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"request-id\",\"kind\":\"UUID\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"wait-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":0,\"maximum\":120000}]},{\"id\":\"trace\",\"owner\":\"self-improvement\",\"operation\":\"RunControlRead.trace\",\"access\":\"read\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:trace\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:trace\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:trace\",\"featureIds\":[\"control.trace\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"run-id\",\"kind\":\"UUID\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"after-sequence\",\"kind\":\"UInt64String\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"limit\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":1,\"maximum\":100}]},{\"id\":\"evidence\",\"owner\":\"self-improvement\",\"operation\":\"RunControlRead.evidence\",\"access\":\"read\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:evidence\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:evidence\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:evidence\",\"featureIds\":[\"control.evidence\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"run-id\",\"kind\":\"UUID\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"criterion\",\"kind\":\"registered\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"limit\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":1,\"maximum\":100},{\"name\":\"cursor\",\"kind\":\"text\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"replay\",\"owner\":\"self-improvement\",\"operation\":\"ReplayEnvironment.reproduce\",\"access\":\"test\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:replay\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:replay\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:replay\",\"featureIds\":[\"control.replay\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"run-id\",\"kind\":\"UUID\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"request-id\",\"kind\":\"UUID\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"artifact\",\"kind\":\"SHA256\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"fixture\",\"kind\":\"registered\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"wait-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":0,\"maximum\":120000}]},{\"id\":\"sim.run\",\"owner\":\"self-improvement\",\"operation\":\"SimControl.run\",\"access\":\"test\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:sim.run\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:sim.run\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:sim.run\",\"featureIds\":[\"control.sim.run\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"scenario-id\",\"kind\":\"registered\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"request-id\",\"kind\":\"UUID\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"artifact\",\"kind\":\"SHA256\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"seed\",\"kind\":\"UInt64String\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"user\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"scripted\",\"adaptive\"],\"minimum\":null,\"maximum\":null},{\"name\":\"clock\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"exact_cadence\",\"projected_behavior\"],\"minimum\":null,\"maximum\":null},{\"name\":\"wait-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":0,\"maximum\":120000}]},{\"id\":\"sim.suite\",\"owner\":\"self-improvement\",\"operation\":\"SimControl.suite\",\"access\":\"test\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:sim.suite\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:sim.suite\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:sim.suite\",\"featureIds\":[\"control.sim.suite\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"suite-id\",\"kind\":\"registered\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"request-id\",\"kind\":\"UUID\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"release\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"R0\",\"R1\",\"R2\",\"R3\",\"R4\",\"R5\"],\"minimum\":null,\"maximum\":null},{\"name\":\"artifact\",\"kind\":\"SHA256\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"wait-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":0,\"maximum\":120000}]},{\"id\":\"sim.show\",\"owner\":\"self-improvement\",\"operation\":\"SimControl.show\",\"access\":\"test\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:sim.show\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:sim.show\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:sim.show\",\"featureIds\":[\"control.sim.show\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"campaign-or-trial-id\",\"kind\":\"UUID\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"section\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"summary\",\"transcript\",\"grades\",\"all\"],\"minimum\":null,\"maximum\":null},{\"name\":\"limit\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":1,\"maximum\":100},{\"name\":\"cursor\",\"kind\":\"text\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"hands.status\",\"owner\":\"hands\",\"operation\":\"Hands.status\",\"access\":\"read\",\"firstRelease\":\"R2\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:hands.status\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:hands.status\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:hands.status\",\"featureIds\":[\"control.hands.status\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"session\",\"kind\":\"UUID\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"hands.smoke\",\"owner\":\"hands\",\"operation\":\"HandsSmokeControl.run\",\"access\":\"test\",\"firstRelease\":\"R2\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:hands.smoke\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:hands.smoke\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:hands.smoke\",\"featureIds\":[\"control.hands.smoke\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"kind\",\"kind\":\"enum\",\"positional\":true,\"required\":true,\"values\":[\"browser\",\"computer\"],\"minimum\":null,\"maximum\":null},{\"name\":\"request-id\",\"kind\":\"UUID\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"fixture\",\"kind\":\"registered\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"wait-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":0,\"maximum\":120000}]},{\"id\":\"clock.show\",\"owner\":\"ops\",\"operation\":\"TestClockControl.get\",\"access\":\"test\",\"firstRelease\":\"R0\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:clock.show\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:clock.show\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:clock.show\",\"featureIds\":[\"control.clock.show\"],\"requirementIds\":[\"0.17\"],\"arguments\":[]},{\"id\":\"clock.freeze\",\"owner\":\"ops\",\"operation\":\"TestClockControl.freeze\",\"access\":\"test\",\"firstRelease\":\"R0\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:clock.freeze\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:clock.freeze\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:clock.freeze\",\"featureIds\":[\"control.clock.freeze\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"at\",\"kind\":\"Instant\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"request-id\",\"kind\":\"UUID\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"clock.advance\",\"owner\":\"ops\",\"operation\":\"TestClockControl.advance\",\"access\":\"test\",\"firstRelease\":\"R0\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:clock.advance\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:clock.advance\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:clock.advance\",\"featureIds\":[\"control.clock.advance\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"by\",\"kind\":\"Duration\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"request-id\",\"kind\":\"UUID\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"wait-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":0,\"maximum\":120000}]},{\"id\":\"clock.resume\",\"owner\":\"ops\",\"operation\":\"TestClockControl.resume\",\"access\":\"test\",\"firstRelease\":\"R0\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:clock.resume\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:clock.resume\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:clock.resume\",\"featureIds\":[\"control.clock.resume\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"request-id\",\"kind\":\"UUID\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"stack.up\",\"owner\":\"ops\",\"operation\":\"OpsTestStack.up\",\"access\":\"test\",\"firstRelease\":\"R0\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:stack.up\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:stack.up\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:stack.up\",\"featureIds\":[\"control.stack.up\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"release\",\"kind\":\"enum\",\"positional\":false,\"required\":true,\"values\":[\"R0\",\"R1\",\"R2\",\"R3\",\"R4\",\"R5\"],\"minimum\":null,\"maximum\":null},{\"name\":\"request-id\",\"kind\":\"UUID\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"world\",\"kind\":\"registered\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"clock\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"fake\",\"real\"],\"minimum\":null,\"maximum\":null},{\"name\":\"model\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"fake\",\"supported\"],\"minimum\":null,\"maximum\":null},{\"name\":\"wait-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":0,\"maximum\":120000}]},{\"id\":\"stack.down\",\"owner\":\"ops\",\"operation\":\"OpsTestStack.down\",\"access\":\"test\",\"firstRelease\":\"R0\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:stack.down\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:stack.down\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:stack.down\",\"featureIds\":[\"control.stack.down\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"request-id\",\"kind\":\"UUID\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"wait-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":0,\"maximum\":120000}]},{\"id\":\"probe.run\",\"owner\":\"self-improvement\",\"operation\":\"ReplayEnvironment.runRegisteredProbe\",\"access\":\"test\",\"firstRelease\":\"R0\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:probe.run\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:probe.run\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:probe.run\",\"featureIds\":[\"control.probe.run\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"at-id\",\"kind\":\"registered\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"request-id\",\"kind\":\"UUID\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"case\",\"kind\":\"registered\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"wait-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":0,\"maximum\":120000}]},{\"id\":\"probe.show\",\"owner\":\"self-improvement\",\"operation\":\"ReplayEnvironment.registeredProbeStatus\",\"access\":\"test\",\"firstRelease\":\"R0\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:probe.show\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:probe.show\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:probe.show\",\"featureIds\":[\"control.probe.show\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"operation-id\",\"kind\":\"UUID\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"new.connector\",\"owner\":\"self-improvement\",\"operation\":\"EngineeringControl.generate\",\"access\":\"engineering\",\"firstRelease\":\"R0\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:new.connector\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:new.connector\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:new.connector\",\"featureIds\":[\"control.new.connector\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"name\",\"kind\":\"name\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"provider\",\"kind\":\"registered\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"plan\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"new.tool\",\"owner\":\"self-improvement\",\"operation\":\"EngineeringControl.generate\",\"access\":\"engineering\",\"firstRelease\":\"R0\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:new.tool\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:new.tool\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:new.tool\",\"featureIds\":[\"control.new.tool\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"name\",\"kind\":\"name\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"module\",\"kind\":\"enum\",\"positional\":false,\"required\":true,\"values\":[\"contracts\",\"obligations\",\"attention\",\"authority\",\"sources\",\"lifestore\",\"hermes\",\"client\",\"hands\",\"self-improvement\",\"adhd\",\"ops\"],\"minimum\":null,\"maximum\":null},{\"name\":\"operation\",\"kind\":\"registered\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"plan\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"new.skill\",\"owner\":\"self-improvement\",\"operation\":\"EngineeringControl.generate\",\"access\":\"engineering\",\"firstRelease\":\"R0\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:new.skill\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:new.skill\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:new.skill\",\"featureIds\":[\"control.new.skill\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"name\",\"kind\":\"name\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"module\",\"kind\":\"enum\",\"positional\":false,\"required\":true,\"values\":[\"contracts\",\"obligations\",\"attention\",\"authority\",\"sources\",\"lifestore\",\"hermes\",\"client\",\"hands\",\"self-improvement\",\"adhd\",\"ops\"],\"minimum\":null,\"maximum\":null},{\"name\":\"plan\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"new.migration\",\"owner\":\"self-improvement\",\"operation\":\"EngineeringControl.generate\",\"access\":\"engineering\",\"firstRelease\":\"R0\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:new.migration\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:new.migration\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:new.migration\",\"featureIds\":[\"control.new.migration\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"name\",\"kind\":\"name\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"module\",\"kind\":\"enum\",\"positional\":false,\"required\":true,\"values\":[\"contracts\",\"obligations\",\"attention\",\"authority\",\"sources\",\"lifestore\",\"hermes\",\"client\",\"hands\",\"self-improvement\",\"adhd\",\"ops\"],\"minimum\":null,\"maximum\":null},{\"name\":\"plan\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"feature-map.check\",\"owner\":\"self-improvement\",\"operation\":\"EngineeringControl.checkFeatureMap\",\"access\":\"engineering\",\"firstRelease\":\"R0\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:feature-map.check\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:feature-map.check\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:feature-map.check\",\"featureIds\":[\"control.feature-map.check\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"release\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"R0\",\"R1\",\"R2\",\"R3\",\"R4\",\"R5\"],\"minimum\":null,\"maximum\":null}]},{\"id\":\"feature-map.update\",\"owner\":\"self-improvement\",\"operation\":\"EngineeringControl.updateFeatureMap\",\"access\":\"engineering\",\"firstRelease\":\"R0\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:feature-map.update\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:feature-map.update\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:feature-map.update\",\"featureIds\":[\"control.feature-map.update\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"plan\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"gardener.run\",\"owner\":\"self-improvement\",\"operation\":\"EngineeringControl.garden\",\"access\":\"engineering\",\"firstRelease\":\"R0\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:gardener.run\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:gardener.run\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:gardener.run\",\"featureIds\":[\"control.gardener.run\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"request-id\",\"kind\":\"UUID\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"mode\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"scan\",\"fix\"],\"minimum\":null,\"maximum\":null},{\"name\":\"wait-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":0,\"maximum\":120000}]},{\"id\":\"release.status\",\"owner\":\"ops\",\"operation\":\"PublisherControlRead.status\",\"access\":\"read\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:release.status\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:release.status\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:release.status\",\"featureIds\":[\"control.release.status\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"digest\",\"kind\":\"SHA256\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"release.rollback\",\"owner\":\"ops\",\"operation\":\"ReleaseHumanControl.prepareRollback\",\"access\":\"human\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:release.rollback\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:release.rollback\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:release.rollback\",\"featureIds\":[\"control.release.rollback\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"target\",\"kind\":\"SHA256\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"expected-current\",\"kind\":\"SHA256\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"incident\",\"kind\":\"UUID\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"request-id\",\"kind\":\"UUID\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"wait-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":0,\"maximum\":120000}]}],\"commonArguments\":[{\"name\":\"env\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"prod\",\"test\"],\"minimum\":null,\"maximum\":null},{\"name\":\"stack\",\"kind\":\"UUID\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"json\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"timeout-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":1000,\"maximum\":120000},{\"name\":\"help\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"version\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}],\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"compatibility\":{\"wireVersions\":[\"toy.cli.v1\"],\"nodeVersion\":\"24.21.0\"}}}\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "help-group-obligations",
-      "args": [
-        "obligations",
-        "--help",
-        "--json"
-      ],
+      "argumentCount": 3,
       "exitCode": 0,
+      "stdoutBytes": 4048,
+      "stderrBytes": 0,
       "stdout": "{\"schemaVersion\":\"toy.cli.v1\",\"commandId\":\"help\",\"invocationId\":\"21b140d9-4186-49d4-949e-7ccd8eab5e17\",\"generatedAt\":\"2026-10-05T03:26:47.298Z\",\"cliVersion\":\"1.0.0\",\"contractsVersion\":\"1.0.0\",\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"environment\":{\"kind\":\"prod\",\"instanceId\":null,\"stackId\":null},\"meta\":{\"exitCode\":0,\"releaseDigest\":null,\"controlDigest\":null,\"evaluatedAt\":null,\"operationId\":null,\"effectState\":\"none\",\"recordRefs\":[],\"evidence\":[]},\"ok\":true,\"data\":{\"group\":\"obligations\",\"commands\":[{\"id\":\"obligations.show\",\"owner\":\"obligations\",\"operation\":\"Obligations.due\",\"access\":\"read\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:obligations.show\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:obligations.show\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:obligations.show\",\"featureIds\":[\"control.obligations.show\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"commitment-id\",\"kind\":\"UUID\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"obligations.resolve\",\"owner\":\"obligations\",\"operation\":\"Obligations.resolve\",\"access\":\"guarded\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:obligations.resolve\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:obligations.resolve\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:obligations.resolve\",\"featureIds\":[\"control.obligations.resolve\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"commitment-id\",\"kind\":\"UUID\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"input\",\"kind\":\"input\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"obligations.defer\",\"owner\":\"obligations\",\"operation\":\"Obligations.defer\",\"access\":\"guarded\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:obligations.defer\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:obligations.defer\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:obligations.defer\",\"featureIds\":[\"control.obligations.defer\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"commitment-id\",\"kind\":\"UUID\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"input\",\"kind\":\"input\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"obligations.satisfy\",\"owner\":\"obligations\",\"operation\":\"Obligations.satisfy\",\"access\":\"guarded\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:obligations.satisfy\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:obligations.satisfy\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:obligations.satisfy\",\"featureIds\":[\"control.obligations.satisfy\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"dependency-id\",\"kind\":\"UUID\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"input\",\"kind\":\"input\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null}]}],\"commonArguments\":[{\"name\":\"env\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"prod\",\"test\"],\"minimum\":null,\"maximum\":null},{\"name\":\"stack\",\"kind\":\"UUID\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"json\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"timeout-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":1000,\"maximum\":120000},{\"name\":\"help\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"version\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}],\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"compatibility\":{\"wireVersions\":[\"toy.cli.v1\"],\"nodeVersion\":\"24.21.0\"}}}\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "help-human-obligations",
-      "args": [
-        "help",
-        "obligations"
-      ],
+      "argumentCount": 2,
       "exitCode": 0,
+      "stdoutBytes": 1047,
+      "stderrBytes": 0,
       "stdout": "Toy command inventory\nUsage: toy [--env prod|test] [--stack UUID] [--json] [--timeout-ms N] <command> [arguments]\n\nobligations show commitment-id <UUID>\n  obligations / Obligations.due; read; R1; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:obligations.show\n  urn:toy:contracts:v1:CliResultV1:obligations.show\nobligations resolve commitment-id <UUID> --input <input>\n  obligations / Obligations.resolve; guarded; R1; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:obligations.resolve\n  urn:toy:contracts:v1:CliResultV1:obligations.resolve\nobligations defer commitment-id <UUID> --input <input>\n  obligations / Obligations.defer; guarded; R1; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:obligations.defer\n  urn:toy:contracts:v1:CliResultV1:obligations.defer\nobligations satisfy dependency-id <UUID> --input <input>\n  obligations / Obligations.satisfy; guarded; R1; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:obligations.satisfy\n  urn:toy:contracts:v1:CliResultV1:obligations.satisfy\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "help-group-attention",
-      "args": [
-        "attention",
-        "--help",
-        "--json"
-      ],
+      "argumentCount": 3,
       "exitCode": 0,
+      "stdoutBytes": 3390,
+      "stderrBytes": 0,
       "stdout": "{\"schemaVersion\":\"toy.cli.v1\",\"commandId\":\"help\",\"invocationId\":\"03012a5d-5b1e-420e-ad10-ca669dda3ab6\",\"generatedAt\":\"2026-10-05T03:26:47.444Z\",\"cliVersion\":\"1.0.0\",\"contractsVersion\":\"1.0.0\",\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"environment\":{\"kind\":\"prod\",\"instanceId\":null,\"stackId\":null},\"meta\":{\"exitCode\":0,\"releaseDigest\":null,\"controlDigest\":null,\"evaluatedAt\":null,\"operationId\":null,\"effectState\":\"none\",\"recordRefs\":[],\"evidence\":[]},\"ok\":true,\"data\":{\"group\":\"attention\",\"commands\":[{\"id\":\"attention.snapshot\",\"owner\":\"attention\",\"operation\":\"AttentionRead.snapshot\",\"access\":\"read\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:attention.snapshot\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:attention.snapshot\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:attention.snapshot\",\"featureIds\":[\"control.attention.snapshot\"],\"requirementIds\":[\"0.17\"],\"arguments\":[]},{\"id\":\"attention.preview\",\"owner\":\"attention\",\"operation\":\"AttentionControlRead.preview\",\"access\":\"read\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:attention.preview\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:attention.preview\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:attention.preview\",\"featureIds\":[\"control.attention.preview\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"commitment\",\"kind\":\"UUID\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"at\",\"kind\":\"Instant\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"horizon\",\"kind\":\"Duration\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"attention.simulate-ack\",\"owner\":\"attention\",\"operation\":\"TestIngressControl.ack\",\"access\":\"test\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:attention.simulate-ack\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:attention.simulate-ack\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:attention.simulate-ack\",\"featureIds\":[\"control.attention.simulate-ack\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"input\",\"kind\":\"input\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"human-fixture\",\"kind\":\"registered\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}]}],\"commonArguments\":[{\"name\":\"env\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"prod\",\"test\"],\"minimum\":null,\"maximum\":null},{\"name\":\"stack\",\"kind\":\"UUID\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"json\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"timeout-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":1000,\"maximum\":120000},{\"name\":\"help\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"version\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}],\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"compatibility\":{\"wireVersions\":[\"toy.cli.v1\"],\"nodeVersion\":\"24.21.0\"}}}\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "help-human-attention",
-      "args": [
-        "help",
-        "attention"
-      ],
+      "argumentCount": 2,
       "exitCode": 0,
+      "stdoutBytes": 835,
+      "stderrBytes": 0,
       "stdout": "Toy command inventory\nUsage: toy [--env prod|test] [--stack UUID] [--json] [--timeout-ms N] <command> [arguments]\n\nattention snapshot \n  attention / AttentionRead.snapshot; read; R1; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:attention.snapshot\n  urn:toy:contracts:v1:CliResultV1:attention.snapshot\nattention preview --commitment <UUID> --at <Instant> --horizon <Duration>\n  attention / AttentionControlRead.preview; read; R1; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:attention.preview\n  urn:toy:contracts:v1:CliResultV1:attention.preview\nattention simulate-ack --input <input> --human-fixture <registered>\n  attention / TestIngressControl.ack; test; R1; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:attention.simulate-ack\n  urn:toy:contracts:v1:CliResultV1:attention.simulate-ack\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "help-group-authority",
-      "args": [
-        "authority",
-        "--help",
-        "--json"
-      ],
+      "argumentCount": 3,
       "exitCode": 0,
+      "stdoutBytes": 4809,
+      "stderrBytes": 0,
       "stdout": "{\"schemaVersion\":\"toy.cli.v1\",\"commandId\":\"help\",\"invocationId\":\"0a0fc930-6139-4d8c-8845-fdbde8075006\",\"generatedAt\":\"2026-10-05T03:26:47.587Z\",\"cliVersion\":\"1.0.0\",\"contractsVersion\":\"1.0.0\",\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"environment\":{\"kind\":\"prod\",\"instanceId\":null,\"stackId\":null},\"meta\":{\"exitCode\":0,\"releaseDigest\":null,\"controlDigest\":null,\"evaluatedAt\":null,\"operationId\":null,\"effectState\":\"none\",\"recordRefs\":[],\"evidence\":[]},\"ok\":true,\"data\":{\"group\":\"authority\",\"commands\":[{\"id\":\"authority.pending\",\"owner\":\"authority\",\"operation\":\"AuthorityControlRead.pending\",\"access\":\"read\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:authority.pending\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:authority.pending\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:authority.pending\",\"featureIds\":[\"control.authority.pending\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"limit\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":1,\"maximum\":100},{\"name\":\"cursor\",\"kind\":\"text\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"authority.outbox\",\"owner\":\"authority\",\"operation\":\"AuthorityControlRead.outbox\",\"access\":\"read\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:authority.outbox\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:authority.outbox\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:authority.outbox\",\"featureIds\":[\"control.authority.outbox\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"action\",\"kind\":\"UUID\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"state\",\"kind\":\"registered\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"limit\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":1,\"maximum\":100},{\"name\":\"cursor\",\"kind\":\"text\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"authority.status\",\"owner\":\"authority\",\"operation\":\"Authority.status\",\"access\":\"read\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:authority.status\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:authority.status\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:authority.status\",\"featureIds\":[\"control.authority.status\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"action-id\",\"kind\":\"UUID\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"authority.receipts\",\"owner\":\"authority\",\"operation\":\"Authority.receipts\",\"access\":\"read\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:authority.receipts\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:authority.receipts\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:authority.receipts\",\"featureIds\":[\"control.authority.receipts\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"action-id\",\"kind\":\"UUID\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"authority.review\",\"owner\":\"authority\",\"operation\":\"AuthorityControlRead.reviewLink\",\"access\":\"read\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:authority.review\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:authority.review\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:authority.review\",\"featureIds\":[\"control.authority.review\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"card-id\",\"kind\":\"UUID\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"open\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}]}],\"commonArguments\":[{\"name\":\"env\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"prod\",\"test\"],\"minimum\":null,\"maximum\":null},{\"name\":\"stack\",\"kind\":\"UUID\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"json\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"timeout-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":1000,\"maximum\":120000},{\"name\":\"help\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"version\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}],\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"compatibility\":{\"wireVersions\":[\"toy.cli.v1\"],\"nodeVersion\":\"24.21.0\"}}}\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "help-human-authority",
-      "args": [
-        "help",
-        "authority"
-      ],
+      "argumentCount": 2,
       "exitCode": 0,
+      "stdoutBytes": 1270,
+      "stderrBytes": 0,
       "stdout": "Toy command inventory\nUsage: toy [--env prod|test] [--stack UUID] [--json] [--timeout-ms N] <command> [arguments]\n\nauthority pending --limit <integer> --cursor <text>\n  authority / AuthorityControlRead.pending; read; R1; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:authority.pending\n  urn:toy:contracts:v1:CliResultV1:authority.pending\nauthority outbox --action <UUID> --state <registered> --limit <integer> --cursor <text>\n  authority / AuthorityControlRead.outbox; read; R1; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:authority.outbox\n  urn:toy:contracts:v1:CliResultV1:authority.outbox\nauthority status action-id <UUID>\n  authority / Authority.status; read; R1; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:authority.status\n  urn:toy:contracts:v1:CliResultV1:authority.status\nauthority receipts action-id <UUID>\n  authority / Authority.receipts; read; R1; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:authority.receipts\n  urn:toy:contracts:v1:CliResultV1:authority.receipts\nauthority review card-id <UUID> --open\n  authority / AuthorityControlRead.reviewLink; read; R1; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:authority.review\n  urn:toy:contracts:v1:CliResultV1:authority.review\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "help-group-sources",
-      "args": [
-        "sources",
-        "--help",
-        "--json"
-      ],
+      "argumentCount": 3,
       "exitCode": 0,
+      "stdoutBytes": 3667,
+      "stderrBytes": 0,
       "stdout": "{\"schemaVersion\":\"toy.cli.v1\",\"commandId\":\"help\",\"invocationId\":\"f847bc9e-16b3-4f8c-b71c-d5b194162d67\",\"generatedAt\":\"2026-10-05T03:26:47.733Z\",\"cliVersion\":\"1.0.0\",\"contractsVersion\":\"1.0.0\",\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"environment\":{\"kind\":\"prod\",\"instanceId\":null,\"stackId\":null},\"meta\":{\"exitCode\":0,\"releaseDigest\":null,\"controlDigest\":null,\"evaluatedAt\":null,\"operationId\":null,\"effectState\":\"none\",\"recordRefs\":[],\"evidence\":[]},\"ok\":true,\"data\":{\"group\":\"sources\",\"commands\":[{\"id\":\"sources.health\",\"owner\":\"sources\",\"operation\":\"Sources.inventory\",\"access\":\"read\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:sources.health\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:sources.health\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:sources.health\",\"featureIds\":[\"control.sources.health\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"source-id\",\"kind\":\"UUID\",\"positional\":true,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"sources.sync.now\",\"owner\":\"sources\",\"operation\":\"Sources.sync\",\"access\":\"guarded\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:sources.sync.now\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:sources.sync.now\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:sources.sync.now\",\"featureIds\":[\"control.sources.sync.now\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"source-id\",\"kind\":\"UUID\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"request-id\",\"kind\":\"UUID\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"mode\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"incremental\",\"reconcile\",\"backfill\"],\"minimum\":null,\"maximum\":null},{\"name\":\"budget-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":1000,\"maximum\":120000},{\"name\":\"wait-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":0,\"maximum\":120000}]},{\"id\":\"sources.cursor\",\"owner\":\"sources\",\"operation\":\"SourcesControlRead.cursor\",\"access\":\"read\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:sources.cursor\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:sources.cursor\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:sources.cursor\",\"featureIds\":[\"control.sources.cursor\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"source-id\",\"kind\":\"UUID\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"partition\",\"kind\":\"UUID\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}]}],\"commonArguments\":[{\"name\":\"env\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"prod\",\"test\"],\"minimum\":null,\"maximum\":null},{\"name\":\"stack\",\"kind\":\"UUID\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"json\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"timeout-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":1000,\"maximum\":120000},{\"name\":\"help\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"version\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}],\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"compatibility\":{\"wireVersions\":[\"toy.cli.v1\"],\"nodeVersion\":\"24.21.0\"}}}\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "help-human-sources",
-      "args": [
-        "help",
-        "sources"
-      ],
+      "argumentCount": 2,
       "exitCode": 0,
+      "stdoutBytes": 819,
+      "stderrBytes": 0,
       "stdout": "Toy command inventory\nUsage: toy [--env prod|test] [--stack UUID] [--json] [--timeout-ms N] <command> [arguments]\n\nsources health source-id <UUID>\n  sources / Sources.inventory; read; R1; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:sources.health\n  urn:toy:contracts:v1:CliResultV1:sources.health\nsources sync now source-id <UUID> --request-id <UUID> --mode <enum> --budget-ms <integer> --wait-ms <integer>\n  sources / Sources.sync; guarded; R1; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:sources.sync.now\n  urn:toy:contracts:v1:CliResultV1:sources.sync.now\nsources cursor source-id <UUID> --partition <UUID>\n  sources / SourcesControlRead.cursor; read; R1; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:sources.cursor\n  urn:toy:contracts:v1:CliResultV1:sources.cursor\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "help-group-sources.sync",
-      "args": [
-        "sources",
-        "sync",
-        "--help",
-        "--json"
-      ],
+      "argumentCount": 4,
       "exitCode": 0,
+      "stdoutBytes": 2450,
+      "stderrBytes": 0,
       "stdout": "{\"schemaVersion\":\"toy.cli.v1\",\"commandId\":\"help\",\"invocationId\":\"48e3208a-bbdd-4441-a73a-91d34482930b\",\"generatedAt\":\"2026-10-05T03:26:47.877Z\",\"cliVersion\":\"1.0.0\",\"contractsVersion\":\"1.0.0\",\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"environment\":{\"kind\":\"prod\",\"instanceId\":null,\"stackId\":null},\"meta\":{\"exitCode\":0,\"releaseDigest\":null,\"controlDigest\":null,\"evaluatedAt\":null,\"operationId\":null,\"effectState\":\"none\",\"recordRefs\":[],\"evidence\":[]},\"ok\":true,\"data\":{\"group\":\"sources.sync\",\"commands\":[{\"id\":\"sources.sync.now\",\"owner\":\"sources\",\"operation\":\"Sources.sync\",\"access\":\"guarded\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:sources.sync.now\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:sources.sync.now\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:sources.sync.now\",\"featureIds\":[\"control.sources.sync.now\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"source-id\",\"kind\":\"UUID\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"request-id\",\"kind\":\"UUID\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"mode\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"incremental\",\"reconcile\",\"backfill\"],\"minimum\":null,\"maximum\":null},{\"name\":\"budget-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":1000,\"maximum\":120000},{\"name\":\"wait-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":0,\"maximum\":120000}]}],\"commonArguments\":[{\"name\":\"env\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"prod\",\"test\"],\"minimum\":null,\"maximum\":null},{\"name\":\"stack\",\"kind\":\"UUID\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"json\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"timeout-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":1000,\"maximum\":120000},{\"name\":\"help\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"version\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}],\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"compatibility\":{\"wireVersions\":[\"toy.cli.v1\"],\"nodeVersion\":\"24.21.0\"}}}\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "help-human-sources.sync",
-      "args": [
-        "help",
-        "sources",
-        "sync"
-      ],
+      "argumentCount": 3,
       "exitCode": 0,
+      "stdoutBytes": 394,
+      "stderrBytes": 0,
       "stdout": "Toy command inventory\nUsage: toy [--env prod|test] [--stack UUID] [--json] [--timeout-ms N] <command> [arguments]\n\nsources sync now source-id <UUID> --request-id <UUID> --mode <enum> --budget-ms <integer> --wait-ms <integer>\n  sources / Sources.sync; guarded; R1; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:sources.sync.now\n  urn:toy:contracts:v1:CliResultV1:sources.sync.now\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "help-group-life",
-      "args": [
-        "life",
-        "--help",
-        "--json"
-      ],
+      "argumentCount": 3,
       "exitCode": 0,
+      "stdoutBytes": 4618,
+      "stderrBytes": 0,
       "stdout": "{\"schemaVersion\":\"toy.cli.v1\",\"commandId\":\"help\",\"invocationId\":\"8a566520-9e1d-4fbc-8d4a-022e840fdd14\",\"generatedAt\":\"2026-10-05T03:26:48.023Z\",\"cliVersion\":\"1.0.0\",\"contractsVersion\":\"1.0.0\",\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"environment\":{\"kind\":\"prod\",\"instanceId\":null,\"stackId\":null},\"meta\":{\"exitCode\":0,\"releaseDigest\":null,\"controlDigest\":null,\"evaluatedAt\":null,\"operationId\":null,\"effectState\":\"none\",\"recordRefs\":[],\"evidence\":[]},\"ok\":true,\"data\":{\"group\":\"life\",\"commands\":[{\"id\":\"life.search\",\"owner\":\"lifestore\",\"operation\":\"LifeStore.search\",\"access\":\"read\",\"firstRelease\":\"R2\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:life.search\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:life.search\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:life.search\",\"featureIds\":[\"control.life.search\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"query\",\"kind\":\"text\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":1,\"maximum\":512},{\"name\":\"mode\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"web\",\"literal\"],\"minimum\":null,\"maximum\":null},{\"name\":\"filters-input\",\"kind\":\"input\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"limit\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":1,\"maximum\":50},{\"name\":\"cursor\",\"kind\":\"text\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"life.timeline\",\"owner\":\"lifestore\",\"operation\":\"LifeStore.timeline\",\"access\":\"read\",\"firstRelease\":\"R2\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:life.timeline\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:life.timeline\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:life.timeline\",\"featureIds\":[\"control.life.timeline\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"from\",\"kind\":\"Instant\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"to\",\"kind\":\"Instant\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"time-basis\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"event\",\"recorded\"],\"minimum\":null,\"maximum\":null},{\"name\":\"granularity\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"raw\",\"hour\",\"day\"],\"minimum\":null,\"maximum\":null},{\"name\":\"order\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"asc\",\"desc\"],\"minimum\":null,\"maximum\":null},{\"name\":\"filters-input\",\"kind\":\"input\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"limit\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":1,\"maximum\":200},{\"name\":\"cursor\",\"kind\":\"text\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"life.get\",\"owner\":\"lifestore\",\"operation\":\"LifeStore.get\",\"access\":\"read\",\"firstRelease\":\"R2\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:life.get\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:life.get\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:life.get\",\"featureIds\":[\"control.life.get\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"life-ref\",\"kind\":\"life-ref\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"document\",\"kind\":\"UUID\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"start-byte\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":0,\"maximum\":null},{\"name\":\"end-byte\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":0,\"maximum\":null}]}],\"commonArguments\":[{\"name\":\"env\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"prod\",\"test\"],\"minimum\":null,\"maximum\":null},{\"name\":\"stack\",\"kind\":\"UUID\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"json\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"timeout-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":1000,\"maximum\":120000},{\"name\":\"help\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"version\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}],\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"compatibility\":{\"wireVersions\":[\"toy.cli.v1\"],\"nodeVersion\":\"24.21.0\"}}}\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "help-human-life",
-      "args": [
-        "help",
-        "life"
-      ],
+      "argumentCount": 2,
       "exitCode": 0,
+      "stdoutBytes": 946,
+      "stderrBytes": 0,
       "stdout": "Toy command inventory\nUsage: toy [--env prod|test] [--stack UUID] [--json] [--timeout-ms N] <command> [arguments]\n\nlife search query <text> --mode <enum> --filters-input <input> --limit <integer> --cursor <text>\n  lifestore / LifeStore.search; read; R2; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:life.search\n  urn:toy:contracts:v1:CliResultV1:life.search\nlife timeline --from <Instant> --to <Instant> --time-basis <enum> --granularity <enum> --order <enum> --filters-input <input> --limit <integer> --cursor <text>\n  lifestore / LifeStore.timeline; read; R2; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:life.timeline\n  urn:toy:contracts:v1:CliResultV1:life.timeline\nlife get life-ref <life-ref> --document <UUID> --start-byte <integer> --end-byte <integer>\n  lifestore / LifeStore.get; read; R2; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:life.get\n  urn:toy:contracts:v1:CliResultV1:life.get\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "help-group-review",
-      "args": [
-        "review",
-        "--help",
-        "--json"
-      ],
+      "argumentCount": 3,
       "exitCode": 0,
+      "stdoutBytes": 4986,
+      "stderrBytes": 0,
       "stdout": "{\"schemaVersion\":\"toy.cli.v1\",\"commandId\":\"help\",\"invocationId\":\"7a5893a1-ca94-4b58-b45a-e1ca8352ddf1\",\"generatedAt\":\"2026-10-05T03:26:48.167Z\",\"cliVersion\":\"1.0.0\",\"contractsVersion\":\"1.0.0\",\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"environment\":{\"kind\":\"prod\",\"instanceId\":null,\"stackId\":null},\"meta\":{\"exitCode\":0,\"releaseDigest\":null,\"controlDigest\":null,\"evaluatedAt\":null,\"operationId\":null,\"effectState\":\"none\",\"recordRefs\":[],\"evidence\":[]},\"ok\":true,\"data\":{\"group\":\"review\",\"commands\":[{\"id\":\"review.slots\",\"owner\":\"self-improvement\",\"operation\":\"RunControlRead.slots\",\"access\":\"read\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:review.slots\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:review.slots\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:review.slots\",\"featureIds\":[\"control.review.slots\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"from\",\"kind\":\"Instant\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"to\",\"kind\":\"Instant\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"job\",\"kind\":\"registered\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"state\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"scheduled\",\"running\",\"swept\",\"reviewed\",\"deferred_quota\",\"deferred_auth\",\"deferred_network\",\"deferred_busy\",\"maintenance\",\"failed\",\"missed\",\"coalesced_after_outage\"],\"minimum\":null,\"maximum\":null},{\"name\":\"limit\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":1,\"maximum\":100},{\"name\":\"cursor\",\"kind\":\"text\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"review.runs\",\"owner\":\"self-improvement\",\"operation\":\"RunControlRead.runs\",\"access\":\"read\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:review.runs\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:review.runs\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:review.runs\",\"featureIds\":[\"control.review.runs\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"slot\",\"kind\":\"UUID\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"from\",\"kind\":\"Instant\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"to\",\"kind\":\"Instant\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"limit\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":1,\"maximum\":100},{\"name\":\"cursor\",\"kind\":\"text\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"review.verdicts\",\"owner\":\"self-improvement\",\"operation\":\"TurnReview.get\",\"access\":\"read\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:review.verdicts\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:review.verdicts\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:review.verdicts\",\"featureIds\":[\"control.review.verdicts\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"run-id\",\"kind\":\"UUID\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"review.request\",\"owner\":\"self-improvement\",\"operation\":\"TurnReview.review\",\"access\":\"guarded\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:review.request\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:review.request\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:review.request\",\"featureIds\":[\"control.review.request\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"run-id\",\"kind\":\"UUID\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"request-id\",\"kind\":\"UUID\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"wait-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":0,\"maximum\":120000}]}],\"commonArguments\":[{\"name\":\"env\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"prod\",\"test\"],\"minimum\":null,\"maximum\":null},{\"name\":\"stack\",\"kind\":\"UUID\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"json\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"timeout-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":1000,\"maximum\":120000},{\"name\":\"help\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"version\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}],\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"compatibility\":{\"wireVersions\":[\"toy.cli.v1\"],\"nodeVersion\":\"24.21.0\"}}}\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "help-human-review",
-      "args": [
-        "help",
-        "review"
-      ],
+      "argumentCount": 2,
       "exitCode": 0,
+      "stdoutBytes": 1120,
+      "stderrBytes": 0,
       "stdout": "Toy command inventory\nUsage: toy [--env prod|test] [--stack UUID] [--json] [--timeout-ms N] <command> [arguments]\n\nreview slots --from <Instant> --to <Instant> --job <registered> --state <enum> --limit <integer> --cursor <text>\n  self-improvement / RunControlRead.slots; read; R1; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:review.slots\n  urn:toy:contracts:v1:CliResultV1:review.slots\nreview runs --slot <UUID> --from <Instant> --to <Instant> --limit <integer> --cursor <text>\n  self-improvement / RunControlRead.runs; read; R1; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:review.runs\n  urn:toy:contracts:v1:CliResultV1:review.runs\nreview verdicts run-id <UUID>\n  self-improvement / TurnReview.get; read; R1; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:review.verdicts\n  urn:toy:contracts:v1:CliResultV1:review.verdicts\nreview request run-id <UUID> --request-id <UUID> --wait-ms <integer>\n  self-improvement / TurnReview.review; guarded; R1; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:review.request\n  urn:toy:contracts:v1:CliResultV1:review.request\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "help-group-sim",
-      "args": [
-        "sim",
-        "--help",
-        "--json"
-      ],
+      "argumentCount": 3,
       "exitCode": 0,
+      "stdoutBytes": 4576,
+      "stderrBytes": 0,
       "stdout": "{\"schemaVersion\":\"toy.cli.v1\",\"commandId\":\"help\",\"invocationId\":\"7e07c82f-e91b-4c7a-b3bc-f08094e11c17\",\"generatedAt\":\"2026-10-05T03:26:48.310Z\",\"cliVersion\":\"1.0.0\",\"contractsVersion\":\"1.0.0\",\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"environment\":{\"kind\":\"prod\",\"instanceId\":null,\"stackId\":null},\"meta\":{\"exitCode\":0,\"releaseDigest\":null,\"controlDigest\":null,\"evaluatedAt\":null,\"operationId\":null,\"effectState\":\"none\",\"recordRefs\":[],\"evidence\":[]},\"ok\":true,\"data\":{\"group\":\"sim\",\"commands\":[{\"id\":\"sim.run\",\"owner\":\"self-improvement\",\"operation\":\"SimControl.run\",\"access\":\"test\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:sim.run\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:sim.run\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:sim.run\",\"featureIds\":[\"control.sim.run\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"scenario-id\",\"kind\":\"registered\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"request-id\",\"kind\":\"UUID\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"artifact\",\"kind\":\"SHA256\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"seed\",\"kind\":\"UInt64String\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"user\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"scripted\",\"adaptive\"],\"minimum\":null,\"maximum\":null},{\"name\":\"clock\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"exact_cadence\",\"projected_behavior\"],\"minimum\":null,\"maximum\":null},{\"name\":\"wait-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":0,\"maximum\":120000}]},{\"id\":\"sim.suite\",\"owner\":\"self-improvement\",\"operation\":\"SimControl.suite\",\"access\":\"test\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:sim.suite\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:sim.suite\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:sim.suite\",\"featureIds\":[\"control.sim.suite\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"suite-id\",\"kind\":\"registered\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"request-id\",\"kind\":\"UUID\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"release\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"R0\",\"R1\",\"R2\",\"R3\",\"R4\",\"R5\"],\"minimum\":null,\"maximum\":null},{\"name\":\"artifact\",\"kind\":\"SHA256\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"wait-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":0,\"maximum\":120000}]},{\"id\":\"sim.show\",\"owner\":\"self-improvement\",\"operation\":\"SimControl.show\",\"access\":\"test\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:sim.show\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:sim.show\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:sim.show\",\"featureIds\":[\"control.sim.show\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"campaign-or-trial-id\",\"kind\":\"UUID\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"section\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"summary\",\"transcript\",\"grades\",\"all\"],\"minimum\":null,\"maximum\":null},{\"name\":\"limit\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":1,\"maximum\":100},{\"name\":\"cursor\",\"kind\":\"text\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}]}],\"commonArguments\":[{\"name\":\"env\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"prod\",\"test\"],\"minimum\":null,\"maximum\":null},{\"name\":\"stack\",\"kind\":\"UUID\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"json\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"timeout-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":1000,\"maximum\":120000},{\"name\":\"help\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"version\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}],\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"compatibility\":{\"wireVersions\":[\"toy.cli.v1\"],\"nodeVersion\":\"24.21.0\"}}}\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "help-human-sim",
-      "args": [
-        "help",
-        "sim"
-      ],
+      "argumentCount": 2,
       "exitCode": 0,
+      "stdoutBytes": 942,
+      "stderrBytes": 0,
       "stdout": "Toy command inventory\nUsage: toy [--env prod|test] [--stack UUID] [--json] [--timeout-ms N] <command> [arguments]\n\nsim run scenario-id <registered> --request-id <UUID> --artifact <SHA256> --seed <UInt64String> --user <enum> --clock <enum> --wait-ms <integer>\n  self-improvement / SimControl.run; test; R1; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:sim.run\n  urn:toy:contracts:v1:CliResultV1:sim.run\nsim suite suite-id <registered> --request-id <UUID> --release <enum> --artifact <SHA256> --wait-ms <integer>\n  self-improvement / SimControl.suite; test; R1; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:sim.suite\n  urn:toy:contracts:v1:CliResultV1:sim.suite\nsim show campaign-or-trial-id <UUID> --section <enum> --limit <integer> --cursor <text>\n  self-improvement / SimControl.show; test; R1; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:sim.show\n  urn:toy:contracts:v1:CliResultV1:sim.show\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "help-group-hands",
-      "args": [
-        "hands",
-        "--help",
-        "--json"
-      ],
+      "argumentCount": 3,
       "exitCode": 0,
+      "stdoutBytes": 2825,
+      "stderrBytes": 0,
       "stdout": "{\"schemaVersion\":\"toy.cli.v1\",\"commandId\":\"help\",\"invocationId\":\"ad080dd1-46e2-4084-89ae-fe9f94fb00a9\",\"generatedAt\":\"2026-10-05T03:26:48.455Z\",\"cliVersion\":\"1.0.0\",\"contractsVersion\":\"1.0.0\",\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"environment\":{\"kind\":\"prod\",\"instanceId\":null,\"stackId\":null},\"meta\":{\"exitCode\":0,\"releaseDigest\":null,\"controlDigest\":null,\"evaluatedAt\":null,\"operationId\":null,\"effectState\":\"none\",\"recordRefs\":[],\"evidence\":[]},\"ok\":true,\"data\":{\"group\":\"hands\",\"commands\":[{\"id\":\"hands.status\",\"owner\":\"hands\",\"operation\":\"Hands.status\",\"access\":\"read\",\"firstRelease\":\"R2\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:hands.status\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:hands.status\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:hands.status\",\"featureIds\":[\"control.hands.status\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"session\",\"kind\":\"UUID\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"hands.smoke\",\"owner\":\"hands\",\"operation\":\"HandsSmokeControl.run\",\"access\":\"test\",\"firstRelease\":\"R2\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:hands.smoke\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:hands.smoke\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:hands.smoke\",\"featureIds\":[\"control.hands.smoke\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"kind\",\"kind\":\"enum\",\"positional\":true,\"required\":true,\"values\":[\"browser\",\"computer\"],\"minimum\":null,\"maximum\":null},{\"name\":\"request-id\",\"kind\":\"UUID\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"fixture\",\"kind\":\"registered\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"wait-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":0,\"maximum\":120000}]}],\"commonArguments\":[{\"name\":\"env\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"prod\",\"test\"],\"minimum\":null,\"maximum\":null},{\"name\":\"stack\",\"kind\":\"UUID\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"json\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"timeout-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":1000,\"maximum\":120000},{\"name\":\"help\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"version\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}],\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"compatibility\":{\"wireVersions\":[\"toy.cli.v1\"],\"nodeVersion\":\"24.21.0\"}}}\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "help-human-hands",
-      "args": [
-        "help",
-        "hands"
-      ],
+      "argumentCount": 2,
       "exitCode": 0,
+      "stdoutBytes": 551,
+      "stderrBytes": 0,
       "stdout": "Toy command inventory\nUsage: toy [--env prod|test] [--stack UUID] [--json] [--timeout-ms N] <command> [arguments]\n\nhands status --session <UUID>\n  hands / Hands.status; read; R2; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:hands.status\n  urn:toy:contracts:v1:CliResultV1:hands.status\nhands smoke kind <enum> --request-id <UUID> --fixture <registered> --wait-ms <integer>\n  hands / HandsSmokeControl.run; test; R2; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:hands.smoke\n  urn:toy:contracts:v1:CliResultV1:hands.smoke\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "help-group-clock",
-      "args": [
-        "clock",
-        "--help",
-        "--json"
-      ],
+      "argumentCount": 3,
       "exitCode": 0,
+      "stdoutBytes": 3784,
+      "stderrBytes": 0,
       "stdout": "{\"schemaVersion\":\"toy.cli.v1\",\"commandId\":\"help\",\"invocationId\":\"d2a917b9-4329-42f8-ae24-2030bc6e2466\",\"generatedAt\":\"2026-10-05T03:26:48.599Z\",\"cliVersion\":\"1.0.0\",\"contractsVersion\":\"1.0.0\",\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"environment\":{\"kind\":\"prod\",\"instanceId\":null,\"stackId\":null},\"meta\":{\"exitCode\":0,\"releaseDigest\":null,\"controlDigest\":null,\"evaluatedAt\":null,\"operationId\":null,\"effectState\":\"none\",\"recordRefs\":[],\"evidence\":[]},\"ok\":true,\"data\":{\"group\":\"clock\",\"commands\":[{\"id\":\"clock.show\",\"owner\":\"ops\",\"operation\":\"TestClockControl.get\",\"access\":\"test\",\"firstRelease\":\"R0\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:clock.show\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:clock.show\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:clock.show\",\"featureIds\":[\"control.clock.show\"],\"requirementIds\":[\"0.17\"],\"arguments\":[]},{\"id\":\"clock.freeze\",\"owner\":\"ops\",\"operation\":\"TestClockControl.freeze\",\"access\":\"test\",\"firstRelease\":\"R0\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:clock.freeze\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:clock.freeze\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:clock.freeze\",\"featureIds\":[\"control.clock.freeze\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"at\",\"kind\":\"Instant\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"request-id\",\"kind\":\"UUID\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"clock.advance\",\"owner\":\"ops\",\"operation\":\"TestClockControl.advance\",\"access\":\"test\",\"firstRelease\":\"R0\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:clock.advance\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:clock.advance\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:clock.advance\",\"featureIds\":[\"control.clock.advance\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"by\",\"kind\":\"Duration\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"request-id\",\"kind\":\"UUID\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"wait-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":0,\"maximum\":120000}]},{\"id\":\"clock.resume\",\"owner\":\"ops\",\"operation\":\"TestClockControl.resume\",\"access\":\"test\",\"firstRelease\":\"R0\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:clock.resume\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:clock.resume\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:clock.resume\",\"featureIds\":[\"control.clock.resume\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"request-id\",\"kind\":\"UUID\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null}]}],\"commonArguments\":[{\"name\":\"env\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"prod\",\"test\"],\"minimum\":null,\"maximum\":null},{\"name\":\"stack\",\"kind\":\"UUID\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"json\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"timeout-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":1000,\"maximum\":120000},{\"name\":\"help\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"version\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}],\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"compatibility\":{\"wireVersions\":[\"toy.cli.v1\"],\"nodeVersion\":\"24.21.0\"}}}\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "help-human-clock",
-      "args": [
-        "help",
-        "clock"
-      ],
+      "argumentCount": 2,
       "exitCode": 0,
+      "stdoutBytes": 934,
+      "stderrBytes": 0,
       "stdout": "Toy command inventory\nUsage: toy [--env prod|test] [--stack UUID] [--json] [--timeout-ms N] <command> [arguments]\n\nclock show \n  ops / TestClockControl.get; test; R0; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:clock.show\n  urn:toy:contracts:v1:CliResultV1:clock.show\nclock freeze --at <Instant> --request-id <UUID>\n  ops / TestClockControl.freeze; test; R0; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:clock.freeze\n  urn:toy:contracts:v1:CliResultV1:clock.freeze\nclock advance --by <Duration> --request-id <UUID> --wait-ms <integer>\n  ops / TestClockControl.advance; test; R0; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:clock.advance\n  urn:toy:contracts:v1:CliResultV1:clock.advance\nclock resume --request-id <UUID>\n  ops / TestClockControl.resume; test; R0; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:clock.resume\n  urn:toy:contracts:v1:CliResultV1:clock.resume\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "help-group-stack",
-      "args": [
-        "stack",
-        "--help",
-        "--json"
-      ],
+      "argumentCount": 3,
       "exitCode": 0,
+      "stdoutBytes": 3170,
+      "stderrBytes": 0,
       "stdout": "{\"schemaVersion\":\"toy.cli.v1\",\"commandId\":\"help\",\"invocationId\":\"befa6201-f8a3-446b-b207-a0346bc511dc\",\"generatedAt\":\"2026-10-05T03:26:48.744Z\",\"cliVersion\":\"1.0.0\",\"contractsVersion\":\"1.0.0\",\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"environment\":{\"kind\":\"prod\",\"instanceId\":null,\"stackId\":null},\"meta\":{\"exitCode\":0,\"releaseDigest\":null,\"controlDigest\":null,\"evaluatedAt\":null,\"operationId\":null,\"effectState\":\"none\",\"recordRefs\":[],\"evidence\":[]},\"ok\":true,\"data\":{\"group\":\"stack\",\"commands\":[{\"id\":\"stack.up\",\"owner\":\"ops\",\"operation\":\"OpsTestStack.up\",\"access\":\"test\",\"firstRelease\":\"R0\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:stack.up\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:stack.up\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:stack.up\",\"featureIds\":[\"control.stack.up\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"release\",\"kind\":\"enum\",\"positional\":false,\"required\":true,\"values\":[\"R0\",\"R1\",\"R2\",\"R3\",\"R4\",\"R5\"],\"minimum\":null,\"maximum\":null},{\"name\":\"request-id\",\"kind\":\"UUID\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"world\",\"kind\":\"registered\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"clock\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"fake\",\"real\"],\"minimum\":null,\"maximum\":null},{\"name\":\"model\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"fake\",\"supported\"],\"minimum\":null,\"maximum\":null},{\"name\":\"wait-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":0,\"maximum\":120000}]},{\"id\":\"stack.down\",\"owner\":\"ops\",\"operation\":\"OpsTestStack.down\",\"access\":\"test\",\"firstRelease\":\"R0\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:stack.down\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:stack.down\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:stack.down\",\"featureIds\":[\"control.stack.down\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"request-id\",\"kind\":\"UUID\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"wait-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":0,\"maximum\":120000}]}],\"commonArguments\":[{\"name\":\"env\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"prod\",\"test\"],\"minimum\":null,\"maximum\":null},{\"name\":\"stack\",\"kind\":\"UUID\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"json\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"timeout-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":1000,\"maximum\":120000},{\"name\":\"help\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"version\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}],\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"compatibility\":{\"wireVersions\":[\"toy.cli.v1\"],\"nodeVersion\":\"24.21.0\"}}}\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "help-human-stack",
-      "args": [
-        "help",
-        "stack"
-      ],
+      "argumentCount": 2,
       "exitCode": 0,
+      "stdoutBytes": 587,
+      "stderrBytes": 0,
       "stdout": "Toy command inventory\nUsage: toy [--env prod|test] [--stack UUID] [--json] [--timeout-ms N] <command> [arguments]\n\nstack up --release <enum> --request-id <UUID> --world <registered> --clock <enum> --model <enum> --wait-ms <integer>\n  ops / OpsTestStack.up; test; R0; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:stack.up\n  urn:toy:contracts:v1:CliResultV1:stack.up\nstack down --request-id <UUID> --wait-ms <integer>\n  ops / OpsTestStack.down; test; R0; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:stack.down\n  urn:toy:contracts:v1:CliResultV1:stack.down\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "help-group-probe",
-      "args": [
-        "probe",
-        "--help",
-        "--json"
-      ],
+      "argumentCount": 3,
       "exitCode": 0,
+      "stdoutBytes": 2856,
+      "stderrBytes": 0,
       "stdout": "{\"schemaVersion\":\"toy.cli.v1\",\"commandId\":\"help\",\"invocationId\":\"af455781-e729-4ed2-a7bd-fa582cd2d189\",\"generatedAt\":\"2026-10-05T03:26:48.887Z\",\"cliVersion\":\"1.0.0\",\"contractsVersion\":\"1.0.0\",\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"environment\":{\"kind\":\"prod\",\"instanceId\":null,\"stackId\":null},\"meta\":{\"exitCode\":0,\"releaseDigest\":null,\"controlDigest\":null,\"evaluatedAt\":null,\"operationId\":null,\"effectState\":\"none\",\"recordRefs\":[],\"evidence\":[]},\"ok\":true,\"data\":{\"group\":\"probe\",\"commands\":[{\"id\":\"probe.run\",\"owner\":\"self-improvement\",\"operation\":\"ReplayEnvironment.runRegisteredProbe\",\"access\":\"test\",\"firstRelease\":\"R0\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:probe.run\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:probe.run\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:probe.run\",\"featureIds\":[\"control.probe.run\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"at-id\",\"kind\":\"registered\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"request-id\",\"kind\":\"UUID\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"case\",\"kind\":\"registered\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"wait-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":0,\"maximum\":120000}]},{\"id\":\"probe.show\",\"owner\":\"self-improvement\",\"operation\":\"ReplayEnvironment.registeredProbeStatus\",\"access\":\"test\",\"firstRelease\":\"R0\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:probe.show\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:probe.show\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:probe.show\",\"featureIds\":[\"control.probe.show\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"operation-id\",\"kind\":\"UUID\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null}]}],\"commonArguments\":[{\"name\":\"env\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"prod\",\"test\"],\"minimum\":null,\"maximum\":null},{\"name\":\"stack\",\"kind\":\"UUID\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"json\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"timeout-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":1000,\"maximum\":120000},{\"name\":\"help\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"version\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}],\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"compatibility\":{\"wireVersions\":[\"toy.cli.v1\"],\"nodeVersion\":\"24.21.0\"}}}\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "help-human-probe",
-      "args": [
-        "help",
-        "probe"
-      ],
+      "argumentCount": 2,
       "exitCode": 0,
+      "stdoutBytes": 610,
+      "stderrBytes": 0,
       "stdout": "Toy command inventory\nUsage: toy [--env prod|test] [--stack UUID] [--json] [--timeout-ms N] <command> [arguments]\n\nprobe run at-id <registered> --request-id <UUID> --case <registered> --wait-ms <integer>\n  self-improvement / ReplayEnvironment.runRegisteredProbe; test; R0; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:probe.run\n  urn:toy:contracts:v1:CliResultV1:probe.run\nprobe show operation-id <UUID>\n  self-improvement / ReplayEnvironment.registeredProbeStatus; test; R0; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:probe.show\n  urn:toy:contracts:v1:CliResultV1:probe.show\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "help-group-new",
-      "args": [
-        "new",
-        "--help",
-        "--json"
-      ],
+      "argumentCount": 3,
       "exitCode": 0,
+      "stdoutBytes": 5007,
+      "stderrBytes": 0,
       "stdout": "{\"schemaVersion\":\"toy.cli.v1\",\"commandId\":\"help\",\"invocationId\":\"8540d013-1af6-427b-a482-0b60a2a51b79\",\"generatedAt\":\"2026-10-05T03:26:49.033Z\",\"cliVersion\":\"1.0.0\",\"contractsVersion\":\"1.0.0\",\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"environment\":{\"kind\":\"prod\",\"instanceId\":null,\"stackId\":null},\"meta\":{\"exitCode\":0,\"releaseDigest\":null,\"controlDigest\":null,\"evaluatedAt\":null,\"operationId\":null,\"effectState\":\"none\",\"recordRefs\":[],\"evidence\":[]},\"ok\":true,\"data\":{\"group\":\"new\",\"commands\":[{\"id\":\"new.connector\",\"owner\":\"self-improvement\",\"operation\":\"EngineeringControl.generate\",\"access\":\"engineering\",\"firstRelease\":\"R0\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:new.connector\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:new.connector\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:new.connector\",\"featureIds\":[\"control.new.connector\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"name\",\"kind\":\"name\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"provider\",\"kind\":\"registered\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"plan\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"new.tool\",\"owner\":\"self-improvement\",\"operation\":\"EngineeringControl.generate\",\"access\":\"engineering\",\"firstRelease\":\"R0\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:new.tool\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:new.tool\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:new.tool\",\"featureIds\":[\"control.new.tool\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"name\",\"kind\":\"name\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"module\",\"kind\":\"enum\",\"positional\":false,\"required\":true,\"values\":[\"contracts\",\"obligations\",\"attention\",\"authority\",\"sources\",\"lifestore\",\"hermes\",\"client\",\"hands\",\"self-improvement\",\"adhd\",\"ops\"],\"minimum\":null,\"maximum\":null},{\"name\":\"operation\",\"kind\":\"registered\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"plan\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"new.skill\",\"owner\":\"self-improvement\",\"operation\":\"EngineeringControl.generate\",\"access\":\"engineering\",\"firstRelease\":\"R0\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:new.skill\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:new.skill\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:new.skill\",\"featureIds\":[\"control.new.skill\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"name\",\"kind\":\"name\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"module\",\"kind\":\"enum\",\"positional\":false,\"required\":true,\"values\":[\"contracts\",\"obligations\",\"attention\",\"authority\",\"sources\",\"lifestore\",\"hermes\",\"client\",\"hands\",\"self-improvement\",\"adhd\",\"ops\"],\"minimum\":null,\"maximum\":null},{\"name\":\"plan\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"new.migration\",\"owner\":\"self-improvement\",\"operation\":\"EngineeringControl.generate\",\"access\":\"engineering\",\"firstRelease\":\"R0\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:new.migration\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:new.migration\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:new.migration\",\"featureIds\":[\"control.new.migration\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"name\",\"kind\":\"name\",\"positional\":true,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"module\",\"kind\":\"enum\",\"positional\":false,\"required\":true,\"values\":[\"contracts\",\"obligations\",\"attention\",\"authority\",\"sources\",\"lifestore\",\"hermes\",\"client\",\"hands\",\"self-improvement\",\"adhd\",\"ops\"],\"minimum\":null,\"maximum\":null},{\"name\":\"plan\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}]}],\"commonArguments\":[{\"name\":\"env\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"prod\",\"test\"],\"minimum\":null,\"maximum\":null},{\"name\":\"stack\",\"kind\":\"UUID\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"json\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"timeout-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":1000,\"maximum\":120000},{\"name\":\"help\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"version\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}],\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"compatibility\":{\"wireVersions\":[\"toy.cli.v1\"],\"nodeVersion\":\"24.21.0\"}}}\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "help-human-new",
-      "args": [
-        "help",
-        "new"
-      ],
+      "argumentCount": 2,
       "exitCode": 0,
+      "stdoutBytes": 1081,
+      "stderrBytes": 0,
       "stdout": "Toy command inventory\nUsage: toy [--env prod|test] [--stack UUID] [--json] [--timeout-ms N] <command> [arguments]\n\nnew connector name <name> --provider <registered> --plan\n  self-improvement / EngineeringControl.generate; engineering; R0; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:new.connector\n  urn:toy:contracts:v1:CliResultV1:new.connector\nnew tool name <name> --module <enum> --operation <registered> --plan\n  self-improvement / EngineeringControl.generate; engineering; R0; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:new.tool\n  urn:toy:contracts:v1:CliResultV1:new.tool\nnew skill name <name> --module <enum> --plan\n  self-improvement / EngineeringControl.generate; engineering; R0; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:new.skill\n  urn:toy:contracts:v1:CliResultV1:new.skill\nnew migration name <name> --module <enum> --plan\n  self-improvement / EngineeringControl.generate; engineering; R0; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:new.migration\n  urn:toy:contracts:v1:CliResultV1:new.migration\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "help-group-feature-map",
-      "args": [
-        "feature-map",
-        "--help",
-        "--json"
-      ],
+      "argumentCount": 3,
       "exitCode": 0,
+      "stdoutBytes": 2634,
+      "stderrBytes": 0,
       "stdout": "{\"schemaVersion\":\"toy.cli.v1\",\"commandId\":\"help\",\"invocationId\":\"d00caf8a-b5b4-4ec0-b224-779bd8ff4aff\",\"generatedAt\":\"2026-10-05T03:26:49.180Z\",\"cliVersion\":\"1.0.0\",\"contractsVersion\":\"1.0.0\",\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"environment\":{\"kind\":\"prod\",\"instanceId\":null,\"stackId\":null},\"meta\":{\"exitCode\":0,\"releaseDigest\":null,\"controlDigest\":null,\"evaluatedAt\":null,\"operationId\":null,\"effectState\":\"none\",\"recordRefs\":[],\"evidence\":[]},\"ok\":true,\"data\":{\"group\":\"feature-map\",\"commands\":[{\"id\":\"feature-map.check\",\"owner\":\"self-improvement\",\"operation\":\"EngineeringControl.checkFeatureMap\",\"access\":\"engineering\",\"firstRelease\":\"R0\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:feature-map.check\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:feature-map.check\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:feature-map.check\",\"featureIds\":[\"control.feature-map.check\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"release\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"R0\",\"R1\",\"R2\",\"R3\",\"R4\",\"R5\"],\"minimum\":null,\"maximum\":null}]},{\"id\":\"feature-map.update\",\"owner\":\"self-improvement\",\"operation\":\"EngineeringControl.updateFeatureMap\",\"access\":\"engineering\",\"firstRelease\":\"R0\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:feature-map.update\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:feature-map.update\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:feature-map.update\",\"featureIds\":[\"control.feature-map.update\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"plan\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}]}],\"commonArguments\":[{\"name\":\"env\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"prod\",\"test\"],\"minimum\":null,\"maximum\":null},{\"name\":\"stack\",\"kind\":\"UUID\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"json\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"timeout-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":1000,\"maximum\":120000},{\"name\":\"help\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"version\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}],\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"compatibility\":{\"wireVersions\":[\"toy.cli.v1\"],\"nodeVersion\":\"24.21.0\"}}}\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "help-human-feature-map",
-      "args": [
-        "help",
-        "feature-map"
-      ],
+      "argumentCount": 2,
       "exitCode": 0,
+      "stdoutBytes": 591,
+      "stderrBytes": 0,
       "stdout": "Toy command inventory\nUsage: toy [--env prod|test] [--stack UUID] [--json] [--timeout-ms N] <command> [arguments]\n\nfeature-map check --release <enum>\n  self-improvement / EngineeringControl.checkFeatureMap; engineering; R0; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:feature-map.check\n  urn:toy:contracts:v1:CliResultV1:feature-map.check\nfeature-map update --plan\n  self-improvement / EngineeringControl.updateFeatureMap; engineering; R0; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:feature-map.update\n  urn:toy:contracts:v1:CliResultV1:feature-map.update\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "help-group-gardener",
-      "args": [
-        "gardener",
-        "--help",
-        "--json"
-      ],
+      "argumentCount": 3,
       "exitCode": 0,
+      "stdoutBytes": 2199,
+      "stderrBytes": 0,
       "stdout": "{\"schemaVersion\":\"toy.cli.v1\",\"commandId\":\"help\",\"invocationId\":\"1f97e4f6-29e7-4631-9fee-4b6e4237a33d\",\"generatedAt\":\"2026-10-05T03:26:49.325Z\",\"cliVersion\":\"1.0.0\",\"contractsVersion\":\"1.0.0\",\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"environment\":{\"kind\":\"prod\",\"instanceId\":null,\"stackId\":null},\"meta\":{\"exitCode\":0,\"releaseDigest\":null,\"controlDigest\":null,\"evaluatedAt\":null,\"operationId\":null,\"effectState\":\"none\",\"recordRefs\":[],\"evidence\":[]},\"ok\":true,\"data\":{\"group\":\"gardener\",\"commands\":[{\"id\":\"gardener.run\",\"owner\":\"self-improvement\",\"operation\":\"EngineeringControl.garden\",\"access\":\"engineering\",\"firstRelease\":\"R0\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:gardener.run\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:gardener.run\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:gardener.run\",\"featureIds\":[\"control.gardener.run\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"request-id\",\"kind\":\"UUID\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"mode\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"scan\",\"fix\"],\"minimum\":null,\"maximum\":null},{\"name\":\"wait-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":0,\"maximum\":120000}]}],\"commonArguments\":[{\"name\":\"env\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"prod\",\"test\"],\"minimum\":null,\"maximum\":null},{\"name\":\"stack\",\"kind\":\"UUID\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"json\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"timeout-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":1000,\"maximum\":120000},{\"name\":\"help\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"version\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}],\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"compatibility\":{\"wireVersions\":[\"toy.cli.v1\"],\"nodeVersion\":\"24.21.0\"}}}\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "help-human-gardener",
-      "args": [
-        "help",
-        "gardener"
-      ],
+      "argumentCount": 2,
       "exitCode": 0,
+      "stdoutBytes": 369,
+      "stderrBytes": 0,
       "stdout": "Toy command inventory\nUsage: toy [--env prod|test] [--stack UUID] [--json] [--timeout-ms N] <command> [arguments]\n\ngardener run --request-id <UUID> --mode <enum> --wait-ms <integer>\n  self-improvement / EngineeringControl.garden; engineering; R0; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:gardener.run\n  urn:toy:contracts:v1:CliResultV1:gardener.run\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "help-group-release",
-      "args": [
-        "release",
-        "--help",
-        "--json"
-      ],
+      "argumentCount": 3,
       "exitCode": 0,
+      "stdoutBytes": 2989,
+      "stderrBytes": 0,
       "stdout": "{\"schemaVersion\":\"toy.cli.v1\",\"commandId\":\"help\",\"invocationId\":\"2c623914-1911-4b05-8f6d-f0446131f759\",\"generatedAt\":\"2026-10-05T03:26:49.470Z\",\"cliVersion\":\"1.0.0\",\"contractsVersion\":\"1.0.0\",\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"environment\":{\"kind\":\"prod\",\"instanceId\":null,\"stackId\":null},\"meta\":{\"exitCode\":0,\"releaseDigest\":null,\"controlDigest\":null,\"evaluatedAt\":null,\"operationId\":null,\"effectState\":\"none\",\"recordRefs\":[],\"evidence\":[]},\"ok\":true,\"data\":{\"group\":\"release\",\"commands\":[{\"id\":\"release.status\",\"owner\":\"ops\",\"operation\":\"PublisherControlRead.status\",\"access\":\"read\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:release.status\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:release.status\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:release.status\",\"featureIds\":[\"control.release.status\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"digest\",\"kind\":\"SHA256\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}]},{\"id\":\"release.rollback\",\"owner\":\"ops\",\"operation\":\"ReleaseHumanControl.prepareRollback\",\"access\":\"human\",\"firstRelease\":\"R1\",\"implementation\":\"specified\",\"ownerSchemas\":\"pending\",\"inputSchemaId\":\"urn:toy:contracts:v1:CliInputV1:release.rollback\",\"outputSchemaId\":\"urn:toy:contracts:v1:CliResultV1:release.rollback\",\"dataSchemaId\":\"urn:toy:contracts:v1:CliDataV1:release.rollback\",\"featureIds\":[\"control.release.rollback\"],\"requirementIds\":[\"0.17\"],\"arguments\":[{\"name\":\"target\",\"kind\":\"SHA256\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"expected-current\",\"kind\":\"SHA256\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"incident\",\"kind\":\"UUID\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"request-id\",\"kind\":\"UUID\",\"positional\":false,\"required\":true,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"wait-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":0,\"maximum\":120000}]}],\"commonArguments\":[{\"name\":\"env\",\"kind\":\"enum\",\"positional\":false,\"required\":false,\"values\":[\"prod\",\"test\"],\"minimum\":null,\"maximum\":null},{\"name\":\"stack\",\"kind\":\"UUID\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"json\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"timeout-ms\",\"kind\":\"integer\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":1000,\"maximum\":120000},{\"name\":\"help\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null},{\"name\":\"version\",\"kind\":\"boolean\",\"positional\":false,\"required\":false,\"values\":[],\"minimum\":null,\"maximum\":null}],\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"compatibility\":{\"wireVersions\":[\"toy.cli.v1\"],\"nodeVersion\":\"24.21.0\"}}}\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "help-human-release",
-      "args": [
-        "help",
-        "release"
-      ],
+      "argumentCount": 2,
       "exitCode": 0,
+      "stdoutBytes": 628,
+      "stderrBytes": 0,
       "stdout": "Toy command inventory\nUsage: toy [--env prod|test] [--stack UUID] [--json] [--timeout-ms N] <command> [arguments]\n\nrelease status --digest <SHA256>\n  ops / PublisherControlRead.status; read; R1; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:release.status\n  urn:toy:contracts:v1:CliResultV1:release.status\nrelease rollback --target <SHA256> --expected-current <SHA256> --incident <UUID> --request-id <UUID> --wait-ms <integer>\n  ops / ReleaseHumanControl.prepareRollback; human; R1; specified; schemas pending\n  urn:toy:contracts:v1:CliInputV1:release.rollback\n  urn:toy:contracts:v1:CliResultV1:release.rollback\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "version-json",
-      "args": [
-        "--version",
-        "--json"
-      ],
+      "argumentCount": 2,
       "exitCode": 0,
+      "stdoutBytes": 884,
+      "stderrBytes": 0,
       "stdout": "{\"schemaVersion\":\"toy.cli.v1\",\"commandId\":\"version\",\"invocationId\":\"89747dd2-ab3d-4a96-846a-c68dc33d1992\",\"generatedAt\":\"2026-10-05T03:26:49.616Z\",\"cliVersion\":\"1.0.0\",\"contractsVersion\":\"1.0.0\",\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"environment\":{\"kind\":\"prod\",\"instanceId\":null,\"stackId\":null},\"meta\":{\"exitCode\":0,\"releaseDigest\":null,\"controlDigest\":null,\"evaluatedAt\":null,\"operationId\":null,\"effectState\":\"none\",\"recordRefs\":[],\"evidence\":[]},\"ok\":true,\"data\":{\"cliVersion\":\"1.0.0\",\"contractsVersion\":\"1.0.0\",\"executableDigest\":\"64852bac48f9e1ce1878107d640385467a4f278dafecb163fc80275580e08795\",\"packageDigest\":\"abf92d1e67f34d87ac06075266b2a9c8132a400f39c7b7fd5cfb4f5ef5cff699\",\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"compatibility\":{\"wireVersions\":[\"toy.cli.v1\"],\"nodeVersion\":\"24.21.0\"}}}\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "version-human",
-      "args": [
-        "version"
-      ],
+      "argumentCount": 1,
       "exitCode": 0,
+      "stdoutBytes": 250,
+      "stderrBytes": 0,
       "stdout": "Toy 1.0.0 / contracts 1.0.0\nExecutable 64852bac48f9e1ce1878107d640385467a4f278dafecb163fc80275580e08795\nPackage abf92d1e67f34d87ac06075266b2a9c8132a400f39c7b7fd5cfb4f5ef5cff699\nSchemas 279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "invalid-0",
-      "args": [
-        "--json",
-        "--json",
-        "status"
-      ],
+      "argumentCount": 3,
       "exitCode": 2,
+      "stdoutBytes": 778,
+      "stderrBytes": 0,
       "stdout": "{\"schemaVersion\":\"toy.cli.v1\",\"commandId\":\"help\",\"invocationId\":\"21b0e9d1-d850-45ae-9511-d60a26b9f4f5\",\"generatedAt\":\"2026-10-05T03:26:49.764Z\",\"cliVersion\":\"1.0.0\",\"contractsVersion\":\"1.0.0\",\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"environment\":{\"kind\":\"prod\",\"instanceId\":null,\"stackId\":null},\"meta\":{\"exitCode\":2,\"releaseDigest\":null,\"controlDigest\":null,\"evaluatedAt\":null,\"operationId\":null,\"effectState\":\"none\",\"recordRefs\":[],\"evidence\":[]},\"ok\":false,\"error\":{\"module\":\"contracts\",\"code\":\"INVALID_INPUT\",\"message\":\"The invocation does not match the registered command schema.\",\"retryable\":false,\"retryAt\":null,\"effectState\":\"none\",\"currentRevision\":null,\"currentGeneration\":null,\"operationRef\":null,\"requiredInteraction\":null}}\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "invalid-1",
-      "args": [
-        "status",
-        "--timeout-ms",
-        "999",
-        "--json"
-      ],
+      "argumentCount": 4,
       "exitCode": 2,
+      "stdoutBytes": 778,
+      "stderrBytes": 0,
       "stdout": "{\"schemaVersion\":\"toy.cli.v1\",\"commandId\":\"help\",\"invocationId\":\"cce6d8ce-4055-4d1f-99ea-89f30197adb7\",\"generatedAt\":\"2026-10-05T03:26:49.837Z\",\"cliVersion\":\"1.0.0\",\"contractsVersion\":\"1.0.0\",\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"environment\":{\"kind\":\"prod\",\"instanceId\":null,\"stackId\":null},\"meta\":{\"exitCode\":2,\"releaseDigest\":null,\"controlDigest\":null,\"evaluatedAt\":null,\"operationId\":null,\"effectState\":\"none\",\"recordRefs\":[],\"evidence\":[]},\"ok\":false,\"error\":{\"module\":\"contracts\",\"code\":\"INVALID_INPUT\",\"message\":\"The invocation does not match the registered command schema.\",\"retryable\":false,\"retryAt\":null,\"effectState\":\"none\",\"currentRevision\":null,\"currentGeneration\":null,\"operationRef\":null,\"requiredInteraction\":null}}\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "invalid-2",
-      "args": [
-        "status",
-        "--release",
-        "R9",
-        "--json"
-      ],
+      "argumentCount": 4,
       "exitCode": 2,
+      "stdoutBytes": 780,
+      "stderrBytes": 0,
       "stdout": "{\"schemaVersion\":\"toy.cli.v1\",\"commandId\":\"status\",\"invocationId\":\"cf3cac9c-2bc5-434c-bc62-5374086ea92e\",\"generatedAt\":\"2026-10-05T03:26:49.911Z\",\"cliVersion\":\"1.0.0\",\"contractsVersion\":\"1.0.0\",\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"environment\":{\"kind\":\"prod\",\"instanceId\":null,\"stackId\":null},\"meta\":{\"exitCode\":2,\"releaseDigest\":null,\"controlDigest\":null,\"evaluatedAt\":null,\"operationId\":null,\"effectState\":\"none\",\"recordRefs\":[],\"evidence\":[]},\"ok\":false,\"error\":{\"module\":\"contracts\",\"code\":\"INVALID_INPUT\",\"message\":\"The invocation does not match the registered command schema.\",\"retryable\":false,\"retryAt\":null,\"effectState\":\"none\",\"currentRevision\":null,\"currentGeneration\":null,\"operationRef\":null,\"requiredInteraction\":null}}\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "invalid-3",
-      "args": [
-        "unknown",
-        "K3_SENTINEL_\u001b[31m_PRIVATE_VALUE",
-        "--json"
-      ],
+      "argumentCount": 3,
       "exitCode": 2,
+      "stdoutBytes": 778,
+      "stderrBytes": 0,
       "stdout": "{\"schemaVersion\":\"toy.cli.v1\",\"commandId\":\"help\",\"invocationId\":\"ee6966f3-28f1-4f83-8031-0608d57699c4\",\"generatedAt\":\"2026-10-05T03:26:49.983Z\",\"cliVersion\":\"1.0.0\",\"contractsVersion\":\"1.0.0\",\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"environment\":{\"kind\":\"prod\",\"instanceId\":null,\"stackId\":null},\"meta\":{\"exitCode\":2,\"releaseDigest\":null,\"controlDigest\":null,\"evaluatedAt\":null,\"operationId\":null,\"effectState\":\"none\",\"recordRefs\":[],\"evidence\":[]},\"ok\":false,\"error\":{\"module\":\"contracts\",\"code\":\"INVALID_INPUT\",\"message\":\"The invocation does not match the registered command schema.\",\"retryable\":false,\"retryAt\":null,\"effectState\":\"none\",\"currentRevision\":null,\"currentGeneration\":null,\"operationRef\":null,\"requiredInteraction\":null}}\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "invalid-4",
-      "args": [
-        "status",
-        "--actor",
-        "K3_SENTINEL_\u001b[31m_PRIVATE_VALUE",
-        "--json"
-      ],
+      "argumentCount": 4,
       "exitCode": 2,
+      "stdoutBytes": 778,
+      "stderrBytes": 0,
       "stdout": "{\"schemaVersion\":\"toy.cli.v1\",\"commandId\":\"help\",\"invocationId\":\"fc6311b8-fa3f-4bad-871b-8c96255d1bf2\",\"generatedAt\":\"2026-10-05T03:26:50.055Z\",\"cliVersion\":\"1.0.0\",\"contractsVersion\":\"1.0.0\",\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"environment\":{\"kind\":\"prod\",\"instanceId\":null,\"stackId\":null},\"meta\":{\"exitCode\":2,\"releaseDigest\":null,\"controlDigest\":null,\"evaluatedAt\":null,\"operationId\":null,\"effectState\":\"none\",\"recordRefs\":[],\"evidence\":[]},\"ok\":false,\"error\":{\"module\":\"contracts\",\"code\":\"INVALID_INPUT\",\"message\":\"The invocation does not match the registered command schema.\",\"retryable\":false,\"retryAt\":null,\"effectState\":\"none\",\"currentRevision\":null,\"currentGeneration\":null,\"operationRef\":null,\"requiredInteraction\":null}}\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "invalid-5",
-      "args": [
-        "status",
-        "--uid",
-        "0",
-        "--json"
-      ],
+      "argumentCount": 4,
       "exitCode": 2,
+      "stdoutBytes": 778,
+      "stderrBytes": 0,
       "stdout": "{\"schemaVersion\":\"toy.cli.v1\",\"commandId\":\"help\",\"invocationId\":\"ded100b6-8ddb-4a7c-acd5-301fd9a659c9\",\"generatedAt\":\"2026-10-05T03:26:50.126Z\",\"cliVersion\":\"1.0.0\",\"contractsVersion\":\"1.0.0\",\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"environment\":{\"kind\":\"prod\",\"instanceId\":null,\"stackId\":null},\"meta\":{\"exitCode\":2,\"releaseDigest\":null,\"controlDigest\":null,\"evaluatedAt\":null,\"operationId\":null,\"effectState\":\"none\",\"recordRefs\":[],\"evidence\":[]},\"ok\":false,\"error\":{\"module\":\"contracts\",\"code\":\"INVALID_INPUT\",\"message\":\"The invocation does not match the registered command schema.\",\"retryable\":false,\"retryAt\":null,\"effectState\":\"none\",\"currentRevision\":null,\"currentGeneration\":null,\"operationRef\":null,\"requiredInteraction\":null}}\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "invalid-6",
-      "args": [
-        "status",
-        "--sql",
-        "K3_SENTINEL_\u001b[31m_PRIVATE_VALUE",
-        "--json"
-      ],
+      "argumentCount": 4,
       "exitCode": 2,
+      "stdoutBytes": 778,
+      "stderrBytes": 0,
       "stdout": "{\"schemaVersion\":\"toy.cli.v1\",\"commandId\":\"help\",\"invocationId\":\"189a81dd-b321-4a51-af3f-bd56d0d2c442\",\"generatedAt\":\"2026-10-05T03:26:50.198Z\",\"cliVersion\":\"1.0.0\",\"contractsVersion\":\"1.0.0\",\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"environment\":{\"kind\":\"prod\",\"instanceId\":null,\"stackId\":null},\"meta\":{\"exitCode\":2,\"releaseDigest\":null,\"controlDigest\":null,\"evaluatedAt\":null,\"operationId\":null,\"effectState\":\"none\",\"recordRefs\":[],\"evidence\":[]},\"ok\":false,\"error\":{\"module\":\"contracts\",\"code\":\"INVALID_INPUT\",\"message\":\"The invocation does not match the registered command schema.\",\"retryable\":false,\"retryAt\":null,\"effectState\":\"none\",\"currentRevision\":null,\"currentGeneration\":null,\"operationRef\":null,\"requiredInteraction\":null}}\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "invalid-7",
-      "args": [
-        "status",
-        "--show-secrets",
-        "--json"
-      ],
+      "argumentCount": 3,
       "exitCode": 2,
+      "stdoutBytes": 778,
+      "stderrBytes": 0,
       "stdout": "{\"schemaVersion\":\"toy.cli.v1\",\"commandId\":\"help\",\"invocationId\":\"ab5f2c0b-1a39-452e-bf4f-a1a5d6012f3c\",\"generatedAt\":\"2026-10-05T03:26:50.270Z\",\"cliVersion\":\"1.0.0\",\"contractsVersion\":\"1.0.0\",\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"environment\":{\"kind\":\"prod\",\"instanceId\":null,\"stackId\":null},\"meta\":{\"exitCode\":2,\"releaseDigest\":null,\"controlDigest\":null,\"evaluatedAt\":null,\"operationId\":null,\"effectState\":\"none\",\"recordRefs\":[],\"evidence\":[]},\"ok\":false,\"error\":{\"module\":\"contracts\",\"code\":\"INVALID_INPUT\",\"message\":\"The invocation does not match the registered command schema.\",\"retryable\":false,\"retryAt\":null,\"effectState\":\"none\",\"currentRevision\":null,\"currentGeneration\":null,\"operationRef\":null,\"requiredInteraction\":null}}\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "invalid-8",
-      "args": [
-        "version",
-        "extra",
-        "--json"
-      ],
+      "argumentCount": 3,
       "exitCode": 2,
+      "stdoutBytes": 778,
+      "stderrBytes": 0,
       "stdout": "{\"schemaVersion\":\"toy.cli.v1\",\"commandId\":\"help\",\"invocationId\":\"864aaba8-6141-450a-bb6a-45357e63860e\",\"generatedAt\":\"2026-10-05T03:26:50.343Z\",\"cliVersion\":\"1.0.0\",\"contractsVersion\":\"1.0.0\",\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"environment\":{\"kind\":\"prod\",\"instanceId\":null,\"stackId\":null},\"meta\":{\"exitCode\":2,\"releaseDigest\":null,\"controlDigest\":null,\"evaluatedAt\":null,\"operationId\":null,\"effectState\":\"none\",\"recordRefs\":[],\"evidence\":[]},\"ok\":false,\"error\":{\"module\":\"contracts\",\"code\":\"INVALID_INPUT\",\"message\":\"The invocation does not match the registered command schema.\",\"retryable\":false,\"retryAt\":null,\"effectState\":\"none\",\"currentRevision\":null,\"currentGeneration\":null,\"operationRef\":null,\"requiredInteraction\":null}}\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "invalid-9",
-      "args": [
-        "help",
-        "unknown",
-        "--json"
-      ],
+      "argumentCount": 3,
       "exitCode": 2,
+      "stdoutBytes": 778,
+      "stderrBytes": 0,
       "stdout": "{\"schemaVersion\":\"toy.cli.v1\",\"commandId\":\"help\",\"invocationId\":\"afb0bc7b-b412-4a43-ae68-f0c799b7e77e\",\"generatedAt\":\"2026-10-05T03:26:50.414Z\",\"cliVersion\":\"1.0.0\",\"contractsVersion\":\"1.0.0\",\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"environment\":{\"kind\":\"prod\",\"instanceId\":null,\"stackId\":null},\"meta\":{\"exitCode\":2,\"releaseDigest\":null,\"controlDigest\":null,\"evaluatedAt\":null,\"operationId\":null,\"effectState\":\"none\",\"recordRefs\":[],\"evidence\":[]},\"ok\":false,\"error\":{\"module\":\"contracts\",\"code\":\"INVALID_INPUT\",\"message\":\"The invocation does not match the registered command schema.\",\"retryable\":false,\"retryAt\":null,\"effectState\":\"none\",\"currentRevision\":null,\"currentGeneration\":null,\"operationRef\":null,\"requiredInteraction\":null}}\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "invalid-10",
-      "args": [
-        "status",
-        "--deep",
-        "--json"
-      ],
+      "argumentCount": 3,
       "exitCode": 2,
+      "stdoutBytes": 780,
+      "stderrBytes": 0,
       "stdout": "{\"schemaVersion\":\"toy.cli.v1\",\"commandId\":\"status\",\"invocationId\":\"bb5890d2-594c-4f87-b793-744fd56dd04d\",\"generatedAt\":\"2026-10-05T03:26:50.487Z\",\"cliVersion\":\"1.0.0\",\"contractsVersion\":\"1.0.0\",\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"environment\":{\"kind\":\"prod\",\"instanceId\":null,\"stackId\":null},\"meta\":{\"exitCode\":2,\"releaseDigest\":null,\"controlDigest\":null,\"evaluatedAt\":null,\"operationId\":null,\"effectState\":\"none\",\"recordRefs\":[],\"evidence\":[]},\"ok\":false,\"error\":{\"module\":\"contracts\",\"code\":\"INVALID_INPUT\",\"message\":\"The invocation does not match the registered command schema.\",\"retryable\":false,\"retryAt\":null,\"effectState\":\"none\",\"currentRevision\":null,\"currentGeneration\":null,\"operationRef\":null,\"requiredInteraction\":null}}\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "invalid-11",
-      "args": [
-        "obligations",
-        "show",
-        "invalid",
-        "--json"
-      ],
+      "argumentCount": 4,
       "exitCode": 2,
+      "stdoutBytes": 790,
+      "stderrBytes": 0,
       "stdout": "{\"schemaVersion\":\"toy.cli.v1\",\"commandId\":\"obligations.show\",\"invocationId\":\"eb449d0f-90ce-412a-915c-f43accc8a0e8\",\"generatedAt\":\"2026-10-05T03:26:50.559Z\",\"cliVersion\":\"1.0.0\",\"contractsVersion\":\"1.0.0\",\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"environment\":{\"kind\":\"prod\",\"instanceId\":null,\"stackId\":null},\"meta\":{\"exitCode\":2,\"releaseDigest\":null,\"controlDigest\":null,\"evaluatedAt\":null,\"operationId\":null,\"effectState\":\"none\",\"recordRefs\":[],\"evidence\":[]},\"ok\":false,\"error\":{\"module\":\"contracts\",\"code\":\"INVALID_INPUT\",\"message\":\"The invocation does not match the registered command schema.\",\"retryable\":false,\"retryAt\":null,\"effectState\":\"none\",\"currentRevision\":null,\"currentGeneration\":null,\"operationRef\":null,\"requiredInteraction\":null}}\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "invalid-12",
-      "args": [
-        "trace",
-        "550e8400-e29b-41d4-a716-446655440000",
-        "--after-sequence",
-        "18446744073709551616",
-        "--json"
-      ],
+      "argumentCount": 5,
       "exitCode": 2,
+      "stdoutBytes": 779,
+      "stderrBytes": 0,
       "stdout": "{\"schemaVersion\":\"toy.cli.v1\",\"commandId\":\"trace\",\"invocationId\":\"c3fe6736-f164-4f1c-95cb-774d5ad6a6f4\",\"generatedAt\":\"2026-10-05T03:26:50.630Z\",\"cliVersion\":\"1.0.0\",\"contractsVersion\":\"1.0.0\",\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"environment\":{\"kind\":\"prod\",\"instanceId\":null,\"stackId\":null},\"meta\":{\"exitCode\":2,\"releaseDigest\":null,\"controlDigest\":null,\"evaluatedAt\":null,\"operationId\":null,\"effectState\":\"none\",\"recordRefs\":[],\"evidence\":[]},\"ok\":false,\"error\":{\"module\":\"contracts\",\"code\":\"INVALID_INPUT\",\"message\":\"The invocation does not match the registered command schema.\",\"retryable\":false,\"retryAt\":null,\"effectState\":\"none\",\"currentRevision\":null,\"currentGeneration\":null,\"operationRef\":null,\"requiredInteraction\":null}}\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "invalid-13",
-      "args": [
-        "trace",
-        "550e8400-e29b-41d4-a716-446655440000",
-        "--after-sequence",
-        "01",
-        "--json"
-      ],
+      "argumentCount": 5,
       "exitCode": 2,
+      "stdoutBytes": 779,
+      "stderrBytes": 0,
       "stdout": "{\"schemaVersion\":\"toy.cli.v1\",\"commandId\":\"trace\",\"invocationId\":\"94d665db-9bf7-44da-bc31-c1732bdb3c63\",\"generatedAt\":\"2026-10-05T03:26:50.703Z\",\"cliVersion\":\"1.0.0\",\"contractsVersion\":\"1.0.0\",\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"environment\":{\"kind\":\"prod\",\"instanceId\":null,\"stackId\":null},\"meta\":{\"exitCode\":2,\"releaseDigest\":null,\"controlDigest\":null,\"evaluatedAt\":null,\"operationId\":null,\"effectState\":\"none\",\"recordRefs\":[],\"evidence\":[]},\"ok\":false,\"error\":{\"module\":\"contracts\",\"code\":\"INVALID_INPUT\",\"message\":\"The invocation does not match the registered command schema.\",\"retryable\":false,\"retryAt\":null,\"effectState\":\"none\",\"currentRevision\":null,\"currentGeneration\":null,\"operationRef\":null,\"requiredInteraction\":null}}\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "invalid-14",
-      "args": [
-        "--env",
-        "test",
-        "status",
-        "--json"
-      ],
+      "argumentCount": 4,
       "exitCode": 2,
+      "stdoutBytes": 780,
+      "stderrBytes": 0,
       "stdout": "{\"schemaVersion\":\"toy.cli.v1\",\"commandId\":\"status\",\"invocationId\":\"651545ea-8878-4163-9927-a384a053a2c6\",\"generatedAt\":\"2026-10-05T03:26:50.775Z\",\"cliVersion\":\"1.0.0\",\"contractsVersion\":\"1.0.0\",\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"environment\":{\"kind\":\"test\",\"instanceId\":null,\"stackId\":null},\"meta\":{\"exitCode\":2,\"releaseDigest\":null,\"controlDigest\":null,\"evaluatedAt\":null,\"operationId\":null,\"effectState\":\"none\",\"recordRefs\":[],\"evidence\":[]},\"ok\":false,\"error\":{\"module\":\"contracts\",\"code\":\"INVALID_INPUT\",\"message\":\"The invocation does not match the registered command schema.\",\"retryable\":false,\"retryAt\":null,\"effectState\":\"none\",\"currentRevision\":null,\"currentGeneration\":null,\"operationRef\":null,\"requiredInteraction\":null}}\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "invalid-15",
-      "args": [
-        "--stack",
-        "550e8400-e29b-41d4-a716-446655440000",
-        "status",
-        "--json"
-      ],
+      "argumentCount": 4,
       "exitCode": 2,
+      "stdoutBytes": 812,
+      "stderrBytes": 0,
       "stdout": "{\"schemaVersion\":\"toy.cli.v1\",\"commandId\":\"help\",\"invocationId\":\"fdd3cd1d-92ce-4902-a6bc-0181e2cd646d\",\"generatedAt\":\"2026-10-05T03:26:50.848Z\",\"cliVersion\":\"1.0.0\",\"contractsVersion\":\"1.0.0\",\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"environment\":{\"kind\":\"prod\",\"instanceId\":null,\"stackId\":\"550e8400-e29b-41d4-a716-446655440000\"},\"meta\":{\"exitCode\":2,\"releaseDigest\":null,\"controlDigest\":null,\"evaluatedAt\":null,\"operationId\":null,\"effectState\":\"none\",\"recordRefs\":[],\"evidence\":[]},\"ok\":false,\"error\":{\"module\":\"contracts\",\"code\":\"INVALID_INPUT\",\"message\":\"The invocation does not match the registered command schema.\",\"retryable\":false,\"retryAt\":null,\"effectState\":\"none\",\"currentRevision\":null,\"currentGeneration\":null,\"operationRef\":null,\"requiredInteraction\":null}}\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "prod-clock-denied",
-      "args": [
-        "clock",
-        "show",
-        "--json"
-      ],
+      "argumentCount": 3,
       "exitCode": 3,
+      "stdoutBytes": 772,
+      "stderrBytes": 0,
       "stdout": "{\"schemaVersion\":\"toy.cli.v1\",\"commandId\":\"clock.show\",\"invocationId\":\"141ab80a-b413-4c0b-b895-ce7cb0eb950f\",\"generatedAt\":\"2026-10-05T03:26:50.921Z\",\"cliVersion\":\"1.0.0\",\"contractsVersion\":\"1.0.0\",\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"environment\":{\"kind\":\"prod\",\"instanceId\":null,\"stackId\":null},\"meta\":{\"exitCode\":3,\"releaseDigest\":null,\"controlDigest\":null,\"evaluatedAt\":null,\"operationId\":null,\"effectState\":\"none\",\"recordRefs\":[],\"evidence\":[]},\"ok\":false,\"error\":{\"module\":\"ops\",\"code\":\"TEST_ONLY\",\"message\":\"This command requires a named disposable test environment.\",\"retryable\":false,\"retryAt\":null,\"effectState\":\"none\",\"currentRevision\":null,\"currentGeneration\":null,\"operationRef\":null,\"requiredInteraction\":null}}\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "test-clock-unavailable",
-      "args": [
-        "--env",
-        "test",
-        "--stack",
-        "550e8400-e29b-41d4-a716-446655440000",
-        "clock",
-        "show",
-        "--json"
-      ],
+      "argumentCount": 7,
       "exitCode": 5,
+      "stdoutBytes": 817,
+      "stderrBytes": 0,
       "stdout": "{\"schemaVersion\":\"toy.cli.v1\",\"commandId\":\"clock.show\",\"invocationId\":\"4feed9c4-94d3-4066-89dd-9f64495dd88d\",\"generatedAt\":\"2026-10-05T03:26:50.994Z\",\"cliVersion\":\"1.0.0\",\"contractsVersion\":\"1.0.0\",\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"environment\":{\"kind\":\"test\",\"instanceId\":null,\"stackId\":\"550e8400-e29b-41d4-a716-446655440000\"},\"meta\":{\"exitCode\":5,\"releaseDigest\":null,\"controlDigest\":null,\"evaluatedAt\":null,\"operationId\":null,\"effectState\":\"none\",\"recordRefs\":[],\"evidence\":[]},\"ok\":false,\"error\":{\"module\":\"ops\",\"code\":\"DEPENDENCY_UNAVAILABLE\",\"message\":\"The required installed owner or launcher is unavailable.\",\"retryable\":false,\"retryAt\":null,\"effectState\":\"none\",\"currentRevision\":null,\"currentGeneration\":null,\"operationRef\":null,\"requiredInteraction\":null}}\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "lossless-9007199254740993",
-      "args": [
-        "trace",
-        "550e8400-e29b-41d4-a716-446655440000",
-        "--after-sequence",
-        "9007199254740993",
-        "--json"
-      ],
+      "argumentCount": 5,
       "exitCode": 5,
+      "stdoutBytes": 778,
+      "stderrBytes": 0,
       "stdout": "{\"schemaVersion\":\"toy.cli.v1\",\"commandId\":\"trace\",\"invocationId\":\"613bd405-6ffa-48d3-8a9a-f90f2b6f3fe4\",\"generatedAt\":\"2026-10-05T03:26:51.066Z\",\"cliVersion\":\"1.0.0\",\"contractsVersion\":\"1.0.0\",\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"environment\":{\"kind\":\"prod\",\"instanceId\":null,\"stackId\":null},\"meta\":{\"exitCode\":5,\"releaseDigest\":null,\"controlDigest\":null,\"evaluatedAt\":null,\"operationId\":null,\"effectState\":\"none\",\"recordRefs\":[],\"evidence\":[]},\"ok\":false,\"error\":{\"module\":\"self-improvement\",\"code\":\"NOT_IMPLEMENTED\",\"message\":\"The registered owner operation is not implemented.\",\"retryable\":false,\"retryAt\":null,\"effectState\":\"none\",\"currentRevision\":null,\"currentGeneration\":null,\"operationRef\":null,\"requiredInteraction\":null}}\n",
-      "stderr": "",
       "protocolValidated": true
     },
     {
       "id": "lossless-18446744073709551615",
-      "args": [
-        "trace",
-        "550e8400-e29b-41d4-a716-446655440000",
-        "--after-sequence",
-        "18446744073709551615",
-        "--json"
-      ],
+      "argumentCount": 5,
       "exitCode": 5,
+      "stdoutBytes": 778,
+      "stderrBytes": 0,
       "stdout": "{\"schemaVersion\":\"toy.cli.v1\",\"commandId\":\"trace\",\"invocationId\":\"8c87f30c-759f-4764-b2fa-1371cdee6e77\",\"generatedAt\":\"2026-10-05T03:26:51.136Z\",\"cliVersion\":\"1.0.0\",\"contractsVersion\":\"1.0.0\",\"schemaDigest\":\"279af04dc9908b10c3e35a2aa53de3f5461252b5be5c79f66778523ad48f71c7\",\"environment\":{\"kind\":\"prod\",\"instanceId\":null,\"stackId\":null},\"meta\":{\"exitCode\":5,\"releaseDigest\":null,\"controlDigest\":null,\"evaluatedAt\":null,\"operationId\":null,\"effectState\":\"none\",\"recordRefs\":[],\"evidence\":[]},\"ok\":false,\"error\":{\"module\":\"self-improvement\",\"code\":\"NOT_IMPLEMENTED\",\"message\":\"The registered owner operation is not implemented.\",\"retryable\":false,\"retryAt\":null,\"effectState\":\"none\",\"currentRevision\":null,\"currentGeneration\":null,\"operationRef\":null,\"requiredInteraction\":null}}\n",
-      "stderr": "",
       "protocolValidated": true
     }
-  ]
+  ],
+  "receiptPolicy": "No arguments or raw stderr; only validated stdout, otherwise byte counts",
+  "archiveTransform": {
+    "originalSha256": "46d2fab029ad1e709f6a141333bef0c82fb09925fd2a9c223ef46ef2b6849c91",
+    "transformedAt": "2026-10-05T04:25:55.461325Z",
+    "reason": "Remove historical raw argument retention; preserve validated output and original receipt digest",
+    "acceptanceChanged": false
+  }
 }

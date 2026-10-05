@@ -1,0 +1,186 @@
+{
+  "schemaVersion": "toy.r0.k3.diagnostic-inventory-design.v1",
+  "generatedAt": "2026-10-05T04:21:24Z",
+  "reviewer": "/root/r0_native_bootstrap_design",
+  "model": "gpt-6-luna",
+  "reasoning": "max",
+  "scope": "Read-only reconciliation of strict CLI status compositions with canonical Ops, Sources, Obligations, and cadence owner interfaces",
+  "verdict": "DESIGN_PROPOSAL_ONLY",
+  "acceptanceComplete": false,
+  "runtimeObserved": false,
+  "currentStatusOrDoctorInvoked": false,
+  "sourceCapture": {
+    "capturedAt": "2026-10-05T04:21:24Z",
+    "note": "Repository/spec source reads only. Parent may advance status/doctor and other shared state independently; this record makes no runtime or current-state claim."
+  },
+  "finding": {
+    "id": "diagnostic-inventory-detail",
+    "summary": "CheckViewV1 and EvidenceLinksV1 encode predicate state and references, not the structured facts required by CLI section 5.1. Existing cursor, cadence-slot, and due owner reads are typed but are not composed by ControlStatusV1. Ops ServiceStatus does not expose expected artifact, endpoint, or explicit measured lifecycle facts.",
+    "checkViewEvidenceLinksSufficeForDetail": false,
+    "existingSafeReads": [
+      {
+        "owner": "sources",
+        "interface": "SourcesControlRead.cursor(CursorQueryV1, ctx)",
+        "payload": "SourceCursorViewV1",
+        "sufficesFor": ["cursor digest", "watermark", "partition/revision/generation", "advance time", "batch/observation references", "gap/reset reason"],
+        "statusComposition": "not present in SourceHealthV1"
+      },
+      {
+        "owner": "self-improvement",
+        "interface": "RunControlRead.slots(SlotQueryV1, ctx)",
+        "payload": "PageV1<CadenceSlotViewV1>",
+        "sufficesFor": ["canonical slot state", "requested model settings", "observed model settings", "sweep/run/review references"],
+        "statusComposition": "not present in CadenceCoverageV1; current slot view has no armId"
+      },
+      {
+        "owner": "obligations",
+        "interface": "Obligations.due(DueInput, ctx)",
+        "payload": "DueResult",
+        "sufficesFor": ["wake health", "capture backlog age", "canonical commitment readback"],
+        "statusComposition": "not present in ControlStatusV1; existing query has no oldest_unmet view/order"
+      },
+      {
+        "owner": "ops",
+        "interface": "Ops.status()",
+        "payload": "OpsStatus",
+        "sufficesFor": ["current service health summary", "measured checkedAt/progress/PID/boot/release where available"],
+        "statusComposition": "present, but ServiceStatus lacks expected artifact, endpoint kind, and explicit installed/running/reachable/ready booleans"
+      }
+    ]
+  },
+  "proposedWirePlan": {
+    "versioning": "Keep strict V1 schemas frozen. Add generated V2 schema IDs and point the status CLI leaf at the V2 specialization; do not add undeclared keys or loosen strict objects.",
+    "ControlStatusV2": {
+      "fields": [
+        "requiredRelease",
+        "ops: OpsStatusV2|null",
+        "probes: CheckViewV1[]",
+        "sources: SourceHealthV2|null",
+        "attention",
+        "quota",
+        "cadence: CadenceCoverageV2|null",
+        "obligations: DueResult|null",
+        "release",
+        "secrets",
+        "capabilities",
+        "complete"
+      ],
+      "unavailableRule": "Any null owner result requires a registered BLOCKED/FAIL CheckViewV1 and complete=false."
+    },
+    "OpsStatusV2": {
+      "basis": "OpsStatus fields remain canonical; services changes to ServiceStatusV2[].",
+      "ServiceStatusV2": {
+        "fields": {
+          "id": "ServiceId",
+          "state": "existing Ops HealthState summary",
+          "expected": "null or {launchdDomain:string|null,launchdLabel:string|null,uid:nonnegative integer|null,releaseId:ReleaseId|null,executableDigest:SHA256|null,endpoints:ServiceEndpointExpectationV1[]}",
+          "observed": "null or {launchdDomain:string|null,launchdLabel:string|null,uid:nonnegative integer|null,pid:positive integer|null,bootId:UUID|null,releaseId:ReleaseId|null,executableDigest:SHA256|null,installed:boolean|null,running:boolean|null,reachable:boolean|null,ready:boolean|null,checkedAt:Instant|null,lastProgressAt:Instant|null,endpoints:ServiceEndpointObservationV1[]}",
+          "reasonCode": "string|null"
+        },
+        "endpointTypes": {
+          "expectation": "{id:registered-endpoint-id,kind:EndpointKind}",
+          "observation": "{id:registered-endpoint-id,kind:EndpointKind,installed:boolean|null,reachable:boolean|null,ready:boolean|null,checkedAt:Instant|null}",
+          "EndpointKind": ["none", "stdio", "inherited-pipe", "unix-socket", "loopback-tcp", "loopback-http", "tailnet-https"]
+        },
+        "unknownSemantics": "null means not measured/available; false means measured absent/not ready. expected:null means no trusted manifest row; observed:null means no safe observation. Never infer the actual UID, label, endpoint, or artifact."
+      },
+      "observationAge": "Derive from OpsStatusV2.generatedAt and observed.checkedAt; do not duplicate a computed duration."
+    },
+    "SourceHealthV2": {
+      "fields": {
+        "items": "SourceStatus[]",
+        "latestSyncReceipts": "SyncReceipt[]",
+        "capabilityManifests": "{sourceId:SourceId,manifest:CapabilityManifest}[]",
+        "cursors": "SourceCursorViewV1[]",
+        "capabilities": "CapabilityViewV1[]",
+        "evaluatedAt": "Instant",
+        "complete": "boolean"
+      },
+      "joins": ["cursor.sourceId to SourceStatus.sourceId", "manifest.sourceId to SourceStatus.sourceId; manifest.provider must equal SourceStatus.provider", "receipt.sourceId to SourceStatus.sourceId"],
+      "scopeSemantics": "SourceStatus.coverage is the safe included/excluded data-coverage view; CapabilityManifest.requestedScopes is declared/requested scope only, not proof of actual provider grant. ConnectionState remains the auth/consent state.",
+      "cursorProjection": "Promote the existing CLI SourceCursorViewV1 shape into generated Sources/Contracts and return it through the existing SourcesControlRead.cursor safe read."
+    },
+    "CadenceCoverageV2": {
+      "period": "CadencePeriodV2 preserves every CadencePeriodV1 field and adds slotDetails:PageV1<CadenceSlotViewV1>.",
+      "settings": "Reuse requestedSettings and observedSettings from canonical CadenceSlotViewV1; do not copy a model-settings DTO.",
+      "bounds": "Each page is bounded; counts/denominator come from the complete owner ledger and never from only the returned page.",
+      "armCorrelation": "CadencePeriodV1 has armId but CadenceSlotViewV1 and the declared cadence_slot table do not. Require a proven unique period-to-arm range or add a durable arm binding plus versioned slot view/query. Until then, do not label slot settings as original/reduced arm settings.",
+      "otherGap": "No current typed status view separately represents deterministic tick/sweep health. OpsStatus.reviewSlots is not equivalent."
+    },
+    "ObligationsStatus": {
+      "composition": "ControlStatusV2.obligations:DueResult|null",
+      "read": "Extend existing read-only DueInput.view with oldest_unmet; owner selects one open commitment by created_at ascending then id ascending and returns the existing DueResult with limit 1.",
+      "health": "Use DueResult.evaluated_at and health.wakes/capture backlog fields; use canonical Commitment created_at, next_wake_at, and deadline fields. No CLI sorting or second commitment schema. Register the owner check before CheckView admission."
+    }
+  },
+  "wireCompatibility": {
+    "breakingRelativeToV1": true,
+    "reason": "CLI §4.4 rejects unknown properties recursively; V1 ServiceStatus, SourceHealth, CadencePeriod/Coverage, and ControlStatus have exact strict fields.",
+    "requiredAction": "Add new generated V2 schema IDs for the changed compositions and update the status leaf's output specialization and consumers through the Contracts generator. Keep V1 frozen or explicitly retire it in the registry."
+  },
+  "unresolvedPredicates": [
+    "The cadence owner must establish a durable, non-ambiguous mapping from each capacity-trial arm to its slot page before settings can be attributed per arm.",
+    "Sources declares requested scopes but no actual granted-scope view. If CLI section 5.1 means actual provider grants rather than data coverage/requested scopes, Sources must define a validated safe projection; do not infer grants.",
+    "Sources declares oldestPendingAt but no numeric backlog count. If a count is required, Sources must define its unit/semantics before adding it.",
+    "A separately typed deterministic tick/sweep status remains undefined; it cannot be inferred from Ops review-slot counters or AI cadence counts."
+  ],
+  "acceptance": {
+    "staticProjection": "PENDING",
+    "K3": "PENDING",
+    "CLI_ATs": "PENDING",
+    "ownerTransports": "PENDING",
+    "actualIdentityAndNativeLauncher": "PENDING_R0.04_R0.05",
+    "runtime": "NOT_RUN",
+    "noRuntimeClaim": true
+  },
+  "sourceRefs": [
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/cli.md",
+      "sha256": "3265ac589e8b64cfc67c0d89fe8e1aa7fd48ecec8c981aab8716262a9f50a22c",
+      "lines": "165-214,307-318,324-331,357-377,468-480",
+      "claims": ["strict V1 shapes", "§5.1 required detail", "safe cursor/slot/due reads", "owner interface additions"]
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/ops.md",
+      "sha256": "825ab91bc6c3122bf038f06f2a7577096edb795a7fcaea7a1ffbcbbc841024a4",
+      "lines": "276-301,624-685",
+      "claims": ["protected expected service manifest", "current ServiceStatus and OpsStatus canonical field sets"]
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/sources.md",
+      "sha256": "7caa4347326c27ed528e96106b729fd9f5d0ae3da69518302b519c98b0fa6645",
+      "lines": "171-185,300-352,357-378,622-648",
+      "claims": ["canonical SourceStatus and SyncReceipt", "Sources inventory/status public reads", "CapabilityManifest requested scopes"]
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/obligations.md",
+      "sha256": "5379f943578b4248dc21379a029acead930047c091316deb796fae0d49f4eb0f",
+      "lines": "338-382,466-531,595-600",
+      "claims": ["DueResult health", "canonical Commitment fields", "due ordering and wake latency targets"]
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/self-improvement.md",
+      "sha256": "dd9823c97df8c9d152d01e7d56d704a29238a5e0ccafd759014630fe625bea40",
+      "lines": "640-709,2753-2755",
+      "claims": ["cadence_slot persistence and ownership", "separate immutable original/reduced trial arms"]
+    },
+    {
+      "path": "docs/adr/0005-diagnostic-contracts.md",
+      "sha256": "af7d5a5344f84898d3e4a6b844bf591f196ba7702fc5df30a8a08f3445fdc969",
+      "lines": "9-17",
+      "claims": ["strict status contracts", "do not invent unavailable identity observations", "runtime checks remain separate"]
+    },
+    {
+      "path": "packages/contracts/src/ops.ts",
+      "sha256": "02a3f03b6a01b4a1cd8db97568b569508726e66b3baf317eb29da198980603bb",
+      "lines": "10-65",
+      "claims": ["current generated owner/status schemas are strict and exclude proposed details"]
+    },
+    {
+      "path": "packages/contracts/src/sources.ts",
+      "sha256": "511061b71338ade9344c1977d122f52bf5cc6b3eee364c67a0a5b76dc0655867",
+      "lines": "36-93",
+      "claims": ["current strict SourceStatus and CapabilityManifest field sets"]
+    }
+  ]
+}

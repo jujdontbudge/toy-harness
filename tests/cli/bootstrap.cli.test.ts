@@ -14,17 +14,19 @@ const fixture = await mkdtemp(join(root, "build/tmp/k3-packed-"));
 await mkdir(receiptDirectory, { recursive: true });
 const setup = (args: string[]): void => {
   const child = spawnSync("npm", args, { cwd: fixture, encoding: "utf8", timeout: 120000, maxBuffer: 2 * 1024 * 1024 });
-  assert.equal(child.error, undefined);
-  assert.equal(child.status, 0, child.stderr);
+  assert.ok(child.error === undefined, "Offline package preparation did not complete");
+  assert.equal(child.status, 0, "Offline package preparation failed");
 };
-const receipts: { id: string; args: string[]; exitCode: number | null; stdout: string; stderr: string; protocolValidated: boolean }[] = [];
+const canaries = new Set<string>();
+const receipts: { id: string; argumentCount: number; exitCode: number | null; stdoutBytes: number; stderrBytes: number; stdout: string | null; protocolValidated: boolean }[] = [];
 const invoke = (id: string, args: string[], exitCode: number) => {
   const child = spawnSync(join(fixture, "node_modules/.bin/toy"), args, { cwd: fixture, encoding: "utf8", timeout: 30000, maxBuffer: 2 * 1024 * 1024 });
-  const receipt = { id, args, exitCode: child.status, stdout: child.stdout, stderr: child.stderr, protocolValidated: false };
+  const receipt = { id, argumentCount: args.length, exitCode: child.status, stdoutBytes: Buffer.byteLength(child.stdout), stderrBytes: Buffer.byteLength(child.stderr), stdout: null, protocolValidated: false };
   receipts.push(receipt);
-  assert.equal(child.error, undefined);
+  assert.ok(child.error === undefined, "CLI process did not complete");
   assert.equal(child.status, exitCode);
-  assert.equal(child.stderr, "");
+  assert.equal(receipt.stderrBytes, 0, "CLI wrote diagnostics to stderr");
+  assert.ok([...canaries].every((canary) => !child.stdout.includes(canary) && !child.stderr.includes(canary)), "CLI disclosed a private canary");
   assert.ok(child.stdout.endsWith("\n"));
   if (!args.includes("--json")) {
     assert.ok(!/[\u001b\u009b]/.test(child.stdout));
@@ -38,15 +40,30 @@ const invoke = (id: string, args: string[], exitCode: number) => {
       }
     }
     receipt.protocolValidated = true;
+    const validatedReceipt = receipts.at(-1);
+    assert.ok(validatedReceipt);
+    validatedReceipt.stdout = child.stdout;
     return null;
   }
   assert.equal(child.stdout.split("\n").length, 2);
-  const decoded: unknown = JSON.parse(child.stdout);
-  const result = cliResultSchema.parse(decoded);
+  let decoded: unknown;
+  try {
+    decoded = JSON.parse(child.stdout);
+  } catch {
+    assert.fail("CLI JSON could not be decoded");
+  }
+  const parsed = cliResultSchema.safeParse(decoded);
+  assert.ok(parsed.success, "CLI output did not match its public schema");
+  const result = parsed.data;
+  const validatedOutput = JSON.stringify(result) + "\n";
+  assert.ok([...canaries].every((canary) => !validatedOutput.includes(canary)), "Validated CLI output disclosed a private canary");
   assert.equal(result.meta.exitCode, exitCode);
   assert.equal(result.schemaDigest, schemaBundleDigest);
   assert.equal(result.meta.effectState, "none");
   receipt.protocolValidated = true;
+  const validatedReceipt = receipts.at(-1);
+  assert.ok(validatedReceipt);
+  validatedReceipt.stdout = validatedOutput;
   return result;
 };
 
@@ -85,7 +102,9 @@ try {
       invoke("version-human", ["version"], 0);
     });
     await suite.test("invalid syntax and privilege options reject without payload disclosure", () => {
-      const sentinel = "K3_SENTINEL_\u001b[31m_PRIVATE_VALUE";
+      const marker = "K3_" + randomUUID();
+      const sentinel = marker + "_\u001b[31m";
+      canaries.add(marker);
       const invalid = [
         ["--json", "--json", "status"], ["status", "--timeout-ms", "999", "--json"],
         ["status", "--release", "R9", "--json"], ["unknown", sentinel, "--json"],
@@ -100,7 +119,7 @@ try {
       for (const [index, args] of invalid.entries()) {
         const result = invoke("invalid-" + index, args, 2);
         assert.ok(result && !result.ok && result.error.code === "INVALID_INPUT");
-        assert.ok(!JSON.stringify(result).includes(sentinel));
+        assert.ok(!JSON.stringify(result).includes(marker));
       }
     });
     await suite.test("production test commands deny and absent owners stay unavailable", () => {
@@ -162,11 +181,18 @@ try {
     });
   });
 } finally {
-  await writeFile(join(receiptDirectory, "receipts.json"), JSON.stringify({
-    schemaVersion: "toy.bootstrap-cli.v1", card: "R0.K3", attemptId, generatedAt: new Date().toISOString(),
-    route: "compiled-packed-cli-subprocess", acceptanceComplete: false,
-    limitation: "Offline/parser subset only. Full assigned AT assertions, owner schemas/transports, input files, actual identities and attested stacks remain pending.",
-    schemaDigest: schemaBundleDigest, receipts
-  }, null, 2) + "\n", { flag: "wx" });
-  await rm(fixture, { recursive: true });
+  try {
+    const archive = JSON.stringify({
+      schemaVersion: "toy.bootstrap-cli.v2", card: "R0.K3", attemptId, generatedAt: new Date().toISOString(),
+      route: "compiled-packed-cli-subprocess", acceptanceComplete: false,
+      receiptPolicy: "No arguments or raw stderr; only validated stdout, otherwise byte counts",
+      limitation: "Offline/parser subset only. Full assigned AT assertions, owner schemas/transports, input files, actual identities and attested stacks remain pending.",
+      schemaDigest: schemaBundleDigest, receipts
+    }, null, 2) + "\n";
+    assert.ok([...canaries].every((canary) => !archive.includes(canary)), "Receipt archive disclosed a private canary");
+    assert.ok(receipts.every((receipt) => receipt.protocolValidated || receipt.stdout === null), "Receipt archive retained unvalidated output");
+    await writeFile(join(receiptDirectory, "receipts.json"), archive, { flag: "wx" });
+  } finally {
+    await rm(fixture, { recursive: true });
+  }
 }
