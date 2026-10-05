@@ -80,5 +80,34 @@
     "availableAPIExecutedForAdmission": false,
     "policySelected": false,
     "requiredDecision": "Choose and verify a conservative byte policy with normal pressure, stable swap and the sealed aggregate ceiling plus margin; no percentage multiplication."
+  },
+  "pressureMappingResearch": {
+    "recordedAt": "2026-10-05T16:36:46.812Z",
+    "primarySource": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/main/bsd/kern/kern_memorystatus_notify.c",
+    "sourceLocations": {
+      "conversion": [
+        1651,
+        1679
+      ],
+      "sysctl": [
+        1753,
+        1778
+      ]
+    },
+    "finding": "The read-only masked kern.memorystatus_vm_pressure_level sysctl maps internal kVMPressureNormal to NOTE_MEMORYSTATUS_PRESSURE_NORMAL, Warning/Urgent to WARN and Critical to CRITICAL before returning userspace data. It does not return the internal zero-based enum.",
+    "installedSdk": "MacOSX26.5.sdk",
+    "installedHeader": "usr/include/dispatch/source.h",
+    "installedHeaderDigest": "c0a3c34828c40d761b421d1b595ce1da22110410412facc531b1ac16af12d5d2",
+    "publicDispatchConstants": {
+      "normal": 1,
+      "warn": 2,
+      "critical": 4
+    },
+    "limitations": [
+      "Current upstream primary source is not a source-to-running-kernel build attestation.",
+      "The masked sysctl is not a documented stable public pressure-query API; failure or unknown values must remain unknown and block admission.",
+      "No live pressure value, swap-stability interval, conservative byte policy, heavy lease or runtime permit was established by this research."
+    ],
+    "resourcePermitIssued": false
   }
 }
