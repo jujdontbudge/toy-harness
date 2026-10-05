@@ -1,0 +1,71 @@
+{
+  "schemaVersion": "toy.bootstrap-attempt-design.v1",
+  "card": "R0.K3",
+  "generatedAt": "2026-10-05T16:57:39.766Z",
+  "status": "WRITTEN_INTERFACE_ONLY",
+  "acceptanceComplete": false,
+  "implementationPerformed": false,
+  "nativeExecutionPerformed": false,
+  "leaseGranted": false,
+  "journalMigrationPerformed": false,
+  "sourceHashes": {
+    "docs/adr/0016-bootstrap-attempt-ownership.md": "43e0eaa5f9c32854415148cfd3d33a2628802669bc9ef2fc9cf27bc7675e3ded",
+    "docs/adr/0014-bootstrap-operation-journal.md": "b038c2f26731a7fd25edae6f729be96bb8487e53b010a70c5380a0b9fee5fc18",
+    "docs/adr/0015-bootstrap-resource-preflight.md": "1fab589dfd87aee6aa93b8f4a93919e8eeced9f140102c40d00cdccd3f4ed354",
+    "docs/adr/0010-bootstrap-stack-lifecycle.md": "d6f3d02bb5cfdb17e0238935a36c9651c5e4274a99d1f17c1aac14899ddd880a",
+    "packages/ops/src/bootstrap-journal.ts": "fc266d517af503e64b665e8c966ed167443e846cb94b5cf85203d26a455d9bc3",
+    "packages/ops/src/bootstrap-resources.ts": "5bbf815ed27f8a74d834109f344429e1e264992432a0e1b1bfce553b8829f499",
+    "packages/ops/native/BootstrapEntry.swift": "19e1616ae0528eba7b29787278282c0e8803b5542ac0f7c764cb662669fadbc2",
+    "packages/ops/native/BootstrapSupervisor.swift": "807a821bf0e4463188eb8468b672911bc9bfad6d6990dd962f2b3f610e477f22",
+    "packages/contracts/src/ops.ts": "76ec1b57073671ea0b10ce37c35ecc1760dc6b546b038c904755142d0c12adfa",
+    "packages/contracts/src/test-control.ts": "dc5299da7d2a082a8eccff48a0cc8aa9b7378e33f0aa19e53b7e1e09a250b9f5"
+  },
+  "primarySources": [
+    {
+      "path": "/usr/share/man/man5/launchd.plist.5",
+      "sha256": "1c5f5041c1d3492988bfa6f9dc6d969dfd072d20af2703c28d9a8f6ed6aaadcb",
+      "claims": [
+        "TimeOut is not implemented",
+        "ExitTimeOut controls stop escalation, not maximum attempt duration",
+        "Process-group death cleanup does not prove all-descendant cleanup",
+        "KeepAlive restart conditions and default throttling are separate from a deadline"
+      ]
+    },
+    {
+      "url": "https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CreatingLaunchdJobs.html",
+      "scope": "Archived primary documentation corroborates general launchd job lifecycle; local manual governs current key observations"
+    },
+    {
+      "url": "https://github.com/apple-oss-distributions/launchd/blob/main/man/launchd.plist.5",
+      "scope": "Historical Apple source; not running-kernel or current launchd attestation"
+    }
+  ],
+  "decisions": [
+    "Existing public OpsTestStack interface and one externally supervised owner",
+    "Deadline outside native Security/hash calls",
+    "Generated durable owner/process-incarnation events before effect acknowledgment",
+    "Singleton transactional lease; uncertainty holds it until verified reconciliation",
+    "Online backup and explicit version migration before modifying the real V1 journal",
+    "Current caller bootstrap serialization cannot certify protected production global admission"
+  ],
+  "pendingWork": [
+    {
+      "unit": "journal-backup-and-owner-state",
+      "firstAction": "Generate exact backup/transition/lease/owner record schemas and inventory before extending the existing journal owner",
+      "proof": "Separate packed CLI retries preserve existing blocked identities through the backed-up version transition; external OS/storage interruptions remain registered pending cases"
+    },
+    {
+      "unit": "external-attempt-and-child-ownership",
+      "firstAction": "Implement the foreground launchd owner and closed durable ownership acknowledgments after the journal transition is verified",
+      "proof": "Registered largest-interface CLI resource/death/fencing/cleanup matrix; no actual native admission before measured headroom, enforcement and identity/artifact gates"
+    }
+  ],
+  "wholeATs": [
+    "AT-cli-4",
+    "AT-cli-6",
+    "AT-cli-9",
+    "AT-cli-10"
+  ],
+  "resourcePrerequisite": "build/evidence/R0.K3/resource-preflight.json",
+  "limitation": "Source/manual/design evidence only; no online backup, migration, job, runtime permit or process recovery was performed"
+}

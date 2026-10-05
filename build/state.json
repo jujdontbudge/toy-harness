@@ -2,7 +2,7 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-05T16:51:09.095Z",
+  "updatedAt": "2026-10-05T16:57:39.766Z",
   "phase": "R0 kitchen",
   "activeCard": "R0.K3",
   "cardCount": 83,
@@ -83,7 +83,8 @@
         "build/evidence/R0.K3/native-compile-recovery.json",
         "build/evidence/R0.K3/operation-journal.json",
         "build/evidence/R0.K3/supervisor-review-corrections.json",
-        "build/evidence/R0.K3/resource-preflight.json"
+        "build/evidence/R0.K3/resource-preflight.json",
+        "build/evidence/R0.K3/attempt-ownership-design.json"
       ],
       "requiredATs": [
         "AT-cli-1",
@@ -132,6 +133,18 @@
           "publicInterface": "OpsControlRead.doctor",
           "evidence": "build/evidence/R0.K3/resource-preflight.json",
           "runtimePermitAvailable": false,
+          "acceptanceComplete": false
+        },
+        "externalAttemptOwner": {
+          "status": "WRITTEN_INTERFACE_ONLY",
+          "interface": "docs/adr/0016-bootstrap-attempt-ownership.md",
+          "evidence": "build/evidence/R0.K3/attempt-ownership-design.json",
+          "onlineBackupVerified": false,
+          "journalMigrationAvailable": false,
+          "leaseAvailable": false,
+          "externalLifetimeVerified": false,
+          "wholeAttemptDeadlineVerified": false,
+          "childOwnershipEventsAvailable": false,
           "acceptanceComplete": false
         }
       },
@@ -8698,7 +8711,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Freeze and implement the single external Ops attempt owner: whole-attempt deadline, sole heavy-work lease bound to request/generation and process incarnation, durable fencing/recovery and backup-before-migration. Current CLI-measured headroom blocks child/native runtime admission; remeasure through toy doctor --deep before execution. Preserve all services. Full K3, actual identities, PostgreSQL, assigned-rung ATs, real elapsed trials/soaks and authorized R0–R5 deployment remain pending.",
+  "nextAction": "Generate the exact private online-backup/version-transition/lease/owner/process-incarnation schemas, then extend only the existing Ops journal owner with a verified SQLite online backup before migration. Preserve every terminal blocked V1 identity. Verify by separate packed toy retries through the real owner. After that, implement the single external foreground launchd attempt and durable native ownership acknowledgment protocol from ADR 0016. Current measured headroom still blocks child/native admission; do not stop production services or substitute a caller lease for protected global admission. Full R0–R5 objective and every whole AT remain pending.",
   "previousTurnClassification": "progress: current native supervisor compilation and independent R0.09 storage preparation",
   "failures": [
     {
@@ -18921,14 +18934,16 @@
     "status": "completed; both native source findings corrected and compiled, actual R0.05 denial acceptance pending"
   },
   "continuationAssessment": {
-    "generatedAt": "2026-10-05T16:51:09.095Z",
+    "generatedAt": "2026-10-05T16:57:39.766Z",
     "classification": "progress",
     "evidence": [
       "build/evidence/R0.K3/resource-preflight.json",
       "build/evidence/R0.K3/bootstrap.json",
       "build/evidence/R0.K3/native-build.json",
-      "build/evidence/R0.K2/bootstrap.json"
+      "build/evidence/R0.K2/bootstrap.json",
+      "build/evidence/R0.K3/attempt-ownership-design.json"
     ],
-    "reason": "Real CLI resource measurements and short real deadline verified; physical complement and allocated/used swap growth predicates corrected in owner code. Fresh 9 CLI/107 invocations, 29 static checks and current native artifact/source readbacks pass; all whole acceptance and runtime gates remain pending."
+    "reason": "Real CLI resource measurements and short real deadline verified; physical complement and allocated/used swap growth predicates corrected in owner code. Fresh 9 CLI/107 invocations, 29 static checks and current native artifact/source readbacks pass; all whole acceptance and runtime gates remain pending.",
+    "nextUnit": "Private generated journal backup/transition/lease/owner schemas followed by backed-up journal migration through toy"
   }
 }
