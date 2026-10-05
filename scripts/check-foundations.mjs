@@ -13,11 +13,23 @@ const execute = (id, executable, argv, rejectionPattern = null, extraEnv = {}) =
   return passed;
 };
 const fixture = async (files, action) => {
-  for (const [path, content] of files) {
-    await mkdir(resolve(root, path, ".."), { recursive: true });
-    await writeFile(resolve(root, path), content, { flag: "wx" });
+  const created = [];
+  try {
+    for (const [path, content] of files) {
+      await mkdir(resolve(root, path, ".."), { recursive: true });
+      await writeFile(resolve(root, path), content, { flag: "wx" });
+      created.push(path);
+    }
+    action();
+  } finally {
+    for (const path of created) {
+      await rm(resolve(root, path));
+      if (path.endsWith(".ts") && path.includes("/src/")) {
+        const output = path.replace("/src/", "/dist/").slice(0, -3);
+        for (const suffix of [".js", ".js.map", ".d.ts"]) await rm(resolve(root, output + suffix), { force: true });
+      }
+    }
   }
-  try { action(); } finally { for (const [path] of files) await rm(resolve(root, path)); }
 };
 
 execute("valid-types", process.execPath, ["node_modules/typescript/bin/tsc", "-b", "--pretty", "false"]);

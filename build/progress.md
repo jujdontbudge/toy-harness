@@ -17,3 +17,7 @@ The eleven bootstrap compiler/import checks pass, including real compiler/import
 ## R0.K2 — worker in progress, full source accounting
 
 One gpt-6-luna/max worker owns the independent K2 lint/codegen card under frozen primitive schemas; no additional stack/model/VM process is admitted. The parent owns shared integration and build checkpoints. The source inventory now independently discovers all 1,425 assertions in current top-level specs, verifies every index definition/release/rung binding, and includes 13 integrated CLI cards. Required sets for R2.08, R4.06 and R5.05 are respectively 1,086, 98 and 1,425 IDs. Acceptance verdicts live in build/state.json separately from the regenerated source index so index regeneration cannot erase evidence. K2 and all release acceptance remain pending.
+
+## K1 verification-fixture cleanup and K3 boundary
+
+A negative TypeScript fixture exposed compiler emission into dist on failed checks. The shared compiler now forbids emission on errors, and the bootstrap gate removes outputs belonging to fixtures it actually created. All eleven checks pass again, with fresh evidence and no fixture artifacts remaining in cli/dist or packages. K1 acceptance remains pending the complete K4 assertion. The K3 public boundary is written in docs/adr/0003-cli-bootstrap.md; its implementation waits for K2 availability. Draft integration PR: https://github.com/JohanSardar/toy-harness/pull/1.
