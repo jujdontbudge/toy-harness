@@ -1,0 +1,66 @@
+{
+  "schemaVersion": "toy.bootstrap-resource-research.v1",
+  "generatedAt": "2026-10-05T16:07:08.027Z",
+  "card": "R0.K3",
+  "scope": "Primary source and installed SDK accounting research only",
+  "acceptanceComplete": false,
+  "resourcePermitIssued": false,
+  "sources": [
+    {
+      "url": "https://github.com/apple-oss-distributions/xnu/blob/main/osfmk/vm/vm_page.h",
+      "finding": "macOS AVAILABLE_NON_COMPRESSED_MEMORY includes active, inactive, free and speculative counters; memorystatus level is not an allocatable free-byte budget."
+    },
+    {
+      "url": "https://github.com/apple-oss-distributions/xnu/blob/main/doc/vm/memorystatus_notify.md",
+      "finding": "Available accounting includes reclaimable memory; reclaiming anonymous pages may require compression or swapping. This does not prove no-pressure admission."
+    },
+    {
+      "url": "https://developer.apple.com/documentation/os/os_proc_available_memory",
+      "finding": "Per-process memory-limit remainder, not physical host headroom; installed SDK declares this API unavailable on macOS."
+    }
+  ],
+  "installedHeaderReadbacks": [
+    {
+      "sdk": "MacOSX26.5.sdk",
+      "path": "usr/include/os/proc.h",
+      "sha256": "32c76833132f2ed8c9b65da1119fda8edf9cb7de9da331fa50a39a609ad29a01"
+    },
+    {
+      "sdk": "MacOSX26.5.sdk",
+      "path": "usr/include/mach/vm_statistics.h",
+      "sha256": "3dcd466ffa164d268b92f5d53357172c26a59e234b488887db164afeb207b132"
+    },
+    {
+      "sdk": "MacOSX26.5.sdk",
+      "path": "System/Library/Frameworks/Security.framework/Headers/SecCode.h",
+      "sha256": "47a0cf42f3babd16f5f8523464f9895cc2302650c35e401e1d9923d6c30769db"
+    }
+  ],
+  "observations": [
+    {
+      "observedAt": "2026-10-05T15:53:24Z",
+      "physicalRamBytes": 8589934592,
+      "memorystatusPercentage": 62,
+      "swapUsedMiB": 1503,
+      "admission": false
+    },
+    {
+      "physicalRamBytes": 8589934592,
+      "memorystatusPercentage": 55,
+      "swapUsedMiB": 1503,
+      "admission": false,
+      "observedBetweenUtc": {
+        "from": "2026-10-05T16:02:07Z",
+        "through": "2026-10-05T16:02:36Z"
+      }
+    }
+  ],
+  "requiredBeforeAdmission": [
+    "Specify conservative available-byte measurement without active/anonymous or speculative double counting",
+    "Measure normal pressure and stable swap under current load",
+    "Verify available >=1.5 GB and sealed aggregate ceiling +512 MiB margin",
+    "Physical-RAM fit and exclusive shared heavy-work lease",
+    "Real aggregate descendant capacity and pressure-loss teardown evidence"
+  ],
+  "conclusion": "Existing percentages are read-only host observations. No stack or supported inference has been admitted; resource owner implementation remains absent."
+}

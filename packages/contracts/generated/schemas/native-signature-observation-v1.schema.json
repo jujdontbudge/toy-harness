@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "role": {
+      "type": "string",
+      "enum": [
+        "supervisor",
+        "parent",
+        "child"
+      ]
+    },
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "artifactDigest": {
+      "type": "string",
+      "minLength": 64,
+      "maxLength": 64,
+      "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+    },
+    "codeIdentifierHex": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{40}(?![\\s\\S])"
+    },
+    "signatureFlags": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 4294967295
+    },
+    "adHoc": {
+      "type": "boolean",
+      "const": true
+    },
+    "teamIdentifier": {
+      "type": "null"
+    },
+    "hardenedRuntime": {
+      "type": "boolean",
+      "const": true
+    },
+    "libraryValidation": {
+      "type": "boolean",
+      "const": true
+    },
+    "entitlementProfile": {
+      "type": "string",
+      "enum": [
+        "none",
+        "app-sandbox",
+        "app-sandbox-inherit"
+      ]
+    }
+  },
+  "required": [
+    "role",
+    "identifier",
+    "artifactDigest",
+    "codeIdentifierHex",
+    "signatureFlags",
+    "adHoc",
+    "teamIdentifier",
+    "hardenedRuntime",
+    "libraryValidation",
+    "entitlementProfile"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:NativeSignatureObservationV1"
+}

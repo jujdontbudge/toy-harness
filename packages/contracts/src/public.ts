@@ -19,4 +19,7 @@ export * from "./attention.js";
 export * from "./publisher.js";
 export * from "./test-control.js";
 
-export const schemaInventory = { ...primitiveSchemaInventory, ...cliSchemaInventory, ...controlEvidenceSchemaInventory, ...sourceSchemaInventory, ...opsRegistrySchemaInventory, ...opsSchemaInventory, ...attentionSchemaInventory, ...publisherSchemaInventory, ...testControlSchemaInventory };
+type SchemaInventory = typeof primitiveSchemaInventory & typeof cliSchemaInventory & typeof controlEvidenceSchemaInventory
+  & typeof sourceSchemaInventory & typeof opsRegistrySchemaInventory & typeof opsSchemaInventory
+  & typeof attentionSchemaInventory & typeof publisherSchemaInventory & typeof testControlSchemaInventory;
+export const schemaInventory: SchemaInventory = { ...primitiveSchemaInventory, ...cliSchemaInventory, ...controlEvidenceSchemaInventory, ...sourceSchemaInventory, ...opsRegistrySchemaInventory, ...opsSchemaInventory, ...attentionSchemaInventory, ...publisherSchemaInventory, ...testControlSchemaInventory };

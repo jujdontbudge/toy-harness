@@ -6387,3 +6387,413 @@ public struct NativeBuildManifestV1Artifacts: Codable, Sendable {
         try container.encode(`child`, forKey: ToyCodingKey("child"))
     }
 }
+
+public struct NativeEntryReceiptV2: Codable, Sendable {
+    public let `protocol`: NativeEntryReceiptV2Protocol
+    public let `parent`: NativeProcessIdentityV1
+    public let `child`: NativeProcessIdentityV1
+    public let `entered`: CliHelpResultOk
+    public let `inheritedChildEntered`: CliHelpResultOk
+    public let `containerHomeReady`: CliFailureOk
+    public init(`protocol`: NativeEntryReceiptV2Protocol, `parent`: NativeProcessIdentityV1, `child`: NativeProcessIdentityV1, `entered`: CliHelpResultOk, `inheritedChildEntered`: CliHelpResultOk, `containerHomeReady`: CliFailureOk) {
+        self.`protocol` = `protocol`
+        self.`parent` = `parent`
+        self.`child` = `child`
+        self.`entered` = `entered`
+        self.`inheritedChildEntered` = `inheritedChildEntered`
+        self.`containerHomeReady` = `containerHomeReady`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["protocol", "parent", "child", "entered", "inheritedChildEntered", "containerHomeReady"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`protocol` = try container.decode(NativeEntryReceiptV2Protocol.self, forKey: ToyCodingKey("protocol"))
+        self.`parent` = try container.decode(NativeProcessIdentityV1.self, forKey: ToyCodingKey("parent"))
+        self.`child` = try container.decode(NativeProcessIdentityV1.self, forKey: ToyCodingKey("child"))
+        self.`entered` = try container.decode(CliHelpResultOk.self, forKey: ToyCodingKey("entered"))
+        self.`inheritedChildEntered` = try container.decode(CliHelpResultOk.self, forKey: ToyCodingKey("inheritedChildEntered"))
+        self.`containerHomeReady` = try container.decode(CliFailureOk.self, forKey: ToyCodingKey("containerHomeReady"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`protocol`, forKey: ToyCodingKey("protocol"))
+        try container.encode(`parent`, forKey: ToyCodingKey("parent"))
+        try container.encode(`child`, forKey: ToyCodingKey("child"))
+        try container.encode(`entered`, forKey: ToyCodingKey("entered"))
+        try container.encode(`inheritedChildEntered`, forKey: ToyCodingKey("inheritedChildEntered"))
+        try container.encode(`containerHomeReady`, forKey: ToyCodingKey("containerHomeReady"))
+    }
+}
+
+public enum NativeEntryReceiptV2Protocol: String, Codable, CaseIterable, Sendable {
+    case `toyBootstrapNativeV2` = "toy.bootstrap-native.v2"
+}
+
+public struct NativeBuildManifestV2: Codable, Sendable {
+    public let `schemaVersion`: NativeBuildManifestV2SchemaVersion
+    public let `generatedAt`: Instant
+    public let `schemaDigest`: Digest
+    public let `compilerVersion`: NativeBuildManifestV1CompilerVersion
+    public let `compilerDigest`: Digest
+    public let `sdk`: NativeBuildManifestV1Sdk
+    public let `sdkSettingsDigest`: Digest
+    public let `sourceDigests`: NativeBuildManifestV2SourceDigests
+    public let `artifacts`: NativeBuildManifestV2Artifacts
+    public init(`schemaVersion`: NativeBuildManifestV2SchemaVersion, `generatedAt`: Instant, `schemaDigest`: Digest, `compilerVersion`: NativeBuildManifestV1CompilerVersion, `compilerDigest`: Digest, `sdk`: NativeBuildManifestV1Sdk, `sdkSettingsDigest`: Digest, `sourceDigests`: NativeBuildManifestV2SourceDigests, `artifacts`: NativeBuildManifestV2Artifacts) {
+        self.`schemaVersion` = `schemaVersion`
+        self.`generatedAt` = `generatedAt`
+        self.`schemaDigest` = `schemaDigest`
+        self.`compilerVersion` = `compilerVersion`
+        self.`compilerDigest` = `compilerDigest`
+        self.`sdk` = `sdk`
+        self.`sdkSettingsDigest` = `sdkSettingsDigest`
+        self.`sourceDigests` = `sourceDigests`
+        self.`artifacts` = `artifacts`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["schemaVersion", "generatedAt", "schemaDigest", "compilerVersion", "compilerDigest", "sdk", "sdkSettingsDigest", "sourceDigests", "artifacts"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`schemaVersion` = try container.decode(NativeBuildManifestV2SchemaVersion.self, forKey: ToyCodingKey("schemaVersion"))
+        self.`generatedAt` = try container.decode(Instant.self, forKey: ToyCodingKey("generatedAt"))
+        self.`schemaDigest` = try container.decode(Digest.self, forKey: ToyCodingKey("schemaDigest"))
+        self.`compilerVersion` = try container.decode(NativeBuildManifestV1CompilerVersion.self, forKey: ToyCodingKey("compilerVersion"))
+        self.`compilerDigest` = try container.decode(Digest.self, forKey: ToyCodingKey("compilerDigest"))
+        self.`sdk` = try container.decode(NativeBuildManifestV1Sdk.self, forKey: ToyCodingKey("sdk"))
+        self.`sdkSettingsDigest` = try container.decode(Digest.self, forKey: ToyCodingKey("sdkSettingsDigest"))
+        self.`sourceDigests` = try container.decode(NativeBuildManifestV2SourceDigests.self, forKey: ToyCodingKey("sourceDigests"))
+        self.`artifacts` = try container.decode(NativeBuildManifestV2Artifacts.self, forKey: ToyCodingKey("artifacts"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`schemaVersion`, forKey: ToyCodingKey("schemaVersion"))
+        try container.encode(`generatedAt`, forKey: ToyCodingKey("generatedAt"))
+        try container.encode(`schemaDigest`, forKey: ToyCodingKey("schemaDigest"))
+        try container.encode(`compilerVersion`, forKey: ToyCodingKey("compilerVersion"))
+        try container.encode(`compilerDigest`, forKey: ToyCodingKey("compilerDigest"))
+        try container.encode(`sdk`, forKey: ToyCodingKey("sdk"))
+        try container.encode(`sdkSettingsDigest`, forKey: ToyCodingKey("sdkSettingsDigest"))
+        try container.encode(`sourceDigests`, forKey: ToyCodingKey("sourceDigests"))
+        try container.encode(`artifacts`, forKey: ToyCodingKey("artifacts"))
+    }
+}
+
+public enum NativeBuildManifestV2SchemaVersion: String, Codable, CaseIterable, Sendable {
+    case `toyBootstrapNativeBuildV2` = "toy.bootstrap-native-build.v2"
+}
+
+public struct NativeBuildManifestV2SourceDigests: Codable, Sendable {
+    public let `contracts`: Digest
+    public let `entry`: Digest
+    public let `supervisor`: Digest
+    public let `builder`: Digest
+    public init(`contracts`: Digest, `entry`: Digest, `supervisor`: Digest, `builder`: Digest) {
+        self.`contracts` = `contracts`
+        self.`entry` = `entry`
+        self.`supervisor` = `supervisor`
+        self.`builder` = `builder`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["contracts", "entry", "supervisor", "builder"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`contracts` = try container.decode(Digest.self, forKey: ToyCodingKey("contracts"))
+        self.`entry` = try container.decode(Digest.self, forKey: ToyCodingKey("entry"))
+        self.`supervisor` = try container.decode(Digest.self, forKey: ToyCodingKey("supervisor"))
+        self.`builder` = try container.decode(Digest.self, forKey: ToyCodingKey("builder"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`contracts`, forKey: ToyCodingKey("contracts"))
+        try container.encode(`entry`, forKey: ToyCodingKey("entry"))
+        try container.encode(`supervisor`, forKey: ToyCodingKey("supervisor"))
+        try container.encode(`builder`, forKey: ToyCodingKey("builder"))
+    }
+}
+
+public struct NativeBuildManifestV2Artifacts: Codable, Sendable {
+    public let `parent`: Digest
+    public let `child`: Digest
+    public let `supervisor`: Digest
+    public init(`parent`: Digest, `child`: Digest, `supervisor`: Digest) {
+        self.`parent` = `parent`
+        self.`child` = `child`
+        self.`supervisor` = `supervisor`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["parent", "child", "supervisor"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`parent` = try container.decode(Digest.self, forKey: ToyCodingKey("parent"))
+        self.`child` = try container.decode(Digest.self, forKey: ToyCodingKey("child"))
+        self.`supervisor` = try container.decode(Digest.self, forKey: ToyCodingKey("supervisor"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`parent`, forKey: ToyCodingKey("parent"))
+        try container.encode(`child`, forKey: ToyCodingKey("child"))
+        try container.encode(`supervisor`, forKey: ToyCodingKey("supervisor"))
+    }
+}
+
+public struct NativeSupervisorRequestV1: Codable, Sendable {
+    public let `protocol`: NativeSupervisorRequestV1Protocol
+    public let `requestId`: UUID
+    public let `operationId`: UUID
+    public let `stackId`: UUID
+    public let `generation`: UInt64String
+    public let `schemaDigest`: Digest
+    public let `nativeBuildDigest`: Digest
+    public let `artifacts`: NativeBuildManifestV2Artifacts
+    public init(`protocol`: NativeSupervisorRequestV1Protocol, `requestId`: UUID, `operationId`: UUID, `stackId`: UUID, `generation`: UInt64String, `schemaDigest`: Digest, `nativeBuildDigest`: Digest, `artifacts`: NativeBuildManifestV2Artifacts) {
+        self.`protocol` = `protocol`
+        self.`requestId` = `requestId`
+        self.`operationId` = `operationId`
+        self.`stackId` = `stackId`
+        self.`generation` = `generation`
+        self.`schemaDigest` = `schemaDigest`
+        self.`nativeBuildDigest` = `nativeBuildDigest`
+        self.`artifacts` = `artifacts`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["protocol", "requestId", "operationId", "stackId", "generation", "schemaDigest", "nativeBuildDigest", "artifacts"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`protocol` = try container.decode(NativeSupervisorRequestV1Protocol.self, forKey: ToyCodingKey("protocol"))
+        self.`requestId` = try container.decode(UUID.self, forKey: ToyCodingKey("requestId"))
+        self.`operationId` = try container.decode(UUID.self, forKey: ToyCodingKey("operationId"))
+        self.`stackId` = try container.decode(UUID.self, forKey: ToyCodingKey("stackId"))
+        self.`generation` = try container.decode(UInt64String.self, forKey: ToyCodingKey("generation"))
+        self.`schemaDigest` = try container.decode(Digest.self, forKey: ToyCodingKey("schemaDigest"))
+        self.`nativeBuildDigest` = try container.decode(Digest.self, forKey: ToyCodingKey("nativeBuildDigest"))
+        self.`artifacts` = try container.decode(NativeBuildManifestV2Artifacts.self, forKey: ToyCodingKey("artifacts"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`protocol`, forKey: ToyCodingKey("protocol"))
+        try container.encode(`requestId`, forKey: ToyCodingKey("requestId"))
+        try container.encode(`operationId`, forKey: ToyCodingKey("operationId"))
+        try container.encode(`stackId`, forKey: ToyCodingKey("stackId"))
+        try container.encode(`generation`, forKey: ToyCodingKey("generation"))
+        try container.encode(`schemaDigest`, forKey: ToyCodingKey("schemaDigest"))
+        try container.encode(`nativeBuildDigest`, forKey: ToyCodingKey("nativeBuildDigest"))
+        try container.encode(`artifacts`, forKey: ToyCodingKey("artifacts"))
+    }
+}
+
+public enum NativeSupervisorRequestV1Protocol: String, Codable, CaseIterable, Sendable {
+    case `toyBootstrapSupervisorRequestV1` = "toy.bootstrap-supervisor.request.v1"
+}
+
+public struct NativeSignatureObservationV1: Codable, Sendable {
+    public let `role`: NativeSignatureObservationV1Role
+    public let `identifier`: String
+    public let `artifactDigest`: Digest
+    public let `codeIdentifierHex`: String
+    public let `signatureFlags`: Int64
+    public let `adHoc`: CliHelpResultOk
+    public let `teamIdentifier`: ToyNull
+    public let `hardenedRuntime`: CliHelpResultOk
+    public let `libraryValidation`: CliHelpResultOk
+    public let `entitlementProfile`: NativeSignatureObservationV1EntitlementProfile
+    public init(`role`: NativeSignatureObservationV1Role, `identifier`: String, `artifactDigest`: Digest, `codeIdentifierHex`: String, `signatureFlags`: Int64, `adHoc`: CliHelpResultOk, `teamIdentifier`: ToyNull, `hardenedRuntime`: CliHelpResultOk, `libraryValidation`: CliHelpResultOk, `entitlementProfile`: NativeSignatureObservationV1EntitlementProfile) {
+        self.`role` = `role`
+        self.`identifier` = `identifier`
+        self.`artifactDigest` = `artifactDigest`
+        self.`codeIdentifierHex` = `codeIdentifierHex`
+        self.`signatureFlags` = `signatureFlags`
+        self.`adHoc` = `adHoc`
+        self.`teamIdentifier` = `teamIdentifier`
+        self.`hardenedRuntime` = `hardenedRuntime`
+        self.`libraryValidation` = `libraryValidation`
+        self.`entitlementProfile` = `entitlementProfile`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["role", "identifier", "artifactDigest", "codeIdentifierHex", "signatureFlags", "adHoc", "teamIdentifier", "hardenedRuntime", "libraryValidation", "entitlementProfile"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`role` = try container.decode(NativeSignatureObservationV1Role.self, forKey: ToyCodingKey("role"))
+        self.`identifier` = try container.decode(String.self, forKey: ToyCodingKey("identifier"))
+        self.`artifactDigest` = try container.decode(Digest.self, forKey: ToyCodingKey("artifactDigest"))
+        self.`codeIdentifierHex` = try container.decode(String.self, forKey: ToyCodingKey("codeIdentifierHex"))
+        self.`signatureFlags` = try container.decode(Int64.self, forKey: ToyCodingKey("signatureFlags"))
+        self.`adHoc` = try container.decode(CliHelpResultOk.self, forKey: ToyCodingKey("adHoc"))
+        self.`teamIdentifier` = try container.decode(ToyNull.self, forKey: ToyCodingKey("teamIdentifier"))
+        self.`hardenedRuntime` = try container.decode(CliHelpResultOk.self, forKey: ToyCodingKey("hardenedRuntime"))
+        self.`libraryValidation` = try container.decode(CliHelpResultOk.self, forKey: ToyCodingKey("libraryValidation"))
+        self.`entitlementProfile` = try container.decode(NativeSignatureObservationV1EntitlementProfile.self, forKey: ToyCodingKey("entitlementProfile"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`role`, forKey: ToyCodingKey("role"))
+        try container.encode(`identifier`, forKey: ToyCodingKey("identifier"))
+        try container.encode(`artifactDigest`, forKey: ToyCodingKey("artifactDigest"))
+        try container.encode(`codeIdentifierHex`, forKey: ToyCodingKey("codeIdentifierHex"))
+        try container.encode(`signatureFlags`, forKey: ToyCodingKey("signatureFlags"))
+        try container.encode(`adHoc`, forKey: ToyCodingKey("adHoc"))
+        try container.encode(`teamIdentifier`, forKey: ToyCodingKey("teamIdentifier"))
+        try container.encode(`hardenedRuntime`, forKey: ToyCodingKey("hardenedRuntime"))
+        try container.encode(`libraryValidation`, forKey: ToyCodingKey("libraryValidation"))
+        try container.encode(`entitlementProfile`, forKey: ToyCodingKey("entitlementProfile"))
+    }
+}
+
+public enum NativeSignatureObservationV1Role: String, Codable, CaseIterable, Sendable {
+    case `supervisor` = "supervisor"
+    case `parent` = "parent"
+    case `child` = "child"
+}
+
+public enum NativeSignatureObservationV1EntitlementProfile: String, Codable, CaseIterable, Sendable {
+    case `none` = "none"
+    case `appSandbox` = "app-sandbox"
+    case `appSandboxInherit` = "app-sandbox-inherit"
+}
+
+public struct NativeSupervisorReceiptV1: Codable, Sendable {
+    public let `protocol`: NativeSupervisorReceiptV1Protocol
+    public let `requestId`: UUID
+    public let `operationId`: UUID
+    public let `stackId`: UUID
+    public let `generation`: UInt64String
+    public let `schemaDigest`: Digest
+    public let `nativeBuildDigest`: Digest
+    public let `supervisor`: NativeProcessIdentityV1
+    public let `signatures`: NativeSupervisorReceiptV1Signatures
+    public let `entry`: Optional<NativeEntryReceiptV2>
+    public let `observedParent`: Optional<NativeProcessIdentityV1>
+    public let `failure`: Optional<NativeSupervisorReceiptV1FailureValue>
+    public let `spawnErrno`: Optional<Int64>
+    public let `exitCode`: Optional<Int64>
+    public let `signal`: Optional<Int64>
+    public let `stdoutBytes`: Int64
+    public let `stderrBytes`: ToyNull
+    public let `parentReaped`: Bool
+    public let `completeDescendantCleanup`: CliFailureOk
+    public let `ready`: CliFailureOk
+    public init(`protocol`: NativeSupervisorReceiptV1Protocol, `requestId`: UUID, `operationId`: UUID, `stackId`: UUID, `generation`: UInt64String, `schemaDigest`: Digest, `nativeBuildDigest`: Digest, `supervisor`: NativeProcessIdentityV1, `signatures`: NativeSupervisorReceiptV1Signatures, `entry`: Optional<NativeEntryReceiptV2>, `observedParent`: Optional<NativeProcessIdentityV1>, `failure`: Optional<NativeSupervisorReceiptV1FailureValue>, `spawnErrno`: Optional<Int64>, `exitCode`: Optional<Int64>, `signal`: Optional<Int64>, `stdoutBytes`: Int64, `stderrBytes`: ToyNull, `parentReaped`: Bool, `completeDescendantCleanup`: CliFailureOk, `ready`: CliFailureOk) {
+        self.`protocol` = `protocol`
+        self.`requestId` = `requestId`
+        self.`operationId` = `operationId`
+        self.`stackId` = `stackId`
+        self.`generation` = `generation`
+        self.`schemaDigest` = `schemaDigest`
+        self.`nativeBuildDigest` = `nativeBuildDigest`
+        self.`supervisor` = `supervisor`
+        self.`signatures` = `signatures`
+        self.`entry` = `entry`
+        self.`observedParent` = `observedParent`
+        self.`failure` = `failure`
+        self.`spawnErrno` = `spawnErrno`
+        self.`exitCode` = `exitCode`
+        self.`signal` = `signal`
+        self.`stdoutBytes` = `stdoutBytes`
+        self.`stderrBytes` = `stderrBytes`
+        self.`parentReaped` = `parentReaped`
+        self.`completeDescendantCleanup` = `completeDescendantCleanup`
+        self.`ready` = `ready`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["protocol", "requestId", "operationId", "stackId", "generation", "schemaDigest", "nativeBuildDigest", "supervisor", "signatures", "entry", "observedParent", "failure", "spawnErrno", "exitCode", "signal", "stdoutBytes", "stderrBytes", "parentReaped", "completeDescendantCleanup", "ready"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`protocol` = try container.decode(NativeSupervisorReceiptV1Protocol.self, forKey: ToyCodingKey("protocol"))
+        self.`requestId` = try container.decode(UUID.self, forKey: ToyCodingKey("requestId"))
+        self.`operationId` = try container.decode(UUID.self, forKey: ToyCodingKey("operationId"))
+        self.`stackId` = try container.decode(UUID.self, forKey: ToyCodingKey("stackId"))
+        self.`generation` = try container.decode(UInt64String.self, forKey: ToyCodingKey("generation"))
+        self.`schemaDigest` = try container.decode(Digest.self, forKey: ToyCodingKey("schemaDigest"))
+        self.`nativeBuildDigest` = try container.decode(Digest.self, forKey: ToyCodingKey("nativeBuildDigest"))
+        self.`supervisor` = try container.decode(NativeProcessIdentityV1.self, forKey: ToyCodingKey("supervisor"))
+        self.`signatures` = try container.decode(NativeSupervisorReceiptV1Signatures.self, forKey: ToyCodingKey("signatures"))
+        self.`entry` = try container.decode(Optional<NativeEntryReceiptV2>.self, forKey: ToyCodingKey("entry"))
+        self.`observedParent` = try container.decode(Optional<NativeProcessIdentityV1>.self, forKey: ToyCodingKey("observedParent"))
+        self.`failure` = try container.decode(Optional<NativeSupervisorReceiptV1FailureValue>.self, forKey: ToyCodingKey("failure"))
+        self.`spawnErrno` = try container.decode(Optional<Int64>.self, forKey: ToyCodingKey("spawnErrno"))
+        self.`exitCode` = try container.decode(Optional<Int64>.self, forKey: ToyCodingKey("exitCode"))
+        self.`signal` = try container.decode(Optional<Int64>.self, forKey: ToyCodingKey("signal"))
+        self.`stdoutBytes` = try container.decode(Int64.self, forKey: ToyCodingKey("stdoutBytes"))
+        self.`stderrBytes` = try container.decode(ToyNull.self, forKey: ToyCodingKey("stderrBytes"))
+        self.`parentReaped` = try container.decode(Bool.self, forKey: ToyCodingKey("parentReaped"))
+        self.`completeDescendantCleanup` = try container.decode(CliFailureOk.self, forKey: ToyCodingKey("completeDescendantCleanup"))
+        self.`ready` = try container.decode(CliFailureOk.self, forKey: ToyCodingKey("ready"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`protocol`, forKey: ToyCodingKey("protocol"))
+        try container.encode(`requestId`, forKey: ToyCodingKey("requestId"))
+        try container.encode(`operationId`, forKey: ToyCodingKey("operationId"))
+        try container.encode(`stackId`, forKey: ToyCodingKey("stackId"))
+        try container.encode(`generation`, forKey: ToyCodingKey("generation"))
+        try container.encode(`schemaDigest`, forKey: ToyCodingKey("schemaDigest"))
+        try container.encode(`nativeBuildDigest`, forKey: ToyCodingKey("nativeBuildDigest"))
+        try container.encode(`supervisor`, forKey: ToyCodingKey("supervisor"))
+        try container.encode(`signatures`, forKey: ToyCodingKey("signatures"))
+        try container.encode(`entry`, forKey: ToyCodingKey("entry"))
+        try container.encode(`observedParent`, forKey: ToyCodingKey("observedParent"))
+        try container.encode(`failure`, forKey: ToyCodingKey("failure"))
+        try container.encode(`spawnErrno`, forKey: ToyCodingKey("spawnErrno"))
+        try container.encode(`exitCode`, forKey: ToyCodingKey("exitCode"))
+        try container.encode(`signal`, forKey: ToyCodingKey("signal"))
+        try container.encode(`stdoutBytes`, forKey: ToyCodingKey("stdoutBytes"))
+        try container.encode(`stderrBytes`, forKey: ToyCodingKey("stderrBytes"))
+        try container.encode(`parentReaped`, forKey: ToyCodingKey("parentReaped"))
+        try container.encode(`completeDescendantCleanup`, forKey: ToyCodingKey("completeDescendantCleanup"))
+        try container.encode(`ready`, forKey: ToyCodingKey("ready"))
+    }
+}
+
+public enum NativeSupervisorReceiptV1Protocol: String, Codable, CaseIterable, Sendable {
+    case `toyBootstrapSupervisorReceiptV1` = "toy.bootstrap-supervisor.receipt.v1"
+}
+
+public struct NativeSupervisorReceiptV1Signatures: Codable, Sendable {
+    public let `supervisor`: Optional<NativeSignatureObservationV1>
+    public let `parent`: Optional<NativeSignatureObservationV1>
+    public let `child`: Optional<NativeSignatureObservationV1>
+    public init(`supervisor`: Optional<NativeSignatureObservationV1>, `parent`: Optional<NativeSignatureObservationV1>, `child`: Optional<NativeSignatureObservationV1>) {
+        self.`supervisor` = `supervisor`
+        self.`parent` = `parent`
+        self.`child` = `child`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["supervisor", "parent", "child"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`supervisor` = try container.decode(Optional<NativeSignatureObservationV1>.self, forKey: ToyCodingKey("supervisor"))
+        self.`parent` = try container.decode(Optional<NativeSignatureObservationV1>.self, forKey: ToyCodingKey("parent"))
+        self.`child` = try container.decode(Optional<NativeSignatureObservationV1>.self, forKey: ToyCodingKey("child"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`supervisor`, forKey: ToyCodingKey("supervisor"))
+        try container.encode(`parent`, forKey: ToyCodingKey("parent"))
+        try container.encode(`child`, forKey: ToyCodingKey("child"))
+    }
+}
+
+public enum NativeSupervisorReceiptV1FailureValue: String, Codable, CaseIterable, Sendable {
+    case `sIGNATUREINVALID` = "SIGNATURE_INVALID"
+    case `aRTIFACTMISMATCH` = "ARTIFACT_MISMATCH"
+    case `sPAWNFAILED` = "SPAWN_FAILED"
+    case `eNTRYINVALID` = "ENTRY_INVALID"
+    case `iDENTITYMISMATCH` = "IDENTITY_MISMATCH"
+    case `tIMEOUT` = "TIMEOUT"
+    case `rEAPUNCONFIRMED` = "REAP_UNCONFIRMED"
+}

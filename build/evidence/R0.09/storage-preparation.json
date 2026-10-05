@@ -1,0 +1,334 @@
+{
+  "schemaVersion": "toy.r0.09.storage-preparation.v1",
+  "capturedAtUtc": "2026-10-05T15:58:41Z",
+  "status": "READ_ONLY_PREPARATION_ONLY",
+  "gateDisposition": {
+    "id": "R0.09",
+    "implementation": "NOT_IMPLEMENTED",
+    "acceptance": "PENDING",
+    "acceptanceComplete": false,
+    "assignedATsExecuted": false,
+    "summary": "Mounted volume metadata was captured. Required remote capacity, source growth, escrow, eligibility, and restore evidence was not gathered; this is not an R0.09 gate verdict."
+  },
+  "sourceDigests": [
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/README.md",
+      "sha256": "2c02bdb4d13abd198231446873eaacfe30177a97f66235158912fd2accd006f4"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/BUILD-PLAN.md",
+      "sha256": "f35e7a18911b12e8c0b89130e3f62db4aa7344a80c7807ee164192fc70c36ad8"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/CONTRACTS.md",
+      "sha256": "ef4b5d18fe3a1adcf9eb28d55da734892795e103894210ed0aea61c911fd70f8"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/ops.md",
+      "sha256": "825ab91bc6c3122bf038f06f2a7577096edb795a7fcaea7a1ffbcbbc841024a4"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/lifestore.md",
+      "sha256": "044e33ba76d512c0fcae478f8d4923d2f33c028b8dae94bbdb69d6d4111c1117"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/sources.md",
+      "sha256": "7caa4347326c27ed528e96106b729fd9f5d0ae3da69518302b519c98b0fa6645"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/TEST-PLAN.md",
+      "sha256": "766aa798a4e980ebf5e4522363c8b038da4fdf66efaa507676d4d970fe0d11f3"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/gates/R0-facts.md",
+      "sha256": "c2c8ccead0caa6394b54f628d674f161f11b43de0629034edd52a1218f1cf643"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/gates/R0-research.md",
+      "sha256": "f53d2261f7ceee0144e920b784865bc8ba097c8c2581efd47410374d25d26029"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/gates/LOGINS-READY.md",
+      "sha256": "b74adf367a706978a114e98a2eaa45203cd60abd9a4bf1ccddbbac4aa0647e74"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/toy-harness/build/cards.json",
+      "sha256": "dfe71eab5b7884d17d2d7f5bc4d3979a68d97fb1c0a3b590a0e3b759a4ad7e0b"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/toy-harness/build/state.json",
+      "sha256": "de0c6e4d38f95533f9ac27fc259835aa712b13b74a85d38a1c6abca7047aec06"
+    }
+  ],
+  "ledgerSnapshot": {
+    "R0.02": {
+      "implementation": "NOT_IMPLEMENTED",
+      "acceptance": "PENDING",
+      "evidence": [],
+      "sourceRowHash": "64fec579eb4943748e507927904712ccad25bdb21948238340b4a7b7e324699e"
+    },
+    "R0.05": {
+      "implementation": "NOT_IMPLEMENTED",
+      "acceptance": "PENDING",
+      "dependsOn": "R0.04",
+      "evidence": [
+        "build/evidence/R0.05/launcher-design.json"
+      ],
+      "preparation": {
+        "status": "DESIGN_ONLY",
+        "runtimeVerified": false
+      },
+      "sourceRowHash": "f1a96d2fabbb1a47de62e6e58dccfe5e216282392a439b741003eba228e7c180"
+    },
+    "R0.09": {
+      "implementation": "NOT_IMPLEMENTED",
+      "acceptance": "PENDING",
+      "dependsOn": [
+        "R0.02",
+        "R0.05"
+      ],
+      "requiredATs": [
+        "AT-lifestore-63",
+        "AT-ops-62",
+        "AT-sources-216"
+      ],
+      "evidence": [],
+      "sourceRowHash": "58c0a18c8c84f96cdb534a9b14fbaf3f72891c563de72edea3bc935006aad52a"
+    }
+  },
+  "criteriaAndCanonicalDecisions": {
+    "buildPlan": {
+      "reference": "specs/BUILD-PLAN.md:55",
+      "summary": "R0.09 measures primary/archive and independent external/B2 capacity, policy eligibility, escrow, capacity ceiling/lifecycle and growth; it requires a harmless restore probe and says an independent destination is not another internal directory. Dependencies are R0.02 and R0.05. No purchase or upgrade is assumed."
+    },
+    "ops": {
+      "references": [
+        "specs/ops.md:987-1022",
+        "specs/ops.md:1969",
+        "specs/ops.md:2008"
+      ],
+      "summary": "Targets are two independent encrypted restic repositories when both pass capacity/restore gates: an approved existing external volume selected by UUID and private B2 under the fixed host prefix. Internal snapshots do not count as disaster coverage. Ops requires distinct recovery material stored outside this Mac, refuses to create the external repository path on the internal disk, forbids automatic formatting/repurposing, and records missing/blocked destinations without purchase or deployed-coverage claims.",
+      "objectives": {
+        "criticalStateRpoWhenDestinationHealthy": "at most 1 hour",
+        "fullCapturedDataRpoWhenDestinationHealthy": "at most 24 hours",
+        "initialDisasterRecoveryTarget": "at most 4 hours for datasets up to 100 GB, subject to measured hardware and bandwidth",
+        "stagingFloor": "10 GB free disk; refuse and alert at the floor per Sources backup admission"
+      },
+      "backendSelection": "Ops §10 names restic's native B2 backend. R0-research separately recommends the B2 S3-compatible API and says that conflicts with Ops, so the backend decision remains a source-level unresolved discrepancy."
+    },
+    "contracts": {
+      "reference": "specs/CONTRACTS.md:72",
+      "summary": "Ops owns backup_set, backup_destination, and restore_drill in state/ops/ops.db. This ownership row does not independently establish destination eligibility or capacity."
+    },
+    "lifeStore": {
+      "references": [
+        "specs/lifestore.md:2097-2104",
+        "specs/lifestore.md:2430"
+      ],
+      "summary": "R0 must measure actual volumes and independent destinations, account caps/credentials, throughput, repository size, permitted-source policy, dumps, version overhead, staging peaks, prune scratch and restore workspace; forecast no-spend headroom and keep missing off-machine capacity incomplete. AT-lifestore-63 requires dated actual destination headroom and a no-spend forecast."
+    },
+    "sources": {
+      "references": [
+        "specs/sources.md:793",
+        "specs/sources.md:4209"
+      ],
+      "summary": "Sources supplies projected growth, pauses noncritical capture with visible gaps, and does not delete retained data when capacity is unavailable. Ops refuses staging at the configured floor and reuses sealed partial sets. Unproved off-site capacity is unavailable."
+    },
+    "assignedATs": [
+      {
+        "id": "AT-ops-62",
+        "definition": "specs/ops.md:1969",
+        "rung": "CLI stack, device/account, probe (TEST-PLAN.md:449)",
+        "criterion": "No independent external disk plus a forecast exceeding verified B2 free allowance must produce missing/blocked coverage and an unattainable-RPO FAIL without purchase assumptions; snapshots do not count.",
+        "thisPreparation": "Not run. The inventory observes no external mounted volume, but the required B2 free-allowance forecast and registered CLI probe were not performed."
+      },
+      {
+        "id": "AT-lifestore-63",
+        "definition": "specs/lifestore.md:2430",
+        "rung": "CLI stack, device/account, probe (TEST-PLAN.md:422)",
+        "criterion": "Dated actual destination headroom and no-spend forecast using measured independent storage and realistic source growth/dump/version/scratch requirements.",
+        "thisPreparation": "Not run. No destination capacity forecast or restore evidence was collected."
+      },
+      {
+        "id": "AT-sources-216",
+        "definition": "specs/sources.md:4209",
+        "rung": "CLI stack, probe (TEST-PLAN.md:462)",
+        "criterion": "With projected archive growth, outage, and staging-floor pressure, pause low-priority capture with explicit gaps, refuse unsafe staging, reuse sealed sets, preserve permitted data, and report unproved off-site capacity unavailable.",
+        "thisPreparation": "Not run. No stack, source-growth scenario, outage fixture, or staging admission was exercised."
+      }
+    ]
+  },
+  "datedSourceRecords": [
+    {
+      "path": "specs/gates/R0-facts.md:11,20",
+      "recordDate": "2026-10-04",
+      "claims": "The record says no external disk, names B2 plus a restic repository in iCloud Drive as two destinations, and describes the B2 bucket as private with SSE-B2 and version retention.",
+      "evidenceClass": "DATED_SOURCE_RECORD; NOT A CURRENT ACCOUNT, CAPACITY, REMOTE-DESTINATION, OR RESTORE CHECK"
+    },
+    {
+      "path": "specs/gates/LOGINS-READY.md:10-11",
+      "recordDate": "2026-10-04",
+      "claims": "The record says the B2 account/bucket was created and iCloud Drive was signed in on the server Mac as a second backup destination.",
+      "evidenceClass": "DATED_SOURCE RECORD; NO LIVE ACCOUNT OR CAPACITY ACCESS WAS PERFORMED"
+    },
+    {
+      "path": "specs/gates/R0-research.md:202-218",
+      "recordDate": "2026-10-04",
+      "claims": "The research record calls B2-only FAIL against the two-destination baseline, recommends an approved existing Pro/other node over SFTP plus B2 S3, says not to assume the advertised B2 free allowance proves account capacity, and says to keep FAIL absent a second destination or explicit degraded-coverage acceptance.",
+      "evidenceClass": "DATED RESEARCH DECISION; NOT A CURRENT CAPACITY OR RESTORE CHECK"
+    }
+  ],
+  "decisionDiscrepancies": [
+    {
+      "topic": "Second-destination selection",
+      "sources": [
+        "R0-facts.md:20 and LOGINS-READY.md:11 name iCloud Drive as the second destination.",
+        "ops.md:999-1002 names an external volume plus B2 as the canonical two-repository target.",
+        "R0-research.md:204-218 says B2-only fails and recommends an approved Pro/other node SFTP target plus B2 S3."
+      ],
+      "disposition": "Unresolved here. iCloud account sign-in does not establish remote repository capacity, independence, policy eligibility, or a restore. The mounted-volume check does not inspect iCloud Drive contents or cloud state. No route is newly selected."
+    },
+    {
+      "topic": "B2 restic backend",
+      "sources": [
+        "ops.md:1002 specifies the native B2 backend.",
+        "R0-research.md:212 recommends B2 S3-compatible API and says it conflicts with Ops."
+      ],
+      "disposition": "Unresolved contract/spec discrepancy; this preparation does not choose a backend or access B2."
+    }
+  ],
+  "hostStorageSnapshot": {
+    "capturedAtUtc": "2026-10-05T15:58:41Z",
+    "commands": [
+      {
+        "argv": [
+          "diskutil",
+          "list",
+          "-plist"
+        ],
+        "exitCode": 0,
+        "filteredResult": {
+          "wholeDiskEntryCount": 4,
+          "enumeratedDeviceIdentifierCount": 20
+        }
+      },
+      {
+        "argv": [
+          "diskutil",
+          "info",
+          "-plist",
+          "/dev/<each enumerated DeviceIdentifier>"
+        ],
+        "attemptedDeviceCount": 20,
+        "successfulResponses": 20,
+        "failedResponses": 0,
+        "filteredResult": {
+          "mountedVolumeCount": 8,
+          "allMountedVolumesReportedInternal": true,
+          "externalMountedVolumeCount": 0
+        }
+      },
+      {
+        "argv": [
+          "df",
+          "-kP",
+          "/",
+          "/System/Volumes/Data"
+        ],
+        "exitCode": 0,
+        "units": "1024-byte blocks",
+        "rows": [
+          {
+            "device": "/dev/disk3s3s1",
+            "mountPoint": "/",
+            "totalBlocks": 239362496,
+            "usedBlocks": 12342672,
+            "availableBlocks": 123810096,
+            "capacityPercent": 10
+          },
+          {
+            "device": "/dev/disk3s1",
+            "mountPoint": "/System/Volumes/Data",
+            "totalBlocks": 239362496,
+            "usedBlocks": 89790460,
+            "availableBlocks": 123810096,
+            "capacityPercent": 43
+          }
+        ]
+      },
+      {
+        "argv": [
+          "diskutil",
+          "info",
+          "-plist",
+          "/dev/disk0"
+        ],
+        "exitCode": 0,
+        "filteredResult": {
+          "deviceIdentifier": "disk0",
+          "totalSizeBytes": 251000193024,
+          "internal": true,
+          "removableMedia": false
+        }
+      },
+      {
+        "argv": [
+          "diskutil",
+          "info",
+          "-plist",
+          "/dev/disk3s1"
+        ],
+        "exitCode": 0,
+        "filteredResult": {
+          "volumeName": "Macintosh HD - Data",
+          "volumeUUID": "C60E6375-B3EC-404B-85B0-CAA0DAAC8B17",
+          "mountPoint": "/System/Volumes/Data",
+          "filesystem": "apfs",
+          "totalSizeBytes": 245107195904,
+          "internal": true,
+          "removableMedia": false
+        }
+      },
+      {
+        "argv": [
+          "diskutil",
+          "info",
+          "-plist",
+          "/dev/disk3s3s1"
+        ],
+        "exitCode": 0,
+        "filteredResult": {
+          "volumeName": "Macintosh HD",
+          "volumeUUID": "9AF528AE-D0C1-432F-B0D3-D3B3B03E2EDC",
+          "mountPoint": "/",
+          "filesystem": "apfs",
+          "totalSizeBytes": 245107195904,
+          "internal": true,
+          "removableMedia": false
+        }
+      }
+    ],
+    "finding": {
+      "externalIndependentMountedVolumesObserved": 0,
+      "internalDataVolumeAvailableBlocks": 123810096,
+      "internalDiskIsOffMachineCoverage": false,
+      "interpretation": "Only internal APFS storage was mounted in this device/volume snapshot. The internal available space is not an independent disaster-recovery destination. Zero external mounts observed does not establish that no unmounted disk or remote SFTP target exists."
+    },
+    "scopeLimits": [
+      "No user file or directory traversal.",
+      "No mounted volume, share, snapshot, or cloud data was opened beyond OS device/volume metadata and df capacity rows.",
+      "No B2 or iCloud account/provider access, capacity lookup, credential/Keychain inspection, or recovery escrow lookup.",
+      "No write probe, repository creation, backup, restore, mount/unmount, formatting, installation, or service identity/process check."
+    ]
+  },
+  "unverifiedRequiredEvidence": [
+    "B2 account access, verified free allowance, bucket/prefix availability, retention/lifecycle capacity, and no-spend growth forecast.",
+    "iCloud Drive remote repository capacity, independent-failure behavior, eligibility, and restore.",
+    "Any approved MacBook Pro or other remote SFTP target capacity and availability.",
+    "External storage policy eligibility, writability, filesystem identity, free space, repository identity, and harmless restore.",
+    "Primary/archive repository size, source-specific retained-byte growth, database dumps, version overhead, staging peaks, prune scratch, restore workspace, throughput, and remaining capacity days.",
+    "Recovery-key escrow location/usability outside the backed-up Mac and distinct destination credentials.",
+    "Actual service UID or R0.05 identity/denial acceptance."
+  ],
+  "acceptanceLimit": "R0.02 and R0.05 remain unsatisfied in the captured build ledger; R0.09 depends on both. AT-ops-62, AT-lifestore-63, and AT-sources-216 remain unrun and pending at their assigned CLI rungs. This file records preliminary local metadata only and does not establish off-machine disaster coverage or any PASS/FAIL AT verdict."
+}

@@ -76,6 +76,41 @@ export const nativeBuildManifestSchema = z.strictObject({
   sourceDigests: z.strictObject({ contracts: digestSchema, entry: digestSchema, builder: digestSchema }),
   artifacts: z.strictObject({ parent: digestSchema, child: digestSchema })
 });
+export const nativeEntryReceiptV2Schema = z.strictObject({
+  protocol: z.literal("toy.bootstrap-native.v2"), parent: nativeProcessIdentitySchema, child: nativeProcessIdentitySchema,
+  entered: z.literal(true), inheritedChildEntered: z.literal(true), containerHomeReady: z.literal(false)
+});
+export const nativeBuildManifestV2Schema = z.strictObject({
+  schemaVersion: z.literal("toy.bootstrap-native-build.v2"), generatedAt: instantSchema, schemaDigest: digestSchema,
+  compilerVersion: z.literal("6.3.3"), compilerDigest: digestSchema, sdk: z.literal("MacOSX26.5.sdk"), sdkSettingsDigest: digestSchema,
+  sourceDigests: z.strictObject({ contracts: digestSchema, entry: digestSchema, supervisor: digestSchema, builder: digestSchema }),
+  artifacts: z.strictObject({ parent: digestSchema, child: digestSchema, supervisor: digestSchema })
+});
+export const nativeSupervisorRequestSchema = z.strictObject({
+  protocol: z.literal("toy.bootstrap-supervisor.request.v1"), requestId: uuidSchema, operationId: uuidSchema, stackId: uuidSchema,
+  generation: uint64Schema, schemaDigest: digestSchema, nativeBuildDigest: digestSchema,
+  artifacts: z.strictObject({ parent: digestSchema, child: digestSchema, supervisor: digestSchema })
+});
+export const nativeSignatureObservationSchema = z.strictObject({
+  role: z.enum(["supervisor", "parent", "child"]), identifier: z.string().min(1).max(120), artifactDigest: digestSchema,
+  codeIdentifierHex: z.string().regex(/^[a-f0-9]{40}(?![\s\S])/), signatureFlags: z.int().min(0).max(4294967295),
+  adHoc: z.literal(true), teamIdentifier: z.null(), hardenedRuntime: z.literal(true), libraryValidation: z.literal(true),
+  entitlementProfile: z.enum(["none", "app-sandbox", "app-sandbox-inherit"])
+});
+export const nativeSupervisorReceiptSchema = z.strictObject({
+  protocol: z.literal("toy.bootstrap-supervisor.receipt.v1"), requestId: uuidSchema, operationId: uuidSchema, stackId: uuidSchema,
+  generation: uint64Schema, schemaDigest: digestSchema, nativeBuildDigest: digestSchema,
+  supervisor: nativeProcessIdentitySchema,
+  signatures: z.strictObject({
+    supervisor: nativeSignatureObservationSchema.nullable(), parent: nativeSignatureObservationSchema.nullable(),
+    child: nativeSignatureObservationSchema.nullable()
+  }),
+  entry: nativeEntryReceiptV2Schema.nullable(), observedParent: nativeProcessIdentitySchema.nullable(),
+  failure: z.enum(["SIGNATURE_INVALID", "ARTIFACT_MISMATCH", "SPAWN_FAILED", "ENTRY_INVALID", "IDENTITY_MISMATCH", "TIMEOUT", "REAP_UNCONFIRMED"]).nullable(),
+  spawnErrno: z.int().min(0).max(2147483647).nullable(), exitCode: z.int().min(0).max(255).nullable(),
+  signal: z.int().min(1).max(127).nullable(), stdoutBytes: z.int().min(0).max(12288), stderrBytes: z.null(), parentReaped: z.boolean(),
+  completeDescendantCleanup: z.literal(false), ready: z.literal(false)
+});
 export type RegisteredCliProbeIdV1 = z.infer<typeof registeredCliProbeIdSchema>;
 export type RegisteredTestCaseV1 = z.infer<typeof registeredTestCaseSchema>;
 export type ArtifactBindingV1 = z.infer<typeof artifactBindingSchema>;
@@ -98,6 +133,11 @@ export type RegisteredProbeShowInputV1 = z.infer<typeof registeredProbeShowInput
 export type NativeProcessIdentityV1 = z.infer<typeof nativeProcessIdentitySchema>;
 export type NativeEntryReceiptV1 = z.infer<typeof nativeEntryReceiptSchema>;
 export type NativeBuildManifestV1 = z.infer<typeof nativeBuildManifestSchema>;
+export type NativeEntryReceiptV2 = z.infer<typeof nativeEntryReceiptV2Schema>;
+export type NativeBuildManifestV2 = z.infer<typeof nativeBuildManifestV2Schema>;
+export type NativeSupervisorRequestV1 = z.infer<typeof nativeSupervisorRequestSchema>;
+export type NativeSignatureObservationV1 = z.infer<typeof nativeSignatureObservationSchema>;
+export type NativeSupervisorReceiptV1 = z.infer<typeof nativeSupervisorReceiptSchema>;
 export const testControlSchemaInventory = {
   RegisteredCliProbeIdV1: registeredCliProbeIdSchema, RegisteredTestWorldV1: registeredTestWorldSchema,
   RegisteredTestCaseV1: registeredTestCaseSchema, TestStackClockV1: testStackClockSchema, TestStackModelV1: testStackModelSchema,
@@ -110,5 +150,8 @@ export const testControlSchemaInventory = {
   TestClockFreezeInputV1: testClockFreezeInputSchema, TestClockResumeInputV1: testClockResumeInputSchema,
   TestClockAdvanceInputV1: testClockAdvanceInputSchema, RegisteredProbeInputV1: registeredProbeInputSchema,
   RegisteredProbeShowInputV1: registeredProbeShowInputSchema, NativeProcessIdentityV1: nativeProcessIdentitySchema,
-  NativeEntryReceiptV1: nativeEntryReceiptSchema, NativeBuildManifestV1: nativeBuildManifestSchema
+  NativeEntryReceiptV1: nativeEntryReceiptSchema, NativeBuildManifestV1: nativeBuildManifestSchema,
+  NativeEntryReceiptV2: nativeEntryReceiptV2Schema, NativeBuildManifestV2: nativeBuildManifestV2Schema,
+  NativeSupervisorRequestV1: nativeSupervisorRequestSchema, NativeSignatureObservationV1: nativeSignatureObservationSchema,
+  NativeSupervisorReceiptV1: nativeSupervisorReceiptSchema
 };

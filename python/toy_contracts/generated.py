@@ -2473,3 +2473,120 @@ class NativeBuildManifestV1SourceDigests(TypedDict):
 class NativeBuildManifestV1Artifacts(TypedDict):
     parent: "Digest"
     child: "Digest"
+
+class NativeEntryReceiptV2(TypedDict):
+    protocol: "NativeEntryReceiptV2Protocol"
+    parent: "NativeProcessIdentityV1"
+    child: "NativeProcessIdentityV1"
+    entered: "CliHelpResultOk"
+    inheritedChildEntered: "CliHelpResultOk"
+    containerHomeReady: "CliFailureOk"
+
+NativeEntryReceiptV2Protocol = Literal[
+    "toy.bootstrap-native.v2",
+]
+
+class NativeBuildManifestV2(TypedDict):
+    schemaVersion: "NativeBuildManifestV2SchemaVersion"
+    generatedAt: "Instant"
+    schemaDigest: "Digest"
+    compilerVersion: "NativeBuildManifestV1CompilerVersion"
+    compilerDigest: "Digest"
+    sdk: "NativeBuildManifestV1Sdk"
+    sdkSettingsDigest: "Digest"
+    sourceDigests: "NativeBuildManifestV2SourceDigests"
+    artifacts: "NativeBuildManifestV2Artifacts"
+
+NativeBuildManifestV2SchemaVersion = Literal[
+    "toy.bootstrap-native-build.v2",
+]
+
+class NativeBuildManifestV2SourceDigests(TypedDict):
+    contracts: "Digest"
+    entry: "Digest"
+    supervisor: "Digest"
+    builder: "Digest"
+
+class NativeBuildManifestV2Artifacts(TypedDict):
+    parent: "Digest"
+    child: "Digest"
+    supervisor: "Digest"
+
+class NativeSupervisorRequestV1(TypedDict):
+    protocol: "NativeSupervisorRequestV1Protocol"
+    requestId: "UUID"
+    operationId: "UUID"
+    stackId: "UUID"
+    generation: "UInt64String"
+    schemaDigest: "Digest"
+    nativeBuildDigest: "Digest"
+    artifacts: "NativeBuildManifestV2Artifacts"
+
+NativeSupervisorRequestV1Protocol = Literal[
+    "toy.bootstrap-supervisor.request.v1",
+]
+
+class NativeSignatureObservationV1(TypedDict):
+    role: "NativeSignatureObservationV1Role"
+    identifier: str
+    artifactDigest: "Digest"
+    codeIdentifierHex: str
+    signatureFlags: int
+    adHoc: "CliHelpResultOk"
+    teamIdentifier: None
+    hardenedRuntime: "CliHelpResultOk"
+    libraryValidation: "CliHelpResultOk"
+    entitlementProfile: "NativeSignatureObservationV1EntitlementProfile"
+
+NativeSignatureObservationV1Role = Literal[
+    "supervisor",
+    "parent",
+    "child",
+]
+
+NativeSignatureObservationV1EntitlementProfile = Literal[
+    "none",
+    "app-sandbox",
+    "app-sandbox-inherit",
+]
+
+class NativeSupervisorReceiptV1(TypedDict):
+    protocol: "NativeSupervisorReceiptV1Protocol"
+    requestId: "UUID"
+    operationId: "UUID"
+    stackId: "UUID"
+    generation: "UInt64String"
+    schemaDigest: "Digest"
+    nativeBuildDigest: "Digest"
+    supervisor: "NativeProcessIdentityV1"
+    signatures: "NativeSupervisorReceiptV1Signatures"
+    entry: Optional["NativeEntryReceiptV2"]
+    observedParent: Optional["NativeProcessIdentityV1"]
+    failure: Optional["NativeSupervisorReceiptV1FailureValue"]
+    spawnErrno: Optional[int]
+    exitCode: Optional[int]
+    signal: Optional[int]
+    stdoutBytes: int
+    stderrBytes: None
+    parentReaped: bool
+    completeDescendantCleanup: "CliFailureOk"
+    ready: "CliFailureOk"
+
+NativeSupervisorReceiptV1Protocol = Literal[
+    "toy.bootstrap-supervisor.receipt.v1",
+]
+
+class NativeSupervisorReceiptV1Signatures(TypedDict):
+    supervisor: Optional["NativeSignatureObservationV1"]
+    parent: Optional["NativeSignatureObservationV1"]
+    child: Optional["NativeSignatureObservationV1"]
+
+NativeSupervisorReceiptV1FailureValue = Literal[
+    "SIGNATURE_INVALID",
+    "ARTIFACT_MISMATCH",
+    "SPAWN_FAILED",
+    "ENTRY_INVALID",
+    "IDENTITY_MISMATCH",
+    "TIMEOUT",
+    "REAP_UNCONFIRMED",
+]

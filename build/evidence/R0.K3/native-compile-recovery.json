@@ -1,0 +1,68 @@
+{
+  "schemaVersion": "toy.bootstrap-native-compile-recovery.v1",
+  "generatedAt": "2026-10-05T16:07:08.027Z",
+  "card": "R0.K3",
+  "scope": "Compiler/API preparation, no native execution",
+  "attempts": [
+    {
+      "command": [
+        "npm",
+        "run",
+        "native:build"
+      ],
+      "exitCode": 1,
+      "classification": "SDK_SWIFT_OPTION_SET_IMPORT_MISMATCH",
+      "evidence": "Fresh fixed-source swiftc typecheck diagnosed unavailable C flag names. Use typed SecCSFlags/SecCodeSignatureFlags options.",
+      "observedBetweenUtc": {
+        "from": "2026-10-05T16:01:37Z",
+        "through": "2026-10-05T16:02:36Z"
+      }
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "native:build"
+      ],
+      "exitCode": 0,
+      "classification": "INTERMEDIATE_STATIC_VALIDATOR_COMPILED",
+      "limitation": "Historical before live-code and output-tail additions; no admission or execution.",
+      "observedBetweenUtc": {
+        "from": "2026-10-05T16:03:39Z",
+        "through": "2026-10-05T16:04:26Z"
+      }
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "native:build"
+      ],
+      "exitCode": 1,
+      "classification": "LIVE_SECURITY_OBJECT_TYPE_MISMATCH",
+      "evidence": "Fresh fixed-source swiftc typecheck: SecCode cannot satisfy SecStaticCode parameter.",
+      "observedBetweenUtc": {
+        "from": "2026-10-05T16:05:57Z",
+        "through": "2026-10-05T16:06:27Z"
+      }
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": "sdk-api-shape",
+      "prediction": "The installed SecCode.h declares signing information for SecStaticCode and exposes SecCodeCopyStaticCode.",
+      "observation": "Both exact declarations found in the fixed SDK; fresh compiler points at the added live-code API call.",
+      "disposition": "CONFIRMED"
+    },
+    {
+      "id": "stale-artifact-or-cache",
+      "prediction": "The error would point at prior code or differ from direct fixed-source typecheck.",
+      "observation": "Error identifies the newly added call in current source. The prior static-only supervisor compiled.",
+      "disposition": "FALSIFIED_FOR_THIS_FAILURE"
+    }
+  ],
+  "boundedRepair": "Validate live SecCode, obtain its SecStaticCode using SecCodeCopyStaticCode, then read signing information without an unchecked cast.",
+  "expectedProof": "Fresh full three-asset native:build exits 0 and all manifest source/artifact hashes independently match.",
+  "acceptanceComplete": false,
+  "nativeExecutionPerformed": false
+}
