@@ -1,0 +1,379 @@
+{
+  "schemaVersion": "toy.r0-05-supervisor-preparation-review.v1",
+  "recordedAt": "2026-10-05T16:23:05Z",
+  "card": "R0.05",
+  "reviewer": "/root/r0_05_supervisor_review",
+  "authorizedModel": "gpt-6.1-sol",
+  "authorizedReasoning": "xhigh",
+  "skill": {
+    "name": "get-fable:fable-security",
+    "path": "/Users/johansardar/.codex/plugins/cache/openai-curated-remote/get-fable/1.5.1/skills/fable-security/SKILL.md"
+  },
+  "reviewKind": "INDEPENDENT_SOURCE_AND_PRIMARY_API_PREPARATION",
+  "verdict": "CHANGES_REQUIRED_BEFORE_NATIVE_ADMISSION",
+  "r0_05Implementation": "NOT_IMPLEMENTED",
+  "r0_05Acceptance": "PENDING",
+  "acceptanceComplete": false,
+  "runtimeVerified": false,
+  "securityProof": false,
+  "summary": "The current public adapter cannot launch or tear down a stack. The compiled prototype has useful fixed-path, exact-signature, descriptor and identity controls, but is not R0.05 confinement evidence. One terminal-wait classification defect and one single-request framing inconsistency should be corrected before admitting execution. Installed identity, immutable filesystem ownership, durable/resource authorization, whole-tree cleanup and the actual-UID denial matrix remain separate future gates.",
+  "scope": {
+    "writablePaths": ["build/evidence/R0.05/supervisor-preparation-review.json"],
+    "reviewedImplementation": [
+      "packages/ops/native/BootstrapEntry.swift",
+      "packages/ops/native/BootstrapSupervisor.swift",
+      "scripts/build-native-bootstrap.mts",
+      "packages/contracts/src/test-control.ts",
+      "swift/ToyContracts/Contracts.swift",
+      "packages/ops/src/public.ts"
+    ],
+    "reviewedDesign": [
+      "docs/adr/0010-bootstrap-stack-lifecycle.md",
+      "docs/adr/0011-bootstrap-receipt-privacy.md",
+      "docs/adr/0012-native-entry-admission.md",
+      "docs/adr/0013-native-supervisor-protocol.md",
+      "build/evidence/R0.05/launcher-design.json",
+      "build/evidence/R0.K3/native-build.json",
+      "build/evidence/R0.K3/native-entry-research.json"
+    ],
+    "notPerformed": [
+      "No tests or acceptance probes",
+      "No native build, signing or execution",
+      "No service, account, Keychain, GUI, provider or production mutation",
+      "No code, contract, specification, pin, state, progress or feature-map edit",
+      "No install, commit or child-agent spawn",
+      "No secret-store access or raw-secret scan"
+    ],
+    "sourceFreeze": "Parent agreed not to edit the two native sources during review. This report binds their exact digests. Concurrent parent journal implementation is outside this review; state/progress snapshots are historical context, not frozen admission authority.",
+    "baseLimitation": "This is a complete read of the named prototype sources and their current design/API contracts, not approval of a git diff against a nominated base or release certification."
+  },
+  "assetsActorsAndBoundaries": {
+    "protectedAssets": [
+      "Production control, Authority, grader, publisher and credential stores",
+      "Johan's existing service/profile/account/Chrome state",
+      "Private controller journal, admission capability, resource lease and independent evidence",
+      "Executable identity, owned process incarnation and honest cleanup status"
+    ],
+    "actors": [
+      "Trusted Ops owner and fixed native supervisor",
+      "Fixed sandbox parent and inherited fixed child",
+      "Future untrusted _toy_agent process/tool/MCP/GUI paths",
+      "OS fault, interrupted transport, stale filesystem generation or traced child"
+    ],
+    "boundaries": [
+      "Authenticated public owner operation to private native request",
+      "Private request pipe to native parsing and fixed spawn",
+      "Mutable path/static signature to live process identity",
+      "Supervisor to sandbox parent to inherited child",
+      "Direct-child status to cleanup evidence",
+      "Native bytes to safe public evidence",
+      "Caller-UID bootstrap evidence to installed actual-service identity acceptance"
+    ],
+    "threatModelLimit": "The prototype explicitly does not defeat a malicious process sharing the owner UID. Same-UID file replacement examples below identify an unclosed production prerequisite, not an asserted exploit of a deployed boundary. Stronger actors able to trace a hardened process are not assumed to be ordinary _toy_agent; the wait finding concerns truthful lifecycle accounting when such OS status is delivered."
+  },
+  "currentEvidence": {
+    "publicAdapter": {
+      "path": "packages/ops/src/public.ts",
+      "lines": [52, 53, 54, 57, 58, 59, 61, 65, 66, 67],
+      "observation": "Up validates its typed input/context and returns DEPENDENCY_UNAVAILABLE; down returns ATTESTATION_INVALID for an established-stack context. Neither creates a process or accepted operation. This observation applies only to the recorded public.ts digest."
+    },
+    "nativePreparation": {
+      "manifestDigest": "1ce2fb96b4481b1a713a336db8ee8e4b32a33776db44eb672546727a5364a309",
+      "manifestSchema": "toy.bootstrap-native-build.v2",
+      "schemaDigest": "83fb36cb5977d18f74216b992a7b23b84ffc4532693af4619ab6819846aadb5e",
+      "artifactDigests": {
+        "parent": "160fe72ac8e60347a5a72a71e09fcf5b3dfd4fa09da65eb35bb71423fe58e701",
+        "child": "5be5c6c1adafc7e6bb5bfb5060c24ccd529ed1391bdf61b5faa24b63f8b103a9",
+        "supervisor": "2a791789d97b44ae27f4c749acfd599f148849b0b8ad162528177857642626f5"
+      },
+      "evidencePath": "build/evidence/R0.K3/native-build.json",
+      "evidenceClaim": "Three-asset compilation and exact local artifact/source readback only. App Sandbox signing and execution were not performed.",
+      "reviewerReexecutedBuild": false,
+      "reviewerRehashedBinaryArtifacts": false,
+      "currentSchemaCompatibleAtFinalReadback": false,
+      "currentSchemaDigestAtFinalReadback": "fa1a1ad51ecf568edbf94454dbb47829bae54ed894f373d9387cb8397eef478b",
+      "schemaDriftDisposition": "Parent advanced the schema/public owner journal during this review. The historical three-asset manifest remains source evidence, but cannot satisfy the current runtime closure until a fresh source-bound build and later exact signing validation. No native source changed."
+    },
+    "acceptanceContext": {
+      "stateSnapshotUpdatedAt": "2026-10-05T16:20:29.934Z",
+      "activeCard": "R0.K3",
+      "wholeATCount": 1425,
+      "wholeATState": "NOT_IMPLEMENTED",
+      "countEvidence": "build/state.json:9 and build/progress.md:89,101; no AT state was changed by this review",
+      "r0_04": "NOT_IMPLEMENTED / PENDING",
+      "r0_05": "NOT_IMPLEMENTED / PENDING",
+      "actualServiceUidGid": "UNMEASURED",
+      "wholeATVerdictsCreated": []
+    }
+  },
+  "actionableCurrentSourceFindings": [
+    {
+      "id": "R005-SUP-01",
+      "title": "A nonterminal wait status is treated as a reaped child",
+      "severity": "important",
+      "classification": "CURRENT_SOURCE_LIFECYCLE_DEFECT",
+      "confidence": "HIGH_SOURCE_AND_PRIMARY_API_EVIDENCE; RUNTIME_SCENARIO_NOT_EXECUTED",
+      "locations": [
+        {"path": "packages/ops/native/BootstrapEntry.swift", "lines": [172, 175, 176, 192, 193, 194, 198, 319, 320, 321]},
+        {"path": "packages/ops/native/BootstrapSupervisor.swift", "lines": [133, 135, 136, 137, 138, 139, 297, 303, 304, 307]}
+      ],
+      "securityProperty": "parentReaped may become true only after a terminal exit/signal status; a still-live direct child remains owned and must not bypass cleanup.",
+      "prerequisite": "The OS returns a stop status for a traced direct child. Darwin documents this even when WUNTRACED is absent. Whether tracing is permitted for the final hardened artifacts on this host is not established, and this is not claimed as an ordinary _toy_agent tracing capability.",
+      "sourceToSink": "waitpid(child, &status, WNOHANG) returns child for a traced stop -> waitForChild returns .exited(status) for any such return -> terminateAndReap returns without SIGKILL; SupervisorObservation.recordWait sets parentReaped=true before examining status -> receipt contains false reap evidence.",
+      "concreteFailureScenario": "A traced parent stops and waitpid returns its PID with low status bits 0x7f. The supervisor records parentReaped=true, records neither exitCode nor signal, and attempts post-reap EOF instead of retaining ownership and killing/reaping the still-live parent. The EOF deadline may eventually produce ENTRY_INVALID, but the final parentReaped flag remains true. If the same status is received inside terminateAndReap, it returns immediately and skips the kill entirely. A stopped inherited child similarly bypasses the parent's cleanup branch.",
+      "existingMitigations": "WNOHANG avoids ordinary blocking and no WUNTRACED is requested, so untraced SIGSTOP alone does not reach this branch. The public adapter is unavailable and completeDescendantCleanup/ready remain false. These limit present exposure but do not make the reap classification correct.",
+      "correctionRung": 1,
+      "boundedCorrection": "Represent terminal status as a type/outcome that can be created only when WIFEXITED or WIFSIGNALED is true. Continue waiting through stop/continue notifications under the same monotonic deadline, preserve direct-child ownership, and set parentReaped only from a terminal outcome. Do not solve this with a warning or a false cleanup flag.",
+      "primaryEvidence": [
+        {"kind": "installed-sdk", "path": "/Library/Developer/CommandLineTools/SDKs/MacOSX26.5.sdk/usr/include/sys/wait.h", "lines": [113, 116, 117, 136, 137, 150, 151, 152, 153]},
+        {"kind": "official-apple-manual", "url": "https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man2/wait.2.html", "support": "WIFSTOPPED can be true for a traced child without WUNTRACED; waitpid returns the child PID for stopped as well as terminated children."}
+      ],
+      "proofNeededAfterRepair": "A registered external OS-fault case reached through toy must distinguish stop/continue from terminal exit, show ownership retained, and independently show the parent stopped/terminated/reaped state. Use the largest available CLI interface; no private-function test is requested."
+    },
+    {
+      "id": "R005-SUP-02",
+      "title": "Single-request admission depends on how trailing bytes are split across reads",
+      "severity": "important",
+      "classification": "CURRENT_SOURCE_PROTOCOL_VALIDATION_DEFECT",
+      "confidence": "HIGH_SOURCE_EVIDENCE; NO_RUNTIME_PROBE",
+      "locations": [
+        {"path": "packages/ops/native/BootstrapEntry.swift", "lines": [141, 154, 162, 163, 165]},
+        {"path": "packages/ops/native/BootstrapSupervisor.swift", "lines": [324, 325, 326, 327, 331]},
+        {"path": "docs/adr/0013-native-supervisor-protocol.md", "lines": [5]}
+      ],
+      "securityProperty": "The private one-shot input admits exactly one bounded request; extra frames or trailing data are refused consistently before side effects.",
+      "prerequisite": "A buggy or faulted private request writer sends a valid request line and extra bytes. The private owner transport is not implemented, and no unauthorized public sender is currently admitted.",
+      "sourceToSink": "readFrame rejects a newline followed by bytes in the same 512-byte read, but returns immediately if the newline is last in that read -> main decodes the first frame and closes FD3 without checking EOF -> supervise may perform signature work and spawn for the same logical byte stream that would have been rejected if coalesced.",
+      "concreteFailureScenario": "A request writer sends valid JSON plus newline in one write, then sends a second line or garbage before closing. If the first read ends at the first newline, the request is accepted and later bytes are discarded when FD3 closes. If both writes are coalesced into one read, it is rejected. Thus malformed one-shot transport can admit execution depending on scheduling and pipe packetization.",
+      "existingMitigations": "The first frame is size bounded, generated decoders reject unknown fields and mismatched literals, and the request cannot select an executable/path/argv/environment. Extra bytes are not interpreted or archived. This is a fail-closed protocol consistency issue, not a command-injection claim.",
+      "correctionRung": 1,
+      "boundedCorrection": "Make one-shot request admission require exactly one bounded line followed by EOF within the same real deadline. The owner must close its write end after the request. Keep reusable first-frame reading separate from single-request completeness; no signature/spawn may precede the completeness check. Check the inherited child's identity stream for trailing bytes after its terminal exit when that stream is certified as exactly one frame.",
+      "primaryEvidence": [
+        {"kind": "source", "path": "packages/ops/native/BootstrapEntry.swift", "lines": [162, 163, 165]},
+        {"kind": "source", "path": "packages/ops/native/BootstrapSupervisor.swift", "lines": [325, 327, 331]},
+        {"kind": "written-interface", "path": "docs/adr/0013-native-supervisor-protocol.md", "lines": [5]}
+      ],
+      "proofNeededAfterRepair": "Registered CLI OS-transport fault cases must produce the same denial for coalesced and split trailing bytes, two frames, missing EOF and an overlong stream, while the valid one-frame/EOF path still produces the permitted receipt. Preserve only byte counts and safe finite failure metadata."
+    }
+  ],
+  "missingFutureGatesNotCurrentDeployedBugs": [
+    {
+      "id": "R005-GATE-IDENTITY",
+      "releaseSeverity": "blocking",
+      "property": "Actual installed service identities, supplementary groups, protected parent ownership, secret/socket custody and approved lifetime are measured independently.",
+      "sourceLocations": [
+        {"path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/BUILD-PLAN.md", "lines": [50, 51]},
+        {"path": "docs/adr/0010-bootstrap-stack-lifecycle.md", "lines": [41, 65]}
+      ],
+      "failureIfSkipped": "Caller UID 501 bootstrap entry is mistaken for _toy_agent confinement; an installed agent may retain an admin group, raw GUI/browser endpoint or secret-store access despite successful bootstrap entry.",
+      "correctionRung": 1,
+      "requiredDisposition": "Keep R0.05 unavailable until R0.04 resolves actual UID/GID/group/domain/path/socket/credential manifest and the full actual-identity CLI denial and positive-control receipts exist. Preserve Johan's current rights and gateway during setup."
+    },
+    {
+      "id": "R005-GATE-FILESYSTEM",
+      "releaseSeverity": "blocking",
+      "property": "The whole materialized executable/resource closure and every ancestor are protected against the admitted attacker from validation through both execs.",
+      "sourceLocations": [
+        {"path": "packages/ops/native/BootstrapSupervisor.swift", "lines": [22, 23, 27, 28, 54, 56, 57, 169, 177, 223, 224, 225, 230]},
+        {"path": "packages/ops/native/BootstrapEntry.swift", "lines": [114, 119, 120, 289]},
+        {"path": "docs/adr/0012-native-entry-admission.md", "lines": [11, 15]},
+        {"path": "docs/adr/0013-native-supervisor-protocol.md", "lines": [9]}
+      ],
+      "currentCoverage": "O_NOFOLLOW protects only the final executable component. lstat checks the generation root and five named directories for ownership, directory type and absence of group/world write. Hashing checks the opened regular file's size, inode, mtime and ctime before/after. It does not establish protected ancestors above the generation root, immutable bundle resources, or an atomic hash-to-path-exec association.",
+      "failureIfSkipped": "An actor able to mutate an unchecked ancestor or the owner UID can replace a bundle/resource/helper after signature/hash checking and before pathname exec. The child exec happens later inside the parent; it is not atomically tied to the supervisor's static hash. Static success then cannot authenticate the executed closure. Same-UID resistance is expressly excluded by the current ADR and no such production protection is claimed.",
+      "correctionRung": 1,
+      "requiredDisposition": "Freeze a protected generation-root/ancestor and read-only signed closure design before execution. Reject symlink/unowned/writable ancestors at allocation and use descriptor-relative no-follow traversal where supported; do not rely on canonical string prefix checks or another rehash alone. Require swapped-ancestor/resource/helper and stale-generation denial cases through toy. Maintenance/root-owned production artifacts must remain inaccessible to _toy_agent mutation.",
+      "primaryEvidence": [{"kind": "installed-sdk", "path": "/Library/Developer/CommandLineTools/SDKs/MacOSX26.5.sdk/System/Library/Frameworks/Security.framework/Headers/SecStaticCode.h", "lines": [128, 129, 130, 131, 135, 136, 137, 138]}]
+    },
+    {
+      "id": "R005-GATE-LIVE-CODE",
+      "releaseSeverity": "blocking",
+      "property": "Live parent and child identity evidence is bound to the immutable expected executable/signature closure; PID, path and self-reported metadata are not authorization.",
+      "sourceLocations": [
+        {"path": "packages/ops/native/BootstrapSupervisor.swift", "lines": [146, 149, 150, 152, 154, 157, 160, 272, 278, 279]},
+        {"path": "packages/ops/native/BootstrapEntry.swift", "lines": [301, 302, 303, 304, 305, 306]},
+        {"path": "docs/adr/0013-native-supervisor-protocol.md", "lines": [11, 13]}
+      ],
+      "currentCoverage": "The supervisor compares its live direct child's complete incarnation tuple, path and Security signing identifier and repeats the incarnation sample. The native parent compares its live child's kernel tuple before acknowledgement. The supervisor does not independently observe the child's live executable/signature; its child-entry claim relies on the trusted parent and protected fixed closure.",
+      "failureIfSkipped": "If immutable closure enforcement is absent, a swapped helper can report its truthful PID/UID/birth and satisfy the parent while differing from the statically validated child. A valid dynamic signature alone with a nil requirement does not itself express the expected artifact policy.",
+      "correctionRung": 1,
+      "requiredDisposition": "The owner must authenticate the supervisor externally and preserve the protected closure for both execs. If child code can vary, require live expected code validation inside the trusted parent before ACK. Prefer applying a pinned expected Security requirement to the live guest where the fixed signing profile permits it, then retain incarnation/path checks. Do not promote child self-reporting to independent evidence.",
+      "uncertainty": "SecCodeCheckValidity is documented as secure against filesystem modification; SecCodeCopyStaticCode is explicitly not guaranteed to make a secure dynamic-to-static link. No exploit of their present combination is asserted. A filesystem-race/live-signature fault case or a requirement-bound public API design is needed before relying on this mapping under mutable filesystem conditions.",
+      "primaryEvidence": [
+        {"kind": "installed-sdk", "path": "/Library/Developer/CommandLineTools/SDKs/MacOSX26.5.sdk/System/Library/Frameworks/Security.framework/Headers/SecCode.h", "lines": [67, 71, 72, 217, 218, 221, 223, 225, 227]},
+        {"kind": "official-doc-url", "url": "https://developer.apple.com/documentation/security/seccodecheckvalidity(_:_:_:)", "contentSource": "Installed SDK header; browser page required JavaScript and its Markdown link was not fetchable."}
+      ]
+    },
+    {
+      "id": "R005-GATE-OWNERSHIP-ADMISSION",
+      "releaseSeverity": "blocking",
+      "property": "Only an authenticated owner with a current durable operation, generation fence and real resource permit can launch this private native request.",
+      "sourceLocations": [
+        {"path": "packages/ops/native/BootstrapSupervisor.swift", "lines": [13, 14, 18, 19, 324, 326, 333, 334, 335]},
+        {"path": "docs/adr/0010-bootstrap-stack-lifecycle.md", "lines": [17, 39, 41, 43]},
+        {"path": "docs/adr/0013-native-supervisor-protocol.md", "lines": [5, 17]}
+      ],
+      "failureIfSkipped": "Any syntactically valid request can name arbitrary operation/schema/build digests and generation values, which the native process merely echoes. Those values are not checked against durable owner state or a measured heavy lease. Treating this frame as authorization would manufacture provenance and allow duplicate/stale/unbudgeted work.",
+      "correctionRung": 1,
+      "requiredDisposition": "Implement the generated private journal and owner admission externally: stable request identity/conflict detection, generation/currentness, capability/peer authentication, schema/build/materialization binding, conservative measured memory bytes, pressure/stable swap, aggregate ceiling plus margin and exclusive heavy lease. Never accept frame IDs or memorystatus percentage as proof. Re-review the parent's new journal/resource implementation separately."
+    },
+    {
+      "id": "R005-GATE-DEADLINE",
+      "releaseSeverity": "blocking",
+      "property": "The external owner bounds the whole native attempt and lost-transport lifetime using real monotonic time, including validation, I/O and cleanup.",
+      "sourceLocations": [
+        {"path": "packages/ops/native/BootstrapEntry.swift", "lines": [24, 29, 31, 89, 95, 141, 147, 172, 179, 192, 199]},
+        {"path": "packages/ops/native/BootstrapSupervisor.swift", "lines": [22, 34, 78, 84, 182, 184, 186, 229, 308, 341, 343]}
+      ],
+      "currentCoverage": "Frame reads and waitpid polling use absolute uptime deadlines; SIGPIPE is ignored in supervisor/parent. The 12-second supervisor deadline starts only after static validation and final hashing. Hash reads, Security validation and emit use blocking APIs without their own deadline; the inherited child's ACK read is bounded by its parent, not by the child itself. Cleanup grants up to five additional seconds and EOF validation grants one additional second.",
+      "failureIfSkipped": "Stalled filesystem/Security work or a blocking inherited output descriptor can keep the supervisor alive past the nominal 12 seconds. Owner death or loss of its output reader must not leave an untracked native attempt or release its lease prematurely.",
+      "correctionRung": 1,
+      "requiredDisposition": "Treat native timers as inner bounds only. The external owner must own and supervise the full attempt from pre-spawn through terminal reconciliation, impose one real deadline/lease and fixed descriptor semantics, and preserve unresolved ownership if termination cannot be proven. Bound output writes with nonblocking/poll handling where needed. No claim that the current 12-second constant bounds the complete operation is justified."
+    },
+    {
+      "id": "R005-GATE-TREE-CLEANUP",
+      "releaseSeverity": "blocking",
+      "property": "All owned descendants and container resources are reconciled independently before complete teardown or resource reuse.",
+      "sourceLocations": [
+        {"path": "packages/ops/native/BootstrapEntry.swift", "lines": [191, 193, 198, 199, 200]},
+        {"path": "packages/ops/native/BootstrapSupervisor.swift", "lines": [247, 256, 261, 281, 300, 338, 339]},
+        {"path": "docs/adr/0010-bootstrap-stack-lifecycle.md", "lines": [21, 31, 45]},
+        {"path": "docs/adr/0013-native-supervisor-protocol.md", "lines": [11, 13]}
+      ],
+      "currentCoverage": "terminateAndReap signals only a still-unreaped direct child after a waitpid ownership check; it does not signal an arbitrary caller PID or PID group. Ordinary direct-child PID reuse is avoided while the native single-threaded parent retains an unreaped child. Complete descendant cleanup and ready are explicitly false. No whole-tree controller exists.",
+      "failureIfSkipped": "Killing/reaping a parent is mistaken for death of a detached descendant or cleanup of an OS-retained container. A reclaimed lease/generation can overlap unresolved work or remove another owner's resource.",
+      "correctionRung": 1,
+      "requiredDisposition": "Retain independent process-incarnation/resource ownership outside the target and implement startup/death/lease/pressure reconciliation under external supervision. Process groups alone do not prove a complete tree. Preserve unresolved references and complete=false on uncertainty; no PostgreSQL, interpreter or long-lived child is admitted before this gate."
+    },
+    {
+      "id": "R005-GATE-RUNTIME-DENIALS",
+      "releaseSeverity": "blocking",
+      "property": "App Sandbox enforcement, per-stack isolation and installed-service denial are measured, rather than inferred from compilation/signature/entry.",
+      "sourceLocations": [
+        {"path": "docs/adr/0012-native-entry-admission.md", "lines": [29, 35, 39, 40, 41]},
+        {"path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/BUILD-PLAN.md", "lines": [51]},
+        {"path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/ops.md", "lines": [1977, 1993]}
+      ],
+      "failureIfSkipped": "A static signature or native entry marker is treated as a denial proof while filesystem/network/Keychain/TCC/IPC/GUI/shell/MCP descendants remain untested. The previous R5 pre-entry abort would be incorrectly reused as enforcement evidence.",
+      "correctionRung": 1,
+      "requiredDisposition": "After prerequisites and source defects are resolved, drive registered fixed CLI cases through toy, retaining safe positive/denial/ownership receipts at actual service UIDs. No unconfined fallback, entitlement relaxation, paid signing assumption or missing-denominator removal is allowed. R5 AT-ops-86 is a distinct future candidate gate and cannot substitute for R0.05's assigned ATs."
+    }
+  ],
+  "controlsReviewedAsSourceOnly": [
+    {"area": "Fixed executable selection", "evidence": "BootstrapSupervisor.swift:165-175; BootstrapEntry.swift:114-121", "assessment": "No request path, argv, environment or identity selector reaches spawn; paths derive from kernel executable location. Ancestor immutability remains a prerequisite."},
+    {"area": "Static code validity", "evidence": "BootstrapSupervisor.swift:75-119", "assessment": "Validation precedes signing-info access; all-architecture/nested/strict/symlink restrictions and no-network validation are requested. Exact ad-hoc/runtime flags, nil team, boolean entitlement dictionaries and expected executable digests are checked. Static success is not enforcement proof."},
+    {"area": "Descriptor mappings", "evidence": "BootstrapEntry.swift:102-104,213-242,288-296; BootstrapSupervisor.swift:210-244", "assessment": "Source descriptors are duplicated at 10 or above; target mappings are unique in 0-5. Fixed callers give parent stdout/FD5 and child FD3/FD4. Null stdio, explicit close actions and POSIX_SPAWN_CLOEXEC_DEFAULT provide one paved mapping; runtime extra-FD denial remains unproven."},
+    {"area": "Environment", "evidence": "BootstrapEntry.swift:245-252", "assessment": "Only LANG, LC_ALL and PATH are passed to spawned children. No live home/config/credential values are copied. Working-directory and external supervisor launch invariants still belong to the future owner."},
+    {"area": "Kernel incarnation", "evidence": "BootstrapEntry.swift:46-76,301-306; BootstrapSupervisor.swift:272-279", "assessment": "Real/effective UID/GID equality, PID/PPID and birth seconds/microseconds are sampled and compared. Supplementary groups, installed service domains and capabilities are not inferred from this tuple."},
+    {"area": "Generated strict decoding", "evidence": "Contracts.swift:6196-6227,6391-6434,6547-6596; test-control.ts:65-112", "assessment": "Generated Swift rejects unknown object fields and mismatched enum/boolean literals. UInt64String remains String; request canonical UUID/digest/generation checks are added natively. No claim of complete cross-language schema validation/round-trip acceptance is made."},
+    {"area": "Privacy and honest readiness", "evidence": "BootstrapSupervisor.swift:250-270,307-315,332-344; test-control.ts:100-112; ADR0011", "assessment": "Malformed frames and raw stderr are not serialized. Signature/entry fields remain absent unless locally validated. Stderr byte count is null; ready and completeDescendantCleanup are literal false. The future owner must independently validate binding/receipt and never archive raw invalid stdout."},
+    {"area": "Build preservation", "evidence": "build-native-bootstrap.mts:136-164,189-210,229-277,278-317", "assessment": "V1/V2 inventories and artifact digests are checked, inputs are hashed before/after compilation, prior verified generations are copied before replacement and manifests use generated validation. Publication is a sequence of replacements rather than atomic whole-generation switch; consumers must reject incomplete mixed state and never treat dist as admitted signed runtime."}
+  ],
+  "r0_05AcceptancePreparation": {
+    "rung": "CLI",
+    "requiredATs": [
+      "AT-attention-67", "AT-authority-35", "AT-authority-37", "AT-authority-69", "AT-authority-73",
+      "AT-hermes-config-19", "AT-hermes-config-29", "AT-hermes-config-53", "AT-hermes-config-79",
+      "AT-hermes-config-80", "AT-hermes-config-82", "AT-hermes-config-83", "AT-self-improvement-78"
+    ],
+    "sourceBinding": "BUILD-PLAN R0.05; current actual source assertions were read in authority.md, hermes-config.md, attention.md and self-improvement.md. TEST-PLAN assigns every listed row to CLI. Its historical line references drift from current actual assertions; tests/acceptance-index.json retains exact bindings.",
+    "relatedPrerequisiteATs": ["AT-ops-30", "AT-ops-70"],
+    "coverageNeeded": [
+      "Actual UID/GID/groups/domain/manifest readbacks and one preserved gateway owner",
+      "Protected writes/unlink/rename/chmod/parent/symlink replacement denials",
+      "Credential, broker, publisher, grader and approval signer denials",
+      "Raw CDP/Playwright/Cua, GUI/IPC/MCP and browser-profile denial; admitted protected Hands positive control",
+      "Database socket/group, sudo/su and SSH-agent denial with Johan's original rights preserved",
+      "Ingress-only bot token/connection and forged input denial; Hermes-down reminders and controlled cutover",
+      "Exact plugin/config/SOUL/skill/toolset/dependency/native signature attestation",
+      "Unavailable paid/native capabilities stay deferred without purchase"
+    ],
+    "casesImplementedByReview": [],
+    "casesRunByReview": [],
+    "wholeAssertionsPassedByReview": []
+  },
+  "commandsPerformed": [
+    {"kind": "read-only-shell", "commands": ["cat AGENTS.md", "cat fable-review/SKILL.md and fable-security/SKILL.md at their listed absolute plugin paths", "cat README.md PRINCIPLES.md CONTRACTS.md in the planning specs"]},
+    {"kind": "read-only-shell", "commands": ["rg searches for R0.05/K3/supervisor/confinement/identity and relevant acceptance IDs", "rg --files inventories of native, contracts, ADR and evidence paths", "nl -ba reads of both native Swift files, the builder, generated test-control/public interfaces and ADRs", "sed reads of relevant generated Swift DTOs, BUILD-PLAN/Ops requirements and installed Security/wait SDK headers", "cat current native manifest and existing native preparation/research evidence", "cat build/state.json; output was truncated, then targeted rg/sed reads of current R0.04/R0.05/state and progress", "git status --short; no entries at the inspected snapshot", "shasum -a 256 of named sources, specs, SDK headers and preparation evidence"]},
+    {"kind": "read-only-command-failure", "commands": ["rg included nonexistent repo specs/build/native/build/state/build/progress.json search paths during initial discovery; corrected to actual planning root, build/state.json, build/progress.md and packages/ops/dist/native. No mutation or retry workaround occurred."]},
+    {"kind": "official-web-read", "commands": ["Opened Apple SecCodeCheckValidity and SecCodeCopyStaticCode official pages; JavaScript-only responses", "Opened Apple archived write(2) and wait(2) manuals", "Followed official Security page Markdown links; browser tool could not fetch text/markdown. Installed SDK headers supplied primary API content."]},
+    {"kind": "review-artifact-only", "commands": ["apply_patch added only this authorized JSON evidence artifact", "python3 -m json.tool parse check of this artifact", "shasum -a 256 of this artifact and final native-source digest readback"]}
+  ],
+  "primarySources": [
+    {"title": "Apple Darwin wait(2)", "url": "https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man2/wait.2.html", "usedFor": "Traced stop status versus terminal status; reparenting does not prove descendant cleanup"},
+    {"title": "Apple Darwin write(2)", "url": "https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man2/write.2.html", "usedFor": "Blocking descriptor behavior versus explicit nonblocking EAGAIN handling"},
+    {"title": "Installed MacOSX26.5 SDK SecCode.h", "path": "/Library/Developer/CommandLineTools/SDKs/MacOSX26.5.sdk/System/Library/Frameworks/Security.framework/Headers/SecCode.h", "usedFor": "Dynamic validation, insecure static-origin translation caveat and distinct code identity"},
+    {"title": "Installed MacOSX26.5 SDK SecStaticCode.h", "path": "/Library/Developer/CommandLineTools/SDKs/MacOSX26.5.sdk/System/Library/Frameworks/Security.framework/Headers/SecStaticCode.h", "usedFor": "Static validation requires protection from concurrent modification"},
+    {"title": "Installed MacOSX26.5 SDK sys/wait.h, spawn.h and sys/fcntl.h", "usedFor": "Wait terminal predicates, descriptor action APIs and F_DUPFD_CLOEXEC"}
+  ],
+  "sourceDigestsSha256": [
+    {"path": "AGENTS.md", "sha256": "fc4ece59b08e8a302797f86d0865fd8eb3c5a5226792b0dd26cc1c1825555529"},
+    {"path": "packages/ops/native/BootstrapEntry.swift", "sha256": "fb6494053a46ed6343162cbe7a51e8d2f966588c33cb6a5522205575f3fd19cc"},
+    {"path": "packages/ops/native/BootstrapSupervisor.swift", "sha256": "46faa2ed3d5ce74830e4b9b0bf002d8ee217331c8fff8cd980a0d66d338b96bc"},
+    {"path": "scripts/build-native-bootstrap.mts", "sha256": "1c77e120c8804a3ec9e0705df9a24d8be1d3e186e699c15861b3685ca2ce4d29"},
+    {"path": "packages/contracts/src/test-control.ts", "sha256": "8298cfead15c0eadef87b6241efd236f0ad16648844e12a33492b49628ced65f"},
+    {"path": "packages/contracts/src/primitives.ts", "sha256": "7fa67d881b9d9c17bca3d7768ede37da6e35aabf8e9c1ae906a3674b6e9d4bb1"},
+    {"path": "swift/ToyContracts/Contracts.swift", "sha256": "8ad5b986bdf8dcdfdf929b4b4dc4e515975b22c90a73f72f83a55cad7a7f6859"},
+    {"path": "packages/ops/src/public.ts", "sha256": "f3641f4a4142956692090dcc3d926f268cdda6cc84beaab4dccf1efedd2eded1"},
+    {"path": "docs/adr/0010-bootstrap-stack-lifecycle.md", "sha256": "ebf0905216c8d81e1ef024cacff17d5b2ee11b9a585472999176ebad442a806f"},
+    {"path": "docs/adr/0011-bootstrap-receipt-privacy.md", "sha256": "6ab656b932e7f6f314db1b5ff3f3e4dbb79898992f58d90e2afbefe009ef61f0"},
+    {"path": "docs/adr/0012-native-entry-admission.md", "sha256": "47f064cfe717e55b098083e708ba7d9b5cb8eb9cc237b0c4486f956e57197cac"},
+    {"path": "docs/adr/0013-native-supervisor-protocol.md", "sha256": "ef40bd0d5a9e5400ccb9c273adfcdb089dec6762b8076f39fd9e8e39951833db"},
+    {"path": "packages/ops/dist/native/manifest.json", "sha256": "1ce2fb96b4481b1a713a336db8ee8e4b32a33776db44eb672546727a5364a309"},
+    {"path": "build/evidence/R0.K3/native-build.json", "sha256": "f686a8289665382c31ebfaafbe7377662ea5ac3e141ed13960b8dcffdddd7511"},
+    {"path": "build/state.json", "sha256": "e74f8ac8b7db6a10e871cdff236514f4b80fa1a854e0d512db0d2af51fb13690", "scope": "Historical context snapshot, parent-owned mutable file"},
+    {"path": "build/progress.md", "sha256": "25be7e26d5cb42f4368e2c001163f1bc8469f32032ecbb029902d03bf96f5986", "scope": "Historical context snapshot, parent-owned mutable file"},
+    {"path": "tests/acceptance-index.json", "sha256": "f971ff2481932a5cafc1dd451dcc7fcc9c36abaab53001b265215398f486b696"},
+    {"path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/README.md", "sha256": "2c02bdb4d13abd198231446873eaacfe30177a97f66235158912fd2accd006f4"},
+    {"path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/PRINCIPLES.md", "sha256": "828bd798692b9f0c2acf3f7d51d5a244ee54dfe5c3bd3e88488788c77e53368b"},
+    {"path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/CONTRACTS.md", "sha256": "ef4b5d18fe3a1adcf9eb28d55da734892795e103894210ed0aea61c911fd70f8"},
+    {"path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/BUILD-PLAN.md", "sha256": "f35e7a18911b12e8c0b89130e3f62db4aa7344a80c7807ee164192fc70c36ad8"},
+    {"path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/TEST-PLAN.md", "sha256": "766aa798a4e980ebf5e4522363c8b038da4fdf66efaa507676d4d970fe0d11f3"},
+    {"path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/ops.md", "sha256": "825ab91bc6c3122bf038f06f2a7577096edb795a7fcaea7a1ffbcbbc841024a4"},
+    {"path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/hermes-config.md", "sha256": "771a27d272514104b1e207bc0342c65214977d2df2c632dfb9a60f8cd0e52cdf"},
+    {"path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/authority.md", "sha256": "0127fd6e992c94bb512af83d507e107431426d2d4a09885d1a420119f2d530be"},
+    {"path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/attention.md", "sha256": "1dbded4e107c5c9276ff6f9e1141b5b9c230502ceee4c66b4465a4df6ee0217a"},
+    {"path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/self-improvement.md", "sha256": "dd9823c97df8c9d152d01e7d56d704a29238a5e0ccafd759014630fe625bea40"},
+    {"path": "/Library/Developer/CommandLineTools/SDKs/MacOSX26.5.sdk/System/Library/Frameworks/Security.framework/Headers/SecCode.h", "sha256": "47a0cf42f3babd16f5f8523464f9895cc2302650c35e401e1d9923d6c30769db"},
+    {"path": "/Library/Developer/CommandLineTools/SDKs/MacOSX26.5.sdk/System/Library/Frameworks/Security.framework/Headers/SecStaticCode.h", "sha256": "4647531b672952064d7d014057c5147722babb29aa0ab6d11b8fbd45b3fde532"},
+    {"path": "/Library/Developer/CommandLineTools/SDKs/MacOSX26.5.sdk/usr/include/spawn.h", "sha256": "2d90f16beec60b2080553613234f004b58f384003feaa5eb809fe5e91b42b884"},
+    {"path": "/Library/Developer/CommandLineTools/SDKs/MacOSX26.5.sdk/usr/include/sys/wait.h", "sha256": "b77f7dd6f592eba8b0d51c15c7b975472fdad50c12ea296f74f062cbf98dcbf7"},
+    {"path": "/Library/Developer/CommandLineTools/SDKs/MacOSX26.5.sdk/usr/include/sys/fcntl.h", "sha256": "805fd8c695f8e5e1c327b6852382cc5533738bbfd8f18bc11f850531166e4fe8"}
+  ],
+  "finalReadback": {
+    "observedAt": "2026-10-05T16:27:15Z",
+    "artifactJsonParse": "PASS_python3_-m_json.tool",
+    "nativeSourceDigestsUnchanged": true,
+    "builderDigestUnchanged": true,
+    "nativeRuntimeAction": "NONE",
+    "concurrentParentChanges": [
+      {"path": "packages/contracts/src/test-control.ts", "sha256": "ada677cd20a4b1c8cbeb04b234c9b681e0dbd18a95a993f455aa8457d1353939", "reviewDisposition": "New owner journal additions not reviewed; prior reviewed native schema lines are bound to the earlier digest."},
+      {"path": "swift/ToyContracts/Contracts.swift", "sha256": "cf9e22164724817255aa207b4e54cccb4f6a7b53f79515d4890ba54b3e37f63e", "reviewDisposition": "Regenerated during parent journal work; no approval of new DTOs."},
+      {"path": "packages/ops/src/public.ts", "sha256": "130920067fb74a422d08c61b2c701e627a7afed8a92c9044893820143d71db0d", "reviewDisposition": "Parent implemented durable blocked-request journal/public up changes; old unavailable-adapter evidence is explicitly historical. Native launch remains unavailable according to parent handoff."}
+    ],
+    "parentMessage": "Native sources untouched; traced waitpid terminal-status bug accepted for rung-1 correction after this handoff. Current schema bundle advanced; historical native build requires a fresh three-asset rebuild. No journal review requested or performed.",
+    "sourceReadbackScope": "sha256 readbacks and JSON syntax validation are static evidence, not runtime or whole-AT proof."
+  },
+  "handoff": {
+    "parentOwnsIntegration": true,
+    "nextActions": [
+      "Integrate this packet without changing any whole-AT verdict or declaring R0.05 implementation available.",
+      "Correct terminal wait classification and exact one-shot request completion at rung 1 before first native admission.",
+      "Review the new journal, generation, resource and external launch/cleanup owner once concrete; this packet does not cover those concurrent changes.",
+      "Then drive one bounded signed native attempt only through toy and retain safe failure/entry/signature/identity/cleanup evidence.",
+      "Resolve runtime failures before extending denials, PostgreSQL or persistent controller; preserve all missing readiness cells and later actual-UID gates."
+    ],
+    "unresolvedPrerequisites": [
+      "R0.04 installed actual UID/GID/groups/domains and protected ownership/custody",
+      "Immutable ancestor and complete signed resource/helper closure",
+      "Durable authenticated owner operation and current generation",
+      "Conservative measured-byte admission, heavy lease and real whole-attempt supervision",
+      "Exact App Sandbox signing/entry on this Mac",
+      "Actual child code binding, deny/positive probes and per-stack container isolation",
+      "Complete direct/descendant/resource cleanup readbacks",
+      "Persistent controller peer/capability authorization and recovery",
+      "Same-sandbox PostgreSQL AF_UNIX feasibility",
+      "Every whole source-assigned CLI AT, with actual installed identities where required"
+    ]
+  }
+}

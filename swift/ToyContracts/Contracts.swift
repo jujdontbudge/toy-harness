@@ -6797,3 +6797,199 @@ public enum NativeSupervisorReceiptV1FailureValue: String, Codable, CaseIterable
     case `tIMEOUT` = "TIMEOUT"
     case `rEAPUNCONFIRMED` = "REAP_UNCONFIRMED"
 }
+
+public struct BootstrapJournalOwnerV1: Codable, Sendable {
+    public let `schemaVersion`: BootstrapJournalOwnerV1SchemaVersion
+    public let `storeId`: UUID
+    public let `uid`: Int64
+    public let `gid`: Int64
+    public let `device`: UInt64String
+    public let `inode`: UInt64String
+    public let `createdAt`: Instant
+    public init(`schemaVersion`: BootstrapJournalOwnerV1SchemaVersion, `storeId`: UUID, `uid`: Int64, `gid`: Int64, `device`: UInt64String, `inode`: UInt64String, `createdAt`: Instant) {
+        self.`schemaVersion` = `schemaVersion`
+        self.`storeId` = `storeId`
+        self.`uid` = `uid`
+        self.`gid` = `gid`
+        self.`device` = `device`
+        self.`inode` = `inode`
+        self.`createdAt` = `createdAt`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["schemaVersion", "storeId", "uid", "gid", "device", "inode", "createdAt"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`schemaVersion` = try container.decode(BootstrapJournalOwnerV1SchemaVersion.self, forKey: ToyCodingKey("schemaVersion"))
+        self.`storeId` = try container.decode(UUID.self, forKey: ToyCodingKey("storeId"))
+        self.`uid` = try container.decode(Int64.self, forKey: ToyCodingKey("uid"))
+        self.`gid` = try container.decode(Int64.self, forKey: ToyCodingKey("gid"))
+        self.`device` = try container.decode(UInt64String.self, forKey: ToyCodingKey("device"))
+        self.`inode` = try container.decode(UInt64String.self, forKey: ToyCodingKey("inode"))
+        self.`createdAt` = try container.decode(Instant.self, forKey: ToyCodingKey("createdAt"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`schemaVersion`, forKey: ToyCodingKey("schemaVersion"))
+        try container.encode(`storeId`, forKey: ToyCodingKey("storeId"))
+        try container.encode(`uid`, forKey: ToyCodingKey("uid"))
+        try container.encode(`gid`, forKey: ToyCodingKey("gid"))
+        try container.encode(`device`, forKey: ToyCodingKey("device"))
+        try container.encode(`inode`, forKey: ToyCodingKey("inode"))
+        try container.encode(`createdAt`, forKey: ToyCodingKey("createdAt"))
+    }
+}
+
+public enum BootstrapJournalOwnerV1SchemaVersion: String, Codable, CaseIterable, Sendable {
+    case `toyBootstrapJournalOwnerV1` = "toy.bootstrap-journal-owner.v1"
+}
+
+public struct BootstrapJournalStateV1: Codable, Sendable {
+    public let `schemaVersion`: BootstrapJournalStateV1SchemaVersion
+    public let `storeId`: UUID
+    public let `nextGeneration`: UInt64String
+    public init(`schemaVersion`: BootstrapJournalStateV1SchemaVersion, `storeId`: UUID, `nextGeneration`: UInt64String) {
+        self.`schemaVersion` = `schemaVersion`
+        self.`storeId` = `storeId`
+        self.`nextGeneration` = `nextGeneration`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["schemaVersion", "storeId", "nextGeneration"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`schemaVersion` = try container.decode(BootstrapJournalStateV1SchemaVersion.self, forKey: ToyCodingKey("schemaVersion"))
+        self.`storeId` = try container.decode(UUID.self, forKey: ToyCodingKey("storeId"))
+        self.`nextGeneration` = try container.decode(UInt64String.self, forKey: ToyCodingKey("nextGeneration"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`schemaVersion`, forKey: ToyCodingKey("schemaVersion"))
+        try container.encode(`storeId`, forKey: ToyCodingKey("storeId"))
+        try container.encode(`nextGeneration`, forKey: ToyCodingKey("nextGeneration"))
+    }
+}
+
+public enum BootstrapJournalStateV1SchemaVersion: String, Codable, CaseIterable, Sendable {
+    case `toyBootstrapJournalStateV1` = "toy.bootstrap-journal-state.v1"
+}
+
+public struct BootstrapUpRequestV1: Codable, Sendable {
+    public let `schemaVersion`: BootstrapUpRequestV1SchemaVersion
+    public let `requestId`: UUID
+    public let `release`: Release
+    public let `world`: RegisteredTestWorldV1
+    public let `clock`: TestStackClockV1
+    public let `model`: TestStackModelV1
+    public init(`schemaVersion`: BootstrapUpRequestV1SchemaVersion, `requestId`: UUID, `release`: Release, `world`: RegisteredTestWorldV1, `clock`: TestStackClockV1, `model`: TestStackModelV1) {
+        self.`schemaVersion` = `schemaVersion`
+        self.`requestId` = `requestId`
+        self.`release` = `release`
+        self.`world` = `world`
+        self.`clock` = `clock`
+        self.`model` = `model`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["schemaVersion", "requestId", "release", "world", "clock", "model"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`schemaVersion` = try container.decode(BootstrapUpRequestV1SchemaVersion.self, forKey: ToyCodingKey("schemaVersion"))
+        self.`requestId` = try container.decode(UUID.self, forKey: ToyCodingKey("requestId"))
+        self.`release` = try container.decode(Release.self, forKey: ToyCodingKey("release"))
+        self.`world` = try container.decode(RegisteredTestWorldV1.self, forKey: ToyCodingKey("world"))
+        self.`clock` = try container.decode(TestStackClockV1.self, forKey: ToyCodingKey("clock"))
+        self.`model` = try container.decode(TestStackModelV1.self, forKey: ToyCodingKey("model"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`schemaVersion`, forKey: ToyCodingKey("schemaVersion"))
+        try container.encode(`requestId`, forKey: ToyCodingKey("requestId"))
+        try container.encode(`release`, forKey: ToyCodingKey("release"))
+        try container.encode(`world`, forKey: ToyCodingKey("world"))
+        try container.encode(`clock`, forKey: ToyCodingKey("clock"))
+        try container.encode(`model`, forKey: ToyCodingKey("model"))
+    }
+}
+
+public enum BootstrapUpRequestV1SchemaVersion: String, Codable, CaseIterable, Sendable {
+    case `toyBootstrapUpRequestV1` = "toy.bootstrap-up-request.v1"
+}
+
+public struct BootstrapOperationRecordV1: Codable, Sendable {
+    public let `schemaVersion`: BootstrapOperationRecordV1SchemaVersion
+    public let `storeId`: UUID
+    public let `operationId`: UUID
+    public let `requestId`: UUID
+    public let `stackId`: UUID
+    public let `generation`: UInt64String
+    public let `requestDigest`: Digest
+    public let `acceptedAt`: Instant
+    public let `state`: BootstrapOperationRecordV1State
+    public let `errorCode`: BootstrapOperationRecordV1ErrorCode
+    public let `nativeExecutionPerformed`: CliFailureOk
+    public let `resourcePermitIssued`: CliFailureOk
+    public init(`schemaVersion`: BootstrapOperationRecordV1SchemaVersion, `storeId`: UUID, `operationId`: UUID, `requestId`: UUID, `stackId`: UUID, `generation`: UInt64String, `requestDigest`: Digest, `acceptedAt`: Instant, `state`: BootstrapOperationRecordV1State, `errorCode`: BootstrapOperationRecordV1ErrorCode, `nativeExecutionPerformed`: CliFailureOk, `resourcePermitIssued`: CliFailureOk) {
+        self.`schemaVersion` = `schemaVersion`
+        self.`storeId` = `storeId`
+        self.`operationId` = `operationId`
+        self.`requestId` = `requestId`
+        self.`stackId` = `stackId`
+        self.`generation` = `generation`
+        self.`requestDigest` = `requestDigest`
+        self.`acceptedAt` = `acceptedAt`
+        self.`state` = `state`
+        self.`errorCode` = `errorCode`
+        self.`nativeExecutionPerformed` = `nativeExecutionPerformed`
+        self.`resourcePermitIssued` = `resourcePermitIssued`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["schemaVersion", "storeId", "operationId", "requestId", "stackId", "generation", "requestDigest", "acceptedAt", "state", "errorCode", "nativeExecutionPerformed", "resourcePermitIssued"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`schemaVersion` = try container.decode(BootstrapOperationRecordV1SchemaVersion.self, forKey: ToyCodingKey("schemaVersion"))
+        self.`storeId` = try container.decode(UUID.self, forKey: ToyCodingKey("storeId"))
+        self.`operationId` = try container.decode(UUID.self, forKey: ToyCodingKey("operationId"))
+        self.`requestId` = try container.decode(UUID.self, forKey: ToyCodingKey("requestId"))
+        self.`stackId` = try container.decode(UUID.self, forKey: ToyCodingKey("stackId"))
+        self.`generation` = try container.decode(UInt64String.self, forKey: ToyCodingKey("generation"))
+        self.`requestDigest` = try container.decode(Digest.self, forKey: ToyCodingKey("requestDigest"))
+        self.`acceptedAt` = try container.decode(Instant.self, forKey: ToyCodingKey("acceptedAt"))
+        self.`state` = try container.decode(BootstrapOperationRecordV1State.self, forKey: ToyCodingKey("state"))
+        self.`errorCode` = try container.decode(BootstrapOperationRecordV1ErrorCode.self, forKey: ToyCodingKey("errorCode"))
+        self.`nativeExecutionPerformed` = try container.decode(CliFailureOk.self, forKey: ToyCodingKey("nativeExecutionPerformed"))
+        self.`resourcePermitIssued` = try container.decode(CliFailureOk.self, forKey: ToyCodingKey("resourcePermitIssued"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`schemaVersion`, forKey: ToyCodingKey("schemaVersion"))
+        try container.encode(`storeId`, forKey: ToyCodingKey("storeId"))
+        try container.encode(`operationId`, forKey: ToyCodingKey("operationId"))
+        try container.encode(`requestId`, forKey: ToyCodingKey("requestId"))
+        try container.encode(`stackId`, forKey: ToyCodingKey("stackId"))
+        try container.encode(`generation`, forKey: ToyCodingKey("generation"))
+        try container.encode(`requestDigest`, forKey: ToyCodingKey("requestDigest"))
+        try container.encode(`acceptedAt`, forKey: ToyCodingKey("acceptedAt"))
+        try container.encode(`state`, forKey: ToyCodingKey("state"))
+        try container.encode(`errorCode`, forKey: ToyCodingKey("errorCode"))
+        try container.encode(`nativeExecutionPerformed`, forKey: ToyCodingKey("nativeExecutionPerformed"))
+        try container.encode(`resourcePermitIssued`, forKey: ToyCodingKey("resourcePermitIssued"))
+    }
+}
+
+public enum BootstrapOperationRecordV1SchemaVersion: String, Codable, CaseIterable, Sendable {
+    case `toyBootstrapOperationRecordV1` = "toy.bootstrap-operation-record.v1"
+}
+
+public enum BootstrapOperationRecordV1State: String, Codable, CaseIterable, Sendable {
+    case `blocked` = "blocked"
+}
+
+public enum BootstrapOperationRecordV1ErrorCode: String, Codable, CaseIterable, Sendable {
+    case `dEPENDENCYUNAVAILABLE` = "DEPENDENCY_UNAVAILABLE"
+}

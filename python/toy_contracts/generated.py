@@ -2590,3 +2590,63 @@ NativeSupervisorReceiptV1FailureValue = Literal[
     "TIMEOUT",
     "REAP_UNCONFIRMED",
 ]
+
+class BootstrapJournalOwnerV1(TypedDict):
+    schemaVersion: "BootstrapJournalOwnerV1SchemaVersion"
+    storeId: "UUID"
+    uid: int
+    gid: int
+    device: "UInt64String"
+    inode: "UInt64String"
+    createdAt: "Instant"
+
+BootstrapJournalOwnerV1SchemaVersion = Literal[
+    "toy.bootstrap-journal-owner.v1",
+]
+
+class BootstrapJournalStateV1(TypedDict):
+    schemaVersion: "BootstrapJournalStateV1SchemaVersion"
+    storeId: "UUID"
+    nextGeneration: "UInt64String"
+
+BootstrapJournalStateV1SchemaVersion = Literal[
+    "toy.bootstrap-journal-state.v1",
+]
+
+class BootstrapUpRequestV1(TypedDict):
+    schemaVersion: "BootstrapUpRequestV1SchemaVersion"
+    requestId: "UUID"
+    release: "Release"
+    world: "RegisteredTestWorldV1"
+    clock: "TestStackClockV1"
+    model: "TestStackModelV1"
+
+BootstrapUpRequestV1SchemaVersion = Literal[
+    "toy.bootstrap-up-request.v1",
+]
+
+class BootstrapOperationRecordV1(TypedDict):
+    schemaVersion: "BootstrapOperationRecordV1SchemaVersion"
+    storeId: "UUID"
+    operationId: "UUID"
+    requestId: "UUID"
+    stackId: "UUID"
+    generation: "UInt64String"
+    requestDigest: "Digest"
+    acceptedAt: "Instant"
+    state: "BootstrapOperationRecordV1State"
+    errorCode: "BootstrapOperationRecordV1ErrorCode"
+    nativeExecutionPerformed: "CliFailureOk"
+    resourcePermitIssued: "CliFailureOk"
+
+BootstrapOperationRecordV1SchemaVersion = Literal[
+    "toy.bootstrap-operation-record.v1",
+]
+
+BootstrapOperationRecordV1State = Literal[
+    "blocked",
+]
+
+BootstrapOperationRecordV1ErrorCode = Literal[
+    "DEPENDENCY_UNAVAILABLE",
+]

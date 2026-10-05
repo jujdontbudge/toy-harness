@@ -17,6 +17,14 @@
     {
       "url": "https://developer.apple.com/documentation/os/os_proc_available_memory",
       "finding": "Per-process memory-limit remainder, not physical host headroom; installed SDK declares this API unavailable on macOS."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/nodejs/node/v24.21.0/doc/api/process.md",
+      "finding": "The exact pinned runtime documents process.availableMemory() as stable and returning available bytes, delegating accounting to libuv; it is not the macOS percentage."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/nodejs/node/v24.21.0/deps/uv/src/unix/darwin.c",
+      "finding": "Pinned Node 24.21 Darwin uv_get_available_memory uses free_count + inactive_count + purgeable_count times page size; uv_get_free_memory uses free_count only. The available result includes reclaimable counters and is not a guarantee of allocation without compression or swap."
     }
   ],
   "installedHeaderReadbacks": [
@@ -62,5 +70,15 @@
     "Physical-RAM fit and exclusive shared heavy-work lease",
     "Real aggregate descendant capacity and pressure-loss teardown evidence"
   ],
-  "conclusion": "Existing percentages are read-only host observations. No stack or supported inference has been admitted; resource owner implementation remains absent."
+  "conclusion": "Existing percentages are read-only host observations. No stack or supported inference has been admitted; resource owner implementation remains absent.",
+  "pinnedRuntimeAccounting": {
+    "node": "24.21.0",
+    "availableAPI": "process.availableMemory",
+    "darwinAvailableFormula": "(free_count + inactive_count + purgeable_count) * pageSize",
+    "freeAPI": "os.freemem",
+    "darwinFreeFormula": "free_count * pageSize",
+    "availableAPIExecutedForAdmission": false,
+    "policySelected": false,
+    "requiredDecision": "Choose and verify a conservative byte policy with normal pressure, stable swap and the sealed aggregate ceiling plus margin; no percentage multiplication."
+  }
 }

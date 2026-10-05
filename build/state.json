@@ -2,7 +2,7 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-05T16:20:29.934Z",
+  "updatedAt": "2026-10-05T16:32:29.585Z",
   "phase": "R0 kitchen",
   "activeCard": "R0.K3",
   "cardCount": 83,
@@ -80,7 +80,9 @@
         "build/evidence/R0.K3/native-build.json",
         "build/evidence/R0.K3/preservation-readback.json",
         "build/evidence/R0.K3/resource-accounting-research.json",
-        "build/evidence/R0.K3/native-compile-recovery.json"
+        "build/evidence/R0.K3/native-compile-recovery.json",
+        "build/evidence/R0.K3/operation-journal.json",
+        "build/evidence/R0.K3/supervisor-review-corrections.json"
       ],
       "requiredATs": [
         "AT-cli-1",
@@ -107,19 +109,22 @@
           "currentSchemaCompatible": true
         },
         "ownerResult": {
-          "status": "COMPILED_OPS_RESULT_AND_PREREQUISITE_ONLY",
+          "status": "COMPILED_AND_CLI_VERIFIED_DURABLE_BLOCKED_REQUEST_IDENTITY",
           "publicInterface": "OpsTestStack.up/down",
           "nativeExecutionAvailable": false,
-          "durableOperationAdmissionAvailable": false,
-          "acceptanceComplete": false
+          "acceptanceComplete": false,
+          "durableBlockedOperationAdmissionAvailable": true,
+          "durableRuntimeOperationAdmissionAvailable": false
         },
         "nativeSupervisor": {
           "status": "COMPILED_NOT_EXECUTED",
           "protocol": "docs/adr/0013-native-supervisor-protocol.md",
           "publicExecutionAvailable": false,
           "resourcePermitAvailable": false,
-          "durableOperationAdmissionAvailable": false,
-          "acceptanceComplete": false
+          "acceptanceComplete": false,
+          "durableBlockedOperationAdmissionAvailable": true,
+          "durableRuntimeOperationAdmissionAvailable": false,
+          "reviewCorrections": "COMPILED_RUNTIME_PROOF_PENDING"
         }
       },
       "pendingConditions": [
@@ -135,9 +140,9 @@
       ],
       "lastVerification": {
         "evidence": "build/evidence/R0.K3/bootstrap.json",
-        "checks": 7,
-        "compiledPackedInvocations": 95,
-        "verdict": "PASS_OFFLINE_OPS_PREREQUISITE_AND_NATIVE_BUILD_SUBSETS",
+        "checks": 8,
+        "compiledPackedInvocations": 106,
+        "verdict": "PASS_BLOCKED_JOURNAL_OFFLINE_AND_NATIVE_COMPILE_SUBSETS",
         "acceptanceComplete": false,
         "receiptPrivacyPolicy": "VALIDATED_OUTPUT_ONLY_NO_ARGUMENTS"
       }
@@ -266,7 +271,8 @@
       "sourceRowHash": "f1a96d2fabbb1a47de62e6e58dccfe5e216282392a439b741003eba228e7c180",
       "dependsOn": "R0.04",
       "evidence": [
-        "build/evidence/R0.05/launcher-design.json"
+        "build/evidence/R0.05/launcher-design.json",
+        "build/evidence/R0.05/supervisor-preparation-review.json"
       ],
       "requiredATs": [
         "AT-attention-67",
@@ -284,12 +290,16 @@
         "AT-self-improvement-78"
       ],
       "preparation": {
-        "status": "DESIGN_ONLY",
+        "status": "INDEPENDENT_SOURCE_SECURITY_PREPARATION",
         "paths": [
           "docs/adr/0006-native-bootstrap-launcher.md",
           "build/evidence/R0.05/launcher-design.json"
         ],
-        "runtimeVerified": false
+        "runtimeVerified": false,
+        "sourceFindings": 2,
+        "sourceCorrectionsCompiled": true,
+        "runtimeFaultProof": false,
+        "acceptanceComplete": false
       }
     },
     "R0.06": {
@@ -8667,7 +8677,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Freeze stable private journal root, generated durable request/generation/resource projections and native owner transport; implement conservative real resource admission and owned Ops signing/launch/cleanup before first native execution through toy. Three-asset V2 preparation is current, but no binary has been App Sandbox signed or executed.",
+  "nextAction": "Freeze and implement conservative byte/pressure/stable-swap resource admission plus the sole heavy lease and externally owned whole-attempt native signing/launch/reconciliation. Durable blocked request identities are verified through toy; current native closure compiles, but no executable resource permit, App Sandbox signing or native execution is available.",
   "previousTurnClassification": "progress: current native supervisor compilation and independent R0.09 storage preparation",
   "failures": [
     {
@@ -8693,6 +8703,14 @@
       "status": "RESOLVED",
       "resolution": "Use typed SDK option sets and checked public SecCodeCopyStaticCode conversion; fresh full native build and digest readback pass",
       "evidence": "build/evidence/R0.K3/native-compile-recovery.json"
+    },
+    {
+      "id": "K3.journal-conflict-case-tuple-type",
+      "condition": "New conflict-test tuple widened to string | undefined under noUncheckedIndexedAccess; first K2 baseline rejected it",
+      "unchangedAttempts": 1,
+      "status": "RESOLVED",
+      "resolution": "Keep the finite conflict table as a const tuple; fresh complete K2 baseline and post-fixture checks pass",
+      "evidence": "build/evidence/R0.K2/attempts/2026-10-05T16-25-44-635Z-1ac98bd1-d57c-49ef-8834-eccd62b80555.json"
     }
   ],
   "specIndex": {
@@ -8712,12 +8730,12 @@
     "contractsSwiftSDK": "/Library/Developer/CommandLineTools/SDKs/MacOSX26.5.sdk"
   },
   "admission": {
-    "concurrentChildren": 1,
+    "concurrentChildren": 0,
     "maximumChildren": 1,
     "swapUsedMiB": 1503,
     "semanticStackAdmitted": false,
-    "observedAt": "2026-10-05T16:17:08Z",
-    "memorystatusPercentage": 60,
+    "observedAt": "2026-10-05T16:32:29.585Z",
+    "memorystatusPercentage": 56,
     "availableBytesVerified": false,
     "measurementEvidence": "build/evidence/R0.K3/resource-accounting-research.json"
   },
@@ -18858,16 +18876,17 @@
     "model": "gpt-6.1-sol",
     "reasoning": "xhigh",
     "ownedScope": "Independent R0.05 hard security preparation review; only supervisor-preparation-review.json",
-    "status": "running; R0.10 corrected inventory complete, all runtime/full ATs pending"
+    "status": "completed; both native source findings corrected and compiled, actual R0.05 denial acceptance pending"
   },
   "continuationAssessment": {
-    "generatedAt": "2026-10-05T16:20:29.934Z",
+    "generatedAt": "2026-10-05T16:32:29.585Z",
     "classification": "progress",
     "evidence": [
-      "build/evidence/R0.10/schema-preparation.json",
+      "build/evidence/R0.K3/operation-journal.json",
+      "build/evidence/R0.K3/supervisor-review-corrections.json",
       "build/evidence/R0.K3/native-build.json",
       "build/evidence/R0.K3/bootstrap.json"
     ],
-    "reason": "Corrected independent source/pin inventory integrated; exact B02 selection and ESLint transitive Ajv provenance confirmed. Future R0.05 hard security preparation review active. Native execution and whole AT acceptance remain pending."
+    "reason": "Real SQLite blocked-request identities and conflict/concurrency semantics verified by packed CLI; independent R0.05 findings repaired at type/protocol rung and compiled. All whole ATs and runtime gates remain pending."
   }
 }

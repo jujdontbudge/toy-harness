@@ -111,6 +111,23 @@ export const nativeSupervisorReceiptSchema = z.strictObject({
   signal: z.int().min(1).max(127).nullable(), stdoutBytes: z.int().min(0).max(12288), stderrBytes: z.null(), parentReaped: z.boolean(),
   completeDescendantCleanup: z.literal(false), ready: z.literal(false)
 });
+export const bootstrapJournalOwnerSchema = z.strictObject({
+  schemaVersion: z.literal("toy.bootstrap-journal-owner.v1"), storeId: uuidSchema,
+  uid: z.int().nonnegative(), gid: z.int().nonnegative(), device: uint64Schema, inode: uint64Schema, createdAt: instantSchema
+});
+export const bootstrapJournalStateSchema = z.strictObject({
+  schemaVersion: z.literal("toy.bootstrap-journal-state.v1"), storeId: uuidSchema, nextGeneration: uint64Schema
+});
+export const bootstrapUpRequestSchema = z.strictObject({
+  schemaVersion: z.literal("toy.bootstrap-up-request.v1"), requestId: uuidSchema,
+  release: releaseSchema, world: registeredTestWorldSchema, clock: testStackClockSchema, model: testStackModelSchema
+});
+export const bootstrapOperationRecordSchema = z.strictObject({
+  schemaVersion: z.literal("toy.bootstrap-operation-record.v1"), storeId: uuidSchema,
+  operationId: uuidSchema, requestId: uuidSchema, stackId: uuidSchema, generation: uint64Schema, requestDigest: digestSchema,
+  acceptedAt: instantSchema, state: z.literal("blocked"), errorCode: z.literal("DEPENDENCY_UNAVAILABLE"),
+  nativeExecutionPerformed: z.literal(false), resourcePermitIssued: z.literal(false)
+});
 export type RegisteredCliProbeIdV1 = z.infer<typeof registeredCliProbeIdSchema>;
 export type RegisteredTestCaseV1 = z.infer<typeof registeredTestCaseSchema>;
 export type ArtifactBindingV1 = z.infer<typeof artifactBindingSchema>;
@@ -138,6 +155,10 @@ export type NativeBuildManifestV2 = z.infer<typeof nativeBuildManifestV2Schema>;
 export type NativeSupervisorRequestV1 = z.infer<typeof nativeSupervisorRequestSchema>;
 export type NativeSignatureObservationV1 = z.infer<typeof nativeSignatureObservationSchema>;
 export type NativeSupervisorReceiptV1 = z.infer<typeof nativeSupervisorReceiptSchema>;
+export type BootstrapJournalOwnerV1 = z.infer<typeof bootstrapJournalOwnerSchema>;
+export type BootstrapJournalStateV1 = z.infer<typeof bootstrapJournalStateSchema>;
+export type BootstrapUpRequestV1 = z.infer<typeof bootstrapUpRequestSchema>;
+export type BootstrapOperationRecordV1 = z.infer<typeof bootstrapOperationRecordSchema>;
 export const testControlSchemaInventory = {
   RegisteredCliProbeIdV1: registeredCliProbeIdSchema, RegisteredTestWorldV1: registeredTestWorldSchema,
   RegisteredTestCaseV1: registeredTestCaseSchema, TestStackClockV1: testStackClockSchema, TestStackModelV1: testStackModelSchema,
@@ -153,5 +174,7 @@ export const testControlSchemaInventory = {
   NativeEntryReceiptV1: nativeEntryReceiptSchema, NativeBuildManifestV1: nativeBuildManifestSchema,
   NativeEntryReceiptV2: nativeEntryReceiptV2Schema, NativeBuildManifestV2: nativeBuildManifestV2Schema,
   NativeSupervisorRequestV1: nativeSupervisorRequestSchema, NativeSignatureObservationV1: nativeSignatureObservationSchema,
-  NativeSupervisorReceiptV1: nativeSupervisorReceiptSchema
+  NativeSupervisorReceiptV1: nativeSupervisorReceiptSchema,
+  BootstrapJournalOwnerV1: bootstrapJournalOwnerSchema, BootstrapJournalStateV1: bootstrapJournalStateSchema,
+  BootstrapUpRequestV1: bootstrapUpRequestSchema, BootstrapOperationRecordV1: bootstrapOperationRecordSchema
 };

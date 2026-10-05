@@ -132,11 +132,10 @@ private struct SupervisorObservation {
 
     mutating func recordWait(_ outcome: ChildWaitOutcome) {
         switch outcome {
-        case .exited(let status):
+        case .reaped(let status):
             parentReaped = true
-            let lowBits = status & 0x7f
-            if lowBits == 0 { exitCode = Int64((status >> 8) & 0xff) }
-            else if lowBits != 0x7f { signal = Int64(lowBits) }
+            exitCode = status.exitCode
+            signal = status.signal
         case .stillOwned, .unavailable:
             failure = .rEAPUNCONFIRMED
         }
@@ -300,9 +299,9 @@ private func supervise(request: NativeSupervisorRequestV1, supervisor: NativePro
         result.recordWait(terminateAndReap(parentPid))
     case .unavailable:
         result.failure = .rEAPUNCONFIRMED
-    case .exited(let status):
-        result.recordWait(.exited(status))
-        if status != 0 { result.failure = .eNTRYINVALID }
+    case .reaped(let status):
+        result.recordWait(.reaped(status))
+        if !status.successful { result.failure = .eNTRYINVALID }
     }
     if result.parentReaped {
         switch readFrame(from: outputReader, until: deadlineAfter(1_000_000_000)) {
@@ -321,8 +320,10 @@ private func supervise(request: NativeSupervisorRequestV1, supervisor: NativePro
 private struct BootstrapSupervisor {
     static func main() {
         _ = Darwin.signal(SIGPIPE, SIG_IGN)
+        let requestDeadline = deadlineAfter(5_000_000_000)
         guard CommandLine.arguments.count == 1, let supervisor = sampleSelfIdentity(),
-            case .frame(let bytes, _) = readFrame(from: 3, until: deadlineAfter(5_000_000_000)),
+            case .frame(let bytes, _) = readFrame(from: 3, until: requestDeadline),
+            case .endOfStream(0) = readFrame(from: 3, until: requestDeadline),
             let request = try? JSONDecoder().decode(NativeSupervisorRequestV1.self, from: bytes), validRequest(request),
             Darwin.close(3) == 0 else {
             _ = emit(Data("BOOTSTRAP_SUPERVISOR_INPUT_INVALID\n".utf8), to: STDERR_FILENO)

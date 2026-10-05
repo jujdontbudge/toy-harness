@@ -1,0 +1,149 @@
+{
+  "schemaVersion": "toy.bootstrap-operation-journal-evidence.v1",
+  "card": "R0.K3",
+  "generatedAt": "2026-10-05T16:31:38.820Z",
+  "acceptanceComplete": false,
+  "scope": "Compiled packed CLI against real caller-owned SQLite bootstrap journal; durable terminal-blocked identity subset only",
+  "command": [
+    "npm",
+    "run",
+    "check:cli-bootstrap"
+  ],
+  "route": "compiled-packed-cli-subprocess",
+  "receipt": "build/evidence/R0.K3/attempts/2026-10-05T16-29-39.077Z-5a75eb79-3413-433a-93d9-2a70c3d4fb07/receipts.json",
+  "receiptDigest": "82ff58f83280861df56e6b671897cff2f9ac41c45df6f288880a383b52771b6c",
+  "checks": 8,
+  "compiledPackedInvocations": 106,
+  "selectedReceipts": [
+    {
+      "check": "journal-blocked-initial",
+      "exitCode": 5,
+      "operation": {
+        "operationId": "bab9b7d7-149a-4d2c-9418-73294970bf31",
+        "state": "blocked",
+        "acceptedAt": "2026-10-05T16:29:51.281Z"
+      },
+      "stackId": "f9191186-c1af-4f79-8457-d5208969ae1b",
+      "errorCode": null
+    },
+    {
+      "check": "journal-blocked-normalized-retry",
+      "exitCode": 5,
+      "operation": {
+        "operationId": "bab9b7d7-149a-4d2c-9418-73294970bf31",
+        "state": "blocked",
+        "acceptedAt": "2026-10-05T16:29:51.281Z"
+      },
+      "stackId": "f9191186-c1af-4f79-8457-d5208969ae1b",
+      "errorCode": null
+    },
+    {
+      "check": "journal-blocked-uppercase-retry",
+      "exitCode": 5,
+      "operation": {
+        "operationId": "bab9b7d7-149a-4d2c-9418-73294970bf31",
+        "state": "blocked",
+        "acceptedAt": "2026-10-05T16:29:51.281Z"
+      },
+      "stackId": "f9191186-c1af-4f79-8457-d5208969ae1b",
+      "errorCode": null
+    },
+    {
+      "check": "journal-blocked-ambient-path-retry",
+      "exitCode": 5,
+      "operation": {
+        "operationId": "bab9b7d7-149a-4d2c-9418-73294970bf31",
+        "state": "blocked",
+        "acceptedAt": "2026-10-05T16:29:51.281Z"
+      },
+      "stackId": "f9191186-c1af-4f79-8457-d5208969ae1b",
+      "errorCode": null
+    },
+    {
+      "check": "journal-blocked-conflict---release",
+      "exitCode": 4,
+      "operation": null,
+      "stackId": null,
+      "errorCode": "CONFLICT"
+    },
+    {
+      "check": "journal-blocked-conflict---clock",
+      "exitCode": 4,
+      "operation": null,
+      "stackId": null,
+      "errorCode": "CONFLICT"
+    },
+    {
+      "check": "journal-blocked-conflict---model",
+      "exitCode": 4,
+      "operation": null,
+      "stackId": null,
+      "errorCode": "CONFLICT"
+    },
+    {
+      "check": "journal-concurrent-second",
+      "exitCode": 5,
+      "operation": {
+        "operationId": "500404c2-704b-4c6f-a110-5b08e3fd34aa",
+        "state": "blocked",
+        "acceptedAt": "2026-10-05T16:29:51.957Z"
+      },
+      "stackId": "6e289d4d-9477-49d7-8de7-93f04cf5232f",
+      "errorCode": null
+    },
+    {
+      "check": "journal-concurrent-first",
+      "exitCode": 5,
+      "operation": {
+        "operationId": "500404c2-704b-4c6f-a110-5b08e3fd34aa",
+        "state": "blocked",
+        "acceptedAt": "2026-10-05T16:29:51.957Z"
+      },
+      "stackId": "6e289d4d-9477-49d7-8de7-93f04cf5232f",
+      "errorCode": null
+    },
+    {
+      "check": "journal-unattested-down",
+      "exitCode": 5,
+      "operation": null,
+      "stackId": null,
+      "errorCode": "ATTESTATION_INVALID"
+    },
+    {
+      "check": "journal-blocked-retained-after-refusal",
+      "exitCode": 5,
+      "operation": {
+        "operationId": "bab9b7d7-149a-4d2c-9418-73294970bf31",
+        "state": "blocked",
+        "acceptedAt": "2026-10-05T16:29:51.281Z"
+      },
+      "stackId": "f9191186-c1af-4f79-8457-d5208969ae1b",
+      "errorCode": null
+    }
+  ],
+  "schemaDigest": "fa1a1ad51ecf568edbf94454dbb47829bae54ed894f373d9387cb8397eef478b",
+  "sourceHashes": {
+    "packages/ops/src/bootstrap-journal.ts": "fc266d517af503e64b665e8c966ed167443e846cb94b5cf85203d26a455d9bc3",
+    "packages/ops/src/public.ts": "130920067fb74a422d08c61b2c701e627a7afed8a92c9044893820143d71db0d",
+    "packages/contracts/src/test-control.ts": "ada677cd20a4b1c8cbeb04b234c9b681e0dbd18a95a993f455aa8457d1353939",
+    "tests/cli/bootstrap.cli.test.ts": "1766dba1deb4b40088951ae012b1cd9337e9da368d0c9a5f5f1553339a558b6c",
+    "docs/adr/0014-bootstrap-operation-journal.md": "b038c2f26731a7fd25edae6f729be96bb8487e53b010a70c5380a0b9fee5fc18"
+  },
+  "ownership": {
+    "actualCallerUid": 501,
+    "actualServiceIdentityVerified": false,
+    "rootSelection": "OS account database home plus fixed private bootstrap suffix; ambient paths ignored",
+    "sqliteDatabaseReal": true,
+    "internalCollaboratorsMocked": false
+  },
+  "nativeExecutionPerformed": false,
+  "resourcePermitIssued": false,
+  "runtimeStackAdmitted": false,
+  "wholeATVerdictsCreated": [],
+  "pending": [
+    "External OS fault matrix: symlink/unowned/corrupt/interrupted roots",
+    "Actual service UID and authenticated runtime generation admission",
+    "Conservative byte resource permit and exclusive heavy lease",
+    "Full signed native entry/denial/tree cleanup assertions"
+  ]
+}

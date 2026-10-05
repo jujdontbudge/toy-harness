@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
-import { spawnSync } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
+import type { SpawnSyncReturns } from "node:child_process";
 import { createHash, randomUUID } from "node:crypto";
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
@@ -19,8 +20,7 @@ const setup = (args: string[]): void => {
 };
 const canaries = new Set<string>();
 const receipts: { id: string; argumentCount: number; exitCode: number | null; stdoutBytes: number; stderrBytes: number; stdout: string | null; protocolValidated: boolean }[] = [];
-const invoke = (id: string, args: string[], exitCode: number) => {
-  const child = spawnSync(join(fixture, "node_modules/.bin/toy"), args, { cwd: fixture, encoding: "utf8", timeout: 30000, maxBuffer: 2 * 1024 * 1024 });
+const validateInvocation = (id: string, args: string[], exitCode: number, child: Pick<SpawnSyncReturns<string>, "stdout" | "stderr" | "status" | "error">) => {
   const receipt = { id, argumentCount: args.length, exitCode: child.status, stdoutBytes: Buffer.byteLength(child.stdout), stderrBytes: Buffer.byteLength(child.stderr), stdout: null, protocolValidated: false };
   receipts.push(receipt);
   assert.ok(child.error === undefined, "CLI process did not complete");
@@ -65,6 +65,26 @@ const invoke = (id: string, args: string[], exitCode: number) => {
   assert.ok(validatedReceipt);
   validatedReceipt.stdout = validatedOutput;
   return result;
+};
+const invoke = (id: string, args: string[], exitCode: number, environment?: NodeJS.ProcessEnv) => validateInvocation(id, args, exitCode,
+  spawnSync(join(fixture, "node_modules/.bin/toy"), args, { cwd: fixture, encoding: "utf8", timeout: 30000, maxBuffer: 2 * 1024 * 1024, ...(environment ? { env: environment } : {}) })
+);
+const invokeConcurrent = async (id: string, args: string[], exitCode: number) => {
+  const child = spawn(join(fixture, "node_modules/.bin/toy"), args, { cwd: fixture, stdio: ["ignore", "pipe", "pipe"] });
+  const stdout: Buffer[] = []; const stderr: Buffer[] = [];
+  let bytes = 0; let error: Error | undefined;
+  const timer = setTimeout(() => { error = new Error("CLI_TIMEOUT"); child.kill("SIGKILL"); }, 30000);
+  const collect = (target: Buffer[], chunk: Buffer): void => {
+    bytes += chunk.length;
+    if (bytes > 2 * 1024 * 1024) { error = new Error("CLI_OUTPUT_LIMIT"); child.kill("SIGKILL"); }
+    else target.push(chunk);
+  };
+  child.stdout.on("data", (chunk: Buffer) => collect(stdout, chunk));
+  child.stderr.on("data", (chunk: Buffer) => collect(stderr, chunk));
+  child.on("error", (failure) => { error = failure; });
+  const status = await new Promise<number | null>((resolveStatus) => { child.on("close", resolveStatus); });
+  clearTimeout(timer);
+  return validateInvocation(id, args, exitCode, { stdout: Buffer.concat(stdout).toString("utf8"), stderr: Buffer.concat(stderr).toString("utf8"), status, ...(error ? { error } : {}) });
 };
 
 try {
@@ -139,7 +159,7 @@ try {
       }
     });
     await suite.test("registered stack and probe schemas reject unregistered selectors before dispatch", () => {
-      const requestId = "550e8400-e29b-41d4-a716-446655440000";
+      const requestId = randomUUID();
       const testStack = ["--env", "test", "--stack", requestId];
       const invalid = [
         ["--env", "test", "stack", "up", "--release", "R0", "--request-id", requestId, "--world", "unknown-world", "--json"],
@@ -154,12 +174,54 @@ try {
       const probe = invoke("registered-probe-unavailable", [...testStack, "probe", "run", "AT-cli-4", "--request-id", requestId, "--case", "native-entry", "--json"], 5);
       assert.ok(probe && !probe.ok && probe.error.code === "DEPENDENCY_UNAVAILABLE");
       cliCommandSchemas["probe.run"].result.parse(probe);
-      const stack = invoke("registered-world-unavailable", ["--env", "test", "stack", "up", "--release", "R0", "--request-id", requestId, "--world", "r0-bootstrap", "--json"], 5);
-      assert.ok(stack && !stack.ok && stack.error.code === "DEPENDENCY_UNAVAILABLE");
+      const stack = invoke("registered-world-blocked", ["--env", "test", "stack", "up", "--release", "R0", "--request-id", requestId, "--world", "r0-bootstrap", "--json"], 5);
+      assert.ok(stack?.ok && stack.commandId === "stack.up" && stack.data.operation.state === "blocked");
+      assert.ok(stack.data.stackId);
+      assert.equal(stack.data.result, null);
       cliCommandSchemas["stack.up"].result.parse(stack);
       const down = invoke("unattested-stack-down", [...testStack, "stack", "down", "--request-id", requestId, "--json"], 5);
       assert.ok(down && !down.ok && down.error.module === "ops" && down.error.code === "ATTESTATION_INVALID");
       cliCommandSchemas["stack.down"].result.parse(down);
+    });
+    await suite.test("durable blocked stack intent survives retries, concurrent calls and ambient path changes", async () => {
+      const requestId = randomUUID();
+      const args = ["--env", "test", "stack", "up", "--release", "R0", "--request-id", requestId, "--json"];
+      const initial = invoke("journal-blocked-initial", args, 5);
+      assert.ok(initial?.ok && initial.commandId === "stack.up");
+      assert.equal(initial.data.operation.state, "blocked");
+      assert.equal(initial.data.result, null);
+      assert.ok(initial.data.stackId);
+      const retry = invoke("journal-blocked-normalized-retry", [...args, "--world", "r0-bootstrap", "--wait-ms", "120000"], 5);
+      assert.ok(retry?.ok && retry.commandId === "stack.up");
+      assert.deepEqual(retry.data, initial.data);
+      const uppercase = invoke("journal-blocked-uppercase-retry", args.map((arg) => arg === requestId ? requestId.toUpperCase() : arg), 5);
+      assert.ok(uppercase?.ok && uppercase.commandId === "stack.up");
+      assert.deepEqual(uppercase.data, initial.data);
+      const ambientHome = join(fixture, "unused-home");
+      const ambientTemporary = join(fixture, "unused-temporary");
+      const ambient = invoke("journal-blocked-ambient-path-retry", args, 5, { ...process.env, HOME: ambientHome, TMPDIR: ambientTemporary });
+      assert.ok(ambient?.ok && ambient.commandId === "stack.up");
+      assert.deepEqual(ambient.data, initial.data);
+      await assert.rejects(readFile(join(ambientHome, "Library/Application Support/ToyBootstrap/control/ops.db")));
+      await assert.rejects(readFile(join(ambientTemporary, "ops.db")));
+      for (const [flag, value] of [["--release", "R1"], ["--clock", "real"], ["--model", "supported"]] as const) {
+        const changed = flag === "--release" ? args.map((arg) => arg === "R0" ? value : arg) : [...args, flag, value];
+        const conflict = invoke("journal-blocked-conflict-" + flag, changed, 4);
+        assert.ok(conflict && !conflict.ok && conflict.error.code === "CONFLICT");
+      }
+      const concurrentId = randomUUID();
+      const concurrentArgs = args.map((arg) => arg === requestId ? concurrentId : arg);
+      const pair = await Promise.all([invokeConcurrent("journal-concurrent-first", concurrentArgs, 5), invokeConcurrent("journal-concurrent-second", concurrentArgs, 5)]);
+      const first = pair[0]; const second = pair[1];
+      assert.ok(first?.ok && first.commandId === "stack.up" && second?.ok && second.commandId === "stack.up");
+      assert.deepEqual(first.data, second.data);
+      assert.notEqual(first.data.operation.operationId, initial.data.operation.operationId);
+      assert.notEqual(first.data.stackId, initial.data.stackId);
+      const down = invoke("journal-unattested-down", ["--env", "test", "--stack", initial.data.stackId, "stack", "down", "--request-id", randomUUID(), "--json"], 5);
+      assert.ok(down && !down.ok && down.error.code === "ATTESTATION_INVALID");
+      const retained = invoke("journal-blocked-retained-after-refusal", args, 5);
+      assert.ok(retained?.ok && retained.commandId === "stack.up");
+      assert.deepEqual(retained.data, initial.data);
     });
     await suite.test("uninstalled status and doctor preserve incomplete inventory and fail closed", () => {
       for (const release of releaseSchema.options) {

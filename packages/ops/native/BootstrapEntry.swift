@@ -8,8 +8,22 @@ private let inheritedAcknowledgmentDescriptor: Int32 = 4
 private let childDeadlineNanoseconds: UInt64 = 5_000_000_000
 private let childAcknowledgment: UInt8 = 0xa5
 
+struct TerminalChildStatus {
+    private let rawStatus: Int32
+
+    init?(rawStatus: Int32) {
+        let lowBits = rawStatus & 0x7f
+        guard lowBits != 0x7f else { return nil }
+        self.rawStatus = rawStatus
+    }
+
+    var exitCode: Int64? { rawStatus & 0x7f == 0 ? Int64((rawStatus >> 8) & 0xff) : nil }
+    var signal: Int64? { rawStatus & 0x7f == 0 ? nil : Int64(rawStatus & 0x7f) }
+    var successful: Bool { exitCode == 0 }
+}
+
 enum ChildWaitOutcome {
-    case exited(Int32)
+    case reaped(TerminalChildStatus)
     case stillOwned
     case unavailable
 }
@@ -173,7 +187,7 @@ func waitForChild(_ child: pid_t, until deadline: UInt64) -> ChildWaitOutcome {
     var status: Int32 = 0
     while true {
         let result = waitpid(child, &status, WNOHANG)
-        if result == child { return .exited(status) }
+        if result == child, let terminal = TerminalChildStatus(rawStatus: status) { return .reaped(terminal) }
         if result < 0, errno == EINTR { continue }
         if result < 0 { return .unavailable }
         guard remainingMilliseconds(until: deadline) != nil else { return .stillOwned }
@@ -191,7 +205,7 @@ func waitForChild(_ child: pid_t, until deadline: UInt64) -> ChildWaitOutcome {
 @discardableResult
 func terminateAndReap(_ child: pid_t) -> ChildWaitOutcome {
     switch waitForChild(child, until: deadlineAfter(0)) {
-    case .exited(let status): return .exited(status)
+    case .reaped(let status): return .reaped(status)
     case .unavailable: return .unavailable
     case .stillOwned: break
     }
@@ -317,8 +331,9 @@ private func spawnChild(path: String, parent: NativeProcessIdentityV1) -> Native
     }
     ownedDescriptors.removeAll { $0 == parentWriteAcknowledgmentDescriptor }
     switch waitForChild(child, until: deadline) {
-    case .exited(let status):
-        return status == 0 ? reportedIdentity : nil
+    case .reaped(let status):
+        guard status.successful, case .endOfStream(0) = readFrame(from: parentReadDescriptor, until: deadlineAfter(1_000_000_000)) else { return nil }
+        return reportedIdentity
     case .unavailable:
         return nil
     case .stillOwned:

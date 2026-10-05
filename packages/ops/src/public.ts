@@ -8,6 +8,7 @@ import type {
   Result, TestStackDownInputV1, TestStackOperationV1, TestStackUpInputV1
 } from "@toy/contracts";
 export type { ModuleId } from "@toy/contracts";
+import { recordBlockedBootstrapUp } from "./bootstrap-journal.js";
 
 const unavailableSnapshot = (release: Release, context: OpsControlContextV1): ControlStatusV1 => {
   opsControlContextSchema.parse(context);
@@ -56,7 +57,7 @@ export const OpsTestStack = {
     }
     if (context.environment.kind !== "test") return Promise.resolve(unavailableStack("UNAUTHORIZED"));
     if (context.environment.stackId !== null) return Promise.resolve(unavailableStack("INVALID_INPUT"));
-    return Promise.resolve(unavailableStack("DEPENDENCY_UNAVAILABLE"));
+    return Promise.resolve(recordBlockedBootstrapUp(input, context.timeoutMs));
   },
   down(input: TestStackDownInputV1, context: OpsControlContextV1): Promise<Result<TestStackOperationV1>> {
     if (!testStackDownInputSchema.safeParse(input).success || !opsControlContextSchema.safeParse(context).success) {

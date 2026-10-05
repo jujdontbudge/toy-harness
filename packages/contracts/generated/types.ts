@@ -139,3 +139,7 @@ export type NativeBuildManifestV2 = z.infer<typeof schemaInventory.NativeBuildMa
 export type NativeSupervisorRequestV1 = z.infer<typeof schemaInventory.NativeSupervisorRequestV1>;
 export type NativeSignatureObservationV1 = z.infer<typeof schemaInventory.NativeSignatureObservationV1>;
 export type NativeSupervisorReceiptV1 = z.infer<typeof schemaInventory.NativeSupervisorReceiptV1>;
+export type BootstrapJournalOwnerV1 = z.infer<typeof schemaInventory.BootstrapJournalOwnerV1>;
+export type BootstrapJournalStateV1 = z.infer<typeof schemaInventory.BootstrapJournalStateV1>;
+export type BootstrapUpRequestV1 = z.infer<typeof schemaInventory.BootstrapUpRequestV1>;
+export type BootstrapOperationRecordV1 = z.infer<typeof schemaInventory.BootstrapOperationRecordV1>;

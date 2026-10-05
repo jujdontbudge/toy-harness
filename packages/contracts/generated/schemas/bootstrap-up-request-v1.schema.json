@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "toy.bootstrap-up-request.v1"
+    },
+    "requestId": {
+      "type": "string",
+      "minLength": 36,
+      "maxLength": 36,
+      "format": "uuid",
+      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    },
+    "release": {
+      "type": "string",
+      "enum": [
+        "R0",
+        "R1",
+        "R2",
+        "R3",
+        "R4",
+        "R5"
+      ]
+    },
+    "world": {
+      "type": "string",
+      "enum": [
+        "r0-bootstrap"
+      ]
+    },
+    "clock": {
+      "type": "string",
+      "enum": [
+        "fake",
+        "real"
+      ]
+    },
+    "model": {
+      "type": "string",
+      "enum": [
+        "fake",
+        "supported"
+      ]
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "requestId",
+    "release",
+    "world",
+    "clock",
+    "model"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:BootstrapUpRequestV1"
+}

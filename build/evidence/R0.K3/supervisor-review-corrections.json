@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "toy.bootstrap-supervisor-review-corrections.v1",
+  "generatedAt": "2026-10-05T16:31:38.820Z",
+  "card": "R0.K3",
+  "review": "build/evidence/R0.05/supervisor-preparation-review.json",
+  "reviewDigest": "ebe3f359d20a9ccb5a7588d44157ed3e25a722e5eedf2977feb3e40f31bf911d",
+  "acceptanceComplete": false,
+  "sourceCorrections": [
+    {
+      "id": "R005-SUP-01",
+      "rung": 1,
+      "status": "IMPLEMENTED_AND_COMPILED",
+      "change": "TerminalChildStatus excludes Darwin stop/continued low bits; reaped outcome requires that type. Nonterminal notifications retain ownership and deadline.",
+      "runtimeFaultProof": "PENDING_REGISTERED_CLI_OS_CASE"
+    },
+    {
+      "id": "R005-SUP-02",
+      "rung": 1,
+      "status": "IMPLEMENTED_AND_COMPILED",
+      "change": "Supervisor requires first bounded frame plus EOF with no trailing bytes under one deadline before signature/spawn; parent also checks child identity EOF after terminal reap.",
+      "runtimeFaultProof": "PENDING_REGISTERED_CLI_TRANSPORT_CASE"
+    }
+  ],
+  "sourceHashes": {
+    "packages/ops/native/BootstrapEntry.swift": "19e1616ae0528eba7b29787278282c0e8803b5542ac0f7c764cb662669fadbc2",
+    "packages/ops/native/BootstrapSupervisor.swift": "807a821bf0e4463188eb8468b672911bc9bfad6d6990dd962f2b3f610e477f22",
+    "docs/adr/0013-native-supervisor-protocol.md": "d8e2eb90507ea6cfff88ec0be7ac6f882479ac81bb11ae086b69e5c136c35bef"
+  },
+  "nativeBuildEvidence": "build/evidence/R0.K3/native-build.json",
+  "nativeBuildAttemptId": "2026-10-05T16-31-00.268Z-04349519-1b72-4d3c-9867-af6ea9ec6657",
+  "nativeManifestDigest": "8ae6e8947c0af8ebc88c55233806d6fe5b20e7687232a31447a89d594c0185a0",
+  "nativeExecutionPerformed": false,
+  "r0_05Implementation": "NOT_IMPLEMENTED",
+  "r0_05Acceptance": "PENDING",
+  "remainingGates": [
+    "Installed service identities and protected complete closure",
+    "External whole-attempt deadline and direct/descendant ownership recovery",
+    "Authenticated runtime journal/resource permit and heavy lease",
+    "Exact App Sandbox signing, native entry, denial and container isolation",
+    "Assigned-rung whole AT proof"
+  ]
+}
