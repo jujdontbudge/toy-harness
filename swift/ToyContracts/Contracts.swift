@@ -6113,3 +6113,116 @@ public struct NativeEntryReceiptV1: Codable, Sendable {
 public enum NativeEntryReceiptV1Protocol: String, Codable, CaseIterable, Sendable {
     case `toyBootstrapNativeV1` = "toy.bootstrap-native.v1"
 }
+
+public struct NativeBuildManifestV1: Codable, Sendable {
+    public let `schemaVersion`: NativeBuildManifestV1SchemaVersion
+    public let `generatedAt`: Instant
+    public let `schemaDigest`: Digest
+    public let `compilerVersion`: NativeBuildManifestV1CompilerVersion
+    public let `compilerDigest`: Digest
+    public let `sdk`: NativeBuildManifestV1Sdk
+    public let `sdkSettingsDigest`: Digest
+    public let `sourceDigests`: NativeBuildManifestV1SourceDigests
+    public let `artifacts`: NativeBuildManifestV1Artifacts
+    public init(`schemaVersion`: NativeBuildManifestV1SchemaVersion, `generatedAt`: Instant, `schemaDigest`: Digest, `compilerVersion`: NativeBuildManifestV1CompilerVersion, `compilerDigest`: Digest, `sdk`: NativeBuildManifestV1Sdk, `sdkSettingsDigest`: Digest, `sourceDigests`: NativeBuildManifestV1SourceDigests, `artifacts`: NativeBuildManifestV1Artifacts) {
+        self.`schemaVersion` = `schemaVersion`
+        self.`generatedAt` = `generatedAt`
+        self.`schemaDigest` = `schemaDigest`
+        self.`compilerVersion` = `compilerVersion`
+        self.`compilerDigest` = `compilerDigest`
+        self.`sdk` = `sdk`
+        self.`sdkSettingsDigest` = `sdkSettingsDigest`
+        self.`sourceDigests` = `sourceDigests`
+        self.`artifacts` = `artifacts`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["schemaVersion", "generatedAt", "schemaDigest", "compilerVersion", "compilerDigest", "sdk", "sdkSettingsDigest", "sourceDigests", "artifacts"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`schemaVersion` = try container.decode(NativeBuildManifestV1SchemaVersion.self, forKey: ToyCodingKey("schemaVersion"))
+        self.`generatedAt` = try container.decode(Instant.self, forKey: ToyCodingKey("generatedAt"))
+        self.`schemaDigest` = try container.decode(Digest.self, forKey: ToyCodingKey("schemaDigest"))
+        self.`compilerVersion` = try container.decode(NativeBuildManifestV1CompilerVersion.self, forKey: ToyCodingKey("compilerVersion"))
+        self.`compilerDigest` = try container.decode(Digest.self, forKey: ToyCodingKey("compilerDigest"))
+        self.`sdk` = try container.decode(NativeBuildManifestV1Sdk.self, forKey: ToyCodingKey("sdk"))
+        self.`sdkSettingsDigest` = try container.decode(Digest.self, forKey: ToyCodingKey("sdkSettingsDigest"))
+        self.`sourceDigests` = try container.decode(NativeBuildManifestV1SourceDigests.self, forKey: ToyCodingKey("sourceDigests"))
+        self.`artifacts` = try container.decode(NativeBuildManifestV1Artifacts.self, forKey: ToyCodingKey("artifacts"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`schemaVersion`, forKey: ToyCodingKey("schemaVersion"))
+        try container.encode(`generatedAt`, forKey: ToyCodingKey("generatedAt"))
+        try container.encode(`schemaDigest`, forKey: ToyCodingKey("schemaDigest"))
+        try container.encode(`compilerVersion`, forKey: ToyCodingKey("compilerVersion"))
+        try container.encode(`compilerDigest`, forKey: ToyCodingKey("compilerDigest"))
+        try container.encode(`sdk`, forKey: ToyCodingKey("sdk"))
+        try container.encode(`sdkSettingsDigest`, forKey: ToyCodingKey("sdkSettingsDigest"))
+        try container.encode(`sourceDigests`, forKey: ToyCodingKey("sourceDigests"))
+        try container.encode(`artifacts`, forKey: ToyCodingKey("artifacts"))
+    }
+}
+
+public enum NativeBuildManifestV1SchemaVersion: String, Codable, CaseIterable, Sendable {
+    case `toyBootstrapNativeBuildV1` = "toy.bootstrap-native-build.v1"
+}
+
+public enum NativeBuildManifestV1CompilerVersion: String, Codable, CaseIterable, Sendable {
+    case `value0` = "6.3.3"
+}
+
+public enum NativeBuildManifestV1Sdk: String, Codable, CaseIterable, Sendable {
+    case `macOSX265Sdk` = "MacOSX26.5.sdk"
+}
+
+public struct NativeBuildManifestV1SourceDigests: Codable, Sendable {
+    public let `contracts`: Digest
+    public let `entry`: Digest
+    public let `builder`: Digest
+    public init(`contracts`: Digest, `entry`: Digest, `builder`: Digest) {
+        self.`contracts` = `contracts`
+        self.`entry` = `entry`
+        self.`builder` = `builder`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["contracts", "entry", "builder"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`contracts` = try container.decode(Digest.self, forKey: ToyCodingKey("contracts"))
+        self.`entry` = try container.decode(Digest.self, forKey: ToyCodingKey("entry"))
+        self.`builder` = try container.decode(Digest.self, forKey: ToyCodingKey("builder"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`contracts`, forKey: ToyCodingKey("contracts"))
+        try container.encode(`entry`, forKey: ToyCodingKey("entry"))
+        try container.encode(`builder`, forKey: ToyCodingKey("builder"))
+    }
+}
+
+public struct NativeBuildManifestV1Artifacts: Codable, Sendable {
+    public let `parent`: Digest
+    public let `child`: Digest
+    public init(`parent`: Digest, `child`: Digest) {
+        self.`parent` = `parent`
+        self.`child` = `child`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["parent", "child"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`parent` = try container.decode(Digest.self, forKey: ToyCodingKey("parent"))
+        self.`child` = try container.decode(Digest.self, forKey: ToyCodingKey("child"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`parent`, forKey: ToyCodingKey("parent"))
+        try container.encode(`child`, forKey: ToyCodingKey("child"))
+    }
+}

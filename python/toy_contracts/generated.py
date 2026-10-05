@@ -2362,3 +2362,35 @@ class NativeEntryReceiptV1(TypedDict):
 NativeEntryReceiptV1Protocol = Literal[
     "toy.bootstrap-native.v1",
 ]
+
+class NativeBuildManifestV1(TypedDict):
+    schemaVersion: "NativeBuildManifestV1SchemaVersion"
+    generatedAt: "Instant"
+    schemaDigest: "Digest"
+    compilerVersion: "NativeBuildManifestV1CompilerVersion"
+    compilerDigest: "Digest"
+    sdk: "NativeBuildManifestV1Sdk"
+    sdkSettingsDigest: "Digest"
+    sourceDigests: "NativeBuildManifestV1SourceDigests"
+    artifacts: "NativeBuildManifestV1Artifacts"
+
+NativeBuildManifestV1SchemaVersion = Literal[
+    "toy.bootstrap-native-build.v1",
+]
+
+NativeBuildManifestV1CompilerVersion = Literal[
+    "6.3.3",
+]
+
+NativeBuildManifestV1Sdk = Literal[
+    "MacOSX26.5.sdk",
+]
+
+class NativeBuildManifestV1SourceDigests(TypedDict):
+    contracts: "Digest"
+    entry: "Digest"
+    builder: "Digest"
+
+class NativeBuildManifestV1Artifacts(TypedDict):
+    parent: "Digest"
+    child: "Digest"

@@ -128,3 +128,4 @@ export type RegisteredProbeInputV1 = z.infer<typeof schemaInventory.RegisteredPr
 export type RegisteredProbeShowInputV1 = z.infer<typeof schemaInventory.RegisteredProbeShowInputV1>;
 export type NativeProcessIdentityV1 = z.infer<typeof schemaInventory.NativeProcessIdentityV1>;
 export type NativeEntryReceiptV1 = z.infer<typeof schemaInventory.NativeEntryReceiptV1>;
+export type NativeBuildManifestV1 = z.infer<typeof schemaInventory.NativeBuildManifestV1>;

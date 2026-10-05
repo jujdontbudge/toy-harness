@@ -69,6 +69,12 @@ export const nativeEntryReceiptSchema = z.strictObject({
   protocol: z.literal("toy.bootstrap-native.v1"), parent: nativeProcessIdentitySchema, child: nativeProcessIdentitySchema.nullable(),
   entered: z.literal(true), inheritedChildEntered: z.boolean(), containerHomeReady: z.boolean()
 });
+export const nativeBuildManifestSchema = z.strictObject({
+  schemaVersion: z.literal("toy.bootstrap-native-build.v1"), generatedAt: instantSchema, schemaDigest: digestSchema,
+  compilerVersion: z.literal("6.3.3"), compilerDigest: digestSchema, sdk: z.literal("MacOSX26.5.sdk"), sdkSettingsDigest: digestSchema,
+  sourceDigests: z.strictObject({ contracts: digestSchema, entry: digestSchema, builder: digestSchema }),
+  artifacts: z.strictObject({ parent: digestSchema, child: digestSchema })
+});
 export type RegisteredCliProbeIdV1 = z.infer<typeof registeredCliProbeIdSchema>;
 export type RegisteredTestCaseV1 = z.infer<typeof registeredTestCaseSchema>;
 export type ArtifactBindingV1 = z.infer<typeof artifactBindingSchema>;
@@ -89,6 +95,7 @@ export type RegisteredProbeInputV1 = z.infer<typeof registeredProbeInputSchema>;
 export type RegisteredProbeShowInputV1 = z.infer<typeof registeredProbeShowInputSchema>;
 export type NativeProcessIdentityV1 = z.infer<typeof nativeProcessIdentitySchema>;
 export type NativeEntryReceiptV1 = z.infer<typeof nativeEntryReceiptSchema>;
+export type NativeBuildManifestV1 = z.infer<typeof nativeBuildManifestSchema>;
 export const testControlSchemaInventory = {
   RegisteredCliProbeIdV1: registeredCliProbeIdSchema, RegisteredTestWorldV1: registeredTestWorldSchema,
   RegisteredTestCaseV1: registeredTestCaseSchema, TestStackClockV1: testStackClockSchema, TestStackModelV1: testStackModelSchema,
@@ -100,5 +107,5 @@ export const testControlSchemaInventory = {
   TestClockFreezeInputV1: testClockFreezeInputSchema, TestClockResumeInputV1: testClockResumeInputSchema,
   TestClockAdvanceInputV1: testClockAdvanceInputSchema, RegisteredProbeInputV1: registeredProbeInputSchema,
   RegisteredProbeShowInputV1: registeredProbeShowInputSchema, NativeProcessIdentityV1: nativeProcessIdentitySchema,
-  NativeEntryReceiptV1: nativeEntryReceiptSchema
+  NativeEntryReceiptV1: nativeEntryReceiptSchema, NativeBuildManifestV1: nativeBuildManifestSchema
 };

@@ -13,7 +13,7 @@
   ],
   "scripts": {
     "build": "tsc -b",
-    "typecheck": "tsc -b --pretty false",
+    "typecheck": "tsc -b --pretty false && tsc -p scripts/tsconfig.json --pretty false",
     "boundaries": "depcruise --config .dependency-cruiser.cjs packages cli tests",
     "python:check": "pyright && .venv/bin/ruff check python && PYTHONPATH=python .venv/bin/lint-imports",
     "lint": "node scripts/run-eslint.mjs && node scripts/check-source-policy.mjs && .venv/bin/python scripts/check-python-policy.py && node scripts/check-contract-ownership.mjs && node scripts/check-contract-pin.mjs && node scripts/check-int-registry.mjs",
@@ -22,7 +22,8 @@
     "check": "npm run typecheck && node scripts/typecheck-tests.mjs && npm run boundaries && npm run python:check && npm run lint && npm run contracts:check",
     "check:k2": "node scripts/check-k2.mjs",
     "check:foundations": "node scripts/check-foundations.mjs",
-    "check:cli-bootstrap": "npm run build && node --test tests/cli/bootstrap.cli.test.ts"
+    "check:cli-bootstrap": "npm run build && node --test tests/cli/bootstrap.cli.test.ts",
+    "native:build": "npm run build && tsc -p scripts/tsconfig.json --pretty false && node scripts/build-native-bootstrap.mts"
   },
   "devDependencies": {
     "@types/node": "24.19.1",

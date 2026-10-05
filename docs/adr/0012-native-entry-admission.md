@@ -1,0 +1,39 @@
+# Bounded native entry through Ops
+
+Status: written next-step contract. Build preparation without admitted App Sandbox signing is in progress; this document admits no signature, native execution, ready stack or acceptance result.
+
+## Boundary
+
+The first native increment is a bounded feasibility operation behind existing `OpsTestStack.up`, reached through compiled `toy --env test stack up --release R0 --world r0-bootstrap`. It measures a fixed trusted parent and inherited child before any PostgreSQL, Node worker, provider, model or persistent controller is started. It accepts only the generated up input and server-derived context. No extra launch, signature, identity, endpoint, path, expectation or code argument is added to the CLI.
+
+Preparation compiles the two fixed files without an admitted App Sandbox signature from generated Contracts and the one native entry source using the existing pinned Swift/SDK. The generated manifest binds the exact builder, source, compiler, SDK settings and artifact bytes. Its Contracts source closure digest hashes an ordered sequence of checkout-relative paths, NUL separators and exact file bytes; entry/builder digests hash their single file bytes. The builder hashes inputs before and after compilation, rejecting drift, and preserves prior verified generations before replacement. A closed inventory and actual UID check refuse unowned or unexpected output. `native:build` compiles the new TypeScript builder with strict/index checks before execution; old JavaScript tooling remains a separately documented gap. It is not a signature or publisher release attestation. The runtime owner rejects absent, incomplete, drifted or incompatible preparation before allocation or exec. A compiler result is a static receipt only. The linker may add a default ad-hoc Mach-O signature; that is separate from the exact App Sandbox signing and Security validation required for admission.
+
+The owner first establishes a real resource permit and exclusive owned request record. Durable request identity assigns the stack and operation UUIDs; a same-input retry returns that operation, while changed input conflicts. The initial record precedes signing/spawn so cancellation or an OS abort can be reconciled. Control journals, bundles and permitted evidence stay in newly allocated owner-only temporary roots, with kernel ownership, no-symlink traversal and generation checks. Existing unowned paths are refused. The caller supplies no filesystem root or manifest bytes.
+
+Only a fixed per-stack bundle materialization is signed. Helpers are signed inside out with exactly App Sandbox plus inherit; the parent has exactly App Sandbox. Both retain hardened runtime and library validation. There is no network, JIT, Keychain, TCC, file-selection, app-group or temporary-exception grant. Each stack's bundle/signature association is immutable. Local ad-hoc signing uses no paid membership or profile.
+
+Codesign and native Security validation immediately precede exec and compare the exact parent/helper entitlement dictionaries, identifiers and expected artifact bytes. Native signing information is read only after successful validity checking. A CodeDirectory identifier and a SHA-256 artifact digest remain distinct types; a truncated code identifier cannot be presented as a full digest. Concurrent mutation or incomplete closure blocks exec. Static signature success does not imply sandbox enforcement.
+
+The fixed native entry source accepts no operation/path arguments. It records kernel PID, effective UID/GID and exact public birth seconds/microseconds, requires unchanged real/effective identity and spawns only its embedded fixed child through explicitly selected stdio, close-on-exec handling and a minimal environment. The future owner must close extraneous descriptors when spawning the parent. The entry exports the generated bounded identity receipt. The external owner independently correlates observed process identity and incarnation; target assertions alone do not attest identity or cleanup.
+
+Container work occurs only inside the fixed trusted sandbox helper, with bounded pipe export. The unsandboxed controller does not stage, traverse or delete a sandbox container. An OS-retained container or inaccessible cleanup readback remains explicitly retained/unresolved. No access entitlement is added to avoid an association or permission failure.
+
+## Result and failure semantics
+
+The public result remains exact `TestStackOperationV1`, using canonical Ops `OperationRef` and typed check/evidence/resource references. Ops' canonical `Result<T>` and `OpsError` are generated before the transport adapter is implemented. The CLI mechanically validates/unwraps that result and preserves its code, retryability, incident and durable metadata. It does not choose a verdict or scrape diagnostic text.
+
+Native entry is one required readiness cell. Every missing denial, container-isolation, private PostgreSQL, authorized persistent controller, resource and cleanup cell stays in the required denominator. The feasibility increment cannot emit `ready:true`, issue a replay/controller capability, mark a whole AT PASS, enable semantic inference or claim the actual service UID. A short native child is not the long-running stack controller. Persistent helpers remain forbidden until ADR 0010's external launchd supervision and recovery are admitted.
+
+A failed spawn records its permitted return status without inventing a PID. A successful spawn followed by missing entry records the process sample where available, exit/signal classification, stdout/stderr byte counts and absence of a validated frame. Raw argv, environment, stderr, malformed native output and full crash reports are not exported or archived. Optional crash evidence uses a strictly allowlisted projection and opaque artifact reference; system log/admin access is not a prerequisite. Missing cause remains unknown.
+
+Accepted work retains its operation/request identity across catchable interruption, timeout or owner restart. Teardown fences that generation and stops/removes only resources with matching independent ownership and incarnation proof. It cannot guess at a descendant, remove another app's container or kill a shared/production process. Unresolved ownership keeps `complete:false`; a safe receipt is retained before retry.
+
+## Proof order
+
+1. Build and validate exact prepared artifacts; retain manifest/source hashes and compiler evidence.
+2. Generate canonical owner result and fixed private journal/signature/process-readback projections, then compile the public Ops and CLI adapters.
+3. Execute one resource-admitted native entry attempt through `toy stack up`; retain signature, entry/identity or pre-entry failure, and reconciled cleanup receipts.
+4. Resolve any measured failure before adding denial cells, per-stack isolation, PostgreSQL AF_UNIX or persistent control. Extend the registered external OS fault cases through the same CLI interface.
+5. Re-review the resulting implementation and run the complete source-assigned AT matrix when its prerequisites exist. No lower-level private-function test or simulated service identity substitutes for these receipts.
+
+Source authority: CLI §§4.2–4.4, 5.7–5.7.1 and 6; Ops §§5 and 7; ADRs 0006 and 0010; primary Apple/SDK research in `build/evidence/R0.K3/native-entry-research.json`.

@@ -80,6 +80,7 @@ from toy_contracts.generated import (
     HealthState,
     Instant,
     ModuleId,
+    NativeBuildManifestV1,
     NativeEntryReceiptV1,
     NativeProcessIdentityV1,
     ObservationEvidenceRef,
@@ -255,4 +256,5 @@ __all__ = [
     "RegisteredProbeShowInputV1",
     "NativeProcessIdentityV1",
     "NativeEntryReceiptV1",
+    "NativeBuildManifestV1",
 ]
