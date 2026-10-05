@@ -322,7 +322,17 @@
             "DEPENDENCY_UNAVAILABLE",
             "ATTESTATION_INVALID",
             "INTERNAL_ERROR",
-            "OUTPUT_INVALID"
+            "OUTPUT_INVALID",
+            "CONFLICT",
+            "MEMORY_PRESSURE",
+            "DISK_PRESSURE",
+            "SECRET_UNAVAILABLE",
+            "SECRET_REVOKED",
+            "BACKUP_DESTINATION_MISSING",
+            "BACKUP_INCOMPLETE",
+            "INCOMPATIBLE_SCHEMA",
+            "ARTIFACT_MISMATCH",
+            "TIMEOUT"
           ]
         },
         "message": {
@@ -335,7 +345,17 @@
             "The required installed owner or launcher is unavailable.",
             "The environment attestation is missing or invalid.",
             "The command could not produce a valid result.",
-            "The owner response did not match the registered output schema."
+            "The owner response did not match the registered output schema.",
+            "The request conflicts with the recorded operation or artifact.",
+            "Measured memory admission does not permit this operation.",
+            "Measured disk admission does not permit this operation.",
+            "The required secret is unavailable to the authorized owner.",
+            "The required secret has been revoked.",
+            "The registered backup destination is unavailable.",
+            "The required backup evidence is incomplete.",
+            "The installed schema is incompatible with this operation.",
+            "The required artifact does not match its recorded identity.",
+            "The bounded owner operation timed out; reconcile its recorded state."
           ]
         },
         "retryable": {
@@ -422,6 +442,13 @@
         },
         "requiredInteraction": {
           "type": "null"
+        },
+        "incidentId": {
+          "type": "string",
+          "minLength": 36,
+          "maxLength": 36,
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
         }
       },
       "required": [

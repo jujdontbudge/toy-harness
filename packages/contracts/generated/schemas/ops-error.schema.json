@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "module": {
+      "type": "string",
+      "const": "ops"
+    },
+    "code": {
+      "type": "string",
+      "enum": [
+        "INVALID_INPUT",
+        "UNAUTHORIZED",
+        "CONFLICT",
+        "DEPENDENCY_UNAVAILABLE",
+        "MEMORY_PRESSURE",
+        "DISK_PRESSURE",
+        "SECRET_UNAVAILABLE",
+        "SECRET_REVOKED",
+        "BACKUP_DESTINATION_MISSING",
+        "BACKUP_INCOMPLETE",
+        "INCOMPATIBLE_SCHEMA",
+        "ARTIFACT_MISMATCH",
+        "ATTESTATION_INVALID",
+        "TIMEOUT"
+      ]
+    },
+    "retryable": {
+      "type": "boolean"
+    },
+    "incidentId": {
+      "type": "string",
+      "minLength": 36,
+      "maxLength": 36,
+      "format": "uuid",
+      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    },
+    "message": {
+      "type": "string",
+      "enum": [
+        "The invocation does not match the registered command schema.",
+        "The calling identity is not authorized for this operation.",
+        "The request conflicts with the recorded operation or artifact.",
+        "The required installed owner or launcher is unavailable.",
+        "Measured memory admission does not permit this operation.",
+        "Measured disk admission does not permit this operation.",
+        "The required secret is unavailable to the authorized owner.",
+        "The required secret has been revoked.",
+        "The registered backup destination is unavailable.",
+        "The required backup evidence is incomplete.",
+        "The installed schema is incompatible with this operation.",
+        "The required artifact does not match its recorded identity.",
+        "The environment attestation is missing or invalid.",
+        "The bounded owner operation timed out; reconcile its recorded state."
+      ]
+    }
+  },
+  "required": [
+    "module",
+    "code",
+    "retryable",
+    "message"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:OpsError"
+}

@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { digestSchema, instantSchema, releaseSchema, revisionSchema, uint64Schema, uuidSchema } from "./primitives.js";
 import { acceptanceStateSchema, checkViewSchema, evidenceLinksSchema, recordRefSchema } from "./control-evidence.js";
-import { cadenceCoverageSchema, operationRefSchema } from "./ops.js";
+import { cadenceCoverageSchema, operationRefSchema, opsResultSchema } from "./ops.js";
 import { registeredCliProbeInventory } from "./generated-probe-registry.js";
 
 export { registeredCliProbeInventory, acceptanceSourceDigest } from "./generated-probe-registry.js";
@@ -28,6 +28,7 @@ export const testStackViewSchema = z.strictObject({
 export const testStackOperationSchema = z.strictObject({
   operation: operationRefSchema, requestId: uuidSchema, stackId: uuidSchema.nullable(), result: testStackViewSchema.nullable(), links: evidenceLinksSchema
 });
+export const opsTestStackResultSchema = opsResultSchema(testStackOperationSchema);
 export const testClockStateSchema = z.strictObject({
   stackId: uuidSchema, revision: revisionSchema, virtualWall: instantSchema, awakeSeconds: uint64Schema, activeSeconds: uint64Schema,
   realMonotonicMs: uint64Schema, frozen: z.boolean(), pendingWorkRefs: z.array(recordRefSchema), coverage: cadenceCoverageSchema
@@ -81,6 +82,7 @@ export type ArtifactBindingV1 = z.infer<typeof artifactBindingSchema>;
 export type TestStackTeardownV1 = z.infer<typeof testStackTeardownSchema>;
 export type TestStackViewV1 = z.infer<typeof testStackViewSchema>;
 export type TestStackOperationV1 = z.infer<typeof testStackOperationSchema>;
+export type OpsTestStackResultV1 = z.infer<typeof opsTestStackResultSchema>;
 export type TestClockStateV1 = z.infer<typeof testClockStateSchema>;
 export type TestClockReceiptV1 = z.infer<typeof testClockReceiptSchema>;
 export type ClockAdvanceOperationV1 = z.infer<typeof clockAdvanceOperationSchema>;
@@ -100,7 +102,8 @@ export const testControlSchemaInventory = {
   RegisteredCliProbeIdV1: registeredCliProbeIdSchema, RegisteredTestWorldV1: registeredTestWorldSchema,
   RegisteredTestCaseV1: registeredTestCaseSchema, TestStackClockV1: testStackClockSchema, TestStackModelV1: testStackModelSchema,
   ElapsedDurationV1: elapsedDurationSchema, ArtifactBindingV1: artifactBindingSchema, TestStackTeardownV1: testStackTeardownSchema,
-  TestStackViewV1: testStackViewSchema, TestStackOperationV1: testStackOperationSchema, TestClockStateV1: testClockStateSchema,
+  TestStackViewV1: testStackViewSchema, TestStackOperationV1: testStackOperationSchema, OpsTestStackResultV1: opsTestStackResultSchema,
+  TestClockStateV1: testClockStateSchema,
   TestClockReceiptV1: testClockReceiptSchema, ClockAdvanceOperationV1: clockAdvanceOperationSchema,
   RegisteredProbeReportV1: registeredProbeReportSchema, RegisteredProbeOperationV1: registeredProbeOperationSchema,
   TestStackUpInputV1: testStackUpInputSchema, TestStackDownInputV1: testStackDownInputSchema,

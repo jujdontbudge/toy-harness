@@ -3,11 +3,11 @@ import { createHash, randomUUID } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { parseArgs } from "node:util";
 import {
-  cliCommandSchemas, cliCommonArguments, cliDeclarations, cliFailureSchema, cliResultSchema, cliSafeMessages,
-  digestSchema, instantSchema, schemaBundleDigest, uint64Schema, uuidSchema
+  cliCommandSchemas, cliCommonArguments, cliDeclarations, cliErrorMessages, cliFailureSchema, cliResultSchema,
+  digestSchema, instantSchema, opsErrorExitCodes, opsTestStackResultSchema, schemaBundleDigest, uint64Schema, uuidSchema
 } from "@toy/contracts";
-import type { CliArgument, CliCommandId, CliDeclaration, CliEnvironment, CliFailure, CliResult } from "@toy/contracts";
-import { OpsControlRead } from "@toy/ops/public";
+import type { CliArgument, CliCommandId, CliDeclaration, CliEnvironment, CliFailure, CliResult, OpsError, OpsTestStackResultV1 } from "@toy/contracts";
+import { OpsControlRead, OpsTestStack } from "@toy/ops/public";
 
 const args = process.argv.slice(2);
 const commonNames = new Set(cliCommonArguments.map((argument) => argument.name));
@@ -23,15 +23,14 @@ const envelope = (exitCode: number) => ({
   meta: { exitCode, releaseDigest: null, controlDigest: null, evaluatedAt: null, operationId: null, effectState: "none", recordRefs: [], evidence: [] }
 });
 const failure = (code: CliFailure["error"]["code"], exitCode: number, module: CliFailure["error"]["module"] = "contracts"): CliFailure => {
-  const messages = {
-    INVALID_INPUT: cliSafeMessages[0], TEST_ONLY: cliSafeMessages[1], UNAUTHORIZED: cliSafeMessages[2],
-    NOT_IMPLEMENTED: cliSafeMessages[3], DEPENDENCY_UNAVAILABLE: cliSafeMessages[4], ATTESTATION_INVALID: cliSafeMessages[5],
-    INTERNAL_ERROR: cliSafeMessages[6], OUTPUT_INVALID: cliSafeMessages[7]
-  };
   return cliFailureSchema.parse({ ...envelope(exitCode), ok: false, error: {
-    module, code, message: messages[code], retryable: false, retryAt: null, effectState: "none",
+    module, code, message: cliErrorMessages[code], retryable: false, retryAt: null, effectState: "none",
     currentRevision: null, currentGeneration: null, operationRef: null, requiredInteraction: null
   } });
+};
+const ownerFailure = (error: OpsError): CliFailure => {
+  const result = failure(error.code, opsErrorExitCodes[error.code], error.module);
+  return cliFailureSchema.parse({ ...result, error: { ...result.error, ...error } });
 };
 
 const validArgument = (argument: CliArgument, value: string | boolean): boolean => {
@@ -141,21 +140,43 @@ const run = async (): Promise<CliResult> => {
   if (kind === "test" && commandId !== "stack.up" && stack === undefined) return failure("INVALID_INPUT", 2);
   const requestId = values.get("request-id");
   const waitMs = Number(values.get("wait-ms") ?? 0);
-  if (commandId === "stack.up" && !cliCommandSchemas["stack.up"].input.safeParse({
+  const upInput = commandId === "stack.up" ? cliCommandSchemas["stack.up"].input.safeParse({
     release: values.get("release"), requestId, world: values.get("world"), clock: values.get("clock") ?? "fake", model: values.get("model") ?? "fake", waitMs
-  }).success) return failure("INVALID_INPUT", 2);
-  if (commandId === "stack.down" && !cliCommandSchemas["stack.down"].input.safeParse({ requestId, waitMs }).success) return failure("INVALID_INPUT", 2);
+  }) : null;
+  const downInput = commandId === "stack.down" ? cliCommandSchemas["stack.down"].input.safeParse({ requestId, waitMs }) : null;
+  if (upInput && !upInput.success || downInput && !downInput.success) return failure("INVALID_INPUT", 2);
   if (commandId === "clock.show" && !cliCommandSchemas["clock.show"].input.safeParse({}).success) return failure("INVALID_INPUT", 2);
   if (commandId === "clock.freeze" && !cliCommandSchemas["clock.freeze"].input.safeParse({ at: values.get("at"), requestId }).success) return failure("INVALID_INPUT", 2);
   if (commandId === "clock.resume" && !cliCommandSchemas["clock.resume"].input.safeParse({ requestId }).success) return failure("INVALID_INPUT", 2);
   if (commandId === "clock.advance" && !cliCommandSchemas["clock.advance"].input.safeParse({ by: values.get("by"), requestId, waitMs }).success) return failure("INVALID_INPUT", 2);
   if (commandId === "probe.run" && !cliCommandSchemas["probe.run"].input.safeParse({ probeId: operands[0], requestId, caseId: values.get("case") }).success) return failure("INVALID_INPUT", 2);
   if (commandId === "probe.show" && !cliCommandSchemas["probe.show"].input.safeParse({ operationId: operands[0] }).success) return failure("INVALID_INPUT", 2);
+  const context = { environment, invocationId, timeoutMs: Number(values.get("timeout-ms") ?? 30000) };
+  if (commandId === "stack.up" || commandId === "stack.down") {
+    let response: OpsTestStackResultV1;
+    if (commandId === "stack.up") {
+      if (!upInput?.success) return failure("INVALID_INPUT", 2);
+      response = await OpsTestStack.up(upInput.data, context);
+    } else {
+      if (!downInput?.success) return failure("INVALID_INPUT", 2);
+      response = await OpsTestStack.down(downInput.data, context);
+    }
+    const validated = opsTestStackResultSchema.safeParse(response);
+    if (!validated.success) return failure("OUTPUT_INVALID", 8, "ops");
+    if (!validated.data.ok) return ownerFailure(validated.data.error);
+    const data = validated.data.data;
+    const exitCode = data.result?.components.some((check) => check.state === "FAIL") ? 1
+      : data.operation.state === "queued" || data.operation.state === "running" || data.result?.ready ? 0 : 5;
+    if (data.stackId !== null) environment = { ...environment, stackId: data.stackId };
+    const base = envelope(exitCode);
+    return cliCommandSchemas[commandId].result.parse({
+      ...base, ok: true, data, meta: { ...base.meta, operationId: data.operation.operationId, recordRefs: data.links.recordRefs, evidence: data.links.observations }
+    });
+  }
   if (commandId === "status" || commandId === "doctor") {
     if (kind === "test") return failure("ATTESTATION_INVALID", 5, "ops");
     const selectedRelease = values.get("release");
     const releaseInput = selectedRelease === undefined ? {} : { release: selectedRelease };
-    const context = { environment, invocationId, timeoutMs: Number(values.get("timeout-ms") ?? 30000) };
     if (commandId === "status") {
       const data = await OpsControlRead.status(cliCommandSchemas.status.input.parse(releaseInput), context);
       const exitCode = data.probes.some((probe) => probe.state === "FAIL") ? 1 : data.complete ? 0 : 5;

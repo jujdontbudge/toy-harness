@@ -2,7 +2,7 @@ import { z } from "zod";
 import { digestSchema, instantSchema, moduleIdSchema, revisionSchema, uuidSchema } from "./primitives.js";
 import { cliAccessSchema, cliArgumentKindSchema, cliArgumentSchema, cliCommandIdSchema, cliDeclarationSchema, cliEnvironmentSchema } from "./cli-declarations.js";
 import { observationEvidenceRefSchema, recordRefSchema } from "./control-evidence.js";
-import { controlStatusInputSchema, controlStatusSchema, doctorInputSchema, doctorReportSchema } from "./ops.js";
+import { controlStatusInputSchema, controlStatusSchema, doctorInputSchema, doctorReportSchema, opsErrorCodeSchema, opsErrorMessages, opsSafeMessageSchema } from "./ops.js";
 import {
   clockAdvanceOperationSchema, registeredProbeInputSchema, registeredProbeOperationSchema, registeredProbeShowInputSchema,
   testClockAdvanceInputSchema, testClockFreezeInputSchema, testClockReceiptSchema, testClockResumeInputSchema, testClockShowInputSchema,
@@ -30,15 +30,27 @@ export const cliSafeMessageSchema = z.enum([
   "The required installed owner or launcher is unavailable.",
   "The environment attestation is missing or invalid.",
   "The command could not produce a valid result.",
-  "The owner response did not match the registered output schema."
+  "The owner response did not match the registered output schema.",
+  ...opsSafeMessageSchema.options
 ]);
 export const cliSafeMessages = cliSafeMessageSchema.options;
+export const cliErrorCodeSchema = z.enum([...new Set([
+  "INVALID_INPUT", "TEST_ONLY", "UNAUTHORIZED", "NOT_IMPLEMENTED", "DEPENDENCY_UNAVAILABLE", "ATTESTATION_INVALID", "INTERNAL_ERROR", "OUTPUT_INVALID",
+  ...opsErrorCodeSchema.options
+] as const)]);
+export const cliErrorMessages = {
+  ...opsErrorMessages,
+  TEST_ONLY: "This command requires a named disposable test environment.",
+  NOT_IMPLEMENTED: "The registered owner operation is not implemented.",
+  INTERNAL_ERROR: "The command could not produce a valid result.",
+  OUTPUT_INVALID: "The owner response did not match the registered output schema."
+} as const satisfies Record<z.infer<typeof cliErrorCodeSchema>, z.infer<typeof cliSafeMessageSchema>>;
 export const cliErrorSchema = z.strictObject({
   module: moduleIdSchema,
-  code: z.enum(["INVALID_INPUT", "TEST_ONLY", "UNAUTHORIZED", "NOT_IMPLEMENTED", "DEPENDENCY_UNAVAILABLE", "ATTESTATION_INVALID", "INTERNAL_ERROR", "OUTPUT_INVALID"]),
+  code: cliErrorCodeSchema,
   message: cliSafeMessageSchema, retryable: z.boolean(), retryAt: instantSchema.nullable(),
   effectState: z.enum(["none", "confirmed", "unknown"]), currentRevision: revisionSchema.nullable(), currentGeneration: revisionSchema.nullable(),
-  operationRef: recordRefSchema.nullable(), requiredInteraction: z.null()
+  operationRef: recordRefSchema.nullable(), requiredInteraction: z.null(), incidentId: uuidSchema.optional()
 });
 export const cliMetadataSchema = z.strictObject({
   exitCode: z.int().min(0).max(143), releaseDigest: digestSchema.nullable(), controlDigest: digestSchema.nullable(),
@@ -110,7 +122,7 @@ export const cliSchemaInventory = {
   CliAccess: cliAccessSchema, CliArgumentKind: cliArgumentKindSchema, CliCommandId: cliCommandIdSchema,
   CliArgument: cliArgumentSchema, CliDeclaration: cliDeclarationSchema,
   CliHelpV1: cliHelpSchema, CliVersionV1: cliVersionSchema, CliEnvironment: cliEnvironmentSchema,
-  CliSafeMessage: cliSafeMessageSchema, CliError: cliErrorSchema, CliMetadata: cliMetadataSchema, CliFailure: cliFailureSchema,
+  CliSafeMessage: cliSafeMessageSchema, CliErrorCode: cliErrorCodeSchema, CliError: cliErrorSchema, CliMetadata: cliMetadataSchema, CliFailure: cliFailureSchema,
   CliHelpResult: cliHelpResultSchema, CliVersionResult: cliVersionResultSchema, CliStatusResult: cliStatusResultSchema, CliDoctorResult: cliDoctorResultSchema, CliResult: cliResultSchema,
   CliHelpInput: cliHelpInputSchema, CliVersionInput: cliVersionInputSchema,
   CliHelpCommandResult: cliHelpCommandResultSchema, CliVersionCommandResult: cliVersionCommandResultSchema,

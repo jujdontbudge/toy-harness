@@ -157,6 +157,9 @@ try {
       const stack = invoke("registered-world-unavailable", ["--env", "test", "stack", "up", "--release", "R0", "--request-id", requestId, "--world", "r0-bootstrap", "--json"], 5);
       assert.ok(stack && !stack.ok && stack.error.code === "DEPENDENCY_UNAVAILABLE");
       cliCommandSchemas["stack.up"].result.parse(stack);
+      const down = invoke("unattested-stack-down", [...testStack, "stack", "down", "--request-id", requestId, "--json"], 5);
+      assert.ok(down && !down.ok && down.error.module === "ops" && down.error.code === "ATTESTATION_INVALID");
+      cliCommandSchemas["stack.down"].result.parse(down);
     });
     await suite.test("uninstalled status and doctor preserve incomplete inventory and fail closed", () => {
       for (const release of releaseSchema.options) {

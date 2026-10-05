@@ -207,6 +207,37 @@ CliSafeMessage = Literal[
     "The environment attestation is missing or invalid.",
     "The command could not produce a valid result.",
     "The owner response did not match the registered output schema.",
+    "The request conflicts with the recorded operation or artifact.",
+    "Measured memory admission does not permit this operation.",
+    "Measured disk admission does not permit this operation.",
+    "The required secret is unavailable to the authorized owner.",
+    "The required secret has been revoked.",
+    "The registered backup destination is unavailable.",
+    "The required backup evidence is incomplete.",
+    "The installed schema is incompatible with this operation.",
+    "The required artifact does not match its recorded identity.",
+    "The bounded owner operation timed out; reconcile its recorded state.",
+]
+
+CliErrorCode = Literal[
+    "INVALID_INPUT",
+    "TEST_ONLY",
+    "UNAUTHORIZED",
+    "NOT_IMPLEMENTED",
+    "DEPENDENCY_UNAVAILABLE",
+    "ATTESTATION_INVALID",
+    "INTERNAL_ERROR",
+    "OUTPUT_INVALID",
+    "CONFLICT",
+    "MEMORY_PRESSURE",
+    "DISK_PRESSURE",
+    "SECRET_UNAVAILABLE",
+    "SECRET_REVOKED",
+    "BACKUP_DESTINATION_MISSING",
+    "BACKUP_INCOMPLETE",
+    "INCOMPATIBLE_SCHEMA",
+    "ARTIFACT_MISMATCH",
+    "TIMEOUT",
 ]
 
 class CliError(TypedDict):
@@ -220,17 +251,7 @@ class CliError(TypedDict):
     currentGeneration: Optional["Revision"]
     operationRef: Optional["RecordRef"]
     requiredInteraction: None
-
-CliErrorCode = Literal[
-    "INVALID_INPUT",
-    "TEST_ONLY",
-    "UNAUTHORIZED",
-    "NOT_IMPLEMENTED",
-    "DEPENDENCY_UNAVAILABLE",
-    "ATTESTATION_INVALID",
-    "INTERNAL_ERROR",
-    "OUTPUT_INVALID",
-]
+    incidentId: NotRequired["UUID"]
 
 CliErrorEffectState = Literal[
     "none",
@@ -2289,6 +2310,51 @@ class OpsControlContextV1(TypedDict):
     invocationId: "UUID"
     timeoutMs: int
 
+OpsErrorCode = Literal[
+    "INVALID_INPUT",
+    "UNAUTHORIZED",
+    "CONFLICT",
+    "DEPENDENCY_UNAVAILABLE",
+    "MEMORY_PRESSURE",
+    "DISK_PRESSURE",
+    "SECRET_UNAVAILABLE",
+    "SECRET_REVOKED",
+    "BACKUP_DESTINATION_MISSING",
+    "BACKUP_INCOMPLETE",
+    "INCOMPATIBLE_SCHEMA",
+    "ARTIFACT_MISMATCH",
+    "ATTESTATION_INVALID",
+    "TIMEOUT",
+]
+
+OpsSafeMessage = Literal[
+    "The invocation does not match the registered command schema.",
+    "The calling identity is not authorized for this operation.",
+    "The request conflicts with the recorded operation or artifact.",
+    "The required installed owner or launcher is unavailable.",
+    "Measured memory admission does not permit this operation.",
+    "Measured disk admission does not permit this operation.",
+    "The required secret is unavailable to the authorized owner.",
+    "The required secret has been revoked.",
+    "The registered backup destination is unavailable.",
+    "The required backup evidence is incomplete.",
+    "The installed schema is incompatible with this operation.",
+    "The required artifact does not match its recorded identity.",
+    "The environment attestation is missing or invalid.",
+    "The bounded owner operation timed out; reconcile its recorded state.",
+]
+
+class OpsError(TypedDict):
+    module: "OpsErrorModule"
+    code: "OpsErrorCode"
+    retryable: bool
+    incidentId: NotRequired["UUID"]
+    message: "OpsSafeMessage"
+
+OpsErrorModule = Literal[
+    "ops",
+]
+
 QuietSource = Literal[
     "user_gn",
     "user_gm",
@@ -2310,6 +2376,19 @@ RegisteredTestCaseV1 = Literal[
 ]
 
 ElapsedDurationV1 = NewType("ElapsedDurationV1", str)
+
+OpsTestStackResultV1 = Union[
+    "OpsTestStackResultV1Variant0",
+    "OpsTestStackResultV1Variant1",
+]
+
+class OpsTestStackResultV1Variant0(TypedDict):
+    ok: "CliHelpResultOk"
+    data: "TestStackOperationV1"
+
+class OpsTestStackResultV1Variant1(TypedDict):
+    ok: "CliFailureOk"
+    error: "OpsError"
 
 class TestStackUpInputV1(TypedDict):
     release: "Release"

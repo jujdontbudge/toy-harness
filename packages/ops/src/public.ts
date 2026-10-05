@@ -1,8 +1,12 @@
 import {
   capabilityViewSchema, checkViewSchema, cliDeclarations, controlStatusInputSchema, controlStatusSchema, doctorInputSchema, doctorReportSchema,
-  evidenceLinksSchema, opsControlContextSchema, opsControlReadInventory, releaseSchema, secretReadinessSchema, serviceIdSchema
+  evidenceLinksSchema, opsControlContextSchema, opsControlReadInventory, opsErrorMessages, opsTestStackResultSchema,
+  releaseSchema, secretReadinessSchema, serviceIdSchema, testStackDownInputSchema, testStackUpInputSchema
 } from "@toy/contracts";
-import type { ControlStatusInputV1, ControlStatusV1, DoctorInputV1, DoctorReportV1, OpsControlContextV1, Release } from "@toy/contracts";
+import type {
+  ControlStatusInputV1, ControlStatusV1, DoctorInputV1, DoctorReportV1, OpsControlContextV1, OpsErrorCode, Release,
+  Result, TestStackDownInputV1, TestStackOperationV1, TestStackUpInputV1
+} from "@toy/contracts";
 export type { ModuleId } from "@toy/contracts";
 
 const unavailableSnapshot = (release: Release, context: OpsControlContextV1): ControlStatusV1 => {
@@ -38,5 +42,28 @@ export const OpsControlRead = {
       requiredRelease: snapshot.requiredRelease, deep: request.deep, checks: snapshot.probes, verdict: "NOT_IMPLEMENTED",
       complete: false, links: { recordRefs: [], observations: [], artifactDigests: [] }
     }));
+  }
+};
+
+const unavailableStack = (code: OpsErrorCode): Result<TestStackOperationV1> => opsTestStackResultSchema.parse({
+  ok: false, error: { module: "ops", code, retryable: false, message: opsErrorMessages[code] }
+});
+
+export const OpsTestStack = {
+  up(input: TestStackUpInputV1, context: OpsControlContextV1): Promise<Result<TestStackOperationV1>> {
+    if (!testStackUpInputSchema.safeParse(input).success || !opsControlContextSchema.safeParse(context).success) {
+      return Promise.resolve(unavailableStack("INVALID_INPUT"));
+    }
+    if (context.environment.kind !== "test") return Promise.resolve(unavailableStack("UNAUTHORIZED"));
+    if (context.environment.stackId !== null) return Promise.resolve(unavailableStack("INVALID_INPUT"));
+    return Promise.resolve(unavailableStack("DEPENDENCY_UNAVAILABLE"));
+  },
+  down(input: TestStackDownInputV1, context: OpsControlContextV1): Promise<Result<TestStackOperationV1>> {
+    if (!testStackDownInputSchema.safeParse(input).success || !opsControlContextSchema.safeParse(context).success) {
+      return Promise.resolve(unavailableStack("INVALID_INPUT"));
+    }
+    if (context.environment.kind !== "test") return Promise.resolve(unavailableStack("UNAUTHORIZED"));
+    if (context.environment.stackId === null) return Promise.resolve(unavailableStack("INVALID_INPUT"));
+    return Promise.resolve(unavailableStack("ATTESTATION_INVALID"));
   }
 };

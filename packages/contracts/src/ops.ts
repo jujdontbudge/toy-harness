@@ -69,6 +69,42 @@ export const opsControlContextSchema = z.strictObject({
 export const operationRefSchema = z.strictObject({
   operationId: uuidSchema, state: z.enum(["queued", "running", "succeeded", "failed", "blocked"]), acceptedAt: instantSchema
 });
+export const opsErrorCodeSchema = z.enum([
+  "INVALID_INPUT", "UNAUTHORIZED", "CONFLICT", "DEPENDENCY_UNAVAILABLE", "MEMORY_PRESSURE", "DISK_PRESSURE",
+  "SECRET_UNAVAILABLE", "SECRET_REVOKED", "BACKUP_DESTINATION_MISSING", "BACKUP_INCOMPLETE", "INCOMPATIBLE_SCHEMA",
+  "ARTIFACT_MISMATCH", "ATTESTATION_INVALID", "TIMEOUT"
+]);
+export const opsErrorMessages = {
+  INVALID_INPUT: "The invocation does not match the registered command schema.",
+  UNAUTHORIZED: "The calling identity is not authorized for this operation.",
+  CONFLICT: "The request conflicts with the recorded operation or artifact.",
+  DEPENDENCY_UNAVAILABLE: "The required installed owner or launcher is unavailable.",
+  MEMORY_PRESSURE: "Measured memory admission does not permit this operation.",
+  DISK_PRESSURE: "Measured disk admission does not permit this operation.",
+  SECRET_UNAVAILABLE: "The required secret is unavailable to the authorized owner.",
+  SECRET_REVOKED: "The required secret has been revoked.",
+  BACKUP_DESTINATION_MISSING: "The registered backup destination is unavailable.",
+  BACKUP_INCOMPLETE: "The required backup evidence is incomplete.",
+  INCOMPATIBLE_SCHEMA: "The installed schema is incompatible with this operation.",
+  ARTIFACT_MISMATCH: "The required artifact does not match its recorded identity.",
+  ATTESTATION_INVALID: "The environment attestation is missing or invalid.",
+  TIMEOUT: "The bounded owner operation timed out; reconcile its recorded state."
+} as const satisfies Record<z.infer<typeof opsErrorCodeSchema>, string>;
+export const opsErrorExitCodes = {
+  INVALID_INPUT: 2, UNAUTHORIZED: 3, CONFLICT: 4, DEPENDENCY_UNAVAILABLE: 5, MEMORY_PRESSURE: 6, DISK_PRESSURE: 6,
+  SECRET_UNAVAILABLE: 5, SECRET_REVOKED: 5, BACKUP_DESTINATION_MISSING: 5, BACKUP_INCOMPLETE: 5,
+  INCOMPATIBLE_SCHEMA: 4, ARTIFACT_MISMATCH: 4, ATTESTATION_INVALID: 5, TIMEOUT: 7
+} as const satisfies Record<z.infer<typeof opsErrorCodeSchema>, number>;
+export const opsSafeMessageSchema = z.enum(Object.values(opsErrorMessages));
+export const opsErrorSchema = z.strictObject({
+  module: z.literal("ops"), code: opsErrorCodeSchema, retryable: z.boolean(), incidentId: uuidSchema.optional(), message: opsSafeMessageSchema
+});
+export const opsResultSchema = <Schema extends z.ZodType>(data: Schema) => z.union([
+  z.strictObject({ ok: z.literal(true), data }), z.strictObject({ ok: z.literal(false), error: opsErrorSchema })
+]);
+export type OpsErrorCode = z.infer<typeof opsErrorCodeSchema>;
+export type OpsError = z.infer<typeof opsErrorSchema>;
+export type Result<Data> = { ok: true; data: Data } | { ok: false; error: OpsError };
 export type ServiceStatus = z.infer<typeof serviceStatusSchema>;
 export type BackupDestinationStatus = z.infer<typeof backupDestinationStatusSchema>;
 export type QuotaWindow = z.infer<typeof quotaWindowSchema>;
@@ -91,5 +127,5 @@ export const opsSchemaInventory = {
   CadenceSlotState: cadenceSlotStateSchema, CadencePeriodV1: cadencePeriodSchema, CadenceCoverageV1: cadenceCoverageSchema,
   DoctorReportV1: doctorReportSchema, ControlStatusInputV1: controlStatusInputSchema, DoctorInputV1: doctorInputSchema,
   SourceHealthV1: sourceHealthSchema, ControlStatusV1: controlStatusSchema, OpsControlContextV1: opsControlContextSchema,
-  OperationRef: operationRefSchema
+  OperationRef: operationRefSchema, OpsErrorCode: opsErrorCodeSchema, OpsSafeMessage: opsSafeMessageSchema, OpsError: opsErrorSchema
 };

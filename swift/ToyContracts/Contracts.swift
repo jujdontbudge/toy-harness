@@ -412,6 +412,37 @@ public enum CliSafeMessage: String, Codable, CaseIterable, Sendable {
     case `theEnvironmentAttestationIsMissingOrInvalid` = "The environment attestation is missing or invalid."
     case `theCommandCouldNotProduceAValidResult` = "The command could not produce a valid result."
     case `theOwnerResponseDidNotMatchTheRegisteredOutputSchema` = "The owner response did not match the registered output schema."
+    case `theRequestConflictsWithTheRecordedOperationOrArtifact` = "The request conflicts with the recorded operation or artifact."
+    case `measuredMemoryAdmissionDoesNotPermitThisOperation` = "Measured memory admission does not permit this operation."
+    case `measuredDiskAdmissionDoesNotPermitThisOperation` = "Measured disk admission does not permit this operation."
+    case `theRequiredSecretIsUnavailableToTheAuthorizedOwner` = "The required secret is unavailable to the authorized owner."
+    case `theRequiredSecretHasBeenRevoked` = "The required secret has been revoked."
+    case `theRegisteredBackupDestinationIsUnavailable` = "The registered backup destination is unavailable."
+    case `theRequiredBackupEvidenceIsIncomplete` = "The required backup evidence is incomplete."
+    case `theInstalledSchemaIsIncompatibleWithThisOperation` = "The installed schema is incompatible with this operation."
+    case `theRequiredArtifactDoesNotMatchItsRecordedIdentity` = "The required artifact does not match its recorded identity."
+    case `theBoundedOwnerOperationTimedOutReconcileItsRecordedState` = "The bounded owner operation timed out; reconcile its recorded state."
+}
+
+public enum CliErrorCode: String, Codable, CaseIterable, Sendable {
+    case `iNVALIDINPUT` = "INVALID_INPUT"
+    case `tESTONLY` = "TEST_ONLY"
+    case `uNAUTHORIZED` = "UNAUTHORIZED"
+    case `nOTIMPLEMENTED` = "NOT_IMPLEMENTED"
+    case `dEPENDENCYUNAVAILABLE` = "DEPENDENCY_UNAVAILABLE"
+    case `aTTESTATIONINVALID` = "ATTESTATION_INVALID"
+    case `iNTERNALERROR` = "INTERNAL_ERROR"
+    case `oUTPUTINVALID` = "OUTPUT_INVALID"
+    case `cONFLICT` = "CONFLICT"
+    case `mEMORYPRESSURE` = "MEMORY_PRESSURE"
+    case `dISKPRESSURE` = "DISK_PRESSURE"
+    case `sECRETUNAVAILABLE` = "SECRET_UNAVAILABLE"
+    case `sECRETREVOKED` = "SECRET_REVOKED"
+    case `bACKUPDESTINATIONMISSING` = "BACKUP_DESTINATION_MISSING"
+    case `bACKUPINCOMPLETE` = "BACKUP_INCOMPLETE"
+    case `iNCOMPATIBLESCHEMA` = "INCOMPATIBLE_SCHEMA"
+    case `aRTIFACTMISMATCH` = "ARTIFACT_MISMATCH"
+    case `tIMEOUT` = "TIMEOUT"
 }
 
 public struct CliError: Codable, Sendable {
@@ -425,7 +456,8 @@ public struct CliError: Codable, Sendable {
     public let `currentGeneration`: Optional<Revision>
     public let `operationRef`: Optional<RecordRef>
     public let `requiredInteraction`: ToyNull
-    public init(`module`: ModuleId, `code`: CliErrorCode, `message`: CliSafeMessage, `retryable`: Bool, `retryAt`: Optional<Instant>, `effectState`: CliErrorEffectState, `currentRevision`: Optional<Revision>, `currentGeneration`: Optional<Revision>, `operationRef`: Optional<RecordRef>, `requiredInteraction`: ToyNull) {
+    public let `incidentId`: Optional<UUID>
+    public init(`module`: ModuleId, `code`: CliErrorCode, `message`: CliSafeMessage, `retryable`: Bool, `retryAt`: Optional<Instant>, `effectState`: CliErrorEffectState, `currentRevision`: Optional<Revision>, `currentGeneration`: Optional<Revision>, `operationRef`: Optional<RecordRef>, `requiredInteraction`: ToyNull, `incidentId`: Optional<UUID>) {
         self.`module` = `module`
         self.`code` = `code`
         self.`message` = `message`
@@ -436,10 +468,11 @@ public struct CliError: Codable, Sendable {
         self.`currentGeneration` = `currentGeneration`
         self.`operationRef` = `operationRef`
         self.`requiredInteraction` = `requiredInteraction`
+        self.`incidentId` = `incidentId`
     }
     public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: ToyCodingKey.self)
-        let allowed: Set<String> = ["module", "code", "message", "retryable", "retryAt", "effectState", "currentRevision", "currentGeneration", "operationRef", "requiredInteraction"]
+        let allowed: Set<String> = ["module", "code", "message", "retryable", "retryAt", "effectState", "currentRevision", "currentGeneration", "operationRef", "requiredInteraction", "incidentId"]
         guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
             throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
         }
@@ -453,6 +486,7 @@ public struct CliError: Codable, Sendable {
         self.`currentGeneration` = try container.decode(Optional<Revision>.self, forKey: ToyCodingKey("currentGeneration"))
         self.`operationRef` = try container.decode(Optional<RecordRef>.self, forKey: ToyCodingKey("operationRef"))
         self.`requiredInteraction` = try container.decode(ToyNull.self, forKey: ToyCodingKey("requiredInteraction"))
+        self.`incidentId` = container.contains(ToyCodingKey("incidentId")) ? try container.decode(UUID.self, forKey: ToyCodingKey("incidentId")) : nil
     }
     public func encode(to encoder: any Encoder) throws {
         var container = encoder.container(keyedBy: ToyCodingKey.self)
@@ -466,18 +500,8 @@ public struct CliError: Codable, Sendable {
         try container.encode(`currentGeneration`, forKey: ToyCodingKey("currentGeneration"))
         try container.encode(`operationRef`, forKey: ToyCodingKey("operationRef"))
         try container.encode(`requiredInteraction`, forKey: ToyCodingKey("requiredInteraction"))
+        try container.encodeIfPresent(`incidentId`, forKey: ToyCodingKey("incidentId"))
     }
-}
-
-public enum CliErrorCode: String, Codable, CaseIterable, Sendable {
-    case `iNVALIDINPUT` = "INVALID_INPUT"
-    case `tESTONLY` = "TEST_ONLY"
-    case `uNAUTHORIZED` = "UNAUTHORIZED"
-    case `nOTIMPLEMENTED` = "NOT_IMPLEMENTED"
-    case `dEPENDENCYUNAVAILABLE` = "DEPENDENCY_UNAVAILABLE"
-    case `aTTESTATIONINVALID` = "ATTESTATION_INVALID"
-    case `iNTERNALERROR` = "INTERNAL_ERROR"
-    case `oUTPUTINVALID` = "OUTPUT_INVALID"
 }
 
 public enum CliErrorEffectState: String, Codable, CaseIterable, Sendable {
@@ -5833,6 +5857,79 @@ public struct OpsControlContextV1: Codable, Sendable {
     }
 }
 
+public enum OpsErrorCode: String, Codable, CaseIterable, Sendable {
+    case `iNVALIDINPUT` = "INVALID_INPUT"
+    case `uNAUTHORIZED` = "UNAUTHORIZED"
+    case `cONFLICT` = "CONFLICT"
+    case `dEPENDENCYUNAVAILABLE` = "DEPENDENCY_UNAVAILABLE"
+    case `mEMORYPRESSURE` = "MEMORY_PRESSURE"
+    case `dISKPRESSURE` = "DISK_PRESSURE"
+    case `sECRETUNAVAILABLE` = "SECRET_UNAVAILABLE"
+    case `sECRETREVOKED` = "SECRET_REVOKED"
+    case `bACKUPDESTINATIONMISSING` = "BACKUP_DESTINATION_MISSING"
+    case `bACKUPINCOMPLETE` = "BACKUP_INCOMPLETE"
+    case `iNCOMPATIBLESCHEMA` = "INCOMPATIBLE_SCHEMA"
+    case `aRTIFACTMISMATCH` = "ARTIFACT_MISMATCH"
+    case `aTTESTATIONINVALID` = "ATTESTATION_INVALID"
+    case `tIMEOUT` = "TIMEOUT"
+}
+
+public enum OpsSafeMessage: String, Codable, CaseIterable, Sendable {
+    case `theInvocationDoesNotMatchTheRegisteredCommandSchema` = "The invocation does not match the registered command schema."
+    case `theCallingIdentityIsNotAuthorizedForThisOperation` = "The calling identity is not authorized for this operation."
+    case `theRequestConflictsWithTheRecordedOperationOrArtifact` = "The request conflicts with the recorded operation or artifact."
+    case `theRequiredInstalledOwnerOrLauncherIsUnavailable` = "The required installed owner or launcher is unavailable."
+    case `measuredMemoryAdmissionDoesNotPermitThisOperation` = "Measured memory admission does not permit this operation."
+    case `measuredDiskAdmissionDoesNotPermitThisOperation` = "Measured disk admission does not permit this operation."
+    case `theRequiredSecretIsUnavailableToTheAuthorizedOwner` = "The required secret is unavailable to the authorized owner."
+    case `theRequiredSecretHasBeenRevoked` = "The required secret has been revoked."
+    case `theRegisteredBackupDestinationIsUnavailable` = "The registered backup destination is unavailable."
+    case `theRequiredBackupEvidenceIsIncomplete` = "The required backup evidence is incomplete."
+    case `theInstalledSchemaIsIncompatibleWithThisOperation` = "The installed schema is incompatible with this operation."
+    case `theRequiredArtifactDoesNotMatchItsRecordedIdentity` = "The required artifact does not match its recorded identity."
+    case `theEnvironmentAttestationIsMissingOrInvalid` = "The environment attestation is missing or invalid."
+    case `theBoundedOwnerOperationTimedOutReconcileItsRecordedState` = "The bounded owner operation timed out; reconcile its recorded state."
+}
+
+public struct OpsError: Codable, Sendable {
+    public let `module`: OpsErrorModule
+    public let `code`: OpsErrorCode
+    public let `retryable`: Bool
+    public let `incidentId`: Optional<UUID>
+    public let `message`: OpsSafeMessage
+    public init(`module`: OpsErrorModule, `code`: OpsErrorCode, `retryable`: Bool, `incidentId`: Optional<UUID>, `message`: OpsSafeMessage) {
+        self.`module` = `module`
+        self.`code` = `code`
+        self.`retryable` = `retryable`
+        self.`incidentId` = `incidentId`
+        self.`message` = `message`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["module", "code", "retryable", "incidentId", "message"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`module` = try container.decode(OpsErrorModule.self, forKey: ToyCodingKey("module"))
+        self.`code` = try container.decode(OpsErrorCode.self, forKey: ToyCodingKey("code"))
+        self.`retryable` = try container.decode(Bool.self, forKey: ToyCodingKey("retryable"))
+        self.`incidentId` = container.contains(ToyCodingKey("incidentId")) ? try container.decode(UUID.self, forKey: ToyCodingKey("incidentId")) : nil
+        self.`message` = try container.decode(OpsSafeMessage.self, forKey: ToyCodingKey("message"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`module`, forKey: ToyCodingKey("module"))
+        try container.encode(`code`, forKey: ToyCodingKey("code"))
+        try container.encode(`retryable`, forKey: ToyCodingKey("retryable"))
+        try container.encodeIfPresent(`incidentId`, forKey: ToyCodingKey("incidentId"))
+        try container.encode(`message`, forKey: ToyCodingKey("message"))
+    }
+}
+
+public enum OpsErrorModule: String, Codable, CaseIterable, Sendable {
+    case `ops` = "ops"
+}
+
 public enum QuietSource: String, Codable, CaseIterable, Sendable {
     case `userGn` = "user_gn"
     case `userGm` = "user_gm"
@@ -5854,6 +5951,70 @@ public enum RegisteredTestCaseV1: String, Codable, CaseIterable, Sendable {
 }
 
 public typealias ElapsedDurationV1 = String
+
+public enum OpsTestStackResultV1: Codable, Sendable {
+    case variant0(OpsTestStackResultV1Variant0)
+    case variant1(OpsTestStackResultV1Variant1)
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        if let value = try? container.decode(OpsTestStackResultV1Variant0.self) { self = .variant0(value); return }
+        if let value = try? container.decode(OpsTestStackResultV1Variant1.self) { self = .variant1(value); return }
+        throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "No contract union member matched."))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.singleValueContainer()
+        switch self {
+        case .variant0(let value): try container.encode(value)
+        case .variant1(let value): try container.encode(value)
+        }
+    }
+}
+
+public struct OpsTestStackResultV1Variant0: Codable, Sendable {
+    public let `ok`: CliHelpResultOk
+    public let `data`: TestStackOperationV1
+    public init(`ok`: CliHelpResultOk, `data`: TestStackOperationV1) {
+        self.`ok` = `ok`
+        self.`data` = `data`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["ok", "data"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`ok` = try container.decode(CliHelpResultOk.self, forKey: ToyCodingKey("ok"))
+        self.`data` = try container.decode(TestStackOperationV1.self, forKey: ToyCodingKey("data"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`ok`, forKey: ToyCodingKey("ok"))
+        try container.encode(`data`, forKey: ToyCodingKey("data"))
+    }
+}
+
+public struct OpsTestStackResultV1Variant1: Codable, Sendable {
+    public let `ok`: CliFailureOk
+    public let `error`: OpsError
+    public init(`ok`: CliFailureOk, `error`: OpsError) {
+        self.`ok` = `ok`
+        self.`error` = `error`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["ok", "error"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`ok` = try container.decode(CliFailureOk.self, forKey: ToyCodingKey("ok"))
+        self.`error` = try container.decode(OpsError.self, forKey: ToyCodingKey("error"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`ok`, forKey: ToyCodingKey("ok"))
+        try container.encode(`error`, forKey: ToyCodingKey("error"))
+    }
+}
 
 public struct TestStackUpInputV1: Codable, Sendable {
     public let `release`: Release
