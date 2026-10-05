@@ -7,7 +7,7 @@ const sourceRoots = ["packages", "cli", "plugins/toy", "behavior", "scripts", "t
 const sourceExtensions = new Set([".ts", ".tsx", ".mts", ".cts", ".js", ".jsx", ".mjs", ".cjs", ".py", ".swift"]);
 const selected = process.argv.slice(2).map((path) => resolve(root, path));
 const generatedManifest = JSON.parse(await readFile(resolve(root, "scripts/generated-artifacts.json"), "utf8"));
-const generatedFiles = new Set(generatedManifest.codeArtifacts);
+const generatedFiles = new Set([...generatedManifest.codeArtifacts, ...generatedManifest.deferredCodeArtifacts]);
 
 const walk = async (path) => {
   let entries;

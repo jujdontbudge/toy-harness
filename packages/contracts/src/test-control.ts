@@ -169,22 +169,20 @@ export const bootstrapJournalReadSchema = z.strictObject({
 });
 export const bootstrapResourceSampleSchema = z.strictObject({
   observedAt: instantSchema, monotonicNanoseconds: uint64Schema, physicalBytes: uint64Schema.nullable(),
-  freeBytes: uint64Schema.nullable(), processAvailableBytes: uint64Schema.nullable(),
-  pressure: z.enum(["normal", "warning", "critical", "unknown"]),
-  swapTotalBytes: uint64Schema.nullable(), swapUsedBytes: uint64Schema.nullable(), swapPageSize: uint64Schema.nullable()
+  pageSizeBytes: uint64Schema.nullable(), freeBytes: uint64Schema.nullable(), inactiveBytes: uint64Schema.nullable(),
+  purgeableBytes: uint64Schema.nullable(), speculativeBytes: uint64Schema.nullable(), availableBytes: uint64Schema.nullable(),
+  pressure: z.enum(["normal", "warning", "critical", "unknown"])
 });
 export const bootstrapResourceReasonSchema = z.enum([
-  "MEASUREMENT_UNAVAILABLE", "NORMAL_PRESSURE_REQUIRED", "STABLE_SWAP_REQUIRED", "AVAILABLE_MEMORY_TOO_LOW",
-  "PHYSICAL_RAM_FIT_REQUIRED", "HEAVY_WORK_OWNER_UNAVAILABLE", "AGGREGATE_ENFORCEMENT_UNAVAILABLE", "TIMEOUT"
+  "MEASUREMENT_UNAVAILABLE", "NORMAL_PRESSURE_REQUIRED", "AVAILABLE_MEMORY_TOO_LOW", "TIMEOUT"
 ]);
 export const bootstrapResourcePreflightSchema = z.strictObject({
-  schemaVersion: z.literal("toy.bootstrap-resource-preflight.v1"), measuredAt: instantSchema,
+  schemaVersion: z.literal("toy.bootstrap-resource-preflight.v2"), measuredAt: instantSchema,
   samples: z.array(bootstrapResourceSampleSchema).max(3), completeMeasurements: z.boolean(),
-  provisionalAggregateCeilingBytes: z.literal("1073741824"), marginBytes: z.literal("536870912"),
-  requiredFreeBytes: z.literal("1610612736"), minimumFreeBytes: uint64Schema.nullable(),
-  stabilityWindowNanoseconds: uint64Schema, maximumSwapGrowthBytes: uint64Schema.nullable(),
-  normalPressureObserved: z.boolean(), swapStable: z.boolean(), headroomSatisfied: z.boolean(), physicalFitSatisfied: z.boolean(),
-  reasons: z.array(bootstrapResourceReasonSchema), resourcePermitIssued: z.literal(false), admissionState: z.literal("blocked")
+  jobNeedBytes: uint64Schema, marginBytes: z.literal("536870912"),
+  requiredAvailableBytes: uint64Schema, minimumAvailableBytes: uint64Schema.nullable(),
+  normalPressureObserved: z.boolean(), headroomSatisfied: z.boolean(),
+  reasons: z.array(bootstrapResourceReasonSchema), resourcePermitIssued: z.literal(false), admissionState: z.enum(["admitted", "blocked"])
 });
 export type RegisteredCliProbeIdV1 = z.infer<typeof registeredCliProbeIdSchema>;
 export type RegisteredTestCaseV1 = z.infer<typeof registeredTestCaseSchema>;

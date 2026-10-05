@@ -46,15 +46,9 @@ export const OpsControlRead = {
       checks.push(inspectBootstrapJournal(context.timeoutMs - Number((process.hrtime.bigint() - started) / 1000000n)));
       const measured = await measureBootstrapResources(context.timeoutMs - Number((process.hrtime.bigint() - started) / 1000000n));
       checks.push(checkViewSchema.parse({
-        id: "bootstrap.resource-admission", owner: "ops", state: "BLOCKED", checkedAt: measured.measuredAt,
-        reasonCode: measured.reasons.join(","), nextCommandId: "stack.up", links: { recordRefs: [], observations: [], artifactDigests: [] },
-        prerequisite: JSON.stringify({
-          samples: measured.samples, completeMeasurements: measured.completeMeasurements, requiredFreeBytes: measured.requiredFreeBytes,
-          minimumFreeBytes: measured.minimumFreeBytes, stabilityWindowNanoseconds: measured.stabilityWindowNanoseconds,
-          maximumSwapGrowthBytes: measured.maximumSwapGrowthBytes, normalPressureObserved: measured.normalPressureObserved,
-          swapStable: measured.swapStable, headroomSatisfied: measured.headroomSatisfied, physicalFitSatisfied: measured.physicalFitSatisfied,
-          resourcePermitIssued: measured.resourcePermitIssued, admissionState: measured.admissionState
-        })
+        id: "bootstrap.resource-admission", owner: "ops", state: measured.admissionState === "admitted" ? "PASS" : "BLOCKED", checkedAt: measured.measuredAt,
+        reasonCode: measured.reasons.join(",") || "MEMORY_ADMITTED", nextCommandId: "stack.up", links: { recordRefs: [], observations: [], artifactDigests: [] },
+        prerequisite: JSON.stringify(measured)
       }));
     }
     return doctorReportSchema.parse({

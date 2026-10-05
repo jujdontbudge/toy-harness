@@ -2802,21 +2802,18 @@ class BootstrapResourceSampleV1(TypedDict):
     observedAt: "Instant"
     monotonicNanoseconds: "UInt64String"
     physicalBytes: Optional["UInt64String"]
+    pageSizeBytes: Optional["UInt64String"]
     freeBytes: Optional["UInt64String"]
-    processAvailableBytes: Optional["UInt64String"]
+    inactiveBytes: Optional["UInt64String"]
+    purgeableBytes: Optional["UInt64String"]
+    speculativeBytes: Optional["UInt64String"]
+    availableBytes: Optional["UInt64String"]
     pressure: "OpsStatusMemoryPressure"
-    swapTotalBytes: Optional["UInt64String"]
-    swapUsedBytes: Optional["UInt64String"]
-    swapPageSize: Optional["UInt64String"]
 
 BootstrapResourceReasonV1 = Literal[
     "MEASUREMENT_UNAVAILABLE",
     "NORMAL_PRESSURE_REQUIRED",
-    "STABLE_SWAP_REQUIRED",
     "AVAILABLE_MEMORY_TOO_LOW",
-    "PHYSICAL_RAM_FIT_REQUIRED",
-    "HEAVY_WORK_OWNER_UNAVAILABLE",
-    "AGGREGATE_ENFORCEMENT_UNAVAILABLE",
     "TIMEOUT",
 ]
 
@@ -2825,32 +2822,25 @@ class BootstrapResourcePreflightV1(TypedDict):
     measuredAt: "Instant"
     samples: list["BootstrapResourceSampleV1"]
     completeMeasurements: bool
-    provisionalAggregateCeilingBytes: "BootstrapResourcePreflightV1ProvisionalAggregateCeilingBytes"
+    jobNeedBytes: "UInt64String"
     marginBytes: "BootstrapResourcePreflightV1MarginBytes"
-    requiredFreeBytes: "BootstrapResourcePreflightV1RequiredFreeBytes"
-    minimumFreeBytes: Optional["UInt64String"]
-    stabilityWindowNanoseconds: "UInt64String"
-    maximumSwapGrowthBytes: Optional["UInt64String"]
+    requiredAvailableBytes: "UInt64String"
+    minimumAvailableBytes: Optional["UInt64String"]
     normalPressureObserved: bool
-    swapStable: bool
     headroomSatisfied: bool
-    physicalFitSatisfied: bool
     reasons: list["BootstrapResourceReasonV1"]
     resourcePermitIssued: "CliFailureOk"
-    admissionState: "BootstrapOperationRecordV1State"
+    admissionState: "BootstrapResourcePreflightV1AdmissionState"
 
 BootstrapResourcePreflightV1SchemaVersion = Literal[
-    "toy.bootstrap-resource-preflight.v1",
-]
-
-BootstrapResourcePreflightV1ProvisionalAggregateCeilingBytes = Literal[
-    "1073741824",
+    "toy.bootstrap-resource-preflight.v2",
 ]
 
 BootstrapResourcePreflightV1MarginBytes = Literal[
     "536870912",
 ]
 
-BootstrapResourcePreflightV1RequiredFreeBytes = Literal[
-    "1610612736",
+BootstrapResourcePreflightV1AdmissionState = Literal[
+    "admitted",
+    "blocked",
 ]

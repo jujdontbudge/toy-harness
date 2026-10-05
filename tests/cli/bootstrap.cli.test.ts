@@ -299,37 +299,24 @@ try {
         assert.equal(result.data.verdict, "NOT_IMPLEMENTED");
         assert.equal(result.data.checks.length, serviceIdSchema.options.length + 6 + Number(deep) * 2);
         assert.equal(result.data.checks.filter((check) => check.state === "NOT_IMPLEMENTED").length, serviceIdSchema.options.length + 6);
-        assert.ok(result.data.checks.every((check) => check.id === "bootstrap.journal" ? check.state === "PASS" : check.state !== "PASS" && check.links.recordRefs.length === 0));
+        assert.ok(result.data.checks.every((check) => ["bootstrap.journal", "bootstrap.resource-admission"].includes(check.id) ? check.state !== "FAIL" : check.state !== "PASS" && check.links.recordRefs.length === 0));
         if (deep) {
           const check = result.data.checks.find((entry) => entry.id === "bootstrap.resource-admission");
-          assert.ok(check?.prerequisite && check.reasonCode);
-          const summary: unknown = JSON.parse(check.prerequisite);
-          assert.ok(typeof summary === "object" && summary !== null && !Array.isArray(summary));
-          const measured = bootstrapResourcePreflightSchema.parse({
-            ...summary, schemaVersion: "toy.bootstrap-resource-preflight.v1", measuredAt: check.checkedAt,
-            provisionalAggregateCeilingBytes: "1073741824", marginBytes: "536870912", reasons: check.reasonCode.split(",")
-          });
-          assert.equal(check.state, "BLOCKED");
+          assert.ok(check?.prerequisite);
+          const measured = bootstrapResourcePreflightSchema.parse(JSON.parse(check.prerequisite));
           assert.equal(check.nextCommandId, "stack.up");
-          assert.equal(measured.samples.length, 3);
-          assert.ok(BigInt(measured.stabilityWindowNanoseconds) >= 1000000000n);
-          for (let index = 1; index < measured.samples.length; index++) {
-            const previous = measured.samples[index - 1]; const current = measured.samples[index];
-            assert.ok(previous && current);
-            assert.ok(BigInt(current.monotonicNanoseconds) - BigInt(previous.monotonicNanoseconds) >= 500000000n);
-          }
+          assert.equal(measured.samples.length, 1);
           assert.equal(measured.resourcePermitIssued, false);
-          assert.equal(measured.admissionState, "blocked");
-          assert.equal(measured.headroomSatisfied, measured.minimumFreeBytes !== null && BigInt(measured.minimumFreeBytes) >= BigInt(measured.requiredFreeBytes));
+          assert.equal(BigInt(measured.requiredAvailableBytes), BigInt(measured.jobNeedBytes) + 536870912n);
+          assert.equal(measured.headroomSatisfied, measured.minimumAvailableBytes !== null && BigInt(measured.minimumAvailableBytes) >= BigInt(measured.requiredAvailableBytes));
           assert.equal(measured.normalPressureObserved, measured.samples.every((sample) => sample.pressure === "normal"));
-          assert.equal(measured.swapStable, measured.maximumSwapGrowthBytes === "0");
-          assert.equal(measured.physicalFitSatisfied, measured.samples.every((sample) => {
-            if (sample.physicalBytes === null || sample.freeBytes === null) return false;
-            const physical = BigInt(sample.physicalBytes); const free = BigInt(sample.freeBytes);
-            return free <= physical && physical - free + BigInt(measured.requiredFreeBytes) <= physical;
-          }));
-          assert.ok(measured.reasons.includes("HEAVY_WORK_OWNER_UNAVAILABLE"));
-          assert.ok(measured.reasons.includes("AGGREGATE_ENFORCEMENT_UNAVAILABLE"));
+          for (const sample of measured.samples) {
+            if (sample.availableBytes === null) continue;
+            assert.ok(sample.freeBytes !== null && sample.inactiveBytes !== null && sample.purgeableBytes !== null && sample.speculativeBytes !== null);
+            assert.equal(BigInt(sample.availableBytes), BigInt(sample.freeBytes) + BigInt(sample.inactiveBytes) + BigInt(sample.purgeableBytes) + BigInt(sample.speculativeBytes));
+          }
+          assert.equal(measured.admissionState, measured.completeMeasurements && measured.normalPressureObserved && measured.headroomSatisfied ? "admitted" : "blocked");
+          assert.equal(check.state, measured.admissionState === "admitted" ? "PASS" : "BLOCKED");
         }
       }
       invoke("status-human", ["status"], 5);
@@ -337,24 +324,16 @@ try {
       const unattested = invoke("status-unattested-stack", ["--env", "test", "--stack", "550e8400-e29b-41d4-a716-446655440000", "status", "--json"], 5);
       assert.ok(unattested && !unattested.ok && unattested.error.code === "ATTESTATION_INVALID");
     });
-    await suite.test("deep doctor retains partial real-time resource measurements under a short deadline", () => {
+    await suite.test("deep doctor measures available pages within a bounded real-time deadline", () => {
       const started = process.hrtime.bigint();
       const result = invoke("doctor-resource-short-deadline", ["doctor", "--deep", "--timeout-ms", "1000", "--json"], 5);
       const elapsed = process.hrtime.bigint() - started;
       assert.ok(result?.ok && result.commandId === "doctor");
       const check = result.data.checks.find((entry) => entry.id === "bootstrap.resource-admission");
-      assert.ok(check?.prerequisite && check.reasonCode);
-      const summary: unknown = JSON.parse(check.prerequisite);
-      assert.ok(typeof summary === "object" && summary !== null && !Array.isArray(summary));
-      const measured = bootstrapResourcePreflightSchema.parse({
-        ...summary, schemaVersion: "toy.bootstrap-resource-preflight.v1", measuredAt: check.checkedAt,
-        provisionalAggregateCeilingBytes: "1073741824", marginBytes: "536870912", reasons: check.reasonCode.split(",")
-      });
-      assert.equal(check.state, "BLOCKED");
-      assert.equal(measured.completeMeasurements, false);
-      assert.ok(measured.samples.length < 3);
-      assert.ok(measured.reasons.includes("TIMEOUT"));
+      assert.ok(check?.prerequisite);
+      const measured = bootstrapResourcePreflightSchema.parse(JSON.parse(check.prerequisite));
       assert.equal(measured.resourcePermitIssued, false);
+      assert.equal(measured.admissionState, measured.reasons.length === 0 ? "admitted" : "blocked");
       assert.equal(result.data.complete, false);
       assert.ok(elapsed < 5000000000n);
     });
