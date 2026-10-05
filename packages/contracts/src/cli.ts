@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { digestSchema, instantSchema, moduleIdSchema, revisionSchema, uuidSchema } from "./public.js";
+import { digestSchema, instantSchema, moduleIdSchema, revisionSchema, uuidSchema } from "./primitives.js";
 
 export const releaseSchema = z.enum(["R0", "R1", "R2", "R3", "R4", "R5"]);
 export const cliAccessSchema = z.enum(["read", "guarded", "test", "engineering", "human"]);
@@ -19,10 +19,11 @@ export const cliDeclarationSchema = z.strictObject({
   operation: z.string().max(100),
   access: cliAccessSchema,
   firstRelease: releaseSchema,
-  implementation: z.literal("specified"),
-  ownerSchemas: z.literal("pending"),
+  implementation: z.enum(["specified", "built"]),
+  ownerSchemas: z.enum(["pending", "registered"]),
   inputSchemaId: z.string().regex(/^urn:toy:contracts:v1:CliInputV1:/),
   outputSchemaId: z.string().regex(/^urn:toy:contracts:v1:CliResultV1:/),
+  dataSchemaId: z.string().regex(/^urn:toy:contracts:v1:CliDataV1:/),
   featureIds: z.array(z.string()).min(1),
   requirementIds: z.array(z.string()).min(1),
   arguments: z.array(cliArgumentSchema).max(20)
@@ -42,14 +43,17 @@ const input = (): CliArgument => arg("input", "input", true);
 const range = (required: boolean): CliArgument[] => [arg("from", "Instant", required), arg("to", "Instant", required)];
 const release = (required = false): CliArgument => choice("release", releaseSchema.options, required);
 const declaration = <CommandId extends string>(commandId: CommandId, owner: CliDeclaration["owner"], operation: string, access: CliDeclaration["access"], firstRelease: CliDeclaration["firstRelease"], args: CliArgument[]) => cliDeclarationSchema.extend({ id: z.literal(commandId) }).parse({
-  id: commandId, owner, operation, access, firstRelease, implementation: "specified", ownerSchemas: "pending",
+  id: commandId, owner, operation, access, firstRelease,
+  implementation: ["help", "version"].includes(commandId) ? "built" : "specified",
+  ownerSchemas: ["help", "version"].includes(commandId) ? "registered" : "pending",
   inputSchemaId: `urn:toy:contracts:v1:CliInputV1:${commandId}`,
   outputSchemaId: `urn:toy:contracts:v1:CliResultV1:${commandId}`,
+  dataSchemaId: `urn:toy:contracts:v1:CliDataV1:${commandId}`,
   featureIds: [`control.${commandId}`], requirementIds: ["0.17"], arguments: args
 });
 
 export const cliDeclarations = [
-  declaration("help", "contracts", "CliHelpV1", "read", "R0", []),
+  declaration("help", "contracts", "CliHelpV1", "read", "R0", [arg("group", "registered", false, true)]),
   declaration("version", "contracts", "CliVersionV1", "read", "R0", []),
   declaration("status", "ops", "OpsControlRead.status", "read", "R0", [release()]),
   declaration("doctor", "ops", "OpsControlRead.doctor", "read", "R0", [release(), flag("deep")]),
@@ -161,11 +165,24 @@ export type CliEnvironment = z.infer<typeof cliEnvironmentSchema>;
 export type CliHelp = z.infer<typeof cliHelpSchema>;
 export type CliVersion = z.infer<typeof cliVersionSchema>;
 export type CliCommandId = z.infer<typeof cliCommandIdSchema>;
+export const cliHelpInputSchema = z.strictObject({ group: z.string().max(80).nullable() });
+export const cliVersionInputSchema = z.strictObject({});
+export const cliHelpCommandResultSchema = z.union([cliHelpResultSchema, cliFailureSchema.extend({ commandId: z.literal("help") })]);
+export const cliVersionCommandResultSchema = z.union([cliVersionResultSchema, cliFailureSchema.extend({ commandId: z.literal("version") })]);
+export const cliCommandSchemas = {
+  help: { input: cliHelpInputSchema, data: cliHelpSchema, result: cliHelpCommandResultSchema },
+  version: { input: cliVersionInputSchema, data: cliVersionSchema, result: cliVersionCommandResultSchema }
+};
+export type CliInputV1<C extends keyof typeof cliCommandSchemas> = z.infer<(typeof cliCommandSchemas)[C]["input"]>;
+export type CliDataV1<C extends keyof typeof cliCommandSchemas> = z.infer<(typeof cliCommandSchemas)[C]["data"]>;
+export type CliResultV1<C extends keyof typeof cliCommandSchemas> = z.infer<(typeof cliCommandSchemas)[C]["result"]>;
 
 export const cliSchemaInventory = {
   Release: releaseSchema, CliAccess: cliAccessSchema, CliArgumentKind: cliArgumentKindSchema, CliCommandId: cliCommandIdSchema,
   CliArgument: cliArgumentSchema, CliDeclaration: cliDeclarationSchema,
   CliHelpV1: cliHelpSchema, CliVersionV1: cliVersionSchema, CliEnvironment: cliEnvironmentSchema,
   CliSafeMessage: cliSafeMessageSchema, CliError: cliErrorSchema, CliMetadata: cliMetadataSchema, CliFailure: cliFailureSchema,
-  CliHelpResult: cliHelpResultSchema, CliVersionResult: cliVersionResultSchema, CliResult: cliResultSchema
+  CliHelpResult: cliHelpResultSchema, CliVersionResult: cliVersionResultSchema, CliResult: cliResultSchema,
+  CliHelpInput: cliHelpInputSchema, CliVersionInput: cliVersionInputSchema,
+  CliHelpCommandResult: cliHelpCommandResultSchema, CliVersionCommandResult: cliVersionCommandResultSchema
 };

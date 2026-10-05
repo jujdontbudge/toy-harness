@@ -72,5 +72,5 @@ if (failures.length > 0) {
   process.stderr.write(`${failures.join("\n")}\n`);
   process.exitCode = 1;
 } else {
-  process.stdout.write(`${registrations.size} registry-only INT entries match ${tests.length} internal test files\n`);
+  process.stdout.write(`${registrations.size} registry-only INT entries match ${internalIds.size} internal test files; ${tests.length} total test files declare a rung\n`);
 }

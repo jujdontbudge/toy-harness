@@ -1,0 +1,254 @@
+{
+  "record_kind": "R0.K4a-preparation",
+  "recorded_date": "2026-10-04",
+  "status": "PREPARATION_ONLY",
+  "scope": "Written interface and source-grounded reference plan for exactly four R0.K4a bootstrap references.",
+  "implementation_claim": false,
+  "references_verified": false,
+  "tests_run": false,
+  "runtime_probes_run": false,
+  "provider_calls_made": false,
+  "credentials_or_runtime_config_read": false,
+  "at_verdicts_recorded": [],
+  "files_written_by_this_preparation": [
+    "docs/adr/0004-bootstrap-reference-contracts.md",
+    "build/evidence/R0.K4a/preparation.json"
+  ],
+  "preparation_adr_sha256": "12e90fae38d99487d4af93350144dae473adc925a6b70223cad64ff98ef96eb1",
+  "explicit_not_implemented": [
+    "The four K4a references: Sources connector fixture, thin owner tool adapter, local toy-control SKILL.md, and disposable owner migration.",
+    "packages/sources/src/public.ts exports only ModuleId; SourceAdapter and Sources operations are not exported there.",
+    "packages/contracts/src/cli.ts is not re-exported from packages/contracts/src/public.ts.",
+    "cli/src/main.ts is the R0.K3 not-implemented stub in this captured source snapshot.",
+    "A compiled K3 toy CLI and its public stack/probe route.",
+    "The registered external fake-provider fixture and its K4a case manifest.",
+    "The toy_sources_status runtime adapter and generated plugin tool schema/registration.",
+    "The local skills/toy-control/SKILL.md and verified release skill-manifest entry.",
+    "The Obligations migration runner registration and disposable migration case."
+  ],
+  "source_grounded_plan": {
+    "bootstrap_exemption": "K1-K3 and only the four named feasibility-only K4a references; K4 must derive the four generators and close the exemptions before R0.01.",
+    "contract_precedence": "CONTRACTS.md, including Amendments, is authoritative for names. Its amendment list already includes toy-control and toy-gardener; this preparation adds no skill name.",
+    "canonical_cli_command_schemas": [
+      "CliInputV1<c>",
+      "CliDataV1<c>",
+      "CliResultV1<c>"
+    ],
+    "canonical_probe_schemas": [
+      "RegisteredProbeInputV1",
+      "RegisteredProbeOperationV1",
+      "RegisteredProbeReportV1"
+    ],
+    "cli_receipt_route": [
+      "toy --env test stack up --release R0 --request-id <UUID> --world <registered-world-id> --clock fake --model fake --json",
+      "toy --env test --stack <returned-stack-UUID> probe run <registered-AT-id> --request-id <UUID> --case <registered-case-id> --wait-ms 120000 --json",
+      "toy --env test --stack <returned-stack-UUID> probe show <returned-operation-UUID> --json",
+      "toy --env test --stack <returned-stack-UUID> stack down --request-id <UUID> --json"
+    ],
+    "cli_receipt_constraints": "Use the compiled K3 CLI, OpsTestStack, and sealed registered test case only. Missing owner or launcher yields NOT_IMPLEMENTED or DEPENDENCY_UNAVAILABLE (exit 5); it does not route to private helpers or direct database access.",
+    "planned_references": [
+      {
+        "pattern": "connector",
+        "status": "NOT_IMPLEMENTED",
+        "owner": "sources",
+        "contract_names": [
+          "SourceAdapter",
+          "AdapterContext",
+          "CapabilityManifest",
+          "ConnectionValidation",
+          "PartitionDefinition",
+          "SyncMode",
+          "AdapterPage",
+          "NormalizedSourceItem",
+          "CoverageWarning",
+          "RevocationReceipt",
+          "SyncReceipt",
+          "SourceStatus"
+        ],
+        "owner_operations": [
+          "Sources.sync(sourceId, {mode, requestId, budgetMs})",
+          "Sources.status(sourceId)"
+        ],
+        "planned_files": [
+          "packages/sources/src/adapters/k4a-reference.ts (proposed)",
+          "tests/fakes/sources/k4a-provider.ts (proposed external fake seam)",
+          "registered Sources test-world fixture (registry ID and path PENDING)"
+        ],
+        "registration": "One R0 feasibility-only read adapter with authKind none and a protected registered test-provider ID; no live provider, credential, network call, or activation.",
+        "public_receipt": "A registered CLI probe invokes Sources.sync and Sources.status. The owner receipt is SyncReceipt plus SourceStatus; the CLI receipt is RegisteredProbeOperationV1/RegisteredProbeReportV1. The R1 sources.sync.now leaf is not the K4a route.",
+        "probe_case_id": "PENDING protected registration"
+      },
+      {
+        "pattern": "tool",
+        "status": "NOT_IMPLEMENTED",
+        "owner": "sources",
+        "canonical_tool": "toy_sources_status",
+        "contract_names": [
+          "UUID",
+          "SourceStatus",
+          "SourceError",
+          "SourceHealthV1"
+        ],
+        "owner_operations": [
+          "Sources.inventory()",
+          "Sources.status(sourceId)"
+        ],
+        "planned_files": [
+          "python/toy_adapter/sources_tools.py (proposed checkout source)",
+          "schemas/sources_status.json under the existing Toy plugin artifact (generated target)"
+        ],
+        "registration": "One existing-plugin entry under plugin toy version 1.0.0 and native toolset toy. Reuse the declared input {source_ids?: UUID[], include_coverage?: boolean}, data {sources: SourceStatus[], checked_at: ISOInstant}, and common ok/data or ok/error envelope. No new canonical tool name, plugin, skill, or toolset.",
+        "public_receipt": "A registered CLI probe invokes the selected test transport and validates the generated schema/envelope against Sources.inventory or Sources.status. Its CLI output is RegisteredProbeOperationV1/RegisteredProbeReportV1. The Hermes profile path is not written by this preparation.",
+        "probe_case_id": "PENDING protected registration"
+      },
+      {
+        "pattern": "skill",
+        "status": "NOT_IMPLEMENTED",
+        "owner": "self-improvement",
+        "canonical_skill": "toy-control",
+        "version": "1.0.0",
+        "contract_names": [
+          "toy-control",
+          "FEATURE-MAP.md"
+        ],
+        "planned_files": [
+          "skills/toy-control/SKILL.md",
+          "skills/toy-control/FEATURE-MAP.md (existing; unchanged)"
+        ],
+        "registration": "One entry in the verified release skill manifest and generated runtime inventory. The manifest's repository file path remains PENDING the publisher owner interface.",
+        "public_receipt": "A registered CLI probe records the local SKILL.md digest and validates its declared metadata/fixed-command guidance. This is a source/static receipt only; it does not publish or load the skill.",
+        "probe_case_id": "PENDING protected registration"
+      },
+      {
+        "pattern": "migration",
+        "status": "NOT_IMPLEMENTED",
+        "owner": "obligations",
+        "canonical_migration_registry": "obligations.schema_migrations",
+        "owner_operations": [
+          "Obligations.capture(input, ctx)",
+          "Obligations.due(input, ctx)"
+        ],
+        "contract_names": [
+          "CaptureInput",
+          "DueInput",
+          "GeneratorInputV1",
+          "GeneratorPlanV1",
+          "GeneratorReceiptV1",
+          "EngineeringControl.generate"
+        ],
+        "planned_files": [
+          "packages/obligations/migrations/0001-k4a-reference.sql (proposed)",
+          "Obligations migration inventory registration (path and runner interface PENDING owner freeze)"
+        ],
+        "registration": "Owner, order, checksum, and compatibility metadata through the existing owner runner. Generator mode never applies this migration. Application is limited to the private test stack's disposable schema.",
+        "public_receipt": "A registered CLI probe drives the owner runner and checks persistence/rollback through Obligations public operations, then returns RegisteredProbeOperationV1/RegisteredProbeReportV1. No SQL assertion, production schema, or automatic down/delete path.",
+        "probe_case_id": "PENDING protected registration"
+      }
+    ],
+    "future_generator_receipt": "EngineeringControl.generate(GeneratorInputV1, ctx) returns GeneratorPlanV1 or GeneratorReceiptV1. The CLI's new.connector, new.tool, new.skill, and new.migration IDs are already represented by control.new.connector, control.new.tool, control.new.skill, and control.new.migration; no feature-map edit was made here.",
+    "upstream_pending_facts": [
+      "BUILD-PLAN R0.K4a depends on R0.K3 implementation availability and frozen owner interfaces.",
+      "AT-hermes-config-101 is pending its full K4 static assertion; AT-cli-7/8 are K4 map checks; this preparation assigns no result.",
+      "Full AT-cli-25-27 integrated runtime acceptance remains pending the release/rung specified in BUILD-PLAN and cli.md.",
+      "Actual identity and native launcher evidence for R0.04-05 is not gathered here; do not substitute a simulated UID.",
+      "The parent task supplied K2 commit c26e8f9 as available and the compound generator as pending; this was not independently checked with Git."
+    ]
+  },
+  "source_hashes_sha256": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "fc4ece59b08e8a302797f86d0865fd8eb3c5a5226792b0dd26cc1c1825555529",
+      "role": "binding repository instructions"
+    },
+    {
+      "path": "README.md",
+      "sha256": "0f896a5d53d4ed5d7218b002fccc6cf857b50e85e351357c5c7b6a82f48b30e2",
+      "role": "repository scope"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/README.md",
+      "sha256": "2c02bdb4d13abd198231446873eaacfe30177a97f66235158912fd2accd006f4",
+      "role": "spec index and precedence"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/PRINCIPLES.md",
+      "sha256": "828bd798692b9f0c2acf3f7d51d5a244ee54dfe5c3bd3e88488788c77e53368b",
+      "role": "binding principles, largest-interface rule"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/CONTRACTS.md",
+      "sha256": "ef4b5d18fe3a1adcf9eb28d55da734892795e103894210ed0aea61c911fd70f8",
+      "role": "canonical names and Amendments"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/BUILD-PLAN.md",
+      "sha256": "f35e7a18911b12e8c0b89130e3f62db4aa7344a80c7807ee164192fc70c36ad8",
+      "role": "R0.K4a scope, dependencies, acceptance state"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/cli.md",
+      "sha256": "3265ac589e8b64cfc67c0d89fe8e1aa7fd48ecec8c981aab8716262a9f50a22c",
+      "role": "CLI commands, schemas, registrations and receipt route"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/sources.md",
+      "sha256": "7caa4347326c27ed528e96106b729fd9f5d0ae3da69518302b519c98b0fa6645",
+      "role": "Sources interface, SourceAdapter seam and tool registration"
+    },
+    {
+      "path": "packages/sources/src/public.ts",
+      "sha256": "526a993a0f22b2d2176444178c414f42c768f462b82b16554caba0490f539d62",
+      "role": "current Sources export surface"
+    },
+    {
+      "path": "packages/contracts/src/public.ts",
+      "sha256": "2ef5aa47a68d233034cbf5ecd77a71cc93ec1dce4a7a8e676f3043cec84b4ef6",
+      "role": "current contracts export surface"
+    },
+    {
+      "path": "packages/contracts/src/cli.ts",
+      "sha256": "702775dfda90f58babfa8642fe0c6602d5c47f85b958441f739eb8ae6cbe3866",
+      "role": "captured CLI schema draft; not re-exported by current public.ts"
+    },
+    {
+      "path": "packages/contracts/package.json",
+      "sha256": "c7cb4a98f2764611d46d9f7eeb077b93d89e93c82b56038da75d6f6b20aa5221",
+      "role": "current @toy/contracts package boundary"
+    },
+    {
+      "path": "cli/src/main.ts",
+      "sha256": "b80f6efd606e199e6c3288cbefbc90077dd3d1328ec21207763ec42061abcd4b",
+      "role": "captured R0.K3 CLI entry stub"
+    },
+    {
+      "path": "cli/package.json",
+      "sha256": "8d3c9db8b6cb2edbf5d212695131c08ea04115d38b3fa389b74b1d1c8cca2ae7",
+      "role": "current CLI package boundary"
+    },
+    {
+      "path": "python/toy_adapter/public.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "role": "current empty Python adapter public module"
+    },
+    {
+      "path": "packages/hermes/src/public.ts",
+      "sha256": "526a993a0f22b2d2176444178c414f42c768f462b82b16554caba0490f539d62",
+      "role": "current Hermes package export surface"
+    },
+    {
+      "path": "skills/toy-control/FEATURE-MAP.md",
+      "sha256": "74c2ce8abb63ef6b1780d1da9ea69f27cb1b3728bcd74a8ce349ff21d1742710",
+      "role": "current map with command declarations; read only"
+    },
+    {
+      "path": "/Users/johansardar/.codex/plugins/cache/openai-curated-remote/get-fable/1.5.1/skills/fable-discover/SKILL.md",
+      "sha256": "1e145f16f5e1092d6d2bc5949c0265182bde2a3700ad6e0b43066678ce9f9922",
+      "role": "read-only discovery procedure used for evidence capture"
+    }
+  ],
+  "evidence_boundary": "This record proves only which documents and source snapshots informed a written plan. It is not a CLI receipt, compiler result, runtime trace, test result, AT verdict, identity result, launcher result, provider result, K4a completion, or K4a availability claim.",
+  "parentIntegrationNote": {
+    "recordedAt": "2026-10-05T03:30:55.580Z",
+    "scope": "Historical source hashes retained; parent K3 now exports CLI schemas and offline executable. Owner stack/probe paths and K4a references remain pending."
+  }
+}

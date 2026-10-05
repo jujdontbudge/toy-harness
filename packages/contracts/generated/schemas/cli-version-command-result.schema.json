@@ -1,0 +1,581 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "anyOf": [
+    {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "type": "string",
+          "const": "toy.cli.v1"
+        },
+        "commandId": {
+          "type": "string",
+          "const": "version"
+        },
+        "invocationId": {
+          "type": "string",
+          "minLength": 36,
+          "maxLength": 36,
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "generatedAt": {
+          "type": "string",
+          "minLength": 24,
+          "maxLength": 24,
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+        },
+        "cliVersion": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "contractsVersion": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "schemaDigest": {
+          "type": "string",
+          "minLength": 64,
+          "maxLength": 64,
+          "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+        },
+        "environment": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "prod",
+                "test"
+              ]
+            },
+            "instanceId": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 36,
+                  "maxLength": 36,
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "stackId": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 36,
+                  "maxLength": 36,
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "kind",
+            "instanceId",
+            "stackId"
+          ],
+          "additionalProperties": false
+        },
+        "meta": {
+          "type": "object",
+          "properties": {
+            "exitCode": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 143
+            },
+            "releaseDigest": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 64,
+                  "maxLength": 64,
+                  "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "controlDigest": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 64,
+                  "maxLength": 64,
+                  "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "evaluatedAt": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 24,
+                  "maxLength": 24,
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "operationId": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 36,
+                  "maxLength": 36,
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "effectState": {
+              "type": "string",
+              "enum": [
+                "none",
+                "confirmed",
+                "unknown"
+              ]
+            },
+            "recordRefs": {
+              "type": "array",
+              "items": {
+                "not": {}
+              }
+            },
+            "evidence": {
+              "type": "array",
+              "items": {
+                "not": {}
+              }
+            }
+          },
+          "required": [
+            "exitCode",
+            "releaseDigest",
+            "controlDigest",
+            "evaluatedAt",
+            "operationId",
+            "effectState",
+            "recordRefs",
+            "evidence"
+          ],
+          "additionalProperties": false
+        },
+        "ok": {
+          "type": "boolean",
+          "const": true
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "cliVersion": {
+              "type": "string",
+              "const": "1.0.0"
+            },
+            "contractsVersion": {
+              "type": "string",
+              "const": "1.0.0"
+            },
+            "executableDigest": {
+              "type": "string",
+              "minLength": 64,
+              "maxLength": 64,
+              "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+            },
+            "packageDigest": {
+              "type": "string",
+              "minLength": 64,
+              "maxLength": 64,
+              "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+            },
+            "schemaDigest": {
+              "type": "string",
+              "minLength": 64,
+              "maxLength": 64,
+              "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+            },
+            "compatibility": {
+              "type": "object",
+              "properties": {
+                "wireVersions": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "const": "toy.cli.v1"
+                  }
+                },
+                "nodeVersion": {
+                  "type": "string",
+                  "const": "24.21.0"
+                }
+              },
+              "required": [
+                "wireVersions",
+                "nodeVersion"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "cliVersion",
+            "contractsVersion",
+            "executableDigest",
+            "packageDigest",
+            "schemaDigest",
+            "compatibility"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "commandId",
+        "invocationId",
+        "generatedAt",
+        "cliVersion",
+        "contractsVersion",
+        "schemaDigest",
+        "environment",
+        "meta",
+        "ok",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "type": "string",
+          "const": "toy.cli.v1"
+        },
+        "commandId": {
+          "type": "string",
+          "const": "version"
+        },
+        "invocationId": {
+          "type": "string",
+          "minLength": 36,
+          "maxLength": 36,
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "generatedAt": {
+          "type": "string",
+          "minLength": 24,
+          "maxLength": 24,
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+        },
+        "cliVersion": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "contractsVersion": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "schemaDigest": {
+          "type": "string",
+          "minLength": 64,
+          "maxLength": 64,
+          "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+        },
+        "environment": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "prod",
+                "test"
+              ]
+            },
+            "instanceId": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 36,
+                  "maxLength": 36,
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "stackId": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 36,
+                  "maxLength": 36,
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "kind",
+            "instanceId",
+            "stackId"
+          ],
+          "additionalProperties": false
+        },
+        "meta": {
+          "type": "object",
+          "properties": {
+            "exitCode": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 143
+            },
+            "releaseDigest": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 64,
+                  "maxLength": 64,
+                  "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "controlDigest": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 64,
+                  "maxLength": 64,
+                  "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "evaluatedAt": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 24,
+                  "maxLength": 24,
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "operationId": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 36,
+                  "maxLength": 36,
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "effectState": {
+              "type": "string",
+              "enum": [
+                "none",
+                "confirmed",
+                "unknown"
+              ]
+            },
+            "recordRefs": {
+              "type": "array",
+              "items": {
+                "not": {}
+              }
+            },
+            "evidence": {
+              "type": "array",
+              "items": {
+                "not": {}
+              }
+            }
+          },
+          "required": [
+            "exitCode",
+            "releaseDigest",
+            "controlDigest",
+            "evaluatedAt",
+            "operationId",
+            "effectState",
+            "recordRefs",
+            "evidence"
+          ],
+          "additionalProperties": false
+        },
+        "ok": {
+          "type": "boolean",
+          "const": false
+        },
+        "error": {
+          "type": "object",
+          "properties": {
+            "module": {
+              "type": "string",
+              "enum": [
+                "contracts",
+                "obligations",
+                "attention",
+                "authority",
+                "sources",
+                "lifestore",
+                "hermes",
+                "client",
+                "hands",
+                "self-improvement",
+                "adhd",
+                "ops"
+              ]
+            },
+            "code": {
+              "type": "string",
+              "enum": [
+                "INVALID_INPUT",
+                "TEST_ONLY",
+                "UNAUTHORIZED",
+                "NOT_IMPLEMENTED",
+                "DEPENDENCY_UNAVAILABLE",
+                "ATTESTATION_INVALID",
+                "INTERNAL_ERROR",
+                "OUTPUT_INVALID"
+              ]
+            },
+            "message": {
+              "type": "string",
+              "enum": [
+                "The invocation does not match the registered command schema.",
+                "This command requires a named disposable test environment.",
+                "The calling identity is not authorized for this operation.",
+                "The registered owner operation is not implemented.",
+                "The required installed owner or launcher is unavailable.",
+                "The environment attestation is missing or invalid.",
+                "The command could not produce a valid result.",
+                "The owner response did not match the registered output schema."
+              ]
+            },
+            "retryable": {
+              "type": "boolean"
+            },
+            "retryAt": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 24,
+                  "maxLength": 24,
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "effectState": {
+              "type": "string",
+              "enum": [
+                "none",
+                "confirmed",
+                "unknown"
+              ]
+            },
+            "currentRevision": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^(0|[1-9][0-9]*)(?![\\s\\S])"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "currentGeneration": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^(0|[1-9][0-9]*)(?![\\s\\S])"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "operationRef": {
+              "type": "null"
+            },
+            "requiredInteraction": {
+              "type": "null"
+            }
+          },
+          "required": [
+            "module",
+            "code",
+            "message",
+            "retryable",
+            "retryAt",
+            "effectState",
+            "currentRevision",
+            "currentGeneration",
+            "operationRef",
+            "requiredInteraction"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "commandId",
+        "invocationId",
+        "generatedAt",
+        "cliVersion",
+        "contractsVersion",
+        "schemaDigest",
+        "environment",
+        "meta",
+        "ok",
+        "error"
+      ],
+      "additionalProperties": false
+    }
+  ],
+  "$id": "urn:toy:contracts:v1:CliVersionCommandResult"
+}

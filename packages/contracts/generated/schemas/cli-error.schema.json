@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "module": {
+      "type": "string",
+      "enum": [
+        "contracts",
+        "obligations",
+        "attention",
+        "authority",
+        "sources",
+        "lifestore",
+        "hermes",
+        "client",
+        "hands",
+        "self-improvement",
+        "adhd",
+        "ops"
+      ]
+    },
+    "code": {
+      "type": "string",
+      "enum": [
+        "INVALID_INPUT",
+        "TEST_ONLY",
+        "UNAUTHORIZED",
+        "NOT_IMPLEMENTED",
+        "DEPENDENCY_UNAVAILABLE",
+        "ATTESTATION_INVALID",
+        "INTERNAL_ERROR",
+        "OUTPUT_INVALID"
+      ]
+    },
+    "message": {
+      "type": "string",
+      "enum": [
+        "The invocation does not match the registered command schema.",
+        "This command requires a named disposable test environment.",
+        "The calling identity is not authorized for this operation.",
+        "The registered owner operation is not implemented.",
+        "The required installed owner or launcher is unavailable.",
+        "The environment attestation is missing or invalid.",
+        "The command could not produce a valid result.",
+        "The owner response did not match the registered output schema."
+      ]
+    },
+    "retryable": {
+      "type": "boolean"
+    },
+    "retryAt": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 24,
+          "maxLength": 24,
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "effectState": {
+      "type": "string",
+      "enum": [
+        "none",
+        "confirmed",
+        "unknown"
+      ]
+    },
+    "currentRevision": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]*)(?![\\s\\S])"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "currentGeneration": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]*)(?![\\s\\S])"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "operationRef": {
+      "type": "null"
+    },
+    "requiredInteraction": {
+      "type": "null"
+    }
+  },
+  "required": [
+    "module",
+    "code",
+    "message",
+    "retryable",
+    "retryAt",
+    "effectState",
+    "currentRevision",
+    "currentGeneration",
+    "operationRef",
+    "requiredInteraction"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:CliError"
+}

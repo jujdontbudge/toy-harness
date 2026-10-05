@@ -1,0 +1,120 @@
+import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
+import { createHash, randomUUID } from "node:crypto";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { join, resolve } from "node:path";
+import test from "node:test";
+import { cliCommandSchemas, cliDeclarations, cliResultSchema, schemaBundleArtifacts, schemaBundleDigest } from "@toy/contracts";
+
+const root = resolve(import.meta.dirname, "../..");
+const attemptId = new Date().toISOString().replaceAll(":", "-") + "-" + randomUUID();
+const receiptDirectory = join(root, "build/evidence/R0.K3/attempts", attemptId);
+await mkdir(join(root, "build/tmp"), { recursive: true });
+const fixture = await mkdtemp(join(root, "build/tmp/k3-packed-"));
+await mkdir(receiptDirectory, { recursive: true });
+const setup = (args: string[]): void => {
+  const child = spawnSync("npm", args, { cwd: fixture, encoding: "utf8", timeout: 120000, maxBuffer: 2 * 1024 * 1024 });
+  assert.equal(child.error, undefined);
+  assert.equal(child.status, 0, child.stderr);
+};
+const receipts: { id: string; args: string[]; exitCode: number | null; stdout: string; stderr: string; protocolValidated: boolean }[] = [];
+const invoke = (id: string, args: string[], exitCode: number) => {
+  const child = spawnSync(join(fixture, "node_modules/.bin/toy"), args, { cwd: fixture, encoding: "utf8", timeout: 30000, maxBuffer: 2 * 1024 * 1024 });
+  const receipt = { id, args, exitCode: child.status, stdout: child.stdout, stderr: child.stderr, protocolValidated: false };
+  receipts.push(receipt);
+  assert.equal(child.error, undefined);
+  assert.equal(child.status, exitCode);
+  assert.equal(child.stderr, "");
+  assert.ok(child.stdout.endsWith("\n"));
+  if (!args.includes("--json")) {
+    assert.ok(!/[\u001b\u009b]/.test(child.stdout));
+    receipt.protocolValidated = true;
+    return null;
+  }
+  assert.equal(child.stdout.split("\n").length, 2);
+  const decoded: unknown = JSON.parse(child.stdout);
+  const result = cliResultSchema.parse(decoded);
+  assert.equal(result.meta.exitCode, exitCode);
+  assert.equal(result.schemaDigest, schemaBundleDigest);
+  assert.equal(result.meta.effectState, "none");
+  receipt.protocolValidated = true;
+  return result;
+};
+
+try {
+  for (const path of ["cli", "packages/contracts", "node_modules/zod"]) {
+    setup(["pack", join(root, path), "--pack-destination", fixture, "--ignore-scripts", "--offline", "--json"]);
+  }
+  await writeFile(join(fixture, "package.json"), JSON.stringify({ name: "toy-k3-offline-fixture", version: "1.0.0", private: true }) + "\n", { flag: "wx" });
+  setup(["install", "--offline", "--ignore-scripts", "--no-audit", "--no-fund", "--cache", join(fixture, "cache"), "./toy-cli-1.0.0.tgz", "./toy-contracts-1.0.0.tgz", "./zod-4.6.5.tgz"]);
+
+  await test("compiled packed CLI offline inventory and protocol boundary", async (suite) => {
+    await suite.test("all declarations and concrete offline schema aliases survive packing", async () => {
+      const result = invoke("help-json", ["--help", "--json"], 0);
+      assert.ok(result?.ok && result.commandId === "help");
+      cliCommandSchemas.help.result.parse(result);
+      assert.deepEqual(result.data.commands, cliDeclarations);
+      for (const artifact of schemaBundleArtifacts) {
+        const bytes = await readFile(join(fixture, "node_modules/@toy/contracts", artifact.path.replace("packages/contracts/", "")));
+        assert.equal(createHash("sha256").update(bytes).digest("hex"), artifact.digest);
+      }
+      const groups = new Set(cliDeclarations.flatMap((entry) => entry.id.split(".").slice(0, -1).map((_, index, parts) => parts.slice(0, index + 1).join("."))));
+      for (const group of groups) {
+        const scoped = invoke("help-group-" + group, [...group.split("."), "--help", "--json"], 0);
+        assert.ok(scoped?.ok && scoped.commandId === "help");
+        assert.ok(scoped.data.commands.every((entry) => entry.id.startsWith(group + ".")));
+        invoke("help-human-" + group, ["help", ...group.split(".")], 0);
+        invoke("help-bare-" + group, [...group.split(".")], 0);
+      }
+    });
+    await suite.test("version digests identify packed bytes", async () => {
+      const result = invoke("version-json", ["--version", "--json"], 0);
+      assert.ok(result?.ok && result.commandId === "version");
+      cliCommandSchemas.version.result.parse(result);
+      const bytes = await readFile(join(fixture, "node_modules/@toy/cli/dist/main.js"));
+      assert.equal(result.data.executableDigest, createHash("sha256").update(bytes).digest("hex"));
+      invoke("version-human", ["version"], 0);
+    });
+    await suite.test("invalid syntax and privilege options reject without payload disclosure", () => {
+      const sentinel = "K3_SENTINEL_\u001b[31m_PRIVATE_VALUE";
+      const invalid = [
+        ["--json", "--json", "status"], ["status", "--timeout-ms", "999", "--json"],
+        ["status", "--release", "R9", "--json"], ["unknown", sentinel, "--json"],
+        ["status", "--actor", sentinel, "--json"], ["status", "--uid", "0", "--json"],
+        ["status", "--sql", sentinel, "--json"], ["status", "--show-secrets", "--json"],
+        ["version", "extra", "--json"], ["help", "unknown", "--json"],
+        ["status", "--deep", "--json"], ["obligations", "show", "invalid", "--json"],
+        ["trace", "550e8400-e29b-41d4-a716-446655440000", "--after-sequence", "18446744073709551616", "--json"],
+        ["trace", "550e8400-e29b-41d4-a716-446655440000", "--after-sequence", "01", "--json"],
+        ["--env", "test", "status", "--json"], ["--stack", "550e8400-e29b-41d4-a716-446655440000", "status", "--json"]
+      ];
+      for (const [index, args] of invalid.entries()) {
+        const result = invoke("invalid-" + index, args, 2);
+        assert.ok(result && !result.ok && result.error.code === "INVALID_INPUT");
+        assert.ok(!JSON.stringify(result).includes(sentinel));
+      }
+    });
+    await suite.test("production test commands deny and absent owners stay unavailable", () => {
+      const denied = invoke("prod-clock-denied", ["clock", "show", "--json"], 3);
+      assert.ok(denied && !denied.ok && denied.error.code === "TEST_ONLY");
+      const absent = invoke("test-clock-unavailable", ["--env", "test", "--stack", "550e8400-e29b-41d4-a716-446655440000", "clock", "show", "--json"], 5);
+      assert.ok(absent && !absent.ok && absent.error.code === "DEPENDENCY_UNAVAILABLE");
+      for (const sequence of ["9007199254740993", "18446744073709551615"]) {
+        const result = invoke("lossless-" + sequence, ["trace", "550e8400-e29b-41d4-a716-446655440000", "--after-sequence", sequence, "--json"], 5);
+        assert.ok(result && !result.ok && result.error.code === "NOT_IMPLEMENTED");
+      }
+      for (const kind of ["observation", "entity", "fact", "aggregate", "conflict"]) {
+        const result = invoke("life-ref-" + kind, ["life", "get", "life://" + kind + "/550e8400-e29b-41d4-a716-446655440000", "--json"], 5);
+        assert.ok(result && !result.ok && result.error.code === "NOT_IMPLEMENTED");
+      }
+    });
+  });
+} finally {
+  await writeFile(join(receiptDirectory, "receipts.json"), JSON.stringify({
+    schemaVersion: "toy.bootstrap-cli.v1", card: "R0.K3", attemptId, generatedAt: new Date().toISOString(),
+    route: "compiled-packed-cli-subprocess", acceptanceComplete: false,
+    limitation: "Offline/parser subset only. Full assigned AT assertions, owner schemas/transports, input files, actual identities and attested stacks remain pending.",
+    schemaDigest: schemaBundleDigest, receipts
+  }, null, 2) + "\n", { flag: "wx" });
+  await rm(fixture, { recursive: true });
+}

@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*(?![\\s\\S])"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "UUID",
+        "Instant",
+        "UInt64String",
+        "SHA256",
+        "Duration",
+        "integer",
+        "enum",
+        "registered",
+        "text",
+        "input",
+        "boolean",
+        "life-ref",
+        "name"
+      ]
+    },
+    "positional": {
+      "type": "boolean"
+    },
+    "required": {
+      "type": "boolean"
+    },
+    "values": {
+      "maxItems": 32,
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "minimum": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "maximum": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "name",
+    "kind",
+    "positional",
+    "required",
+    "values",
+    "minimum",
+    "maximum"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:CliArgument"
+}

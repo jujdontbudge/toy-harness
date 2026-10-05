@@ -14,12 +14,12 @@ Every product feature, new command and executable AT registration will be added 
 
 ## CLI declarations prepared for K3
 
-These 53 declarations are frozen interface preparation in [cli.ts](../../packages/contracts/src/cli.ts). They are not exported, executable or verified yet. Required owner input/output schemas and registered fixture membership remain pending. The K3 integration will add receipts; future owner implementations remain NOT_IMPLEMENTED. K4 will validate the canonical full map and source linkage.
+These 53 declarations are exported from [cli.ts](../../packages/contracts/src/cli.ts). Compiled offline help/version and protocol parsing are implemented; [packed subprocess checks](../../tests/cli/bootstrap.cli.test.ts) prove only that bounded subset. The existing generator exports strict offline command-schema aliases and a digest of the schema bundle. Required owner input/output schemas, authorized input-file reading, status transports and registered fixture membership remain pending. Future owner implementations return NOT_IMPLEMENTED, while absent test owners/launchers return DEPENDENCY_UNAVAILABLE. All whole AT assertions remain pending. K4 will validate the canonical full map and source linkage.
 
 | Feature ID | What it does | Requirement | First release / state | User route | Public owner operation | CLI command | Required proof |
 |---|---|---|---|---|---|---|---|
-| control.help | Inspect the public owner view | 0.17 | R0 / specified | Johan terminal or scoped control caller | contracts / CliHelpV1 | help | AT-cli-1 / CLI; AT-cli-2 / CLI; AT-cli-9 / CLI: whole assertions pending |
-| control.version | Inspect the public owner view | 0.17 | R0 / specified | Johan terminal or scoped control caller | contracts / CliVersionV1 | version | AT-cli-1 / CLI; AT-cli-9 / CLI: whole assertions pending |
+| control.help | Inspect the public owner view | 0.17 | R0 / built | Johan terminal or scoped control caller | contracts / CliHelpV1 | help | AT-cli-1 / CLI; AT-cli-2 / CLI; AT-cli-9 / CLI: whole assertions pending |
+| control.version | Inspect the public owner view | 0.17 | R0 / built | Johan terminal or scoped control caller | contracts / CliVersionV1 | version | AT-cli-1 / CLI; AT-cli-9 / CLI: whole assertions pending |
 | control.status | Inspect the public owner view | 0.17 | R0 / specified | Johan terminal or scoped control caller | ops / OpsControlRead.status | status | AT-cli-3 / CLI; AT-cli-9 / CLI; AT-cli-10 / CLI: whole assertions pending |
 | control.doctor | Inspect the public owner view | 0.17 | R0 / specified | Johan terminal or scoped control caller | ops / OpsControlRead.doctor | doctor | AT-cli-3 / CLI; AT-cli-9 / CLI; AT-cli-10 / CLI: whole assertions pending |
 | control.capture | Request the authorized owner mutation | 0.17 | R1 / specified | Johan terminal or scoped control caller | obligations / Obligations.capture | capture | AT-cli-11 / CLI; AT-cli-19 / CLI: whole assertions pending |

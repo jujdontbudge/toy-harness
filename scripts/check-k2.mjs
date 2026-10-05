@@ -196,6 +196,7 @@ const policyGeneratorPaths = [
   "packages/contracts/package.json",
   "packages/contracts/src/cli.ts",
   "packages/contracts/src/public.ts",
+  "packages/contracts/src/primitives.ts",
   "packages/contracts/tsconfig.json",
   "pyproject.toml",
   "pyrightconfig.json",

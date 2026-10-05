@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "cliVersion": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "contractsVersion": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "executableDigest": {
+      "type": "string",
+      "minLength": 64,
+      "maxLength": 64,
+      "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+    },
+    "packageDigest": {
+      "type": "string",
+      "minLength": 64,
+      "maxLength": 64,
+      "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+    },
+    "schemaDigest": {
+      "type": "string",
+      "minLength": 64,
+      "maxLength": 64,
+      "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+    },
+    "compatibility": {
+      "type": "object",
+      "properties": {
+        "wireVersions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "const": "toy.cli.v1"
+          }
+        },
+        "nodeVersion": {
+          "type": "string",
+          "const": "24.21.0"
+        }
+      },
+      "required": [
+        "wireVersions",
+        "nodeVersion"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "cliVersion",
+    "contractsVersion",
+    "executableDigest",
+    "packageDigest",
+    "schemaDigest",
+    "compatibility"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:CliDataV1:version"
+}

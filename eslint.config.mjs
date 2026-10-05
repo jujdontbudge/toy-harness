@@ -63,7 +63,7 @@ export default tseslint.config(
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {
-        projectService: true,
+        projectService: { allowDefaultProject: ["eslint.config.mjs"] },
         tsconfigRootDir: import.meta.dirname
       }
     },

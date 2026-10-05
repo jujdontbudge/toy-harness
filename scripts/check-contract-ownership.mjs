@@ -37,12 +37,6 @@ for (const statement of ownerFile.statements) {
   }
 }
 if (!inventory) throw new Error("packages/contracts/src/public.ts must export schemaInventory");
-const schemaNames = inventory.properties.flatMap((property) => {
-  if (ts.isPropertyAssignment(property) && (ts.isIdentifier(property.name) || ts.isStringLiteral(property.name))) return [property.name.text];
-  return [];
-});
-if (schemaNames.length === 0 || new Set(schemaNames).size !== schemaNames.length) throw new Error("schemaInventory must have unique named schema properties");
-
 const compilerOptions = {
   strict: true,
   noUncheckedIndexedAccess: true,
@@ -54,6 +48,12 @@ const compilerOptions = {
 };
 const program = ts.createProgram({ rootNames: [...files, ownerPath, generatedPath], options: compilerOptions });
 const checker = program.getTypeChecker();
+const programOwner = program.getSourceFile(ownerPath);
+const ownerSymbol = programOwner ? checker.getSymbolAtLocation(programOwner) : undefined;
+const inventorySymbol = ownerSymbol ? checker.getExportsOfModule(ownerSymbol).find((symbol) => symbol.getName() === "schemaInventory") : undefined;
+if (!programOwner || !inventorySymbol) throw new Error("The public contracts module must export a statically named schemaInventory");
+const schemaNames = checker.getPropertiesOfType(checker.getTypeOfSymbolAtLocation(inventorySymbol, programOwner)).map((symbol) => symbol.getName());
+if (schemaNames.length === 0 || new Set(schemaNames).size !== schemaNames.length) throw new Error("schemaInventory must have unique statically named schema properties");
 const generatedSource = program.getSourceFile(generatedPath);
 if (!generatedSource) throw new Error("Generated contract TypeScript is missing; run npm run contracts:generate");
 const generatedAliases = new Map();

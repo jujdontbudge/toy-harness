@@ -15,7 +15,8 @@
     "contracts:check": "tsc -b packages/contracts --pretty false && node scripts/generate-contracts.mjs --check && tsc --ignoreConfig --noEmit --strict --noUncheckedIndexedAccess --target ES2024 --module NodeNext --moduleResolution NodeNext packages/contracts/generated/types.ts && swiftc -typecheck -sdk /Library/Developer/CommandLineTools/SDKs/MacOSX26.5.sdk swift/ToyContracts/Contracts.swift",
     "check": "npm run typecheck && node scripts/typecheck-tests.mjs && npm run boundaries && npm run python:check && npm run lint && npm run contracts:check",
     "check:k2": "node scripts/check-k2.mjs",
-    "check:foundations": "node scripts/check-foundations.mjs"
+    "check:foundations": "node scripts/check-foundations.mjs",
+    "check:cli-bootstrap": "npm run build && node --test tests/cli/bootstrap.cli.test.ts"
   },
   "devDependencies": {
     "@types/node": "24.19.1",

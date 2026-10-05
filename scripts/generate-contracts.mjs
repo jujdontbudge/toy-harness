@@ -1,202 +1,385 @@
+import { createHash } from "node:crypto";
 import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, relative, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
 const root = resolve(import.meta.dirname, "..");
 const mode = process.argv[2] === "--check" ? "check" : "write";
-const sourceModule = resolve(root, "packages/contracts/dist/public.js");
-const { schemaInventory, uint64Maximum } = await import(pathToFileURL(sourceModule).href);
+const owner = await import(pathToFileURL(resolve(root, "packages/contracts/dist/public.js")).href);
+const { schemaInventory, uint64Maximum, uint64Schema, cliCommandSchemas } = owner;
 const artifactManifest = JSON.parse(await readFile(resolve(root, "scripts/generated-artifacts.json"), "utf8"));
-const jsonSchemaOptions = { target: "draft-2020-12", io: "output", unrepresentable: "throw" };
+const schemas = Object.entries(schemaInventory);
+if (schemas.length === 0) throw new Error("A named schema inventory is required");
 
 const uint64Pattern = (maximum) => {
-  const alternatives = ["0"];
-  if (maximum.length > 1) alternatives.push(`[1-9][0-9]{0,${maximum.length - 2}}`);
+  const alternatives = ["0", "[1-9][0-9]{0," + (maximum.length - 2) + "}"];
   let prefix = "";
   for (let index = 0; index < maximum.length; index += 1) {
     const digit = Number(maximum[index]);
     const remaining = maximum.length - index - 1;
     if (index > 0 && digit > 0) {
-      const range = digit === 1 ? "0" : `[0-${digit - 1}]`;
-      alternatives.push(`${prefix}${range}${remaining === 0 ? "" : `[0-9]{${remaining}}`}`);
+      const range = digit === 1 ? "0" : "[0-" + (digit - 1) + "]";
+      alternatives.push(prefix + range + (remaining === 0 ? "" : "[0-9]{" + remaining + "}"));
     }
     prefix += maximum[index];
   }
   alternatives.push(maximum);
-  return `^(?:${alternatives.join("|")})(?![\\s\\S])`;
+  return "^(?:" + alternatives.join("|") + ")(?![\\s\\S])";
 };
-
+const exportOptions = {
+  target: "draft-2020-12",
+  io: "output",
+  unrepresentable: "throw",
+  cycles: "throw",
+  reused: "inline",
+  override: ({ zodSchema, jsonSchema }) => {
+    if (zodSchema === uint64Schema) jsonSchema.pattern = uint64Pattern(uint64Maximum);
+  }
+};
+const exported = schemas.map(([name, schema]) => [name, schema.toJSONSchema(exportOptions)]);
+const canonical = (value) => {
+  if (Array.isArray(value)) return value.map(canonical);
+  if (!value || typeof value !== "object") return value;
+  return Object.fromEntries(Object.keys(value).filter((key) => !["$schema", "$id"].includes(key)).sort().map((key) => [key, canonical(value[key])]));
+};
+const signature = (value) => JSON.stringify(canonical(value));
 const schemaName = (name) => name.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
-const schemas = Object.entries(schemaInventory);
-const schemaNames = schemas.map(([name]) => name);
-if (schemaNames.length === 0 || new Set(schemaNames).size !== schemaNames.length) throw new Error("schemaInventory must have unique named schemas");
-const validateCase = (name, value, valid) => {
-  if (schemaInventory[name].safeParse(value).success !== valid) throw new Error(`Frozen primitive case failed for ${name}`);
+const quote = (value) => JSON.stringify(value);
+const models = [];
+const named = new Map();
+const reserved = new Map();
+for (const [name, schema] of exported) {
+  if (!/^[A-Z][A-Za-z0-9]*$/.test(name)) throw new Error("Invalid generated contract name");
+  const key = signature(schema);
+  if (reserved.has(key)) throw new Error("Distinct canonical names cannot duplicate a complete schema");
+  reserved.set(key, name);
+}
+const uniqueName = (hint, schema) => {
+  const base = hint.replace(/[^A-Za-z0-9]/g, "");
+  const suffix = createHash("sha256").update(signature(schema)).digest("hex").slice(0, 10);
+  const candidate = /^[A-Z]/.test(base) ? base : "Contract" + base;
+  return models.some((model) => model.name === candidate) ? candidate + suffix : candidate;
 };
-validateCase("UUID", "550e8400-e29b-41d4-a716-446655440000", true);
-validateCase("UUID", "550e8400-e29b-41d4-a716-446655440000\n", false);
-validateCase("Instant", "2026-10-04T12:34:56.789Z", true);
-validateCase("Instant", "2026-10-04T12:34:56.789Z\n", false);
-validateCase("Digest", "a".repeat(64), true);
-validateCase("Digest", `${"a".repeat(64)}\n`, false);
-validateCase("Revision", "0", true);
-validateCase("Revision", "5\n", false);
-validateCase("UInt64String", "18446744073709551615", true);
-validateCase("UInt64String", "18446744073709551616", false);
-validateCase("UInt64String", "18446744073709551615\n", false);
-validateCase("UInt64String", "01", false);
-validateCase("UInt64String", "not-a-decimal", false);
-validateCase("UInt64String", "Infinity", false);
-validateCase("UInt64String", "-1", false);
-const validateSupportedShape = (name, jsonSchema) => {
-  if (jsonSchema.type !== "string" || ["properties", "items", "oneOf", "anyOf", "allOf", "not", "prefixItems"].some((key) => key in jsonSchema)) {
-    throw new Error(`Unsupported schema shape for ${name}; extend DTO generation before adding this schema`);
+const modelFor = (schema, hint, forceName = null) => {
+  if (typeof schema === "boolean") {
+    if (schema) throw new Error("Unconstrained schemas cannot become DTOs");
+    schema = { not: {} };
   }
-  if (name === "ModuleId") {
-    if (!Array.isArray(jsonSchema.enum) || jsonSchema.enum.some((value) => typeof value !== "string")) throw new Error("ModuleId must remain a string enum");
-  } else if ("enum" in jsonSchema) {
-    throw new Error(`Unsupported enum schema shape for ${name}; extend DTO generation before adding this schema`);
+  if (!schema || typeof schema !== "object" || "$ref" in schema || "$defs" in schema || "allOf" in schema || "prefixItems" in schema) {
+    throw new Error("Unsupported DTO schema at " + hint);
   }
-};
-const exportedSchemaAccepts = (jsonSchema, value) => {
-  if (typeof value !== "string") return false;
-  if (jsonSchema.minLength !== undefined && value.length < jsonSchema.minLength) return false;
-  if (jsonSchema.maxLength !== undefined && value.length > jsonSchema.maxLength) return false;
-  if (Array.isArray(jsonSchema.enum) && !jsonSchema.enum.includes(value)) return false;
-  return jsonSchema.pattern === undefined || new RegExp(jsonSchema.pattern).test(value);
-};
-const verifyExportedCases = (name, jsonSchema, values) => {
-  for (const value of values) {
-    const runtime = schemaInventory[name].safeParse(value).success;
-    if (exportedSchemaAccepts(jsonSchema, value) !== runtime) throw new Error(`Generated JSON Schema case differs from public ${name} schema`);
+  const key = signature(schema);
+  if (named.has(key)) return named.get(key);
+  let kind;
+  let members;
+  if (schema.oneOf) throw new Error("Exclusive unions require a preserving projection at " + hint);
+  const alternatives = schema.anyOf;
+  if (Array.isArray(alternatives)) {
+    const nonNull = alternatives.filter((item) => item.type !== "null");
+    if (alternatives.length === 2 && nonNull.length === 1) {
+      kind = "nullable";
+      members = nonNull;
+    } else {
+      kind = "union";
+      members = alternatives;
+    }
+  } else if (schema.not && Object.keys(schema.not).length === 0 && Object.keys(canonical(schema)).length === 1) kind = "never";
+  else if (schema.type === "object") {
+    if (schema.additionalProperties !== false || !schema.properties) throw new Error("DTO objects must reject unknown fields at " + hint);
+    kind = "object";
+  } else if (schema.type === "array") {
+    if (!schema.items) throw new Error("DTO arrays require an item schema at " + hint);
+    kind = "array";
+  } else if (Array.isArray(schema.enum) || "const" in schema) {
+    const values = schema.enum ?? [schema.const];
+    if (values.some((value) => typeof value === "number" && !Number.isSafeInteger(value))) throw new Error("Numeric literals require exact integer Python projections at " + hint);
+    if (values.every((value) => typeof value === "string")) kind = "enum";
+    else if (values.length === 1 && ["boolean", "number"].includes(typeof values[0])) kind = "constant";
+    else if (values.length === 1 && values[0] === null) kind = "null";
+    else throw new Error("Unsupported enum values at " + hint);
+  } else if (["string", "integer", "number", "boolean", "null"].includes(schema.type)) kind = schema.type;
+  else throw new Error("Unsupported DTO wire shape at " + hint);
+  const needsName = ["object", "enum", "union", "constant"].includes(kind);
+  const name = forceName ?? reserved.get(key) ?? (needsName ? uniqueName(hint, schema) : null);
+  const model = { name, kind, schema };
+  if (name) {
+    named.set(key, model);
+    models.push(model);
   }
+  if (kind === "object") {
+    const required = new Set(schema.required ?? []);
+    model.fields = Object.entries(schema.properties).map(([field, child]) => {
+      if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(field)) throw new Error("Unsupported DTO property identifier at " + hint);
+      const type = modelFor(child, (name ?? hint) + field[0].toUpperCase() + field.slice(1));
+      if (!required.has(field) && type.kind === "nullable") throw new Error("Optional nullable fields require presence-preserving projection");
+      return { field, type, required: required.has(field) };
+    });
+  } else if (kind === "array") model.item = modelFor(schema.items, hint + "Item");
+  else if (kind === "nullable") model.item = modelFor(members[0], hint + "Value");
+  else if (kind === "union") model.members = members.map((item, index) => modelFor(item, (name ?? hint) + "Variant" + index));
+  else if (kind === "enum") model.values = schema.enum ?? [schema.const];
+  else if (kind === "constant") model.value = schema.const ?? schema.enum[0];
+  return model;
 };
-const jsonSchemaFor = (name, schema) => {
-  const jsonSchema = name === "UInt64String"
-    ? { ...schemaInventory.Revision.toJSONSchema(jsonSchemaOptions), pattern: uint64Pattern(uint64Maximum) }
-    : schema.toJSONSchema(jsonSchemaOptions);
-  validateSupportedShape(name, jsonSchema);
-  return name === "UInt64String" ? { ...jsonSchema, pattern: uint64Pattern(uint64Maximum) } : jsonSchema;
+for (const [name, schema] of exported) modelFor(schema, name, name);
+
+const pythonImports = new Set();
+const usePython = (name) => {
+  pythonImports.add(name);
+  return name;
 };
-const uint64Previous = (BigInt(uint64Maximum) - 1n).toString();
-const uint64Next = (BigInt(uint64Maximum) + 1n).toString();
-const jsonSchemaCases = {
-  ModuleId: ["contracts", "unknown"],
-  UUID: ["550e8400-e29b-41d4-a716-446655440000", "550e8400-e29b-41d4-a716-446655440000\n"],
-  Digest: ["a".repeat(64), `${"a".repeat(64)}\n`],
-  Instant: ["2026-10-04T12:34:56.789Z", "2026-10-04T12:34:56.789Z\n"],
-  Revision: ["0", "5\n"],
-  UInt64String: ["0", "1", uint64Previous, uint64Maximum, uint64Next, `${uint64Maximum}\n`, "01", "not-a-decimal", "Infinity", "-1"]
+const pythonType = (model) => {
+  if (model.name) return quote(model.name);
+  if (model.kind === "array") return "list[" + pythonType(model.item) + "]";
+  if (model.kind === "nullable") return usePython("Optional") + "[" + pythonType(model.item) + "]";
+  if (model.kind === "never") return usePython("NoReturn");
+  if (model.kind === "null") return "None";
+  return { string: "str", integer: "int", number: "float", boolean: "bool" }[model.kind];
 };
+const pythonLiteral = (value) => typeof value === "boolean" ? (value ? "True" : "False") : value === null ? "None" : quote(value);
+const pythonDeclarations = [];
+const pythonKeywords = new Set(["False", "None", "True", "and", "as", "assert", "async", "await", "break", "class", "continue", "def", "del", "elif", "else", "except", "finally", "for", "from", "global", "if", "import", "in", "is", "lambda", "nonlocal", "not", "or", "pass", "raise", "return", "try", "while", "with", "yield"]);
+for (const model of models) {
+  const name = model.name;
+  if (model.kind === "object") {
+    usePython("TypedDict");
+    if (model.fields.every(({ field }) => !pythonKeywords.has(field))) {
+      pythonDeclarations.push("class " + name + "(TypedDict):");
+      for (const { field, type, required } of model.fields) {
+        const value = pythonType(type);
+        if (!required) pythonImports.add("NotRequired");
+        pythonDeclarations.push("    " + field + ": " + (required ? value : "NotRequired[" + value + "]"));
+      }
+      if (model.fields.length === 0) pythonDeclarations.push("    pass");
+      pythonDeclarations.push("");
+      continue;
+    }
+    pythonDeclarations.push(name + " = TypedDict(");
+    pythonDeclarations.push("    " + quote(name) + ",");
+    pythonDeclarations.push("    {");
+    for (const { field, type, required } of model.fields) {
+      const value = pythonType(type);
+      if (!required) pythonImports.add("NotRequired");
+      pythonDeclarations.push("        " + quote(field) + ": " + (required ? value : "NotRequired[" + value + "]") + ",");
+    }
+    pythonDeclarations.push("    },", ")", "");
+  } else if (model.kind === "enum" || model.kind === "constant") {
+    usePython("Literal");
+    pythonDeclarations.push(name + " = Literal[", ...(model.values ?? [model.value]).map((value) => "    " + pythonLiteral(value) + ","), "]", "");
+  } else if (model.kind === "union") {
+    usePython("Union");
+    pythonDeclarations.push(name + " = Union[", ...model.members.map((member) => "    " + pythonType(member) + ","), "]", "");
+  } else if (model.kind === "string") {
+    usePython("NewType");
+    pythonDeclarations.push(name + " = NewType(" + quote(name) + ", str)", "");
+  } else {
+    const clone = { ...model, name: null };
+    pythonDeclarations.push(name + " = " + pythonType(clone), "");
+  }
+}
+const ordinaryImports = [...pythonImports].filter((name) => name !== "NotRequired").sort();
+const pythonLines = ["# @generated by scripts/generate-contracts.mjs"];
+if (ordinaryImports.length > 0) {
+  pythonLines.push("from typing import (", ...ordinaryImports.map((name) => "    " + name + ","), ")");
+}
+if (pythonImports.has("NotRequired")) pythonLines.push("from typing_extensions import NotRequired");
+pythonLines.push("", ...pythonDeclarations);
+const exportedNames = exported.map(([name]) => name);
+const pythonPublicNames = [...exportedNames].sort((left, right) => Number(right === right.toUpperCase()) - Number(left === left.toUpperCase()) || left.toLowerCase().localeCompare(right.toLowerCase()));
+const pythonPackageLines = [
+  "# @generated by scripts/generate-contracts.mjs",
+  "from toy_contracts.generated import (",
+  ...pythonPublicNames.map((name) => "    " + name + ","),
+  ")",
+  "",
+  "__all__ = [",
+  ...exportedNames.map((name) => "    " + quote(name) + ","),
+  "]"
+];
+
+const swiftType = (model) => {
+  if (model.name) return model.name;
+  if (model.kind === "array") return "[" + swiftType(model.item) + "]";
+  if (model.kind === "nullable") return "Optional<" + swiftType(model.item) + ">";
+  if (model.kind === "never") return "ToyNever";
+  if (model.kind === "null") return "ToyNull";
+  return { string: "String", integer: "Int64", number: "Double", boolean: "Bool" }[model.kind];
+};
+const swiftRawString = (value) => quote(value).replaceAll("\\u", "\\u{").replace(/\\u\{([0-9a-fA-F]{4})/g, "\\u{$1}");
+const swiftField = (field) => "`" + field + "`";
+const swiftLines = [
+  "// @generated by scripts/generate-contracts.mjs",
+  "public struct ToyCodingKey: CodingKey, Sendable {",
+  "    public let stringValue: String",
+  "    public let intValue: Int?",
+  "    public init(_ value: String) { stringValue = value; intValue = nil }",
+  "    public init?(stringValue: String) { self.init(stringValue) }",
+  "    public init?(intValue: Int) { self.stringValue = String(intValue); self.intValue = intValue }",
+  "}",
+  "",
+  "public enum ToyNever: Codable, Sendable {",
+  "    public init(from decoder: any Decoder) throws {",
+  "        throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: \"A forbidden value was received.\"))",
+  "    }",
+  "    public func encode(to encoder: any Encoder) throws { switch self {} }",
+  "}",
+  "",
+  "public struct ToyNull: Codable, Sendable {",
+  "    public init() {}",
+  "    public init(from decoder: any Decoder) throws {",
+  "        let container = try decoder.singleValueContainer()",
+  "        guard container.decodeNil() else {",
+  "            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: \"A null value is required.\"))",
+  "        }",
+  "    }",
+  "    public func encode(to encoder: any Encoder) throws {",
+  "        var container = encoder.singleValueContainer()",
+  "        try container.encodeNil()",
+  "    }",
+  "}",
+  ""
+];
+for (const model of models) {
+  const name = model.name;
+  if (model.kind === "object") {
+    swiftLines.push("public struct " + name + ": Codable, Sendable {");
+    for (const { field, type, required } of model.fields) swiftLines.push("    public let " + swiftField(field) + ": " + (required ? swiftType(type) : "Optional<" + swiftType(type) + ">"));
+    const parameters = model.fields.map(({ field, type, required }) => swiftField(field) + ": " + (required ? swiftType(type) : "Optional<" + swiftType(type) + ">"));
+    swiftLines.push("    public init(" + parameters.join(", ") + ") {");
+    for (const { field } of model.fields) swiftLines.push("        self." + swiftField(field) + " = " + swiftField(field));
+    swiftLines.push("    }", "    public init(from decoder: any Decoder) throws {", "        let container = try decoder.container(keyedBy: ToyCodingKey.self)");
+    swiftLines.push("        let allowed: Set<String> = [" + model.fields.map(({ field }) => swiftRawString(field)).join(", ") + "]");
+    swiftLines.push("        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {");
+    swiftLines.push("            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: \"An unknown contract field was received.\"))", "        }");
+    for (const { field, type, required } of model.fields) {
+      const decode = "try container.decode(" + swiftType(type) + ".self, forKey: ToyCodingKey(" + swiftRawString(field) + "))";
+      swiftLines.push("        self." + swiftField(field) + " = " + (required ? decode : "container.contains(ToyCodingKey(" + swiftRawString(field) + ")) ? " + decode + " : nil"));
+    }
+    swiftLines.push("    }", "    public func encode(to encoder: any Encoder) throws {", "        " + (model.fields.length === 0 ? "_ = " : "var container = ") + "encoder.container(keyedBy: ToyCodingKey.self)");
+    for (const { field, required } of model.fields) swiftLines.push("        try container." + (required ? "encode" : "encodeIfPresent") + "(" + swiftField(field) + ", forKey: ToyCodingKey(" + swiftRawString(field) + "))");
+    swiftLines.push("    }", "}", "");
+  } else if (model.kind === "enum") {
+    swiftLines.push("public enum " + name + ": String, Codable, CaseIterable, Sendable {");
+    const cases = new Set();
+    for (const [index, value] of model.values.entries()) {
+      const parts = value.split(/[^A-Za-z0-9]+/).filter(Boolean);
+      let label = parts.map((part, position) => position === 0 ? part[0].toLowerCase() + part.slice(1) : part[0].toUpperCase() + part.slice(1)).join("");
+      if (!/^[a-z][A-Za-z0-9]*$/.test(label) || label.length > 80 || cases.has(label)) label = "value" + index;
+      let suffix = 0;
+      while (cases.has(label)) {
+        label = "value" + index + "_" + suffix;
+        suffix += 1;
+      }
+      cases.add(label);
+      swiftLines.push("    case `" + label + "` = " + swiftRawString(value));
+    }
+    swiftLines.push("}", "");
+  } else if (model.kind === "constant") {
+    const value = typeof model.value === "boolean" ? (model.value ? "true" : "false") : String(model.value);
+    const type = typeof model.value === "boolean" ? "Bool" : "Double";
+    swiftLines.push("public struct " + name + ": Codable, Sendable {", "    public init() {}", "    public init(from decoder: any Decoder) throws {", "        let container = try decoder.singleValueContainer()");
+    swiftLines.push("        guard try container.decode(" + type + ".self) == " + value + " else {");
+    swiftLines.push("            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: \"A contract literal did not match.\"))", "        }", "    }");
+    swiftLines.push("    public func encode(to encoder: any Encoder) throws {", "        var container = encoder.singleValueContainer()", "        try container.encode(" + value + ")", "    }", "}", "");
+  } else if (model.kind === "union") {
+    swiftLines.push("public enum " + name + ": Codable, Sendable {");
+    for (const [index, member] of model.members.entries()) swiftLines.push("    case variant" + index + "(" + swiftType(member) + ")");
+    swiftLines.push("    public init(from decoder: any Decoder) throws {", "        let container = try decoder.singleValueContainer()");
+    for (const [index, member] of model.members.entries()) {
+      swiftLines.push("        if let value = try? container.decode(" + swiftType(member) + ".self) { self = .variant" + index + "(value); return }");
+    }
+    swiftLines.push("        throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: \"No contract union member matched.\"))", "    }", "    public func encode(to encoder: any Encoder) throws {", "        var container = encoder.singleValueContainer()", "        switch self {");
+    for (const [index] of model.members.entries()) swiftLines.push("        case .variant" + index + "(let value): try container.encode(value)");
+    swiftLines.push("        }", "    }", "}", "");
+  } else {
+    swiftLines.push("public typealias " + name + " = " + swiftType({ ...model, name: null }), "");
+  }
+}
+const finish = (lines) => lines.join("\n").trimEnd() + "\n";
 const tsLines = [
   "// @generated by scripts/generate-contracts.mjs",
   'import type { z } from "zod";',
   'import type { schemaInventory } from "../src/public.js";',
-  ""
-];
-for (const [name] of schemas) tsLines.push(`export type ${name} = z.infer<typeof schemaInventory.${name}>;`);
-tsLines.push("");
-
-const moduleIds = schemaInventory.ModuleId.options;
-const pythonNames = schemas.map(([name]) => name);
-const pythonImportNames = [...pythonNames].sort((left, right) => Number(right === right.toUpperCase()) - Number(left === left.toUpperCase()) || left.toLowerCase().localeCompare(right.toLowerCase()));
-const pythonLines = [
-  "# @generated by scripts/generate-contracts.mjs",
-  "from typing import Literal, NewType",
   "",
-  "ModuleId = Literal[",
-  ...moduleIds.map((value) => `    ${JSON.stringify(value)},`),
-  "]"
+  ...schemas.map(([name]) => "export type " + name + " = z.infer<typeof schemaInventory." + name + ">;")
 ];
-for (const [name] of schemas) {
-  if (name !== "ModuleId") pythonLines.push(`${name} = NewType(${JSON.stringify(name)}, str)`);
-}
-pythonLines.push("");
-const pythonPackageLines = [
-  "# @generated by scripts/generate-contracts.mjs",
-  `from toy_contracts.generated import ${pythonImportNames.join(", ")}`,
-  "",
-  `__all__ = ${JSON.stringify(pythonNames)}`,
-  ""
-];
-
-const swiftCase = (value) => {
-  const parts = value.split("-");
-  return parts.map((part, index) => index === 0 ? part : `${part[0]?.toUpperCase() ?? ""}${part.slice(1)}`).join("");
-};
-const swiftLines = ["// @generated by scripts/generate-contracts.mjs", "public enum ModuleId: String, Codable, CaseIterable, Sendable {"];
-for (const value of moduleIds) swiftLines.push(`    case ${swiftCase(value)} = ${JSON.stringify(value)}`);
-swiftLines.push("}", "");
-for (const [name] of schemas) {
-  if (name !== "ModuleId") swiftLines.push(`public typealias ${name} = String`);
-}
-swiftLines.push("");
-
 const outputs = new Map([
-  ["packages/contracts/generated/types.ts", tsLines.join("\n")],
-  ["python/toy_contracts/__init__.py", pythonPackageLines.join("\n")],
-  ["python/toy_contracts/generated.py", pythonLines.join("\n")],
-  ["swift/ToyContracts/Contracts.swift", swiftLines.join("\n")]
+  ["packages/contracts/generated/types.ts", finish(tsLines)],
+  ["python/toy_contracts/__init__.py", finish(pythonPackageLines)],
+  ["python/toy_contracts/generated.py", finish(pythonLines)],
+  ["swift/ToyContracts/Contracts.swift", finish(swiftLines)]
 ]);
-
-for (const [name, schema] of schemas) {
-  const jsonSchema = jsonSchemaFor(name, schema);
-  verifyExportedCases(name, jsonSchema, jsonSchemaCases[name] ?? []);
-  const artifact = {
-    ...jsonSchema,
-    $schema: "https://json-schema.org/draft/2020-12/schema",
-    $id: `urn:toy:contracts:v1:${name}`,
-    ...(name === "UInt64String" ? { pattern: uint64Pattern(uint64Maximum) } : {})
-  };
-  outputs.set(`packages/contracts/generated/schemas/${schemaName(name)}.schema.json`, `${JSON.stringify(artifact, null, 2)}\n`);
+const primitiveCases = {
+  ModuleId: ["contracts", "unknown"],
+  UUID: ["550e8400-e29b-41d4-a716-446655440000", "550e8400-e29b-41d4-a716-446655440000\n"],
+  Instant: ["2026-10-04T12:34:56.789Z", "2026-10-04T12:34:56.789Z\n"],
+  Digest: ["a".repeat(64), "a".repeat(64) + "\n"],
+  Revision: ["0", "5\n", "01", "-1"],
+  UInt64String: ["0", "9007199254740993", uint64Maximum, (BigInt(uint64Maximum) + 1n).toString(), "01", "-1", "not-a-decimal", "Infinity", uint64Maximum + "\n"]
+};
+const acceptsPrimitive = (schema, value) => {
+  if (typeof value !== "string") return false;
+  if (schema.minLength !== undefined && value.length < schema.minLength) return false;
+  if (schema.maxLength !== undefined && value.length > schema.maxLength) return false;
+  if (schema.enum && !schema.enum.includes(value)) return false;
+  return schema.pattern === undefined || new RegExp(schema.pattern).test(value);
+};
+for (const [name, schema] of exported) {
+  if (primitiveCases[name]) {
+    for (const value of primitiveCases[name]) {
+      if (acceptsPrimitive(schema, value) !== schemaInventory[name].safeParse(value).success) throw new Error("Generated primitive differs from public " + name);
+    }
+  }
+  const artifact = { ...schema, $schema: "https://json-schema.org/draft/2020-12/schema", $id: "urn:toy:contracts:v1:" + name };
+  outputs.set("packages/contracts/generated/schemas/" + schemaName(name) + ".schema.json", JSON.stringify(artifact, null, 2) + "\n");
 }
-
+for (const [command, schemas] of Object.entries(cliCommandSchemas)) {
+  for (const [kind, schema] of Object.entries(schemas)) {
+    const type = { input: "CliInputV1", data: "CliDataV1", result: "CliResultV1" }[kind];
+    if (!type) throw new Error("Unknown command-schema projection");
+    const artifact = { ...schema.toJSONSchema(exportOptions), $schema: "https://json-schema.org/draft/2020-12/schema", $id: "urn:toy:contracts:v1:" + type + ":" + command };
+    outputs.set("packages/contracts/generated/schemas/" + schemaName(type) + "-" + command.replaceAll(".", "-") + ".schema.json", JSON.stringify(artifact, null, 2) + "\n");
+  }
+}
+const schemaArtifacts = [...outputs.entries()].filter(([path]) => path.endsWith(".schema.json")).sort(([left], [right]) => left.localeCompare(right)).map(([path, content]) => ({ path, digest: createHash("sha256").update(content).digest("hex") }));
+const schemaBundleDigest = createHash("sha256").update(JSON.stringify(schemaArtifacts)).digest("hex");
+outputs.set("packages/contracts/src/generated-bundle.ts", finish([
+  "// @generated by scripts/generate-contracts.mjs",
+  "export const schemaBundleDigest = " + quote(schemaBundleDigest) + ";",
+  "export const schemaBundleArtifacts = " + JSON.stringify(schemaArtifacts, null, 2) + " as const;"
+]));
 const codeOutputs = [...outputs.keys()].filter((path) => !path.endsWith(".schema.json")).sort();
-if (artifactManifest.generator !== "scripts/generate-contracts.mjs" || JSON.stringify([...artifactManifest.codeArtifacts].sort()) !== JSON.stringify(codeOutputs)) {
-  throw new Error("scripts/generated-artifacts.json does not match generated code artifacts");
-}
-const generatedRoot = resolve(root, "packages/contracts/generated");
-const generatedFiles = [];
-const scanGenerated = async (path) => {
+if (artifactManifest.generator !== "scripts/generate-contracts.mjs" || JSON.stringify([...artifactManifest.codeArtifacts].sort()) !== JSON.stringify(codeOutputs)) throw new Error("Generated code manifest does not match the sole generator");
+const files = [];
+const scan = async (path) => {
   let entries;
-  try {
-    entries = await readdir(path, { withFileTypes: true });
-  } catch (error) {
+  try { entries = await readdir(path, { withFileTypes: true }); }
+  catch (error) {
     if (error && typeof error === "object" && "code" in error && error.code === "ENOENT") return;
     throw error;
   }
   for (const entry of entries) {
     const child = resolve(path, entry.name);
-    if (entry.isDirectory()) await scanGenerated(child);
-    else generatedFiles.push(relative(root, child).replaceAll("\\", "/"));
+    if (entry.isDirectory()) await scan(child);
+    else files.push(relative(root, child).replaceAll("\\", "/"));
   }
 };
-await scanGenerated(generatedRoot);
-const generatedExpected = [...outputs.keys()].filter((path) => path.startsWith("packages/contracts/generated/")).sort();
-const orphaned = generatedFiles.filter((path) => !generatedExpected.includes(path));
-if (orphaned.length > 0) throw new Error(`Unexpected generated contract artifacts: ${orphaned.join(", ")}`);
-
+await scan(resolve(root, "packages/contracts/generated"));
+const expected = new Set(outputs.keys());
+const orphaned = files.filter((path) => !expected.has(path));
+if (orphaned.length > 0) throw new Error("Unexpected generated contract artifacts: " + orphaned.join(", "));
 const drift = [];
-for (const [relativePath, expected] of outputs) {
-  const path = resolve(root, relativePath);
+for (const [path, content] of outputs) {
+  const absolute = resolve(root, path);
   if (mode === "check") {
-    let actual;
-    try {
-      actual = await readFile(path, "utf8");
-    } catch {
-      drift.push(`${relativePath}: missing generated artifact`);
-      continue;
-    }
-    if (actual !== expected) drift.push(`${relativePath}: generated artifact drift`);
+    const actual = await readFile(absolute, "utf8").catch(() => null);
+    if (actual !== content) drift.push(path + ": generated artifact drift");
   } else {
-    await mkdir(dirname(path), { recursive: true });
-    await writeFile(path, expected, "utf8");
+    await mkdir(dirname(absolute), { recursive: true });
+    await writeFile(absolute, content, "utf8");
   }
 }
-
 if (drift.length > 0) {
-  process.stderr.write(`${drift.join("\n")}\n`);
+  process.stderr.write(drift.join("\n") + "\n");
   process.exitCode = 1;
-} else {
-  process.stdout.write(`${mode === "check" ? "Verified" : "Generated"} ${outputs.size} contract artifacts\n`);
-}
+} else process.stdout.write((mode === "check" ? "Verified " : "Generated ") + outputs.size + " contract artifacts\n");

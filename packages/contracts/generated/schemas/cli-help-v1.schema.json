@@ -1,0 +1,319 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "group": {
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 80
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "commands": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]*(?:\\.[a-z][a-z0-9-]*)*(?![\\s\\S])"
+          },
+          "owner": {
+            "type": "string",
+            "enum": [
+              "contracts",
+              "obligations",
+              "attention",
+              "authority",
+              "sources",
+              "lifestore",
+              "hermes",
+              "client",
+              "hands",
+              "self-improvement",
+              "adhd",
+              "ops"
+            ]
+          },
+          "operation": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "access": {
+            "type": "string",
+            "enum": [
+              "read",
+              "guarded",
+              "test",
+              "engineering",
+              "human"
+            ]
+          },
+          "firstRelease": {
+            "type": "string",
+            "enum": [
+              "R0",
+              "R1",
+              "R2",
+              "R3",
+              "R4",
+              "R5"
+            ]
+          },
+          "implementation": {
+            "type": "string",
+            "enum": [
+              "specified",
+              "built"
+            ]
+          },
+          "ownerSchemas": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "registered"
+            ]
+          },
+          "inputSchemaId": {
+            "type": "string",
+            "pattern": "^urn:toy:contracts:v1:CliInputV1:"
+          },
+          "outputSchemaId": {
+            "type": "string",
+            "pattern": "^urn:toy:contracts:v1:CliResultV1:"
+          },
+          "dataSchemaId": {
+            "type": "string",
+            "pattern": "^urn:toy:contracts:v1:CliDataV1:"
+          },
+          "featureIds": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "requirementIds": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "arguments": {
+            "maxItems": 20,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9-]*(?![\\s\\S])"
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "UUID",
+                    "Instant",
+                    "UInt64String",
+                    "SHA256",
+                    "Duration",
+                    "integer",
+                    "enum",
+                    "registered",
+                    "text",
+                    "input",
+                    "boolean",
+                    "life-ref",
+                    "name"
+                  ]
+                },
+                "positional": {
+                  "type": "boolean"
+                },
+                "required": {
+                  "type": "boolean"
+                },
+                "values": {
+                  "maxItems": 32,
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "minimum": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "maximum": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "name",
+                "kind",
+                "positional",
+                "required",
+                "values",
+                "minimum",
+                "maximum"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "id",
+          "owner",
+          "operation",
+          "access",
+          "firstRelease",
+          "implementation",
+          "ownerSchemas",
+          "inputSchemaId",
+          "outputSchemaId",
+          "dataSchemaId",
+          "featureIds",
+          "requirementIds",
+          "arguments"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "commonArguments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]*(?![\\s\\S])"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "UUID",
+              "Instant",
+              "UInt64String",
+              "SHA256",
+              "Duration",
+              "integer",
+              "enum",
+              "registered",
+              "text",
+              "input",
+              "boolean",
+              "life-ref",
+              "name"
+            ]
+          },
+          "positional": {
+            "type": "boolean"
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "values": {
+            "maxItems": 32,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "minimum": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "maximum": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "kind",
+          "positional",
+          "required",
+          "values",
+          "minimum",
+          "maximum"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "schemaDigest": {
+      "type": "string",
+      "minLength": 64,
+      "maxLength": 64,
+      "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+    },
+    "compatibility": {
+      "type": "object",
+      "properties": {
+        "wireVersions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "const": "toy.cli.v1"
+          }
+        },
+        "nodeVersion": {
+          "type": "string",
+          "const": "24.21.0"
+        }
+      },
+      "required": [
+        "wireVersions",
+        "nodeVersion"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "group",
+    "commands",
+    "commonArguments",
+    "schemaDigest",
+    "compatibility"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:CliHelpV1"
+}
