@@ -59,7 +59,7 @@ const validateInvocation = (id: string, args: string[], exitCode: number, child:
   assert.ok([...canaries].every((canary) => !validatedOutput.includes(canary)), "Validated CLI output disclosed a private canary");
   assert.equal(result.meta.exitCode, exitCode);
   assert.equal(result.schemaDigest, schemaBundleDigest);
-  assert.equal(result.meta.effectState, "none");
+  assert.equal(result.meta.effectState, result.ok && exitCode === 0 && ["stack.up", "stack.down", "clock.freeze", "clock.advance", "clock.resume", "probe.run"].includes(result.commandId) ? "confirmed" : "none");
   receipt.protocolValidated = true;
   const validatedReceipt = receipts.at(-1);
   assert.ok(validatedReceipt);
@@ -133,6 +133,8 @@ try {
       const final = invoke("journal-pre-existing-separate-retry", [...args, "--wait-ms", "120000"], 5);
       assert.ok(final?.ok && final.commandId === "stack.up");
       assert.deepEqual(final.data, original.data);
+      const concurrent = await Promise.all([invokeConcurrent("journal-concurrent-first", args, 5), invokeConcurrent("journal-concurrent-second", args, 5)]);
+      for (const retried of concurrent) { assert.ok(retried?.ok && retried.commandId === "stack.up"); assert.deepEqual(retried.data, original.data); }
     });
     await suite.test("all declarations and concrete offline schema aliases survive packing", async () => {
       const result = invoke("help-json", ["--help", "--json"], 0);
@@ -187,7 +189,7 @@ try {
       const denied = invoke("prod-clock-denied", ["clock", "show", "--json"], 3);
       assert.ok(denied && !denied.ok && denied.error.code === "TEST_ONLY");
       const absent = invoke("test-clock-unavailable", ["--env", "test", "--stack", "550e8400-e29b-41d4-a716-446655440000", "clock", "show", "--json"], 5);
-      assert.ok(absent && !absent.ok && absent.error.code === "DEPENDENCY_UNAVAILABLE");
+      assert.ok(absent && !absent.ok && absent.error.code === "ATTESTATION_INVALID");
       for (const sequence of ["9007199254740993", "18446744073709551615"]) {
         const result = invoke("lossless-" + sequence, ["trace", "550e8400-e29b-41d4-a716-446655440000", "--after-sequence", sequence, "--json"], 5);
         assert.ok(result && !result.ok && result.error.code === "NOT_IMPLEMENTED");
@@ -211,56 +213,78 @@ try {
         assert.ok(result && !result.ok && result.error.code === "INVALID_INPUT");
       }
       const probe = invoke("registered-probe-unavailable", [...testStack, "probe", "run", "AT-cli-4", "--request-id", requestId, "--case", "native-entry", "--json"], 5);
-      assert.ok(probe && !probe.ok && probe.error.code === "DEPENDENCY_UNAVAILABLE");
+      assert.ok(probe && !probe.ok && probe.error.code === "ATTESTATION_INVALID");
       cliCommandSchemas["probe.run"].result.parse(probe);
-      const stack = invoke("registered-world-blocked", ["--env", "test", "stack", "up", "--release", "R0", "--request-id", requestId, "--world", "r0-bootstrap", "--json"], 5);
-      assert.ok(stack?.ok && stack.commandId === "stack.up" && stack.data.operation.state === "blocked");
-      assert.ok(stack.data.stackId);
-      assert.equal(stack.data.result, null);
+      const stack = invoke("supported-route-unavailable", ["--env", "test", "stack", "up", "--release", "R0", "--request-id", requestId, "--model", "supported", "--json"], 5);
+      assert.ok(stack && !stack.ok && stack.error.code === "DEPENDENCY_UNAVAILABLE");
       cliCommandSchemas["stack.up"].result.parse(stack);
       const down = invoke("unattested-stack-down", [...testStack, "stack", "down", "--request-id", requestId, "--json"], 5);
       assert.ok(down && !down.ok && down.error.module === "ops" && down.error.code === "ATTESTATION_INVALID");
       cliCommandSchemas["stack.down"].result.parse(down);
     });
-    await suite.test("durable blocked stack intent survives retries, concurrent calls and ambient path changes", async () => {
+    await suite.test("fixed fake R0 stack owns real process database clock and probe lifecycle", () => {
       const requestId = randomUUID();
       const args = ["--env", "test", "stack", "up", "--release", "R0", "--request-id", requestId, "--json"];
-      const initial = invoke("journal-blocked-initial", args, 5);
-      assert.ok(initial?.ok && initial.commandId === "stack.up");
-      assert.equal(initial.data.operation.state, "blocked");
-      assert.equal(initial.data.result, null);
-      assert.ok(initial.data.stackId);
-      const retry = invoke("journal-blocked-normalized-retry", [...args, "--world", "r0-bootstrap", "--wait-ms", "120000"], 5);
-      assert.ok(retry?.ok && retry.commandId === "stack.up");
-      assert.deepEqual(retry.data, initial.data);
-      const uppercase = invoke("journal-blocked-uppercase-retry", args.map((arg) => arg === requestId ? requestId.toUpperCase() : arg), 5);
-      assert.ok(uppercase?.ok && uppercase.commandId === "stack.up");
-      assert.deepEqual(uppercase.data, initial.data);
-      const ambientHome = join(fixture, "unused-home");
-      const ambientTemporary = join(fixture, "unused-temporary");
-      const ambient = invoke("journal-blocked-ambient-path-retry", args, 5, { ...process.env, HOME: ambientHome, TMPDIR: ambientTemporary });
-      assert.ok(ambient?.ok && ambient.commandId === "stack.up");
-      assert.deepEqual(ambient.data, initial.data);
-      await assert.rejects(readFile(join(ambientHome, "Library/Application Support/ToyBootstrap/control/ops.db")));
-      await assert.rejects(readFile(join(ambientTemporary, "ops.db")));
-      for (const [flag, value] of [["--release", "R1"], ["--clock", "real"], ["--model", "supported"]] as const) {
-        const changed = flag === "--release" ? args.map((arg) => arg === "R0" ? value : arg) : [...args, flag, value];
-        const conflict = invoke("journal-blocked-conflict-" + flag, changed, 4);
-        assert.ok(conflict && !conflict.ok && conflict.error.code === "CONFLICT");
+      const initial = invoke("fixture-stack-up", args, 0);
+      assert.ok(initial?.ok && initial.commandId === "stack.up" && initial.data.stackId && initial.data.result?.ready);
+      const named = ["--env", "test", "--stack", initial.data.stackId];
+      try {
+        const retry = invoke("fixture-stack-up-retry", [...args, "--world", "r0-bootstrap", "--wait-ms", "120000"], 0);
+        assert.ok(retry?.ok && retry.commandId === "stack.up");
+        assert.equal(retry.data.operation.operationId, initial.data.operation.operationId);
+        assert.equal(retry.data.stackId, initial.data.stackId);
+        const status = invoke("fixture-status", [...named, "status", "--json"], 5);
+        assert.ok(status?.ok && status.commandId === "status");
+        assert.equal(status.data.complete, false);
+        assert.ok(status.data.probes.some(check => check.id === "bootstrap.fixture-runtime" && check.state === "PASS"));
+        invoke("fixture-doctor-human", [...named, "doctor"], 5);
+        const before = invoke("fixture-clock-before", [...named, "clock", "show", "--json"], 0);
+        assert.ok(before?.ok && before.commandId === "clock.show");
+        const freezeId = randomUUID();
+        const frozen = invoke("fixture-clock-freeze", [...named, "clock", "freeze", "--at", "2026-10-05T12:00:00.000Z", "--request-id", freezeId, "--json"], 0);
+        assert.ok(frozen?.ok && frozen.commandId === "clock.freeze");
+        assert.equal(frozen.data.after.virtualWall, "2026-10-05T12:00:00.000Z");
+        const advanceId = randomUUID(); const advanceArgs = [...named, "clock", "advance", "--by", "PT1M0.125S", "--request-id", advanceId, "--json"];
+        const advanced = invoke("fixture-clock-advance", advanceArgs, 0);
+        assert.ok(advanced?.ok && advanced.commandId === "clock.advance" && advanced.data.result);
+        assert.equal(advanced.data.result.after.virtualWall, "2026-10-05T12:01:00.125Z");
+        assert.equal(advanced.data.result.after.awakeSeconds, "60");
+        assert.equal(advanced.data.barrier, "settled");
+        const advancedAgain = invoke("fixture-clock-advance-retry", advanceArgs, 0);
+        assert.ok(advancedAgain?.ok && advancedAgain.commandId === "clock.advance");
+        assert.deepEqual(advancedAgain.data, advanced.data);
+        invoke("fixture-clock-request-conflict", advanceArgs.map(arg => arg === "PT1M0.125S" ? "PT2M" : arg), 4);
+        const shown = invoke("fixture-clock-show-after", [...named, "clock", "show", "--json"], 0);
+        assert.ok(shown?.ok && shown.commandId === "clock.show");
+        assert.deepEqual(shown.data, advanced.data.result.after);
+        const probeId = randomUUID();
+        const probed = invoke("fixture-probe-run", [...named, "probe", "run", "AT-cli-4", "--case", "stack-lifecycle", "--request-id", probeId, "--json"], 0);
+        assert.ok(probed?.ok && probed.commandId === "probe.run" && probed.data.result);
+        assert.equal(probed.data.result.complete, false);
+        assert.equal(probed.data.result.state, "NOT_IMPLEMENTED");
+        assert.ok(probed.data.result.cases.some(entry => entry.state === "PASS"));
+        const readback = invoke("fixture-probe-show", [...named, "probe", "show", probed.data.operation.operationId, "--json"], 0);
+        assert.ok(readback?.ok && readback.commandId === "probe.show");
+        assert.deepEqual(readback.data, probed.data);
+        for (const [flag, value] of [["--release", "R1"], ["--clock", "real"], ["--model", "supported"]] as const) {
+          invoke("fixture-stack-up-conflict-" + flag, flag === "--release" ? args.map(arg => arg === "R0" ? value : arg) : [...args, flag, value], 4);
+        }
+        const resumed = invoke("fixture-clock-resume", [...named, "clock", "resume", "--request-id", randomUUID(), "--json"], 0);
+        assert.ok(resumed?.ok && resumed.commandId === "clock.resume" && !resumed.data.after.frozen);
+        const downArgs = [...named, "stack", "down", "--request-id", randomUUID(), "--json"];
+        const down = invoke("fixture-stack-down", downArgs, 0);
+        assert.ok(down?.ok && down.commandId === "stack.down" && down.data.result?.teardown?.complete);
+        const again = invoke("fixture-stack-down-retry", downArgs, 0);
+        assert.ok(again?.ok && again.commandId === "stack.down");
+        assert.deepEqual(again.data, down.data);
+        invoke("fixture-clock-stopped-refuses", [...named, "clock", "show", "--json"], 5);
+        const restarted = invoke("fixture-stack-restart", args.map(arg => arg === requestId ? randomUUID() : arg), 0);
+        assert.ok(restarted?.ok && restarted.commandId === "stack.up" && restarted.data.stackId && restarted.data.result?.ready);
+        assert.notEqual(restarted.data.stackId, initial.data.stackId);
+        invoke("fixture-restarted-stack-stop", ["--env", "test", "--stack", restarted.data.stackId, "stack", "down", "--request-id", randomUUID(), "--json"], 0);
+      } finally {
+        invoke("fixture-stack-finally-stop", [...named, "stack", "down", "--request-id", randomUUID(), "--json"], 0);
       }
-      const concurrentId = randomUUID();
-      const concurrentArgs = args.map((arg) => arg === requestId ? concurrentId : arg);
-      const pair = await Promise.all([invokeConcurrent("journal-concurrent-first", concurrentArgs, 5), invokeConcurrent("journal-concurrent-second", concurrentArgs, 5)]);
-      const first = pair[0]; const second = pair[1];
-      assert.ok(first?.ok && first.commandId === "stack.up" && second?.ok && second.commandId === "stack.up");
-      assert.deepEqual(first.data, second.data);
-      assert.notEqual(first.data.operation.operationId, initial.data.operation.operationId);
-      assert.notEqual(first.data.stackId, initial.data.stackId);
-      const down = invoke("journal-unattested-down", ["--env", "test", "--stack", initial.data.stackId, "stack", "down", "--request-id", randomUUID(), "--json"], 5);
-      assert.ok(down && !down.ok && down.error.code === "ATTESTATION_INVALID");
-      const retained = invoke("journal-blocked-retained-after-refusal", args, 5);
-      assert.ok(retained?.ok && retained.commandId === "stack.up");
-      assert.deepEqual(retained.data, initial.data);
     });
     await suite.test("uninstalled status and doctor preserve incomplete inventory and fail closed", () => {
       for (const release of releaseSchema.options) {

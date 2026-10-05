@@ -184,6 +184,20 @@ export const bootstrapResourcePreflightSchema = z.strictObject({
   normalPressureObserved: z.boolean(), headroomSatisfied: z.boolean(),
   reasons: z.array(bootstrapResourceReasonSchema), resourcePermitIssued: z.literal(false), admissionState: z.enum(["admitted", "blocked"])
 });
+export const fixtureStackRecordSchema = z.strictObject({
+  schemaVersion: z.literal("toy.r0-fixture-stack.v1"), stackId: uuidSchema, request: bootstrapUpRequestSchema,
+  operation: operationRefSchema, generation: uint64Schema, ownerUid: z.int().nonnegative(),
+  nonce: uuidSchema, schemaDigest: digestSchema, runtimeDigest: digestSchema,
+  state: z.enum(["starting", "running", "stopped", "failed"]), pid: z.int().positive().nullable(),
+  createdAt: instantSchema, realExpiresAt: instantSchema, evidenceId: uuidSchema,
+  failureCode: z.enum(["PACKAGE_METADATA_DENIED", "CONTRACTS_READ_DENIED", "ZOD_READ_DENIED", "WORLD_READ_DENIED", "RUNTIME_READ_DENIED", "MODULE_NOT_FOUND", "SCHEMA_INVALID", "SQLITE_FAILURE", "SPAWN_FAILED", "STARTUP_TIMEOUT", "UNKNOWN_EXIT"]).optional()
+});
+export const fixtureWorkerStateSchema = z.strictObject({
+  stackId: uuidSchema, nonce: uuidSchema, pid: z.int().positive(),
+  state: z.enum(["running", "stopped"]), checkedAt: instantSchema, heartbeatCount: uint64Schema
+});
+export type FixtureStackRecordV1 = z.infer<typeof fixtureStackRecordSchema>;
+export type FixtureWorkerStateV1 = z.infer<typeof fixtureWorkerStateSchema>;
 export type RegisteredCliProbeIdV1 = z.infer<typeof registeredCliProbeIdSchema>;
 export type RegisteredTestCaseV1 = z.infer<typeof registeredTestCaseSchema>;
 export type ArtifactBindingV1 = z.infer<typeof artifactBindingSchema>;
@@ -248,5 +262,6 @@ export const testControlSchemaInventory = {
   BootstrapJournalMigrationV1: bootstrapJournalMigrationSchema, BootstrapAttemptOwnerRecordV1: bootstrapAttemptOwnerRecordSchema,
   BootstrapWorkLeaseRecordV1: bootstrapWorkLeaseRecordSchema, BootstrapJournalReadV1: bootstrapJournalReadSchema,
   BootstrapResourceSampleV1: bootstrapResourceSampleSchema, BootstrapResourceReasonV1: bootstrapResourceReasonSchema,
-  BootstrapResourcePreflightV1: bootstrapResourcePreflightSchema
+  BootstrapResourcePreflightV1: bootstrapResourcePreflightSchema,
+  FixtureStackRecordV1: fixtureStackRecordSchema, FixtureWorkerStateV1: fixtureWorkerStateSchema
 };

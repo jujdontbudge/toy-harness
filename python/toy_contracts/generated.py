@@ -525,6 +525,8 @@ RegisteredCheckIdV1 = Literal[
     "read.quota",
     "read.cadence",
     "read.release",
+    "bootstrap.fixture-runtime",
+    "bootstrap.fixture-identities",
     "bootstrap.journal",
     "bootstrap.signature",
     "bootstrap.native-entry",
@@ -2844,3 +2846,166 @@ BootstrapResourcePreflightV1AdmissionState = Literal[
     "admitted",
     "blocked",
 ]
+
+class FixtureStackRecordV1(TypedDict):
+    schemaVersion: "FixtureStackRecordV1SchemaVersion"
+    stackId: "UUID"
+    request: "BootstrapUpRequestV1"
+    operation: "OperationRef"
+    generation: "UInt64String"
+    ownerUid: int
+    nonce: "UUID"
+    schemaDigest: "Digest"
+    runtimeDigest: "Digest"
+    state: "FixtureStackRecordV1State"
+    pid: Optional[int]
+    createdAt: "Instant"
+    realExpiresAt: "Instant"
+    evidenceId: "UUID"
+    failureCode: NotRequired["FixtureStackRecordV1FailureCode"]
+
+FixtureStackRecordV1SchemaVersion = Literal[
+    "toy.r0-fixture-stack.v1",
+]
+
+FixtureStackRecordV1State = Literal[
+    "starting",
+    "running",
+    "stopped",
+    "failed",
+]
+
+FixtureStackRecordV1FailureCode = Literal[
+    "PACKAGE_METADATA_DENIED",
+    "CONTRACTS_READ_DENIED",
+    "ZOD_READ_DENIED",
+    "WORLD_READ_DENIED",
+    "RUNTIME_READ_DENIED",
+    "MODULE_NOT_FOUND",
+    "SCHEMA_INVALID",
+    "SQLITE_FAILURE",
+    "SPAWN_FAILED",
+    "STARTUP_TIMEOUT",
+    "UNKNOWN_EXIT",
+]
+
+class FixtureWorkerStateV1(TypedDict):
+    stackId: "UUID"
+    nonce: "UUID"
+    pid: int
+    state: "FixtureWorkerStateV1State"
+    checkedAt: "Instant"
+    heartbeatCount: "UInt64String"
+
+FixtureWorkerStateV1State = Literal[
+    "running",
+    "stopped",
+]
+
+SyncMode = Literal[
+    "incremental",
+    "reconcile",
+    "backfill",
+]
+
+class NormalizedSourceItem(TypedDict):
+    sourceId: "UUID"
+    partition: str
+    kind: str
+    providerId: str
+    revisionKey: str
+    operation: "NormalizedSourceItemOperation"
+    occurredAt: Optional["Instant"]
+    providerUpdatedAt: Optional["Instant"]
+    payloadSchema: str
+    payload: dict[str, object]
+    rawBlobId: Optional["UUID"]
+    contentHash: "Digest"
+
+NormalizedSourceItemOperation = Literal[
+    "upsert",
+    "tombstone",
+    "availability_change",
+]
+
+SourceErrorCode = Literal[
+    "AUTH_REQUIRED",
+    "CONSENT_REQUIRED",
+    "POLICY_BLOCKED",
+    "OS_PERMISSION_REQUIRED",
+    "ACCOUNT_MISMATCH",
+    "CURSOR_EXPIRED",
+    "RATE_LIMITED",
+    "QUOTA_EXHAUSTED",
+    "PAYMENT_REQUIRED",
+    "NETWORK_UNAVAILABLE",
+    "PROVIDER_UNAVAILABLE",
+    "SCHEMA_CHANGED",
+    "MALFORMED_ITEM",
+    "COVERAGE_INCOMPLETE",
+    "STORAGE_PRESSURE",
+    "LEASE_LOST",
+    "IDENTITY_CONFLICT",
+    "INVALID_INPUT",
+]
+
+class SourceError(TypedDict):
+    code: "SourceErrorCode"
+    retryable: bool
+    retryAt: Optional["Instant"]
+    incidentId: Optional["UUID"]
+    safeMessage: str
+
+class SyncReceipt(TypedDict):
+    runId: "UUID"
+    sourceId: "UUID"
+    mode: "SyncMode"
+    status: "SyncReceiptStatus"
+    observationIds: list["UUID"]
+    inserted: int
+    unchanged: int
+    tombstones: int
+    quarantined: int
+    moreWork: bool
+    checkedAt: "Instant"
+    coverage: "Coverage"
+    error: Optional["SourceError"]
+
+SyncReceiptStatus = Literal[
+    "completed",
+    "checkpointed",
+    "blocked",
+    "failed",
+]
+
+class ToySourcesStatusInputV1(TypedDict):
+    source_ids: NotRequired[list["UUID"]]
+    include_coverage: NotRequired[bool]
+
+class ToySourcesStatusDataV1(TypedDict):
+    sources: list["SourceStatus"]
+    checked_at: "Instant"
+
+class ToySourcesStatusErrorV1(TypedDict):
+    module: "ToySourcesStatusErrorV1Module"
+    code: "SourceErrorCode"
+    message: str
+    retryable: bool
+    incidentId: NotRequired["UUID"]
+
+ToySourcesStatusErrorV1Module = Literal[
+    "sources",
+]
+
+ToySourcesStatusResultV1 = Union[
+    "ToySourcesStatusResultV1Variant0",
+    "ToySourcesStatusResultV1Variant1",
+]
+
+class ToySourcesStatusResultV1Variant0(TypedDict):
+    ok: "CliHelpResultOk"
+    data: "ToySourcesStatusDataV1"
+
+class ToySourcesStatusResultV1Variant1(TypedDict):
+    ok: "CliFailureOk"
+    error: "ToySourcesStatusErrorV1"

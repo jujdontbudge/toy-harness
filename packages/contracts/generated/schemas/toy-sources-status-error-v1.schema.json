@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "module": {
+      "type": "string",
+      "const": "sources"
+    },
+    "code": {
+      "type": "string",
+      "enum": [
+        "AUTH_REQUIRED",
+        "CONSENT_REQUIRED",
+        "POLICY_BLOCKED",
+        "OS_PERMISSION_REQUIRED",
+        "ACCOUNT_MISMATCH",
+        "CURSOR_EXPIRED",
+        "RATE_LIMITED",
+        "QUOTA_EXHAUSTED",
+        "PAYMENT_REQUIRED",
+        "NETWORK_UNAVAILABLE",
+        "PROVIDER_UNAVAILABLE",
+        "SCHEMA_CHANGED",
+        "MALFORMED_ITEM",
+        "COVERAGE_INCOMPLETE",
+        "STORAGE_PRESSURE",
+        "LEASE_LOST",
+        "IDENTITY_CONFLICT",
+        "INVALID_INPUT"
+      ]
+    },
+    "message": {
+      "type": "string"
+    },
+    "retryable": {
+      "type": "boolean"
+    },
+    "incidentId": {
+      "type": "string",
+      "minLength": 36,
+      "maxLength": 36,
+      "format": "uuid",
+      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    }
+  },
+  "required": [
+    "module",
+    "code",
+    "message",
+    "retryable"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:ToySourcesStatusErrorV1"
+}

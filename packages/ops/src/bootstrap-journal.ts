@@ -455,6 +455,28 @@ const allocate = (db: DatabaseSync, owner: BootstrapJournalOwnerV1, request: Boo
 const errorCode = (error: unknown): OpsErrorCode => error instanceof JournalRefusal ? error.code
   : error instanceof Error && "errcode" in error && (error.errcode === 5 || error.errcode === 6) ? "TIMEOUT" : "ATTESTATION_INVALID";
 
+export const findBlockedBootstrapUp = (input: TestStackUpInputV1, timeoutMs: number): Result<TestStackOperationV1> | null => {
+  let db: DatabaseSync | undefined;
+  try {
+    const deadline = performance.now() + timeoutMs;
+    const { root, owner } = storeRoot("inspect");
+    const request = bootstrapUpRequestSchema.parse({
+      schemaVersion: "toy.bootstrap-up-request.v1", requestId: input.requestId.toLowerCase(), release: input.release,
+      world: input.world ?? "r0-bootstrap", clock: input.clock, model: input.model
+    });
+    ownedFile(join(root, "ops.db"), owner.uid, 16777216n);
+    db = openDatabase(join(root, "ops.db"), deadline, true);
+    checkSchema(db, owner);
+    const prior = existingOperation(db, owner, request);
+    return prior === null ? null : projection(prior);
+  } catch (error) {
+    const code = errorCode(error);
+    return code === "DEPENDENCY_UNAVAILABLE" ? null : opsTestStackResultSchema.parse({
+      ok: false, error: { module: "ops", code, retryable: code === "TIMEOUT", message: opsErrorMessages[code] }
+    });
+  } finally { db?.close(); }
+};
+
 export const recordBlockedBootstrapUp = async (input: TestStackUpInputV1, timeoutMs: number): Promise<Result<TestStackOperationV1>> => {
   const deadline = performance.now() + timeoutMs;
   const inTime = (): void => { if (performance.now() >= deadline) refuse("TIMEOUT"); };

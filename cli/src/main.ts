@@ -7,7 +7,7 @@ import {
   digestSchema, instantSchema, opsErrorExitCodes, opsTestStackResultSchema, schemaBundleDigest, uint64Schema, uuidSchema
 } from "@toy/contracts";
 import type { CliArgument, CliCommandId, CliDeclaration, CliEnvironment, CliFailure, CliResult, OpsError, OpsTestStackResultV1 } from "@toy/contracts";
-import { OpsControlRead, OpsTestStack } from "@toy/ops/public";
+import { OpsControlRead, OpsTestStack, TestClockControl, TestProbeControl } from "@toy/ops/public";
 
 const args = process.argv.slice(2);
 const commonNames = new Set(cliCommonArguments.map((argument) => argument.name));
@@ -166,15 +166,48 @@ const run = async (): Promise<CliResult> => {
     if (!validated.data.ok) return ownerFailure(validated.data.error);
     const data = validated.data.data;
     const exitCode = data.result?.components.some((check) => check.state === "FAIL") ? 1
-      : data.operation.state === "queued" || data.operation.state === "running" || data.result?.ready ? 0 : 5;
+      : data.operation.state === "queued" || data.operation.state === "running" || data.result?.ready || data.result?.teardown?.complete ? 0 : 5;
     if (data.stackId !== null) environment = { ...environment, stackId: data.stackId };
     const base = envelope(exitCode);
     return cliCommandSchemas[commandId].result.parse({
-      ...base, ok: true, data, meta: { ...base.meta, operationId: data.operation.operationId, recordRefs: data.links.recordRefs, evidence: data.links.observations }
+      ...base, ok: true, data, meta: { ...base.meta, effectState: exitCode === 0 && data.operation.state === "succeeded" ? "confirmed" : "none", operationId: data.operation.operationId, recordRefs: data.links.recordRefs, evidence: data.links.observations }
     });
   }
+  if (commandId.startsWith("clock.") || commandId.startsWith("probe.")) {
+    if (commandId === "clock.show") {
+      const result = TestClockControl.get(context);
+      if (!result.ok) return ownerFailure(result.error);
+      return cliCommandSchemas["clock.show"].result.parse({ ...envelope(0), commandId, ok: true, data: result.data, meta: { ...envelope(0).meta, effectState: commandId === "clock.show" ? "none" : "confirmed" } });
+    }
+    if (commandId === "clock.freeze") {
+      const result = TestClockControl.freeze(cliCommandSchemas["clock.freeze"].input.parse({ at: values.get("at"), requestId }), context);
+      if (!result.ok) return ownerFailure(result.error);
+      return cliCommandSchemas["clock.freeze"].result.parse({ ...envelope(0), commandId, ok: true, data: result.data, meta: { ...envelope(0).meta, effectState: "confirmed" } });
+    }
+    if (commandId === "clock.resume") {
+      const result = TestClockControl.resume(cliCommandSchemas["clock.resume"].input.parse({ requestId }), context);
+      if (!result.ok) return ownerFailure(result.error);
+      return cliCommandSchemas["clock.resume"].result.parse({ ...envelope(0), commandId, ok: true, data: result.data, meta: { ...envelope(0).meta, effectState: "confirmed" } });
+    }
+    if (commandId === "clock.advance") {
+      const result = TestClockControl.advance(cliCommandSchemas["clock.advance"].input.parse({ by: values.get("by"), requestId, waitMs }), context);
+      if (!result.ok) return ownerFailure(result.error);
+      return cliCommandSchemas["clock.advance"].result.parse({ ...envelope(0), commandId, ok: true, data: result.data, meta: { ...envelope(0).meta, effectState: "confirmed" } });
+    }
+    if (commandId === "probe.run" || commandId === "probe.show") {
+      const result = commandId === "probe.run"
+        ? TestProbeControl.run(cliCommandSchemas["probe.run"].input.parse({ probeId: operands[0], requestId, caseId: values.get("case") }), context)
+        : TestProbeControl.show(cliCommandSchemas["probe.show"].input.parse({ operationId: operands[0] }), context);
+      if (!result.ok) return ownerFailure(result.error);
+      const exitCode = result.data.operation.state === "succeeded" ? 0 : 5;
+      return cliCommandSchemas[commandId].result.parse({ ...envelope(exitCode), commandId, ok: true, data: result.data, meta: { ...envelope(exitCode).meta, effectState: commandId === "probe.run" ? "confirmed" : "none" } });
+    }
+  }
   if (commandId === "status" || commandId === "doctor") {
-    if (kind === "test") return failure("ATTESTATION_INVALID", 5, "ops");
+    if (kind === "test") {
+      const inspected = OpsTestStack.inspect(context);
+      if (!inspected.ok) return ownerFailure(inspected.error);
+    }
     const selectedRelease = values.get("release");
     const releaseInput = selectedRelease === undefined ? {} : { release: selectedRelease };
     if (commandId === "status") {

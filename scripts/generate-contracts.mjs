@@ -52,6 +52,7 @@ const exportOptions = {
 const exported = schemas.map(([name, schema]) => [name, schema.toJSONSchema(exportOptions)]);
 const finiteRecord = (schema) => {
   if (schema.type !== "object" || schema.additionalProperties === false) return schema;
+  if (schema.propertyNames?.type === "string" && !schema.properties && !schema.required && schema.additionalProperties && typeof schema.additionalProperties === "object") return schema;
   const keys = schema.propertyNames?.enum;
   if (!Array.isArray(keys) || keys.length === 0 || keys.some((key) => typeof key !== "string") || new Set(keys).size !== keys.length
     || !schema.additionalProperties || typeof schema.additionalProperties !== "object" || schema.properties
@@ -111,8 +112,11 @@ const modelFor = (schema, hint, forceName = null) => {
     }
   } else if (schema.not && Object.keys(schema.not).length === 0 && Object.keys(canonical(schema)).length === 1) kind = "never";
   else if (schema.type === "object") {
-    if (schema.additionalProperties !== false || !schema.properties) throw new Error("DTO objects must reject unknown fields at " + hint);
-    kind = "object";
+    if (schema.additionalProperties && typeof schema.additionalProperties === "object" && !schema.properties) kind = "record";
+    else {
+      if (schema.additionalProperties !== false || !schema.properties) throw new Error("DTO objects must reject unknown fields at " + hint);
+      kind = "object";
+    }
   } else if (schema.type === "array") {
     if (!schema.items) throw new Error("DTO arrays require an item schema at " + hint);
     kind = "array";
@@ -124,6 +128,7 @@ const modelFor = (schema, hint, forceName = null) => {
     else if (values.length === 1 && values[0] === null) kind = "null";
     else throw new Error("Unsupported enum values at " + hint);
   } else if (["string", "integer", "number", "boolean", "null"].includes(schema.type)) kind = schema.type;
+  else if (Object.keys(schema).length === 0) kind = "unknown";
   else throw new Error("Unsupported DTO wire shape at " + hint);
   const needsName = ["object", "enum", "union", "constant"].includes(kind);
   const name = forceName ?? reserved.get(key) ?? (needsName ? uniqueName(hint, schema) : null);
@@ -140,7 +145,8 @@ const modelFor = (schema, hint, forceName = null) => {
       if (!required.has(field) && type.kind === "nullable") throw new Error("Optional nullable fields require presence-preserving projection");
       return { field, type, required: required.has(field) };
     });
-  } else if (kind === "array") model.item = modelFor(schema.items, hint + "Item");
+  } else if (kind === "record") model.item = modelFor(schema.additionalProperties, hint + "Value");
+  else if (kind === "array") model.item = modelFor(schema.items, hint + "Item");
   else if (kind === "nullable") model.item = modelFor(members[0], hint + "Value");
   else if (kind === "union") model.members = members.map((item, index) => modelFor(item, (name ?? hint) + "Variant" + index));
   else if (kind === "enum") model.values = schema.enum ?? [schema.const];
@@ -157,6 +163,8 @@ const usePython = (name) => {
 const pythonType = (model) => {
   if (model.name) return quote(model.name);
   if (model.kind === "array") return "list[" + pythonType(model.item) + "]";
+  if (model.kind === "record") return "dict[str, " + pythonType(model.item) + "]";
+  if (model.kind === "unknown") return "object";
   if (model.kind === "nullable") return usePython("Optional") + "[" + pythonType(model.item) + "]";
   if (model.kind === "never") return usePython("NoReturn");
   if (model.kind === "null") return "None";

@@ -1,0 +1,161 @@
+{
+  "record_kind": "R0.K4a-reference-implementation",
+  "recorded_at": "2026-10-05",
+  "status": "REFERENCE_SOURCE_IMPLEMENTED_PENDING_PARENT_INTEGRATION",
+  "implementation_claim": true,
+  "public_boundary_compile_verified": false,
+  "references_verified": false,
+  "tests_run": false,
+  "runtime_probes_run": false,
+  "provider_calls_made": false,
+  "credentials_or_runtime_config_read": false,
+  "at_verdicts_recorded": [],
+  "scope": "Exactly the four R0.K4a reference patterns; no R1 activation or production effects.",
+  "reference_registrations": [
+    {
+      "pattern": "connector",
+      "owner": "sources",
+      "provider": "toy-k4a-empty",
+      "version": "1.0.0",
+      "auth_kind": "none",
+      "permitted_hosts": [],
+      "requested_scopes": [],
+      "network_calls": false,
+      "read_page_items": 0,
+      "test_world_id": null,
+      "probe_case_id": null,
+      "registration_state": "PENDING_PARENT_K3_PROTECTED_REGISTRY"
+    },
+    {
+      "pattern": "tool",
+      "owner": "sources",
+      "tool": "toy_sources_status",
+      "plugin": "toy",
+      "plugin_version": "1.0.0",
+      "toolset": "toy",
+      "input_schema": "ToySourcesStatusInputV1",
+      "result_schema": "ToySourcesStatusResultV1",
+      "plugin_artifact_or_hermes_profile_written": false,
+      "probe_case_id": null,
+      "registration_state": "LOCAL_DESCRIPTOR_ONLY_PENDING_PARENT_K3_TRANSPORT"
+    },
+    {
+      "pattern": "skill",
+      "owner": "self-improvement",
+      "name": "toy-control",
+      "version": "1.0.0",
+      "local_source": "skills/toy-control/SKILL.md",
+      "published": false,
+      "skill_manifest_entry": "PENDING_PARENT_INVENTORY",
+      "probe_case_id": null
+    },
+    {
+      "pattern": "migration",
+      "owner": "ops",
+      "migration_id": "ops.k4a.reference.0001",
+      "dialect": "sqlite",
+      "target_database": "private_disposable_sqlite_world",
+      "target_schema": "main",
+      "target_table": "k4a_reference_marker",
+      "disposable_only": true,
+      "production_allowed": false,
+      "automatic_rollback": false,
+      "runner_registration": "PENDING_PARENT_K3_DISPOSABLE_FIXTURE_TRANSPORT",
+      "probe_case_id": null
+    }
+  ],
+  "generated_schema_inventory_names": [
+    "SourceId",
+    "ISOInstant",
+    "ObservationId",
+    "SyncMode",
+    "NormalizedSourceItem",
+    "SourceErrorCode",
+    "SourceError",
+    "SyncReceipt",
+    "ToySourcesStatusInputV1",
+    "ToySourcesStatusDataV1",
+    "ToySourcesStatusErrorV1",
+    "ToySourcesStatusResultV1"
+  ],
+  "generated_schema_integration": "PENDING_PARENT_EXPORT_INVENTORY_AND_CODEGEN; no generated output was edited or produced. Parent will add bounded support for string-keyed record values typed as object in Python.",
+  "cli_receipts": {
+    "stack_up": null,
+    "probe_run": null,
+    "probe_show": null,
+    "stack_down": null,
+    "owner": "parent K3 integration"
+  },
+  "cli_attempts": [
+    {
+      "phase": "stack_up",
+      "result": "FAILED_BEFORE_RUNTIME_START",
+      "expected_exit_code": 0,
+      "observed_exit_code": 5,
+      "observed_binary": "preceding packed CLI binary",
+      "daemon_started": false,
+      "reported_by": "parent K3 integration",
+      "acceptance_verdict": null
+    }
+  ],
+  "acceptance_prerequisites": {
+    "k3_cli_ops_stack_and_probe_transport": "PENDING_PARENT_INTEGRATION",
+    "protected_test_world_case_ids_and_attestation": "PENDING_PARENT_REGISTRATION",
+    "AT-hermes-config-101": "PENDING_K4_STATIC_GATE",
+    "AT-cli-7": "PENDING_K4_STATIC_GATE",
+    "AT-cli-8": "PENDING_K4_STATIC_GATE",
+    "AT-cli-25": "PENDING_R1_FULL_GENERATOR_ACCEPTANCE",
+    "AT-cli-26": "PENDING_R1_FULL_GARDENER_ACCEPTANCE",
+    "AT-cli-27": "PENDING_R1_PUBLISHED_SKILL_ACCEPTANCE",
+    "future_sim_cases": "No K4a-specific SIM IDs are assigned in BUILD-PLAN; keep future SIM acceptance pending under its registered IDs.",
+    "actual_identity_and_launcher": "PENDING_R0.04-R0.05; no simulated identity or launcher pass claimed."
+  },
+  "file_digests_sha256": [
+    {
+      "path": "packages/contracts/src/bootstrap-references.ts",
+      "sha256": "28c6e7a44dfc27deb2d25505b6850ff16c39abfe82de707305f1f3d75f086916",
+      "role": "canonical wire schema source; parent-owned export/codegen remains pending"
+    },
+    {
+      "path": "packages/sources/src/public.ts",
+      "sha256": "4a7d0032d366ec8b92b0272a9d0ce4a6cda9a169f27f23e7198d7b5ea0c43d20",
+      "role": "bounded R0 SourceAdapterR0 and Sources public interface"
+    },
+    {
+      "path": "packages/sources/src/adapters/k4a-reference.ts",
+      "sha256": "9ae0025fae5e16021ba320aa4147705adaf0a2486d1a973ef7c8a0f1b4d48517",
+      "role": "fake no-network, empty-page SourceAdapter"
+    },
+    {
+      "path": "python/toy_adapter/sources_tools.py",
+      "sha256": "83df8656fd57556a05bd89a22337c862c7a8df2cb8babe02dfc6dadfb137764a",
+      "role": "thin public-owner toy_sources_status handler and local descriptor"
+    },
+    {
+      "path": "skills/toy-control/SKILL.md",
+      "sha256": "6443b62b178526de748bf732980f819db005f29d457c8d2a476bafd6c9c42986",
+      "role": "existing local skill source; unchanged"
+    },
+    {
+      "path": "skills/toy-control/FEATURE-MAP.md",
+      "sha256": "d482d7734f20cb5ededaa800ddec7d71b6a9ae025a0b8aebad77041ba0a318b3",
+      "role": "adjacent parent-owned map source as observed at handoff"
+    },
+    {
+      "path": "packages/ops/migrations/0001-k4a-reference.sql",
+      "sha256": "937f34c9c347e6306cc39a30f8910eade7ae539d17823627b57e645dd24a4e22",
+      "role": "single disposable-schema SQLite migration artifact"
+    },
+    {
+      "path": "packages/ops/migrations/0001-k4a-reference.json",
+      "sha256": "0dd2c45c2d1810d6fd93e510b417a866d59b3e2751e14b8bd51fb45d0e433839",
+      "role": "test-only migration registration descriptor with SQL digest"
+    },
+    {
+      "path": "docs/adr/0018-k4a-reference-implementation.md",
+      "sha256": "bc2530235af206782dc379c937a37c3fdb8c77c430454ce7b05444d3c84639e0",
+      "role": "written interface and acceptance boundary"
+    }
+  ],
+  "evidence_boundary": "This record binds hand-built reference sources and local descriptors only. It is not generated schema output, compilation evidence, a CLI receipt, a test result, an AT verdict, actual identity or launcher proof, K4a availability, R1 activation, or production migration evidence."
+}

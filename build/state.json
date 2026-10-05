@@ -2,9 +2,9 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-05T17:55:46.057Z",
+  "updatedAt": "2026-10-05T18:30:31.128Z",
   "phase": "R0 kitchen",
-  "activeCard": "R0.K3",
+  "activeCard": "R0.K4a",
   "cardCount": 83,
   "acceptanceCount": 1425,
   "cards": {
@@ -65,8 +65,8 @@
       }
     },
     "R0.K3": {
-      "implementation": "IN_PROGRESS",
-      "acceptance": "PENDING",
+      "implementation": "AVAILABLE",
+      "acceptance": "PENDING_FULL_ASSIGNED_ATS_AND_R0_04_05",
       "sourceRowHash": "aea9e7c31c24a6feb29dfb8050e1524938f8779899696e604c66835496ba6946",
       "dependsOn": "R0.K2 implementation available",
       "evidence": [
@@ -90,7 +90,8 @@
         "build/evidence/R0.K3/clock-static-check.json",
         "build/evidence/R0.K3/owner-live-readback.json",
         "build/evidence/R0.K3/memory-admission-v2.json",
-        "build/evidence/R0.K3/memory-correction-verification.json"
+        "build/evidence/R0.K3/memory-correction-verification.json",
+        "build/evidence/R0.K3/fixture-stack-verification.json"
       ],
       "requiredATs": [
         "AT-cli-1",
@@ -104,7 +105,7 @@
         "AT-hermes-config-100"
       ],
       "preparation": {
-        "status": "EXPORTED_OFFLINE_DIAGNOSTIC_AND_TEST_CONTROL_SCHEMA_SUBSETS",
+        "status": "FIXED_TRUSTED_FAKE_STACK_CLOCK_PROBE_AVAILABLE",
         "path": "packages/contracts/src/cli.ts",
         "declarations": 53,
         "ownerSchemas": "TWELVE_CONCRETE_COMMAND_SCHEMAS_REGISTERED_OWNER_EXECUTION_PENDING",
@@ -117,12 +118,12 @@
           "currentSchemaCompatible": false
         },
         "ownerResult": {
-          "status": "COMPILED_AND_CLI_VERIFIED_DURABLE_BLOCKED_REQUEST_IDENTITY",
+          "status": "TRUSTED_R0_FIXTURE_CLI_VERIFIED_ACTUAL_IDENTITY_PENDING",
           "publicInterface": "OpsTestStack.up/down",
           "nativeExecutionAvailable": false,
           "acceptanceComplete": false,
           "durableBlockedOperationAdmissionAvailable": true,
-          "durableRuntimeOperationAdmissionAvailable": false
+          "durableRuntimeOperationAdmissionAvailable": true
         },
         "nativeSupervisor": {
           "status": "COMPILED_NOT_EXECUTED",
@@ -167,44 +168,41 @@
         }
       },
       "pendingConditions": [
-        "All complete K3 AT assertions",
-        "All future leaf request/data/result schemas",
-        "Canonical human-interaction metadata and owner-specific error extensions",
-        "Authorized input-file schema validation",
-        "Installed manifest/release discovery and authenticated non-null owner transports",
-        "Confined stack/clock/probe owners with sealed manifests and persistent supervised lifecycle",
-        "Actual identity and native launcher prerequisites R0.04\u201305",
-        "Python runtime schema validation; Swift generation/compilation deferred to R3",
-        "Strict service/source/cadence detail representation before admitting non-null owner reads"
+        "Whole assigned AT assertions and complete fault matrix",
+        "K4a fixed external fake-provider receipts",
+        "Actual protected service identities and signed launcher: R0.04-R0.05",
+        "Installed manifest and authenticated owner transports for later releases",
+        "Future owner schemas and input-file transport at assigned cards"
       ],
       "lastVerification": {
-        "evidence": "build/evidence/R0.K3/memory-correction-verification.json",
+        "evidence": "build/evidence/R0.K3/fixture-stack-verification.json",
         "checks": 10,
-        "compiledPackedInvocations": 111,
-        "verdict": "PASS_STATIC_AND_PACKED_CLI_AVAILABLE_MEMORY_AMENDMENT",
+        "compiledPackedInvocations": 124,
+        "verdict": "PASS_STATIC_AND_TRUSTED_FAKE_FIXTURE_LIFECYCLE",
         "acceptanceComplete": false,
-        "receiptPrivacyPolicy": "VALIDATED_OUTPUT_ONLY_NO_ARGUMENTS",
-        "schemaDigest": "80536e413c6794c8bc1ff28232b8700ef095279437543256e0a31d2c5d595de9",
+        "schemaDigest": "4f512f87e789dc15a55399b982f7b984840027f46ea80362ab4479ea26afcf47",
         "swiftInvoked": false
       },
       "timebox": {
         "startedAt": "2026-10-05T17:48:00.000Z",
         "targetStopAt": "2026-10-05T19:48:00.000Z",
-        "scope": "Assigned K3 ATs; actual identity/launcher prerequisites remain pending until assigned cards"
+        "scope": "Assigned K3 ATs; actual identity/launcher prerequisites remain pending until assigned cards",
+        "implementationAvailableAt": "2026-10-05T18:30:31.128Z"
       }
     },
     "R0.K4a": {
-      "implementation": "NOT_IMPLEMENTED",
+      "implementation": "IN_PROGRESS",
       "acceptance": "PENDING",
       "sourceRowHash": "7c9218a2e67148310afa4449e589bfb1158716f384ee2c962239d17f016c0dd9",
       "dependsOn": "R0.K3 implementation available; frozen owner interfaces",
       "evidence": [
         "build/evidence/R0.K4a/preparation.json",
-        "build/evidence/R0.K4a/skill-preparation.json"
+        "build/evidence/R0.K4a/skill-preparation.json",
+        "build/evidence/R0.K4a/reference-implementation.json"
       ],
       "requiredATs": [],
       "preparation": {
-        "status": "WRITTEN_INTERFACE_ONLY",
+        "status": "REFERENCE_SOURCES_COMPILED_PUBLIC_CLI_RECEIPTS_PENDING",
         "paths": [
           "docs/adr/0004-bootstrap-reference-contracts.md",
           "build/evidence/R0.K4a/preparation.json",
@@ -8817,34 +8815,38 @@
   "currentTurnClassification": "progress",
   "cliCards": {
     "CLI-01": {
-      "implementation": "IN_PROGRESS",
+      "implementation": "AVAILABLE",
       "acceptance": "PENDING",
       "sourceRowHash": "0ec034559d0d22e42a7362483a3839d8cd2b470eee8a6439667cbe1fa61b2b5f",
       "requiredATs": [
         "AT-cli-1"
       ],
       "evidence": [
-        "build/evidence/R0.K3/bootstrap.json"
+        "build/evidence/R0.K3/bootstrap.json",
+        "build/evidence/R0.K3/fixture-stack-verification.json"
       ]
     },
     "CLI-02": {
-      "implementation": "NOT_IMPLEMENTED",
+      "implementation": "AVAILABLE",
       "acceptance": "PENDING",
       "sourceRowHash": "cfaeeaba647ee02f7b69caa44e4d63eb8867cc11f33544ecd38dc3d5291bfb3c",
       "requiredATs": [
         "AT-cli-4"
       ],
-      "evidence": []
+      "evidence": [
+        "build/evidence/R0.K3/fixture-stack-verification.json"
+      ]
     },
     "CLI-03": {
-      "implementation": "IN_PROGRESS",
+      "implementation": "AVAILABLE",
       "acceptance": "PENDING",
       "sourceRowHash": "307661c4851aff610ced3596a7409a974cc55dbfa6906629989c14b60a4f9c32",
       "requiredATs": [
         "AT-cli-3"
       ],
       "evidence": [
-        "build/evidence/R0.K3/bootstrap.json"
+        "build/evidence/R0.K3/bootstrap.json",
+        "build/evidence/R0.K3/fixture-stack-verification.json"
       ]
     },
     "CLI-04": {
@@ -18947,24 +18949,20 @@
   },
   "pullRequest": "https://github.com/JohanSardar/toy-harness/pull/1",
   "lastWorker": {
-    "id": "/root/r0_05_supervisor_review",
-    "model": "gpt-6.1-sol",
-    "reasoning": "xhigh",
-    "ownedScope": "Independent R0.05 hard security preparation review; only supervisor-preparation-review.json",
-    "status": "completed; both native source findings corrected and compiled, actual R0.05 denial acceptance pending"
+    "id": "/root/k4a_minimal_references",
+    "model": "gpt-6-luna",
+    "reasoning": "max",
+    "status": "completed",
+    "ownedScope": "Four K4a reference sources and read-only integration handoff; no builds or runtime claims"
   },
   "continuationAssessment": {
-    "generatedAt": "2026-10-05T17:43:21.402Z",
+    "generatedAt": "2026-10-05T18:30:31.128Z",
     "classification": "progress",
     "evidence": [
-      "build/evidence/R0.K3/journal-migration.json",
-      "build/evidence/R0.K3/owner-lifetime-research.json",
-      "build/evidence/R0.K3/native-build.json",
-      "build/evidence/R0.K3/clock-static-check.json",
-      "build/evidence/R0.K3/owner-live-readback.json"
+      "build/evidence/R0.K3/fixture-stack-verification.json"
     ],
-    "reason": "Actual backed-up journal migration was committed/pushed. Pinned process-lifetime and clock research then drove typed continuous native deadlines, checked scaling/addition, post-wait expiry checks and an independently bounded child acknowledgment. Fresh three-asset build completed zero and all closure hashes match; complete static gate passes. Live toy doctor re-verifies retained private backup and blocked runtime admission. No native execution or whole acceptance is claimed.",
-    "nextUnit": "Closed generated ownership-event/acknowledgment clock/boot context and native pre-effect gating, followed by compatible backed-up canonical runtime journal ownership"
+    "reason": "A real fixed trusted fake R0 process/SQLite lifecycle now passes packed toy clock/probe/retry/conflict/teardown/restart checks. Complete TS/Python static gate passes without Swift. K3 is implementation available, with actual identity and whole-AT predicates pending.",
+    "nextUnit": "K4a public reference probes using actual existing read-only Ops owner for the thin tool, followed immediately by minimal K4 generators/map/static gate and R0.01"
   },
   "executionPolicy": {
     "authority": "Johan direct instruction 2026-10-05; CONTRACTS.md Memory admission row",

@@ -8,8 +8,10 @@ import type {
   Result, TestStackDownInputV1, TestStackOperationV1, TestStackUpInputV1
 } from "@toy/contracts";
 export type { ModuleId } from "@toy/contracts";
-import { inspectBootstrapJournal, recordBlockedBootstrapUp } from "./bootstrap-journal.js";
+import { inspectBootstrapJournal } from "./bootstrap-journal.js";
 import { measureBootstrapResources } from "./bootstrap-resources.js";
+import { fixtureStackUp, fixtureStackDown, fixtureStackInspect, FixtureClock, FixtureProbe } from "./fixture-stack.js";
+export { FixtureClock as TestClockControl, FixtureProbe as TestProbeControl };
 
 const unavailableSnapshot = (release: Release, context: OpsControlContextV1): ControlStatusV1 => {
   opsControlContextSchema.parse(context);
@@ -35,13 +37,22 @@ const unavailableSnapshot = (release: Release, context: OpsControlContextV1): Co
 export const OpsControlRead = {
   status(input: ControlStatusInputV1, context: OpsControlContextV1): Promise<ControlStatusV1> {
     const request = controlStatusInputSchema.parse(input);
-    return Promise.resolve(unavailableSnapshot(request.release ?? "R0", context));
+    const snapshot = unavailableSnapshot(request.release ?? "R0", context);
+    if (context.environment.kind === "test") {
+      const fixture = fixtureStackInspect(context);
+      if (fixture.ok && fixture.data.result) snapshot.probes.push(...fixture.data.result.components);
+    }
+    return Promise.resolve(controlStatusSchema.parse(snapshot));
   },
   async doctor(input: DoctorInputV1, context: OpsControlContextV1): Promise<DoctorReportV1> {
     const started = process.hrtime.bigint();
     const request = doctorInputSchema.parse(input);
     const snapshot = unavailableSnapshot(request.release ?? "R0", context);
     const checks = [...snapshot.probes];
+    if (context.environment.kind === "test") {
+      const fixture = fixtureStackInspect(context);
+      if (fixture.ok && fixture.data.result) checks.push(...fixture.data.result.components);
+    }
     if (request.deep) {
       checks.push(inspectBootstrapJournal(context.timeoutMs - Number((process.hrtime.bigint() - started) / 1000000n)));
       const measured = await measureBootstrapResources(context.timeoutMs - Number((process.hrtime.bigint() - started) / 1000000n));
@@ -69,7 +80,7 @@ export const OpsTestStack = {
     }
     if (context.environment.kind !== "test") return Promise.resolve(unavailableStack("UNAUTHORIZED"));
     if (context.environment.stackId !== null) return Promise.resolve(unavailableStack("INVALID_INPUT"));
-    return recordBlockedBootstrapUp(input, context.timeoutMs);
+    return fixtureStackUp(input, context);
   },
   down(input: TestStackDownInputV1, context: OpsControlContextV1): Promise<Result<TestStackOperationV1>> {
     if (!testStackDownInputSchema.safeParse(input).success || !opsControlContextSchema.safeParse(context).success) {
@@ -77,6 +88,10 @@ export const OpsTestStack = {
     }
     if (context.environment.kind !== "test") return Promise.resolve(unavailableStack("UNAUTHORIZED"));
     if (context.environment.stackId === null) return Promise.resolve(unavailableStack("INVALID_INPUT"));
-    return Promise.resolve(unavailableStack("ATTESTATION_INVALID"));
+    return fixtureStackDown(input, context);
+  },
+  inspect(context: OpsControlContextV1): Result<TestStackOperationV1> {
+    if (!opsControlContextSchema.safeParse(context).success) return unavailableStack("INVALID_INPUT");
+    return fixtureStackInspect(context);
   }
 };
