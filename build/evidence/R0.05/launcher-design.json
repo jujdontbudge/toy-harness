@@ -1,0 +1,197 @@
+{
+  "record_kind": "R0.05-native-bootstrap-launcher-design",
+  "recorded_date": "2026-10-04",
+  "status": "DESIGN_ONLY",
+  "acceptance_complete": false,
+  "at_verdicts_recorded": [],
+  "mutation_scope": [
+    "docs/adr/0006-native-bootstrap-launcher.md",
+    "build/evidence/R0.05/launcher-design.json"
+  ],
+  "runtime_actions": {
+    "launcher_built": false,
+    "signature_created": false,
+    "launcher_run": false,
+    "service_or_profile_changed": false,
+    "service_uid_measured": false,
+    "provider_called": false,
+    "credentials_read": false,
+    "production_stack_used": false,
+    "vm_started": false
+  },
+  "dependency_resolution": {
+    "same_release_availability_rule": "BUILD-PLAN separates compiled public implementation and applicable static checks from full future acceptance. R0.K4a consumes K3 implementation availability; this does not pass K3 runtime ATs or installed-identity gates.",
+    "k3_public_operations": [
+      "OpsTestStack.up/down",
+      "OpsControlRead.status/doctor",
+      "ReplayEnvironment.runRegisteredProbe/registeredProbeStatus"
+    ],
+    "current_k3_route": "The original source snapshot showed offline help/version and parsing only. On the latest captured snapshot, production status/doctor call OpsControlRead and return explicit NOT_IMPLEMENTED owner probes/capabilities; test-environment status/doctor remains attestation-gated. Stack, test clock, and registered-probe invocations still lack owner transports and return DEPENDENCY_UNAVAILABLE. R0.K3 evidence remains labeled offline/parser-only.",
+    "status_doctor_source_delta": "The parent added the public diagnostic adapter and safe Ops projections during this design review (docs/adr/0008-ops-control-read-bootstrap.md). Those reads report unavailable owners; they do not supply stack lifecycle, probe transport, or K4a receipts.",
+    "k4a_current_route": "R0.K4a preparation lists four unimplemented references and requires a registered test stack, sealed case IDs, and public toy.cli.v1 operation/report receipts. No K4a case IDs or public receipts are present.",
+    "candidate_bootstrap": "A dedicated one-shot App Sandbox test launcher may execute the disposable R0 stack under the actual invoking UID/GID recorded from the OS. It never impersonates _toy_agent and proves no installed-service identity predicate. This exact K3 launcher/manifest is not yet frozen or executable.",
+    "actual_service_gates": "R0.04 measures service identities/protected parents/recovery; R0.05 runs the declared denial matrix as actual _toy_agent. Both remain pending and independent from caller-UID K4a receipts."
+  },
+  "launcher_design": {
+    "purpose": "fixed registered R0 test stack only; no production activation",
+    "process_identity": "actual invoking OS UID/GID, read back independently; no setuid, sudo, su, --uid, --as, or UserName override",
+    "stack_lifecycle_owner": "Ops must freeze one bounded owner-supervised controller/lifecycle contract across separate stack up and probe run/show/down CLI invocations. An inherited pipe only spans its creating process tree; PostgreSQL must not be left detached or controlled through an undeclared local socket. No such K3 contract is implemented.",
+    "parent_entitlements": [
+      "com.apple.security.app-sandbox=true"
+    ],
+    "embedded_child_entitlements": [
+      "com.apple.security.app-sandbox=true",
+      "com.apple.security.inherit=true"
+    ],
+    "signature": "local ad-hoc code signature; seal launcher and complete helper closure, verify strict signature and entitlements at every admission; signature is not runtime denial evidence",
+    "network": "no App Sandbox network entitlements, DNS, TCP listeners, Internet, provider endpoints, or live secrets",
+    "ipc": "fixed bounded framed inherited pipes only; stdout protocol-only, stderr redacted; close all undeclared inherited descriptors",
+    "database": "private PostgreSQL 17.11 child and durable data ownership bound to one stack generation, database toy/schema pgboss, listen_addresses empty, per-stack socket under the private sandbox container; exact App Sandbox socket viability and cross-invocation lifecycle/control are unresolved and must fail closed if unavailable",
+    "resources": {
+      "provisional_stack_limit_mib": 1024,
+      "minimum_available_memory_gib": 1.5,
+      "headroom_mib": 512,
+      "required_pressure": "normal with stable swap",
+      "heavy_work_leases": 1
+    },
+    "production_service_identity": {
+      "service_id": "hermes",
+      "launchd_domain": "system",
+      "launchd_label": "ai.hermes.gateway",
+      "configured_account": "_toy_agent",
+      "configured_host": "127.0.0.1:8642",
+      "interactive_label": "toy.hermes-interactive",
+      "interactive_host": "127.0.0.1:9119",
+      "numeric_uid": null,
+      "uid_status": "UNMEASURED_R0.04"
+    }
+  },
+  "public_receipt_plan": {
+    "commands": [
+      "toy --env test stack up --release R0 --request-id <UUID> --world <registered-world-id> --clock fake --model fake --json",
+      "toy --env test --stack <returned-stack-UUID> probe run <registered-AT-id> --request-id <UUID> --case <registered-case-id> --wait-ms 120000 --json",
+      "toy --env test --stack <returned-stack-UUID> probe show <returned-operation-UUID> --json",
+      "toy --env test --stack <returned-stack-UUID> stack down --request-id <UUID> --json"
+    ],
+    "receipt_contracts": [
+      "toy.cli.v1",
+      "TestStackOperationV1",
+      "RegisteredProbeOperationV1",
+      "RegisteredProbeReportV1",
+      "CheckViewV1",
+      "EvidenceLinksV1"
+    ],
+    "required_binding": [
+      "stackId and generation",
+      "release/control/schema/artifact digests",
+      "test launcher manifest digest",
+      "actual caller UID/GID",
+      "registered case manifest digest",
+      "operation ID and request ID",
+      "owned process/resource references",
+      "independent safe record/evidence links"
+    ],
+    "pass_boundary": "Only complete registered public-case receipts with full artifact binding can verify K4a references. Source hashes, compilation, codesign verification, help/version, or this ADR remain preparation/static evidence. No current receipt or AT verdict is recorded."
+  },
+  "unresolved_technical_predicates": [
+    "Ops has not frozen the K3-specific test bundle identifier, artifact path, manifest schema, or internal frame schema.",
+    "K3 has no frozen owner/controller contract for a stack generation spanning separate CLI invocations. Inherited pipes do not persist as control between calls, and no source authorizes an unowned/detached PostgreSQL process or another local control transport.",
+    "No runtime evidence shows the full local ad-hoc-signed parent bundle launches under this host's current macOS policy.",
+    "No source-backed runtime evidence shows PostgreSQL 17.11 can use the per-stack Unix socket inside this App Sandbox with network entitlements absent. Ops §5.1's no-Unix-socket-service rule is specific to the R5 target worker and does not authorize this K3 path.",
+    "The previously recorded R5 sandbox probe failed before parent or child entry markers; it cannot establish sandbox enforcement or this R0 path.",
+    "No resource, stack ownership, restart, teardown, or K4a public-probe receipt exists.",
+    "R0.04 numeric service UIDs/GIDs and R0.05 actual _toy_agent denial/positive evidence remain unmeasured."
+  ],
+  "human_only_steps": {
+    "test_launcher_signing_or_install": "No explicit user-only signing or installer step is source-required for the local test launcher. Ops §5.1 specifies ad-hoc local signing without paid membership, but this design does not sign or install anything.",
+    "r0_04": "BUILD-PLAN names only an unavoidable macOS administrator identity dialog; builder performs setup.",
+    "r0_05": "No human step is listed except a recovery/login interaction the OS actually requires."
+  },
+  "primary_research": [
+    {
+      "url": "https://developer.apple.com/documentation/xcode/embedding-a-helper-tool-in-a-sandboxed-app",
+      "fact": "Apple documents a helper executable embedded in a sandboxed macOS app, shows an ad-hoc - signature for a locally built helper, and describes the helper's inherited sandbox configuration.",
+      "limit": "The distribution example re-signs the helper with the parent application's signing identity; it does not prove this exact full ad-hoc R0 bundle will launch under local host policy."
+    },
+    {
+      "url": "https://developer.apple.com/library/archive/documentation/Miscellaneous/Reference/EntitlementKeyReference/Chapters/EnablingAppSandbox.html",
+      "fact": "A child configured to inherit App Sandbox uses exactly app-sandbox and inherit; specifying another App Sandbox key aborts that child. Inheritance applies to the parent's static entitlements.",
+      "limit": "Entitlement configuration alone does not prove runtime enforcement."
+    },
+    {
+      "url": "https://developer.apple.com/documentation/security/protecting-user-data-with-app-sandbox",
+      "fact": "App Sandbox limits access to files, network and hardware; a sandboxed app has access to its container and an embedded command-line tool must inherit the containing app's sandbox.",
+      "limit": "This source does not prove PostgreSQL's exact per-stack AF_UNIX behavior in the proposed launcher."
+    },
+    {
+      "url": "https://developer.apple.com/library/archive/documentation/Security/Conceptual/CodeSigningGuide/AboutCS/AboutCS.html",
+      "fact": "App Sandbox evaluates entitlements sealed into a code signature; code signing seals bytes but does not prove the code is safe or that runtime denial behavior is correct.",
+      "limit": "Gatekeeper policy is separate from the entitlement/runtime question."
+    }
+  ],
+  "source_hashes_sha256": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "fc4ece59b08e8a302797f86d0865fd8eb3c5a5226792b0dd26cc1c1825555529"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/BUILD-PLAN.md",
+      "sha256": "f35e7a18911b12e8c0b89130e3f62db4aa7344a80c7807ee164192fc70c36ad8"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/cli.md",
+      "sha256": "3265ac589e8b64cfc67c0d89fe8e1aa7fd48ecec8c981aab8716262a9f50a22c"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/ops.md",
+      "sha256": "825ab91bc6c3122bf038f06f2a7577096edb795a7fcaea7a1ffbcbbc841024a4"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/CONTRACTS.md",
+      "sha256": "ef4b5d18fe3a1adcf9eb28d55da734892795e103894210ed0aea61c911fd70f8"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/TEST-PLAN.md",
+      "sha256": "766aa798a4e980ebf5e4522363c8b038da4fdf66efaa507676d4d970fe0d11f3"
+    },
+    {
+      "path": "docs/adr/0003-cli-bootstrap.md",
+      "sha256": "81c6c1179d62be8c9f7ece6979c463c451b653bdd88839246b2fd13495db1c79"
+    },
+    {
+      "path": "docs/adr/0004-bootstrap-reference-contracts.md",
+      "sha256": "12e90fae38d99487d4af93350144dae473adc925a6b70223cad64ff98ef96eb1"
+    },
+    {
+      "path": "cli/src/main.ts",
+      "sha256": "63aecede63d153b0f7027d02e79f41feb803f436ee0ea41c348a0466a8bd91d8"
+    },
+    {
+      "path": "packages/contracts/src/cli-declarations.ts",
+      "sha256": "f2140cc358d0b42b19f51d5f35123082481cf0bb59633a71da139ad590262b2f"
+    },
+    {
+      "path": "build/evidence/R0.K3/bootstrap.json",
+      "sha256": "64bbf139b0a2c87336ab72dabb88c50019eddc815b18b6c10e0a6273207a4866"
+    },
+    {
+      "path": "build/evidence/R0.K4a/preparation.json",
+      "sha256": "74ec4c0daba8478079854666c297d2e8998913e4034ea0cb742b4b3c2a0d3d15"
+    }
+  ],
+  "source_snapshot_history": {
+    "earlier_snapshot": {
+      "capture_time": "not separately recorded; the original main.ts digest in source_hashes_sha256 binds the earlier CLI implementation snapshot",
+      "cli_main_sha256": "63aecede63d153b0f7027d02e79f41feb803f436ee0ea41c348a0466a8bd91d8",
+      "observation": "offline/parser-only help/version path; this status/doctor observation is historical after the parent added OpsControlRead"
+    },
+    "latest_snapshot": {
+      "captured_at_utc": "2026-10-05T03:57:12Z",
+      "cli_main_sha256": "c36e30788311b6afc553c4f7f7503bea3e363b711cec8c0bc765f2bb6d5b59a0",
+      "ops_public_sha256": "edeb3a810c639adba7ffaa5880abbf86f8f0ba660479b1028cef7caf2fa6c0ef",
+      "ops_contracts_sha256": "26443b2dc72999547a9ac44a6e5dd61a010ecb27b601d05d1e0a6a873f31bba6",
+      "ops_read_adr_sha256": "24d589e97b6f7bdefa0fc802d1c589e5b2cb95bbf602efb20d4976818e8479ed",
+      "observation": "production status/doctor returns truthful NOT_IMPLEMENTED projections; stack/test-clock/probe owner operations remain unavailable, so no K3/K4a runtime readiness is inferred"
+    }
+  }
+}

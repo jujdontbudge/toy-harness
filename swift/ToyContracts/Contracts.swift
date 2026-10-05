@@ -423,9 +423,9 @@ public struct CliError: Codable, Sendable {
     public let `effectState`: CliErrorEffectState
     public let `currentRevision`: Optional<Revision>
     public let `currentGeneration`: Optional<Revision>
-    public let `operationRef`: ToyNull
+    public let `operationRef`: Optional<RecordRef>
     public let `requiredInteraction`: ToyNull
-    public init(`module`: ModuleId, `code`: CliErrorCode, `message`: CliSafeMessage, `retryable`: Bool, `retryAt`: Optional<Instant>, `effectState`: CliErrorEffectState, `currentRevision`: Optional<Revision>, `currentGeneration`: Optional<Revision>, `operationRef`: ToyNull, `requiredInteraction`: ToyNull) {
+    public init(`module`: ModuleId, `code`: CliErrorCode, `message`: CliSafeMessage, `retryable`: Bool, `retryAt`: Optional<Instant>, `effectState`: CliErrorEffectState, `currentRevision`: Optional<Revision>, `currentGeneration`: Optional<Revision>, `operationRef`: Optional<RecordRef>, `requiredInteraction`: ToyNull) {
         self.`module` = `module`
         self.`code` = `code`
         self.`message` = `message`
@@ -451,7 +451,7 @@ public struct CliError: Codable, Sendable {
         self.`effectState` = try container.decode(CliErrorEffectState.self, forKey: ToyCodingKey("effectState"))
         self.`currentRevision` = try container.decode(Optional<Revision>.self, forKey: ToyCodingKey("currentRevision"))
         self.`currentGeneration` = try container.decode(Optional<Revision>.self, forKey: ToyCodingKey("currentGeneration"))
-        self.`operationRef` = try container.decode(ToyNull.self, forKey: ToyCodingKey("operationRef"))
+        self.`operationRef` = try container.decode(Optional<RecordRef>.self, forKey: ToyCodingKey("operationRef"))
         self.`requiredInteraction` = try container.decode(ToyNull.self, forKey: ToyCodingKey("requiredInteraction"))
     }
     public func encode(to encoder: any Encoder) throws {
@@ -486,6 +486,33 @@ public enum CliErrorEffectState: String, Codable, CaseIterable, Sendable {
     case `unknown` = "unknown"
 }
 
+public struct RecordRef: Codable, Sendable {
+    public let `module`: String
+    public let `kind`: String
+    public let `id`: UUID
+    public init(`module`: String, `kind`: String, `id`: UUID) {
+        self.`module` = `module`
+        self.`kind` = `kind`
+        self.`id` = `id`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["module", "kind", "id"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`module` = try container.decode(String.self, forKey: ToyCodingKey("module"))
+        self.`kind` = try container.decode(String.self, forKey: ToyCodingKey("kind"))
+        self.`id` = try container.decode(UUID.self, forKey: ToyCodingKey("id"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`module`, forKey: ToyCodingKey("module"))
+        try container.encode(`kind`, forKey: ToyCodingKey("kind"))
+        try container.encode(`id`, forKey: ToyCodingKey("id"))
+    }
+}
+
 public struct CliMetadata: Codable, Sendable {
     public let `exitCode`: Int64
     public let `releaseDigest`: Optional<Digest>
@@ -493,9 +520,9 @@ public struct CliMetadata: Codable, Sendable {
     public let `evaluatedAt`: Optional<Instant>
     public let `operationId`: Optional<UUID>
     public let `effectState`: CliErrorEffectState
-    public let `recordRefs`: [ToyNever]
-    public let `evidence`: [ToyNever]
-    public init(`exitCode`: Int64, `releaseDigest`: Optional<Digest>, `controlDigest`: Optional<Digest>, `evaluatedAt`: Optional<Instant>, `operationId`: Optional<UUID>, `effectState`: CliErrorEffectState, `recordRefs`: [ToyNever], `evidence`: [ToyNever]) {
+    public let `recordRefs`: [RecordRef]
+    public let `evidence`: [ObservationEvidenceRef]
+    public init(`exitCode`: Int64, `releaseDigest`: Optional<Digest>, `controlDigest`: Optional<Digest>, `evaluatedAt`: Optional<Instant>, `operationId`: Optional<UUID>, `effectState`: CliErrorEffectState, `recordRefs`: [RecordRef], `evidence`: [ObservationEvidenceRef]) {
         self.`exitCode` = `exitCode`
         self.`releaseDigest` = `releaseDigest`
         self.`controlDigest` = `controlDigest`
@@ -517,8 +544,8 @@ public struct CliMetadata: Codable, Sendable {
         self.`evaluatedAt` = try container.decode(Optional<Instant>.self, forKey: ToyCodingKey("evaluatedAt"))
         self.`operationId` = try container.decode(Optional<UUID>.self, forKey: ToyCodingKey("operationId"))
         self.`effectState` = try container.decode(CliErrorEffectState.self, forKey: ToyCodingKey("effectState"))
-        self.`recordRefs` = try container.decode([ToyNever].self, forKey: ToyCodingKey("recordRefs"))
-        self.`evidence` = try container.decode([ToyNever].self, forKey: ToyCodingKey("evidence"))
+        self.`recordRefs` = try container.decode([RecordRef].self, forKey: ToyCodingKey("recordRefs"))
+        self.`evidence` = try container.decode([ObservationEvidenceRef].self, forKey: ToyCodingKey("evidence"))
     }
     public func encode(to encoder: any Encoder) throws {
         var container = encoder.container(keyedBy: ToyCodingKey.self)
@@ -532,6 +559,43 @@ public struct CliMetadata: Codable, Sendable {
         try container.encode(`evidence`, forKey: ToyCodingKey("evidence"))
     }
 }
+
+public struct ObservationEvidenceRef: Codable, Sendable {
+    public let `observationRef`: ObservationRef
+    public let `documentId`: Optional<UUID>
+    public let `byteFrom`: Optional<Revision>
+    public let `byteTo`: Optional<Revision>
+    public let `quote`: Optional<String>
+    public init(`observationRef`: ObservationRef, `documentId`: Optional<UUID>, `byteFrom`: Optional<Revision>, `byteTo`: Optional<Revision>, `quote`: Optional<String>) {
+        self.`observationRef` = `observationRef`
+        self.`documentId` = `documentId`
+        self.`byteFrom` = `byteFrom`
+        self.`byteTo` = `byteTo`
+        self.`quote` = `quote`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["observationRef", "documentId", "byteFrom", "byteTo", "quote"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`observationRef` = try container.decode(ObservationRef.self, forKey: ToyCodingKey("observationRef"))
+        self.`documentId` = container.contains(ToyCodingKey("documentId")) ? try container.decode(UUID.self, forKey: ToyCodingKey("documentId")) : nil
+        self.`byteFrom` = container.contains(ToyCodingKey("byteFrom")) ? try container.decode(Revision.self, forKey: ToyCodingKey("byteFrom")) : nil
+        self.`byteTo` = container.contains(ToyCodingKey("byteTo")) ? try container.decode(Revision.self, forKey: ToyCodingKey("byteTo")) : nil
+        self.`quote` = container.contains(ToyCodingKey("quote")) ? try container.decode(String.self, forKey: ToyCodingKey("quote")) : nil
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`observationRef`, forKey: ToyCodingKey("observationRef"))
+        try container.encodeIfPresent(`documentId`, forKey: ToyCodingKey("documentId"))
+        try container.encodeIfPresent(`byteFrom`, forKey: ToyCodingKey("byteFrom"))
+        try container.encodeIfPresent(`byteTo`, forKey: ToyCodingKey("byteTo"))
+        try container.encodeIfPresent(`quote`, forKey: ToyCodingKey("quote"))
+    }
+}
+
+public typealias ObservationRef = String
 
 public struct CliFailure: Codable, Sendable {
     public let `schemaVersion`: CliHelpV1CompatibilityWireVersionsItem
@@ -746,15 +810,2211 @@ public enum CliVersionResultCommandId: String, Codable, CaseIterable, Sendable {
     case `version` = "version"
 }
 
+public struct CliStatusResult: Codable, Sendable {
+    public let `schemaVersion`: CliHelpV1CompatibilityWireVersionsItem
+    public let `commandId`: CliStatusResultCommandId
+    public let `invocationId`: UUID
+    public let `generatedAt`: Instant
+    public let `cliVersion`: CliVersionV1CliVersion
+    public let `contractsVersion`: CliVersionV1CliVersion
+    public let `schemaDigest`: Digest
+    public let `environment`: CliEnvironment
+    public let `meta`: CliMetadata
+    public let `ok`: CliHelpResultOk
+    public let `data`: ControlStatusV1
+    public init(`schemaVersion`: CliHelpV1CompatibilityWireVersionsItem, `commandId`: CliStatusResultCommandId, `invocationId`: UUID, `generatedAt`: Instant, `cliVersion`: CliVersionV1CliVersion, `contractsVersion`: CliVersionV1CliVersion, `schemaDigest`: Digest, `environment`: CliEnvironment, `meta`: CliMetadata, `ok`: CliHelpResultOk, `data`: ControlStatusV1) {
+        self.`schemaVersion` = `schemaVersion`
+        self.`commandId` = `commandId`
+        self.`invocationId` = `invocationId`
+        self.`generatedAt` = `generatedAt`
+        self.`cliVersion` = `cliVersion`
+        self.`contractsVersion` = `contractsVersion`
+        self.`schemaDigest` = `schemaDigest`
+        self.`environment` = `environment`
+        self.`meta` = `meta`
+        self.`ok` = `ok`
+        self.`data` = `data`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["schemaVersion", "commandId", "invocationId", "generatedAt", "cliVersion", "contractsVersion", "schemaDigest", "environment", "meta", "ok", "data"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`schemaVersion` = try container.decode(CliHelpV1CompatibilityWireVersionsItem.self, forKey: ToyCodingKey("schemaVersion"))
+        self.`commandId` = try container.decode(CliStatusResultCommandId.self, forKey: ToyCodingKey("commandId"))
+        self.`invocationId` = try container.decode(UUID.self, forKey: ToyCodingKey("invocationId"))
+        self.`generatedAt` = try container.decode(Instant.self, forKey: ToyCodingKey("generatedAt"))
+        self.`cliVersion` = try container.decode(CliVersionV1CliVersion.self, forKey: ToyCodingKey("cliVersion"))
+        self.`contractsVersion` = try container.decode(CliVersionV1CliVersion.self, forKey: ToyCodingKey("contractsVersion"))
+        self.`schemaDigest` = try container.decode(Digest.self, forKey: ToyCodingKey("schemaDigest"))
+        self.`environment` = try container.decode(CliEnvironment.self, forKey: ToyCodingKey("environment"))
+        self.`meta` = try container.decode(CliMetadata.self, forKey: ToyCodingKey("meta"))
+        self.`ok` = try container.decode(CliHelpResultOk.self, forKey: ToyCodingKey("ok"))
+        self.`data` = try container.decode(ControlStatusV1.self, forKey: ToyCodingKey("data"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`schemaVersion`, forKey: ToyCodingKey("schemaVersion"))
+        try container.encode(`commandId`, forKey: ToyCodingKey("commandId"))
+        try container.encode(`invocationId`, forKey: ToyCodingKey("invocationId"))
+        try container.encode(`generatedAt`, forKey: ToyCodingKey("generatedAt"))
+        try container.encode(`cliVersion`, forKey: ToyCodingKey("cliVersion"))
+        try container.encode(`contractsVersion`, forKey: ToyCodingKey("contractsVersion"))
+        try container.encode(`schemaDigest`, forKey: ToyCodingKey("schemaDigest"))
+        try container.encode(`environment`, forKey: ToyCodingKey("environment"))
+        try container.encode(`meta`, forKey: ToyCodingKey("meta"))
+        try container.encode(`ok`, forKey: ToyCodingKey("ok"))
+        try container.encode(`data`, forKey: ToyCodingKey("data"))
+    }
+}
+
+public enum CliStatusResultCommandId: String, Codable, CaseIterable, Sendable {
+    case `status` = "status"
+}
+
+public struct ControlStatusV1: Codable, Sendable {
+    public let `requiredRelease`: Release
+    public let `ops`: Optional<OpsStatus>
+    public let `probes`: [CheckViewV1]
+    public let `sources`: Optional<SourceHealthV1>
+    public let `attention`: Optional<AttentionSnapshot>
+    public let `quota`: Optional<QuotaAdmissionViewV1>
+    public let `cadence`: Optional<CadenceCoverageV1>
+    public let `release`: Optional<ReleaseStatusV1>
+    public let `secrets`: [SecretReadinessV1]
+    public let `capabilities`: [CapabilityViewV1]
+    public let `complete`: Bool
+    public init(`requiredRelease`: Release, `ops`: Optional<OpsStatus>, `probes`: [CheckViewV1], `sources`: Optional<SourceHealthV1>, `attention`: Optional<AttentionSnapshot>, `quota`: Optional<QuotaAdmissionViewV1>, `cadence`: Optional<CadenceCoverageV1>, `release`: Optional<ReleaseStatusV1>, `secrets`: [SecretReadinessV1], `capabilities`: [CapabilityViewV1], `complete`: Bool) {
+        self.`requiredRelease` = `requiredRelease`
+        self.`ops` = `ops`
+        self.`probes` = `probes`
+        self.`sources` = `sources`
+        self.`attention` = `attention`
+        self.`quota` = `quota`
+        self.`cadence` = `cadence`
+        self.`release` = `release`
+        self.`secrets` = `secrets`
+        self.`capabilities` = `capabilities`
+        self.`complete` = `complete`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["requiredRelease", "ops", "probes", "sources", "attention", "quota", "cadence", "release", "secrets", "capabilities", "complete"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`requiredRelease` = try container.decode(Release.self, forKey: ToyCodingKey("requiredRelease"))
+        self.`ops` = try container.decode(Optional<OpsStatus>.self, forKey: ToyCodingKey("ops"))
+        self.`probes` = try container.decode([CheckViewV1].self, forKey: ToyCodingKey("probes"))
+        self.`sources` = try container.decode(Optional<SourceHealthV1>.self, forKey: ToyCodingKey("sources"))
+        self.`attention` = try container.decode(Optional<AttentionSnapshot>.self, forKey: ToyCodingKey("attention"))
+        self.`quota` = try container.decode(Optional<QuotaAdmissionViewV1>.self, forKey: ToyCodingKey("quota"))
+        self.`cadence` = try container.decode(Optional<CadenceCoverageV1>.self, forKey: ToyCodingKey("cadence"))
+        self.`release` = try container.decode(Optional<ReleaseStatusV1>.self, forKey: ToyCodingKey("release"))
+        self.`secrets` = try container.decode([SecretReadinessV1].self, forKey: ToyCodingKey("secrets"))
+        self.`capabilities` = try container.decode([CapabilityViewV1].self, forKey: ToyCodingKey("capabilities"))
+        self.`complete` = try container.decode(Bool.self, forKey: ToyCodingKey("complete"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`requiredRelease`, forKey: ToyCodingKey("requiredRelease"))
+        try container.encode(`ops`, forKey: ToyCodingKey("ops"))
+        try container.encode(`probes`, forKey: ToyCodingKey("probes"))
+        try container.encode(`sources`, forKey: ToyCodingKey("sources"))
+        try container.encode(`attention`, forKey: ToyCodingKey("attention"))
+        try container.encode(`quota`, forKey: ToyCodingKey("quota"))
+        try container.encode(`cadence`, forKey: ToyCodingKey("cadence"))
+        try container.encode(`release`, forKey: ToyCodingKey("release"))
+        try container.encode(`secrets`, forKey: ToyCodingKey("secrets"))
+        try container.encode(`capabilities`, forKey: ToyCodingKey("capabilities"))
+        try container.encode(`complete`, forKey: ToyCodingKey("complete"))
+    }
+}
+
+public struct OpsStatus: Codable, Sendable {
+    public let `generatedAt`: Instant
+    public let `services`: [ServiceStatus]
+    public let `backups`: [BackupDestinationStatus]
+    public let `subscriptions`: [SubscriptionStatus]
+    public let `currentRelease`: Optional<Digest>
+    public let `rollbackRelease`: Optional<Digest>
+    public let `diskAvailableBytes`: Revision
+    public let `memoryPressure`: OpsStatusMemoryPressure
+    public let `reviewSlots`: OpsStatusReviewSlots
+    public let `incidentIds`: [UUID]
+    public init(`generatedAt`: Instant, `services`: [ServiceStatus], `backups`: [BackupDestinationStatus], `subscriptions`: [SubscriptionStatus], `currentRelease`: Optional<Digest>, `rollbackRelease`: Optional<Digest>, `diskAvailableBytes`: Revision, `memoryPressure`: OpsStatusMemoryPressure, `reviewSlots`: OpsStatusReviewSlots, `incidentIds`: [UUID]) {
+        self.`generatedAt` = `generatedAt`
+        self.`services` = `services`
+        self.`backups` = `backups`
+        self.`subscriptions` = `subscriptions`
+        self.`currentRelease` = `currentRelease`
+        self.`rollbackRelease` = `rollbackRelease`
+        self.`diskAvailableBytes` = `diskAvailableBytes`
+        self.`memoryPressure` = `memoryPressure`
+        self.`reviewSlots` = `reviewSlots`
+        self.`incidentIds` = `incidentIds`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["generatedAt", "services", "backups", "subscriptions", "currentRelease", "rollbackRelease", "diskAvailableBytes", "memoryPressure", "reviewSlots", "incidentIds"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`generatedAt` = try container.decode(Instant.self, forKey: ToyCodingKey("generatedAt"))
+        self.`services` = try container.decode([ServiceStatus].self, forKey: ToyCodingKey("services"))
+        self.`backups` = try container.decode([BackupDestinationStatus].self, forKey: ToyCodingKey("backups"))
+        self.`subscriptions` = try container.decode([SubscriptionStatus].self, forKey: ToyCodingKey("subscriptions"))
+        self.`currentRelease` = try container.decode(Optional<Digest>.self, forKey: ToyCodingKey("currentRelease"))
+        self.`rollbackRelease` = try container.decode(Optional<Digest>.self, forKey: ToyCodingKey("rollbackRelease"))
+        self.`diskAvailableBytes` = try container.decode(Revision.self, forKey: ToyCodingKey("diskAvailableBytes"))
+        self.`memoryPressure` = try container.decode(OpsStatusMemoryPressure.self, forKey: ToyCodingKey("memoryPressure"))
+        self.`reviewSlots` = try container.decode(OpsStatusReviewSlots.self, forKey: ToyCodingKey("reviewSlots"))
+        self.`incidentIds` = try container.decode([UUID].self, forKey: ToyCodingKey("incidentIds"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`generatedAt`, forKey: ToyCodingKey("generatedAt"))
+        try container.encode(`services`, forKey: ToyCodingKey("services"))
+        try container.encode(`backups`, forKey: ToyCodingKey("backups"))
+        try container.encode(`subscriptions`, forKey: ToyCodingKey("subscriptions"))
+        try container.encode(`currentRelease`, forKey: ToyCodingKey("currentRelease"))
+        try container.encode(`rollbackRelease`, forKey: ToyCodingKey("rollbackRelease"))
+        try container.encode(`diskAvailableBytes`, forKey: ToyCodingKey("diskAvailableBytes"))
+        try container.encode(`memoryPressure`, forKey: ToyCodingKey("memoryPressure"))
+        try container.encode(`reviewSlots`, forKey: ToyCodingKey("reviewSlots"))
+        try container.encode(`incidentIds`, forKey: ToyCodingKey("incidentIds"))
+    }
+}
+
+public struct ServiceStatus: Codable, Sendable {
+    public let `id`: ServiceId
+    public let `state`: ServiceStatusState
+    public let `launchdDomain`: String
+    public let `launchdLabel`: String
+    public let `uid`: Int64
+    public let `pid`: Optional<Int64>
+    public let `bootId`: UUID
+    public let `releaseId`: Optional<Digest>
+    public let `checkedAt`: Instant
+    public let `lastProgressAt`: Optional<Instant>
+    public let `reasonCode`: Optional<String>
+    public init(`id`: ServiceId, `state`: ServiceStatusState, `launchdDomain`: String, `launchdLabel`: String, `uid`: Int64, `pid`: Optional<Int64>, `bootId`: UUID, `releaseId`: Optional<Digest>, `checkedAt`: Instant, `lastProgressAt`: Optional<Instant>, `reasonCode`: Optional<String>) {
+        self.`id` = `id`
+        self.`state` = `state`
+        self.`launchdDomain` = `launchdDomain`
+        self.`launchdLabel` = `launchdLabel`
+        self.`uid` = `uid`
+        self.`pid` = `pid`
+        self.`bootId` = `bootId`
+        self.`releaseId` = `releaseId`
+        self.`checkedAt` = `checkedAt`
+        self.`lastProgressAt` = `lastProgressAt`
+        self.`reasonCode` = `reasonCode`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["id", "state", "launchdDomain", "launchdLabel", "uid", "pid", "bootId", "releaseId", "checkedAt", "lastProgressAt", "reasonCode"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`id` = try container.decode(ServiceId.self, forKey: ToyCodingKey("id"))
+        self.`state` = try container.decode(ServiceStatusState.self, forKey: ToyCodingKey("state"))
+        self.`launchdDomain` = try container.decode(String.self, forKey: ToyCodingKey("launchdDomain"))
+        self.`launchdLabel` = try container.decode(String.self, forKey: ToyCodingKey("launchdLabel"))
+        self.`uid` = try container.decode(Int64.self, forKey: ToyCodingKey("uid"))
+        self.`pid` = try container.decode(Optional<Int64>.self, forKey: ToyCodingKey("pid"))
+        self.`bootId` = try container.decode(UUID.self, forKey: ToyCodingKey("bootId"))
+        self.`releaseId` = try container.decode(Optional<Digest>.self, forKey: ToyCodingKey("releaseId"))
+        self.`checkedAt` = try container.decode(Instant.self, forKey: ToyCodingKey("checkedAt"))
+        self.`lastProgressAt` = try container.decode(Optional<Instant>.self, forKey: ToyCodingKey("lastProgressAt"))
+        self.`reasonCode` = try container.decode(Optional<String>.self, forKey: ToyCodingKey("reasonCode"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`id`, forKey: ToyCodingKey("id"))
+        try container.encode(`state`, forKey: ToyCodingKey("state"))
+        try container.encode(`launchdDomain`, forKey: ToyCodingKey("launchdDomain"))
+        try container.encode(`launchdLabel`, forKey: ToyCodingKey("launchdLabel"))
+        try container.encode(`uid`, forKey: ToyCodingKey("uid"))
+        try container.encode(`pid`, forKey: ToyCodingKey("pid"))
+        try container.encode(`bootId`, forKey: ToyCodingKey("bootId"))
+        try container.encode(`releaseId`, forKey: ToyCodingKey("releaseId"))
+        try container.encode(`checkedAt`, forKey: ToyCodingKey("checkedAt"))
+        try container.encode(`lastProgressAt`, forKey: ToyCodingKey("lastProgressAt"))
+        try container.encode(`reasonCode`, forKey: ToyCodingKey("reasonCode"))
+    }
+}
+
+public enum ServiceId: String, Codable, CaseIterable, Sendable {
+    case `postgres` = "postgres"
+    case `backend` = "backend"
+    case `workers` = "workers"
+    case `hermes` = "hermes"
+    case `hermesInteractive` = "hermes-interactive"
+    case `ops` = "ops"
+    case `authority` = "authority"
+    case `ingress` = "ingress"
+    case `approval` = "approval"
+    case `review` = "review"
+    case `attentionDelivery` = "attention-delivery"
+    case `hands` = "hands"
+    case `backup` = "backup"
+    case `secrets` = "secrets"
+    case `publisher` = "publisher"
+    case `evaluator` = "evaluator"
+    case `repair` = "repair"
+    case `tailscale` = "tailscale"
+    case `recorder` = "recorder"
+}
+
+public enum ServiceStatusState: String, Codable, CaseIterable, Sendable {
+    case `ready` = "ready"
+    case `degraded` = "degraded"
+    case `starting` = "starting"
+    case `parked` = "parked"
+    case `unavailable` = "unavailable"
+    case `unknown` = "unknown"
+}
+
+public struct BackupDestinationStatus: Codable, Sendable {
+    public let `destination`: BackupDestinationStatusDestination
+    public let `lastCompleteSetId`: Optional<UUID>
+    public let `lastCompleteAt`: Optional<Instant>
+    public let `criticalStateAgeSeconds`: Optional<Double>
+    public let `fullStateAgeSeconds`: Optional<Double>
+    public let `lastVerifiedRestoreAt`: Optional<Instant>
+    public let `state`: BackupDestinationStatusState
+    public init(`destination`: BackupDestinationStatusDestination, `lastCompleteSetId`: Optional<UUID>, `lastCompleteAt`: Optional<Instant>, `criticalStateAgeSeconds`: Optional<Double>, `fullStateAgeSeconds`: Optional<Double>, `lastVerifiedRestoreAt`: Optional<Instant>, `state`: BackupDestinationStatusState) {
+        self.`destination` = `destination`
+        self.`lastCompleteSetId` = `lastCompleteSetId`
+        self.`lastCompleteAt` = `lastCompleteAt`
+        self.`criticalStateAgeSeconds` = `criticalStateAgeSeconds`
+        self.`fullStateAgeSeconds` = `fullStateAgeSeconds`
+        self.`lastVerifiedRestoreAt` = `lastVerifiedRestoreAt`
+        self.`state` = `state`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["destination", "lastCompleteSetId", "lastCompleteAt", "criticalStateAgeSeconds", "fullStateAgeSeconds", "lastVerifiedRestoreAt", "state"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`destination` = try container.decode(BackupDestinationStatusDestination.self, forKey: ToyCodingKey("destination"))
+        self.`lastCompleteSetId` = try container.decode(Optional<UUID>.self, forKey: ToyCodingKey("lastCompleteSetId"))
+        self.`lastCompleteAt` = try container.decode(Optional<Instant>.self, forKey: ToyCodingKey("lastCompleteAt"))
+        self.`criticalStateAgeSeconds` = try container.decode(Optional<Double>.self, forKey: ToyCodingKey("criticalStateAgeSeconds"))
+        self.`fullStateAgeSeconds` = try container.decode(Optional<Double>.self, forKey: ToyCodingKey("fullStateAgeSeconds"))
+        self.`lastVerifiedRestoreAt` = try container.decode(Optional<Instant>.self, forKey: ToyCodingKey("lastVerifiedRestoreAt"))
+        self.`state` = try container.decode(BackupDestinationStatusState.self, forKey: ToyCodingKey("state"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`destination`, forKey: ToyCodingKey("destination"))
+        try container.encode(`lastCompleteSetId`, forKey: ToyCodingKey("lastCompleteSetId"))
+        try container.encode(`lastCompleteAt`, forKey: ToyCodingKey("lastCompleteAt"))
+        try container.encode(`criticalStateAgeSeconds`, forKey: ToyCodingKey("criticalStateAgeSeconds"))
+        try container.encode(`fullStateAgeSeconds`, forKey: ToyCodingKey("fullStateAgeSeconds"))
+        try container.encode(`lastVerifiedRestoreAt`, forKey: ToyCodingKey("lastVerifiedRestoreAt"))
+        try container.encode(`state`, forKey: ToyCodingKey("state"))
+    }
+}
+
+public enum BackupDestinationStatusDestination: String, Codable, CaseIterable, Sendable {
+    case `external` = "external"
+    case `b2` = "b2"
+}
+
+public enum BackupDestinationStatusState: String, Codable, CaseIterable, Sendable {
+    case `healthy` = "healthy"
+    case `stale` = "stale"
+    case `missing` = "missing"
+    case `blocked` = "blocked"
+    case `unknown` = "unknown"
+}
+
+public struct SubscriptionStatus: Codable, Sendable {
+    public let `provider`: SubscriptionStatusProvider
+    public let `source`: String
+    public let `fetchedAt`: Optional<Instant>
+    public let `state`: SubscriptionStatusState
+    public let `windows`: [QuotaWindow]
+    public let `paidUsageAllowed`: CliFailureOk
+    public let `noOverageVerifiedAt`: Optional<Instant>
+    public init(`provider`: SubscriptionStatusProvider, `source`: String, `fetchedAt`: Optional<Instant>, `state`: SubscriptionStatusState, `windows`: [QuotaWindow], `paidUsageAllowed`: CliFailureOk, `noOverageVerifiedAt`: Optional<Instant>) {
+        self.`provider` = `provider`
+        self.`source` = `source`
+        self.`fetchedAt` = `fetchedAt`
+        self.`state` = `state`
+        self.`windows` = `windows`
+        self.`paidUsageAllowed` = `paidUsageAllowed`
+        self.`noOverageVerifiedAt` = `noOverageVerifiedAt`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["provider", "source", "fetchedAt", "state", "windows", "paidUsageAllowed", "noOverageVerifiedAt"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`provider` = try container.decode(SubscriptionStatusProvider.self, forKey: ToyCodingKey("provider"))
+        self.`source` = try container.decode(String.self, forKey: ToyCodingKey("source"))
+        self.`fetchedAt` = try container.decode(Optional<Instant>.self, forKey: ToyCodingKey("fetchedAt"))
+        self.`state` = try container.decode(SubscriptionStatusState.self, forKey: ToyCodingKey("state"))
+        self.`windows` = try container.decode([QuotaWindow].self, forKey: ToyCodingKey("windows"))
+        self.`paidUsageAllowed` = try container.decode(CliFailureOk.self, forKey: ToyCodingKey("paidUsageAllowed"))
+        self.`noOverageVerifiedAt` = try container.decode(Optional<Instant>.self, forKey: ToyCodingKey("noOverageVerifiedAt"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`provider`, forKey: ToyCodingKey("provider"))
+        try container.encode(`source`, forKey: ToyCodingKey("source"))
+        try container.encode(`fetchedAt`, forKey: ToyCodingKey("fetchedAt"))
+        try container.encode(`state`, forKey: ToyCodingKey("state"))
+        try container.encode(`windows`, forKey: ToyCodingKey("windows"))
+        try container.encode(`paidUsageAllowed`, forKey: ToyCodingKey("paidUsageAllowed"))
+        try container.encode(`noOverageVerifiedAt`, forKey: ToyCodingKey("noOverageVerifiedAt"))
+    }
+}
+
+public enum SubscriptionStatusProvider: String, Codable, CaseIterable, Sendable {
+    case `openai` = "openai"
+    case `anthropic` = "anthropic"
+}
+
+public enum SubscriptionStatusState: String, Codable, CaseIterable, Sendable {
+    case `known` = "known"
+    case `stale` = "stale"
+    case `unavailable` = "unavailable"
+}
+
+public struct QuotaWindow: Codable, Sendable {
+    public let `limitId`: String
+    public let `label`: String
+    public let `windowDurationMins`: Optional<Double>
+    public let `usedPercent`: Optional<Double>
+    public let `resetsAt`: Optional<Instant>
+    public init(`limitId`: String, `label`: String, `windowDurationMins`: Optional<Double>, `usedPercent`: Optional<Double>, `resetsAt`: Optional<Instant>) {
+        self.`limitId` = `limitId`
+        self.`label` = `label`
+        self.`windowDurationMins` = `windowDurationMins`
+        self.`usedPercent` = `usedPercent`
+        self.`resetsAt` = `resetsAt`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["limitId", "label", "windowDurationMins", "usedPercent", "resetsAt"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`limitId` = try container.decode(String.self, forKey: ToyCodingKey("limitId"))
+        self.`label` = try container.decode(String.self, forKey: ToyCodingKey("label"))
+        self.`windowDurationMins` = try container.decode(Optional<Double>.self, forKey: ToyCodingKey("windowDurationMins"))
+        self.`usedPercent` = try container.decode(Optional<Double>.self, forKey: ToyCodingKey("usedPercent"))
+        self.`resetsAt` = try container.decode(Optional<Instant>.self, forKey: ToyCodingKey("resetsAt"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`limitId`, forKey: ToyCodingKey("limitId"))
+        try container.encode(`label`, forKey: ToyCodingKey("label"))
+        try container.encode(`windowDurationMins`, forKey: ToyCodingKey("windowDurationMins"))
+        try container.encode(`usedPercent`, forKey: ToyCodingKey("usedPercent"))
+        try container.encode(`resetsAt`, forKey: ToyCodingKey("resetsAt"))
+    }
+}
+
+public enum OpsStatusMemoryPressure: String, Codable, CaseIterable, Sendable {
+    case `normal` = "normal"
+    case `warning` = "warning"
+    case `critical` = "critical"
+    case `unknown` = "unknown"
+}
+
+public struct OpsStatusReviewSlots: Codable, Sendable {
+    public let `periodStart`: Instant
+    public let `scheduled`: Int64
+    public let `admitted`: Int64
+    public let `inferenceDone`: Int64
+    public let `reviewed`: Int64
+    public let `deferred`: Int64
+    public let `missed`: Int64
+    public init(`periodStart`: Instant, `scheduled`: Int64, `admitted`: Int64, `inferenceDone`: Int64, `reviewed`: Int64, `deferred`: Int64, `missed`: Int64) {
+        self.`periodStart` = `periodStart`
+        self.`scheduled` = `scheduled`
+        self.`admitted` = `admitted`
+        self.`inferenceDone` = `inferenceDone`
+        self.`reviewed` = `reviewed`
+        self.`deferred` = `deferred`
+        self.`missed` = `missed`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["periodStart", "scheduled", "admitted", "inferenceDone", "reviewed", "deferred", "missed"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`periodStart` = try container.decode(Instant.self, forKey: ToyCodingKey("periodStart"))
+        self.`scheduled` = try container.decode(Int64.self, forKey: ToyCodingKey("scheduled"))
+        self.`admitted` = try container.decode(Int64.self, forKey: ToyCodingKey("admitted"))
+        self.`inferenceDone` = try container.decode(Int64.self, forKey: ToyCodingKey("inferenceDone"))
+        self.`reviewed` = try container.decode(Int64.self, forKey: ToyCodingKey("reviewed"))
+        self.`deferred` = try container.decode(Int64.self, forKey: ToyCodingKey("deferred"))
+        self.`missed` = try container.decode(Int64.self, forKey: ToyCodingKey("missed"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`periodStart`, forKey: ToyCodingKey("periodStart"))
+        try container.encode(`scheduled`, forKey: ToyCodingKey("scheduled"))
+        try container.encode(`admitted`, forKey: ToyCodingKey("admitted"))
+        try container.encode(`inferenceDone`, forKey: ToyCodingKey("inferenceDone"))
+        try container.encode(`reviewed`, forKey: ToyCodingKey("reviewed"))
+        try container.encode(`deferred`, forKey: ToyCodingKey("deferred"))
+        try container.encode(`missed`, forKey: ToyCodingKey("missed"))
+    }
+}
+
+public struct CheckViewV1: Codable, Sendable {
+    public let `id`: RegisteredCheckIdV1
+    public let `owner`: ModuleId
+    public let `state`: AcceptanceStateV1
+    public let `checkedAt`: Instant
+    public let `reasonCode`: Optional<String>
+    public let `prerequisite`: Optional<String>
+    public let `nextCommandId`: Optional<CliCommandId>
+    public let `links`: EvidenceLinksV1
+    public init(`id`: RegisteredCheckIdV1, `owner`: ModuleId, `state`: AcceptanceStateV1, `checkedAt`: Instant, `reasonCode`: Optional<String>, `prerequisite`: Optional<String>, `nextCommandId`: Optional<CliCommandId>, `links`: EvidenceLinksV1) {
+        self.`id` = `id`
+        self.`owner` = `owner`
+        self.`state` = `state`
+        self.`checkedAt` = `checkedAt`
+        self.`reasonCode` = `reasonCode`
+        self.`prerequisite` = `prerequisite`
+        self.`nextCommandId` = `nextCommandId`
+        self.`links` = `links`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["id", "owner", "state", "checkedAt", "reasonCode", "prerequisite", "nextCommandId", "links"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`id` = try container.decode(RegisteredCheckIdV1.self, forKey: ToyCodingKey("id"))
+        self.`owner` = try container.decode(ModuleId.self, forKey: ToyCodingKey("owner"))
+        self.`state` = try container.decode(AcceptanceStateV1.self, forKey: ToyCodingKey("state"))
+        self.`checkedAt` = try container.decode(Instant.self, forKey: ToyCodingKey("checkedAt"))
+        self.`reasonCode` = try container.decode(Optional<String>.self, forKey: ToyCodingKey("reasonCode"))
+        self.`prerequisite` = try container.decode(Optional<String>.self, forKey: ToyCodingKey("prerequisite"))
+        self.`nextCommandId` = try container.decode(Optional<CliCommandId>.self, forKey: ToyCodingKey("nextCommandId"))
+        self.`links` = try container.decode(EvidenceLinksV1.self, forKey: ToyCodingKey("links"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`id`, forKey: ToyCodingKey("id"))
+        try container.encode(`owner`, forKey: ToyCodingKey("owner"))
+        try container.encode(`state`, forKey: ToyCodingKey("state"))
+        try container.encode(`checkedAt`, forKey: ToyCodingKey("checkedAt"))
+        try container.encode(`reasonCode`, forKey: ToyCodingKey("reasonCode"))
+        try container.encode(`prerequisite`, forKey: ToyCodingKey("prerequisite"))
+        try container.encode(`nextCommandId`, forKey: ToyCodingKey("nextCommandId"))
+        try container.encode(`links`, forKey: ToyCodingKey("links"))
+    }
+}
+
+public enum RegisteredCheckIdV1: String, Codable, CaseIterable, Sendable {
+    case `servicePostgres` = "service.postgres"
+    case `serviceBackend` = "service.backend"
+    case `serviceWorkers` = "service.workers"
+    case `serviceHermes` = "service.hermes"
+    case `serviceHermesInteractive` = "service.hermes-interactive"
+    case `serviceOps` = "service.ops"
+    case `serviceAuthority` = "service.authority"
+    case `serviceIngress` = "service.ingress"
+    case `serviceApproval` = "service.approval"
+    case `serviceReview` = "service.review"
+    case `serviceAttentionDelivery` = "service.attention-delivery"
+    case `serviceHands` = "service.hands"
+    case `serviceBackup` = "service.backup"
+    case `serviceSecrets` = "service.secrets"
+    case `servicePublisher` = "service.publisher"
+    case `serviceEvaluator` = "service.evaluator"
+    case `serviceRepair` = "service.repair"
+    case `serviceTailscale` = "service.tailscale"
+    case `serviceRecorder` = "service.recorder"
+    case `readOps` = "read.ops"
+    case `readSources` = "read.sources"
+    case `readAttention` = "read.attention"
+    case `readQuota` = "read.quota"
+    case `readCadence` = "read.cadence"
+    case `readRelease` = "read.release"
+}
+
+public enum AcceptanceStateV1: String, Codable, CaseIterable, Sendable {
+    case `pASS` = "PASS"
+    case `fAIL` = "FAIL"
+    case `bLOCKED` = "BLOCKED"
+    case `dEFERREDCAPABILITY` = "DEFERRED_CAPABILITY"
+    case `nOTIMPLEMENTED` = "NOT_IMPLEMENTED"
+}
+
+public struct EvidenceLinksV1: Codable, Sendable {
+    public let `recordRefs`: [RecordRef]
+    public let `observations`: [ObservationEvidenceRef]
+    public let `artifactDigests`: [Digest]
+    public init(`recordRefs`: [RecordRef], `observations`: [ObservationEvidenceRef], `artifactDigests`: [Digest]) {
+        self.`recordRefs` = `recordRefs`
+        self.`observations` = `observations`
+        self.`artifactDigests` = `artifactDigests`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["recordRefs", "observations", "artifactDigests"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`recordRefs` = try container.decode([RecordRef].self, forKey: ToyCodingKey("recordRefs"))
+        self.`observations` = try container.decode([ObservationEvidenceRef].self, forKey: ToyCodingKey("observations"))
+        self.`artifactDigests` = try container.decode([Digest].self, forKey: ToyCodingKey("artifactDigests"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`recordRefs`, forKey: ToyCodingKey("recordRefs"))
+        try container.encode(`observations`, forKey: ToyCodingKey("observations"))
+        try container.encode(`artifactDigests`, forKey: ToyCodingKey("artifactDigests"))
+    }
+}
+
+public struct SourceHealthV1: Codable, Sendable {
+    public let `items`: [SourceStatus]
+    public let `latestSyncRefs`: [RecordRef]
+    public let `capabilities`: [CapabilityViewV1]
+    public let `evaluatedAt`: Instant
+    public let `complete`: Bool
+    public init(`items`: [SourceStatus], `latestSyncRefs`: [RecordRef], `capabilities`: [CapabilityViewV1], `evaluatedAt`: Instant, `complete`: Bool) {
+        self.`items` = `items`
+        self.`latestSyncRefs` = `latestSyncRefs`
+        self.`capabilities` = `capabilities`
+        self.`evaluatedAt` = `evaluatedAt`
+        self.`complete` = `complete`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["items", "latestSyncRefs", "capabilities", "evaluatedAt", "complete"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`items` = try container.decode([SourceStatus].self, forKey: ToyCodingKey("items"))
+        self.`latestSyncRefs` = try container.decode([RecordRef].self, forKey: ToyCodingKey("latestSyncRefs"))
+        self.`capabilities` = try container.decode([CapabilityViewV1].self, forKey: ToyCodingKey("capabilities"))
+        self.`evaluatedAt` = try container.decode(Instant.self, forKey: ToyCodingKey("evaluatedAt"))
+        self.`complete` = try container.decode(Bool.self, forKey: ToyCodingKey("complete"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`items`, forKey: ToyCodingKey("items"))
+        try container.encode(`latestSyncRefs`, forKey: ToyCodingKey("latestSyncRefs"))
+        try container.encode(`capabilities`, forKey: ToyCodingKey("capabilities"))
+        try container.encode(`evaluatedAt`, forKey: ToyCodingKey("evaluatedAt"))
+        try container.encode(`complete`, forKey: ToyCodingKey("complete"))
+    }
+}
+
+public struct SourceStatus: Codable, Sendable {
+    public let `sourceId`: UUID
+    public let `provider`: String
+    public let `accountLabel`: String
+    public let `connection`: ConnectionState
+    public let `health`: HealthState
+    public let `coverage`: Coverage
+    public let `lastAttemptAt`: Optional<Instant>
+    public let `lastSuccessfulCheckAt`: Optional<Instant>
+    public let `lastObservedChangeAt`: Optional<Instant>
+    public let `lastReconciledAt`: Optional<Instant>
+    public let `nextCheckAt`: Optional<Instant>
+    public let `oldestPendingAt`: Optional<Instant>
+    public let `freshnessTargetSeconds`: Optional<Double>
+    public let `reasonCode`: Optional<String>
+    public let `release`: Release
+    public let `deploymentState`: SourceStatusDeploymentState
+    public let `repairAction`: SourceStatusRepairAction
+    public init(`sourceId`: UUID, `provider`: String, `accountLabel`: String, `connection`: ConnectionState, `health`: HealthState, `coverage`: Coverage, `lastAttemptAt`: Optional<Instant>, `lastSuccessfulCheckAt`: Optional<Instant>, `lastObservedChangeAt`: Optional<Instant>, `lastReconciledAt`: Optional<Instant>, `nextCheckAt`: Optional<Instant>, `oldestPendingAt`: Optional<Instant>, `freshnessTargetSeconds`: Optional<Double>, `reasonCode`: Optional<String>, `release`: Release, `deploymentState`: SourceStatusDeploymentState, `repairAction`: SourceStatusRepairAction) {
+        self.`sourceId` = `sourceId`
+        self.`provider` = `provider`
+        self.`accountLabel` = `accountLabel`
+        self.`connection` = `connection`
+        self.`health` = `health`
+        self.`coverage` = `coverage`
+        self.`lastAttemptAt` = `lastAttemptAt`
+        self.`lastSuccessfulCheckAt` = `lastSuccessfulCheckAt`
+        self.`lastObservedChangeAt` = `lastObservedChangeAt`
+        self.`lastReconciledAt` = `lastReconciledAt`
+        self.`nextCheckAt` = `nextCheckAt`
+        self.`oldestPendingAt` = `oldestPendingAt`
+        self.`freshnessTargetSeconds` = `freshnessTargetSeconds`
+        self.`reasonCode` = `reasonCode`
+        self.`release` = `release`
+        self.`deploymentState` = `deploymentState`
+        self.`repairAction` = `repairAction`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["sourceId", "provider", "accountLabel", "connection", "health", "coverage", "lastAttemptAt", "lastSuccessfulCheckAt", "lastObservedChangeAt", "lastReconciledAt", "nextCheckAt", "oldestPendingAt", "freshnessTargetSeconds", "reasonCode", "release", "deploymentState", "repairAction"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`sourceId` = try container.decode(UUID.self, forKey: ToyCodingKey("sourceId"))
+        self.`provider` = try container.decode(String.self, forKey: ToyCodingKey("provider"))
+        self.`accountLabel` = try container.decode(String.self, forKey: ToyCodingKey("accountLabel"))
+        self.`connection` = try container.decode(ConnectionState.self, forKey: ToyCodingKey("connection"))
+        self.`health` = try container.decode(HealthState.self, forKey: ToyCodingKey("health"))
+        self.`coverage` = try container.decode(Coverage.self, forKey: ToyCodingKey("coverage"))
+        self.`lastAttemptAt` = try container.decode(Optional<Instant>.self, forKey: ToyCodingKey("lastAttemptAt"))
+        self.`lastSuccessfulCheckAt` = try container.decode(Optional<Instant>.self, forKey: ToyCodingKey("lastSuccessfulCheckAt"))
+        self.`lastObservedChangeAt` = try container.decode(Optional<Instant>.self, forKey: ToyCodingKey("lastObservedChangeAt"))
+        self.`lastReconciledAt` = try container.decode(Optional<Instant>.self, forKey: ToyCodingKey("lastReconciledAt"))
+        self.`nextCheckAt` = try container.decode(Optional<Instant>.self, forKey: ToyCodingKey("nextCheckAt"))
+        self.`oldestPendingAt` = try container.decode(Optional<Instant>.self, forKey: ToyCodingKey("oldestPendingAt"))
+        self.`freshnessTargetSeconds` = try container.decode(Optional<Double>.self, forKey: ToyCodingKey("freshnessTargetSeconds"))
+        self.`reasonCode` = try container.decode(Optional<String>.self, forKey: ToyCodingKey("reasonCode"))
+        self.`release` = try container.decode(Release.self, forKey: ToyCodingKey("release"))
+        self.`deploymentState` = try container.decode(SourceStatusDeploymentState.self, forKey: ToyCodingKey("deploymentState"))
+        self.`repairAction` = try container.decode(SourceStatusRepairAction.self, forKey: ToyCodingKey("repairAction"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`sourceId`, forKey: ToyCodingKey("sourceId"))
+        try container.encode(`provider`, forKey: ToyCodingKey("provider"))
+        try container.encode(`accountLabel`, forKey: ToyCodingKey("accountLabel"))
+        try container.encode(`connection`, forKey: ToyCodingKey("connection"))
+        try container.encode(`health`, forKey: ToyCodingKey("health"))
+        try container.encode(`coverage`, forKey: ToyCodingKey("coverage"))
+        try container.encode(`lastAttemptAt`, forKey: ToyCodingKey("lastAttemptAt"))
+        try container.encode(`lastSuccessfulCheckAt`, forKey: ToyCodingKey("lastSuccessfulCheckAt"))
+        try container.encode(`lastObservedChangeAt`, forKey: ToyCodingKey("lastObservedChangeAt"))
+        try container.encode(`lastReconciledAt`, forKey: ToyCodingKey("lastReconciledAt"))
+        try container.encode(`nextCheckAt`, forKey: ToyCodingKey("nextCheckAt"))
+        try container.encode(`oldestPendingAt`, forKey: ToyCodingKey("oldestPendingAt"))
+        try container.encode(`freshnessTargetSeconds`, forKey: ToyCodingKey("freshnessTargetSeconds"))
+        try container.encode(`reasonCode`, forKey: ToyCodingKey("reasonCode"))
+        try container.encode(`release`, forKey: ToyCodingKey("release"))
+        try container.encode(`deploymentState`, forKey: ToyCodingKey("deploymentState"))
+        try container.encode(`repairAction`, forKey: ToyCodingKey("repairAction"))
+    }
+}
+
+public enum ConnectionState: String, Codable, CaseIterable, Sendable {
+    case `unconfigured` = "unconfigured"
+    case `authRequired` = "auth_required"
+    case `consentRequired` = "consent_required"
+    case `policyBlocked` = "policy_blocked"
+    case `connecting` = "connecting"
+    case `backfilling` = "backfilling"
+    case `active` = "active"
+    case `paused` = "paused"
+    case `broken` = "broken"
+    case `disconnected` = "disconnected"
+}
+
+public enum HealthState: String, Codable, CaseIterable, Sendable {
+    case `fresh` = "fresh"
+    case `stale` = "stale"
+    case `broken` = "broken"
+}
+
+public struct Coverage: Codable, Sendable {
+    public let `mode`: CoverageMode
+    public let `included`: [String]
+    public let `excluded`: [CoverageExclusion]
+    public let `historicalFrom`: Optional<Instant>
+    public let `historicalThrough`: Optional<Instant>
+    public let `historyComplete`: Bool
+    public let `gaps`: [CoverageGap]
+    public init(`mode`: CoverageMode, `included`: [String], `excluded`: [CoverageExclusion], `historicalFrom`: Optional<Instant>, `historicalThrough`: Optional<Instant>, `historyComplete`: Bool, `gaps`: [CoverageGap]) {
+        self.`mode` = `mode`
+        self.`included` = `included`
+        self.`excluded` = `excluded`
+        self.`historicalFrom` = `historicalFrom`
+        self.`historicalThrough` = `historicalThrough`
+        self.`historyComplete` = `historyComplete`
+        self.`gaps` = `gaps`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["mode", "included", "excluded", "historicalFrom", "historicalThrough", "historyComplete", "gaps"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`mode` = try container.decode(CoverageMode.self, forKey: ToyCodingKey("mode"))
+        self.`included` = try container.decode([String].self, forKey: ToyCodingKey("included"))
+        self.`excluded` = try container.decode([CoverageExclusion].self, forKey: ToyCodingKey("excluded"))
+        self.`historicalFrom` = try container.decode(Optional<Instant>.self, forKey: ToyCodingKey("historicalFrom"))
+        self.`historicalThrough` = try container.decode(Optional<Instant>.self, forKey: ToyCodingKey("historicalThrough"))
+        self.`historyComplete` = try container.decode(Bool.self, forKey: ToyCodingKey("historyComplete"))
+        self.`gaps` = try container.decode([CoverageGap].self, forKey: ToyCodingKey("gaps"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`mode`, forKey: ToyCodingKey("mode"))
+        try container.encode(`included`, forKey: ToyCodingKey("included"))
+        try container.encode(`excluded`, forKey: ToyCodingKey("excluded"))
+        try container.encode(`historicalFrom`, forKey: ToyCodingKey("historicalFrom"))
+        try container.encode(`historicalThrough`, forKey: ToyCodingKey("historicalThrough"))
+        try container.encode(`historyComplete`, forKey: ToyCodingKey("historyComplete"))
+        try container.encode(`gaps`, forKey: ToyCodingKey("gaps"))
+    }
+}
+
+public enum CoverageMode: String, Codable, CaseIterable, Sendable {
+    case `api` = "api"
+    case `deviceStream` = "device_stream"
+    case `deviceExport` = "device_export"
+    case `importedSnapshot` = "imported_snapshot"
+    case `localReportOnly` = "local_report_only"
+    case `partial` = "partial"
+    case `unavailable` = "unavailable"
+}
+
+public struct CoverageExclusion: Codable, Sendable {
+    public let `capability`: String
+    public let `reasonCode`: String
+    public init(`capability`: String, `reasonCode`: String) {
+        self.`capability` = `capability`
+        self.`reasonCode` = `reasonCode`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["capability", "reasonCode"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`capability` = try container.decode(String.self, forKey: ToyCodingKey("capability"))
+        self.`reasonCode` = try container.decode(String.self, forKey: ToyCodingKey("reasonCode"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`capability`, forKey: ToyCodingKey("capability"))
+        try container.encode(`reasonCode`, forKey: ToyCodingKey("reasonCode"))
+    }
+}
+
+public struct CoverageGap: Codable, Sendable {
+    public let `partition`: String
+    public let `from`: Optional<Instant>
+    public let `through`: Optional<Instant>
+    public let `reasonCode`: String
+    public init(`partition`: String, `from`: Optional<Instant>, `through`: Optional<Instant>, `reasonCode`: String) {
+        self.`partition` = `partition`
+        self.`from` = `from`
+        self.`through` = `through`
+        self.`reasonCode` = `reasonCode`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["partition", "from", "through", "reasonCode"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`partition` = try container.decode(String.self, forKey: ToyCodingKey("partition"))
+        self.`from` = try container.decode(Optional<Instant>.self, forKey: ToyCodingKey("from"))
+        self.`through` = try container.decode(Optional<Instant>.self, forKey: ToyCodingKey("through"))
+        self.`reasonCode` = try container.decode(String.self, forKey: ToyCodingKey("reasonCode"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`partition`, forKey: ToyCodingKey("partition"))
+        try container.encode(`from`, forKey: ToyCodingKey("from"))
+        try container.encode(`through`, forKey: ToyCodingKey("through"))
+        try container.encode(`reasonCode`, forKey: ToyCodingKey("reasonCode"))
+    }
+}
+
+public enum SourceStatusDeploymentState: String, Codable, CaseIterable, Sendable {
+    case `planned` = "planned"
+    case `deferred` = "deferred"
+    case `validated` = "validated"
+    case `deployed` = "deployed"
+}
+
+public enum SourceStatusRepairAction: String, Codable, CaseIterable, Sendable {
+    case `none` = "none"
+    case `retryScheduled` = "retry_scheduled"
+    case `reconnect` = "reconnect"
+    case `grantOsPermission` = "grant_os_permission"
+    case `institutionalReview` = "institutional_review"
+    case `providerPermission` = "provider_permission"
+    case `supplyExport` = "supply_export"
+    case `operatorRepair` = "operator_repair"
+}
+
+public struct CapabilityViewV1: Codable, Sendable {
+    public let `id`: RegisteredCapabilityIdV1
+    public let `firstRelease`: Release
+    public let `required`: Bool
+    public let `implementation`: CapabilityViewV1Implementation
+    public let `state`: AcceptanceStateV1
+    public let `tested`: Bool
+    public let `installed`: Bool
+    public let `deployed`: Bool
+    public let `checkedAt`: Optional<Instant>
+    public let `prerequisite`: Optional<String>
+    public let `links`: EvidenceLinksV1
+    public init(`id`: RegisteredCapabilityIdV1, `firstRelease`: Release, `required`: Bool, `implementation`: CapabilityViewV1Implementation, `state`: AcceptanceStateV1, `tested`: Bool, `installed`: Bool, `deployed`: Bool, `checkedAt`: Optional<Instant>, `prerequisite`: Optional<String>, `links`: EvidenceLinksV1) {
+        self.`id` = `id`
+        self.`firstRelease` = `firstRelease`
+        self.`required` = `required`
+        self.`implementation` = `implementation`
+        self.`state` = `state`
+        self.`tested` = `tested`
+        self.`installed` = `installed`
+        self.`deployed` = `deployed`
+        self.`checkedAt` = `checkedAt`
+        self.`prerequisite` = `prerequisite`
+        self.`links` = `links`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["id", "firstRelease", "required", "implementation", "state", "tested", "installed", "deployed", "checkedAt", "prerequisite", "links"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`id` = try container.decode(RegisteredCapabilityIdV1.self, forKey: ToyCodingKey("id"))
+        self.`firstRelease` = try container.decode(Release.self, forKey: ToyCodingKey("firstRelease"))
+        self.`required` = try container.decode(Bool.self, forKey: ToyCodingKey("required"))
+        self.`implementation` = try container.decode(CapabilityViewV1Implementation.self, forKey: ToyCodingKey("implementation"))
+        self.`state` = try container.decode(AcceptanceStateV1.self, forKey: ToyCodingKey("state"))
+        self.`tested` = try container.decode(Bool.self, forKey: ToyCodingKey("tested"))
+        self.`installed` = try container.decode(Bool.self, forKey: ToyCodingKey("installed"))
+        self.`deployed` = try container.decode(Bool.self, forKey: ToyCodingKey("deployed"))
+        self.`checkedAt` = try container.decode(Optional<Instant>.self, forKey: ToyCodingKey("checkedAt"))
+        self.`prerequisite` = try container.decode(Optional<String>.self, forKey: ToyCodingKey("prerequisite"))
+        self.`links` = try container.decode(EvidenceLinksV1.self, forKey: ToyCodingKey("links"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`id`, forKey: ToyCodingKey("id"))
+        try container.encode(`firstRelease`, forKey: ToyCodingKey("firstRelease"))
+        try container.encode(`required`, forKey: ToyCodingKey("required"))
+        try container.encode(`implementation`, forKey: ToyCodingKey("implementation"))
+        try container.encode(`state`, forKey: ToyCodingKey("state"))
+        try container.encode(`tested`, forKey: ToyCodingKey("tested"))
+        try container.encode(`installed`, forKey: ToyCodingKey("installed"))
+        try container.encode(`deployed`, forKey: ToyCodingKey("deployed"))
+        try container.encode(`checkedAt`, forKey: ToyCodingKey("checkedAt"))
+        try container.encode(`prerequisite`, forKey: ToyCodingKey("prerequisite"))
+        try container.encode(`links`, forKey: ToyCodingKey("links"))
+    }
+}
+
+public enum RegisteredCapabilityIdV1: String, Codable, CaseIterable, Sendable {
+    case `controlHelp` = "control.help"
+    case `controlVersion` = "control.version"
+    case `controlStatus` = "control.status"
+    case `controlDoctor` = "control.doctor"
+    case `controlCapture` = "control.capture"
+    case `controlDue` = "control.due"
+    case `controlObligationsShow` = "control.obligations.show"
+    case `controlObligationsResolve` = "control.obligations.resolve"
+    case `controlObligationsDefer` = "control.obligations.defer"
+    case `controlObligationsSatisfy` = "control.obligations.satisfy"
+    case `controlAttentionSnapshot` = "control.attention.snapshot"
+    case `controlAttentionPreview` = "control.attention.preview"
+    case `controlAttentionSimulateAck` = "control.attention.simulate-ack"
+    case `controlAuthorityPending` = "control.authority.pending"
+    case `controlAuthorityOutbox` = "control.authority.outbox"
+    case `controlAuthorityStatus` = "control.authority.status"
+    case `controlAuthorityReceipts` = "control.authority.receipts"
+    case `controlAuthorityReview` = "control.authority.review"
+    case `controlSourcesHealth` = "control.sources.health"
+    case `controlSourcesSyncNow` = "control.sources.sync.now"
+    case `controlSourcesCursor` = "control.sources.cursor"
+    case `controlLifeSearch` = "control.life.search"
+    case `controlLifeTimeline` = "control.life.timeline"
+    case `controlLifeGet` = "control.life.get"
+    case `controlReviewSlots` = "control.review.slots"
+    case `controlReviewRuns` = "control.review.runs"
+    case `controlReviewVerdicts` = "control.review.verdicts"
+    case `controlReviewRequest` = "control.review.request"
+    case `controlTrace` = "control.trace"
+    case `controlEvidence` = "control.evidence"
+    case `controlReplay` = "control.replay"
+    case `controlSimRun` = "control.sim.run"
+    case `controlSimSuite` = "control.sim.suite"
+    case `controlSimShow` = "control.sim.show"
+    case `controlHandsStatus` = "control.hands.status"
+    case `controlHandsSmoke` = "control.hands.smoke"
+    case `controlClockShow` = "control.clock.show"
+    case `controlClockFreeze` = "control.clock.freeze"
+    case `controlClockAdvance` = "control.clock.advance"
+    case `controlClockResume` = "control.clock.resume"
+    case `controlStackUp` = "control.stack.up"
+    case `controlStackDown` = "control.stack.down"
+    case `controlProbeRun` = "control.probe.run"
+    case `controlProbeShow` = "control.probe.show"
+    case `controlNewConnector` = "control.new.connector"
+    case `controlNewTool` = "control.new.tool"
+    case `controlNewSkill` = "control.new.skill"
+    case `controlNewMigration` = "control.new.migration"
+    case `controlFeatureMapCheck` = "control.feature-map.check"
+    case `controlFeatureMapUpdate` = "control.feature-map.update"
+    case `controlGardenerRun` = "control.gardener.run"
+    case `controlReleaseStatus` = "control.release.status"
+    case `controlReleaseRollback` = "control.release.rollback"
+}
+
+public enum CapabilityViewV1Implementation: String, Codable, CaseIterable, Sendable {
+    case `specified` = "specified"
+    case `built` = "built"
+    case `retired` = "retired"
+}
+
+public struct AttentionSnapshot: Codable, Sendable {
+    public let `ownerId`: UUID
+    public let `evaluatedAt`: Instant
+    public let `policyDigest`: Digest
+    public let `policyVersion`: String
+    public let `quietState`: QuietState
+    public let `quietReason`: QuietReason
+    public let `quietEpoch`: Revision
+    public let `quietStartedAt`: Optional<Instant>
+    public let `explicitLatch`: AttentionManualLatchV1
+    public let `focus`: AttentionFocusViewV1
+    public let `staleSince`: Optional<Instant>
+    public let `nextRepairAt`: Optional<Instant>
+    public let `lastAuthenticatedEvent`: Optional<AttentionGateEventViewV1>
+    public let `wearableConfirmation`: Optional<AttentionWearableConfirmationV1>
+    public let `localCancellation`: AttentionLocalCancellationV1
+    public let `channels`: AttentionChannelViewV1
+    public let `items`: AttentionItemPageV1
+    public let `localPlans`: AttentionLocalPlanPageV1
+    public let `complete`: Bool
+    public init(`ownerId`: UUID, `evaluatedAt`: Instant, `policyDigest`: Digest, `policyVersion`: String, `quietState`: QuietState, `quietReason`: QuietReason, `quietEpoch`: Revision, `quietStartedAt`: Optional<Instant>, `explicitLatch`: AttentionManualLatchV1, `focus`: AttentionFocusViewV1, `staleSince`: Optional<Instant>, `nextRepairAt`: Optional<Instant>, `lastAuthenticatedEvent`: Optional<AttentionGateEventViewV1>, `wearableConfirmation`: Optional<AttentionWearableConfirmationV1>, `localCancellation`: AttentionLocalCancellationV1, `channels`: AttentionChannelViewV1, `items`: AttentionItemPageV1, `localPlans`: AttentionLocalPlanPageV1, `complete`: Bool) {
+        self.`ownerId` = `ownerId`
+        self.`evaluatedAt` = `evaluatedAt`
+        self.`policyDigest` = `policyDigest`
+        self.`policyVersion` = `policyVersion`
+        self.`quietState` = `quietState`
+        self.`quietReason` = `quietReason`
+        self.`quietEpoch` = `quietEpoch`
+        self.`quietStartedAt` = `quietStartedAt`
+        self.`explicitLatch` = `explicitLatch`
+        self.`focus` = `focus`
+        self.`staleSince` = `staleSince`
+        self.`nextRepairAt` = `nextRepairAt`
+        self.`lastAuthenticatedEvent` = `lastAuthenticatedEvent`
+        self.`wearableConfirmation` = `wearableConfirmation`
+        self.`localCancellation` = `localCancellation`
+        self.`channels` = `channels`
+        self.`items` = `items`
+        self.`localPlans` = `localPlans`
+        self.`complete` = `complete`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["ownerId", "evaluatedAt", "policyDigest", "policyVersion", "quietState", "quietReason", "quietEpoch", "quietStartedAt", "explicitLatch", "focus", "staleSince", "nextRepairAt", "lastAuthenticatedEvent", "wearableConfirmation", "localCancellation", "channels", "items", "localPlans", "complete"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`ownerId` = try container.decode(UUID.self, forKey: ToyCodingKey("ownerId"))
+        self.`evaluatedAt` = try container.decode(Instant.self, forKey: ToyCodingKey("evaluatedAt"))
+        self.`policyDigest` = try container.decode(Digest.self, forKey: ToyCodingKey("policyDigest"))
+        self.`policyVersion` = try container.decode(String.self, forKey: ToyCodingKey("policyVersion"))
+        self.`quietState` = try container.decode(QuietState.self, forKey: ToyCodingKey("quietState"))
+        self.`quietReason` = try container.decode(QuietReason.self, forKey: ToyCodingKey("quietReason"))
+        self.`quietEpoch` = try container.decode(Revision.self, forKey: ToyCodingKey("quietEpoch"))
+        self.`quietStartedAt` = try container.decode(Optional<Instant>.self, forKey: ToyCodingKey("quietStartedAt"))
+        self.`explicitLatch` = try container.decode(AttentionManualLatchV1.self, forKey: ToyCodingKey("explicitLatch"))
+        self.`focus` = try container.decode(AttentionFocusViewV1.self, forKey: ToyCodingKey("focus"))
+        self.`staleSince` = try container.decode(Optional<Instant>.self, forKey: ToyCodingKey("staleSince"))
+        self.`nextRepairAt` = try container.decode(Optional<Instant>.self, forKey: ToyCodingKey("nextRepairAt"))
+        self.`lastAuthenticatedEvent` = try container.decode(Optional<AttentionGateEventViewV1>.self, forKey: ToyCodingKey("lastAuthenticatedEvent"))
+        self.`wearableConfirmation` = try container.decode(Optional<AttentionWearableConfirmationV1>.self, forKey: ToyCodingKey("wearableConfirmation"))
+        self.`localCancellation` = try container.decode(AttentionLocalCancellationV1.self, forKey: ToyCodingKey("localCancellation"))
+        self.`channels` = try container.decode(AttentionChannelViewV1.self, forKey: ToyCodingKey("channels"))
+        self.`items` = try container.decode(AttentionItemPageV1.self, forKey: ToyCodingKey("items"))
+        self.`localPlans` = try container.decode(AttentionLocalPlanPageV1.self, forKey: ToyCodingKey("localPlans"))
+        self.`complete` = try container.decode(Bool.self, forKey: ToyCodingKey("complete"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`ownerId`, forKey: ToyCodingKey("ownerId"))
+        try container.encode(`evaluatedAt`, forKey: ToyCodingKey("evaluatedAt"))
+        try container.encode(`policyDigest`, forKey: ToyCodingKey("policyDigest"))
+        try container.encode(`policyVersion`, forKey: ToyCodingKey("policyVersion"))
+        try container.encode(`quietState`, forKey: ToyCodingKey("quietState"))
+        try container.encode(`quietReason`, forKey: ToyCodingKey("quietReason"))
+        try container.encode(`quietEpoch`, forKey: ToyCodingKey("quietEpoch"))
+        try container.encode(`quietStartedAt`, forKey: ToyCodingKey("quietStartedAt"))
+        try container.encode(`explicitLatch`, forKey: ToyCodingKey("explicitLatch"))
+        try container.encode(`focus`, forKey: ToyCodingKey("focus"))
+        try container.encode(`staleSince`, forKey: ToyCodingKey("staleSince"))
+        try container.encode(`nextRepairAt`, forKey: ToyCodingKey("nextRepairAt"))
+        try container.encode(`lastAuthenticatedEvent`, forKey: ToyCodingKey("lastAuthenticatedEvent"))
+        try container.encode(`wearableConfirmation`, forKey: ToyCodingKey("wearableConfirmation"))
+        try container.encode(`localCancellation`, forKey: ToyCodingKey("localCancellation"))
+        try container.encode(`channels`, forKey: ToyCodingKey("channels"))
+        try container.encode(`items`, forKey: ToyCodingKey("items"))
+        try container.encode(`localPlans`, forKey: ToyCodingKey("localPlans"))
+        try container.encode(`complete`, forKey: ToyCodingKey("complete"))
+    }
+}
+
+public enum QuietState: String, Codable, CaseIterable, Sendable {
+    case `awake` = "awake"
+    case `asleep` = "asleep"
+}
+
+public enum QuietReason: String, Codable, CaseIterable, Sendable {
+    case `explicit` = "explicit"
+    case `focus` = "focus"
+    case `initialDefault` = "initial_default"
+}
+
+public struct AttentionManualLatchV1: Codable, Sendable {
+    public let `state`: Optional<QuietState>
+    public let `source`: Optional<AttentionManualLatchV1SourceValue>
+    public let `eventId`: Optional<UUID>
+    public let `observedAt`: Optional<Instant>
+    public let `explicitUntil`: Optional<Instant>
+    public init(`state`: Optional<QuietState>, `source`: Optional<AttentionManualLatchV1SourceValue>, `eventId`: Optional<UUID>, `observedAt`: Optional<Instant>, `explicitUntil`: Optional<Instant>) {
+        self.`state` = `state`
+        self.`source` = `source`
+        self.`eventId` = `eventId`
+        self.`observedAt` = `observedAt`
+        self.`explicitUntil` = `explicitUntil`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["state", "source", "eventId", "observedAt", "explicitUntil"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`state` = try container.decode(Optional<QuietState>.self, forKey: ToyCodingKey("state"))
+        self.`source` = try container.decode(Optional<AttentionManualLatchV1SourceValue>.self, forKey: ToyCodingKey("source"))
+        self.`eventId` = try container.decode(Optional<UUID>.self, forKey: ToyCodingKey("eventId"))
+        self.`observedAt` = try container.decode(Optional<Instant>.self, forKey: ToyCodingKey("observedAt"))
+        self.`explicitUntil` = try container.decode(Optional<Instant>.self, forKey: ToyCodingKey("explicitUntil"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`state`, forKey: ToyCodingKey("state"))
+        try container.encode(`source`, forKey: ToyCodingKey("source"))
+        try container.encode(`eventId`, forKey: ToyCodingKey("eventId"))
+        try container.encode(`observedAt`, forKey: ToyCodingKey("observedAt"))
+        try container.encode(`explicitUntil`, forKey: ToyCodingKey("explicitUntil"))
+    }
+}
+
+public enum AttentionManualLatchV1SourceValue: String, Codable, CaseIterable, Sendable {
+    case `userGn` = "user_gn"
+    case `userGm` = "user_gm"
+    case `userSleepControl` = "user_sleep_control"
+}
+
+public struct AttentionFocusViewV1: Codable, Sendable {
+    public let `state`: Optional<QuietState>
+    public let `observedAt`: Optional<Instant>
+    public let `cycleId`: Optional<UUID>
+    public let `manualOverrideCycleId`: Optional<UUID>
+    public init(`state`: Optional<QuietState>, `observedAt`: Optional<Instant>, `cycleId`: Optional<UUID>, `manualOverrideCycleId`: Optional<UUID>) {
+        self.`state` = `state`
+        self.`observedAt` = `observedAt`
+        self.`cycleId` = `cycleId`
+        self.`manualOverrideCycleId` = `manualOverrideCycleId`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["state", "observedAt", "cycleId", "manualOverrideCycleId"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`state` = try container.decode(Optional<QuietState>.self, forKey: ToyCodingKey("state"))
+        self.`observedAt` = try container.decode(Optional<Instant>.self, forKey: ToyCodingKey("observedAt"))
+        self.`cycleId` = try container.decode(Optional<UUID>.self, forKey: ToyCodingKey("cycleId"))
+        self.`manualOverrideCycleId` = try container.decode(Optional<UUID>.self, forKey: ToyCodingKey("manualOverrideCycleId"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`state`, forKey: ToyCodingKey("state"))
+        try container.encode(`observedAt`, forKey: ToyCodingKey("observedAt"))
+        try container.encode(`cycleId`, forKey: ToyCodingKey("cycleId"))
+        try container.encode(`manualOverrideCycleId`, forKey: ToyCodingKey("manualOverrideCycleId"))
+    }
+}
+
+public struct AttentionGateEventViewV1: Codable, Sendable {
+    public let `eventId`: UUID
+    public let `state`: QuietState
+    public let `source`: AttentionGateEventViewV1Source
+    public let `observedAt`: Instant
+    public let `receivedAt`: Instant
+    public let `quietEpoch`: Revision
+    public let `disposition`: AttentionGateEventViewV1Disposition
+    public let `receiptRef`: RecordRef
+    public init(`eventId`: UUID, `state`: QuietState, `source`: AttentionGateEventViewV1Source, `observedAt`: Instant, `receivedAt`: Instant, `quietEpoch`: Revision, `disposition`: AttentionGateEventViewV1Disposition, `receiptRef`: RecordRef) {
+        self.`eventId` = `eventId`
+        self.`state` = `state`
+        self.`source` = `source`
+        self.`observedAt` = `observedAt`
+        self.`receivedAt` = `receivedAt`
+        self.`quietEpoch` = `quietEpoch`
+        self.`disposition` = `disposition`
+        self.`receiptRef` = `receiptRef`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["eventId", "state", "source", "observedAt", "receivedAt", "quietEpoch", "disposition", "receiptRef"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`eventId` = try container.decode(UUID.self, forKey: ToyCodingKey("eventId"))
+        self.`state` = try container.decode(QuietState.self, forKey: ToyCodingKey("state"))
+        self.`source` = try container.decode(AttentionGateEventViewV1Source.self, forKey: ToyCodingKey("source"))
+        self.`observedAt` = try container.decode(Instant.self, forKey: ToyCodingKey("observedAt"))
+        self.`receivedAt` = try container.decode(Instant.self, forKey: ToyCodingKey("receivedAt"))
+        self.`quietEpoch` = try container.decode(Revision.self, forKey: ToyCodingKey("quietEpoch"))
+        self.`disposition` = try container.decode(AttentionGateEventViewV1Disposition.self, forKey: ToyCodingKey("disposition"))
+        self.`receiptRef` = try container.decode(RecordRef.self, forKey: ToyCodingKey("receiptRef"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`eventId`, forKey: ToyCodingKey("eventId"))
+        try container.encode(`state`, forKey: ToyCodingKey("state"))
+        try container.encode(`source`, forKey: ToyCodingKey("source"))
+        try container.encode(`observedAt`, forKey: ToyCodingKey("observedAt"))
+        try container.encode(`receivedAt`, forKey: ToyCodingKey("receivedAt"))
+        try container.encode(`quietEpoch`, forKey: ToyCodingKey("quietEpoch"))
+        try container.encode(`disposition`, forKey: ToyCodingKey("disposition"))
+        try container.encode(`receiptRef`, forKey: ToyCodingKey("receiptRef"))
+    }
+}
+
+public enum AttentionGateEventViewV1Source: String, Codable, CaseIterable, Sendable {
+    case `userGn` = "user_gn"
+    case `userGm` = "user_gm"
+    case `userSleepControl` = "user_sleep_control"
+    case `sleepFocus` = "sleep_focus"
+    case `focusSnapshot` = "focus_snapshot"
+}
+
+public enum AttentionGateEventViewV1Disposition: String, Codable, CaseIterable, Sendable {
+    case `applied` = "applied"
+    case `duplicate` = "duplicate"
+    case `historicalOnly` = "historical_only"
+    case `stale` = "stale"
+}
+
+public struct AttentionWearableConfirmationV1: Codable, Sendable {
+    public let `eventId`: UUID
+    public let `state`: QuietState
+    public let `from`: Instant
+    public let `to`: Instant
+    public let `recordedAt`: Instant
+    public let `disposition`: AttentionWearableConfirmationV1Disposition
+    public let `observations`: [ObservationEvidenceRef]
+    public init(`eventId`: UUID, `state`: QuietState, `from`: Instant, `to`: Instant, `recordedAt`: Instant, `disposition`: AttentionWearableConfirmationV1Disposition, `observations`: [ObservationEvidenceRef]) {
+        self.`eventId` = `eventId`
+        self.`state` = `state`
+        self.`from` = `from`
+        self.`to` = `to`
+        self.`recordedAt` = `recordedAt`
+        self.`disposition` = `disposition`
+        self.`observations` = `observations`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["eventId", "state", "from", "to", "recordedAt", "disposition", "observations"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`eventId` = try container.decode(UUID.self, forKey: ToyCodingKey("eventId"))
+        self.`state` = try container.decode(QuietState.self, forKey: ToyCodingKey("state"))
+        self.`from` = try container.decode(Instant.self, forKey: ToyCodingKey("from"))
+        self.`to` = try container.decode(Instant.self, forKey: ToyCodingKey("to"))
+        self.`recordedAt` = try container.decode(Instant.self, forKey: ToyCodingKey("recordedAt"))
+        self.`disposition` = try container.decode(AttentionWearableConfirmationV1Disposition.self, forKey: ToyCodingKey("disposition"))
+        self.`observations` = try container.decode([ObservationEvidenceRef].self, forKey: ToyCodingKey("observations"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`eventId`, forKey: ToyCodingKey("eventId"))
+        try container.encode(`state`, forKey: ToyCodingKey("state"))
+        try container.encode(`from`, forKey: ToyCodingKey("from"))
+        try container.encode(`to`, forKey: ToyCodingKey("to"))
+        try container.encode(`recordedAt`, forKey: ToyCodingKey("recordedAt"))
+        try container.encode(`disposition`, forKey: ToyCodingKey("disposition"))
+        try container.encode(`observations`, forKey: ToyCodingKey("observations"))
+    }
+}
+
+public enum AttentionWearableConfirmationV1Disposition: String, Codable, CaseIterable, Sendable {
+    case `confirmationOnly` = "confirmation_only"
+}
+
+public struct AttentionLocalCancellationV1: Codable, Sendable {
+    public let `state`: AttentionLocalCancellationV1State
+    public let `quietEpoch`: Revision
+    public let `planGeneration`: Revision
+    public let `pendingPlanRefs`: [RecordRef]
+    public let `confirmedPlanRefs`: [RecordRef]
+    public let `residualOfflineRisk`: Bool
+    public let `checkedAt`: Instant
+    public init(`state`: AttentionLocalCancellationV1State, `quietEpoch`: Revision, `planGeneration`: Revision, `pendingPlanRefs`: [RecordRef], `confirmedPlanRefs`: [RecordRef], `residualOfflineRisk`: Bool, `checkedAt`: Instant) {
+        self.`state` = `state`
+        self.`quietEpoch` = `quietEpoch`
+        self.`planGeneration` = `planGeneration`
+        self.`pendingPlanRefs` = `pendingPlanRefs`
+        self.`confirmedPlanRefs` = `confirmedPlanRefs`
+        self.`residualOfflineRisk` = `residualOfflineRisk`
+        self.`checkedAt` = `checkedAt`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["state", "quietEpoch", "planGeneration", "pendingPlanRefs", "confirmedPlanRefs", "residualOfflineRisk", "checkedAt"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`state` = try container.decode(AttentionLocalCancellationV1State.self, forKey: ToyCodingKey("state"))
+        self.`quietEpoch` = try container.decode(Revision.self, forKey: ToyCodingKey("quietEpoch"))
+        self.`planGeneration` = try container.decode(Revision.self, forKey: ToyCodingKey("planGeneration"))
+        self.`pendingPlanRefs` = try container.decode([RecordRef].self, forKey: ToyCodingKey("pendingPlanRefs"))
+        self.`confirmedPlanRefs` = try container.decode([RecordRef].self, forKey: ToyCodingKey("confirmedPlanRefs"))
+        self.`residualOfflineRisk` = try container.decode(Bool.self, forKey: ToyCodingKey("residualOfflineRisk"))
+        self.`checkedAt` = try container.decode(Instant.self, forKey: ToyCodingKey("checkedAt"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`state`, forKey: ToyCodingKey("state"))
+        try container.encode(`quietEpoch`, forKey: ToyCodingKey("quietEpoch"))
+        try container.encode(`planGeneration`, forKey: ToyCodingKey("planGeneration"))
+        try container.encode(`pendingPlanRefs`, forKey: ToyCodingKey("pendingPlanRefs"))
+        try container.encode(`confirmedPlanRefs`, forKey: ToyCodingKey("confirmedPlanRefs"))
+        try container.encode(`residualOfflineRisk`, forKey: ToyCodingKey("residualOfflineRisk"))
+        try container.encode(`checkedAt`, forKey: ToyCodingKey("checkedAt"))
+    }
+}
+
+public enum AttentionLocalCancellationV1State: String, Codable, CaseIterable, Sendable {
+    case `notApplicable` = "not_applicable"
+    case `pending` = "pending"
+    case `confirmed` = "confirmed"
+}
+
+public struct AttentionChannelViewV1: Codable, Sendable {
+    public let `primary`: AttentionChannelViewV1Primary
+    public let `channels`: [AttentionChannelViewV1ChannelsItem]
+    public init(`primary`: AttentionChannelViewV1Primary, `channels`: [AttentionChannelViewV1ChannelsItem]) {
+        self.`primary` = `primary`
+        self.`channels` = `channels`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["primary", "channels"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`primary` = try container.decode(AttentionChannelViewV1Primary.self, forKey: ToyCodingKey("primary"))
+        self.`channels` = try container.decode([AttentionChannelViewV1ChannelsItem].self, forKey: ToyCodingKey("channels"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`primary`, forKey: ToyCodingKey("primary"))
+        try container.encode(`channels`, forKey: ToyCodingKey("channels"))
+    }
+}
+
+public enum AttentionChannelViewV1Primary: String, Codable, CaseIterable, Sendable {
+    case `discord` = "discord"
+    case `app` = "app"
+}
+
+public struct AttentionChannelViewV1ChannelsItem: Codable, Sendable {
+    public let `channel`: AttentionChannel
+    public let `checks`: [CheckViewV1]
+    public init(`channel`: AttentionChannel, `checks`: [CheckViewV1]) {
+        self.`channel` = `channel`
+        self.`checks` = `checks`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["channel", "checks"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`channel` = try container.decode(AttentionChannel.self, forKey: ToyCodingKey("channel"))
+        self.`checks` = try container.decode([CheckViewV1].self, forKey: ToyCodingKey("checks"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`channel`, forKey: ToyCodingKey("channel"))
+        try container.encode(`checks`, forKey: ToyCodingKey("checks"))
+    }
+}
+
+public enum AttentionChannel: String, Codable, CaseIterable, Sendable {
+    case `discord` = "discord"
+    case `webPush` = "web_push"
+    case `expoPush` = "expo_push"
+    case `appForeground` = "app_foreground"
+}
+
+public struct AttentionItemPageV1: Codable, Sendable {
+    public let `items`: [AttentionItemViewV1]
+    public let `nextCursor`: Optional<String>
+    public let `hasMore`: Bool
+    public let `watermark`: Optional<Revision>
+    public let `evaluatedAt`: Instant
+    public init(`items`: [AttentionItemViewV1], `nextCursor`: Optional<String>, `hasMore`: Bool, `watermark`: Optional<Revision>, `evaluatedAt`: Instant) {
+        self.`items` = `items`
+        self.`nextCursor` = `nextCursor`
+        self.`hasMore` = `hasMore`
+        self.`watermark` = `watermark`
+        self.`evaluatedAt` = `evaluatedAt`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["items", "nextCursor", "hasMore", "watermark", "evaluatedAt"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`items` = try container.decode([AttentionItemViewV1].self, forKey: ToyCodingKey("items"))
+        self.`nextCursor` = try container.decode(Optional<String>.self, forKey: ToyCodingKey("nextCursor"))
+        self.`hasMore` = try container.decode(Bool.self, forKey: ToyCodingKey("hasMore"))
+        self.`watermark` = try container.decode(Optional<Revision>.self, forKey: ToyCodingKey("watermark"))
+        self.`evaluatedAt` = try container.decode(Instant.self, forKey: ToyCodingKey("evaluatedAt"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`items`, forKey: ToyCodingKey("items"))
+        try container.encode(`nextCursor`, forKey: ToyCodingKey("nextCursor"))
+        try container.encode(`hasMore`, forKey: ToyCodingKey("hasMore"))
+        try container.encode(`watermark`, forKey: ToyCodingKey("watermark"))
+        try container.encode(`evaluatedAt`, forKey: ToyCodingKey("evaluatedAt"))
+    }
+}
+
+public struct AttentionItemViewV1: Codable, Sendable {
+    public let `id`: UUID
+    public let `commitmentId`: UUID
+    public let `commitmentRevision`: Revision
+    public let `generation`: Revision
+    public let `revision`: Revision
+    public let `state`: AttentionItemState
+    public let `purpose`: AttentionPurpose
+    public let `urgency`: AttentionUrgency
+    public let `requiresResponse`: Bool
+    public let `title`: Optional<String>
+    public let `nextAction`: Optional<String>
+    public let `contentVisibility`: AttentionItemViewV1ContentVisibility
+    public let `deadlineAt`: Optional<Instant>
+    public let `deadlineTimezone`: Optional<String>
+    public let `snoozedUntil`: Optional<Instant>
+    public let `snoozeCrossesDeadline`: Bool
+    public let `helpRequestId`: Optional<UUID>
+    public let `helpCheckAt`: Optional<Instant>
+    public let `nextAttentionAt`: Optional<Instant>
+    public let `attentionGeneration`: Revision
+    public let `closedReason`: Optional<AttentionItemViewV1ClosedReasonValue>
+    public let `closedAt`: Optional<Instant>
+    public let `createdAt`: Instant
+    public let `updatedAt`: Instant
+    public let `links`: EvidenceLinksV1
+    public init(`id`: UUID, `commitmentId`: UUID, `commitmentRevision`: Revision, `generation`: Revision, `revision`: Revision, `state`: AttentionItemState, `purpose`: AttentionPurpose, `urgency`: AttentionUrgency, `requiresResponse`: Bool, `title`: Optional<String>, `nextAction`: Optional<String>, `contentVisibility`: AttentionItemViewV1ContentVisibility, `deadlineAt`: Optional<Instant>, `deadlineTimezone`: Optional<String>, `snoozedUntil`: Optional<Instant>, `snoozeCrossesDeadline`: Bool, `helpRequestId`: Optional<UUID>, `helpCheckAt`: Optional<Instant>, `nextAttentionAt`: Optional<Instant>, `attentionGeneration`: Revision, `closedReason`: Optional<AttentionItemViewV1ClosedReasonValue>, `closedAt`: Optional<Instant>, `createdAt`: Instant, `updatedAt`: Instant, `links`: EvidenceLinksV1) {
+        self.`id` = `id`
+        self.`commitmentId` = `commitmentId`
+        self.`commitmentRevision` = `commitmentRevision`
+        self.`generation` = `generation`
+        self.`revision` = `revision`
+        self.`state` = `state`
+        self.`purpose` = `purpose`
+        self.`urgency` = `urgency`
+        self.`requiresResponse` = `requiresResponse`
+        self.`title` = `title`
+        self.`nextAction` = `nextAction`
+        self.`contentVisibility` = `contentVisibility`
+        self.`deadlineAt` = `deadlineAt`
+        self.`deadlineTimezone` = `deadlineTimezone`
+        self.`snoozedUntil` = `snoozedUntil`
+        self.`snoozeCrossesDeadline` = `snoozeCrossesDeadline`
+        self.`helpRequestId` = `helpRequestId`
+        self.`helpCheckAt` = `helpCheckAt`
+        self.`nextAttentionAt` = `nextAttentionAt`
+        self.`attentionGeneration` = `attentionGeneration`
+        self.`closedReason` = `closedReason`
+        self.`closedAt` = `closedAt`
+        self.`createdAt` = `createdAt`
+        self.`updatedAt` = `updatedAt`
+        self.`links` = `links`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["id", "commitmentId", "commitmentRevision", "generation", "revision", "state", "purpose", "urgency", "requiresResponse", "title", "nextAction", "contentVisibility", "deadlineAt", "deadlineTimezone", "snoozedUntil", "snoozeCrossesDeadline", "helpRequestId", "helpCheckAt", "nextAttentionAt", "attentionGeneration", "closedReason", "closedAt", "createdAt", "updatedAt", "links"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`id` = try container.decode(UUID.self, forKey: ToyCodingKey("id"))
+        self.`commitmentId` = try container.decode(UUID.self, forKey: ToyCodingKey("commitmentId"))
+        self.`commitmentRevision` = try container.decode(Revision.self, forKey: ToyCodingKey("commitmentRevision"))
+        self.`generation` = try container.decode(Revision.self, forKey: ToyCodingKey("generation"))
+        self.`revision` = try container.decode(Revision.self, forKey: ToyCodingKey("revision"))
+        self.`state` = try container.decode(AttentionItemState.self, forKey: ToyCodingKey("state"))
+        self.`purpose` = try container.decode(AttentionPurpose.self, forKey: ToyCodingKey("purpose"))
+        self.`urgency` = try container.decode(AttentionUrgency.self, forKey: ToyCodingKey("urgency"))
+        self.`requiresResponse` = try container.decode(Bool.self, forKey: ToyCodingKey("requiresResponse"))
+        self.`title` = try container.decode(Optional<String>.self, forKey: ToyCodingKey("title"))
+        self.`nextAction` = try container.decode(Optional<String>.self, forKey: ToyCodingKey("nextAction"))
+        self.`contentVisibility` = try container.decode(AttentionItemViewV1ContentVisibility.self, forKey: ToyCodingKey("contentVisibility"))
+        self.`deadlineAt` = try container.decode(Optional<Instant>.self, forKey: ToyCodingKey("deadlineAt"))
+        self.`deadlineTimezone` = try container.decode(Optional<String>.self, forKey: ToyCodingKey("deadlineTimezone"))
+        self.`snoozedUntil` = try container.decode(Optional<Instant>.self, forKey: ToyCodingKey("snoozedUntil"))
+        self.`snoozeCrossesDeadline` = try container.decode(Bool.self, forKey: ToyCodingKey("snoozeCrossesDeadline"))
+        self.`helpRequestId` = try container.decode(Optional<UUID>.self, forKey: ToyCodingKey("helpRequestId"))
+        self.`helpCheckAt` = try container.decode(Optional<Instant>.self, forKey: ToyCodingKey("helpCheckAt"))
+        self.`nextAttentionAt` = try container.decode(Optional<Instant>.self, forKey: ToyCodingKey("nextAttentionAt"))
+        self.`attentionGeneration` = try container.decode(Revision.self, forKey: ToyCodingKey("attentionGeneration"))
+        self.`closedReason` = try container.decode(Optional<AttentionItemViewV1ClosedReasonValue>.self, forKey: ToyCodingKey("closedReason"))
+        self.`closedAt` = try container.decode(Optional<Instant>.self, forKey: ToyCodingKey("closedAt"))
+        self.`createdAt` = try container.decode(Instant.self, forKey: ToyCodingKey("createdAt"))
+        self.`updatedAt` = try container.decode(Instant.self, forKey: ToyCodingKey("updatedAt"))
+        self.`links` = try container.decode(EvidenceLinksV1.self, forKey: ToyCodingKey("links"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`id`, forKey: ToyCodingKey("id"))
+        try container.encode(`commitmentId`, forKey: ToyCodingKey("commitmentId"))
+        try container.encode(`commitmentRevision`, forKey: ToyCodingKey("commitmentRevision"))
+        try container.encode(`generation`, forKey: ToyCodingKey("generation"))
+        try container.encode(`revision`, forKey: ToyCodingKey("revision"))
+        try container.encode(`state`, forKey: ToyCodingKey("state"))
+        try container.encode(`purpose`, forKey: ToyCodingKey("purpose"))
+        try container.encode(`urgency`, forKey: ToyCodingKey("urgency"))
+        try container.encode(`requiresResponse`, forKey: ToyCodingKey("requiresResponse"))
+        try container.encode(`title`, forKey: ToyCodingKey("title"))
+        try container.encode(`nextAction`, forKey: ToyCodingKey("nextAction"))
+        try container.encode(`contentVisibility`, forKey: ToyCodingKey("contentVisibility"))
+        try container.encode(`deadlineAt`, forKey: ToyCodingKey("deadlineAt"))
+        try container.encode(`deadlineTimezone`, forKey: ToyCodingKey("deadlineTimezone"))
+        try container.encode(`snoozedUntil`, forKey: ToyCodingKey("snoozedUntil"))
+        try container.encode(`snoozeCrossesDeadline`, forKey: ToyCodingKey("snoozeCrossesDeadline"))
+        try container.encode(`helpRequestId`, forKey: ToyCodingKey("helpRequestId"))
+        try container.encode(`helpCheckAt`, forKey: ToyCodingKey("helpCheckAt"))
+        try container.encode(`nextAttentionAt`, forKey: ToyCodingKey("nextAttentionAt"))
+        try container.encode(`attentionGeneration`, forKey: ToyCodingKey("attentionGeneration"))
+        try container.encode(`closedReason`, forKey: ToyCodingKey("closedReason"))
+        try container.encode(`closedAt`, forKey: ToyCodingKey("closedAt"))
+        try container.encode(`createdAt`, forKey: ToyCodingKey("createdAt"))
+        try container.encode(`updatedAt`, forKey: ToyCodingKey("updatedAt"))
+        try container.encode(`links`, forKey: ToyCodingKey("links"))
+    }
+}
+
+public enum AttentionItemState: String, Codable, CaseIterable, Sendable {
+    case `active` = "active"
+    case `snoozed` = "snoozed"
+    case `waitingHelp` = "waiting_help"
+    case `closed` = "closed"
+}
+
+public enum AttentionPurpose: String, Codable, CaseIterable, Sendable {
+    case `nextAction` = "next_action"
+    case `approvalNeeded` = "approval_needed"
+    case `eventPrepare` = "event_prepare"
+    case `eventDepart` = "event_depart"
+    case `eventAttend` = "event_attend"
+    case `deadline` = "deadline"
+    case `stuckRescue` = "stuck_rescue"
+    case `completion` = "completion"
+    case `incident` = "incident"
+}
+
+public enum AttentionUrgency: String, Codable, CaseIterable, Sendable {
+    case `routine` = "routine"
+    case `important` = "important"
+    case `hardDeadline` = "hard_deadline"
+}
+
+public enum AttentionItemViewV1ContentVisibility: String, Codable, CaseIterable, Sendable {
+    case `permitted` = "permitted"
+    case `redacted` = "redacted"
+    case `unavailable` = "unavailable"
+}
+
+public enum AttentionItemViewV1ClosedReasonValue: String, Codable, CaseIterable, Sendable {
+    case `done` = "done"
+    case `dropped` = "dropped"
+    case `noLongerActionable` = "no_longer_actionable"
+    case `informationalDelivered` = "informational_delivered"
+}
+
+public struct AttentionLocalPlanPageV1: Codable, Sendable {
+    public let `items`: [AttentionLocalPlanViewV1]
+    public let `nextCursor`: Optional<String>
+    public let `hasMore`: Bool
+    public let `watermark`: Optional<Revision>
+    public let `evaluatedAt`: Instant
+    public init(`items`: [AttentionLocalPlanViewV1], `nextCursor`: Optional<String>, `hasMore`: Bool, `watermark`: Optional<Revision>, `evaluatedAt`: Instant) {
+        self.`items` = `items`
+        self.`nextCursor` = `nextCursor`
+        self.`hasMore` = `hasMore`
+        self.`watermark` = `watermark`
+        self.`evaluatedAt` = `evaluatedAt`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["items", "nextCursor", "hasMore", "watermark", "evaluatedAt"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`items` = try container.decode([AttentionLocalPlanViewV1].self, forKey: ToyCodingKey("items"))
+        self.`nextCursor` = try container.decode(Optional<String>.self, forKey: ToyCodingKey("nextCursor"))
+        self.`hasMore` = try container.decode(Bool.self, forKey: ToyCodingKey("hasMore"))
+        self.`watermark` = try container.decode(Optional<Revision>.self, forKey: ToyCodingKey("watermark"))
+        self.`evaluatedAt` = try container.decode(Instant.self, forKey: ToyCodingKey("evaluatedAt"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`items`, forKey: ToyCodingKey("items"))
+        try container.encode(`nextCursor`, forKey: ToyCodingKey("nextCursor"))
+        try container.encode(`hasMore`, forKey: ToyCodingKey("hasMore"))
+        try container.encode(`watermark`, forKey: ToyCodingKey("watermark"))
+        try container.encode(`evaluatedAt`, forKey: ToyCodingKey("evaluatedAt"))
+    }
+}
+
+public struct AttentionLocalPlanViewV1: Codable, Sendable {
+    public let `id`: UUID
+    public let `itemId`: UUID
+    public let `itemRevision`: Revision
+    public let `commitmentId`: UUID
+    public let `commitmentRevision`: Revision
+    public let `deadlineAt`: Instant
+    public let `fireAt`: [Instant]
+    public let `expiresAt`: Instant
+    public let `generation`: Revision
+    public let `quietEpoch`: Revision
+    public let `mode`: AttentionLocalPlanViewV1Mode
+    public let `desiredState`: AttentionLocalPlanViewV1DesiredState
+    public let `deviceState`: AttentionLocalPlanViewV1DeviceState
+    public let `lastDeviceReceiptAt`: Optional<Instant>
+    public let `reasonCode`: Optional<String>
+    public let `links`: EvidenceLinksV1
+    public init(`id`: UUID, `itemId`: UUID, `itemRevision`: Revision, `commitmentId`: UUID, `commitmentRevision`: Revision, `deadlineAt`: Instant, `fireAt`: [Instant], `expiresAt`: Instant, `generation`: Revision, `quietEpoch`: Revision, `mode`: AttentionLocalPlanViewV1Mode, `desiredState`: AttentionLocalPlanViewV1DesiredState, `deviceState`: AttentionLocalPlanViewV1DeviceState, `lastDeviceReceiptAt`: Optional<Instant>, `reasonCode`: Optional<String>, `links`: EvidenceLinksV1) {
+        self.`id` = `id`
+        self.`itemId` = `itemId`
+        self.`itemRevision` = `itemRevision`
+        self.`commitmentId` = `commitmentId`
+        self.`commitmentRevision` = `commitmentRevision`
+        self.`deadlineAt` = `deadlineAt`
+        self.`fireAt` = `fireAt`
+        self.`expiresAt` = `expiresAt`
+        self.`generation` = `generation`
+        self.`quietEpoch` = `quietEpoch`
+        self.`mode` = `mode`
+        self.`desiredState` = `desiredState`
+        self.`deviceState` = `deviceState`
+        self.`lastDeviceReceiptAt` = `lastDeviceReceiptAt`
+        self.`reasonCode` = `reasonCode`
+        self.`links` = `links`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["id", "itemId", "itemRevision", "commitmentId", "commitmentRevision", "deadlineAt", "fireAt", "expiresAt", "generation", "quietEpoch", "mode", "desiredState", "deviceState", "lastDeviceReceiptAt", "reasonCode", "links"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`id` = try container.decode(UUID.self, forKey: ToyCodingKey("id"))
+        self.`itemId` = try container.decode(UUID.self, forKey: ToyCodingKey("itemId"))
+        self.`itemRevision` = try container.decode(Revision.self, forKey: ToyCodingKey("itemRevision"))
+        self.`commitmentId` = try container.decode(UUID.self, forKey: ToyCodingKey("commitmentId"))
+        self.`commitmentRevision` = try container.decode(Revision.self, forKey: ToyCodingKey("commitmentRevision"))
+        self.`deadlineAt` = try container.decode(Instant.self, forKey: ToyCodingKey("deadlineAt"))
+        self.`fireAt` = try container.decode([Instant].self, forKey: ToyCodingKey("fireAt"))
+        self.`expiresAt` = try container.decode(Instant.self, forKey: ToyCodingKey("expiresAt"))
+        self.`generation` = try container.decode(Revision.self, forKey: ToyCodingKey("generation"))
+        self.`quietEpoch` = try container.decode(Revision.self, forKey: ToyCodingKey("quietEpoch"))
+        self.`mode` = try container.decode(AttentionLocalPlanViewV1Mode.self, forKey: ToyCodingKey("mode"))
+        self.`desiredState` = try container.decode(AttentionLocalPlanViewV1DesiredState.self, forKey: ToyCodingKey("desiredState"))
+        self.`deviceState` = try container.decode(AttentionLocalPlanViewV1DeviceState.self, forKey: ToyCodingKey("deviceState"))
+        self.`lastDeviceReceiptAt` = try container.decode(Optional<Instant>.self, forKey: ToyCodingKey("lastDeviceReceiptAt"))
+        self.`reasonCode` = try container.decode(Optional<String>.self, forKey: ToyCodingKey("reasonCode"))
+        self.`links` = try container.decode(EvidenceLinksV1.self, forKey: ToyCodingKey("links"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`id`, forKey: ToyCodingKey("id"))
+        try container.encode(`itemId`, forKey: ToyCodingKey("itemId"))
+        try container.encode(`itemRevision`, forKey: ToyCodingKey("itemRevision"))
+        try container.encode(`commitmentId`, forKey: ToyCodingKey("commitmentId"))
+        try container.encode(`commitmentRevision`, forKey: ToyCodingKey("commitmentRevision"))
+        try container.encode(`deadlineAt`, forKey: ToyCodingKey("deadlineAt"))
+        try container.encode(`fireAt`, forKey: ToyCodingKey("fireAt"))
+        try container.encode(`expiresAt`, forKey: ToyCodingKey("expiresAt"))
+        try container.encode(`generation`, forKey: ToyCodingKey("generation"))
+        try container.encode(`quietEpoch`, forKey: ToyCodingKey("quietEpoch"))
+        try container.encode(`mode`, forKey: ToyCodingKey("mode"))
+        try container.encode(`desiredState`, forKey: ToyCodingKey("desiredState"))
+        try container.encode(`deviceState`, forKey: ToyCodingKey("deviceState"))
+        try container.encode(`lastDeviceReceiptAt`, forKey: ToyCodingKey("lastDeviceReceiptAt"))
+        try container.encode(`reasonCode`, forKey: ToyCodingKey("reasonCode"))
+        try container.encode(`links`, forKey: ToyCodingKey("links"))
+    }
+}
+
+public enum AttentionLocalPlanViewV1Mode: String, Codable, CaseIterable, Sendable {
+    case `localNotification` = "local_notification"
+    case `alarmkit` = "alarmkit"
+}
+
+public enum AttentionLocalPlanViewV1DesiredState: String, Codable, CaseIterable, Sendable {
+    case `armed` = "armed"
+    case `canceled` = "canceled"
+}
+
+public enum AttentionLocalPlanViewV1DeviceState: String, Codable, CaseIterable, Sendable {
+    case `pending` = "pending"
+    case `armed` = "armed"
+    case `cancellationPending` = "cancellation_pending"
+    case `canceled` = "canceled"
+    case `permissionDenied` = "permission_denied"
+    case `unsupported` = "unsupported"
+    case `error` = "error"
+    case `expired` = "expired"
+}
+
+public struct QuotaAdmissionViewV1: Codable, Sendable {
+    public let `subscriptions`: [SubscriptionStatus]
+    public let `checkedAt`: Instant
+    public let `laneBusy`: Bool
+    public let `reservedCalls`: UInt64String
+    public let `unknownCalls`: UInt64String
+    public let `autonomousAllowed`: Bool
+    public let `optionalEvaluationAllowed`: Bool
+    public let `pauseReason`: Optional<String>
+    public let `fallbackJobCount`: Optional<UInt64String>
+    public let `paidUsageAllowed`: CliFailureOk
+    public init(`subscriptions`: [SubscriptionStatus], `checkedAt`: Instant, `laneBusy`: Bool, `reservedCalls`: UInt64String, `unknownCalls`: UInt64String, `autonomousAllowed`: Bool, `optionalEvaluationAllowed`: Bool, `pauseReason`: Optional<String>, `fallbackJobCount`: Optional<UInt64String>, `paidUsageAllowed`: CliFailureOk) {
+        self.`subscriptions` = `subscriptions`
+        self.`checkedAt` = `checkedAt`
+        self.`laneBusy` = `laneBusy`
+        self.`reservedCalls` = `reservedCalls`
+        self.`unknownCalls` = `unknownCalls`
+        self.`autonomousAllowed` = `autonomousAllowed`
+        self.`optionalEvaluationAllowed` = `optionalEvaluationAllowed`
+        self.`pauseReason` = `pauseReason`
+        self.`fallbackJobCount` = `fallbackJobCount`
+        self.`paidUsageAllowed` = `paidUsageAllowed`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["subscriptions", "checkedAt", "laneBusy", "reservedCalls", "unknownCalls", "autonomousAllowed", "optionalEvaluationAllowed", "pauseReason", "fallbackJobCount", "paidUsageAllowed"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`subscriptions` = try container.decode([SubscriptionStatus].self, forKey: ToyCodingKey("subscriptions"))
+        self.`checkedAt` = try container.decode(Instant.self, forKey: ToyCodingKey("checkedAt"))
+        self.`laneBusy` = try container.decode(Bool.self, forKey: ToyCodingKey("laneBusy"))
+        self.`reservedCalls` = try container.decode(UInt64String.self, forKey: ToyCodingKey("reservedCalls"))
+        self.`unknownCalls` = try container.decode(UInt64String.self, forKey: ToyCodingKey("unknownCalls"))
+        self.`autonomousAllowed` = try container.decode(Bool.self, forKey: ToyCodingKey("autonomousAllowed"))
+        self.`optionalEvaluationAllowed` = try container.decode(Bool.self, forKey: ToyCodingKey("optionalEvaluationAllowed"))
+        self.`pauseReason` = try container.decode(Optional<String>.self, forKey: ToyCodingKey("pauseReason"))
+        self.`fallbackJobCount` = try container.decode(Optional<UInt64String>.self, forKey: ToyCodingKey("fallbackJobCount"))
+        self.`paidUsageAllowed` = try container.decode(CliFailureOk.self, forKey: ToyCodingKey("paidUsageAllowed"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`subscriptions`, forKey: ToyCodingKey("subscriptions"))
+        try container.encode(`checkedAt`, forKey: ToyCodingKey("checkedAt"))
+        try container.encode(`laneBusy`, forKey: ToyCodingKey("laneBusy"))
+        try container.encode(`reservedCalls`, forKey: ToyCodingKey("reservedCalls"))
+        try container.encode(`unknownCalls`, forKey: ToyCodingKey("unknownCalls"))
+        try container.encode(`autonomousAllowed`, forKey: ToyCodingKey("autonomousAllowed"))
+        try container.encode(`optionalEvaluationAllowed`, forKey: ToyCodingKey("optionalEvaluationAllowed"))
+        try container.encode(`pauseReason`, forKey: ToyCodingKey("pauseReason"))
+        try container.encode(`fallbackJobCount`, forKey: ToyCodingKey("fallbackJobCount"))
+        try container.encode(`paidUsageAllowed`, forKey: ToyCodingKey("paidUsageAllowed"))
+    }
+}
+
+public struct CadenceCoverageV1: Codable, Sendable {
+    public let `policyDigest`: Digest
+    public let `requiredAiEverySeconds`: CadenceCoverageV1RequiredAiEverySeconds
+    public let `periods`: [CadencePeriodV1]
+    public let `pendingRunRefs`: [RecordRef]
+    public init(`policyDigest`: Digest, `requiredAiEverySeconds`: CadenceCoverageV1RequiredAiEverySeconds, `periods`: [CadencePeriodV1], `pendingRunRefs`: [RecordRef]) {
+        self.`policyDigest` = `policyDigest`
+        self.`requiredAiEverySeconds` = `requiredAiEverySeconds`
+        self.`periods` = `periods`
+        self.`pendingRunRefs` = `pendingRunRefs`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["policyDigest", "requiredAiEverySeconds", "periods", "pendingRunRefs"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`policyDigest` = try container.decode(Digest.self, forKey: ToyCodingKey("policyDigest"))
+        self.`requiredAiEverySeconds` = try container.decode(CadenceCoverageV1RequiredAiEverySeconds.self, forKey: ToyCodingKey("requiredAiEverySeconds"))
+        self.`periods` = try container.decode([CadencePeriodV1].self, forKey: ToyCodingKey("periods"))
+        self.`pendingRunRefs` = try container.decode([RecordRef].self, forKey: ToyCodingKey("pendingRunRefs"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`policyDigest`, forKey: ToyCodingKey("policyDigest"))
+        try container.encode(`requiredAiEverySeconds`, forKey: ToyCodingKey("requiredAiEverySeconds"))
+        try container.encode(`periods`, forKey: ToyCodingKey("periods"))
+        try container.encode(`pendingRunRefs`, forKey: ToyCodingKey("pendingRunRefs"))
+    }
+}
+
+public struct CadenceCoverageV1RequiredAiEverySeconds: Codable, Sendable {
+    public init() {}
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        guard try container.decode(Double.self) == 180 else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "A contract literal did not match."))
+        }
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(180)
+    }
+}
+
+public struct CadencePeriodV1: Codable, Sendable {
+    public let `from`: Instant
+    public let `to`: Instant
+    public let `clock`: CadencePeriodV1Clock
+    public let `armId`: Optional<UUID>
+    public let `experimental`: Bool
+    public let `nominalSlots`: UInt64String
+    public let `counts`: CadencePeriodV1Counts
+    public let `complete`: Bool
+    public init(`from`: Instant, `to`: Instant, `clock`: CadencePeriodV1Clock, `armId`: Optional<UUID>, `experimental`: Bool, `nominalSlots`: UInt64String, `counts`: CadencePeriodV1Counts, `complete`: Bool) {
+        self.`from` = `from`
+        self.`to` = `to`
+        self.`clock` = `clock`
+        self.`armId` = `armId`
+        self.`experimental` = `experimental`
+        self.`nominalSlots` = `nominalSlots`
+        self.`counts` = `counts`
+        self.`complete` = `complete`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["from", "to", "clock", "armId", "experimental", "nominalSlots", "counts", "complete"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`from` = try container.decode(Instant.self, forKey: ToyCodingKey("from"))
+        self.`to` = try container.decode(Instant.self, forKey: ToyCodingKey("to"))
+        self.`clock` = try container.decode(CadencePeriodV1Clock.self, forKey: ToyCodingKey("clock"))
+        self.`armId` = try container.decode(Optional<UUID>.self, forKey: ToyCodingKey("armId"))
+        self.`experimental` = try container.decode(Bool.self, forKey: ToyCodingKey("experimental"))
+        self.`nominalSlots` = try container.decode(UInt64String.self, forKey: ToyCodingKey("nominalSlots"))
+        self.`counts` = try container.decode(CadencePeriodV1Counts.self, forKey: ToyCodingKey("counts"))
+        self.`complete` = try container.decode(Bool.self, forKey: ToyCodingKey("complete"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`from`, forKey: ToyCodingKey("from"))
+        try container.encode(`to`, forKey: ToyCodingKey("to"))
+        try container.encode(`clock`, forKey: ToyCodingKey("clock"))
+        try container.encode(`armId`, forKey: ToyCodingKey("armId"))
+        try container.encode(`experimental`, forKey: ToyCodingKey("experimental"))
+        try container.encode(`nominalSlots`, forKey: ToyCodingKey("nominalSlots"))
+        try container.encode(`counts`, forKey: ToyCodingKey("counts"))
+        try container.encode(`complete`, forKey: ToyCodingKey("complete"))
+    }
+}
+
+public enum CadencePeriodV1Clock: String, Codable, CaseIterable, Sendable {
+    case `real` = "real"
+    case `exactCadence` = "exact_cadence"
+    case `projectedBehavior` = "projected_behavior"
+    case `fakeModel` = "fake_model"
+}
+
+public struct CadencePeriodV1Counts: Codable, Sendable {
+    public let `scheduled`: UInt64String
+    public let `running`: UInt64String
+    public let `swept`: UInt64String
+    public let `reviewed`: UInt64String
+    public let `deferred_quota`: UInt64String
+    public let `deferred_auth`: UInt64String
+    public let `deferred_network`: UInt64String
+    public let `deferred_busy`: UInt64String
+    public let `maintenance`: UInt64String
+    public let `failed`: UInt64String
+    public let `missed`: UInt64String
+    public let `coalesced_after_outage`: UInt64String
+    public init(`scheduled`: UInt64String, `running`: UInt64String, `swept`: UInt64String, `reviewed`: UInt64String, `deferred_quota`: UInt64String, `deferred_auth`: UInt64String, `deferred_network`: UInt64String, `deferred_busy`: UInt64String, `maintenance`: UInt64String, `failed`: UInt64String, `missed`: UInt64String, `coalesced_after_outage`: UInt64String) {
+        self.`scheduled` = `scheduled`
+        self.`running` = `running`
+        self.`swept` = `swept`
+        self.`reviewed` = `reviewed`
+        self.`deferred_quota` = `deferred_quota`
+        self.`deferred_auth` = `deferred_auth`
+        self.`deferred_network` = `deferred_network`
+        self.`deferred_busy` = `deferred_busy`
+        self.`maintenance` = `maintenance`
+        self.`failed` = `failed`
+        self.`missed` = `missed`
+        self.`coalesced_after_outage` = `coalesced_after_outage`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["scheduled", "running", "swept", "reviewed", "deferred_quota", "deferred_auth", "deferred_network", "deferred_busy", "maintenance", "failed", "missed", "coalesced_after_outage"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`scheduled` = try container.decode(UInt64String.self, forKey: ToyCodingKey("scheduled"))
+        self.`running` = try container.decode(UInt64String.self, forKey: ToyCodingKey("running"))
+        self.`swept` = try container.decode(UInt64String.self, forKey: ToyCodingKey("swept"))
+        self.`reviewed` = try container.decode(UInt64String.self, forKey: ToyCodingKey("reviewed"))
+        self.`deferred_quota` = try container.decode(UInt64String.self, forKey: ToyCodingKey("deferred_quota"))
+        self.`deferred_auth` = try container.decode(UInt64String.self, forKey: ToyCodingKey("deferred_auth"))
+        self.`deferred_network` = try container.decode(UInt64String.self, forKey: ToyCodingKey("deferred_network"))
+        self.`deferred_busy` = try container.decode(UInt64String.self, forKey: ToyCodingKey("deferred_busy"))
+        self.`maintenance` = try container.decode(UInt64String.self, forKey: ToyCodingKey("maintenance"))
+        self.`failed` = try container.decode(UInt64String.self, forKey: ToyCodingKey("failed"))
+        self.`missed` = try container.decode(UInt64String.self, forKey: ToyCodingKey("missed"))
+        self.`coalesced_after_outage` = try container.decode(UInt64String.self, forKey: ToyCodingKey("coalesced_after_outage"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`scheduled`, forKey: ToyCodingKey("scheduled"))
+        try container.encode(`running`, forKey: ToyCodingKey("running"))
+        try container.encode(`swept`, forKey: ToyCodingKey("swept"))
+        try container.encode(`reviewed`, forKey: ToyCodingKey("reviewed"))
+        try container.encode(`deferred_quota`, forKey: ToyCodingKey("deferred_quota"))
+        try container.encode(`deferred_auth`, forKey: ToyCodingKey("deferred_auth"))
+        try container.encode(`deferred_network`, forKey: ToyCodingKey("deferred_network"))
+        try container.encode(`deferred_busy`, forKey: ToyCodingKey("deferred_busy"))
+        try container.encode(`maintenance`, forKey: ToyCodingKey("maintenance"))
+        try container.encode(`failed`, forKey: ToyCodingKey("failed"))
+        try container.encode(`missed`, forKey: ToyCodingKey("missed"))
+        try container.encode(`coalesced_after_outage`, forKey: ToyCodingKey("coalesced_after_outage"))
+    }
+}
+
+public struct ReleaseStatusV1: Codable, Sendable {
+    public let `currentDigest`: Optional<Digest>
+    public let `previousDigest`: Optional<Digest>
+    public let `controlDigest`: Optional<Digest>
+    public let `targetDigest`: Optional<Digest>
+    public let `projectionCurrentDigest`: Optional<Digest>
+    public let `projectionStale`: Bool
+    public let `compatibility`: PublisherCompatibilityV1
+    public let `gates`: [CheckViewV1]
+    public let `attestationRefs`: [RecordRef]
+    public let `operationRefs`: [RecordRef]
+    public let `rollbackEligible`: Bool
+    public let `checkedAt`: Instant
+    public init(`currentDigest`: Optional<Digest>, `previousDigest`: Optional<Digest>, `controlDigest`: Optional<Digest>, `targetDigest`: Optional<Digest>, `projectionCurrentDigest`: Optional<Digest>, `projectionStale`: Bool, `compatibility`: PublisherCompatibilityV1, `gates`: [CheckViewV1], `attestationRefs`: [RecordRef], `operationRefs`: [RecordRef], `rollbackEligible`: Bool, `checkedAt`: Instant) {
+        self.`currentDigest` = `currentDigest`
+        self.`previousDigest` = `previousDigest`
+        self.`controlDigest` = `controlDigest`
+        self.`targetDigest` = `targetDigest`
+        self.`projectionCurrentDigest` = `projectionCurrentDigest`
+        self.`projectionStale` = `projectionStale`
+        self.`compatibility` = `compatibility`
+        self.`gates` = `gates`
+        self.`attestationRefs` = `attestationRefs`
+        self.`operationRefs` = `operationRefs`
+        self.`rollbackEligible` = `rollbackEligible`
+        self.`checkedAt` = `checkedAt`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["currentDigest", "previousDigest", "controlDigest", "targetDigest", "projectionCurrentDigest", "projectionStale", "compatibility", "gates", "attestationRefs", "operationRefs", "rollbackEligible", "checkedAt"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`currentDigest` = try container.decode(Optional<Digest>.self, forKey: ToyCodingKey("currentDigest"))
+        self.`previousDigest` = try container.decode(Optional<Digest>.self, forKey: ToyCodingKey("previousDigest"))
+        self.`controlDigest` = try container.decode(Optional<Digest>.self, forKey: ToyCodingKey("controlDigest"))
+        self.`targetDigest` = try container.decode(Optional<Digest>.self, forKey: ToyCodingKey("targetDigest"))
+        self.`projectionCurrentDigest` = try container.decode(Optional<Digest>.self, forKey: ToyCodingKey("projectionCurrentDigest"))
+        self.`projectionStale` = try container.decode(Bool.self, forKey: ToyCodingKey("projectionStale"))
+        self.`compatibility` = try container.decode(PublisherCompatibilityV1.self, forKey: ToyCodingKey("compatibility"))
+        self.`gates` = try container.decode([CheckViewV1].self, forKey: ToyCodingKey("gates"))
+        self.`attestationRefs` = try container.decode([RecordRef].self, forKey: ToyCodingKey("attestationRefs"))
+        self.`operationRefs` = try container.decode([RecordRef].self, forKey: ToyCodingKey("operationRefs"))
+        self.`rollbackEligible` = try container.decode(Bool.self, forKey: ToyCodingKey("rollbackEligible"))
+        self.`checkedAt` = try container.decode(Instant.self, forKey: ToyCodingKey("checkedAt"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`currentDigest`, forKey: ToyCodingKey("currentDigest"))
+        try container.encode(`previousDigest`, forKey: ToyCodingKey("previousDigest"))
+        try container.encode(`controlDigest`, forKey: ToyCodingKey("controlDigest"))
+        try container.encode(`targetDigest`, forKey: ToyCodingKey("targetDigest"))
+        try container.encode(`projectionCurrentDigest`, forKey: ToyCodingKey("projectionCurrentDigest"))
+        try container.encode(`projectionStale`, forKey: ToyCodingKey("projectionStale"))
+        try container.encode(`compatibility`, forKey: ToyCodingKey("compatibility"))
+        try container.encode(`gates`, forKey: ToyCodingKey("gates"))
+        try container.encode(`attestationRefs`, forKey: ToyCodingKey("attestationRefs"))
+        try container.encode(`operationRefs`, forKey: ToyCodingKey("operationRefs"))
+        try container.encode(`rollbackEligible`, forKey: ToyCodingKey("rollbackEligible"))
+        try container.encode(`checkedAt`, forKey: ToyCodingKey("checkedAt"))
+    }
+}
+
+public struct PublisherCompatibilityV1: Codable, Sendable {
+    public let `database`: PublisherCompatibilityV1Database
+    public let `runtime`: PublisherCompatibilityV1Runtime
+    public let `state`: PublisherCompatibilityV1State
+    public let `checks`: [CheckViewV1]
+    public let `checkedAt`: Instant
+    public init(`database`: PublisherCompatibilityV1Database, `runtime`: PublisherCompatibilityV1Runtime, `state`: PublisherCompatibilityV1State, `checks`: [CheckViewV1], `checkedAt`: Instant) {
+        self.`database` = `database`
+        self.`runtime` = `runtime`
+        self.`state` = `state`
+        self.`checks` = `checks`
+        self.`checkedAt` = `checkedAt`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["database", "runtime", "state", "checks", "checkedAt"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`database` = try container.decode(PublisherCompatibilityV1Database.self, forKey: ToyCodingKey("database"))
+        self.`runtime` = try container.decode(PublisherCompatibilityV1Runtime.self, forKey: ToyCodingKey("runtime"))
+        self.`state` = try container.decode(PublisherCompatibilityV1State.self, forKey: ToyCodingKey("state"))
+        self.`checks` = try container.decode([CheckViewV1].self, forKey: ToyCodingKey("checks"))
+        self.`checkedAt` = try container.decode(Instant.self, forKey: ToyCodingKey("checkedAt"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`database`, forKey: ToyCodingKey("database"))
+        try container.encode(`runtime`, forKey: ToyCodingKey("runtime"))
+        try container.encode(`state`, forKey: ToyCodingKey("state"))
+        try container.encode(`checks`, forKey: ToyCodingKey("checks"))
+        try container.encode(`checkedAt`, forKey: ToyCodingKey("checkedAt"))
+    }
+}
+
+public struct PublisherCompatibilityV1Database: Codable, Sendable {
+    public let `observed`: Optional<Revision>
+    public let `minimum`: Optional<Revision>
+    public let `maximum`: Optional<Revision>
+    public let `compatible`: Optional<Bool>
+    public init(`observed`: Optional<Revision>, `minimum`: Optional<Revision>, `maximum`: Optional<Revision>, `compatible`: Optional<Bool>) {
+        self.`observed` = `observed`
+        self.`minimum` = `minimum`
+        self.`maximum` = `maximum`
+        self.`compatible` = `compatible`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["observed", "minimum", "maximum", "compatible"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`observed` = try container.decode(Optional<Revision>.self, forKey: ToyCodingKey("observed"))
+        self.`minimum` = try container.decode(Optional<Revision>.self, forKey: ToyCodingKey("minimum"))
+        self.`maximum` = try container.decode(Optional<Revision>.self, forKey: ToyCodingKey("maximum"))
+        self.`compatible` = try container.decode(Optional<Bool>.self, forKey: ToyCodingKey("compatible"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`observed`, forKey: ToyCodingKey("observed"))
+        try container.encode(`minimum`, forKey: ToyCodingKey("minimum"))
+        try container.encode(`maximum`, forKey: ToyCodingKey("maximum"))
+        try container.encode(`compatible`, forKey: ToyCodingKey("compatible"))
+    }
+}
+
+public struct PublisherCompatibilityV1Runtime: Codable, Sendable {
+    public let `observed`: Optional<String>
+    public let `minimum`: Optional<String>
+    public let `maximum`: Optional<String>
+    public let `compatible`: Optional<Bool>
+    public init(`observed`: Optional<String>, `minimum`: Optional<String>, `maximum`: Optional<String>, `compatible`: Optional<Bool>) {
+        self.`observed` = `observed`
+        self.`minimum` = `minimum`
+        self.`maximum` = `maximum`
+        self.`compatible` = `compatible`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["observed", "minimum", "maximum", "compatible"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`observed` = try container.decode(Optional<String>.self, forKey: ToyCodingKey("observed"))
+        self.`minimum` = try container.decode(Optional<String>.self, forKey: ToyCodingKey("minimum"))
+        self.`maximum` = try container.decode(Optional<String>.self, forKey: ToyCodingKey("maximum"))
+        self.`compatible` = try container.decode(Optional<Bool>.self, forKey: ToyCodingKey("compatible"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`observed`, forKey: ToyCodingKey("observed"))
+        try container.encode(`minimum`, forKey: ToyCodingKey("minimum"))
+        try container.encode(`maximum`, forKey: ToyCodingKey("maximum"))
+        try container.encode(`compatible`, forKey: ToyCodingKey("compatible"))
+    }
+}
+
+public enum PublisherCompatibilityV1State: String, Codable, CaseIterable, Sendable {
+    case `compatible` = "compatible"
+    case `incompatible` = "incompatible"
+    case `unknown` = "unknown"
+}
+
+public struct SecretReadinessV1: Codable, Sendable {
+    public let `serviceId`: ServiceId
+    public let `state`: SecretReadinessV1State
+    public let `checkedAt`: Instant
+    public let `expiresAt`: Optional<Instant>
+    public init(`serviceId`: ServiceId, `state`: SecretReadinessV1State, `checkedAt`: Instant, `expiresAt`: Optional<Instant>) {
+        self.`serviceId` = `serviceId`
+        self.`state` = `state`
+        self.`checkedAt` = `checkedAt`
+        self.`expiresAt` = `expiresAt`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["serviceId", "state", "checkedAt", "expiresAt"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`serviceId` = try container.decode(ServiceId.self, forKey: ToyCodingKey("serviceId"))
+        self.`state` = try container.decode(SecretReadinessV1State.self, forKey: ToyCodingKey("state"))
+        self.`checkedAt` = try container.decode(Instant.self, forKey: ToyCodingKey("checkedAt"))
+        self.`expiresAt` = try container.decode(Optional<Instant>.self, forKey: ToyCodingKey("expiresAt"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`serviceId`, forKey: ToyCodingKey("serviceId"))
+        try container.encode(`state`, forKey: ToyCodingKey("state"))
+        try container.encode(`checkedAt`, forKey: ToyCodingKey("checkedAt"))
+        try container.encode(`expiresAt`, forKey: ToyCodingKey("expiresAt"))
+    }
+}
+
+public enum SecretReadinessV1State: String, Codable, CaseIterable, Sendable {
+    case `ready` = "ready"
+    case `expired` = "expired"
+    case `missing` = "missing"
+    case `blocked` = "blocked"
+    case `unknown` = "unknown"
+}
+
+public struct CliDoctorResult: Codable, Sendable {
+    public let `schemaVersion`: CliHelpV1CompatibilityWireVersionsItem
+    public let `commandId`: CliDoctorResultCommandId
+    public let `invocationId`: UUID
+    public let `generatedAt`: Instant
+    public let `cliVersion`: CliVersionV1CliVersion
+    public let `contractsVersion`: CliVersionV1CliVersion
+    public let `schemaDigest`: Digest
+    public let `environment`: CliEnvironment
+    public let `meta`: CliMetadata
+    public let `ok`: CliHelpResultOk
+    public let `data`: DoctorReportV1
+    public init(`schemaVersion`: CliHelpV1CompatibilityWireVersionsItem, `commandId`: CliDoctorResultCommandId, `invocationId`: UUID, `generatedAt`: Instant, `cliVersion`: CliVersionV1CliVersion, `contractsVersion`: CliVersionV1CliVersion, `schemaDigest`: Digest, `environment`: CliEnvironment, `meta`: CliMetadata, `ok`: CliHelpResultOk, `data`: DoctorReportV1) {
+        self.`schemaVersion` = `schemaVersion`
+        self.`commandId` = `commandId`
+        self.`invocationId` = `invocationId`
+        self.`generatedAt` = `generatedAt`
+        self.`cliVersion` = `cliVersion`
+        self.`contractsVersion` = `contractsVersion`
+        self.`schemaDigest` = `schemaDigest`
+        self.`environment` = `environment`
+        self.`meta` = `meta`
+        self.`ok` = `ok`
+        self.`data` = `data`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["schemaVersion", "commandId", "invocationId", "generatedAt", "cliVersion", "contractsVersion", "schemaDigest", "environment", "meta", "ok", "data"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`schemaVersion` = try container.decode(CliHelpV1CompatibilityWireVersionsItem.self, forKey: ToyCodingKey("schemaVersion"))
+        self.`commandId` = try container.decode(CliDoctorResultCommandId.self, forKey: ToyCodingKey("commandId"))
+        self.`invocationId` = try container.decode(UUID.self, forKey: ToyCodingKey("invocationId"))
+        self.`generatedAt` = try container.decode(Instant.self, forKey: ToyCodingKey("generatedAt"))
+        self.`cliVersion` = try container.decode(CliVersionV1CliVersion.self, forKey: ToyCodingKey("cliVersion"))
+        self.`contractsVersion` = try container.decode(CliVersionV1CliVersion.self, forKey: ToyCodingKey("contractsVersion"))
+        self.`schemaDigest` = try container.decode(Digest.self, forKey: ToyCodingKey("schemaDigest"))
+        self.`environment` = try container.decode(CliEnvironment.self, forKey: ToyCodingKey("environment"))
+        self.`meta` = try container.decode(CliMetadata.self, forKey: ToyCodingKey("meta"))
+        self.`ok` = try container.decode(CliHelpResultOk.self, forKey: ToyCodingKey("ok"))
+        self.`data` = try container.decode(DoctorReportV1.self, forKey: ToyCodingKey("data"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`schemaVersion`, forKey: ToyCodingKey("schemaVersion"))
+        try container.encode(`commandId`, forKey: ToyCodingKey("commandId"))
+        try container.encode(`invocationId`, forKey: ToyCodingKey("invocationId"))
+        try container.encode(`generatedAt`, forKey: ToyCodingKey("generatedAt"))
+        try container.encode(`cliVersion`, forKey: ToyCodingKey("cliVersion"))
+        try container.encode(`contractsVersion`, forKey: ToyCodingKey("contractsVersion"))
+        try container.encode(`schemaDigest`, forKey: ToyCodingKey("schemaDigest"))
+        try container.encode(`environment`, forKey: ToyCodingKey("environment"))
+        try container.encode(`meta`, forKey: ToyCodingKey("meta"))
+        try container.encode(`ok`, forKey: ToyCodingKey("ok"))
+        try container.encode(`data`, forKey: ToyCodingKey("data"))
+    }
+}
+
+public enum CliDoctorResultCommandId: String, Codable, CaseIterable, Sendable {
+    case `doctor` = "doctor"
+}
+
+public struct DoctorReportV1: Codable, Sendable {
+    public let `requiredRelease`: Release
+    public let `deep`: Bool
+    public let `checks`: [CheckViewV1]
+    public let `verdict`: AcceptanceStateV1
+    public let `complete`: Bool
+    public let `links`: EvidenceLinksV1
+    public init(`requiredRelease`: Release, `deep`: Bool, `checks`: [CheckViewV1], `verdict`: AcceptanceStateV1, `complete`: Bool, `links`: EvidenceLinksV1) {
+        self.`requiredRelease` = `requiredRelease`
+        self.`deep` = `deep`
+        self.`checks` = `checks`
+        self.`verdict` = `verdict`
+        self.`complete` = `complete`
+        self.`links` = `links`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["requiredRelease", "deep", "checks", "verdict", "complete", "links"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`requiredRelease` = try container.decode(Release.self, forKey: ToyCodingKey("requiredRelease"))
+        self.`deep` = try container.decode(Bool.self, forKey: ToyCodingKey("deep"))
+        self.`checks` = try container.decode([CheckViewV1].self, forKey: ToyCodingKey("checks"))
+        self.`verdict` = try container.decode(AcceptanceStateV1.self, forKey: ToyCodingKey("verdict"))
+        self.`complete` = try container.decode(Bool.self, forKey: ToyCodingKey("complete"))
+        self.`links` = try container.decode(EvidenceLinksV1.self, forKey: ToyCodingKey("links"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`requiredRelease`, forKey: ToyCodingKey("requiredRelease"))
+        try container.encode(`deep`, forKey: ToyCodingKey("deep"))
+        try container.encode(`checks`, forKey: ToyCodingKey("checks"))
+        try container.encode(`verdict`, forKey: ToyCodingKey("verdict"))
+        try container.encode(`complete`, forKey: ToyCodingKey("complete"))
+        try container.encode(`links`, forKey: ToyCodingKey("links"))
+    }
+}
+
 public enum CliResult: Codable, Sendable {
     case variant0(CliFailure)
     case variant1(CliHelpResult)
     case variant2(CliVersionResult)
+    case variant3(CliStatusResult)
+    case variant4(CliDoctorResult)
     public init(from decoder: any Decoder) throws {
         let container = try decoder.singleValueContainer()
         if let value = try? container.decode(CliFailure.self) { self = .variant0(value); return }
         if let value = try? container.decode(CliHelpResult.self) { self = .variant1(value); return }
         if let value = try? container.decode(CliVersionResult.self) { self = .variant2(value); return }
+        if let value = try? container.decode(CliStatusResult.self) { self = .variant3(value); return }
+        if let value = try? container.decode(CliDoctorResult.self) { self = .variant4(value); return }
         throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "No contract union member matched."))
     }
     public func encode(to encoder: any Encoder) throws {
@@ -763,6 +3023,8 @@ public enum CliResult: Codable, Sendable {
         case .variant0(let value): try container.encode(value)
         case .variant1(let value): try container.encode(value)
         case .variant2(let value): try container.encode(value)
+        case .variant3(let value): try container.encode(value)
+        case .variant4(let value): try container.encode(value)
         }
     }
 }
@@ -953,4 +3215,377 @@ public struct CliVersionCommandResultVariant1: Codable, Sendable {
         try container.encode(`ok`, forKey: ToyCodingKey("ok"))
         try container.encode(`error`, forKey: ToyCodingKey("error"))
     }
+}
+
+public enum CliStatusCommandResult: Codable, Sendable {
+    case variant0(CliStatusResult)
+    case variant1(CliStatusCommandResultVariant1)
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        if let value = try? container.decode(CliStatusResult.self) { self = .variant0(value); return }
+        if let value = try? container.decode(CliStatusCommandResultVariant1.self) { self = .variant1(value); return }
+        throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "No contract union member matched."))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.singleValueContainer()
+        switch self {
+        case .variant0(let value): try container.encode(value)
+        case .variant1(let value): try container.encode(value)
+        }
+    }
+}
+
+public struct CliStatusCommandResultVariant1: Codable, Sendable {
+    public let `schemaVersion`: CliHelpV1CompatibilityWireVersionsItem
+    public let `commandId`: CliStatusResultCommandId
+    public let `invocationId`: UUID
+    public let `generatedAt`: Instant
+    public let `cliVersion`: CliVersionV1CliVersion
+    public let `contractsVersion`: CliVersionV1CliVersion
+    public let `schemaDigest`: Digest
+    public let `environment`: CliEnvironment
+    public let `meta`: CliMetadata
+    public let `ok`: CliFailureOk
+    public let `error`: CliError
+    public init(`schemaVersion`: CliHelpV1CompatibilityWireVersionsItem, `commandId`: CliStatusResultCommandId, `invocationId`: UUID, `generatedAt`: Instant, `cliVersion`: CliVersionV1CliVersion, `contractsVersion`: CliVersionV1CliVersion, `schemaDigest`: Digest, `environment`: CliEnvironment, `meta`: CliMetadata, `ok`: CliFailureOk, `error`: CliError) {
+        self.`schemaVersion` = `schemaVersion`
+        self.`commandId` = `commandId`
+        self.`invocationId` = `invocationId`
+        self.`generatedAt` = `generatedAt`
+        self.`cliVersion` = `cliVersion`
+        self.`contractsVersion` = `contractsVersion`
+        self.`schemaDigest` = `schemaDigest`
+        self.`environment` = `environment`
+        self.`meta` = `meta`
+        self.`ok` = `ok`
+        self.`error` = `error`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["schemaVersion", "commandId", "invocationId", "generatedAt", "cliVersion", "contractsVersion", "schemaDigest", "environment", "meta", "ok", "error"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`schemaVersion` = try container.decode(CliHelpV1CompatibilityWireVersionsItem.self, forKey: ToyCodingKey("schemaVersion"))
+        self.`commandId` = try container.decode(CliStatusResultCommandId.self, forKey: ToyCodingKey("commandId"))
+        self.`invocationId` = try container.decode(UUID.self, forKey: ToyCodingKey("invocationId"))
+        self.`generatedAt` = try container.decode(Instant.self, forKey: ToyCodingKey("generatedAt"))
+        self.`cliVersion` = try container.decode(CliVersionV1CliVersion.self, forKey: ToyCodingKey("cliVersion"))
+        self.`contractsVersion` = try container.decode(CliVersionV1CliVersion.self, forKey: ToyCodingKey("contractsVersion"))
+        self.`schemaDigest` = try container.decode(Digest.self, forKey: ToyCodingKey("schemaDigest"))
+        self.`environment` = try container.decode(CliEnvironment.self, forKey: ToyCodingKey("environment"))
+        self.`meta` = try container.decode(CliMetadata.self, forKey: ToyCodingKey("meta"))
+        self.`ok` = try container.decode(CliFailureOk.self, forKey: ToyCodingKey("ok"))
+        self.`error` = try container.decode(CliError.self, forKey: ToyCodingKey("error"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`schemaVersion`, forKey: ToyCodingKey("schemaVersion"))
+        try container.encode(`commandId`, forKey: ToyCodingKey("commandId"))
+        try container.encode(`invocationId`, forKey: ToyCodingKey("invocationId"))
+        try container.encode(`generatedAt`, forKey: ToyCodingKey("generatedAt"))
+        try container.encode(`cliVersion`, forKey: ToyCodingKey("cliVersion"))
+        try container.encode(`contractsVersion`, forKey: ToyCodingKey("contractsVersion"))
+        try container.encode(`schemaDigest`, forKey: ToyCodingKey("schemaDigest"))
+        try container.encode(`environment`, forKey: ToyCodingKey("environment"))
+        try container.encode(`meta`, forKey: ToyCodingKey("meta"))
+        try container.encode(`ok`, forKey: ToyCodingKey("ok"))
+        try container.encode(`error`, forKey: ToyCodingKey("error"))
+    }
+}
+
+public enum CliDoctorCommandResult: Codable, Sendable {
+    case variant0(CliDoctorResult)
+    case variant1(CliDoctorCommandResultVariant1)
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        if let value = try? container.decode(CliDoctorResult.self) { self = .variant0(value); return }
+        if let value = try? container.decode(CliDoctorCommandResultVariant1.self) { self = .variant1(value); return }
+        throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "No contract union member matched."))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.singleValueContainer()
+        switch self {
+        case .variant0(let value): try container.encode(value)
+        case .variant1(let value): try container.encode(value)
+        }
+    }
+}
+
+public struct CliDoctorCommandResultVariant1: Codable, Sendable {
+    public let `schemaVersion`: CliHelpV1CompatibilityWireVersionsItem
+    public let `commandId`: CliDoctorResultCommandId
+    public let `invocationId`: UUID
+    public let `generatedAt`: Instant
+    public let `cliVersion`: CliVersionV1CliVersion
+    public let `contractsVersion`: CliVersionV1CliVersion
+    public let `schemaDigest`: Digest
+    public let `environment`: CliEnvironment
+    public let `meta`: CliMetadata
+    public let `ok`: CliFailureOk
+    public let `error`: CliError
+    public init(`schemaVersion`: CliHelpV1CompatibilityWireVersionsItem, `commandId`: CliDoctorResultCommandId, `invocationId`: UUID, `generatedAt`: Instant, `cliVersion`: CliVersionV1CliVersion, `contractsVersion`: CliVersionV1CliVersion, `schemaDigest`: Digest, `environment`: CliEnvironment, `meta`: CliMetadata, `ok`: CliFailureOk, `error`: CliError) {
+        self.`schemaVersion` = `schemaVersion`
+        self.`commandId` = `commandId`
+        self.`invocationId` = `invocationId`
+        self.`generatedAt` = `generatedAt`
+        self.`cliVersion` = `cliVersion`
+        self.`contractsVersion` = `contractsVersion`
+        self.`schemaDigest` = `schemaDigest`
+        self.`environment` = `environment`
+        self.`meta` = `meta`
+        self.`ok` = `ok`
+        self.`error` = `error`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["schemaVersion", "commandId", "invocationId", "generatedAt", "cliVersion", "contractsVersion", "schemaDigest", "environment", "meta", "ok", "error"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`schemaVersion` = try container.decode(CliHelpV1CompatibilityWireVersionsItem.self, forKey: ToyCodingKey("schemaVersion"))
+        self.`commandId` = try container.decode(CliDoctorResultCommandId.self, forKey: ToyCodingKey("commandId"))
+        self.`invocationId` = try container.decode(UUID.self, forKey: ToyCodingKey("invocationId"))
+        self.`generatedAt` = try container.decode(Instant.self, forKey: ToyCodingKey("generatedAt"))
+        self.`cliVersion` = try container.decode(CliVersionV1CliVersion.self, forKey: ToyCodingKey("cliVersion"))
+        self.`contractsVersion` = try container.decode(CliVersionV1CliVersion.self, forKey: ToyCodingKey("contractsVersion"))
+        self.`schemaDigest` = try container.decode(Digest.self, forKey: ToyCodingKey("schemaDigest"))
+        self.`environment` = try container.decode(CliEnvironment.self, forKey: ToyCodingKey("environment"))
+        self.`meta` = try container.decode(CliMetadata.self, forKey: ToyCodingKey("meta"))
+        self.`ok` = try container.decode(CliFailureOk.self, forKey: ToyCodingKey("ok"))
+        self.`error` = try container.decode(CliError.self, forKey: ToyCodingKey("error"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`schemaVersion`, forKey: ToyCodingKey("schemaVersion"))
+        try container.encode(`commandId`, forKey: ToyCodingKey("commandId"))
+        try container.encode(`invocationId`, forKey: ToyCodingKey("invocationId"))
+        try container.encode(`generatedAt`, forKey: ToyCodingKey("generatedAt"))
+        try container.encode(`cliVersion`, forKey: ToyCodingKey("cliVersion"))
+        try container.encode(`contractsVersion`, forKey: ToyCodingKey("contractsVersion"))
+        try container.encode(`schemaDigest`, forKey: ToyCodingKey("schemaDigest"))
+        try container.encode(`environment`, forKey: ToyCodingKey("environment"))
+        try container.encode(`meta`, forKey: ToyCodingKey("meta"))
+        try container.encode(`ok`, forKey: ToyCodingKey("ok"))
+        try container.encode(`error`, forKey: ToyCodingKey("error"))
+    }
+}
+
+public struct CapabilityManifest: Codable, Sendable {
+    public let `provider`: String
+    public let `adapterVersion`: String
+    public let `apiVersion`: Optional<String>
+    public let `authKind`: CapabilityManifestAuthKind
+    public let `readCapabilities`: [String]
+    public let `deniedOperations`: [String]
+    public let `requestedScopes`: [String]
+    public let `permittedHosts`: [String]
+    public let `collectionMode`: CoverageMode
+    public let `pollSeconds`: Optional<Double>
+    public let `staleAfterSeconds`: Optional<Double>
+    public let `reconciliationSchedule`: Optional<String>
+    public let `modelUsePolicyId`: String
+    public let `retentionPolicyId`: String
+    public let `supportsExplicitDeletion`: Bool
+    public let `supportsCompleteSnapshot`: Bool
+    public let `supportsHistoricalBackfill`: Bool
+    public let `accountValidationFields`: [String]
+    public let `admissionEvidence`: [String]
+    public init(`provider`: String, `adapterVersion`: String, `apiVersion`: Optional<String>, `authKind`: CapabilityManifestAuthKind, `readCapabilities`: [String], `deniedOperations`: [String], `requestedScopes`: [String], `permittedHosts`: [String], `collectionMode`: CoverageMode, `pollSeconds`: Optional<Double>, `staleAfterSeconds`: Optional<Double>, `reconciliationSchedule`: Optional<String>, `modelUsePolicyId`: String, `retentionPolicyId`: String, `supportsExplicitDeletion`: Bool, `supportsCompleteSnapshot`: Bool, `supportsHistoricalBackfill`: Bool, `accountValidationFields`: [String], `admissionEvidence`: [String]) {
+        self.`provider` = `provider`
+        self.`adapterVersion` = `adapterVersion`
+        self.`apiVersion` = `apiVersion`
+        self.`authKind` = `authKind`
+        self.`readCapabilities` = `readCapabilities`
+        self.`deniedOperations` = `deniedOperations`
+        self.`requestedScopes` = `requestedScopes`
+        self.`permittedHosts` = `permittedHosts`
+        self.`collectionMode` = `collectionMode`
+        self.`pollSeconds` = `pollSeconds`
+        self.`staleAfterSeconds` = `staleAfterSeconds`
+        self.`reconciliationSchedule` = `reconciliationSchedule`
+        self.`modelUsePolicyId` = `modelUsePolicyId`
+        self.`retentionPolicyId` = `retentionPolicyId`
+        self.`supportsExplicitDeletion` = `supportsExplicitDeletion`
+        self.`supportsCompleteSnapshot` = `supportsCompleteSnapshot`
+        self.`supportsHistoricalBackfill` = `supportsHistoricalBackfill`
+        self.`accountValidationFields` = `accountValidationFields`
+        self.`admissionEvidence` = `admissionEvidence`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["provider", "adapterVersion", "apiVersion", "authKind", "readCapabilities", "deniedOperations", "requestedScopes", "permittedHosts", "collectionMode", "pollSeconds", "staleAfterSeconds", "reconciliationSchedule", "modelUsePolicyId", "retentionPolicyId", "supportsExplicitDeletion", "supportsCompleteSnapshot", "supportsHistoricalBackfill", "accountValidationFields", "admissionEvidence"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`provider` = try container.decode(String.self, forKey: ToyCodingKey("provider"))
+        self.`adapterVersion` = try container.decode(String.self, forKey: ToyCodingKey("adapterVersion"))
+        self.`apiVersion` = try container.decode(Optional<String>.self, forKey: ToyCodingKey("apiVersion"))
+        self.`authKind` = try container.decode(CapabilityManifestAuthKind.self, forKey: ToyCodingKey("authKind"))
+        self.`readCapabilities` = try container.decode([String].self, forKey: ToyCodingKey("readCapabilities"))
+        self.`deniedOperations` = try container.decode([String].self, forKey: ToyCodingKey("deniedOperations"))
+        self.`requestedScopes` = try container.decode([String].self, forKey: ToyCodingKey("requestedScopes"))
+        self.`permittedHosts` = try container.decode([String].self, forKey: ToyCodingKey("permittedHosts"))
+        self.`collectionMode` = try container.decode(CoverageMode.self, forKey: ToyCodingKey("collectionMode"))
+        self.`pollSeconds` = try container.decode(Optional<Double>.self, forKey: ToyCodingKey("pollSeconds"))
+        self.`staleAfterSeconds` = try container.decode(Optional<Double>.self, forKey: ToyCodingKey("staleAfterSeconds"))
+        self.`reconciliationSchedule` = try container.decode(Optional<String>.self, forKey: ToyCodingKey("reconciliationSchedule"))
+        self.`modelUsePolicyId` = try container.decode(String.self, forKey: ToyCodingKey("modelUsePolicyId"))
+        self.`retentionPolicyId` = try container.decode(String.self, forKey: ToyCodingKey("retentionPolicyId"))
+        self.`supportsExplicitDeletion` = try container.decode(Bool.self, forKey: ToyCodingKey("supportsExplicitDeletion"))
+        self.`supportsCompleteSnapshot` = try container.decode(Bool.self, forKey: ToyCodingKey("supportsCompleteSnapshot"))
+        self.`supportsHistoricalBackfill` = try container.decode(Bool.self, forKey: ToyCodingKey("supportsHistoricalBackfill"))
+        self.`accountValidationFields` = try container.decode([String].self, forKey: ToyCodingKey("accountValidationFields"))
+        self.`admissionEvidence` = try container.decode([String].self, forKey: ToyCodingKey("admissionEvidence"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`provider`, forKey: ToyCodingKey("provider"))
+        try container.encode(`adapterVersion`, forKey: ToyCodingKey("adapterVersion"))
+        try container.encode(`apiVersion`, forKey: ToyCodingKey("apiVersion"))
+        try container.encode(`authKind`, forKey: ToyCodingKey("authKind"))
+        try container.encode(`readCapabilities`, forKey: ToyCodingKey("readCapabilities"))
+        try container.encode(`deniedOperations`, forKey: ToyCodingKey("deniedOperations"))
+        try container.encode(`requestedScopes`, forKey: ToyCodingKey("requestedScopes"))
+        try container.encode(`permittedHosts`, forKey: ToyCodingKey("permittedHosts"))
+        try container.encode(`collectionMode`, forKey: ToyCodingKey("collectionMode"))
+        try container.encode(`pollSeconds`, forKey: ToyCodingKey("pollSeconds"))
+        try container.encode(`staleAfterSeconds`, forKey: ToyCodingKey("staleAfterSeconds"))
+        try container.encode(`reconciliationSchedule`, forKey: ToyCodingKey("reconciliationSchedule"))
+        try container.encode(`modelUsePolicyId`, forKey: ToyCodingKey("modelUsePolicyId"))
+        try container.encode(`retentionPolicyId`, forKey: ToyCodingKey("retentionPolicyId"))
+        try container.encode(`supportsExplicitDeletion`, forKey: ToyCodingKey("supportsExplicitDeletion"))
+        try container.encode(`supportsCompleteSnapshot`, forKey: ToyCodingKey("supportsCompleteSnapshot"))
+        try container.encode(`supportsHistoricalBackfill`, forKey: ToyCodingKey("supportsHistoricalBackfill"))
+        try container.encode(`accountValidationFields`, forKey: ToyCodingKey("accountValidationFields"))
+        try container.encode(`admissionEvidence`, forKey: ToyCodingKey("admissionEvidence"))
+    }
+}
+
+public enum CapabilityManifestAuthKind: String, Codable, CaseIterable, Sendable {
+    case `oauth` = "oauth"
+    case `apiToken` = "api_token"
+    case `osPermission` = "os_permission"
+    case `deviceToken` = "device_token"
+    case `none` = "none"
+}
+
+public struct OpsControlProbeDeclarationV1: Codable, Sendable {
+    public let `id`: RegisteredCheckIdV1
+    public let `owner`: ModuleId
+    public let `nextCommandId`: CliCommandId
+    public init(`id`: RegisteredCheckIdV1, `owner`: ModuleId, `nextCommandId`: CliCommandId) {
+        self.`id` = `id`
+        self.`owner` = `owner`
+        self.`nextCommandId` = `nextCommandId`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["id", "owner", "nextCommandId"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`id` = try container.decode(RegisteredCheckIdV1.self, forKey: ToyCodingKey("id"))
+        self.`owner` = try container.decode(ModuleId.self, forKey: ToyCodingKey("owner"))
+        self.`nextCommandId` = try container.decode(CliCommandId.self, forKey: ToyCodingKey("nextCommandId"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`id`, forKey: ToyCodingKey("id"))
+        try container.encode(`owner`, forKey: ToyCodingKey("owner"))
+        try container.encode(`nextCommandId`, forKey: ToyCodingKey("nextCommandId"))
+    }
+}
+
+public enum CadenceSlotState: String, Codable, CaseIterable, Sendable {
+    case `scheduled` = "scheduled"
+    case `running` = "running"
+    case `swept` = "swept"
+    case `reviewed` = "reviewed"
+    case `deferredQuota` = "deferred_quota"
+    case `deferredAuth` = "deferred_auth"
+    case `deferredNetwork` = "deferred_network"
+    case `deferredBusy` = "deferred_busy"
+    case `maintenance` = "maintenance"
+    case `failed` = "failed"
+    case `missed` = "missed"
+    case `coalescedAfterOutage` = "coalesced_after_outage"
+}
+
+public struct ControlStatusInputV1: Codable, Sendable {
+    public let `release`: Optional<Release>
+    public init(`release`: Optional<Release>) {
+        self.`release` = `release`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["release"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`release` = container.contains(ToyCodingKey("release")) ? try container.decode(Release.self, forKey: ToyCodingKey("release")) : nil
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encodeIfPresent(`release`, forKey: ToyCodingKey("release"))
+    }
+}
+
+public struct DoctorInputV1: Codable, Sendable {
+    public let `release`: Optional<Release>
+    public let `deep`: Bool
+    public init(`release`: Optional<Release>, `deep`: Bool) {
+        self.`release` = `release`
+        self.`deep` = `deep`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["release", "deep"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`release` = container.contains(ToyCodingKey("release")) ? try container.decode(Release.self, forKey: ToyCodingKey("release")) : nil
+        self.`deep` = try container.decode(Bool.self, forKey: ToyCodingKey("deep"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encodeIfPresent(`release`, forKey: ToyCodingKey("release"))
+        try container.encode(`deep`, forKey: ToyCodingKey("deep"))
+    }
+}
+
+public struct OpsControlContextV1: Codable, Sendable {
+    public let `environment`: CliEnvironment
+    public let `invocationId`: UUID
+    public let `timeoutMs`: Int64
+    public init(`environment`: CliEnvironment, `invocationId`: UUID, `timeoutMs`: Int64) {
+        self.`environment` = `environment`
+        self.`invocationId` = `invocationId`
+        self.`timeoutMs` = `timeoutMs`
+    }
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: ToyCodingKey.self)
+        let allowed: Set<String> = ["environment", "invocationId", "timeoutMs"]
+        guard container.allKeys.allSatisfy({ allowed.contains($0.stringValue) }) else {
+            throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "An unknown contract field was received."))
+        }
+        self.`environment` = try container.decode(CliEnvironment.self, forKey: ToyCodingKey("environment"))
+        self.`invocationId` = try container.decode(UUID.self, forKey: ToyCodingKey("invocationId"))
+        self.`timeoutMs` = try container.decode(Int64.self, forKey: ToyCodingKey("timeoutMs"))
+    }
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: ToyCodingKey.self)
+        try container.encode(`environment`, forKey: ToyCodingKey("environment"))
+        try container.encode(`invocationId`, forKey: ToyCodingKey("invocationId"))
+        try container.encode(`timeoutMs`, forKey: ToyCodingKey("timeoutMs"))
+    }
+}
+
+public enum QuietSource: String, Codable, CaseIterable, Sendable {
+    case `userGn` = "user_gn"
+    case `userGm` = "user_gm"
+    case `userSleepControl` = "user_sleep_control"
+    case `sleepFocus` = "sleep_focus"
+    case `focusSnapshot` = "focus_snapshot"
+    case `wearableConfirmation` = "wearable_confirmation"
 }

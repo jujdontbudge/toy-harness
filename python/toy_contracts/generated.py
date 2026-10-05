@@ -2,11 +2,12 @@
 from typing import (
     Literal,
     NewType,
-    NoReturn,
     Optional,
     TypedDict,
     Union,
 )
+
+from typing_extensions import NotRequired
 
 ModuleId = Literal[
     "contracts",
@@ -217,7 +218,7 @@ class CliError(TypedDict):
     effectState: "CliErrorEffectState"
     currentRevision: Optional["Revision"]
     currentGeneration: Optional["Revision"]
-    operationRef: None
+    operationRef: Optional["RecordRef"]
     requiredInteraction: None
 
 CliErrorCode = Literal[
@@ -237,6 +238,11 @@ CliErrorEffectState = Literal[
     "unknown",
 ]
 
+class RecordRef(TypedDict):
+    module: str
+    kind: str
+    id: "UUID"
+
 class CliMetadata(TypedDict):
     exitCode: int
     releaseDigest: Optional["Digest"]
@@ -244,8 +250,17 @@ class CliMetadata(TypedDict):
     evaluatedAt: Optional["Instant"]
     operationId: Optional["UUID"]
     effectState: "CliErrorEffectState"
-    recordRefs: list[NoReturn]
-    evidence: list[NoReturn]
+    recordRefs: list["RecordRef"]
+    evidence: list["ObservationEvidenceRef"]
+
+class ObservationEvidenceRef(TypedDict):
+    observationRef: "ObservationRef"
+    documentId: NotRequired["UUID"]
+    byteFrom: NotRequired["Revision"]
+    byteTo: NotRequired["Revision"]
+    quote: NotRequired[str]
+
+ObservationRef = NewType("ObservationRef", str)
 
 class CliFailure(TypedDict):
     schemaVersion: "CliHelpV1CompatibilityWireVersionsItem"
@@ -302,10 +317,766 @@ CliVersionResultCommandId = Literal[
     "version",
 ]
 
+class CliStatusResult(TypedDict):
+    schemaVersion: "CliHelpV1CompatibilityWireVersionsItem"
+    commandId: "CliStatusResultCommandId"
+    invocationId: "UUID"
+    generatedAt: "Instant"
+    cliVersion: "CliVersionV1CliVersion"
+    contractsVersion: "CliVersionV1CliVersion"
+    schemaDigest: "Digest"
+    environment: "CliEnvironment"
+    meta: "CliMetadata"
+    ok: "CliHelpResultOk"
+    data: "ControlStatusV1"
+
+CliStatusResultCommandId = Literal[
+    "status",
+]
+
+class ControlStatusV1(TypedDict):
+    requiredRelease: "Release"
+    ops: Optional["OpsStatus"]
+    probes: list["CheckViewV1"]
+    sources: Optional["SourceHealthV1"]
+    attention: Optional["AttentionSnapshot"]
+    quota: Optional["QuotaAdmissionViewV1"]
+    cadence: Optional["CadenceCoverageV1"]
+    release: Optional["ReleaseStatusV1"]
+    secrets: list["SecretReadinessV1"]
+    capabilities: list["CapabilityViewV1"]
+    complete: bool
+
+class OpsStatus(TypedDict):
+    generatedAt: "Instant"
+    services: list["ServiceStatus"]
+    backups: list["BackupDestinationStatus"]
+    subscriptions: list["SubscriptionStatus"]
+    currentRelease: Optional["Digest"]
+    rollbackRelease: Optional["Digest"]
+    diskAvailableBytes: "Revision"
+    memoryPressure: "OpsStatusMemoryPressure"
+    reviewSlots: "OpsStatusReviewSlots"
+    incidentIds: list["UUID"]
+
+class ServiceStatus(TypedDict):
+    id: "ServiceId"
+    state: "ServiceStatusState"
+    launchdDomain: str
+    launchdLabel: str
+    uid: int
+    pid: Optional[int]
+    bootId: "UUID"
+    releaseId: Optional["Digest"]
+    checkedAt: "Instant"
+    lastProgressAt: Optional["Instant"]
+    reasonCode: Optional[str]
+
+ServiceId = Literal[
+    "postgres",
+    "backend",
+    "workers",
+    "hermes",
+    "hermes-interactive",
+    "ops",
+    "authority",
+    "ingress",
+    "approval",
+    "review",
+    "attention-delivery",
+    "hands",
+    "backup",
+    "secrets",
+    "publisher",
+    "evaluator",
+    "repair",
+    "tailscale",
+    "recorder",
+]
+
+ServiceStatusState = Literal[
+    "ready",
+    "degraded",
+    "starting",
+    "parked",
+    "unavailable",
+    "unknown",
+]
+
+class BackupDestinationStatus(TypedDict):
+    destination: "BackupDestinationStatusDestination"
+    lastCompleteSetId: Optional["UUID"]
+    lastCompleteAt: Optional["Instant"]
+    criticalStateAgeSeconds: Optional[float]
+    fullStateAgeSeconds: Optional[float]
+    lastVerifiedRestoreAt: Optional["Instant"]
+    state: "BackupDestinationStatusState"
+
+BackupDestinationStatusDestination = Literal[
+    "external",
+    "b2",
+]
+
+BackupDestinationStatusState = Literal[
+    "healthy",
+    "stale",
+    "missing",
+    "blocked",
+    "unknown",
+]
+
+class SubscriptionStatus(TypedDict):
+    provider: "SubscriptionStatusProvider"
+    source: str
+    fetchedAt: Optional["Instant"]
+    state: "SubscriptionStatusState"
+    windows: list["QuotaWindow"]
+    paidUsageAllowed: "CliFailureOk"
+    noOverageVerifiedAt: Optional["Instant"]
+
+SubscriptionStatusProvider = Literal[
+    "openai",
+    "anthropic",
+]
+
+SubscriptionStatusState = Literal[
+    "known",
+    "stale",
+    "unavailable",
+]
+
+class QuotaWindow(TypedDict):
+    limitId: str
+    label: str
+    windowDurationMins: Optional[float]
+    usedPercent: Optional[float]
+    resetsAt: Optional["Instant"]
+
+OpsStatusMemoryPressure = Literal[
+    "normal",
+    "warning",
+    "critical",
+    "unknown",
+]
+
+class OpsStatusReviewSlots(TypedDict):
+    periodStart: "Instant"
+    scheduled: int
+    admitted: int
+    inferenceDone: int
+    reviewed: int
+    deferred: int
+    missed: int
+
+class CheckViewV1(TypedDict):
+    id: "RegisteredCheckIdV1"
+    owner: "ModuleId"
+    state: "AcceptanceStateV1"
+    checkedAt: "Instant"
+    reasonCode: Optional[str]
+    prerequisite: Optional[str]
+    nextCommandId: Optional["CliCommandId"]
+    links: "EvidenceLinksV1"
+
+RegisteredCheckIdV1 = Literal[
+    "service.postgres",
+    "service.backend",
+    "service.workers",
+    "service.hermes",
+    "service.hermes-interactive",
+    "service.ops",
+    "service.authority",
+    "service.ingress",
+    "service.approval",
+    "service.review",
+    "service.attention-delivery",
+    "service.hands",
+    "service.backup",
+    "service.secrets",
+    "service.publisher",
+    "service.evaluator",
+    "service.repair",
+    "service.tailscale",
+    "service.recorder",
+    "read.ops",
+    "read.sources",
+    "read.attention",
+    "read.quota",
+    "read.cadence",
+    "read.release",
+]
+
+AcceptanceStateV1 = Literal[
+    "PASS",
+    "FAIL",
+    "BLOCKED",
+    "DEFERRED_CAPABILITY",
+    "NOT_IMPLEMENTED",
+]
+
+class EvidenceLinksV1(TypedDict):
+    recordRefs: list["RecordRef"]
+    observations: list["ObservationEvidenceRef"]
+    artifactDigests: list["Digest"]
+
+class SourceHealthV1(TypedDict):
+    items: list["SourceStatus"]
+    latestSyncRefs: list["RecordRef"]
+    capabilities: list["CapabilityViewV1"]
+    evaluatedAt: "Instant"
+    complete: bool
+
+class SourceStatus(TypedDict):
+    sourceId: "UUID"
+    provider: str
+    accountLabel: str
+    connection: "ConnectionState"
+    health: "HealthState"
+    coverage: "Coverage"
+    lastAttemptAt: Optional["Instant"]
+    lastSuccessfulCheckAt: Optional["Instant"]
+    lastObservedChangeAt: Optional["Instant"]
+    lastReconciledAt: Optional["Instant"]
+    nextCheckAt: Optional["Instant"]
+    oldestPendingAt: Optional["Instant"]
+    freshnessTargetSeconds: Optional[float]
+    reasonCode: Optional[str]
+    release: "Release"
+    deploymentState: "SourceStatusDeploymentState"
+    repairAction: "SourceStatusRepairAction"
+
+ConnectionState = Literal[
+    "unconfigured",
+    "auth_required",
+    "consent_required",
+    "policy_blocked",
+    "connecting",
+    "backfilling",
+    "active",
+    "paused",
+    "broken",
+    "disconnected",
+]
+
+HealthState = Literal[
+    "fresh",
+    "stale",
+    "broken",
+]
+
+class Coverage(TypedDict):
+    mode: "CoverageMode"
+    included: list[str]
+    excluded: list["CoverageExclusion"]
+    historicalFrom: Optional["Instant"]
+    historicalThrough: Optional["Instant"]
+    historyComplete: bool
+    gaps: list["CoverageGap"]
+
+CoverageMode = Literal[
+    "api",
+    "device_stream",
+    "device_export",
+    "imported_snapshot",
+    "local_report_only",
+    "partial",
+    "unavailable",
+]
+
+class CoverageExclusion(TypedDict):
+    capability: str
+    reasonCode: str
+
+CoverageGap = TypedDict(
+    "CoverageGap",
+    {
+        "partition": str,
+        "from": Optional["Instant"],
+        "through": Optional["Instant"],
+        "reasonCode": str,
+    },
+)
+
+SourceStatusDeploymentState = Literal[
+    "planned",
+    "deferred",
+    "validated",
+    "deployed",
+]
+
+SourceStatusRepairAction = Literal[
+    "none",
+    "retry_scheduled",
+    "reconnect",
+    "grant_os_permission",
+    "institutional_review",
+    "provider_permission",
+    "supply_export",
+    "operator_repair",
+]
+
+class CapabilityViewV1(TypedDict):
+    id: "RegisteredCapabilityIdV1"
+    firstRelease: "Release"
+    required: bool
+    implementation: "CapabilityViewV1Implementation"
+    state: "AcceptanceStateV1"
+    tested: bool
+    installed: bool
+    deployed: bool
+    checkedAt: Optional["Instant"]
+    prerequisite: Optional[str]
+    links: "EvidenceLinksV1"
+
+RegisteredCapabilityIdV1 = Literal[
+    "control.help",
+    "control.version",
+    "control.status",
+    "control.doctor",
+    "control.capture",
+    "control.due",
+    "control.obligations.show",
+    "control.obligations.resolve",
+    "control.obligations.defer",
+    "control.obligations.satisfy",
+    "control.attention.snapshot",
+    "control.attention.preview",
+    "control.attention.simulate-ack",
+    "control.authority.pending",
+    "control.authority.outbox",
+    "control.authority.status",
+    "control.authority.receipts",
+    "control.authority.review",
+    "control.sources.health",
+    "control.sources.sync.now",
+    "control.sources.cursor",
+    "control.life.search",
+    "control.life.timeline",
+    "control.life.get",
+    "control.review.slots",
+    "control.review.runs",
+    "control.review.verdicts",
+    "control.review.request",
+    "control.trace",
+    "control.evidence",
+    "control.replay",
+    "control.sim.run",
+    "control.sim.suite",
+    "control.sim.show",
+    "control.hands.status",
+    "control.hands.smoke",
+    "control.clock.show",
+    "control.clock.freeze",
+    "control.clock.advance",
+    "control.clock.resume",
+    "control.stack.up",
+    "control.stack.down",
+    "control.probe.run",
+    "control.probe.show",
+    "control.new.connector",
+    "control.new.tool",
+    "control.new.skill",
+    "control.new.migration",
+    "control.feature-map.check",
+    "control.feature-map.update",
+    "control.gardener.run",
+    "control.release.status",
+    "control.release.rollback",
+]
+
+CapabilityViewV1Implementation = Literal[
+    "specified",
+    "built",
+    "retired",
+]
+
+class AttentionSnapshot(TypedDict):
+    ownerId: "UUID"
+    evaluatedAt: "Instant"
+    policyDigest: "Digest"
+    policyVersion: str
+    quietState: "QuietState"
+    quietReason: "QuietReason"
+    quietEpoch: "Revision"
+    quietStartedAt: Optional["Instant"]
+    explicitLatch: "AttentionManualLatchV1"
+    focus: "AttentionFocusViewV1"
+    staleSince: Optional["Instant"]
+    nextRepairAt: Optional["Instant"]
+    lastAuthenticatedEvent: Optional["AttentionGateEventViewV1"]
+    wearableConfirmation: Optional["AttentionWearableConfirmationV1"]
+    localCancellation: "AttentionLocalCancellationV1"
+    channels: "AttentionChannelViewV1"
+    items: "AttentionItemPageV1"
+    localPlans: "AttentionLocalPlanPageV1"
+    complete: bool
+
+QuietState = Literal[
+    "awake",
+    "asleep",
+]
+
+QuietReason = Literal[
+    "explicit",
+    "focus",
+    "initial_default",
+]
+
+class AttentionManualLatchV1(TypedDict):
+    state: Optional["QuietState"]
+    source: Optional["AttentionManualLatchV1SourceValue"]
+    eventId: Optional["UUID"]
+    observedAt: Optional["Instant"]
+    explicitUntil: Optional["Instant"]
+
+AttentionManualLatchV1SourceValue = Literal[
+    "user_gn",
+    "user_gm",
+    "user_sleep_control",
+]
+
+class AttentionFocusViewV1(TypedDict):
+    state: Optional["QuietState"]
+    observedAt: Optional["Instant"]
+    cycleId: Optional["UUID"]
+    manualOverrideCycleId: Optional["UUID"]
+
+class AttentionGateEventViewV1(TypedDict):
+    eventId: "UUID"
+    state: "QuietState"
+    source: "AttentionGateEventViewV1Source"
+    observedAt: "Instant"
+    receivedAt: "Instant"
+    quietEpoch: "Revision"
+    disposition: "AttentionGateEventViewV1Disposition"
+    receiptRef: "RecordRef"
+
+AttentionGateEventViewV1Source = Literal[
+    "user_gn",
+    "user_gm",
+    "user_sleep_control",
+    "sleep_focus",
+    "focus_snapshot",
+]
+
+AttentionGateEventViewV1Disposition = Literal[
+    "applied",
+    "duplicate",
+    "historical_only",
+    "stale",
+]
+
+AttentionWearableConfirmationV1 = TypedDict(
+    "AttentionWearableConfirmationV1",
+    {
+        "eventId": "UUID",
+        "state": "QuietState",
+        "from": "Instant",
+        "to": "Instant",
+        "recordedAt": "Instant",
+        "disposition": "AttentionWearableConfirmationV1Disposition",
+        "observations": list["ObservationEvidenceRef"],
+    },
+)
+
+AttentionWearableConfirmationV1Disposition = Literal[
+    "confirmation_only",
+]
+
+class AttentionLocalCancellationV1(TypedDict):
+    state: "AttentionLocalCancellationV1State"
+    quietEpoch: "Revision"
+    planGeneration: "Revision"
+    pendingPlanRefs: list["RecordRef"]
+    confirmedPlanRefs: list["RecordRef"]
+    residualOfflineRisk: bool
+    checkedAt: "Instant"
+
+AttentionLocalCancellationV1State = Literal[
+    "not_applicable",
+    "pending",
+    "confirmed",
+]
+
+class AttentionChannelViewV1(TypedDict):
+    primary: "AttentionChannelViewV1Primary"
+    channels: list["AttentionChannelViewV1ChannelsItem"]
+
+AttentionChannelViewV1Primary = Literal[
+    "discord",
+    "app",
+]
+
+class AttentionChannelViewV1ChannelsItem(TypedDict):
+    channel: "AttentionChannel"
+    checks: list["CheckViewV1"]
+
+AttentionChannel = Literal[
+    "discord",
+    "web_push",
+    "expo_push",
+    "app_foreground",
+]
+
+class AttentionItemPageV1(TypedDict):
+    items: list["AttentionItemViewV1"]
+    nextCursor: Optional[str]
+    hasMore: bool
+    watermark: Optional["Revision"]
+    evaluatedAt: "Instant"
+
+class AttentionItemViewV1(TypedDict):
+    id: "UUID"
+    commitmentId: "UUID"
+    commitmentRevision: "Revision"
+    generation: "Revision"
+    revision: "Revision"
+    state: "AttentionItemState"
+    purpose: "AttentionPurpose"
+    urgency: "AttentionUrgency"
+    requiresResponse: bool
+    title: Optional[str]
+    nextAction: Optional[str]
+    contentVisibility: "AttentionItemViewV1ContentVisibility"
+    deadlineAt: Optional["Instant"]
+    deadlineTimezone: Optional[str]
+    snoozedUntil: Optional["Instant"]
+    snoozeCrossesDeadline: bool
+    helpRequestId: Optional["UUID"]
+    helpCheckAt: Optional["Instant"]
+    nextAttentionAt: Optional["Instant"]
+    attentionGeneration: "Revision"
+    closedReason: Optional["AttentionItemViewV1ClosedReasonValue"]
+    closedAt: Optional["Instant"]
+    createdAt: "Instant"
+    updatedAt: "Instant"
+    links: "EvidenceLinksV1"
+
+AttentionItemState = Literal[
+    "active",
+    "snoozed",
+    "waiting_help",
+    "closed",
+]
+
+AttentionPurpose = Literal[
+    "next_action",
+    "approval_needed",
+    "event_prepare",
+    "event_depart",
+    "event_attend",
+    "deadline",
+    "stuck_rescue",
+    "completion",
+    "incident",
+]
+
+AttentionUrgency = Literal[
+    "routine",
+    "important",
+    "hard_deadline",
+]
+
+AttentionItemViewV1ContentVisibility = Literal[
+    "permitted",
+    "redacted",
+    "unavailable",
+]
+
+AttentionItemViewV1ClosedReasonValue = Literal[
+    "done",
+    "dropped",
+    "no_longer_actionable",
+    "informational_delivered",
+]
+
+class AttentionLocalPlanPageV1(TypedDict):
+    items: list["AttentionLocalPlanViewV1"]
+    nextCursor: Optional[str]
+    hasMore: bool
+    watermark: Optional["Revision"]
+    evaluatedAt: "Instant"
+
+class AttentionLocalPlanViewV1(TypedDict):
+    id: "UUID"
+    itemId: "UUID"
+    itemRevision: "Revision"
+    commitmentId: "UUID"
+    commitmentRevision: "Revision"
+    deadlineAt: "Instant"
+    fireAt: list["Instant"]
+    expiresAt: "Instant"
+    generation: "Revision"
+    quietEpoch: "Revision"
+    mode: "AttentionLocalPlanViewV1Mode"
+    desiredState: "AttentionLocalPlanViewV1DesiredState"
+    deviceState: "AttentionLocalPlanViewV1DeviceState"
+    lastDeviceReceiptAt: Optional["Instant"]
+    reasonCode: Optional[str]
+    links: "EvidenceLinksV1"
+
+AttentionLocalPlanViewV1Mode = Literal[
+    "local_notification",
+    "alarmkit",
+]
+
+AttentionLocalPlanViewV1DesiredState = Literal[
+    "armed",
+    "canceled",
+]
+
+AttentionLocalPlanViewV1DeviceState = Literal[
+    "pending",
+    "armed",
+    "cancellation_pending",
+    "canceled",
+    "permission_denied",
+    "unsupported",
+    "error",
+    "expired",
+]
+
+class QuotaAdmissionViewV1(TypedDict):
+    subscriptions: list["SubscriptionStatus"]
+    checkedAt: "Instant"
+    laneBusy: bool
+    reservedCalls: "UInt64String"
+    unknownCalls: "UInt64String"
+    autonomousAllowed: bool
+    optionalEvaluationAllowed: bool
+    pauseReason: Optional[str]
+    fallbackJobCount: Optional["UInt64String"]
+    paidUsageAllowed: "CliFailureOk"
+
+class CadenceCoverageV1(TypedDict):
+    policyDigest: "Digest"
+    requiredAiEverySeconds: "CadenceCoverageV1RequiredAiEverySeconds"
+    periods: list["CadencePeriodV1"]
+    pendingRunRefs: list["RecordRef"]
+
+CadenceCoverageV1RequiredAiEverySeconds = Literal[
+    180,
+]
+
+CadencePeriodV1 = TypedDict(
+    "CadencePeriodV1",
+    {
+        "from": "Instant",
+        "to": "Instant",
+        "clock": "CadencePeriodV1Clock",
+        "armId": Optional["UUID"],
+        "experimental": bool,
+        "nominalSlots": "UInt64String",
+        "counts": "CadencePeriodV1Counts",
+        "complete": bool,
+    },
+)
+
+CadencePeriodV1Clock = Literal[
+    "real",
+    "exact_cadence",
+    "projected_behavior",
+    "fake_model",
+]
+
+class CadencePeriodV1Counts(TypedDict):
+    scheduled: "UInt64String"
+    running: "UInt64String"
+    swept: "UInt64String"
+    reviewed: "UInt64String"
+    deferred_quota: "UInt64String"
+    deferred_auth: "UInt64String"
+    deferred_network: "UInt64String"
+    deferred_busy: "UInt64String"
+    maintenance: "UInt64String"
+    failed: "UInt64String"
+    missed: "UInt64String"
+    coalesced_after_outage: "UInt64String"
+
+class ReleaseStatusV1(TypedDict):
+    currentDigest: Optional["Digest"]
+    previousDigest: Optional["Digest"]
+    controlDigest: Optional["Digest"]
+    targetDigest: Optional["Digest"]
+    projectionCurrentDigest: Optional["Digest"]
+    projectionStale: bool
+    compatibility: "PublisherCompatibilityV1"
+    gates: list["CheckViewV1"]
+    attestationRefs: list["RecordRef"]
+    operationRefs: list["RecordRef"]
+    rollbackEligible: bool
+    checkedAt: "Instant"
+
+class PublisherCompatibilityV1(TypedDict):
+    database: "PublisherCompatibilityV1Database"
+    runtime: "PublisherCompatibilityV1Runtime"
+    state: "PublisherCompatibilityV1State"
+    checks: list["CheckViewV1"]
+    checkedAt: "Instant"
+
+class PublisherCompatibilityV1Database(TypedDict):
+    observed: Optional["Revision"]
+    minimum: Optional["Revision"]
+    maximum: Optional["Revision"]
+    compatible: Optional[bool]
+
+class PublisherCompatibilityV1Runtime(TypedDict):
+    observed: Optional[str]
+    minimum: Optional[str]
+    maximum: Optional[str]
+    compatible: Optional[bool]
+
+PublisherCompatibilityV1State = Literal[
+    "compatible",
+    "incompatible",
+    "unknown",
+]
+
+class SecretReadinessV1(TypedDict):
+    serviceId: "ServiceId"
+    state: "SecretReadinessV1State"
+    checkedAt: "Instant"
+    expiresAt: Optional["Instant"]
+
+SecretReadinessV1State = Literal[
+    "ready",
+    "expired",
+    "missing",
+    "blocked",
+    "unknown",
+]
+
+class CliDoctorResult(TypedDict):
+    schemaVersion: "CliHelpV1CompatibilityWireVersionsItem"
+    commandId: "CliDoctorResultCommandId"
+    invocationId: "UUID"
+    generatedAt: "Instant"
+    cliVersion: "CliVersionV1CliVersion"
+    contractsVersion: "CliVersionV1CliVersion"
+    schemaDigest: "Digest"
+    environment: "CliEnvironment"
+    meta: "CliMetadata"
+    ok: "CliHelpResultOk"
+    data: "DoctorReportV1"
+
+CliDoctorResultCommandId = Literal[
+    "doctor",
+]
+
+class DoctorReportV1(TypedDict):
+    requiredRelease: "Release"
+    deep: bool
+    checks: list["CheckViewV1"]
+    verdict: "AcceptanceStateV1"
+    complete: bool
+    links: "EvidenceLinksV1"
+
 CliResult = Union[
     "CliFailure",
     "CliHelpResult",
     "CliVersionResult",
+    "CliStatusResult",
+    "CliDoctorResult",
 ]
 
 class CliHelpInput(TypedDict):
@@ -349,3 +1120,109 @@ class CliVersionCommandResultVariant1(TypedDict):
     meta: "CliMetadata"
     ok: "CliFailureOk"
     error: "CliError"
+
+CliStatusCommandResult = Union[
+    "CliStatusResult",
+    "CliStatusCommandResultVariant1",
+]
+
+class CliStatusCommandResultVariant1(TypedDict):
+    schemaVersion: "CliHelpV1CompatibilityWireVersionsItem"
+    commandId: "CliStatusResultCommandId"
+    invocationId: "UUID"
+    generatedAt: "Instant"
+    cliVersion: "CliVersionV1CliVersion"
+    contractsVersion: "CliVersionV1CliVersion"
+    schemaDigest: "Digest"
+    environment: "CliEnvironment"
+    meta: "CliMetadata"
+    ok: "CliFailureOk"
+    error: "CliError"
+
+CliDoctorCommandResult = Union[
+    "CliDoctorResult",
+    "CliDoctorCommandResultVariant1",
+]
+
+class CliDoctorCommandResultVariant1(TypedDict):
+    schemaVersion: "CliHelpV1CompatibilityWireVersionsItem"
+    commandId: "CliDoctorResultCommandId"
+    invocationId: "UUID"
+    generatedAt: "Instant"
+    cliVersion: "CliVersionV1CliVersion"
+    contractsVersion: "CliVersionV1CliVersion"
+    schemaDigest: "Digest"
+    environment: "CliEnvironment"
+    meta: "CliMetadata"
+    ok: "CliFailureOk"
+    error: "CliError"
+
+class CapabilityManifest(TypedDict):
+    provider: str
+    adapterVersion: str
+    apiVersion: Optional[str]
+    authKind: "CapabilityManifestAuthKind"
+    readCapabilities: list[str]
+    deniedOperations: list[str]
+    requestedScopes: list[str]
+    permittedHosts: list[str]
+    collectionMode: "CoverageMode"
+    pollSeconds: Optional[float]
+    staleAfterSeconds: Optional[float]
+    reconciliationSchedule: Optional[str]
+    modelUsePolicyId: str
+    retentionPolicyId: str
+    supportsExplicitDeletion: bool
+    supportsCompleteSnapshot: bool
+    supportsHistoricalBackfill: bool
+    accountValidationFields: list[str]
+    admissionEvidence: list[str]
+
+CapabilityManifestAuthKind = Literal[
+    "oauth",
+    "api_token",
+    "os_permission",
+    "device_token",
+    "none",
+]
+
+class OpsControlProbeDeclarationV1(TypedDict):
+    id: "RegisteredCheckIdV1"
+    owner: "ModuleId"
+    nextCommandId: "CliCommandId"
+
+CadenceSlotState = Literal[
+    "scheduled",
+    "running",
+    "swept",
+    "reviewed",
+    "deferred_quota",
+    "deferred_auth",
+    "deferred_network",
+    "deferred_busy",
+    "maintenance",
+    "failed",
+    "missed",
+    "coalesced_after_outage",
+]
+
+class ControlStatusInputV1(TypedDict):
+    release: NotRequired["Release"]
+
+class DoctorInputV1(TypedDict):
+    release: NotRequired["Release"]
+    deep: bool
+
+class OpsControlContextV1(TypedDict):
+    environment: "CliEnvironment"
+    invocationId: "UUID"
+    timeoutMs: int
+
+QuietSource = Literal[
+    "user_gn",
+    "user_gm",
+    "user_sleep_control",
+    "sleep_focus",
+    "focus_snapshot",
+    "wearable_confirmation",
+]

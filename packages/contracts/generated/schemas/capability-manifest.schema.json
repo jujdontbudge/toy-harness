@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "provider": {
+      "type": "string"
+    },
+    "adapterVersion": {
+      "type": "string"
+    },
+    "apiVersion": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "authKind": {
+      "type": "string",
+      "enum": [
+        "oauth",
+        "api_token",
+        "os_permission",
+        "device_token",
+        "none"
+      ]
+    },
+    "readCapabilities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "deniedOperations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "requestedScopes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "permittedHosts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "collectionMode": {
+      "type": "string",
+      "enum": [
+        "api",
+        "device_stream",
+        "device_export",
+        "imported_snapshot",
+        "local_report_only",
+        "partial",
+        "unavailable"
+      ]
+    },
+    "pollSeconds": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "staleAfterSeconds": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "reconciliationSchedule": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "modelUsePolicyId": {
+      "type": "string"
+    },
+    "retentionPolicyId": {
+      "type": "string"
+    },
+    "supportsExplicitDeletion": {
+      "type": "boolean"
+    },
+    "supportsCompleteSnapshot": {
+      "type": "boolean"
+    },
+    "supportsHistoricalBackfill": {
+      "type": "boolean"
+    },
+    "accountValidationFields": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "admissionEvidence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "provider",
+    "adapterVersion",
+    "apiVersion",
+    "authKind",
+    "readCapabilities",
+    "deniedOperations",
+    "requestedScopes",
+    "permittedHosts",
+    "collectionMode",
+    "pollSeconds",
+    "staleAfterSeconds",
+    "reconciliationSchedule",
+    "modelUsePolicyId",
+    "retentionPolicyId",
+    "supportsExplicitDeletion",
+    "supportsCompleteSnapshot",
+    "supportsHistoricalBackfill",
+    "accountValidationFields",
+    "admissionEvidence"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:CapabilityManifest"
+}

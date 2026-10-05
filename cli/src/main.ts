@@ -7,6 +7,7 @@ import {
   digestSchema, instantSchema, schemaBundleDigest, uint64Schema, uuidSchema
 } from "@toy/contracts";
 import type { CliArgument, CliCommandId, CliDeclaration, CliEnvironment, CliFailure, CliResult } from "@toy/contracts";
+import { OpsControlRead } from "@toy/ops/public";
 
 const args = process.argv.slice(2);
 const commonNames = new Set(cliCommonArguments.map((argument) => argument.name));
@@ -138,6 +139,20 @@ const run = async (): Promise<CliResult> => {
   if (declaration.access === "test" && kind === "prod" || commandId === "attention.preview" && values.has("at") && kind === "prod") return failure("TEST_ONLY", 3, declaration.owner);
   if (commandId === "stack.up" && stack !== undefined) return failure("INVALID_INPUT", 2);
   if (kind === "test" && commandId !== "stack.up" && stack === undefined) return failure("INVALID_INPUT", 2);
+  if (commandId === "status" || commandId === "doctor") {
+    if (kind === "test") return failure("ATTESTATION_INVALID", 5, "ops");
+    const selectedRelease = values.get("release");
+    const releaseInput = selectedRelease === undefined ? {} : { release: selectedRelease };
+    const context = { environment, invocationId, timeoutMs: Number(values.get("timeout-ms") ?? 30000) };
+    if (commandId === "status") {
+      const data = await OpsControlRead.status(cliCommandSchemas.status.input.parse(releaseInput), context);
+      const exitCode = data.probes.some((probe) => probe.state === "FAIL") ? 1 : data.complete ? 0 : 5;
+      return cliCommandSchemas.status.result.parse({ ...envelope(exitCode), ok: true, data });
+    }
+    const data = await OpsControlRead.doctor(cliCommandSchemas.doctor.input.parse({ ...releaseInput, deep: values.has("deep") }), context);
+    const exitCode = data.verdict === "FAIL" ? 1 : data.complete && data.verdict === "PASS" ? 0 : 5;
+    return cliCommandSchemas.doctor.result.parse({ ...envelope(exitCode), ok: true, data });
+  }
   const unavailable = commandId.startsWith("stack.") || commandId.startsWith("clock.") || commandId.startsWith("probe.");
   return failure(unavailable ? "DEPENDENCY_UNAVAILABLE" : "NOT_IMPLEMENTED", 5, declaration.owner);
 };
@@ -146,6 +161,8 @@ const escapeTerminal = (value: string): string => value.replace(/[\u0000-\u0008\
 const renderHuman = (result: CliResult): string => {
   if (!result.ok) return `${result.environment.kind}: ${result.error.code}: ${result.error.message}\n`;
   if (result.commandId === "version") return `Toy ${result.data.cliVersion} / contracts ${result.data.contractsVersion}\nExecutable ${result.data.executableDigest}\nPackage ${result.data.packageDigest}\nSchemas ${result.data.schemaDigest}\n`;
+  if (result.commandId === "status") return `${result.environment.kind}: ${result.data.requiredRelease}; coverage ${result.data.complete ? "complete" : "incomplete"}\n` + JSON.stringify(result.data, null, 2) + "\n";
+  if (result.commandId === "doctor") return `${result.environment.kind}: ${result.data.requiredRelease}; ${result.data.verdict}; coverage ${result.data.complete ? "complete" : "incomplete"}\n` + JSON.stringify(result.data, null, 2) + "\n";
   const lines = ["Toy command inventory", "Usage: toy [--env prod|test] [--stack UUID] [--json] [--timeout-ms N] <command> [arguments]", "Common: --help; --version; --env defaults prod; --timeout-ms defaults 30000 (1000–120000)", ""];
   for (const entry of result.data.commands) {
     const operands = entry.arguments.map((argument) => {
@@ -163,5 +180,11 @@ try {
 } catch {
   result = failure("INTERNAL_ERROR", 8);
 }
-process.stdout.write(jsonRequested ? JSON.stringify(result) + "\n" : escapeTerminal(renderHuman(result)));
+const render = (value: CliResult): string => jsonRequested ? JSON.stringify(value) + "\n" : escapeTerminal(renderHuman(value));
+let output = render(result);
+if (Buffer.byteLength(output, "utf8") > 2 * 1024 * 1024) {
+  result = failure("OUTPUT_INVALID", 8);
+  output = render(result);
+}
+process.stdout.write(output);
 process.exitCode = result.meta.exitCode;

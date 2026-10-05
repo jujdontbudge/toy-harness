@@ -1,0 +1,19 @@
+# Attention and publisher diagnostic projections
+
+CLI §4.4 explicitly requires strict safe owner projections where an owner source lacks a wire declaration. Attention §2.5 names `AttentionSnapshot` without defining it. Self-Improvement §14.5 requires database/runtime compatibility ranges without defining the publisher compatibility read. These additions freeze those existing public reads; they introduce no module, store, authority or runtime activation.
+
+## Attention
+
+`AttentionRead.snapshot(authenticated owner)` returns `AttentionSnapshot`. Owner identity comes from authenticated transport context. The snapshot includes owner/evaluation/policy identity, effective quiet state/reason/epoch, explicit latch, Focus state/cycle and manual override cycle, stale/repair timestamps, last authenticated gate event, retrospective wearable confirmation, local cancellation, primary/delivery channels, current item page and local plan page. Every nullable value represents unavailable or absent owner data; it is never a guessed signal.
+
+Quiet state/reason, event sources/dispositions, item state/purpose/urgency, primary channel and local plan device state derive from Attention §2.1/§2.4/§4.1/§4.2/§4.10. The last authenticated event excludes the wearable source. Its receipt reference binds owner-authenticated ingress rather than accepting a CLI event claim. A wearable confirmation carries its own observation evidence and observed interval and cannot update the live gate. The explicit latch retains its source/event/time independently of Focus; time alone cannot clear it.
+
+Item views carry immutable item/commitment identity, revision/generation, state/purpose/urgency, response requirement, deadlines, snooze/help/attention timing, closure metadata and evidence links. Their title and next action are nullable policy-filtered views, with `contentVisibility` recording permitted/redacted/unavailable content; diagnostic callers gain no evidence access from knowing an item ID. Raw action URLs, provider payloads, device identifiers, native notification identifiers and wake-authorization capabilities are excluded. Local plan views retain item/commitment revision, generation/quiet epoch, declared fire/expiry times, mode, desired/device state and latest safe receipt/error metadata. They cannot be used to arm or cancel a plan.
+
+Both pages use the canonical CLI page fields, maximum 100 records, bounded opaque cursors and owner-evaluated watermark/time. The owner verifies cursor/query/principal binding, cursor/hasMore consistency and all lifecycle predicates. Local cancellation reports the affected epoch/generation, pending and confirmed plan references and residual offline risk; an empty list alone is not confirmation. Delivery channels expose existing registered readiness checks rather than inventing delivery success from configuration.
+
+## Publisher
+
+`PublisherControlRead.status` returns CLI's exact `ReleaseStatusV1`. `PublisherCompatibilityV1` is the safe read of the authoritative publisher journal's database/runtime ranges: observed, minimum and maximum versions; nullable compatibility decisions; overall compatible/incompatible/unknown; check records and checked time. Database revisions use decimal strings. Runtime values are bounded version identifiers; the publisher compares its canonical range semantics and never uses lexical order as compatibility proof. Missing observed/range values leave compatibility unknown. Checks bind the exact target/current/control artifacts and installed database/runtime, independently of stale PostgreSQL projections.
+
+This DTO declares readable facts only. Digest/range verification, authenticated owner transport, rollback eligibility, complete page predicates and runtime implementations remain required. No CLI handler can manufacture a non-null owner result from this declaration.

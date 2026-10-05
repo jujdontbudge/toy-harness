@@ -4,7 +4,7 @@ import { createHash, randomUUID } from "node:crypto";
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import test from "node:test";
-import { cliCommandSchemas, cliDeclarations, cliResultSchema, schemaBundleArtifacts, schemaBundleDigest } from "@toy/contracts";
+import { cliCommandSchemas, cliDeclarations, cliResultSchema, releaseSchema, schemaBundleArtifacts, schemaBundleDigest, serviceIdSchema } from "@toy/contracts";
 
 const root = resolve(import.meta.dirname, "../..");
 const attemptId = new Date().toISOString().replaceAll(":", "-") + "-" + randomUUID();
@@ -28,6 +28,15 @@ const invoke = (id: string, args: string[], exitCode: number) => {
   assert.ok(child.stdout.endsWith("\n"));
   if (!args.includes("--json")) {
     assert.ok(!/[\u001b\u009b]/.test(child.stdout));
+    if (args[0] === "status" || args[0] === "doctor") {
+      assert.ok(child.stdout.startsWith("prod:"));
+      assert.ok(child.stdout.includes('"checkedAt":'));
+      assert.ok(child.stdout.includes('"nextCommandId":'));
+      if (args[0] === "status") {
+        assert.ok(child.stdout.includes('"capabilities":'));
+        assert.ok(child.stdout.includes('"secrets":'));
+      }
+    }
     receipt.protocolValidated = true;
     return null;
   }
@@ -42,11 +51,11 @@ const invoke = (id: string, args: string[], exitCode: number) => {
 };
 
 try {
-  for (const path of ["cli", "packages/contracts", "node_modules/zod"]) {
+  for (const path of ["cli", "packages/contracts", "packages/ops", "node_modules/zod"]) {
     setup(["pack", join(root, path), "--pack-destination", fixture, "--ignore-scripts", "--offline", "--json"]);
   }
   await writeFile(join(fixture, "package.json"), JSON.stringify({ name: "toy-k3-offline-fixture", version: "1.0.0", private: true }) + "\n", { flag: "wx" });
-  setup(["install", "--offline", "--ignore-scripts", "--no-audit", "--no-fund", "--cache", join(fixture, "cache"), "./toy-cli-1.0.0.tgz", "./toy-contracts-1.0.0.tgz", "./zod-4.6.5.tgz"]);
+  setup(["install", "--offline", "--ignore-scripts", "--no-audit", "--no-fund", "--cache", join(fixture, "cache"), "./toy-cli-1.0.0.tgz", "./toy-contracts-1.0.0.tgz", "./toy-ops-1.0.0.tgz", "./zod-4.6.5.tgz"]);
 
   await test("compiled packed CLI offline inventory and protocol boundary", async (suite) => {
     await suite.test("all declarations and concrete offline schema aliases survive packing", async () => {
@@ -107,6 +116,49 @@ try {
         const result = invoke("life-ref-" + kind, ["life", "get", "life://" + kind + "/550e8400-e29b-41d4-a716-446655440000", "--json"], 5);
         assert.ok(result && !result.ok && result.error.code === "NOT_IMPLEMENTED");
       }
+    });
+    await suite.test("uninstalled status and doctor preserve incomplete inventory and fail closed", () => {
+      for (const release of releaseSchema.options) {
+        const result = invoke("status-uninstalled-" + release, ["status", "--release", release, "--json"], 5);
+        assert.ok(result?.ok && result.commandId === "status");
+        cliCommandSchemas.status.result.parse(result);
+        assert.equal(result.data.requiredRelease, release);
+        assert.equal(result.data.complete, false);
+        assert.equal(result.data.ops, null);
+        assert.equal(result.data.sources, null);
+        assert.equal(result.data.attention, null);
+        assert.equal(result.data.quota, null);
+        assert.equal(result.data.cadence, null);
+        assert.equal(result.data.release, null);
+        for (const id of serviceIdSchema.options) {
+          assert.ok(result.data.probes.some((probe) => probe.id === "service." + id && probe.state === "NOT_IMPLEMENTED"));
+          assert.ok(result.data.secrets.some((secret) => secret.serviceId === id && secret.state === "unknown"));
+        }
+        for (const owner of ["ops", "sources", "attention", "quota", "cadence", "release"]) {
+          assert.ok(result.data.probes.some((probe) => probe.id === "read." + owner && probe.state === "NOT_IMPLEMENTED"));
+        }
+        assert.equal(result.data.capabilities.length, cliDeclarations.length);
+        assert.ok(result.data.capabilities.every((capability) => !capability.tested && !capability.installed && !capability.deployed));
+        assert.ok(result.data.capabilities.some((capability) => capability.id === "control.help" && capability.implementation === "built"));
+        assert.ok(result.data.capabilities.some((capability) => capability.id === "control.capture" && capability.implementation === "specified"));
+      }
+      const defaultStatus = invoke("status-default-release", ["status", "--json"], 5);
+      assert.ok(defaultStatus?.ok && defaultStatus.commandId === "status" && defaultStatus.data.requiredRelease === "R0");
+      for (const deep of [false, true]) {
+        const result = invoke("doctor-uninstalled-" + deep, ["doctor", "--release", "R3", ...(deep ? ["--deep"] : []), "--json"], 5);
+        assert.ok(result?.ok && result.commandId === "doctor");
+        cliCommandSchemas.doctor.result.parse(result);
+        assert.equal(result.data.requiredRelease, "R3");
+        assert.equal(result.data.deep, deep);
+        assert.equal(result.data.complete, false);
+        assert.equal(result.data.verdict, "NOT_IMPLEMENTED");
+        assert.equal(result.data.checks.length, serviceIdSchema.options.length + 6);
+        assert.ok(result.data.checks.every((check) => check.state !== "PASS" && check.links.recordRefs.length === 0));
+      }
+      invoke("status-human", ["status"], 5);
+      invoke("doctor-human", ["doctor", "--deep"], 5);
+      const unattested = invoke("status-unattested-stack", ["--env", "test", "--stack", "550e8400-e29b-41d4-a716-446655440000", "status", "--json"], 5);
+      assert.ok(unattested && !unattested.ok && unattested.error.code === "ATTESTATION_INVALID");
     });
   });
 } finally {

@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "enum": [
+        "postgres",
+        "backend",
+        "workers",
+        "hermes",
+        "hermes-interactive",
+        "ops",
+        "authority",
+        "ingress",
+        "approval",
+        "review",
+        "attention-delivery",
+        "hands",
+        "backup",
+        "secrets",
+        "publisher",
+        "evaluator",
+        "repair",
+        "tailscale",
+        "recorder"
+      ]
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "ready",
+        "degraded",
+        "starting",
+        "parked",
+        "unavailable",
+        "unknown"
+      ]
+    },
+    "launchdDomain": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "launchdLabel": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160
+    },
+    "uid": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "pid": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "bootId": {
+      "type": "string",
+      "minLength": 36,
+      "maxLength": 36,
+      "format": "uuid",
+      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    },
+    "releaseId": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 64,
+          "maxLength": 64,
+          "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "checkedAt": {
+      "type": "string",
+      "minLength": 24,
+      "maxLength": 24,
+      "format": "date-time",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+    },
+    "lastProgressAt": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 24,
+          "maxLength": 24,
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "reasonCode": {
+      "anyOf": [
+        {
+          "type": "string",
+          "maxLength": 2000
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "state",
+    "launchdDomain",
+    "launchdLabel",
+    "uid",
+    "pid",
+    "bootId",
+    "releaseId",
+    "checkedAt",
+    "lastProgressAt",
+    "reasonCode"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:ServiceStatus"
+}

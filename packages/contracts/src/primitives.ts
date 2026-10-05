@@ -4,6 +4,12 @@ export const moduleIdSchema = z.enum([
   "contracts", "obligations", "attention", "authority", "sources", "lifestore",
   "hermes", "client", "hands", "self-improvement", "adhd", "ops"
 ]);
+export const releaseSchema = z.enum(["R0", "R1", "R2", "R3", "R4", "R5"]);
+export type Release = z.infer<typeof releaseSchema>;
+export const cadenceSlotStateSchema = z.enum([
+  "scheduled", "running", "swept", "reviewed", "deferred_quota", "deferred_auth", "deferred_network", "deferred_busy",
+  "maintenance", "failed", "missed", "coalesced_after_outage"
+]);
 export type ModuleId = z.infer<typeof moduleIdSchema>;
 
 export const uuidSchema = z.uuid().length(36);
@@ -23,5 +29,6 @@ export const primitiveSchemaInventory = {
   Digest: digestSchema,
   Instant: instantSchema,
   Revision: revisionSchema,
-  UInt64String: uint64Schema
+  UInt64String: uint64Schema,
+  Release: releaseSchema
 };

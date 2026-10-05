@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "toy.bounded-diagnostic-review.v1",
+  "generatedAt": "2026-10-05T04:12:14.644Z",
+  "reviewer": "/root/r0_native_bootstrap_design",
+  "model": "gpt-6-luna",
+  "reasoning": "max",
+  "scope": "Read-only independent review of the offline and unavailable-state diagnostic increment",
+  "boundedVerdict": "ACCEPT_UNAVAILABLE_STATE_PATH",
+  "nonNullOwnerReadVerdict": "CHANGES_REQUIRED",
+  "acceptanceComplete": false,
+  "parentResolutionInputHashes": {
+    "packages/contracts/src/control-evidence.ts": "5708640e11fd64752b5f6d3a662566618684c66d3d981fb0eaf8da952b9bc32c",
+    "packages/contracts/src/ops-registry.ts": "3486614cfeaa2f64823f7ef596ef19e2ffcb99f7ec69be40559ddcdf27fbba3c",
+    "packages/contracts/src/cli-declarations.ts": "6b53daaa7558a6ac2aa94130f359af2634f1165523d87a21dd9328f658edeefd",
+    "packages/contracts/src/ops.ts": "02a3f03b6a01b4a1cd8db97568b569508726e66b3baf317eb29da198980603bb",
+    "packages/contracts/src/attention.ts": "0987ab0f7c9e2d352261fcf608c1f7b9a6d42d75a495f6b1c5ea24cf1a77f59a",
+    "packages/contracts/src/publisher.ts": "f0b96f0b187e285f7ef2b815c170481287dd8abe87a2e0a29343908ab1eb09f6",
+    "packages/ops/src/public.ts": "edeb3a810c639adba7ffaa5880abbf86f8f0ba660479b1028cef7caf2fa6c0ef",
+    "cli/src/main.ts": "595273a1fc98a6851edd3ea93ba6b9944f474dcf1493902e75af5f94284fa971",
+    "docs/adr/0008-ops-control-read-bootstrap.md": "53d1329bf5c97745061721f30f1b46dfa733bdc5511dc151a5c3df6702f410f2"
+  },
+  "hashScope": "Parent resolution snapshot; not a claim that the reviewer re-reviewed these exact post-fix bytes",
+  "findings": [
+    {
+      "id": "registered-diagnostic-identifiers",
+      "finding": "Check/capability/probe declaration IDs accepted arbitrary strings",
+      "resolution": "Finite schemas derive from the sole registered check and CLI capability inventories; unknown IDs fail schema validation",
+      "correctionRung": 1,
+      "status": "FIXED_BY_PARENT"
+    },
+    {
+      "id": "diagnostic-inventory-detail",
+      "finding": "Exact canonical payload compositions lack some service/source/cadence details required by CLI section 5.1",
+      "owner": "ops",
+      "status": "OPEN_INTERFACE_DESIGN_BEFORE_NON_NULL_OWNER_ADMISSION",
+      "nextWork": "Reconcile strict owner projections and exact compositions before implementing authenticated non-null owner transport"
+    }
+  ],
+  "reviewerRuntimeChecks": [],
+  "limitations": "Inspection only. Full K3, assigned ATs and native/identity/transport/runtime predicates remain pending."
+}
