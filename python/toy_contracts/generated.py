@@ -525,6 +525,7 @@ RegisteredCheckIdV1 = Literal[
     "read.quota",
     "read.cadence",
     "read.release",
+    "bootstrap.journal",
     "bootstrap.signature",
     "bootstrap.native-entry",
     "bootstrap.inherited-child",
@@ -2649,6 +2650,152 @@ BootstrapOperationRecordV1State = Literal[
 
 BootstrapOperationRecordV1ErrorCode = Literal[
     "DEPENDENCY_UNAVAILABLE",
+]
+
+class BootstrapJournalCountsV1(TypedDict):
+    operations: "UInt64String"
+    bindings: "UInt64String"
+    events: "UInt64String"
+
+class BootstrapJournalBackupIntentV1(TypedDict):
+    schemaVersion: "BootstrapJournalBackupIntentV1SchemaVersion"
+    backupId: "UUID"
+    storeId: "UUID"
+    sourceVersion: "BootstrapJournalBackupIntentV1SourceVersion"
+    targetVersion: "BootstrapJournalBackupIntentV1TargetVersion"
+    startedAt: "Instant"
+    sourceSchemaDigest: "Digest"
+    sourceLogicalDigest: "Digest"
+    nextGeneration: "UInt64String"
+    counts: "BootstrapJournalCountsV1"
+
+BootstrapJournalBackupIntentV1SchemaVersion = Literal[
+    "toy.bootstrap-journal-backup-intent.v1",
+]
+
+BootstrapJournalBackupIntentV1SourceVersion = Literal[
+    1,
+]
+
+BootstrapJournalBackupIntentV1TargetVersion = Literal[
+    2,
+]
+
+class BootstrapJournalBackupReceiptV1(TypedDict):
+    schemaVersion: "BootstrapJournalBackupReceiptV1SchemaVersion"
+    backupId: "UUID"
+    storeId: "UUID"
+    sourceVersion: "BootstrapJournalBackupIntentV1SourceVersion"
+    targetVersion: "BootstrapJournalBackupIntentV1TargetVersion"
+    startedAt: "Instant"
+    completedAt: "Instant"
+    sourceSchemaDigest: "Digest"
+    sourceLogicalDigest: "Digest"
+    nextGeneration: "UInt64String"
+    counts: "BootstrapJournalCountsV1"
+    artifactDigest: "Digest"
+    byteLength: "UInt64String"
+    pageCount: "UInt64String"
+    integrityVerified: "CliHelpResultOk"
+    sourceSnapshotVerified: "CliHelpResultOk"
+
+BootstrapJournalBackupReceiptV1SchemaVersion = Literal[
+    "toy.bootstrap-journal-backup-receipt.v1",
+]
+
+class BootstrapJournalMigrationV1(TypedDict):
+    schemaVersion: "BootstrapJournalMigrationV1SchemaVersion"
+    migrationId: "UUID"
+    storeId: "UUID"
+    sourceVersion: "BootstrapJournalBackupIntentV1SourceVersion"
+    targetVersion: "BootstrapJournalBackupIntentV1TargetVersion"
+    appliedAt: "Instant"
+    backupId: "UUID"
+    backupReceiptDigest: "Digest"
+    sourceSchemaDigest: "Digest"
+    targetSchemaDigest: "Digest"
+    preservedLogicalDigest: "Digest"
+    preservedCounts: "BootstrapJournalCountsV1"
+
+BootstrapJournalMigrationV1SchemaVersion = Literal[
+    "toy.bootstrap-journal-migration.v1",
+]
+
+class BootstrapAttemptOwnerRecordV1(TypedDict):
+    schemaVersion: "BootstrapAttemptOwnerRecordV1SchemaVersion"
+    storeId: "UUID"
+    operationId: "UUID"
+    stackId: "UUID"
+    generation: "UInt64String"
+    bootSessionId: "UUID"
+    incarnation: "NativeProcessIdentityV1"
+    closureDigest: "Digest"
+    createdAt: "Instant"
+    expiresAt: "Instant"
+    expiresMonotonicNanoseconds: "UInt64String"
+    state: "BootstrapAttemptOwnerRecordV1State"
+
+BootstrapAttemptOwnerRecordV1SchemaVersion = Literal[
+    "toy.bootstrap-attempt-owner.v1",
+]
+
+BootstrapAttemptOwnerRecordV1State = Literal[
+    "running",
+    "reconciliation-required",
+    "stopped",
+]
+
+class BootstrapWorkLeaseRecordV1(TypedDict):
+    schemaVersion: "BootstrapWorkLeaseRecordV1SchemaVersion"
+    leaseId: "UUID"
+    storeId: "UUID"
+    operationId: "UUID"
+    stackId: "UUID"
+    generation: "UInt64String"
+    bootSessionId: "UUID"
+    ownerIncarnation: "NativeProcessIdentityV1"
+    createdAt: "Instant"
+    expiresAt: "Instant"
+    expiresMonotonicNanoseconds: "UInt64String"
+    state: "BootstrapWorkLeaseRecordV1State"
+    protectedGlobalLeaseVerified: "CliFailureOk"
+
+BootstrapWorkLeaseRecordV1SchemaVersion = Literal[
+    "toy.bootstrap-work-lease.v1",
+]
+
+BootstrapWorkLeaseRecordV1State = Literal[
+    "held",
+    "reconciliation-required",
+    "released",
+]
+
+class BootstrapJournalReadV1(TypedDict):
+    schemaVersion: "BootstrapJournalReadV1SchemaVersion"
+    observedAt: "Instant"
+    storeId: "UUID"
+    storeVersion: "BootstrapJournalReadV1StoreVersion"
+    nextGeneration: "UInt64String"
+    counts: "BootstrapJournalCountsV1"
+    migrationId: Optional["UUID"]
+    backupId: Optional["UUID"]
+    backupArtifactDigest: Optional["Digest"]
+    backupReceiptDigest: Optional["Digest"]
+    preservedLogicalDigest: Optional["Digest"]
+    preservedCounts: Optional["BootstrapJournalCountsV1"]
+    backupVerified: bool
+    ownerCount: "UInt64String"
+    leaseCount: "UInt64String"
+    runtimeAdmissionAvailable: "CliFailureOk"
+    protectedGlobalLeaseVerified: "CliFailureOk"
+
+BootstrapJournalReadV1SchemaVersion = Literal[
+    "toy.bootstrap-journal-read.v1",
+]
+
+BootstrapJournalReadV1StoreVersion = Literal[
+    "1",
+    "2",
 ]
 
 class BootstrapResourceSampleV1(TypedDict):

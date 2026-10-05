@@ -17,6 +17,7 @@ export const opsControlReadInventory = [
   declaration("read.cadence", "self-improvement", "review.slots"), declaration("read.release", "ops", "release.status")
 ];
 export const testStackCheckInventory = [
+  declaration("bootstrap.journal", "ops", "stack.up"),
   declaration("bootstrap.signature", "ops", "stack.up"), declaration("bootstrap.native-entry", "ops", "stack.up"),
   declaration("bootstrap.inherited-child", "ops", "stack.up"), declaration("bootstrap.fs-denial", "ops", "stack.up"),
   declaration("bootstrap.network-denial", "ops", "stack.up"), declaration("bootstrap.keychain-denial", "ops", "stack.up"),

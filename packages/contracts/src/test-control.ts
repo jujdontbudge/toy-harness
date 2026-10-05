@@ -128,6 +128,45 @@ export const bootstrapOperationRecordSchema = z.strictObject({
   acceptedAt: instantSchema, state: z.literal("blocked"), errorCode: z.literal("DEPENDENCY_UNAVAILABLE"),
   nativeExecutionPerformed: z.literal(false), resourcePermitIssued: z.literal(false)
 });
+export const bootstrapJournalCountsSchema = z.strictObject({ operations: uint64Schema, bindings: uint64Schema, events: uint64Schema });
+export const bootstrapJournalBackupIntentSchema = z.strictObject({
+  schemaVersion: z.literal("toy.bootstrap-journal-backup-intent.v1"), backupId: uuidSchema, storeId: uuidSchema,
+  sourceVersion: z.literal(1), targetVersion: z.literal(2), startedAt: instantSchema,
+  sourceSchemaDigest: digestSchema, sourceLogicalDigest: digestSchema, nextGeneration: uint64Schema, counts: bootstrapJournalCountsSchema
+});
+export const bootstrapJournalBackupReceiptSchema = z.strictObject({
+  schemaVersion: z.literal("toy.bootstrap-journal-backup-receipt.v1"), backupId: uuidSchema, storeId: uuidSchema,
+  sourceVersion: z.literal(1), targetVersion: z.literal(2), startedAt: instantSchema, completedAt: instantSchema,
+  sourceSchemaDigest: digestSchema, sourceLogicalDigest: digestSchema, nextGeneration: uint64Schema, counts: bootstrapJournalCountsSchema,
+  artifactDigest: digestSchema, byteLength: uint64Schema, pageCount: uint64Schema,
+  integrityVerified: z.literal(true), sourceSnapshotVerified: z.literal(true)
+});
+export const bootstrapJournalMigrationSchema = z.strictObject({
+  schemaVersion: z.literal("toy.bootstrap-journal-migration.v1"), migrationId: uuidSchema, storeId: uuidSchema,
+  sourceVersion: z.literal(1), targetVersion: z.literal(2), appliedAt: instantSchema, backupId: uuidSchema,
+  backupReceiptDigest: digestSchema, sourceSchemaDigest: digestSchema, targetSchemaDigest: digestSchema,
+  preservedLogicalDigest: digestSchema, preservedCounts: bootstrapJournalCountsSchema
+});
+export const bootstrapAttemptOwnerRecordSchema = z.strictObject({
+  schemaVersion: z.literal("toy.bootstrap-attempt-owner.v1"), storeId: uuidSchema, operationId: uuidSchema, stackId: uuidSchema,
+  generation: uint64Schema, bootSessionId: uuidSchema, incarnation: nativeProcessIdentitySchema,
+  closureDigest: digestSchema, createdAt: instantSchema, expiresAt: instantSchema, expiresMonotonicNanoseconds: uint64Schema,
+  state: z.enum(["running", "reconciliation-required", "stopped"])
+});
+export const bootstrapWorkLeaseRecordSchema = z.strictObject({
+  schemaVersion: z.literal("toy.bootstrap-work-lease.v1"), leaseId: uuidSchema, storeId: uuidSchema, operationId: uuidSchema,
+  stackId: uuidSchema, generation: uint64Schema, bootSessionId: uuidSchema, ownerIncarnation: nativeProcessIdentitySchema,
+  createdAt: instantSchema, expiresAt: instantSchema, expiresMonotonicNanoseconds: uint64Schema,
+  state: z.enum(["held", "reconciliation-required", "released"]), protectedGlobalLeaseVerified: z.literal(false)
+});
+export const bootstrapJournalReadSchema = z.strictObject({
+  schemaVersion: z.literal("toy.bootstrap-journal-read.v1"), observedAt: instantSchema, storeId: uuidSchema,
+  storeVersion: z.enum(["1", "2"]), nextGeneration: uint64Schema, counts: bootstrapJournalCountsSchema,
+  migrationId: uuidSchema.nullable(), backupId: uuidSchema.nullable(), backupArtifactDigest: digestSchema.nullable(),
+  backupReceiptDigest: digestSchema.nullable(), preservedLogicalDigest: digestSchema.nullable(), preservedCounts: bootstrapJournalCountsSchema.nullable(),
+  backupVerified: z.boolean(),
+  ownerCount: uint64Schema, leaseCount: uint64Schema, runtimeAdmissionAvailable: z.literal(false), protectedGlobalLeaseVerified: z.literal(false)
+});
 export const bootstrapResourceSampleSchema = z.strictObject({
   observedAt: instantSchema, monotonicNanoseconds: uint64Schema, physicalBytes: uint64Schema.nullable(),
   freeBytes: uint64Schema.nullable(), processAvailableBytes: uint64Schema.nullable(),
@@ -178,6 +217,13 @@ export type BootstrapJournalOwnerV1 = z.infer<typeof bootstrapJournalOwnerSchema
 export type BootstrapJournalStateV1 = z.infer<typeof bootstrapJournalStateSchema>;
 export type BootstrapUpRequestV1 = z.infer<typeof bootstrapUpRequestSchema>;
 export type BootstrapOperationRecordV1 = z.infer<typeof bootstrapOperationRecordSchema>;
+export type BootstrapJournalCountsV1 = z.infer<typeof bootstrapJournalCountsSchema>;
+export type BootstrapJournalBackupIntentV1 = z.infer<typeof bootstrapJournalBackupIntentSchema>;
+export type BootstrapJournalBackupReceiptV1 = z.infer<typeof bootstrapJournalBackupReceiptSchema>;
+export type BootstrapJournalMigrationV1 = z.infer<typeof bootstrapJournalMigrationSchema>;
+export type BootstrapAttemptOwnerRecordV1 = z.infer<typeof bootstrapAttemptOwnerRecordSchema>;
+export type BootstrapWorkLeaseRecordV1 = z.infer<typeof bootstrapWorkLeaseRecordSchema>;
+export type BootstrapJournalReadV1 = z.infer<typeof bootstrapJournalReadSchema>;
 export type BootstrapResourceSampleV1 = z.infer<typeof bootstrapResourceSampleSchema>;
 export type BootstrapResourceReasonV1 = z.infer<typeof bootstrapResourceReasonSchema>;
 export type BootstrapResourcePreflightV1 = z.infer<typeof bootstrapResourcePreflightSchema>;
@@ -199,6 +245,10 @@ export const testControlSchemaInventory = {
   NativeSupervisorReceiptV1: nativeSupervisorReceiptSchema,
   BootstrapJournalOwnerV1: bootstrapJournalOwnerSchema, BootstrapJournalStateV1: bootstrapJournalStateSchema,
   BootstrapUpRequestV1: bootstrapUpRequestSchema, BootstrapOperationRecordV1: bootstrapOperationRecordSchema,
+  BootstrapJournalCountsV1: bootstrapJournalCountsSchema,
+  BootstrapJournalBackupIntentV1: bootstrapJournalBackupIntentSchema, BootstrapJournalBackupReceiptV1: bootstrapJournalBackupReceiptSchema,
+  BootstrapJournalMigrationV1: bootstrapJournalMigrationSchema, BootstrapAttemptOwnerRecordV1: bootstrapAttemptOwnerRecordSchema,
+  BootstrapWorkLeaseRecordV1: bootstrapWorkLeaseRecordSchema, BootstrapJournalReadV1: bootstrapJournalReadSchema,
   BootstrapResourceSampleV1: bootstrapResourceSampleSchema, BootstrapResourceReasonV1: bootstrapResourceReasonSchema,
   BootstrapResourcePreflightV1: bootstrapResourcePreflightSchema
 };

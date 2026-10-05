@@ -8,7 +8,7 @@ import type {
   Result, TestStackDownInputV1, TestStackOperationV1, TestStackUpInputV1
 } from "@toy/contracts";
 export type { ModuleId } from "@toy/contracts";
-import { recordBlockedBootstrapUp } from "./bootstrap-journal.js";
+import { inspectBootstrapJournal, recordBlockedBootstrapUp } from "./bootstrap-journal.js";
 import { measureBootstrapResources } from "./bootstrap-resources.js";
 
 const unavailableSnapshot = (release: Release, context: OpsControlContextV1): ControlStatusV1 => {
@@ -43,6 +43,7 @@ export const OpsControlRead = {
     const snapshot = unavailableSnapshot(request.release ?? "R0", context);
     const checks = [...snapshot.probes];
     if (request.deep) {
+      checks.push(inspectBootstrapJournal(context.timeoutMs - Number((process.hrtime.bigint() - started) / 1000000n)));
       const measured = await measureBootstrapResources(context.timeoutMs - Number((process.hrtime.bigint() - started) / 1000000n));
       checks.push(checkViewSchema.parse({
         id: "bootstrap.resource-admission", owner: "ops", state: "BLOCKED", checkedAt: measured.measuredAt,
@@ -57,7 +58,7 @@ export const OpsControlRead = {
       }));
     }
     return doctorReportSchema.parse({
-      requiredRelease: snapshot.requiredRelease, deep: request.deep, checks, verdict: "NOT_IMPLEMENTED",
+      requiredRelease: snapshot.requiredRelease, deep: request.deep, checks, verdict: checks.some((check) => check.state === "FAIL") ? "FAIL" : "NOT_IMPLEMENTED",
       complete: false, links: { recordRefs: [], observations: [], artifactDigests: [] }
     });
   }
@@ -74,7 +75,7 @@ export const OpsTestStack = {
     }
     if (context.environment.kind !== "test") return Promise.resolve(unavailableStack("UNAUTHORIZED"));
     if (context.environment.stackId !== null) return Promise.resolve(unavailableStack("INVALID_INPUT"));
-    return Promise.resolve(recordBlockedBootstrapUp(input, context.timeoutMs));
+    return recordBlockedBootstrapUp(input, context.timeoutMs);
   },
   down(input: TestStackDownInputV1, context: OpsControlContextV1): Promise<Result<TestStackOperationV1>> {
     if (!testStackDownInputSchema.safeParse(input).success || !opsControlContextSchema.safeParse(context).success) {
