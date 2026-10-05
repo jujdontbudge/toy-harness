@@ -1,0 +1,128 @@
+{
+  "schemaVersion": "toy.bootstrap-owner-lifetime-research.v1",
+  "card": "R0.K3",
+  "attemptId": "2026-10-05T17-40-30.211Z-25f5f50b-99fd-41f3-8b0a-57d1539ab039",
+  "generatedAt": "2026-10-05T17:40:30.211Z",
+  "acceptanceComplete": false,
+  "scope": "Pinned lifetime/clock API research and strict native compilation/readback preparation",
+  "sources": [
+    {
+      "id": "process-lifetime",
+      "url": "https://raw.githubusercontent.com/nodejs/node/v24.21.0/deps/uv/src/unix/process.c",
+      "sha256": "e79f9bd90787011d59d9395f46658caca2ca01d1daad84c36e3b86eba50a4a52",
+      "version": "Node v24.21.0 exact upstream source",
+      "applicability": "Pinned local Node version; source observation, no OS fault execution"
+    },
+    {
+      "id": "child-handle-lifecycle",
+      "url": "https://raw.githubusercontent.com/nodejs/node/v24.21.0/lib/internal/child_process.js",
+      "sha256": "ace05809adf0d02482984f6b9fb8418b3c788df2d8fb8fec3527bfcfd7465d2f",
+      "version": "Node v24.21.0 exact upstream source",
+      "applicability": "Pinned local Node version; source observation, no OS fault execution"
+    },
+    {
+      "id": "darwin-clock",
+      "url": "https://raw.githubusercontent.com/nodejs/node/v24.21.0/deps/uv/src/unix/darwin.c",
+      "sha256": "d3ffb6997fa61127feaa67ee2b9d0fda2796e58c0b1094a066bc017e648867cb",
+      "version": "Node v24.21.0 exact upstream source",
+      "applicability": "Pinned local Node version; source observation, no OS fault execution"
+    },
+    {
+      "id": "hrtime-binding",
+      "url": "https://raw.githubusercontent.com/nodejs/node/v24.21.0/src/node_process_methods.cc",
+      "sha256": "4ba467781cdaf3a892abaa8a5aadeda01395622570d4bd623ee13ca13ccf1bcf",
+      "version": "Node v24.21.0 exact upstream source",
+      "applicability": "Pinned local Node version; source observation, no OS fault execution"
+    },
+    {
+      "id": "sdk-continuous-clock",
+      "path": "/Library/Developer/CommandLineTools/SDKs/MacOSX26.5.sdk/usr/include/mach/mach_time.h",
+      "sha256": "d690e304ea595ca216ed51e20aa9747e0b3bcb07446d996abe0080a231c7065f",
+      "version": "Installed fixed macOS 26.5 SDK",
+      "applicability": "Native compiler input SDK; header declares availability and sleep semantics"
+    }
+  ],
+  "sourceBackedFacts": [
+    {
+      "source": "process-lifetime",
+      "fact": "libuv collects waitpid terminal results before delivering queued exit callbacks; process-handle signaling delegates to numeric-PID kill."
+    },
+    {
+      "source": "child-handle-lifecycle",
+      "fact": "Node clears its child handle before emitting the child exit callback. A remaining handle alone does not establish a general unreaped kernel incarnation across arbitrary concurrent callbacks."
+    },
+    {
+      "source": "hrtime-binding",
+      "fact": "The pinned hrtime BigInt native binding obtains uv_hrtime."
+    },
+    {
+      "source": "darwin-clock",
+      "fact": "Pinned Darwin uv_hrtime scales mach_continuous_time into nanoseconds."
+    },
+    {
+      "source": "sdk-continuous-clock",
+      "fact": "The installed SDK declares the continuous Mach clock, which advances during sleep."
+    }
+  ],
+  "interpretation": {
+    "singleHelperRunnerRequired": true,
+    "arbitraryPidKillForbidden": true,
+    "rememberedPidSignalAfterExitForbidden": true,
+    "clockDomain": "darwin-mach-continuous-nanoseconds",
+    "bootSessionBindingRequired": true,
+    "sourceOnlyNotRuntimeProof": true
+  },
+  "compiledCorrection": {
+    "source": "packages/ops/native/BootstrapEntry.swift",
+    "sourceDigest": "54af7ac8bc2743ebaa392a0213b780148cac3086692f75dd42dd98589845fa59",
+    "nativeBuildEvidence": "build/evidence/R0.K3/native-build.json",
+    "nativeManifestDigest": "5854c4c9641574ba419b03f2da9a9d37baf9d1fb7748e0ecd913c1803b73f7c0",
+    "deadlineType": "NativeDeadline",
+    "clockConversion": "Checked full-width multiply/divide; invalid timebase, quotient overflow or deadline overflow terminates without permitting work",
+    "frameExpiryRechecked": true,
+    "acknowledgmentExpiryRechecked": true,
+    "childAcknowledgmentLocallyBounded": true,
+    "observedNativeBuildExitCode": 0,
+    "nativeExecutionPerformed": false
+  },
+  "currentStorage": {
+    "version": 2,
+    "ownerAndLeaseTablesEmpty": true,
+    "legacyBlockedOperationsImmutable": true,
+    "activeRuntimeOperationAvailable": false
+  },
+  "nextWorkCard": {
+    "id": "R0.K3.private-ownership-protocol",
+    "objective": "Add generated closed ownership-event/acknowledgment context and native pre-effect gating, then expose it only to the single foreground Ops owner.",
+    "owns": [
+      "Contracts private ownership/clock context source and its generated artifacts",
+      "Existing fixed native supervisor/parent/child ownership event and acknowledgment sequencing",
+      "ADR 0016 and current feature-map row"
+    ],
+    "preconditions": [
+      "Keep native execution unavailable while measured resource/actual identity gates are absent",
+      "Freeze complete context including boot session, continuous-clock domain, generation, operation/stack, lease and immutable closure",
+      "One unclosed external helper in the future outside Node owner; native children stay under kernel-incarnation and unreaped terminal ownership"
+    ],
+    "prohibited": [
+      "New public path/argv/UID/SQL or lease-proof flags",
+      "Changing V2 immutable terminal blocked requests into executable work",
+      "Adding an alternate runtime operation/event store",
+      "Claiming source/compilation proof as runtime acceptance"
+    ],
+    "acceptanceEvidence": [
+      "Strict generated TS/Python/Swift consumers and exact source/artifact native build readback",
+      "Future registered packed toy probe cases for malformed/trailing/stale/duplicate context, missing acknowledgment, clock expiry and process stop/death; only external OS seams may be faked",
+      "Actual-identity assigned-rung AT-cli-4/6/10 and R0.04–05 remain pending until their complete assertions run"
+    ],
+    "recovery": "Dropped or stale context grants no phase; unknown resources retain a fenced lease. V2-to-runtime compatible schema transition requires a verified V2 online backup before mutation.",
+    "integrationOwner": "/root",
+    "parallelSafe": false
+  },
+  "limitations": [
+    "No launchd owner/job created, no signaling or helper execution performed",
+    "No real clock sample, sleep, stop, PID-reuse, death or dropped-pipe fault exercise",
+    "Continuous local deadlines do not cover pre-deadline Security/hash calls; external whole-attempt ownership is still required",
+    "The single-helper source inference requires enforced implementation and CLI OS-fault proof; it is not a measured safety certificate"
+  ]
+}

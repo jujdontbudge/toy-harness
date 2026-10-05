@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "toy.bootstrap-native-static-check.v1",
+  "card": "R0.K3",
+  "generatedAt": "2026-10-05 17:41:43 UTC",
+  "acceptanceComplete": false,
+  "scope": "Complete repository static gate after continuous native deadline source changes",
+  "command": [
+    "npm",
+    "run",
+    "check"
+  ],
+  "observedExitCode": 0,
+  "output": "\n> toy-harness@1.0.0 check\n> npm run typecheck && node scripts/typecheck-tests.mjs && npm run boundaries && npm run python:check && npm run lint && npm run contracts:check\n\n\n> toy-harness@1.0.0 typecheck\n> tsc -b --pretty false && tsc -p scripts/tsconfig.json --pretty false\n\n\n> toy-harness@1.0.0 boundaries\n> depcruise --config .dependency-cruiser.cjs packages cli tests\n\n\n✔ no dependency violations found (96 modules, 194 dependencies cruised)\n\n\n> toy-harness@1.0.0 python:check\n> pyright && .venv/bin/ruff check python && PYTHONPATH=python .venv/bin/lint-imports\n\n0 errors, 0 warnings, 0 informations\nAll checks passed!\n\u001b[1m=============\u001b[0m\n\u001b[1mImport Linter\u001b[0m\n\u001b[1m=============\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[1m---------\u001b[0m\n\u001b[1mContracts\u001b[0m\n\u001b[1m---------\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[1mAnalyzed 4 files, 0 dependencies.\u001b[0m\n\u001b[1m---------------------------------\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[22mHermes adapter cannot import protected controls \u001b[0m\u001b[32m\u001b[22mKEPT\u001b[0m\u001b[33m\u001b[22m\u001b[0m\u001b[22m\u001b[0m\n\u001b[22mProtected controls cannot depend on agent implementation \u001b[0m\u001b[32m\u001b[22mKEPT\u001b[0m\u001b[33m\u001b[22m\u001b[0m\u001b[22m\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[22mContracts: 2 kept, 0 broken.\u001b[0m\n\n> toy-harness@1.0.0 lint\n> node scripts/run-eslint.mjs && node scripts/check-source-policy.mjs && .venv/bin/python scripts/check-python-policy.py && node scripts/check-contract-ownership.mjs && node scripts/check-contract-pin.mjs && node scripts/check-int-registry.mjs\n\n50 source files passed comment and debt policy\n7 Python source files passed comment and type policy\n30 TypeScript source files passed schema-inventory ownership policy for 151 contracts\nThe sole Zod runtime pin is @toy/contracts 4.6.5.\n0 registry-only INT entries match 0 internal test files; 1 total test files declare a rung\n\n> toy-harness@1.0.0 contracts:check\n> tsc -b packages/contracts --pretty false && node scripts/generate-contracts.mjs --check && tsc --ignoreConfig --noEmit --strict --noUncheckedIndexedAccess --target ES2024 --module NodeNext --moduleResolution NodeNext packages/contracts/generated/types.ts && swiftc -typecheck -sdk /Library/Developer/CommandLineTools/SDKs/MacOSX26.5.sdk swift/ToyContracts/Contracts.swift\n\nVerified 193 contract artifacts\n",
+  "nativeExecutionPerformed": false
+}

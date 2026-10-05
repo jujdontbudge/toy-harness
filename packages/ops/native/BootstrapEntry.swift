@@ -1,5 +1,4 @@
 import Darwin
-import Dispatch
 import Foundation
 
 private let maximumIdentityBytes = 4096
@@ -96,6 +95,33 @@ func encoded<T: Encodable>(_ value: T) -> Data? {
     return try? encoder.encode(value)
 }
 
+struct NativeDeadline {
+    fileprivate let nanoseconds: UInt64
+}
+
+private func continuousNanoseconds() -> UInt64 {
+    var timebase = mach_timebase_info_data_t()
+    guard mach_timebase_info(&timebase) == KERN_SUCCESS, timebase.numer > 0, timebase.denom > 0 else { _exit(71) }
+    let divisor = UInt64(timebase.denom)
+    let scaled = mach_continuous_time().multipliedFullWidth(by: UInt64(timebase.numer))
+    guard scaled.high < divisor else { _exit(71) }
+    return divisor.dividingFullWidth(scaled).quotient
+}
+
+func deadlineAfter(_ duration: UInt64) -> NativeDeadline {
+    let start = continuousNanoseconds()
+    guard start <= UInt64.max - duration else { _exit(71) }
+    return NativeDeadline(nanoseconds: start + duration)
+}
+
+func remainingMilliseconds(until deadline: NativeDeadline) -> Int32? {
+    let current = continuousNanoseconds()
+    guard current < deadline.nanoseconds else { return nil }
+    let remaining = deadline.nanoseconds - current
+    let rounded = remaining / 1_000_000 + (remaining.isMultiple(of: 1_000_000) ? 0 : 1)
+    return Int32(min(rounded, UInt64(Int32.max)))
+}
+
 #if BOOTSTRAP_CHILD
 @main
 private struct BootstrapEntry {
@@ -105,9 +131,14 @@ private struct BootstrapEntry {
         var payload = identityBytes
         payload.append(0x0a)
         var acknowledgment: UInt8 = 0
+        let acknowledgmentDeadline = deadlineAfter(childDeadlineNanoseconds)
+        var pollEntry = pollfd(fd: inheritedAcknowledgmentDescriptor, events: Int16(POLLIN | POLLHUP), revents: 0)
         guard emit(payload, to: inheritedIdentityDescriptor),
+            let remaining = remainingMilliseconds(until: acknowledgmentDeadline),
+            Darwin.poll(&pollEntry, 1, remaining) == 1,
             Darwin.read(inheritedAcknowledgmentDescriptor, &acknowledgment, 1) == 1,
             acknowledgment == childAcknowledgment,
+            remainingMilliseconds(until: acknowledgmentDeadline) != nil,
             Darwin.close(inheritedIdentityDescriptor) == 0,
             Darwin.close(inheritedAcknowledgmentDescriptor) == 0 else { failure() }
     }
@@ -135,24 +166,7 @@ private func fixedChildPath() -> String? {
         .appendingPathComponent("bootstrap-child", isDirectory: false).path
 }
 
-private func monotonicNanoseconds() -> UInt64 {
-    DispatchTime.now().uptimeNanoseconds
-}
-
-func deadlineAfter(_ duration: UInt64) -> UInt64 {
-    let start = monotonicNanoseconds()
-    return start <= UInt64.max - duration ? start + duration : UInt64.max
-}
-
-func remainingMilliseconds(until deadline: UInt64) -> Int32? {
-    let current = monotonicNanoseconds()
-    guard current < deadline else { return nil }
-    let remaining = deadline - current
-    let rounded = remaining / 1_000_000 + (remaining.isMultiple(of: 1_000_000) ? 0 : 1)
-    return Int32(min(rounded, UInt64(Int32.max)))
-}
-
-func readFrame(from descriptor: Int32, until deadline: UInt64) -> NativeFrameReadOutcome {
+func readFrame(from descriptor: Int32, until deadline: NativeDeadline) -> NativeFrameReadOutcome {
     var result = Data()
     var buffer = [UInt8](repeating: 0, count: 512)
     var byteCount = 0
@@ -165,11 +179,13 @@ func readFrame(from descriptor: Int32, until deadline: UInt64) -> NativeFrameRea
             return .incomplete(byteCount)
         }
         if ready == 0 { return .timedOut(byteCount) }
+        guard remainingMilliseconds(until: deadline) != nil else { return .timedOut(byteCount) }
         let count = Darwin.read(descriptor, &buffer, buffer.count)
         if count < 0 {
             if errno == EINTR { continue }
             return .incomplete(byteCount)
         }
+        guard remainingMilliseconds(until: deadline) != nil else { return .timedOut(byteCount + count) }
         if count == 0 { return .endOfStream(byteCount) }
         byteCount += count
         let chunk = Data(buffer.prefix(count))
@@ -183,7 +199,7 @@ func readFrame(from descriptor: Int32, until deadline: UInt64) -> NativeFrameRea
     }
 }
 
-func waitForChild(_ child: pid_t, until deadline: UInt64) -> ChildWaitOutcome {
+func waitForChild(_ child: pid_t, until deadline: NativeDeadline) -> ChildWaitOutcome {
     var status: Int32 = 0
     while true {
         let result = waitpid(child, &status, WNOHANG)
@@ -361,10 +377,12 @@ private struct BootstrapEntry {
         payload.append(0x0a)
         guard emit(payload, to: STDOUT_FILENO) else { failure() }
         var acknowledgment: UInt8 = 0
+        let acknowledgmentDeadline = deadlineAfter(childDeadlineNanoseconds)
         var pollEntry = pollfd(fd: 5, events: Int16(POLLIN | POLLHUP), revents: 0)
-        guard let remaining = remainingMilliseconds(until: deadlineAfter(childDeadlineNanoseconds)),
+        guard let remaining = remainingMilliseconds(until: acknowledgmentDeadline),
             Darwin.poll(&pollEntry, 1, remaining) == 1,
             Darwin.read(5, &acknowledgment, 1) == 1, acknowledgment == 0x5a,
+            remainingMilliseconds(until: acknowledgmentDeadline) != nil,
             Darwin.close(5) == 0 else { failure() }
     }
 }

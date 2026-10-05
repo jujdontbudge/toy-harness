@@ -1,7 +1,7 @@
 {
   "schemaVersion": "toy.bootstrap-cli-checkpoint.v1",
   "card": "R0.K3",
-  "generatedAt": "2026-10-05T17:30:25.528Z",
+  "generatedAt": "2026-10-05T17:43:21.402Z",
   "acceptanceComplete": false,
   "scope": "Packed CLI diagnostics, actual online-backed SQLite V1-to-V2 private journal transition, unchanged blocked request identity and real-time resource preflight; current three-asset compilation/readback only",
   "observedSubprocessInvocations": 111,
@@ -44,7 +44,7 @@
     "docs/adr/0007-owner-diagnostic-projections.md": "e56344a8bc797d3584d14b32170f0f94d1490540d872b08c4bbf5b4a9f976b3c",
     "docs/adr/0008-ops-control-read-bootstrap.md": "c4ae3038f19223d6c819d967b43a562db1390d81fce376a6bc6472cf2158b39c",
     "skills/toy-control/SKILL.md": "6443b62b178526de748bf732980f819db005f29d457c8d2a476bafd6c9c42986",
-    "skills/toy-control/FEATURE-MAP.md": "348469b963a03e67623f62ab089cc80ef9ce5d9b8a61fa91a19280a59ad35287",
+    "skills/toy-control/FEATURE-MAP.md": "24a379e825e77c4b79059e847be22fac842de134e2c8a6b018bae3a1d5942335",
     "docs/adr/0009-diagnostic-inventory-reconciliation.md": "8a92e31619b41c56d8175351296e1ab9ca244476b20399cb76c824420226a87a",
     "docs/adr/0010-bootstrap-stack-lifecycle.md": "d6f3d02bb5cfdb17e0238935a36c9651c5e4274a99d1f17c1aac14899ddd880a",
     "docs/adr/0011-bootstrap-receipt-privacy.md": "6ab656b932e7f6f314db1b5ff3f3e4dbb79898992f58d90e2afbefe009ef61f0",
@@ -54,15 +54,15 @@
     "scripts/check-k2.mjs": "a7b326dccf93f3e3df7ae943a6ef44f5717fec757f9a2639122c29db25b708b9",
     "scripts/tsconfig.json": "f65070467a8a3fc2f23a02568baaa61c0f933097c17613ee3cf461851e16e255",
     "scripts/build-native-bootstrap.mts": "1c77e120c8804a3ec9e0705df9a24d8be1d3e186e699c15861b3685ca2ce4d29",
-    "packages/ops/native/BootstrapEntry.swift": "19e1616ae0528eba7b29787278282c0e8803b5542ac0f7c764cb662669fadbc2",
+    "packages/ops/native/BootstrapEntry.swift": "54af7ac8bc2743ebaa392a0213b780148cac3086692f75dd42dd98589845fa59",
     "docs/adr/0012-native-entry-admission.md": "1e09bde08e40d0ef33af6cd37f3b6ebea14dcc437d377f84b2af4eeb9ae63711",
     "packages/ops/native/BootstrapSupervisor.swift": "807a821bf0e4463188eb8468b672911bc9bfad6d6990dd962f2b3f610e477f22",
-    "docs/adr/0013-native-supervisor-protocol.md": "d8e2eb90507ea6cfff88ec0be7ac6f882479ac81bb11ae086b69e5c136c35bef",
+    "docs/adr/0013-native-supervisor-protocol.md": "84150b64da22cc36792501c45743c00cf5877c606f5d763e441d8da04cdc79d0",
     "packages/ops/src/bootstrap-journal.ts": "8c75be54de8823dc4fdfca71c9793b0d4a6410485ef4a9667344f40c62a095ab",
     "docs/adr/0014-bootstrap-operation-journal.md": "4f58d09fc2e1106f8ce11550450cfc86fb581a6a341054f86f4ec580f4741b36",
     "packages/ops/src/bootstrap-resources.ts": "5bbf815ed27f8a74d834109f344429e1e264992432a0e1b1bfce553b8829f499",
     "docs/adr/0015-bootstrap-resource-preflight.md": "1fab589dfd87aee6aa93b8f4a93919e8eeced9f140102c40d00cdccd3f4ed354",
-    "docs/adr/0016-bootstrap-attempt-ownership.md": "003b86354d8bd7c62619a65a124d2ba701e3f8151481a5f666c663060e246b2e"
+    "docs/adr/0016-bootstrap-attempt-ownership.md": "c1b732fc716ad2bdba686e1c351a31b1aa6ed8bda0ba1706fb8b634e52c1731a"
   },
   "staticGate": {
     "evidence": "build/evidence/R0.K2/bootstrap.json",
@@ -90,14 +90,14 @@
   "lifecycleReview": "build/evidence/R0.K3/lifecycle-review.json",
   "nativeBuild": {
     "evidence": "build/evidence/R0.K3/native-build.json",
-    "attemptId": "2026-10-05T17-25-58.626Z-fa06e176-6c7c-4ff2-874e-82b87687f95c",
-    "observedExitCode": null,
-    "manifestDigest": "ac38d23bd1ff89384d1b66d266d35d00879b83e25d7869077bdd7ae9de449ed7",
+    "attemptId": "2026-10-05T17-40-30.211Z-25f5f50b-99fd-41f3-8b0a-57d1539ab039",
+    "observedExitCode": 0,
+    "manifestDigest": "5854c4c9641574ba419b03f2da9a9d37baf9d1fb7748e0ecd913c1803b73f7c0",
     "nativeExecutionPerformed": false,
     "sandboxEntryVerified": false,
     "currentSchemaCompatible": true,
     "limitation": "Current three-asset closure compiled and digest-verified; no admitted signing, native execution, resource permit or runtime acceptance.",
-    "terminalOutputAvailable": false
+    "terminalOutputAvailable": true
   },
   "operationJournal": "build/evidence/R0.K3/operation-journal.json",
   "supervisorReviewCorrections": "build/evidence/R0.K3/supervisor-review-corrections.json",
@@ -105,11 +105,11 @@
     "command": [
       "npm",
       "run",
-      "check:k2"
+      "check"
     ],
     "observedExitCode": 0,
-    "attemptId": "2026-10-05T17-27-03-388Z-859c7e9c-97a0-4d06-8d5c-450ab1098b6b",
-    "scope": "All 29 policy fixtures pass; final restored product code independently passes npm run check"
+    "evidence": "build/evidence/R0.K3/clock-static-check.json",
+    "scope": "Complete strict compiler, boundary, Python, lint and 193-artifact drift gate after final native-only clock changes; policy fixture evidence remains the separate 29-check K2 packet"
   },
   "resourcePreflight": "build/evidence/R0.K3/resource-preflight.json",
   "attemptOwnershipDesign": "build/evidence/R0.K3/attempt-ownership-design.json",
@@ -127,5 +127,8 @@
     "lint": true,
     "contractArtifacts": 193
   },
-  "receiptDigest": "1837b2f9c0a3564162cd1139f32b3124627e39faa08b229a08787b404fbea0f7"
+  "receiptDigest": "1837b2f9c0a3564162cd1139f32b3124627e39faa08b229a08787b404fbea0f7",
+  "nativeClockPreparation": "build/evidence/R0.K3/owner-lifetime-research.json",
+  "liveReadback": "build/evidence/R0.K3/owner-live-readback.json",
+  "cliVerificationScope": "Existing packed CLI 10 checks/111 invocations bind unchanged TS CLI/Ops/Contracts behavior. Later native-only clock source changes have separate strict native compilation/readbacks and final static proof; no native behavior exercised by the packed suite."
 }

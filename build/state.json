@@ -2,7 +2,7 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-05T17:30:25.528Z",
+  "updatedAt": "2026-10-05T17:43:21.402Z",
   "phase": "R0 kitchen",
   "activeCard": "R0.K3",
   "cardCount": 83,
@@ -85,7 +85,10 @@
         "build/evidence/R0.K3/supervisor-review-corrections.json",
         "build/evidence/R0.K3/resource-preflight.json",
         "build/evidence/R0.K3/attempt-ownership-design.json",
-        "build/evidence/R0.K3/journal-migration.json"
+        "build/evidence/R0.K3/journal-migration.json",
+        "build/evidence/R0.K3/owner-lifetime-research.json",
+        "build/evidence/R0.K3/clock-static-check.json",
+        "build/evidence/R0.K3/owner-live-readback.json"
       ],
       "requiredATs": [
         "AT-cli-1",
@@ -146,6 +149,17 @@
           "externalLifetimeVerified": false,
           "wholeAttemptDeadlineVerified": false,
           "childOwnershipEventsAvailable": false,
+          "acceptanceComplete": false,
+          "lifetimeContractEvidence": "build/evidence/R0.K3/owner-lifetime-research.json"
+        },
+        "nativeClock": {
+          "status": "CONTINUOUS_TYPED_DEADLINES_COMPILED_RUNTIME_UNVERIFIED",
+          "evidence": "build/evidence/R0.K3/owner-lifetime-research.json",
+          "clockDomain": "darwin-mach-continuous-nanoseconds",
+          "actualSleepExpiryVerified": false,
+          "actualStopExpiryVerified": false,
+          "actualCrossLanguageClockAgreementVerified": false,
+          "wholeAttemptDeadlineVerified": false,
           "acceptanceComplete": false
         }
       },
@@ -8695,9 +8709,9 @@
     {
       "id": "K3.bootstrap-resource-headroom",
       "kind": "MEASURED_PREREQUISITE",
-      "observedAt": "2026-10-05T17:28:29.631Z",
-      "evidence": "build/evidence/R0.K3/resource-preflight.json",
-      "condition": "Minimum conservative free bytes 874299392 below 1610612736; sole lease, aggregate enforcement and foreground admission remain unavailable",
+      "observedAt": "2026-10-05T17:42:28.752Z",
+      "evidence": "build/evidence/R0.K3/owner-live-readback.json",
+      "condition": "Minimum conservative free bytes 426917888 below 1610612736; sole lease, aggregate enforcement and foreground admission remain unavailable",
       "blocks": [
         "New child admission",
         "Disposable native runtime admission"
@@ -8712,7 +8726,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Implement the external foreground attempt owner and generated durable native ownership event/acknowledgment protocol from ADR 0016. Resolve the V2 immutable blocked-operation constraint with one compatible, backed-up canonical journal transition before admitting a runtime operation. Never reuse a terminal blocked request for executable work. Current free-byte headroom blocks child/native admission; continue local implementation without stopping production services. Full R0–R5 objective and all whole ATs remain pending.",
+  "nextAction": "Generate the closed private native ownership-event/acknowledgment and clock/boot context for the fixed supervisor/parent/child protocol, and add pre-effect gates under one outside foreground owner. Preserve V2 terminal blocked requests; a compatible canonical runtime journal transition needs a verified V2 online backup before any table or constraint mutation. Enforce one unclosed outside helper handle; never signal remembered PIDs after exit. Remeasure through toy before child/native admission. All R0–R5 whole ATs and actual runtime gates remain pending.",
   "previousTurnClassification": "progress",
   "failures": [
     {
@@ -8784,9 +8798,9 @@
     "concurrentChildren": 0,
     "maximumChildren": 1,
     "semanticStackAdmitted": false,
-    "observedAt": "2026-10-05T17:28:29.631Z",
+    "observedAt": "2026-10-05T17:42:28.752Z",
     "availableBytesVerified": true,
-    "measurementEvidence": "build/evidence/R0.K3/resource-preflight.json",
+    "measurementEvidence": "build/evidence/R0.K3/owner-live-readback.json",
     "historicalSnapshot": {
       "observedAt": "2026-10-05T16:32:29.585Z",
       "memorystatusPercentage": 56,
@@ -8794,7 +8808,7 @@
       "availableBytesVerified": false
     },
     "measurementMeaning": "Conservative free-byte counter; process.availableMemory diagnostic only; no capacity or resource permit",
-    "minimumFreeBytes": "874299392",
+    "minimumFreeBytes": "426917888",
     "requiredFreeBytes": "1610612736",
     "pressure": "normal",
     "maximumSwapGrowthBytes": "0",
@@ -18943,16 +18957,16 @@
     "status": "completed; both native source findings corrected and compiled, actual R0.05 denial acceptance pending"
   },
   "continuationAssessment": {
-    "generatedAt": "2026-10-05T17:30:25.528Z",
+    "generatedAt": "2026-10-05T17:43:21.402Z",
     "classification": "progress",
     "evidence": [
       "build/evidence/R0.K3/journal-migration.json",
-      "build/evidence/R0.K3/bootstrap.json",
+      "build/evidence/R0.K3/owner-lifetime-research.json",
       "build/evidence/R0.K3/native-build.json",
-      "build/evidence/R0.K3/resource-preflight.json",
-      "build/evidence/R0.K2/bootstrap.json"
+      "build/evidence/R0.K3/clock-static-check.json",
+      "build/evidence/R0.K3/owner-live-readback.json"
     ],
-    "reason": "Actual verified online backup preceded the private V1-to-V2 journal transition. All 22 original operation/binding/event records and the pre-existing blocked request identity survived. Current code independently re-verifies the retained backup; final 10 CLI checks/111 invocations, all 29 static policy fixtures and final restored static checks pass. Native artifacts bind the current generated contracts and match readbacks. All whole acceptance and runtime gates remain pending.",
-    "nextUnit": "External owner lifetime, native ownership event/acknowledgment protocol and compatible canonical runtime journal fencing"
+    "reason": "Actual backed-up journal migration was committed/pushed. Pinned process-lifetime and clock research then drove typed continuous native deadlines, checked scaling/addition, post-wait expiry checks and an independently bounded child acknowledgment. Fresh three-asset build completed zero and all closure hashes match; complete static gate passes. Live toy doctor re-verifies retained private backup and blocked runtime admission. No native execution or whole acceptance is claimed.",
+    "nextUnit": "Closed generated ownership-event/acknowledgment clock/boot context and native pre-effect gating, followed by compatible backed-up canonical runtime journal ownership"
   }
 }
