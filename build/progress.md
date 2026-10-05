@@ -13,3 +13,7 @@ Next: run K1 compiler/import/Python gates and fixed negative fixtures, retain re
 ## R0.K1 — implementation available, full acceptance pending
 
 The eleven bootstrap compiler/import checks pass, including real compiler/import-linter rejection diagnostics for injected private/protected imports and unsafe TS/Python types. Evidence: build/evidence/R0.K1/foundations.json. The 83-card / 1,425-AT source index found 1,301 stale TEST-PLAN line references; unique actual assertion bindings and both line positions are retained in build/spec-index-drift.json and tests/acceptance-index.json. K1 is available for same-release integration; the whole AT-hermes-config-101 and independently protected production filesystem remain pending. Next unblocked card: R0.K2.
+
+## R0.K2 — worker in progress, full source accounting
+
+One gpt-6-luna/max worker owns the independent K2 lint/codegen card under frozen primitive schemas; no additional stack/model/VM process is admitted. The parent owns shared integration and build checkpoints. The source inventory now independently discovers all 1,425 assertions in current top-level specs, verifies every index definition/release/rung binding, and includes 13 integrated CLI cards. Required sets for R2.08, R4.06 and R5.05 are respectively 1,086, 98 and 1,425 IDs. Acceptance verdicts live in build/state.json separately from the regenerated source index so index regeneration cannot erase evidence. K2 and all release acceptance remain pending.
