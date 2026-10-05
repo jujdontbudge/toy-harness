@@ -1,0 +1,22 @@
+[tool.ruff]
+target-version = "py39"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "ASYNC"]
+
+[tool.importlinter]
+root_packages = ["toy_adapter", "toy_control"]
+include_external_packages = true
+
+[[tool.importlinter.contracts]]
+name = "Hermes adapter cannot import protected controls"
+type = "forbidden"
+source_modules = ["toy_adapter"]
+forbidden_modules = ["toy_control"]
+
+[[tool.importlinter.contracts]]
+name = "Protected controls cannot depend on agent implementation"
+type = "forbidden"
+source_modules = ["toy_control"]
+forbidden_modules = ["toy_adapter"]

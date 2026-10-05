@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "toy.modules.v1",
+  "modules": [
+    { "id": "contracts", "dependencies": [], "spec": "CONTRACTS.md" },
+    { "id": "obligations", "dependencies": ["contracts", "sources"], "spec": "obligations.md" },
+    { "id": "attention", "dependencies": ["contracts", "obligations", "authority"], "spec": "attention.md" },
+    { "id": "authority", "dependencies": ["contracts"], "spec": "authority.md" },
+    { "id": "sources", "dependencies": ["contracts", "lifestore", "authority"], "spec": "sources.md" },
+    { "id": "lifestore", "dependencies": ["contracts"], "spec": "lifestore.md" },
+    { "id": "hermes", "dependencies": ["contracts", "obligations", "attention", "authority", "sources", "lifestore", "hands", "self-improvement", "adhd", "client", "ops"], "spec": "hermes-config.md" },
+    { "id": "client", "dependencies": ["contracts", "obligations", "attention", "authority", "sources", "lifestore", "self-improvement", "adhd", "hands", "ops"], "spec": "client-apps.md" },
+    { "id": "hands", "dependencies": ["contracts", "authority", "lifestore"], "spec": "hands.md" },
+    { "id": "self-improvement", "dependencies": ["contracts", "obligations", "attention", "authority", "sources", "lifestore", "ops"], "spec": "self-improvement.md" },
+    { "id": "adhd", "dependencies": ["contracts", "obligations", "attention", "authority", "sources", "lifestore", "self-improvement"], "spec": "adhd-features.md" },
+    { "id": "ops", "dependencies": ["contracts"], "spec": "ops.md" }
+  ],
+  "cliDependencies": ["contracts", "ops", "self-improvement"],
+  "protectedRoots": ["control/authority", "control/evaluator", "control/publisher", "control/secrets"]
+}
