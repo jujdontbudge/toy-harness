@@ -3,7 +3,7 @@ import { createHash, randomUUID } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { parseArgs } from "node:util";
 import {
-  cliCommandSchemas, cliCommonArguments, cliDeclarations, cliErrorMessages, cliFailureSchema, cliResultSchema,
+  cliCommandSchemas, cliCommonArguments, cliDeclarations, cliErrorMessages, cliFailureSchema, cliResultSchema, registeredCliAcceptanceManifestInventory,
   digestSchema, instantSchema, opsErrorExitCodes, opsTestStackResultSchema, schemaBundleDigest, uint64Schema, uuidSchema
 } from "@toy/contracts";
 import type { CliArgument, CliCommandId, CliDeclaration, CliEnvironment, CliFailure, CliResult, OpsError, OpsTestStackResultV1, RegisteredProbeOperationV1, Result } from "@toy/contracts";
@@ -239,7 +239,7 @@ const run = async (): Promise<CliResult> => {
       else if (probeInput?.caseId === "backup-capacity") result = BackupCapacityProbe.run(probeInput, context);
       else if (probeInput?.caseId === "native-release-eligibility") result = NativeReleaseEligibilityProbe.run(probeInput, context);
       else if (probeInput !== null && (probeInput.caseId === "native-auth-cli" || (["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-87"].includes(probeInput.probeId) && probeInput.caseId === undefined))) result = await HermesAuthProbe.run(probeInput, context);
-      else if (probeInput?.caseId === "model-route-policy" || probeInput?.caseId === "model-route-stream" || (probeInput?.probeId === "AT-obligations-75" && probeInput.caseId === undefined)) result = await ModelRouteProbe.run(probeInput, context);
+      else if (probeInput !== null && (probeInput.caseId === "model-route-policy" || probeInput.caseId === "model-route-stream" || (probeInput.caseId === undefined && registeredCliAcceptanceManifestInventory.some(entry => entry.id === probeInput.probeId && entry.owner === "hermes" && entry.scenarioId === "delegation.route-skill")))) result = await ModelRouteProbe.run(probeInput, context);
       else if (probeInput) result = await ReplayEnvironment.runRegisteredProbe(probeInput, context);
       else result = ReplayEnvironment.registeredProbeStatus(cliCommandSchemas["probe.show"].input.parse({ operationId: operands[0] }), context);
       if (!result.ok) return ownerFailure(result.error);

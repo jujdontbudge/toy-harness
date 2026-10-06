@@ -1,0 +1,191 @@
+{
+  "schema": "toy.r0.02.research-route-minimum-plan.v1",
+  "status": "plan_only",
+  "scope": "AT-RESEARCH-REGISTER-3 only. Read-only comparison of its indexed assertion to the existing public ModelRoute.delegationReceipt diagnostics and AT-obligations-75 CLI route. No source, contract, registry, planning, runtime, or stack changes were made.",
+  "sourceBindings": [
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/RESEARCH-REGISTER.md",
+      "sha256": "e89b3336e0c2458ac204fb0927da30f4541abfab48a9d55735c4655719a3f10d",
+      "lines": [
+        25,
+        457
+      ],
+      "meaning": "The research route must be Sol/medium/Fast with the pinned skill; exact assertion rejects absent or mismatched route/skill and keeps research unaccepted."
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/obligations.md",
+      "sha256": "5379f943578b4248dc21379a029acead930047c091316deb796fae0d49f4eb0f",
+      "lines": [
+        2676
+      ],
+      "meaning": "Existing AT-obligations-75 CLI assertion exercises the protected delegation adapter, wrong/missing route, and separate ordinary Luna route."
+    },
+    {
+      "path": "tests/acceptance-index.json",
+      "sha256": "c9b645eab7f55b2ebf35d7db769a534a4837de23ad3dc3d913f3189e781d44fa",
+      "references": {
+        "AT-RESEARCH-REGISTER-3": {
+          "sourceAssertionHash": "66b6a7b0728b7600898836f7310b83a2fe570cccc124c935bc02e2ac0b6a92aa",
+          "sourceDigest": "e89b3336e0c2458ac204fb0927da30f4541abfab48a9d55735c4655719a3f10d",
+          "rung": "CLI"
+        },
+        "AT-obligations-75": {
+          "sourceAssertionHash": "a24197c805faf3897e4c115c9fac9b877d63134ee4cdfe5b15a0312c63541840",
+          "rung": "CLI"
+        }
+      }
+    },
+    {
+      "path": "tests/registry.yaml",
+      "sha256": "96a0309ed6cc73481e6b99ec63e7c3efd34edf0c52b632b116bcf251a43dbbc0",
+      "lines": [
+        1047,
+        1155
+      ],
+      "meaning": "Contains the AT-obligations-75 nine-case CLI manifest; no authored AT-RESEARCH-REGISTER-3 manifest exists."
+    },
+    {
+      "path": "packages/contracts/src/generated-probe-registry.ts",
+      "sha256": "4d5eaff4f475da31e1f3fd986f8996dd06e32ccc57887351fc8bb0434d6b2d75",
+      "lines": [
+        2594,
+        3731
+      ],
+      "meaning": "AT-RESEARCH-REGISTER-3 already exists in the generated source-indexed CLI ID inventory, while only AT-obligations-75 has the generated delegation.route-skill manifest."
+    },
+    {
+      "path": "packages/contracts/src/model-route.ts",
+      "sha256": "e95a854b188b67d37aa4b518626428e4de7eb28e1fcb35edc74bdc8a4235dd0d",
+      "lines": [
+        140,
+        171
+      ],
+      "meaning": "Canonical route receipt schemas bind the loaded skill's commit and equal content/loaded digests; delegation receipts carry acceptanceComplete:false and nativeExecutionVerified:false."
+    },
+    {
+      "path": "packages/hermes/src/model-route.ts",
+      "sha256": "75bad754c537c53a920762b259d30ee6f89149a8d60d40678214cf5e2dec3962",
+      "lines": [
+        61,
+        108
+      ],
+      "meaning": "Public ModelRoute.delegationReceipt reads and hashes pinned skill resources, builds the bounded export, maps CLI fast to the receipt's priority tier, and refuses route mismatches before accepted completion."
+    },
+    {
+      "path": "packages/hermes/src/model-route-probe.ts",
+      "sha256": "40981cb56ab8a80e0b8bfc0d3b01b1278288a44bc6804f806d5ce535809271ed",
+      "lines": [
+        68,
+        74,
+        123,
+        172
+      ],
+      "meaning": "The public probe has the nine existing cases and generic manifest lookup, but the unfiltered delegation branch currently accepts only AT-obligations-75."
+    },
+    {
+      "path": "cli/src/main.ts",
+      "sha256": "f886b348ab577844945a6b0a2e10d94377861c9ad52b7d548925ab7bb4290b9f",
+      "lines": [
+        235,
+        244
+      ],
+      "meaning": "CLI dispatch sends only unfiltered AT-obligations-75 to ModelRouteProbe; other registered probes use the generic replay route."
+    },
+    {
+      "path": "behavior/research-skill.json",
+      "sha256": "676190b93eccbee205a5ec7e2609b2f4100a27bac73f808704095fa0229d2f72",
+      "meaning": "Current canonical research-skill pin consumed by the existing public receipt path."
+    },
+    {
+      "path": "build/evidence/R0.10/delegation-cli/AT-obligations-75-run.json",
+      "sha256": "d0ac190bee30ef5c4e000342cf22c5bb480135755b25ed0a8932e97c996a9379",
+      "meaning": "Unfiltered public CLI run result for the existing AT-obligations-75 scenario."
+    },
+    {
+      "path": "build/evidence/R0.10/delegation-cli/AT-obligations-75-show.json",
+      "sha256": "008f0bcda0a9f8718c5f1ac0ca5fd153f55349bb2081e92c55c89bad5c1b138a",
+      "meaning": "Persisted probe.show readback containing all nine diagnostic cases."
+    },
+    {
+      "path": "build/evidence/R0.10/delegation-verification.json",
+      "sha256": "e7fcfc2d7749d10c0e5247b4720fdb8591598eecca29756d3c6173eb58379531",
+      "meaning": "Verification records acceptanceComplete:false, nativeExecutionVerified:false, zero live provider sends, and defers authenticated actual research and complete AT assertions."
+    }
+  ],
+  "exactAssertion": {
+    "id": "AT-RESEARCH-REGISTER-3",
+    "release": "R0",
+    "rung": "CLI",
+    "hash": "66b6a7b0728b7600898836f7310b83a2fe570cccc124c935bc02e2ac0b6a92aa",
+    "requiredEvidence": "stack, device/account, probe:AT-RESEARCH-REGISTER-3",
+    "oracle": "When requested/observed Sol-medium-Fast route or pinned loaded-skill receipt is absent/different, report acceptance must remain false, research must stay open, and Luna/paid fallback must not satisfy the research requirement."
+  },
+  "existingNineDiagnostics": {
+    "recordedProbeId": "AT-obligations-75",
+    "result": "9/9 diagnostics PASS in the saved unfiltered CLI run/show.",
+    "caseIds": [
+      "research-route-observed",
+      "research-route-missing",
+      "research-route-luna",
+      "research-route-wrong-effort",
+      "research-route-wrong-tier",
+      "research-skill-missing",
+      "research-skill-wrong-bytes",
+      "ordinary-implementation-luna",
+      "module-local-override-refused"
+    ],
+    "coverageAssessment": "Semantically covers the requested negative receipt cases: absent route, observed Luna, wrong effort/tier, absent/wrong skill bytes, and no module-local override. It keeps ordinary implementation on Luna. The serialized research receipts set acceptanceComplete:false; requested selections set paidFallbackPermitted:false and receipts set paidFallbackAttempted:false. The successful fixture maps external service_tier=fast to internal serviceTier=priority and has the pinned loaded digest.",
+    "cannotCountAsAT3": "The run is bound to AT-obligations-75, not AT-RESEARCH-REGISTER-3. Current AT3 has no authored manifest and neither CLI dispatch nor ModelRouteProbe's unfiltered branch recognizes its ID. The existing nine PASS entries therefore do not establish the exact registered AT3 assertion.",
+    "oracleLimit": "The fixture external CLI is fake and liveProviderSends is 0. All receipts intentionally set acceptanceComplete:false and nativeExecutionVerified:false; probe.show reads diagnostic receipts but does not inspect a persisted research report or durable obligation state. The current evidence supports refusal/no-acceptance at the receipt boundary only, not authenticated/native execution or a whole AT verdict. UID 501 in diagnostic output is the caller process observation and is not evidence of service identity."
+  },
+  "smallestRemainingChange": {
+    "writtenInterfaceChange": "None. Reuse ModelRoute.delegationReceipt and the existing nine cases; do not add a second receipt type, protocol, provider, or internal test.",
+    "files": [
+      {
+        "path": "tests/registry.yaml",
+        "change": "Add an AT-RESEARCH-REGISTER-3 CLI manifest with its indexed assertion hash, R0 release, Hermes owner, delegation.route-skill scenario, and the existing nine mandatory phases plus their existing fixed fault controls and observations."
+      },
+      {
+        "path": "cli/src/main.ts",
+        "change": "Route an unfiltered AT-RESEARCH-REGISTER-3 probe.run to ModelRouteProbe alongside AT-obligations-75."
+      },
+      {
+        "path": "packages/hermes/src/model-route-probe.ts",
+        "change": "Allow AT-RESEARCH-REGISTER-3 in the existing unfiltered delegation branch; retain the same nine case IDs and generic manifest validation."
+      },
+      {
+        "path": "packages/contracts/src/generated-probe-registry.ts",
+        "change": "Regenerate through the existing contracts generator after the authored manifest addition; the ID inventory already contains AT3, and only its missing source-bound manifest should be added."
+      }
+    ],
+    "no_change_needed": [
+      "AT-RESEARCH-REGISTER-3 assertion or source-index ID/hash",
+      "ModelRoute.delegationReceipt interface and contracts",
+      "the nine diagnostic case implementations",
+      "ordinary implementation Luna route"
+    ]
+  },
+  "largestInterfaceValidation": {
+    "assignedRung": "CLI",
+    "sequence": [
+      "Start the admitted disposable R0 test stack after implementation.",
+      "Run the unfiltered public probe: `toy --env test --stack <stack-uuid> probe run AT-RESEARCH-REGISTER-3 --request-id <uuid> --json`.",
+      "Read the returned operation with `toy --env test --stack <stack-uuid> probe show <operation-id> --json`."
+    ],
+    "expectedDiagnosticOracle": "The exact probe ID is AT-RESEARCH-REGISTER-3; all nine fixed cases are present once and pass; mismatched/missing route or skill receipts are refused; Luna remains ordinary-implementation-only; research receipt acceptance stays false and no paid fallback is permitted or attempted.",
+    "notRun": true
+  },
+  "stillOpen": [
+    "No authenticated native Codex execution, service identity, credential isolation, or global admission is established.",
+    "No live provider send or account/device evidence is present in the saved diagnostics.",
+    "The durable report/research-obligation state is not independently read by this route; remain explicit if the whole-AT oracle requires more than the receipt's acceptanceComplete:false field.",
+    "Do not claim AT-RESEARCH-REGISTER-3 or whole R0 acceptance complete from the AT-obligations-75 diagnostic result."
+  ],
+  "parentReview": {
+    "recordedAt": "2026-10-06T21:46:10.490155+00:00",
+    "thirdFixtureDispatchGuardRequired": true,
+    "routing": "All three existing dispatch checks consume the same generated owner/scenario manifest; no per-AT allowlist addition.",
+    "wholeReportObligationReadbackPending": true,
+    "noNewInterfaceOrFixtureCases": true
+  }
+}

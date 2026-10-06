@@ -1,0 +1,1382 @@
+{
+  "recordedAt": "2026-10-06T21:47:29.574176+00:00",
+  "card": "R0.02",
+  "rung": "CLI",
+  "stackId": "9e6e59fc-034f-4bdf-9896-adbb33420dd4",
+  "records": [
+    {
+      "AT": "AT-RESEARCH-REGISTER-3",
+      "unfiltered": true,
+      "operationId": "96c0d6a9-ef42-4c94-b041-7ef6a8640f04",
+      "runExit": 0,
+      "showExit": 0,
+      "runShowExact": true,
+      "wholeState": "NOT_IMPLEMENTED",
+      "acceptanceComplete": false,
+      "maximumPrerequisiteLength": 1857,
+      "runtimeBinding": {
+        "releaseDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "controlDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "schemaDigest": "f509080a6f77a7ccac9701af9c4dd5ef1e951f8aaa469907ba833b35b7abdd88",
+        "fixtureDigest": "7f0076c891a2a169122659b8990b118d73fb1b8dbe237f31307dc35656907cb7"
+      },
+      "caseManifestDigest": "d5c4160541338a7eac60465e22c3acfe7eaf067300e74f6eb1dfc329bd9a5f63",
+      "sourceRegistration": {
+        "id": "AT-RESEARCH-REGISTER-3",
+        "rung": "CLI",
+        "sourceAssertionHash": "66b6a7b0728b7600898836f7310b83a2fe570cccc124c935bc02e2ac0b6a92aa",
+        "commandId": "probe.run",
+        "scenarioId": "delegation.route-skill",
+        "owner": "hermes",
+        "firstRelease": "R0",
+        "kind": "behavioral",
+        "mandatoryCases": [
+          {
+            "id": "research-route-observed",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "research-route-observed"
+          },
+          {
+            "id": "research-route-missing",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "research-route-missing"
+          },
+          {
+            "id": "research-route-luna",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "research-route-luna"
+          },
+          {
+            "id": "research-route-wrong-effort",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "research-route-wrong-effort"
+          },
+          {
+            "id": "research-route-wrong-tier",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "research-route-wrong-tier"
+          },
+          {
+            "id": "research-skill-missing",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "research-skill-missing"
+          },
+          {
+            "id": "research-skill-wrong-bytes",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "research-skill-wrong-bytes"
+          },
+          {
+            "id": "ordinary-implementation-luna",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "ordinary-implementation-luna"
+          },
+          {
+            "id": "module-local-override-refused",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "module-local-override-refused"
+          }
+        ],
+        "trigger": "Reject absent or mismatched research route and loaded skill through canonical receipts; preserve ordinary Luna and no paid fallback while report/obligation/native gates remain incomplete.",
+        "faultControls": [
+          {
+            "id": "external-cli-route-observations",
+            "seam": "provider",
+            "affectedPhases": [
+              "research-route-missing",
+              "research-route-luna",
+              "research-route-wrong-effort",
+              "research-route-wrong-tier"
+            ]
+          },
+          {
+            "id": "published-research-artifact-faults",
+            "seam": "os",
+            "affectedPhases": [
+              "research-skill-missing",
+              "research-skill-wrong-bytes"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "native-role-request-and-receipt",
+            "independentReader": "Fixed external Codex CLI: argument/task/skill readback and actual emitted settings",
+            "caseIds": [
+              "research-route-observed",
+              "research-route-missing",
+              "research-route-luna",
+              "research-route-wrong-effort",
+              "research-route-wrong-tier",
+              "research-skill-missing",
+              "research-skill-wrong-bytes",
+              "ordinary-implementation-luna",
+              "module-local-override-refused"
+            ]
+          },
+          {
+            "id": "persisted-cli-evidence",
+            "independentReader": "toy probe.show: source-bound exact route/skill receipt and no-send refusal readback",
+            "caseIds": [
+              "research-route-observed",
+              "research-route-missing",
+              "research-route-luna",
+              "research-route-wrong-effort",
+              "research-route-wrong-tier",
+              "research-skill-missing",
+              "research-skill-wrong-bytes",
+              "ordinary-implementation-luna",
+              "module-local-override-refused"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot inspect administrative pre-build delegation settings and published skill bytes. CLI exercises the public owner with external CLI/OS fakes and real isolated exports."
+      },
+      "checks": 9,
+      "proofs": [
+        {
+          "caseId": "research-route-observed",
+          "actualUid": 501,
+          "externalCliSends": 1,
+          "exportReadback": true,
+          "nativeArgumentsMatched": true,
+          "receipt": {
+            "requestId": "d76af585-819d-467e-a418-38043ce329eb",
+            "purpose": "research",
+            "executionBackend": "codex_exec",
+            "state": "observed",
+            "reasonCode": "DELEGATION_ROUTE_OBSERVED",
+            "skill": {
+              "repository": "https://github.com/mattpocock/skills",
+              "sourcePath": "skills/engineering/research/SKILL.md",
+              "sourceCommit": "6fd947921b935b7e1e69293a200400f0fdd5c15f",
+              "contentDigest": "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4",
+              "loadedDigest": "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4",
+              "semanticVersion": null,
+              "resources": [
+                {
+                  "path": "LICENSE",
+                  "digest": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5"
+                },
+                {
+                  "path": "agents/openai.yaml",
+                  "digest": "9b4c470d63221c1f68f22df70b83e2f12401b317babe0d1b7b5f24a974474d0d"
+                }
+              ]
+            },
+            "invocation": {
+              "requested": {
+                "role": "research",
+                "arm": "original",
+                "provider": "siwc_responses",
+                "settings": {
+                  "model": "gpt-6.1-sol",
+                  "effort": "medium",
+                  "serviceTier": "priority"
+                },
+                "policyDigest": "8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67",
+                "localOutputReservationTokens": 4096,
+                "outputLimitKind": "estimate",
+                "providerOutputCap": null,
+                "paidFallbackPermitted": false
+              },
+              "observed": {
+                "model": "gpt-6.1-sol",
+                "effort": "medium",
+                "serviceTier": "priority"
+              },
+              "terminal": "completed",
+              "completion": "complete",
+              "usage": {
+                "inputTokens": 17,
+                "outputTokens": 8,
+                "reasoningTokens": 3
+              },
+              "usageState": "known",
+              "reservationTokens": 0,
+              "outputStarted": true,
+              "reasonCode": null,
+              "paidFallbackAttempted": false
+            },
+            "taskDigest": "896ef395c3fe8249bcfae1f9f117fa1c42f7fef1d6fef2cac709cc7cb75dbce4",
+            "requestDigest": "3581d39b26e6d447a7fa6492b5d8f75c91abbcc4e570ba047c7af6de45af8c6c",
+            "nativeExecutionVerified": false,
+            "acceptanceComplete": false
+          },
+          "errorCode": null,
+          "fakeExternalCli": true,
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "research-route-missing",
+          "actualUid": 501,
+          "externalCliSends": 1,
+          "exportReadback": true,
+          "nativeArgumentsMatched": true,
+          "receipt": {
+            "requestId": "441f4b14-ebbf-4b13-b646-fc092c937339",
+            "purpose": "research",
+            "executionBackend": "codex_exec",
+            "state": "refused",
+            "reasonCode": "DELEGATION_ROUTE_REFUSED",
+            "skill": {
+              "repository": "https://github.com/mattpocock/skills",
+              "sourcePath": "skills/engineering/research/SKILL.md",
+              "sourceCommit": "6fd947921b935b7e1e69293a200400f0fdd5c15f",
+              "contentDigest": "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4",
+              "loadedDigest": "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4",
+              "semanticVersion": null,
+              "resources": [
+                {
+                  "path": "LICENSE",
+                  "digest": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5"
+                },
+                {
+                  "path": "agents/openai.yaml",
+                  "digest": "9b4c470d63221c1f68f22df70b83e2f12401b317babe0d1b7b5f24a974474d0d"
+                }
+              ]
+            },
+            "invocation": {
+              "requested": {
+                "role": "research",
+                "arm": "original",
+                "provider": "siwc_responses",
+                "settings": {
+                  "model": "gpt-6.1-sol",
+                  "effort": "medium",
+                  "serviceTier": "priority"
+                },
+                "policyDigest": "8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67",
+                "localOutputReservationTokens": 4096,
+                "outputLimitKind": "estimate",
+                "providerOutputCap": null,
+                "paidFallbackPermitted": false
+              },
+              "observed": null,
+              "terminal": "failed",
+              "completion": "pending",
+              "usage": null,
+              "usageState": "uncertain",
+              "reservationTokens": 4096,
+              "outputStarted": false,
+              "reasonCode": "route_unobserved",
+              "paidFallbackAttempted": false
+            },
+            "taskDigest": "6bf8979437fdacd5b988693af87f78487e7e86c7025797271e96181e08294d96",
+            "requestDigest": "5e1ece2820bd34fb60b0c87737d82e3a3121060cfdb30a04d5fcaf5cf72e9094",
+            "nativeExecutionVerified": false,
+            "acceptanceComplete": false
+          },
+          "errorCode": null,
+          "fakeExternalCli": true,
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "research-route-luna",
+          "actualUid": 501,
+          "externalCliSends": 1,
+          "exportReadback": true,
+          "nativeArgumentsMatched": true,
+          "receipt": {
+            "requestId": "df382128-26ae-4c36-ac90-adad848ef932",
+            "purpose": "research",
+            "executionBackend": "codex_exec",
+            "state": "refused",
+            "reasonCode": "DELEGATION_ROUTE_REFUSED",
+            "skill": {
+              "repository": "https://github.com/mattpocock/skills",
+              "sourcePath": "skills/engineering/research/SKILL.md",
+              "sourceCommit": "6fd947921b935b7e1e69293a200400f0fdd5c15f",
+              "contentDigest": "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4",
+              "loadedDigest": "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4",
+              "semanticVersion": null,
+              "resources": [
+                {
+                  "path": "LICENSE",
+                  "digest": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5"
+                },
+                {
+                  "path": "agents/openai.yaml",
+                  "digest": "9b4c470d63221c1f68f22df70b83e2f12401b317babe0d1b7b5f24a974474d0d"
+                }
+              ]
+            },
+            "invocation": {
+              "requested": {
+                "role": "research",
+                "arm": "original",
+                "provider": "siwc_responses",
+                "settings": {
+                  "model": "gpt-6.1-sol",
+                  "effort": "medium",
+                  "serviceTier": "priority"
+                },
+                "policyDigest": "8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67",
+                "localOutputReservationTokens": 4096,
+                "outputLimitKind": "estimate",
+                "providerOutputCap": null,
+                "paidFallbackPermitted": false
+              },
+              "observed": {
+                "model": "gpt-6-luna",
+                "effort": "medium",
+                "serviceTier": "priority"
+              },
+              "terminal": "failed",
+              "completion": "pending",
+              "usage": null,
+              "usageState": "uncertain",
+              "reservationTokens": 4096,
+              "outputStarted": false,
+              "reasonCode": "route_mismatch",
+              "paidFallbackAttempted": false
+            },
+            "taskDigest": "fac8eaf33f718aed88b8ccdd6418b53ff313e697e5f1a04911798c750f7c903b",
+            "requestDigest": "0d93db34c1f5220b0128a116a2f3480d27e5114d09a93043b21df40812093cbc",
+            "nativeExecutionVerified": false,
+            "acceptanceComplete": false
+          },
+          "errorCode": null,
+          "fakeExternalCli": true,
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "research-route-wrong-effort",
+          "actualUid": 501,
+          "externalCliSends": 1,
+          "exportReadback": true,
+          "nativeArgumentsMatched": true,
+          "receipt": {
+            "requestId": "0c9498b1-26ea-4032-a1bd-e831175fcd3d",
+            "purpose": "research",
+            "executionBackend": "codex_exec",
+            "state": "refused",
+            "reasonCode": "DELEGATION_ROUTE_REFUSED",
+            "skill": {
+              "repository": "https://github.com/mattpocock/skills",
+              "sourcePath": "skills/engineering/research/SKILL.md",
+              "sourceCommit": "6fd947921b935b7e1e69293a200400f0fdd5c15f",
+              "contentDigest": "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4",
+              "loadedDigest": "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4",
+              "semanticVersion": null,
+              "resources": [
+                {
+                  "path": "LICENSE",
+                  "digest": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5"
+                },
+                {
+                  "path": "agents/openai.yaml",
+                  "digest": "9b4c470d63221c1f68f22df70b83e2f12401b317babe0d1b7b5f24a974474d0d"
+                }
+              ]
+            },
+            "invocation": {
+              "requested": {
+                "role": "research",
+                "arm": "original",
+                "provider": "siwc_responses",
+                "settings": {
+                  "model": "gpt-6.1-sol",
+                  "effort": "medium",
+                  "serviceTier": "priority"
+                },
+                "policyDigest": "8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67",
+                "localOutputReservationTokens": 4096,
+                "outputLimitKind": "estimate",
+                "providerOutputCap": null,
+                "paidFallbackPermitted": false
+              },
+              "observed": {
+                "model": "gpt-6.1-sol",
+                "effort": "max",
+                "serviceTier": "priority"
+              },
+              "terminal": "failed",
+              "completion": "pending",
+              "usage": null,
+              "usageState": "uncertain",
+              "reservationTokens": 4096,
+              "outputStarted": false,
+              "reasonCode": "route_mismatch",
+              "paidFallbackAttempted": false
+            },
+            "taskDigest": "197fdde3245c3b6758496acc33ed336c35aa9c2be01cabede294a8a8a4136734",
+            "requestDigest": "fffb6d388a76bc683d0812adccb111e28ea17c29540c89868a8a76d1ecd54f2a",
+            "nativeExecutionVerified": false,
+            "acceptanceComplete": false
+          },
+          "errorCode": null,
+          "fakeExternalCli": true,
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "research-route-wrong-tier",
+          "actualUid": 501,
+          "externalCliSends": 1,
+          "exportReadback": true,
+          "nativeArgumentsMatched": true,
+          "receipt": {
+            "requestId": "77d23bf2-167d-48a0-bacd-0bb2f0846495",
+            "purpose": "research",
+            "executionBackend": "codex_exec",
+            "state": "refused",
+            "reasonCode": "DELEGATION_ROUTE_REFUSED",
+            "skill": {
+              "repository": "https://github.com/mattpocock/skills",
+              "sourcePath": "skills/engineering/research/SKILL.md",
+              "sourceCommit": "6fd947921b935b7e1e69293a200400f0fdd5c15f",
+              "contentDigest": "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4",
+              "loadedDigest": "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4",
+              "semanticVersion": null,
+              "resources": [
+                {
+                  "path": "LICENSE",
+                  "digest": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5"
+                },
+                {
+                  "path": "agents/openai.yaml",
+                  "digest": "9b4c470d63221c1f68f22df70b83e2f12401b317babe0d1b7b5f24a974474d0d"
+                }
+              ]
+            },
+            "invocation": {
+              "requested": {
+                "role": "research",
+                "arm": "original",
+                "provider": "siwc_responses",
+                "settings": {
+                  "model": "gpt-6.1-sol",
+                  "effort": "medium",
+                  "serviceTier": "priority"
+                },
+                "policyDigest": "8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67",
+                "localOutputReservationTokens": 4096,
+                "outputLimitKind": "estimate",
+                "providerOutputCap": null,
+                "paidFallbackPermitted": false
+              },
+              "observed": {
+                "model": "gpt-6.1-sol",
+                "effort": "medium",
+                "serviceTier": "default"
+              },
+              "terminal": "failed",
+              "completion": "pending",
+              "usage": null,
+              "usageState": "uncertain",
+              "reservationTokens": 4096,
+              "outputStarted": false,
+              "reasonCode": "route_mismatch",
+              "paidFallbackAttempted": false
+            },
+            "taskDigest": "6057d155812d67f4113a4d892a1a8aef252c771f531f9685b89ef38552f511a7",
+            "requestDigest": "d4cc006b954f3a1f43c30817b70ef7fcc3e6c1bdf00dce8bacbec4b5c0932e69",
+            "nativeExecutionVerified": false,
+            "acceptanceComplete": false
+          },
+          "errorCode": null,
+          "fakeExternalCli": true,
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "research-skill-missing",
+          "actualUid": 501,
+          "externalCliSends": 0,
+          "exportReadback": false,
+          "nativeArgumentsMatched": false,
+          "receipt": {
+            "requestId": "2ce7cb9b-4e17-4211-8665-52103c3426d8",
+            "purpose": "research",
+            "executionBackend": "codex_exec",
+            "state": "refused",
+            "reasonCode": "RESEARCH_SKILL_UNAVAILABLE",
+            "skill": null,
+            "invocation": null,
+            "taskDigest": null,
+            "requestDigest": null,
+            "nativeExecutionVerified": false,
+            "acceptanceComplete": false
+          },
+          "errorCode": null,
+          "fakeExternalCli": true,
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "research-skill-wrong-bytes",
+          "actualUid": 501,
+          "externalCliSends": 0,
+          "exportReadback": false,
+          "nativeArgumentsMatched": false,
+          "receipt": {
+            "requestId": "ec829a75-2746-48e5-b8b2-64dcd54dc182",
+            "purpose": "research",
+            "executionBackend": "codex_exec",
+            "state": "refused",
+            "reasonCode": "RESEARCH_SKILL_MISMATCH",
+            "skill": null,
+            "invocation": null,
+            "taskDigest": null,
+            "requestDigest": null,
+            "nativeExecutionVerified": false,
+            "acceptanceComplete": false
+          },
+          "errorCode": null,
+          "fakeExternalCli": true,
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "ordinary-implementation-luna",
+          "actualUid": 501,
+          "externalCliSends": 1,
+          "exportReadback": true,
+          "nativeArgumentsMatched": true,
+          "receipt": {
+            "requestId": "42fb0745-73b3-4a21-ad69-e90febf1e8bd",
+            "purpose": "implementation",
+            "executionBackend": "codex_exec",
+            "state": "observed",
+            "reasonCode": "DELEGATION_ROUTE_OBSERVED",
+            "skill": null,
+            "invocation": {
+              "requested": {
+                "role": "child",
+                "arm": "original",
+                "provider": "siwc_responses",
+                "settings": {
+                  "model": "gpt-6-luna",
+                  "effort": "max",
+                  "serviceTier": "priority"
+                },
+                "policyDigest": "8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67",
+                "localOutputReservationTokens": 4096,
+                "outputLimitKind": "estimate",
+                "providerOutputCap": null,
+                "paidFallbackPermitted": false
+              },
+              "observed": {
+                "model": "gpt-6-luna",
+                "effort": "max",
+                "serviceTier": "priority"
+              },
+              "terminal": "completed",
+              "completion": "complete",
+              "usage": {
+                "inputTokens": 17,
+                "outputTokens": 8,
+                "reasoningTokens": 3
+              },
+              "usageState": "known",
+              "reservationTokens": 0,
+              "outputStarted": true,
+              "reasonCode": null,
+              "paidFallbackAttempted": false
+            },
+            "taskDigest": "4be3d098665b87cd6f749a79ef0a3d0ea870bd503bc7cc540925772d7fd0173e",
+            "requestDigest": "f98097e43e0711f0a923a301ca8ebf67b616a8ab46713581e4513b1cf0adab95",
+            "nativeExecutionVerified": false,
+            "acceptanceComplete": false
+          },
+          "errorCode": null,
+          "fakeExternalCli": true,
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "module-local-override-refused",
+          "actualUid": 501,
+          "externalCliSends": 0,
+          "exportReadback": false,
+          "nativeArgumentsMatched": false,
+          "receipt": null,
+          "errorCode": "INVALID_INPUT",
+          "fakeExternalCli": true,
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        }
+      ]
+    },
+    {
+      "AT": "AT-obligations-75",
+      "unfiltered": true,
+      "operationId": "0f8a5165-02e9-4d45-b7a7-107b78ffbd4c",
+      "runExit": 0,
+      "showExit": 0,
+      "runShowExact": true,
+      "wholeState": "NOT_IMPLEMENTED",
+      "acceptanceComplete": false,
+      "maximumPrerequisiteLength": 1857,
+      "runtimeBinding": {
+        "releaseDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "controlDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "schemaDigest": "f509080a6f77a7ccac9701af9c4dd5ef1e951f8aaa469907ba833b35b7abdd88",
+        "fixtureDigest": "7f0076c891a2a169122659b8990b118d73fb1b8dbe237f31307dc35656907cb7"
+      },
+      "caseManifestDigest": "b4ba6d9d1a7aabdd10bc4c76d09a38261c5b617d0339d223944844fca0f48027",
+      "sourceRegistration": {
+        "id": "AT-obligations-75",
+        "rung": "CLI",
+        "sourceAssertionHash": "a24197c805faf3897e4c115c9fac9b877d63134ee4cdfe5b15a0312c63541840",
+        "commandId": "probe.run",
+        "scenarioId": "delegation.route-skill",
+        "owner": "hermes",
+        "firstRelease": "R0",
+        "kind": "behavioral",
+        "mandatoryCases": [
+          {
+            "id": "research-route-observed",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "research-route-observed"
+          },
+          {
+            "id": "research-route-missing",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "research-route-missing"
+          },
+          {
+            "id": "research-route-luna",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "research-route-luna"
+          },
+          {
+            "id": "research-route-wrong-effort",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "research-route-wrong-effort"
+          },
+          {
+            "id": "research-route-wrong-tier",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "research-route-wrong-tier"
+          },
+          {
+            "id": "research-skill-missing",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "research-skill-missing"
+          },
+          {
+            "id": "research-skill-wrong-bytes",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "research-skill-wrong-bytes"
+          },
+          {
+            "id": "ordinary-implementation-luna",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "ordinary-implementation-luna"
+          },
+          {
+            "id": "module-local-override-refused",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "module-local-override-refused"
+          }
+        ],
+        "trigger": "Exercise the real route/skill receipt owner with a fixed external Codex CLI and OS artifact faults; verify native argument role binding, actual exported skill/version/hash and observed-route refusal without live model execution.",
+        "faultControls": [
+          {
+            "id": "external-cli-route-observations",
+            "seam": "provider",
+            "affectedPhases": [
+              "research-route-missing",
+              "research-route-luna",
+              "research-route-wrong-effort",
+              "research-route-wrong-tier"
+            ]
+          },
+          {
+            "id": "published-research-artifact-faults",
+            "seam": "os",
+            "affectedPhases": [
+              "research-skill-missing",
+              "research-skill-wrong-bytes"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "native-role-request-and-receipt",
+            "independentReader": "Fixed external Codex CLI: argument/task/skill readback and actual emitted settings",
+            "caseIds": [
+              "research-route-observed",
+              "research-route-missing",
+              "research-route-luna",
+              "research-route-wrong-effort",
+              "research-route-wrong-tier",
+              "research-skill-missing",
+              "research-skill-wrong-bytes",
+              "ordinary-implementation-luna",
+              "module-local-override-refused"
+            ]
+          },
+          {
+            "id": "persisted-cli-evidence",
+            "independentReader": "toy probe.show: source-bound exact route/skill receipt and no-send refusal readback",
+            "caseIds": [
+              "research-route-observed",
+              "research-route-missing",
+              "research-route-luna",
+              "research-route-wrong-effort",
+              "research-route-wrong-tier",
+              "research-skill-missing",
+              "research-skill-wrong-bytes",
+              "ordinary-implementation-luna",
+              "module-local-override-refused"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot inspect administrative pre-build delegation settings and published skill bytes. CLI exercises the public owner with external CLI/OS fakes and real isolated exports."
+      },
+      "checks": 9,
+      "proofs": [
+        {
+          "caseId": "research-route-observed",
+          "actualUid": 501,
+          "externalCliSends": 1,
+          "exportReadback": true,
+          "nativeArgumentsMatched": true,
+          "receipt": {
+            "requestId": "e3bde888-da30-42e6-bea5-832563969523",
+            "purpose": "research",
+            "executionBackend": "codex_exec",
+            "state": "observed",
+            "reasonCode": "DELEGATION_ROUTE_OBSERVED",
+            "skill": {
+              "repository": "https://github.com/mattpocock/skills",
+              "sourcePath": "skills/engineering/research/SKILL.md",
+              "sourceCommit": "6fd947921b935b7e1e69293a200400f0fdd5c15f",
+              "contentDigest": "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4",
+              "loadedDigest": "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4",
+              "semanticVersion": null,
+              "resources": [
+                {
+                  "path": "LICENSE",
+                  "digest": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5"
+                },
+                {
+                  "path": "agents/openai.yaml",
+                  "digest": "9b4c470d63221c1f68f22df70b83e2f12401b317babe0d1b7b5f24a974474d0d"
+                }
+              ]
+            },
+            "invocation": {
+              "requested": {
+                "role": "research",
+                "arm": "original",
+                "provider": "siwc_responses",
+                "settings": {
+                  "model": "gpt-6.1-sol",
+                  "effort": "medium",
+                  "serviceTier": "priority"
+                },
+                "policyDigest": "8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67",
+                "localOutputReservationTokens": 4096,
+                "outputLimitKind": "estimate",
+                "providerOutputCap": null,
+                "paidFallbackPermitted": false
+              },
+              "observed": {
+                "model": "gpt-6.1-sol",
+                "effort": "medium",
+                "serviceTier": "priority"
+              },
+              "terminal": "completed",
+              "completion": "complete",
+              "usage": {
+                "inputTokens": 17,
+                "outputTokens": 8,
+                "reasoningTokens": 3
+              },
+              "usageState": "known",
+              "reservationTokens": 0,
+              "outputStarted": true,
+              "reasonCode": null,
+              "paidFallbackAttempted": false
+            },
+            "taskDigest": "a858982c965f4c5dedc84b4784284c02c7bb00c0a031cc964690b4230179d711",
+            "requestDigest": "fe6c00d59341394a39236d9148fdd080ca7ad916013e1a33451a8f9bd7dd8c76",
+            "nativeExecutionVerified": false,
+            "acceptanceComplete": false
+          },
+          "errorCode": null,
+          "fakeExternalCli": true,
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "research-route-missing",
+          "actualUid": 501,
+          "externalCliSends": 1,
+          "exportReadback": true,
+          "nativeArgumentsMatched": true,
+          "receipt": {
+            "requestId": "88076093-b224-409f-9ae2-3ffcd323b30b",
+            "purpose": "research",
+            "executionBackend": "codex_exec",
+            "state": "refused",
+            "reasonCode": "DELEGATION_ROUTE_REFUSED",
+            "skill": {
+              "repository": "https://github.com/mattpocock/skills",
+              "sourcePath": "skills/engineering/research/SKILL.md",
+              "sourceCommit": "6fd947921b935b7e1e69293a200400f0fdd5c15f",
+              "contentDigest": "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4",
+              "loadedDigest": "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4",
+              "semanticVersion": null,
+              "resources": [
+                {
+                  "path": "LICENSE",
+                  "digest": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5"
+                },
+                {
+                  "path": "agents/openai.yaml",
+                  "digest": "9b4c470d63221c1f68f22df70b83e2f12401b317babe0d1b7b5f24a974474d0d"
+                }
+              ]
+            },
+            "invocation": {
+              "requested": {
+                "role": "research",
+                "arm": "original",
+                "provider": "siwc_responses",
+                "settings": {
+                  "model": "gpt-6.1-sol",
+                  "effort": "medium",
+                  "serviceTier": "priority"
+                },
+                "policyDigest": "8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67",
+                "localOutputReservationTokens": 4096,
+                "outputLimitKind": "estimate",
+                "providerOutputCap": null,
+                "paidFallbackPermitted": false
+              },
+              "observed": null,
+              "terminal": "failed",
+              "completion": "pending",
+              "usage": null,
+              "usageState": "uncertain",
+              "reservationTokens": 4096,
+              "outputStarted": false,
+              "reasonCode": "route_unobserved",
+              "paidFallbackAttempted": false
+            },
+            "taskDigest": "ee7062edff9a8d499987fafe1a91f2476086b9a22e3d6cc0a7a3635bbd10a666",
+            "requestDigest": "2d7e3f4955ea6c97904de246294edb97a935f3ae0c377eaf51270dfe69605f31",
+            "nativeExecutionVerified": false,
+            "acceptanceComplete": false
+          },
+          "errorCode": null,
+          "fakeExternalCli": true,
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "research-route-luna",
+          "actualUid": 501,
+          "externalCliSends": 1,
+          "exportReadback": true,
+          "nativeArgumentsMatched": true,
+          "receipt": {
+            "requestId": "020e0911-097f-415e-bf65-a9bd3df34925",
+            "purpose": "research",
+            "executionBackend": "codex_exec",
+            "state": "refused",
+            "reasonCode": "DELEGATION_ROUTE_REFUSED",
+            "skill": {
+              "repository": "https://github.com/mattpocock/skills",
+              "sourcePath": "skills/engineering/research/SKILL.md",
+              "sourceCommit": "6fd947921b935b7e1e69293a200400f0fdd5c15f",
+              "contentDigest": "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4",
+              "loadedDigest": "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4",
+              "semanticVersion": null,
+              "resources": [
+                {
+                  "path": "LICENSE",
+                  "digest": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5"
+                },
+                {
+                  "path": "agents/openai.yaml",
+                  "digest": "9b4c470d63221c1f68f22df70b83e2f12401b317babe0d1b7b5f24a974474d0d"
+                }
+              ]
+            },
+            "invocation": {
+              "requested": {
+                "role": "research",
+                "arm": "original",
+                "provider": "siwc_responses",
+                "settings": {
+                  "model": "gpt-6.1-sol",
+                  "effort": "medium",
+                  "serviceTier": "priority"
+                },
+                "policyDigest": "8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67",
+                "localOutputReservationTokens": 4096,
+                "outputLimitKind": "estimate",
+                "providerOutputCap": null,
+                "paidFallbackPermitted": false
+              },
+              "observed": {
+                "model": "gpt-6-luna",
+                "effort": "medium",
+                "serviceTier": "priority"
+              },
+              "terminal": "failed",
+              "completion": "pending",
+              "usage": null,
+              "usageState": "uncertain",
+              "reservationTokens": 4096,
+              "outputStarted": false,
+              "reasonCode": "route_mismatch",
+              "paidFallbackAttempted": false
+            },
+            "taskDigest": "8cc5df4bca496ae23404a30c3df17764a568da8d1309095165e4942b0837fbd3",
+            "requestDigest": "f808dac2fab9e6a8226109962bf03c4e72bd7b93ccbd0786bb3e770c5d4692d5",
+            "nativeExecutionVerified": false,
+            "acceptanceComplete": false
+          },
+          "errorCode": null,
+          "fakeExternalCli": true,
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "research-route-wrong-effort",
+          "actualUid": 501,
+          "externalCliSends": 1,
+          "exportReadback": true,
+          "nativeArgumentsMatched": true,
+          "receipt": {
+            "requestId": "9a73e83f-33e7-47c4-af53-dbd478f9a4dd",
+            "purpose": "research",
+            "executionBackend": "codex_exec",
+            "state": "refused",
+            "reasonCode": "DELEGATION_ROUTE_REFUSED",
+            "skill": {
+              "repository": "https://github.com/mattpocock/skills",
+              "sourcePath": "skills/engineering/research/SKILL.md",
+              "sourceCommit": "6fd947921b935b7e1e69293a200400f0fdd5c15f",
+              "contentDigest": "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4",
+              "loadedDigest": "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4",
+              "semanticVersion": null,
+              "resources": [
+                {
+                  "path": "LICENSE",
+                  "digest": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5"
+                },
+                {
+                  "path": "agents/openai.yaml",
+                  "digest": "9b4c470d63221c1f68f22df70b83e2f12401b317babe0d1b7b5f24a974474d0d"
+                }
+              ]
+            },
+            "invocation": {
+              "requested": {
+                "role": "research",
+                "arm": "original",
+                "provider": "siwc_responses",
+                "settings": {
+                  "model": "gpt-6.1-sol",
+                  "effort": "medium",
+                  "serviceTier": "priority"
+                },
+                "policyDigest": "8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67",
+                "localOutputReservationTokens": 4096,
+                "outputLimitKind": "estimate",
+                "providerOutputCap": null,
+                "paidFallbackPermitted": false
+              },
+              "observed": {
+                "model": "gpt-6.1-sol",
+                "effort": "max",
+                "serviceTier": "priority"
+              },
+              "terminal": "failed",
+              "completion": "pending",
+              "usage": null,
+              "usageState": "uncertain",
+              "reservationTokens": 4096,
+              "outputStarted": false,
+              "reasonCode": "route_mismatch",
+              "paidFallbackAttempted": false
+            },
+            "taskDigest": "7e55734cba302596c77c6e81e213671f72068d0a448751ba545148284345201d",
+            "requestDigest": "5392de61bbc00b6c5a673ab9af3ebc46e83045f34854ba7beae964346f84313a",
+            "nativeExecutionVerified": false,
+            "acceptanceComplete": false
+          },
+          "errorCode": null,
+          "fakeExternalCli": true,
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "research-route-wrong-tier",
+          "actualUid": 501,
+          "externalCliSends": 1,
+          "exportReadback": true,
+          "nativeArgumentsMatched": true,
+          "receipt": {
+            "requestId": "2f4b1848-d459-4930-9750-396eb646fc61",
+            "purpose": "research",
+            "executionBackend": "codex_exec",
+            "state": "refused",
+            "reasonCode": "DELEGATION_ROUTE_REFUSED",
+            "skill": {
+              "repository": "https://github.com/mattpocock/skills",
+              "sourcePath": "skills/engineering/research/SKILL.md",
+              "sourceCommit": "6fd947921b935b7e1e69293a200400f0fdd5c15f",
+              "contentDigest": "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4",
+              "loadedDigest": "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4",
+              "semanticVersion": null,
+              "resources": [
+                {
+                  "path": "LICENSE",
+                  "digest": "0e7ac423bf2c6e223b7c5b156f8cf72da49d748e56a1641402c31f22ad07dbb5"
+                },
+                {
+                  "path": "agents/openai.yaml",
+                  "digest": "9b4c470d63221c1f68f22df70b83e2f12401b317babe0d1b7b5f24a974474d0d"
+                }
+              ]
+            },
+            "invocation": {
+              "requested": {
+                "role": "research",
+                "arm": "original",
+                "provider": "siwc_responses",
+                "settings": {
+                  "model": "gpt-6.1-sol",
+                  "effort": "medium",
+                  "serviceTier": "priority"
+                },
+                "policyDigest": "8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67",
+                "localOutputReservationTokens": 4096,
+                "outputLimitKind": "estimate",
+                "providerOutputCap": null,
+                "paidFallbackPermitted": false
+              },
+              "observed": {
+                "model": "gpt-6.1-sol",
+                "effort": "medium",
+                "serviceTier": "default"
+              },
+              "terminal": "failed",
+              "completion": "pending",
+              "usage": null,
+              "usageState": "uncertain",
+              "reservationTokens": 4096,
+              "outputStarted": false,
+              "reasonCode": "route_mismatch",
+              "paidFallbackAttempted": false
+            },
+            "taskDigest": "cc5d1af10a4b481c8abbb0db4f5a29345056679e6ec9d8eb746eb2788128f2c7",
+            "requestDigest": "9dc57d428d60ec63df05d7d9cbac397971f2d2572d77e752e3eaab1c3975c197",
+            "nativeExecutionVerified": false,
+            "acceptanceComplete": false
+          },
+          "errorCode": null,
+          "fakeExternalCli": true,
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "research-skill-missing",
+          "actualUid": 501,
+          "externalCliSends": 0,
+          "exportReadback": false,
+          "nativeArgumentsMatched": false,
+          "receipt": {
+            "requestId": "d6163155-8875-46b0-bc26-86b7b00cac51",
+            "purpose": "research",
+            "executionBackend": "codex_exec",
+            "state": "refused",
+            "reasonCode": "RESEARCH_SKILL_UNAVAILABLE",
+            "skill": null,
+            "invocation": null,
+            "taskDigest": null,
+            "requestDigest": null,
+            "nativeExecutionVerified": false,
+            "acceptanceComplete": false
+          },
+          "errorCode": null,
+          "fakeExternalCli": true,
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "research-skill-wrong-bytes",
+          "actualUid": 501,
+          "externalCliSends": 0,
+          "exportReadback": false,
+          "nativeArgumentsMatched": false,
+          "receipt": {
+            "requestId": "49d21431-adc0-4ad9-b2e8-574783a80a17",
+            "purpose": "research",
+            "executionBackend": "codex_exec",
+            "state": "refused",
+            "reasonCode": "RESEARCH_SKILL_MISMATCH",
+            "skill": null,
+            "invocation": null,
+            "taskDigest": null,
+            "requestDigest": null,
+            "nativeExecutionVerified": false,
+            "acceptanceComplete": false
+          },
+          "errorCode": null,
+          "fakeExternalCli": true,
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "ordinary-implementation-luna",
+          "actualUid": 501,
+          "externalCliSends": 1,
+          "exportReadback": true,
+          "nativeArgumentsMatched": true,
+          "receipt": {
+            "requestId": "856f364b-e9e7-4206-ae7d-ddcfb2dce9ed",
+            "purpose": "implementation",
+            "executionBackend": "codex_exec",
+            "state": "observed",
+            "reasonCode": "DELEGATION_ROUTE_OBSERVED",
+            "skill": null,
+            "invocation": {
+              "requested": {
+                "role": "child",
+                "arm": "original",
+                "provider": "siwc_responses",
+                "settings": {
+                  "model": "gpt-6-luna",
+                  "effort": "max",
+                  "serviceTier": "priority"
+                },
+                "policyDigest": "8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67",
+                "localOutputReservationTokens": 4096,
+                "outputLimitKind": "estimate",
+                "providerOutputCap": null,
+                "paidFallbackPermitted": false
+              },
+              "observed": {
+                "model": "gpt-6-luna",
+                "effort": "max",
+                "serviceTier": "priority"
+              },
+              "terminal": "completed",
+              "completion": "complete",
+              "usage": {
+                "inputTokens": 17,
+                "outputTokens": 8,
+                "reasoningTokens": 3
+              },
+              "usageState": "known",
+              "reservationTokens": 0,
+              "outputStarted": true,
+              "reasonCode": null,
+              "paidFallbackAttempted": false
+            },
+            "taskDigest": "e0de8e5e18266ba07da02ce19e97004bb8d74d2087c6b67944bec9e75ec4094d",
+            "requestDigest": "38f7f4c92575e0da6efe80dd20ecce72f06c99a23b009915da1429ff8afc6cec",
+            "nativeExecutionVerified": false,
+            "acceptanceComplete": false
+          },
+          "errorCode": null,
+          "fakeExternalCli": true,
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "module-local-override-refused",
+          "actualUid": 501,
+          "externalCliSends": 0,
+          "exportReadback": false,
+          "nativeArgumentsMatched": false,
+          "receipt": null,
+          "errorCode": "INVALID_INPUT",
+          "fakeExternalCli": true,
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        }
+      ]
+    }
+  ],
+  "stackDown": {
+    "schemaVersion": "toy.cli.v1",
+    "commandId": "stack.down",
+    "invocationId": "c6c71c1a-5067-4a9f-91ed-9fe233166276",
+    "generatedAt": "2026-10-06T21:47:29.565Z",
+    "cliVersion": "1.0.0",
+    "contractsVersion": "1.0.0",
+    "schemaDigest": "f509080a6f77a7ccac9701af9c4dd5ef1e951f8aaa469907ba833b35b7abdd88",
+    "environment": {
+      "kind": "test",
+      "instanceId": null,
+      "stackId": "9e6e59fc-034f-4bdf-9896-adbb33420dd4"
+    },
+    "meta": {
+      "exitCode": 0,
+      "releaseDigest": null,
+      "controlDigest": null,
+      "evaluatedAt": null,
+      "operationId": "43270d84-1481-4bb5-a28e-dc78114d7fdc",
+      "effectState": "confirmed",
+      "recordRefs": [],
+      "evidence": []
+    },
+    "ok": true,
+    "data": {
+      "operation": {
+        "operationId": "43270d84-1481-4bb5-a28e-dc78114d7fdc",
+        "state": "succeeded",
+        "acceptedAt": "2026-10-06T21:47:29.564Z"
+      },
+      "requestId": "23664795-8630-4213-8d4a-75b6fe615519",
+      "stackId": "9e6e59fc-034f-4bdf-9896-adbb33420dd4",
+      "result": {
+        "stackId": "9e6e59fc-034f-4bdf-9896-adbb33420dd4",
+        "release": "R0",
+        "manifestDigest": "7f0076c891a2a169122659b8990b118d73fb1b8dbe237f31307dc35656907cb7",
+        "clock": "fake",
+        "model": "fake",
+        "ready": false,
+        "components": [
+          {
+            "id": "bootstrap.resource-admission",
+            "owner": "ops",
+            "state": "PASS",
+            "checkedAt": "2026-10-06T21:47:28.626Z",
+            "reasonCode": "AVAILABLE_MEMORY_AND_OBSERVED_PRESSURE",
+            "prerequisite": "{\"schemaVersion\":\"toy.bootstrap-resource-preflight.v2\",\"measuredAt\":\"2026-10-06T21:47:28.626Z\",\"samples\":[{\"observedAt\":\"2026-10-06T21:47:28.626Z\",\"monotonicNanoseconds\":\"192540428616333\",\"physicalBytes\":\"8589934592\",\"pageSizeBytes\":\"16384\",\"freeBytes\":\"1340030976\",\"inactiveBytes\":\"1597325312\",\"purgeableBytes\":\"2834432\",\"speculativeBytes\":\"119783424\",\"availableBytes\":\"3059974144\",\"pressure\":\"normal\",\"pressureSource\":\"os\",\"pressureQueryOutput\":\"1\\n\"}],\"completeMeasurements\":true,\"jobNeedBytes\":\"1073741824\",\"marginBytes\":\"536870912\",\"requiredAvailableBytes\":\"1610612736\",\"minimumAvailableBytes\":\"3059974144\",\"normalPressureObserved\":true,\"headroomSatisfied\":true,\"reasons\":[],\"resourcePermitIssued\":false,\"admissionState\":\"admitted\"}",
+            "nextCommandId": "stack.up",
+            "links": {
+              "recordRefs": [],
+              "observations": [],
+              "artifactDigests": []
+            }
+          },
+          {
+            "id": "bootstrap.fixture-runtime",
+            "owner": "ops",
+            "state": "PASS",
+            "checkedAt": "2026-10-06T21:47:29.562Z",
+            "reasonCode": "OWNED_FIXTURE_STOPPED",
+            "prerequisite": null,
+            "nextCommandId": "stack.up",
+            "links": {
+              "recordRefs": [],
+              "observations": [],
+              "artifactDigests": []
+            }
+          },
+          {
+            "id": "bootstrap.fixture-identities",
+            "owner": "ops",
+            "state": "NOT_IMPLEMENTED",
+            "checkedAt": "2026-10-06T21:47:29.563Z",
+            "reasonCode": "R0_04_05_ACTUAL_PREREQUISITES_PENDING",
+            "prerequisite": "Actual protected service identities and signed target launcher remain pending.",
+            "nextCommandId": "doctor",
+            "links": {
+              "recordRefs": [],
+              "observations": [],
+              "artifactDigests": []
+            }
+          }
+        ],
+        "ownedResourceRefs": [
+          {
+            "module": "ops",
+            "kind": "test_world",
+            "id": "9e6e59fc-034f-4bdf-9896-adbb33420dd4"
+          }
+        ],
+        "evidenceLocation": "c8bc05a2-fa49-4917-a1c0-de75c7a1751f",
+        "teardown": {
+          "stackId": "9e6e59fc-034f-4bdf-9896-adbb33420dd4",
+          "checkpointRefs": [],
+          "fenceRefs": [],
+          "stoppedResourceRefs": [
+            {
+              "module": "ops",
+              "kind": "test_world",
+              "id": "9e6e59fc-034f-4bdf-9896-adbb33420dd4"
+            }
+          ],
+          "retainedArtifactRefs": [
+            {
+              "module": "ops",
+              "kind": "test_world",
+              "id": "9e6e59fc-034f-4bdf-9896-adbb33420dd4"
+            }
+          ],
+          "unresolvedResourceRefs": [],
+          "complete": true
+        }
+      },
+      "links": {
+        "recordRefs": [],
+        "observations": [],
+        "artifactDigests": []
+      }
+    }
+  },
+  "nativeExecutionVerified": false,
+  "liveProviderSends": 0,
+  "acceptanceComplete": false,
+  "durableResearchReportReadback": false,
+  "durableResearchObligationReadback": false,
+  "static": {
+    "command": "npm run check",
+    "recordedAt": "2026-10-06T21:47:10.325972+00:00",
+    "exitCode": 0,
+    "log": "build/evidence/R0.02/route-check.txt",
+    "swiftInvoked": false,
+    "artifacts": 370,
+    "contracts": 302,
+    "cliManifests": 18,
+    "features": 97,
+    "commands": 55,
+    "indexedATs": 1447,
+    "schemaDigest": "f509080a6f77a7ccac9701af9c4dd5ef1e951f8aaa469907ba833b35b7abdd88"
+  },
+  "rootRequestPins": {
+    "verified": true,
+    "unchanged": {
+      "scripts/probe-siwc-control-runtime.mts": "96e1fd2d98469772c3d0d203386c3f7aa56af57db025c420fa93f1f4ecd7e70d",
+      "scripts/stage-siwc-control-runtime.mts": "13ff53e341ab7670dbed967ce810d5aa2834df7a47ffe1620f037ff1da3ee0d4",
+      "control/dist/bootstrap/siwc-runtime-probe.js": "06870b8dd41d2ffc093cc04680ba56c4570f07b4aa0a27a9ab70796cdd8204bd",
+      "scripts/probe-unfiltered-control-denials.mts": "1cb93d375df931a482d946170e31549450d8efb71d6a251f5d2bcea8c5b92529",
+      "packages/ops/dist/role-control-probe.js": "1764a98e5ae45694118007c242320711a7bd9e0d021b7c6d6ee0cbb8cff73ec2",
+      "control/dist/bootstrap/denial-probe.js": "7fda1824ec7bc308cac97d07c7c92cadd5527e87e89d79b410d33d95d1b30672"
+    }
+  },
+  "sourceDigests": {
+    "cli/src/main.ts": "a31ba6b03829108b390f5b1228b476794bde4346eb051f4a7601a8cae0e4f95b",
+    "packages/hermes/src/model-route-probe.ts": "ba37e7728d124bcbf3cace803dacbcc45d90f35ef9dcdc96b6edbfe266a2065b",
+    "packages/ops/src/fixture-stack.ts": "c1eebace98edb5ec7059f38339b6af2e589aa5733eb80536831f086d52e2c577",
+    "tests/registry.yaml": "500311309bf1d71db12d70a18069569de24cf8366fae9f3c335940519bf7820f"
+  },
+  "deferred": [
+    "Durable research obligation remains unimplemented; no open-state readback was fabricated",
+    "Attested report persistence/native account/device/protected controller",
+    "Other whole R0.02 assigned acceptance and whole register admission"
+  ],
+  "identityReadback": {
+    "evidence": "build/evidence/R0.02/route-doctor.json",
+    "allExpectedIdentitiesObserved": true,
+    "uids": [
+      309,
+      310,
+      311,
+      312,
+      313,
+      314,
+      315,
+      316
+    ],
+    "identityGateVerified": false
+  }
+}

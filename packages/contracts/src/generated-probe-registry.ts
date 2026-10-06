@@ -4161,6 +4161,117 @@ export const registeredCliAcceptanceManifestInventory = [
     "simUnavailableReason": "SIM cannot inspect pre-build admission counters or drive the native PostgreSQL restart boundary. The CLI exercises the real accounting owner with fixed external quota and clock observations."
   },
   {
+    "id": "AT-RESEARCH-REGISTER-3",
+    "rung": "CLI",
+    "sourceAssertionHash": "66b6a7b0728b7600898836f7310b83a2fe570cccc124c935bc02e2ac0b6a92aa",
+    "commandId": "probe.run",
+    "scenarioId": "delegation.route-skill",
+    "owner": "hermes",
+    "firstRelease": "R0",
+    "kind": "behavioral",
+    "mandatoryCases": [
+      {
+        "id": "research-route-observed",
+        "publicOperation": "ModelRoute.delegationReceipt",
+        "phase": "research-route-observed"
+      },
+      {
+        "id": "research-route-missing",
+        "publicOperation": "ModelRoute.delegationReceipt",
+        "phase": "research-route-missing"
+      },
+      {
+        "id": "research-route-luna",
+        "publicOperation": "ModelRoute.delegationReceipt",
+        "phase": "research-route-luna"
+      },
+      {
+        "id": "research-route-wrong-effort",
+        "publicOperation": "ModelRoute.delegationReceipt",
+        "phase": "research-route-wrong-effort"
+      },
+      {
+        "id": "research-route-wrong-tier",
+        "publicOperation": "ModelRoute.delegationReceipt",
+        "phase": "research-route-wrong-tier"
+      },
+      {
+        "id": "research-skill-missing",
+        "publicOperation": "ModelRoute.delegationReceipt",
+        "phase": "research-skill-missing"
+      },
+      {
+        "id": "research-skill-wrong-bytes",
+        "publicOperation": "ModelRoute.delegationReceipt",
+        "phase": "research-skill-wrong-bytes"
+      },
+      {
+        "id": "ordinary-implementation-luna",
+        "publicOperation": "ModelRoute.delegationReceipt",
+        "phase": "ordinary-implementation-luna"
+      },
+      {
+        "id": "module-local-override-refused",
+        "publicOperation": "ModelRoute.delegationReceipt",
+        "phase": "module-local-override-refused"
+      }
+    ],
+    "trigger": "Reject absent or mismatched research route and loaded skill through canonical receipts; preserve ordinary Luna and no paid fallback while report/obligation/native gates remain incomplete.",
+    "faultControls": [
+      {
+        "id": "external-cli-route-observations",
+        "seam": "provider",
+        "affectedPhases": [
+          "research-route-missing",
+          "research-route-luna",
+          "research-route-wrong-effort",
+          "research-route-wrong-tier"
+        ]
+      },
+      {
+        "id": "published-research-artifact-faults",
+        "seam": "os",
+        "affectedPhases": [
+          "research-skill-missing",
+          "research-skill-wrong-bytes"
+        ]
+      }
+    ],
+    "observations": [
+      {
+        "id": "native-role-request-and-receipt",
+        "independentReader": "Fixed external Codex CLI: argument/task/skill readback and actual emitted settings",
+        "caseIds": [
+          "research-route-observed",
+          "research-route-missing",
+          "research-route-luna",
+          "research-route-wrong-effort",
+          "research-route-wrong-tier",
+          "research-skill-missing",
+          "research-skill-wrong-bytes",
+          "ordinary-implementation-luna",
+          "module-local-override-refused"
+        ]
+      },
+      {
+        "id": "persisted-cli-evidence",
+        "independentReader": "toy probe.show: source-bound exact route/skill receipt and no-send refusal readback",
+        "caseIds": [
+          "research-route-observed",
+          "research-route-missing",
+          "research-route-luna",
+          "research-route-wrong-effort",
+          "research-route-wrong-tier",
+          "research-skill-missing",
+          "research-skill-wrong-bytes",
+          "ordinary-implementation-luna",
+          "module-local-override-refused"
+        ]
+      }
+    ],
+    "simUnavailableReason": "SIM cannot inspect administrative pre-build delegation settings and published skill bytes. CLI exercises the public owner with external CLI/OS fakes and real isolated exports."
+  },
+  {
     "id": "AT-RESEARCH-REGISTER-6",
     "rung": "CLI",
     "sourceAssertionHash": "22a0f9e2fc9184ec5954426c4cb34e6f43cc553eff2772456b5f36ec8d9d91d1",
