@@ -3909,6 +3909,43 @@
       "atIds": [
         "AT-hermes-config-81"
       ]
+    },
+    {
+      "id": "contracts.dto-roundtrip",
+      "description": "Expose the specified RunContext, FocusSession and IngestReceipt schemas and verify exact TS/Python UUID, decimal counter and UTF-8 wire representation through unfiltered CLI; protected identity, actual Client/Life owners and Swift remain pending",
+      "implementation": "built",
+      "requirementIds": [
+        "spec:hermes-config",
+        "spec:activity-focus",
+        "spec:lifestore",
+        "0.17"
+      ],
+      "entry": "cli/src/main.ts",
+      "owner": "self-improvement",
+      "publicInterface": "ReplayEnvironment.runRegisteredProbe",
+      "paths": [
+        "packages/contracts/src/agent-context.ts",
+        "packages/contracts/src/activity-focus.ts",
+        "packages/contracts/src/primitives.ts",
+        "packages/contracts/src/control-evidence.ts",
+        "packages/contracts/src/public.ts",
+        "packages/contracts/src/ops-registry.ts",
+        "packages/self-improvement/src/dto-roundtrip-probe.ts",
+        "packages/self-improvement/src/public.ts",
+        "packages/ops/src/fixture-stack.ts",
+        "python/toy_control/dto_roundtrip.py",
+        "scripts/generate-contracts.mjs",
+        "tests/registry.yaml",
+        "docs/adr/0041-canonical-dto-roundtrip.md"
+      ],
+      "firstRelease": "R0",
+      "commands": [
+        "probe.run",
+        "probe.show"
+      ],
+      "atIds": [
+        "AT-hermes-config-50"
+      ]
     }
   ],
   "requirements": [

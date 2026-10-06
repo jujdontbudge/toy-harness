@@ -9,6 +9,7 @@ import { referenceCheck } from "./reference-check.js";
 import { accountingProbe } from "./accounting-probe.js";
 import { componentComparisonProbe } from "./component-comparison-probe.js";
 import { capacityTrialProbe } from "./capacity-trial-probe.js";
+import { dtoRoundtripProbe } from "./dto-roundtrip-probe.js";
 import { accountingTestConnection, withAccountingFixture } from "./accounting-postgres.js";
 
 export const ReplayEnvironment = {
@@ -16,6 +17,7 @@ export const ReplayEnvironment = {
     const owned = OpsTestStack.inspect(context);
     if (!owned.ok) return owned;
     if (!registeredProbeInputSchema.safeParse(input).success) return { ok: false, error: { module: "ops", code: "INVALID_INPUT", message: opsErrorMessages.INVALID_INPUT, retryable: false } };
+    if (input.probeId === "AT-hermes-config-50") return dtoRoundtripProbe(input, context);
     if (["AT-obligations-74", "AT-self-improvement-54", "AT-sources-188", "AT-sources-190"].includes(input.probeId)) return componentComparisonProbe(input, context);
     if (input.caseId === "model-admission" || (input.caseId === undefined && ["AT-ops-49", "AT-ops-51", "AT-ops-52"].includes(input.probeId))) return accountingProbe(input, context);
     if (input.caseId === "capacity-trial" || (input.caseId === undefined && ["AT-ops-47", "AT-self-improvement-59", "AT-self-improvement-60", "AT-RESEARCH-REGISTER-6"].includes(input.probeId))) return capacityTrialProbe(input, context);

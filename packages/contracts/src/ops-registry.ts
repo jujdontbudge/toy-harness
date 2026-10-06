@@ -211,6 +211,7 @@ export const opsControlReadInventory = [
   declaration("read.cadence", "self-improvement", "review.slots"), declaration("read.release", "ops", "release.status")
 ];
 export const testStackCheckInventory = [
+  declaration("contracts.dto-roundtrip", "contracts", "probe.run"),
   declaration("engineering.map", "self-improvement", "feature-map.check"), declaration("engineering.static", "self-improvement", "gardener.run"),
   declaration("accounting.model-admission", "self-improvement", "probe.run"),
   declaration("capacity.trial-journal", "self-improvement", "probe.run"),

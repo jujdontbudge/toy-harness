@@ -1,0 +1,52 @@
+
+> toy-harness@1.0.0 check
+> npm run typecheck && node scripts/typecheck-tests.mjs && npm run boundaries && npm run python:check && npm run lint && npm run contracts:check && node cli/dist/main.js feature-map check --json
+
+
+> toy-harness@1.0.0 typecheck
+> tsc -b --pretty false && tsc -p scripts/tsconfig.json --pretty false
+
+
+> toy-harness@1.0.0 boundaries
+> depcruise --config .dependency-cruiser.cjs packages cli tests control
+
+
+✔ no dependency violations found (270 modules, 921 dependencies cruised)
+
+
+> toy-harness@1.0.0 python:check
+> pyright && .venv/bin/ruff check python && PYTHONPATH=python .venv/bin/lint-imports
+
+0 errors, 0 warnings, 0 informations
+I001 [*] Import block is un-sorted or un-formatted
+  --> python/toy_control/dto_roundtrip.py:1:1
+   |
+ 1 | / import json
+ 2 | |
+ 3 | | from toy_contracts import (
+ 4 | |     Digest,
+ 5 | |     FocusSession,
+ 6 | |     IngestReceipt,
+ 7 | |     Instant,
+ 8 | |     ObservationEvidenceRef,
+ 9 | |     ObservationRef,
+10 | |     PrincipalId,
+11 | |     Revision,
+12 | |     RunContext,
+13 | |     UInt64String,
+14 | |     UUID,
+15 | | )
+   | |_^
+help: Organize imports
+   |
+3  | from toy_contracts import (
+4  +     UUID,
+5  |     Digest,
+--------------------------------------------------------------------------------
+14 |     UInt64String,
+   -     UUID,
+15 | )
+   |
+
+Found 1 error.
+[*] 1 fixable with the `--fix` option.

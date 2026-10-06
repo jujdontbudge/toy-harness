@@ -800,6 +800,7 @@ RegisteredCheckIdV1 = Literal[
     "read.quota",
     "read.cadence",
     "read.release",
+    "contracts.dto-roundtrip",
     "engineering.map",
     "engineering.static",
     "accounting.model-admission",
@@ -6316,6 +6317,71 @@ CapacityTrialReportV1FullCadenceVerdict = Literal[
     "NOT_EVALUATED",
 ]
 
+class RunContext(TypedDict):
+    profile: "RunContextProfile"
+    runId: "UUID"
+    parentRunId: Optional["UUID"]
+    actorId: "UUID"
+    sessionId: Optional[str]
+    turnId: Optional[str]
+    wireSchemaVersion: "RunContextWireSchemaVersion"
+    contractVersion: int
+    recordRevision: "Revision"
+    releaseDigest: "Digest"
+    generation: "Revision"
+    source: "RunContextSource"
+    permissionRefs: list["UUID"]
+
+RunContextProfile = Literal[
+    "toy",
+]
+
+RunContextWireSchemaVersion = Literal[
+    "toy-agent/v1",
+]
+
+RunContextSource = Literal[
+    "discord",
+    "cli",
+    "rpc",
+    "runs",
+    "cron",
+    "event",
+    "continuation",
+    "codex",
+]
+
+class FocusSession(TypedDict):
+    id: "UUID"
+    focusGeneration: "UUID"
+    revision: "UInt64String"
+    commitmentId: "UUID"
+    objective: str
+    startsAt: "Instant"
+    endsAt: "Instant"
+    state: "FocusSessionState"
+    ruleSetId: "UUID"
+    policyHash: "Digest"
+
+FocusSessionState = Literal[
+    "scheduled",
+    "active",
+    "paused",
+    "ended",
+    "cancelled",
+]
+
+class IngestReceipt(TypedDict):
+    receiptId: "UUID"
+    deviceId: "UUID"
+    streamId: "UUID"
+    committedThroughSeq: "UInt64String"
+    committedEventIds: list["UUID"]
+    observationRefs: list["ObservationEvidenceRef"]
+    committedWatermark: "UInt64String"
+    serverTime: "Instant"
+    nextUploadAfterMs: float
+
 ToyCaptureParametersV1 = Union[
     "ToyCaptureParametersV1Variant0",
     "ToyCaptureParametersV1Variant1",
@@ -6601,3 +6667,7 @@ class ToySatisfyParametersV1(TypedDict):
     dependency_id: "UUID"
     expected_dependency_revision: str
     evidence: list["ObservationEvidenceRef"]
+
+PrincipalId = UUID
+
+PermissionRef = UUID

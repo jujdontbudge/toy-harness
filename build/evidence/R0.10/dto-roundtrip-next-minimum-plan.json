@@ -1,0 +1,136 @@
+{
+  "schemaVersion": "toy.r010-dto-roundtrip-next-minimum-plan.v2",
+  "observedAt": "2026-10-06T23:23:07Z",
+  "head": "891a00d7eb1a3a71b6af2d088c11b5c4857c2f18",
+  "bindingNote": "The head is informational for this live shared-worktree read. The per-file SHA-256 values below bind the exact source and planning inputs observed; concurrent work can move HEAD without refreshing this artifact.",
+  "result": "CANONICAL_DTO_AND_CLI_OWNER_GAPS_IDENTIFIED",
+  "assignedAssertion": {
+    "id": "AT-hermes-config-50",
+    "rung": "CLI",
+    "requiredEvidence": "static, stack, probe:AT-hermes-config-50",
+    "sourceAssertionHash": "2d2e75c4c8e22b94d2f1fc10e237613182ddf8ef5daef01264eef72ed2cf6520",
+    "sourceDigest": "d3548fde13180bc750660f306caa0041101832e398ccdabd6cfdac0b3de8f4af",
+    "assertion": "Given a principal and bigint value exceeding JavaScript's safe integer range, When tool/client/Python/Swift DTOs round-trip it, Then UUID actor mapping, canonical decimal revision/generation/sequence/watermark, focusGeneration UUID and immutable UTF-8 observation quote remain exact."
+  },
+  "authoritativeShapes": [
+    {
+      "dto": "RunContext",
+      "specOwner": "Hermes common agent/tool context; trusted identity mapping belongs to protected authentication/ingress",
+      "source": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/hermes-config.md §5.1; specs/CONTRACTS.md common identifiers and identity.principals owner row",
+      "requiredFields": "actorId: PrincipalId; recordRevision: Revision; generation: Revision. Protected ingress maps opaque Better Auth user text through identity.principals to the UUID PrincipalId before RunContext construction.",
+      "currentGap": "Neither PrincipalId nor RunContext appears in current TypeScript contract sources or generated Python DTOs. AttentionSnapshot.ownerId is not evidence of actor mapping."
+    },
+    {
+      "dto": "RunRef and Review/ReviewResult",
+      "specOwner": "Self-Improvement RunAdmission and TurnReview",
+      "source": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/self-improvement.md §3",
+      "requiredFields": "RunRef has runId: UUID, principalId: PrincipalId, profile, sessionId, taskId, turnId, contractId, contractVersion and generation: Revision. Review carries that RunRef and evidenceHighWater: Revision among its review fields; ReviewResult is reviewed-with-Review or pending-with-RunRef/reason/retryAt.",
+      "currentGap": "RunRef, Review and ReviewResult are absent from @toy/contracts and generated Python. The specified RunAdmission.admit and TurnReview.checkStop/review/get owner interfaces also have no current implementation. RunRef.principalId and RunContext.actorId are distinct specified fields; neither attention ownerId nor a hand-built sample proves their mapping. Review.evidenceHighWater does not replace the distinct IngestReceipt sequence/watermark fields."
+    },
+    {
+      "dto": "FocusSession",
+      "specOwner": "Activity-Focus FocusModule",
+      "source": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/activity-focus.md §5.3",
+      "requiredFields": "id: UUID; focusGeneration: UUID; revision: UInt64String; commitmentId: UUID; objective; startsAt; endsAt; state; ruleSetId; policyHash.",
+      "currentGap": "No FocusSession DTO exists in current @toy/contracts or generated Python. AttentionFocusViewV1.cycleId is a different domain field and cannot substitute for focusGeneration."
+    },
+    {
+      "dto": "IngestReceipt",
+      "specOwner": "Activity-Focus ActivitySource; immutable observation references are Life Store owned",
+      "source": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/activity-focus.md §5.2",
+      "requiredFields": "receiptId, deviceId, streamId, committedThroughSeq: UInt64String, committedEventIds, observationRefs, committedWatermark: UInt64String, serverTime, nextUploadAfterMs. committedThroughSeq and committedWatermark are separate values.",
+      "currentGap": "No IngestReceipt DTO exists in current @toy/contracts or generated Python. A Revision-only sample does not cover either missing sequence or watermark boundary."
+    },
+    {
+      "dto": "ObservationEvidenceRef",
+      "specOwner": "Life Store",
+      "source": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/lifestore.md §4.1",
+      "requiredFields": "observationRef: life://observation/<UUID>; optional documentId: UUID; optional paired byteFrom/byteTo decimal offsets; optional quote. The retained UTF-8 byte span must delimit the exact quote and the referenced observation is immutable.",
+      "currentGap": "The TypeScript schema and generated Python shape exist, but the Zod schema only validates the reference and scalar field shapes; it does not require paired offsets/document binding or verify quote bytes against retained evidence. A source type alone cannot prove archive immutability."
+    }
+  ],
+  "currentSourceFindings": {
+    "primitives": "packages/contracts/src/primitives.ts has UUID, canonical decimal Revision and bounded UInt64String string schemas. Those preserve values above 9007199254740991 as strings, but they do not create the absent RunContext, FocusSession or IngestReceipt DTO boundaries.",
+    "attentionAliasesRejected": "AttentionSnapshot.ownerId and AttentionFocusViewV1.cycleId remain their own canonical fields. Existing Attention item revisions/page watermarks do not represent the distinct RunContext generation, IngestReceipt sequence/watermark pair, or FocusSession.focusGeneration.",
+    "identityOwner": "CONTRACTS.md assigns identity.principals to protected authentication/ingress. A fixture UUID in actorId would prove UUID representation only; it would not prove principal-to-actor resolution unless the public protected mapping owner supplies the resolved value.",
+    "pythonBoundary": "python/toy_contracts/generated.py uses TypedDict and NewType(str) shapes. They provide static typing, not runtime JSON validation. Python equality/JSON readback can prove decimal-string and UTF-8 representation preservation; runtime validation must be attributed to an actual validator, not TypedDict.",
+    "existingCliRoute": "AT-hermes-config-50 is present in generated-probe-registry.ts but absent from authored tests/registry.yaml. Existing toy probe.run/probe.show routes use ReplayEnvironment.runRegisteredProbe and FixtureProbe. The ReplayEnvironment has no AT50 branch today. RegisteredProbeInput carries probe identity/case/request ID, while CheckView carries only bounded summary strings and evidence links; neither is a DTO payload/readback API.",
+    "checkAndMap": "No semantically exact registered check ID exists for DTO round-trip. read.attention is owned by Attention and routes to attention.snapshot at R1, so it cannot stand for this R0 assertion. FEATURE-MAP.md currently lists AT50 under the broad specified hermes-config row without an implemented DTO route.",
+    "publicOwners": "Current Hermes public exports ModelRoute/auth/profile probes only; Attention, Client and LifeStore public entries are stubs. The specified RunAdmission/TurnReview, RunContext, FocusSession, IngestReceipt and retained-observation owner paths therefore are not available as current public DTO owners."
+  },
+  "minimumReachableUnit": {
+    "status": "NOT_RUNNABLE_UNTIL_SPECIFIED_DTO_BOUNDARIES_ARE_PUBLISHED",
+    "smallestCanonicalPrerequisite": "Publish the already-specified PrincipalId, RunContext, RunRef, Review/ReviewResult, FocusSession and IngestReceipt shapes through the existing @toy/contracts schema source and generator; use the specified RunAdmission and TurnReview owners when exercising RunRef/Review rather than fabricating values. Reuse the current ObservationEvidenceRef type, adding only its specified paired-offset/document validation; do not add a composite probe DTO or alias ownerId/cycleId/Revision into missing fields.",
+    "boundedSteps": [
+      {
+        "files": ["packages/contracts/src/primitives.ts", "packages/contracts/src/public.ts", "packages/contracts/src/control-evidence.ts", "scripts/generate-contracts.mjs"],
+        "action": "Expose the spec-defined PrincipalId/common context and publish the exact evidence constraints through the canonical schema inventory and existing generator. Keep Life Store retained-text verification at the Life Store owner boundary."
+      },
+      {
+        "files": ["packages/contracts/src/activity-focus.ts", "packages/contracts/src/self-improvement.ts", "packages/contracts/src/public.ts", "scripts/generate-contracts.mjs"],
+        "action": "Publish the already-written FocusSession and IngestReceipt interfaces from activity-focus.md §§5.2–5.3 and RunRef/Review/ReviewResult from self-improvement.md §3. Preserve separate focusGeneration, revision, committedThroughSeq and committedWatermark fields, plus RunRef.principalId/generation and Review.evidenceHighWater. Generate TypeScript and Python; Swift generation/compiler remains deferred to R3."
+      },
+      {
+        "files": ["tests/registry.yaml", "packages/contracts/src/ops-registry.ts", "packages/self-improvement/src/public.ts", "packages/ops/src/fixture-stack.ts", "packages/contracts/src/generated-probe-registry.ts", "tests/cli/dto-roundtrip.cli.test.ts", "skills/toy-control/FEATURE-MAP.md"],
+        "action": "Register one unfiltered AT-hermes-config-50 manifest; add the narrowly scoped contracts.dto-roundtrip CheckView ID owned by contracts with nextCommandId probe.run; dispatch that exact probe through the existing ReplayEnvironment route and allow only that check ID/owner through FixtureProbe. Regenerate the probe registry through the existing generator and map the existing CLI path. The check ID is a CLI receipt identity, not a new DTO or product protocol."
+      },
+      {
+        "files": ["tests/cli/dto-roundtrip.cli.test.ts", "python/toy_contracts/generated.py"],
+        "action": "At the assigned CLI rung, exercise the specified public RunAdmission/TurnReview and Activity-Focus DTO owners through the one registered unfiltered probe; round-trip their generated TypeScript schemas and Python wire representations using the same canonical values. Assert RunContext.actorId and RunRef.principalId from the fixture mapping, >2^53 decimal revision/generation values, separate IngestReceipt committedThroughSeq/committedWatermark, FocusSession.focusGeneration UUID, exact UTF-8 quote bytes, unfiltered run, saved probe.show status, and stack teardown. Python TypedDict is a static annotation; its JSON round-trip is representation evidence, not runtime validation."
+      }
+    ],
+    "checkIdRoute": {
+      "proposedId": "contracts.dto-roundtrip",
+      "owner": "contracts",
+      "nextCommandId": "probe.run",
+      "reason": "The current check registry has no matching check. read.attention/attention.snapshot is a different owner and R1 route. FixtureProbe currently rejects checks outside its explicit probe/check/owner pairs."
+    },
+    "assignedCliCommands": {
+      "stackUp": "toy stack up --release R0 --world registered --clock fake --model fake --request-id <uuid> --json",
+      "run": "toy --env test --stack <stack-id> probe run AT-hermes-config-50 --request-id <uuid> --json",
+      "runMode": "Omit --case so the authored manifest is the exercised unit.",
+      "show": "toy --env test --stack <stack-id> probe show <returned-operation-id> --json",
+      "down": "toy --env test --stack <stack-id> stack down --request-id <uuid> --json"
+    }
+  },
+  "acceptanceLimits": {
+    "principalMapping": "RunContext.actorId and RunRef.principalId are the spec-defined UUID fields. A deterministic UUID round-trip proves representation only. The AT's principal-to-actor predicate remains pending until the protected identity.principals owner supplies a public fixture mapping/readback; ownerId cannot stand in for either field.",
+    "utf8Evidence": "An exact UTF-8 quote-byte round-trip proves representation only. The current schema cannot establish retained quote/span agreement or archive immutability; that remains a Life Store owner proof.",
+    "tsPython": "No TS/Python DTO CLI unit has been implemented or run. After the source prerequisite, TypeScript Zod can provide runtime schema validation; Python generated TypedDict plus JSON equality provides typed representation/readback only, not runtime validation.",
+    "clientOwner": "The current Client public entry is a stub; no separate Client DTO round-trip owner is proven by this plan.",
+    "swift": "Explicitly deferred until R3; no Swift generation or compiler is part of this step.",
+    "wholeAT": "PENDING. This plan does not prove the protected principal mapping, a real Client owner, retained Life Store evidence, all language DTOs, or the assigned full AT.",
+    "execution": "Read-only source/spec review only. No build, test, stack, process, provider, controller, credential, OS, network, Swift, or external research operation was performed."
+  },
+  "sourceHashes": [
+    {"path": "tests/acceptance-index.json", "sha256": "c9b645eab7f55b2ebf35d7db769a534a4837de23ad3dc3d913f3189e781d44fa"},
+    {"path": "tests/registry.yaml", "sha256": "596b4b923b2bb1387d5413760bb80761f522eca56869ecd9b2f3e9add94f235a"},
+    {"path": "packages/contracts/src/primitives.ts", "sha256": "7fa67d881b9d9c17bca3d7768ede37da6e35aabf8e9c1ae906a3674b6e9d4bb1"},
+    {"path": "packages/contracts/src/attention.ts", "sha256": "0987ab0f7c9e2d352261fcf608c1f7b9a6d42d75a495f6b1c5ea24cf1a77f59a"},
+    {"path": "packages/contracts/src/control-evidence.ts", "sha256": "5708640e11fd64752b5f6d3a662566618684c66d3d981fb0eaf8da952b9bc32c"},
+    {"path": "packages/contracts/src/ops-registry.ts", "sha256": "8e98e2eec08fcc1cf79d8065f01e494ae5cfc4372273e044e41f6b65eb923d6d"},
+    {"path": "packages/contracts/src/test-control.ts", "sha256": "0af0d0e4349cae05bfdc06a77592e32c5171f0dc5d0e5964f2ef87faeaa4111c"},
+    {"path": "packages/contracts/src/public.ts", "sha256": "ad77e5aca06fc1d0445476c8ce7a159a6b9ed94a5f58f1807bcff439795e97dc"},
+    {"path": "packages/contracts/src/generated-probe-registry.ts", "sha256": "706a6a4ffd632d576c93cb23233f6b4dc4830cf206047be64a2eaa9370b8e337"},
+    {"path": "packages/contracts/generated/schemas/attention-snapshot.schema.json", "sha256": "ae70674d9bd1f37886948e3eb5933d3dc6449118105f98eb01b0f1a6f0a44224"},
+    {"path": "packages/contracts/generated/schemas/observation-evidence-ref.schema.json", "sha256": "8c09d5ad4c1dd668ab215dca508853a33e11a158e0ba86779c15d65b25213df0"},
+    {"path": "python/toy_contracts/generated.py", "sha256": "d007b97e6357c0337d17302b2cf6877bf2848b9cc03fa0cb5e3876cc1e5e5e58"},
+    {"path": "python/toy_control/public.py", "sha256": "b6df3fc3a99cd663a2a3a6f6aaa82141d8b2d85c3781ce28785adce79e472da2"},
+    {"path": "packages/hermes/src/public.ts", "sha256": "ccabd122931e9c879e9be4084cdfae31a6d112490936b2a48bf695293ecdfc86"},
+    {"path": "packages/attention/src/public.ts", "sha256": "526a993a0f22b2d2176444178c414f42c768f462b82b16554caba0490f539d62"},
+    {"path": "packages/client/src/public.ts", "sha256": "526a993a0f22b2d2176444178c414f42c768f462b82b16554caba0490f539d62"},
+    {"path": "packages/lifestore/src/public.ts", "sha256": "526a993a0f22b2d2176444178c414f42c768f462b82b16554caba0490f539d62"},
+    {"path": "packages/self-improvement/src/public.ts", "sha256": "f06a33fbdd6587b5f82ca575528148e1a6965c6ff15dbe39ef2d86dad61c84ff"},
+    {"path": "packages/ops/src/fixture-stack.ts", "sha256": "7e07dfff47d48293f0afd9fb2b80068fbbb0dcdcaf91b84cc14869dc7b5b7fb5"},
+    {"path": "cli/src/main.ts", "sha256": "4862cfd0540890e2551049589c49f1917f40427b65f84196691cb3c4a49b29dc"},
+    {"path": "scripts/generate-contracts.mjs", "sha256": "4af296522897059f2d54d63077535da25a9fdbce7eeaad3ceba818962ffdc371"},
+    {"path": "skills/toy-control/FEATURE-MAP.md", "sha256": "9df34be81c7244e1cf7d1017a209951467cbc2c9482ed787b9dfe851deb6b930"}
+  ],
+  "authoritativeSpecHashes": [
+    {"path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/CONTRACTS.md", "sha256": "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d"},
+    {"path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/hermes-config.md", "sha256": "d3548fde13180bc750660f306caa0041101832e398ccdabd6cfdac0b3de8f4af"},
+    {"path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/activity-focus.md", "sha256": "95419ee43fbc5c4367e2109efc17eb0c08527b1355fea71fd170650adf4afa81"},
+    {"path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/lifestore.md", "sha256": "044e33ba76d512c0fcae478f8d4923d2f33c028b8dae94bbdb69d6d4111c1117"},
+    {"path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/self-improvement.md", "sha256": "23e69b258189148328f029acd3ec7c4c125544bf49d670757eee2bf071ab7014"}
+  ]
+}

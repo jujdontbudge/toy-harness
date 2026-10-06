@@ -3937,6 +3937,77 @@ export const registeredCliAcceptanceManifestInventory = [
     "simUnavailableReason": "The assigned acceptance rung requires a CLI stack, device/account evidence and a registered probe. This manifest exercises only fixed external test projections through the public CLI; it does not inspect actual membership, licence or device state."
   },
   {
+    "id": "AT-hermes-config-50",
+    "rung": "CLI",
+    "sourceAssertionHash": "2d2e75c4c8e22b94d2f1fc10e237613182ddf8ef5daef01264eef72ed2cf6520",
+    "commandId": "probe.run",
+    "scenarioId": "contracts.dto-roundtrip",
+    "owner": "contracts",
+    "firstRelease": "R0",
+    "kind": "behavioral",
+    "mandatoryCases": [
+      {
+        "id": "tool-context-wire",
+        "publicOperation": "@toy/contracts and generated Python DTOs",
+        "phase": "tool-context-wire"
+      },
+      {
+        "id": "client-focus-wire",
+        "publicOperation": "@toy/contracts and generated Python DTOs",
+        "phase": "client-focus-wire"
+      },
+      {
+        "id": "ingest-counters-wire",
+        "publicOperation": "@toy/contracts and generated Python DTOs",
+        "phase": "ingest-counters-wire"
+      },
+      {
+        "id": "python-generated-wire",
+        "publicOperation": "@toy/contracts and generated Python DTOs",
+        "phase": "python-generated-wire"
+      },
+      {
+        "id": "utf8-observation-wire",
+        "publicOperation": "@toy/contracts and generated Python DTOs",
+        "phase": "utf8-observation-wire"
+      },
+      {
+        "id": "malformed-identifiers",
+        "publicOperation": "@toy/contracts and generated Python DTOs",
+        "phase": "malformed-identifiers"
+      },
+      {
+        "id": "noncanonical-counters",
+        "publicOperation": "@toy/contracts and generated Python DTOs",
+        "phase": "noncanonical-counters"
+      },
+      {
+        "id": "incomplete-observation-span",
+        "publicOperation": "@toy/contracts and generated Python DTOs",
+        "phase": "incomplete-observation-span"
+      }
+    ],
+    "trigger": "Round-trip the specified RunContext, FocusSession, IngestReceipt and UTF-8 observation reference through public TypeScript schemas and generated Python wire representations; reject malformed identifiers, counters and paired spans.",
+    "faultControls": [],
+    "observations": [
+      {
+        "id": "canonical-dto-readback",
+        "independentReader": "ReplayEnvironment: public schema parses, isolated Python DTO wire readbacks and refusal outcomes",
+        "caseIds": [
+          "tool-context-wire",
+          "client-focus-wire",
+          "ingest-counters-wire",
+          "python-generated-wire",
+          "utf8-observation-wire",
+          "malformed-identifiers",
+          "noncanonical-counters",
+          "incomplete-observation-span"
+        ]
+      }
+    ],
+    "simUnavailableReason": "The assigned R0 CLI probe reaches the canonical schemas and real Python serializer; no simulated-Johan ingress exists at this release."
+  },
+  {
     "id": "AT-hermes-config-75",
     "rung": "CLI",
     "sourceAssertionHash": "901516dd5ec64a9d7e28c9fcfec9f7877b8e539031fcfda5fe347e06919316cd",

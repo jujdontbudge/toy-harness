@@ -11,7 +11,9 @@ export const observationRefSchema = z.string().length(55).regex(new RegExp("^lif
 export const observationEvidenceRefSchema = z.strictObject({
   observationRef: observationRefSchema,
   documentId: uuidSchema.optional(), byteFrom: revisionSchema.optional(), byteTo: revisionSchema.optional(), quote: z.string().optional()
-});
+}).refine(ref => (ref.byteFrom === undefined && ref.byteTo === undefined)
+  || (ref.byteFrom !== undefined && ref.byteTo !== undefined && ref.documentId !== undefined
+    && revisionSchema.safeParse(ref.byteFrom).success && revisionSchema.safeParse(ref.byteTo).success && BigInt(ref.byteFrom) <= BigInt(ref.byteTo)));
 export const evidenceLinksSchema = z.strictObject({ recordRefs: z.array(recordRefSchema), observations: z.array(observationEvidenceRefSchema), artifactDigests: z.array(digestSchema) });
 export const checkViewSchema = z.strictObject({
   id: registeredCheckIdSchema, owner: moduleIdSchema, state: acceptanceStateSchema, checkedAt: instantSchema,

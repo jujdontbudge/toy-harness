@@ -2,9 +2,9 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-06T23:17:15.315171+00:00",
+  "updatedAt": "2026-10-06T23:33:12.731951+00:00",
   "phase": "R0_FEASIBILITY",
-  "activeCard": "R0.09",
+  "activeCard": "R0.10",
   "cardCount": 87,
   "acceptanceCount": 1447,
   "cards": {
@@ -1571,7 +1571,10 @@
         "build/evidence/R0.10/mcp81-final-verification.json",
         "build/evidence/R0.10/mcp81-preparation.json",
         "build/evidence/R0.10/mcp81-check-result.json",
-        "build/evidence/R0.10/mcp81-root-pins-final.json"
+        "build/evidence/R0.10/mcp81-root-pins-final.json",
+        "build/evidence/R0.10/dto50-final-verification.json",
+        "build/evidence/R0.10/dto50-source-review.json",
+        "build/evidence/R0.10/dto-roundtrip-next-minimum-plan.json"
       ],
       "requiredATs": [
         "AT-activity-focus-86",
@@ -1623,10 +1626,9 @@
         }
       },
       "lastVerification": {
-        "evidence": "build/evidence/R0.10/profile-verification.json",
-        "verdict": "PASS_EIGHT_NATIVE_GATEWAY_FRAGMENT_AND_NINE_ROUTE_DIAGNOSTICS",
+        "evidence": "build/evidence/R0.10/dto50-final-verification.json",
+        "verdict": "PASS_EIGHT_CANONICAL_TS_PYTHON_DTO_WIRE_DIAGNOSTICS",
         "checks": 8,
-        "regressionChecks": 9,
         "runShowExact": true,
         "cleanupPassed": true,
         "ownedWorldsDown": true,
@@ -1840,7 +1842,7 @@
         }
       },
       "dtoRoundTripNextUnit": {
-        "status": "READ_ONLY_CANONICAL_FIELD_PLAN_CORRECTION_PENDING",
+        "status": "CANONICAL_PLAN_REVIEWED_AND_SOURCE_UNIT_VERIFIED",
         "assignedAT": "AT-hermes-config-50",
         "artifact": "build/evidence/R0.10/dto-roundtrip-next-minimum-plan.json",
         "parentReview": [
@@ -1850,9 +1852,45 @@
           "Generated TypedDicts do not validate input at runtime",
           "Require existing public owner/CLI/FixtureProbe/check-ID/map coverage; no probe-only DTO"
         ],
-        "implementationStarted": false,
+        "implementationStarted": true,
         "SwiftDeferredTo": "R3",
         "wholeATComplete": false
+      },
+      "dtoRoundTripUnit": {
+        "status": "STOPPED_AFTER_PASS",
+        "assignedAT": "AT-hermes-config-50",
+        "casesPassed": 8,
+        "runtimeFailedAttempts": 0,
+        "timebox": {
+          "startedAt": "2026-10-06T23:26:00Z",
+          "deadlineUtc": "2026-10-07T01:26:00Z",
+          "stoppedAt": "2026-10-06T23:33:12.731951+00:00"
+        },
+        "verification": "build/evidence/R0.10/dto50-final-verification.json",
+        "sourceReview": "build/evidence/R0.10/dto50-source-review.json",
+        "runShowExact": true,
+        "teardownComplete": true,
+        "unresolvedResources": 0,
+        "wholeATComplete": false,
+        "deferred": [
+          {
+            "owner": "protected authentication/ingress",
+            "work": "Resolve authenticated opaque user identity through identity.principals before constructing RunContext.actorId"
+          },
+          {
+            "owner": "Client/Activity-Focus",
+            "work": "Consume the published DTOs through actual module interfaces"
+          },
+          {
+            "owner": "Life Store",
+            "work": "Verify immutable observation/document ownership and exact retained quote spans"
+          },
+          {
+            "owner": "R3",
+            "work": "Generate, compile and round-trip Swift DTOs"
+          }
+        ],
+        "SwiftDeferredTo": "R3"
       }
     },
     "R0.11": {
@@ -10623,7 +10661,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Poll both pending ROOT-REQUESTS; exact root02 DONE immediately prioritizes R0.01. Otherwise finish review of the R0.10 TS/Python DTO plan using exact canonical fields, then the smallest assigned CLI baseline and versioned interface. Do not substitute focus.cycleId for focusGeneration or claim ownerId as principal mapping. Swift remains deferred to R3.",
+  "nextAction": "Poll both pending ROOT-REQUESTS; exact root02 DONE immediately prioritizes R0.01 native owner load. DTO source unit is stopped after eight unfiltered CLI diagnostics pass. Continue the next actual canonical owner prerequisite under its assigned card; principal mapping, Client/Life ownership, RunAdmission/TurnReview and Swift/R3 remain pending. Do not treat wire representation or a pending root step as goal completion or goal blockage.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -21154,13 +21192,13 @@
   },
   "pullRequest": "https://github.com/JohanSardar/toy-harness/pull/1",
   "lastWorker": {
-    "card": "R0.11",
-    "task": "r007_minimum_trial_journal",
+    "card": "R0.10",
+    "task": "r010_pin_revalidation",
     "model": "gpt-6-luna",
     "reasoning": "max",
     "state": "completed_read_only",
-    "evidence": "build/evidence/R0.11/run-review-next-minimum-plan.json",
-    "ownedScope": "Read-only independent card plan; no source/runtime changes"
+    "evidence": "build/evidence/R0.10/dto-roundtrip-next-minimum-plan.json",
+    "ownedScope": "Corrected exact canonical DTO minimum plan only; parent owned implementation after helper completion"
   },
   "continuationAssessment": {
     "observedAt": "2026-10-06T22:36:16.865800+00:00",
@@ -21202,17 +21240,17 @@
     "queuedRootReserveAdmissionGate": false
   },
   "latestStaticVerification": {
-    "recordedAt": "2026-10-06T23:13:52.246825+00:00",
+    "recordedAt": "2026-10-06T23:30:12.104Z",
     "command": "npm run check",
     "exitCode": 0,
-    "artifacts": 382,
-    "contracts": 314,
-    "cliManifests": 28,
-    "features": 99,
+    "artifacts": 385,
+    "contracts": 317,
+    "cliManifests": 29,
+    "features": 100,
     "commands": 55,
     "indexedATs": 1447,
-    "schemaDigest": "0b271593090f9fc0815b3154f2e74414cd7933005b5d974e398c2c4ad667b05c",
-    "evidence": "build/evidence/R0.09/unfiltered-check-output.txt",
+    "schemaDigest": "a0c2cef4fe1c805c37d92191a87701cbbf708e7dccc0c22d932dbc3cc0c14c9d",
+    "evidence": "build/evidence/R0.10/dto50-strict-check-final.txt",
     "languages": [
       "TypeScript",
       "Python"
@@ -21277,20 +21315,5 @@
     "queuedRootReserveGate": false,
     "rule": "Normal OS pressure and available memory at least the current job declared need plus512MiB; no strictly-free, hypothetical reserve, swap or second physical-fit gate"
   },
-  "activeWorkers": [
-    {
-      "task": "r010_pin_revalidation",
-      "card": "R0.10",
-      "model": "gpt-6-luna",
-      "reasoning": "max",
-      "state": "running_read_only_canonical_plan_correction",
-      "scope": "build/evidence/R0.10/dto-roundtrip-next-minimum-plan.json only",
-      "deadlineUtc": "2026-10-06T23:39:08Z",
-      "admissionObservedAt": "2026-10-06T23:15:44.098Z",
-      "availableBytes": "2110586880",
-      "pressure": "normal",
-      "ownNeedBytes": "268435456",
-      "marginBytes": "536870912"
-    }
-  ]
+  "activeWorkers": []
 }
