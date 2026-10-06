@@ -2,7 +2,7 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-06T23:13:52.246825+00:00",
+  "updatedAt": "2026-10-06T23:17:15.315171+00:00",
   "phase": "R0_FEASIBILITY",
   "activeCard": "R0.09",
   "cardCount": 87,
@@ -1838,6 +1838,21 @@
           ],
           "SwiftDeferredTo": "R3"
         }
+      },
+      "dtoRoundTripNextUnit": {
+        "status": "READ_ONLY_CANONICAL_FIELD_PLAN_CORRECTION_PENDING",
+        "assignedAT": "AT-hermes-config-50",
+        "artifact": "build/evidence/R0.10/dto-roundtrip-next-minimum-plan.json",
+        "parentReview": [
+          "focus.cycleId does not prove focusGeneration",
+          "ownerId does not prove principal-to-actor mapping",
+          "Revision alone does not prove absent sequence/watermark fields",
+          "Generated TypedDicts do not validate input at runtime",
+          "Require existing public owner/CLI/FixtureProbe/check-ID/map coverage; no probe-only DTO"
+        ],
+        "implementationStarted": false,
+        "SwiftDeferredTo": "R3",
+        "wholeATComplete": false
       }
     },
     "R0.11": {
@@ -10608,7 +10623,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Commit/push the verified R0.09 manifest unit; poll ROOT-REQUESTS and immediately prioritize R0.01 on exact root02 DONE, otherwise review the independent R0.10 TS/Python DTO minimum plan. Swift remains deferred to R3; no whole acceptance promotion.",
+  "nextAction": "Poll both pending ROOT-REQUESTS; exact root02 DONE immediately prioritizes R0.01. Otherwise finish review of the R0.10 TS/Python DTO plan using exact canonical fields, then the smallest assigned CLI baseline and versioned interface. Do not substitute focus.cycleId for focusGeneration or claim ownerId as principal mapping. Swift remains deferred to R3.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -21204,7 +21219,7 @@
     ],
     "SwiftDeferredTo": "R3"
   },
-  "sourceCheckpointCommit": "f086417",
+  "sourceCheckpointCommit": "acf498b",
   "sourceCheckpointPushed": true,
   "rootRequests": {
     "ROOT-R004-20261006-01": {
@@ -21244,15 +21259,15 @@
     }
   },
   "resourceAdmission": {
-    "measuredAt": "2026-10-06T23:09:08.773Z",
-    "availableBytes": "2309029888",
+    "measuredAt": "2026-10-06T23:15:44.098Z",
+    "availableBytes": "2110586880",
     "pressure": "normal",
     "strictlyFreeAdmission": false,
     "repairFloorApplied": false,
     "ownedWorldsRunning": 0,
     "helpersRunning": 1,
     "helperNeedBytes": "268435456",
-    "measurementSource": "build/evidence/R0.09/unfiltered-baseline-cli/up.json",
+    "measurementSource": "build/evidence/R0.09/unfiltered-current-doctor.json",
     "marginBytes": "536870912",
     "ownedStackId": null,
     "stackAndNativeChildrenNeedBytes": "0",
@@ -21268,11 +21283,11 @@
       "card": "R0.10",
       "model": "gpt-6-luna",
       "reasoning": "max",
-      "state": "running_read_only",
+      "state": "running_read_only_canonical_plan_correction",
       "scope": "build/evidence/R0.10/dto-roundtrip-next-minimum-plan.json only",
       "deadlineUtc": "2026-10-06T23:39:08Z",
-      "admissionObservedAt": "2026-10-06T23:09:08.773Z",
-      "availableBytes": "2309029888",
+      "admissionObservedAt": "2026-10-06T23:15:44.098Z",
+      "availableBytes": "2110586880",
       "pressure": "normal",
       "ownNeedBytes": "268435456",
       "marginBytes": "536870912"
