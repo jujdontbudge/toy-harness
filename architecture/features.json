@@ -3842,6 +3842,36 @@
         "AT-self-improvement-60",
         "AT-RESEARCH-REGISTER-6"
       ]
+    },
+    {
+      "id": "hermes.native-gateway-profile",
+      "description": "Generate and strictly validate the seven reviewed native gateway fragment keys, bind locked consumer sources and exercise the real native loader in isolated disposable profiles; full profile and protected publication remain pending",
+      "implementation": "built",
+      "requirementIds": [
+        "spec:hermes-config",
+        "0.17"
+      ],
+      "entry": "cli/src/main.ts",
+      "owner": "hermes",
+      "publicInterface": "HermesProfile.generateGateway/consumeGateway; HermesProfileProbe.run",
+      "paths": [
+        "packages/hermes/src/public.ts",
+        "packages/hermes/src/profile.ts",
+        "packages/hermes/src/profile-probe.ts",
+        "packages/contracts/src/hermes-runtime.ts",
+        "behavior/hermes-gateway-consumers.json",
+        "packages/ops/src/fixture-stack.ts",
+        "tests/registry.yaml",
+        "docs/adr/0021-supported-model-route.md"
+      ],
+      "firstRelease": "R0",
+      "commands": [
+        "probe.run",
+        "probe.show"
+      ],
+      "atIds": [
+        "AT-hermes-config-75"
+      ]
     }
   ],
   "requirements": [
@@ -4366,6 +4396,11 @@
       "id": "CapacityTrialJournal migrations",
       "owner": "self-improvement",
       "path": "packages/self-improvement/src/capacity-trial-migration.ts"
+    },
+    {
+      "id": "HermesProfile.generateGateway/consumeGateway; HermesProfileProbe.run",
+      "owner": "hermes",
+      "path": "packages/hermes/src/public.ts"
     }
   ],
   "commands": [

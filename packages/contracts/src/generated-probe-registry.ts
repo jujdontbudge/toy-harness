@@ -3389,6 +3389,83 @@ export const registeredCliAcceptanceManifestInventory = [
     "simUnavailableReason": "SIM cannot drive pre-build actual OS service-identity denials. The CLI invokes only the fixed root-owned owner with real OS results and independent canary readbacks."
   },
   {
+    "id": "AT-hermes-config-75",
+    "rung": "CLI",
+    "sourceAssertionHash": "901516dd5ec64a9d7e28c9fcfec9f7877b8e539031fcfda5fe347e06919316cd",
+    "commandId": "probe.run",
+    "scenarioId": "profile.gateway-consumers",
+    "owner": "hermes",
+    "firstRelease": "R0",
+    "kind": "behavioral",
+    "mandatoryCases": [
+      {
+        "id": "generated-gateway-consumed",
+        "publicOperation": "HermesProfile.consumeGateway",
+        "phase": "generated-gateway-consumed"
+      },
+      {
+        "id": "nondefault-gateway-consumed",
+        "publicOperation": "HermesProfile.consumeGateway",
+        "phase": "nondefault-gateway-consumed"
+      },
+      {
+        "id": "unknown-root-refused",
+        "publicOperation": "HermesProfile.consumeGateway",
+        "phase": "unknown-root-refused"
+      },
+      {
+        "id": "unknown-nested-refused",
+        "publicOperation": "HermesProfile.consumeGateway",
+        "phase": "unknown-nested-refused"
+      },
+      {
+        "id": "ignored-key-refused",
+        "publicOperation": "HermesProfile.consumeGateway",
+        "phase": "ignored-key-refused"
+      },
+      {
+        "id": "native-default-replacement-refused",
+        "publicOperation": "HermesProfile.consumeGateway",
+        "phase": "native-default-replacement-refused"
+      },
+      {
+        "id": "container-shape-refused",
+        "publicOperation": "HermesProfile.consumeGateway",
+        "phase": "container-shape-refused"
+      },
+      {
+        "id": "missing-key-refused",
+        "publicOperation": "HermesProfile.consumeGateway",
+        "phase": "missing-key-refused"
+      }
+    ],
+    "trigger": "Generate the reviewed gateway fragment and load its target and nondefault sentinels through the real locked native gateway loader; refuse unknown, ignored, missing, malformed and silently defaulted values before disposable profile effects. Complete native profile and protected publication remain pending.",
+    "faultControls": [],
+    "observations": [
+      {
+        "id": "locked-source-consumer-and-native-process",
+        "independentReader": "Native load_gateway_config: effective settings, child identity/network ledger; locked source digests",
+        "caseIds": [
+          "generated-gateway-consumed",
+          "nondefault-gateway-consumed"
+        ]
+      },
+      {
+        "id": "preload-refusal-without-profile-effects",
+        "independentReader": "Public owner error code and disposable profile artifact count before/after rejection",
+        "caseIds": [
+          "unknown-root-refused",
+          "unknown-nested-refused",
+          "ignored-key-refused",
+          "native-default-replacement-refused",
+          "container-shape-refused",
+          "missing-key-refused"
+        ]
+      }
+    ],
+    "simUnavailableReason": "SIM cannot generate administrative native configuration or inspect the locked parser and isolated OS loader. The public Toy CLI drives the real owner and native consumers without loading a live profile."
+  },
+  {
     "id": "AT-hermes-config-84",
     "rung": "CLI",
     "sourceAssertionHash": "c3002739bea88d5199c702493f348084adb65b3042fc8f9b679925ffc0d13726",

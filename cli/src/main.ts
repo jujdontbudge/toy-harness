@@ -9,7 +9,7 @@ import {
 import type { CliArgument, CliCommandId, CliDeclaration, CliEnvironment, CliFailure, CliResult, OpsError, OpsTestStackResultV1, RegisteredProbeOperationV1, Result } from "@toy/contracts";
 import { BackupCapacityProbe, NativeReleaseEligibilityProbe, RoleControlProbe, OpsControlRead, OpsTestStack, RoleIdentityBootstrap, TestClockControl } from "@toy/ops/public";
 import { EngineeringControl, ReplayEnvironment } from "@toy/self-improvement/public";
-import { HermesAuthProbe, ModelRoute, ModelRouteProbe } from "@toy/hermes/public";
+import { HermesAuthProbe, HermesProfileProbe, ModelRoute, ModelRouteProbe } from "@toy/hermes/public";
 
 const args = process.argv.slice(2);
 const commonNames = new Set(cliCommonArguments.map((argument) => argument.name));
@@ -239,6 +239,7 @@ const run = async (): Promise<CliResult> => {
       else if (probeInput?.caseId === "backup-capacity") result = BackupCapacityProbe.run(probeInput, context);
       else if (probeInput?.caseId === "native-release-eligibility") result = NativeReleaseEligibilityProbe.run(probeInput, context);
       else if (probeInput !== null && (probeInput.caseId === "native-auth-cli" || (["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-87"].includes(probeInput.probeId) && probeInput.caseId === undefined))) result = await HermesAuthProbe.run(probeInput, context);
+      else if (probeInput !== null && probeInput.caseId === undefined && registeredCliAcceptanceManifestInventory.some(entry => entry.id === probeInput.probeId && entry.owner === "hermes" && entry.scenarioId === "profile.gateway-consumers")) result = await HermesProfileProbe.run(probeInput, context);
       else if (probeInput !== null && (probeInput.caseId === "model-route-policy" || probeInput.caseId === "model-route-stream" || (probeInput.caseId === undefined && registeredCliAcceptanceManifestInventory.some(entry => entry.id === probeInput.probeId && entry.owner === "hermes" && entry.scenarioId === "delegation.route-skill")))) result = await ModelRouteProbe.run(probeInput, context);
       else if (probeInput) result = await ReplayEnvironment.runRegisteredProbe(probeInput, context);
       else result = ReplayEnvironment.registeredProbeStatus(cliCommandSchemas["probe.show"].input.parse({ operationId: operands[0] }), context);

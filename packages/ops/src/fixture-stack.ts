@@ -309,6 +309,7 @@ export const FixtureProbe = {
       const reference = input.probeId === "AT-hermes-config-101" && ["k4a-connector", "k4a-tool", "k4a-skill"].includes(input.caseId ?? "");
       const modelPolicy = (input.caseId === "model-route-policy" && ["AT-hermes-config-1", "AT-hermes-config-76", "AT-hermes-config-77"].includes(input.probeId)) || (input.caseId === undefined && sourceRegistration?.owner === "hermes" && sourceRegistration.scenarioId === "delegation.route-skill");
       const modelStream = input.caseId === "model-route-stream" && ["AT-hermes-config-40", "AT-self-improvement-58"].includes(input.probeId);
+      const profileConsumers = input.caseId === undefined && sourceRegistration?.owner === "hermes" && sourceRegistration.scenarioId === "profile.gateway-consumers";
       const accounting = (input.caseId === undefined || input.caseId === "model-admission") && ["AT-ops-49", "AT-ops-51", "AT-ops-52"].includes(input.probeId);
       const componentComparison = ["AT-obligations-74", "AT-self-improvement-54", "AT-sources-188", "AT-sources-190"].includes(input.probeId) && input.caseId === undefined;
       const capacityTrial = (input.caseId === undefined || input.caseId === "capacity-trial") && ["AT-ops-47", "AT-self-improvement-59", "AT-self-improvement-60", "AT-RESEARCH-REGISTER-6"].includes(input.probeId);
@@ -317,7 +318,8 @@ export const FixtureProbe = {
       const roleDenials = (input.caseId === undefined || input.caseId === "control-filesystem-denial") && input.probeId === "AT-authority-35";
       const queueFaults = input.probeId === "AT-obligations-76" && (input.caseId === undefined || input.caseId === "queue-transaction-faults");
       const backupCapacity = input.caseId === "backup-capacity" && ["AT-ops-62", "AT-lifestore-63", "AT-sources-216"].includes(input.probeId);
-      if (checks.length > 0 && !reference && !(modelPolicy || modelStream || accounting || componentComparison || capacityTrial || nativeEligibility || nativeAuth || backupCapacity || roleDenials || queueFaults)) refuse("INVALID_INPUT");
+      if (checks.length > 0 && !reference && !(modelPolicy || modelStream || profileConsumers || accounting || componentComparison || capacityTrial || nativeEligibility || nativeAuth || backupCapacity || roleDenials || queueFaults)) refuse("INVALID_INPUT");
+      if (profileConsumers && checks.some(check => check.id !== "profile.native-gateway" || check.owner !== "hermes")) refuse("INVALID_INPUT");
       if ((modelPolicy || modelStream) && checks.some(check => check.id !== "read.model-route-policy" || check.owner !== "hermes")) refuse("INVALID_INPUT");
       if (accounting && checks.some(check => check.id !== "accounting.model-admission" || check.owner !== "self-improvement")) refuse("INVALID_INPUT");
       if (componentComparison && checks.some(check => check.id !== "research.component-comparison" || check.owner !== "self-improvement")) refuse("INVALID_INPUT");

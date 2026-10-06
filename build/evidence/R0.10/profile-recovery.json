@@ -1,0 +1,47 @@
+{
+  "recordedAt": "2026-10-06T22:16:05.265626+00:00",
+  "failureStreak": 3,
+  "reliableReproduction": "Unfiltered AT-hermes-config-75: six invalid-input cases PASS, two valid consumers produce ATTESTATION_INVALID; exact show and complete teardown for each world",
+  "executedArtifactVerified": true,
+  "currentOwnerDigest": "274c216b042742c06ce5f1f6215e913d6b8407044db4a9470ecf1ede73bddbc1",
+  "preservedRuns": [
+    "profile-failed-cli",
+    "profile-failed-readback-cli",
+    "profile-failed-preservation-cli"
+  ],
+  "attempts": [
+    "initial strict native readback",
+    "discard native output/represent parsed mismatch",
+    "semantic stored readback instead of extra byte-preservation gate"
+  ],
+  "hypotheses": [
+    {
+      "id": "native-output-format",
+      "prediction": "fixed diagnostic reports native-json before schema parse; raw native streams remain discarded"
+    },
+    {
+      "id": "canonical-observation-shape",
+      "prediction": "fixed diagnostic reports native-shape after valid JSON; infer no identity/product failure yet"
+    },
+    {
+      "id": "native-identity-boundary",
+      "prediction": "fixed diagnostic reports native-identity with only canonical PID/UID/GID booleans/numbers"
+    },
+    {
+      "id": "canonical-receipt-schema",
+      "prediction": "fixed diagnostic reports receipt-shape after valid observation and identity; repair field/contract binding only"
+    }
+  ],
+  "selectedProbe": "Temporary fixed-stage stderr instrumentation through the same registered CLI; no product behavior, source pin, decoder input or identity guard weakened; remove diagnostics after attribution",
+  "next": "One bounded repair only after separating observation; no cache cleanup or fourth guessed fix",
+  "diagnosticProofs": [
+    "profile-diagnostic-cli/diagnostic.json",
+    "profile-identity-diagnostic-cli/diagnostic.json",
+    "profile-network-origin-cli/diagnostic.json"
+  ],
+  "revisedDiagnosis": "All actual child identity flags match; the denied import-time urllib3.util.connection._has_ipv6 socket bind was incorrectly counted as an outbound network attempt.",
+  "dependencySourceDigest": "2633bbdb69731e5ccb5cf4e4afd65605d86c7979cc5633126f50c92d5ad74a74",
+  "priorAttemptExplanation": "Parsing, settings-preservation and cache guesses did not affect the shared network counter; the observed guard failure was networkAbsent=false only.",
+  "boundedRepair": "Keep every socket.bind denied and report blockedSocketBinds separately. Count/reject socket.connect and socket.getaddrinfo as network attempts. Remove all temporary stage/origin instrumentation and unnecessary nullable/stored-profile receipt branches.",
+  "expectedProof": "Both valid configurations read back all seven exact consumer settings with actual child identity, networkAttempts=0 and blockedSocketBinds>0; all six invalid inputs remain refused before effects. Unfiltered CLI/show/down only; wholeAT incomplete."
+}

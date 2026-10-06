@@ -1,5 +1,38 @@
 import { z } from "zod";
 
+export const hermesGatewayProfileSchema = z.strictObject({
+  gateway: z.strictObject({
+    multiplex_profiles: z.boolean(), loop_watchdog: z.boolean(),
+    loop_watchdog_probe_interval_s: z.number().min(1).max(3600),
+    loop_watchdog_probe_timeout_s: z.number().min(1).max(600),
+    loop_watchdog_max_strikes: z.int().min(1).max(1000)
+  }),
+  platforms: z.strictObject({ discord: z.strictObject({ enabled: z.boolean() }) }),
+  streaming: z.strictObject({ enabled: z.boolean() })
+});
+export const hermesGatewayConsumerInventorySchema = z.strictObject({
+  sourceCommit: z.literal("8d5e3e412138342e8bf30443e72bd4e6a9abd057"),
+  sources: z.array(z.strictObject({ path: z.enum(["gateway/config.py", "gateway/config_loader.py", "hermes_cli/config.py"]), digest: z.string().regex(/^[a-f0-9]{64}$/) })).length(3),
+  keys: z.array(z.strictObject({ path: z.string().min(1).max(100), consumer: z.enum(["GatewayConfig", "PlatformConfig", "StreamingConfig"]) })).length(7)
+});
+export const hermesGatewayNativeObservationSchema = z.strictObject({
+  effective: hermesGatewayProfileSchema,
+  pid: z.int().positive(), parentPid: z.int().positive(), uid: z.int().nonnegative(), gid: z.int().nonnegative(),
+  networkAttempts: z.int().nonnegative(), blockedSocketBinds: z.int().nonnegative()
+});
+export const hermesGatewayProfileReceiptSchema = z.strictObject({
+  scope: z.literal("gateway-fragment"), profile: hermesGatewayProfileSchema,
+  profileDigest: z.string().regex(/^[a-f0-9]{64}$/), consumerInventoryDigest: z.string().regex(/^[a-f0-9]{64}$/),
+  sourceCommit: z.literal("8d5e3e412138342e8bf30443e72bd4e6a9abd057"),
+  native: hermesGatewayNativeObservationSchema,
+  nativeExitCode: z.literal(0), nativeConsumerMatched: z.literal(true),
+  profilePublicationPerformed: z.literal(false), liveProviderSends: z.literal(0), acceptanceComplete: z.literal(false)
+});
+export type HermesGatewayProfileV1 = z.infer<typeof hermesGatewayProfileSchema>;
+export type HermesGatewayConsumerInventoryV1 = z.infer<typeof hermesGatewayConsumerInventorySchema>;
+export type HermesGatewayNativeObservationV1 = z.infer<typeof hermesGatewayNativeObservationSchema>;
+export type HermesGatewayProfileReceiptV1 = z.infer<typeof hermesGatewayProfileReceiptSchema>;
+
 export const installedHermesDependencyRecordSchema = z.object({
   packages: z.object({ venv: z.object({ environment: z.string().min(1).max(4096) }) })
 });
@@ -38,6 +71,10 @@ export type HermesAuthConcurrencyObservationV1 = z.infer<typeof hermesAuthConcur
 export type HermesAuthRefreshEffectV1 = z.infer<typeof hermesAuthRefreshEffectSchema>;
 export type HermesAuthFixtureResultV1 = z.infer<typeof hermesAuthFixtureResultSchema>;
 export const hermesRuntimeSchemaInventory = {
+  HermesGatewayProfileV1: hermesGatewayProfileSchema,
+  HermesGatewayConsumerInventoryV1: hermesGatewayConsumerInventorySchema,
+  HermesGatewayNativeObservationV1: hermesGatewayNativeObservationSchema,
+  HermesGatewayProfileReceiptV1: hermesGatewayProfileReceiptSchema,
   InstalledHermesDependencyRecordV1: installedHermesDependencyRecordSchema,
   HermesPublicRuntimeCommandV1: hermesPublicRuntimeCommandSchema,
   HermesAuthConcurrencyObservationV1: hermesAuthConcurrencyObservationSchema,

@@ -1,0 +1,323 @@
+{
+  "recordedAt": "2026-10-06T22:03:23.489339+00:00",
+  "card": "R0.10",
+  "rung": "CLI",
+  "stackId": "997589e1-eb2a-49f2-a4fc-1a3c1c75e893",
+  "records": [
+    {
+      "AT": "AT-hermes-config-75",
+      "unfiltered": true,
+      "operationId": "a3d141e9-6e19-4825-842d-5a352b45d758",
+      "runExit": 1,
+      "showExit": 1,
+      "runShowExact": true,
+      "wholeState": "NOT_IMPLEMENTED",
+      "acceptanceComplete": false,
+      "checks": 8,
+      "allChecksPass": false,
+      "maximumPrerequisiteLength": 282,
+      "runtimeBinding": {
+        "releaseDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "controlDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "schemaDigest": "cfa86d6e92b06814f73a3e3687e7f3ccdcc463630b351c8447b20d8f04ec5ea9",
+        "fixtureDigest": "4f1593e1358743428ea086d1e5318bcda21410e4d2e695496be19b2798f395e2"
+      },
+      "caseManifestDigest": "b903f6980daa4e6dd369a7d201d5a0249132b01546279f9472daebe8dab05d13",
+      "sourceRegistration": {
+        "id": "AT-hermes-config-75",
+        "rung": "CLI",
+        "sourceAssertionHash": "901516dd5ec64a9d7e28c9fcfec9f7877b8e539031fcfda5fe347e06919316cd",
+        "commandId": "probe.run",
+        "scenarioId": "profile.gateway-consumers",
+        "owner": "hermes",
+        "firstRelease": "R0",
+        "kind": "behavioral",
+        "mandatoryCases": [
+          {
+            "id": "generated-gateway-consumed",
+            "publicOperation": "HermesProfile.consumeGateway",
+            "phase": "generated-gateway-consumed"
+          },
+          {
+            "id": "nondefault-gateway-consumed",
+            "publicOperation": "HermesProfile.consumeGateway",
+            "phase": "nondefault-gateway-consumed"
+          },
+          {
+            "id": "unknown-root-refused",
+            "publicOperation": "HermesProfile.consumeGateway",
+            "phase": "unknown-root-refused"
+          },
+          {
+            "id": "unknown-nested-refused",
+            "publicOperation": "HermesProfile.consumeGateway",
+            "phase": "unknown-nested-refused"
+          },
+          {
+            "id": "ignored-key-refused",
+            "publicOperation": "HermesProfile.consumeGateway",
+            "phase": "ignored-key-refused"
+          },
+          {
+            "id": "native-default-replacement-refused",
+            "publicOperation": "HermesProfile.consumeGateway",
+            "phase": "native-default-replacement-refused"
+          },
+          {
+            "id": "container-shape-refused",
+            "publicOperation": "HermesProfile.consumeGateway",
+            "phase": "container-shape-refused"
+          },
+          {
+            "id": "missing-key-refused",
+            "publicOperation": "HermesProfile.consumeGateway",
+            "phase": "missing-key-refused"
+          }
+        ],
+        "trigger": "Generate the reviewed gateway fragment and load its target and nondefault sentinels through the real locked native gateway loader; refuse unknown, ignored, missing, malformed and silently defaulted values before disposable profile effects. Complete native profile and protected publication remain pending.",
+        "faultControls": [],
+        "observations": [
+          {
+            "id": "locked-source-consumer-and-native-process",
+            "independentReader": "Native load_gateway_config: effective settings, child identity/network ledger; locked source digests",
+            "caseIds": [
+              "generated-gateway-consumed",
+              "nondefault-gateway-consumed"
+            ]
+          },
+          {
+            "id": "preload-refusal-without-profile-effects",
+            "independentReader": "Public owner error code and disposable profile artifact count before/after rejection",
+            "caseIds": [
+              "unknown-root-refused",
+              "unknown-nested-refused",
+              "ignored-key-refused",
+              "native-default-replacement-refused",
+              "container-shape-refused",
+              "missing-key-refused"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot generate administrative native configuration or inspect the locked parser and isolated OS loader. The public Toy CLI drives the real owner and native consumers without loading a live profile."
+      },
+      "proofs": [
+        {
+          "caseId": "generated-gateway-consumed",
+          "generatedKeys": 7,
+          "profileArtifactsBefore": 0,
+          "profileArtifactsAfter": 1,
+          "receipt": null,
+          "errorCode": "ATTESTATION_INVALID",
+          "sourceValidation": "reviewed-native-files-and-locked-git-blobs",
+          "completeProfileValidated": false,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "nondefault-gateway-consumed",
+          "generatedKeys": 7,
+          "profileArtifactsBefore": 1,
+          "profileArtifactsAfter": 2,
+          "receipt": null,
+          "errorCode": "ATTESTATION_INVALID",
+          "sourceValidation": "reviewed-native-files-and-locked-git-blobs",
+          "completeProfileValidated": false,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "unknown-root-refused",
+          "generatedKeys": 7,
+          "profileArtifactsBefore": 2,
+          "profileArtifactsAfter": 2,
+          "receipt": null,
+          "errorCode": "INVALID_INPUT",
+          "sourceValidation": "reviewed-native-files-and-locked-git-blobs",
+          "completeProfileValidated": false,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "unknown-nested-refused",
+          "generatedKeys": 7,
+          "profileArtifactsBefore": 2,
+          "profileArtifactsAfter": 2,
+          "receipt": null,
+          "errorCode": "INVALID_INPUT",
+          "sourceValidation": "reviewed-native-files-and-locked-git-blobs",
+          "completeProfileValidated": false,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "ignored-key-refused",
+          "generatedKeys": 7,
+          "profileArtifactsBefore": 2,
+          "profileArtifactsAfter": 2,
+          "receipt": null,
+          "errorCode": "INVALID_INPUT",
+          "sourceValidation": "reviewed-native-files-and-locked-git-blobs",
+          "completeProfileValidated": false,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "native-default-replacement-refused",
+          "generatedKeys": 7,
+          "profileArtifactsBefore": 2,
+          "profileArtifactsAfter": 2,
+          "receipt": null,
+          "errorCode": "INVALID_INPUT",
+          "sourceValidation": "reviewed-native-files-and-locked-git-blobs",
+          "completeProfileValidated": false,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "container-shape-refused",
+          "generatedKeys": 7,
+          "profileArtifactsBefore": 2,
+          "profileArtifactsAfter": 2,
+          "receipt": null,
+          "errorCode": "INVALID_INPUT",
+          "sourceValidation": "reviewed-native-files-and-locked-git-blobs",
+          "completeProfileValidated": false,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "missing-key-refused",
+          "generatedKeys": 7,
+          "profileArtifactsBefore": 2,
+          "profileArtifactsAfter": 2,
+          "receipt": null,
+          "errorCode": "INVALID_INPUT",
+          "sourceValidation": "reviewed-native-files-and-locked-git-blobs",
+          "completeProfileValidated": false,
+          "wholeATComplete": false
+        }
+      ]
+    }
+  ],
+  "downExit": 0,
+  "teardown": {
+    "operation": {
+      "operationId": "00bb645d-62d4-470b-98ef-c37371cfa6c5",
+      "state": "succeeded",
+      "acceptedAt": "2026-10-06T22:03:23.479Z"
+    },
+    "requestId": "ecb48958-65d0-4f99-9b48-7abe8b63ac25",
+    "stackId": "997589e1-eb2a-49f2-a4fc-1a3c1c75e893",
+    "result": {
+      "stackId": "997589e1-eb2a-49f2-a4fc-1a3c1c75e893",
+      "release": "R0",
+      "manifestDigest": "4f1593e1358743428ea086d1e5318bcda21410e4d2e695496be19b2798f395e2",
+      "clock": "fake",
+      "model": "fake",
+      "ready": false,
+      "components": [
+        {
+          "id": "bootstrap.resource-admission",
+          "owner": "ops",
+          "state": "PASS",
+          "checkedAt": "2026-10-06T22:03:20.695Z",
+          "reasonCode": "AVAILABLE_MEMORY_AND_OBSERVED_PRESSURE",
+          "prerequisite": "{\"schemaVersion\":\"toy.bootstrap-resource-preflight.v2\",\"measuredAt\":\"2026-10-06T22:03:20.695Z\",\"samples\":[{\"observedAt\":\"2026-10-06T22:03:20.695Z\",\"monotonicNanoseconds\":\"193492551706708\",\"physicalBytes\":\"8589934592\",\"pageSizeBytes\":\"16384\",\"freeBytes\":\"399065088\",\"inactiveBytes\":\"1465843712\",\"purgeableBytes\":\"10272768\",\"speculativeBytes\":\"359251968\",\"availableBytes\":\"2234433536\",\"pressure\":\"normal\",\"pressureSource\":\"os\",\"pressureQueryOutput\":\"1\\n\"}],\"completeMeasurements\":true,\"jobNeedBytes\":\"1073741824\",\"marginBytes\":\"536870912\",\"requiredAvailableBytes\":\"1610612736\",\"minimumAvailableBytes\":\"2234433536\",\"normalPressureObserved\":true,\"headroomSatisfied\":true,\"reasons\":[],\"resourcePermitIssued\":false,\"admissionState\":\"admitted\"}",
+          "nextCommandId": "stack.up",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": []
+          }
+        },
+        {
+          "id": "bootstrap.fixture-runtime",
+          "owner": "ops",
+          "state": "PASS",
+          "checkedAt": "2026-10-06T22:03:23.477Z",
+          "reasonCode": "OWNED_FIXTURE_STOPPED",
+          "prerequisite": null,
+          "nextCommandId": "stack.up",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": []
+          }
+        },
+        {
+          "id": "bootstrap.fixture-identities",
+          "owner": "ops",
+          "state": "NOT_IMPLEMENTED",
+          "checkedAt": "2026-10-06T22:03:23.478Z",
+          "reasonCode": "R0_04_05_ACTUAL_PREREQUISITES_PENDING",
+          "prerequisite": "Actual protected service identities and signed target launcher remain pending.",
+          "nextCommandId": "doctor",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": []
+          }
+        }
+      ],
+      "ownedResourceRefs": [
+        {
+          "module": "ops",
+          "kind": "test_world",
+          "id": "997589e1-eb2a-49f2-a4fc-1a3c1c75e893"
+        }
+      ],
+      "evidenceLocation": "f5c4ce6d-a130-464c-932f-79ac31cd048d",
+      "teardown": {
+        "stackId": "997589e1-eb2a-49f2-a4fc-1a3c1c75e893",
+        "checkpointRefs": [],
+        "fenceRefs": [],
+        "stoppedResourceRefs": [
+          {
+            "module": "ops",
+            "kind": "test_world",
+            "id": "997589e1-eb2a-49f2-a4fc-1a3c1c75e893"
+          }
+        ],
+        "retainedArtifactRefs": [
+          {
+            "module": "ops",
+            "kind": "test_world",
+            "id": "997589e1-eb2a-49f2-a4fc-1a3c1c75e893"
+          }
+        ],
+        "unresolvedResourceRefs": [],
+        "complete": true
+      }
+    },
+    "links": {
+      "recordRefs": [],
+      "observations": [],
+      "artifactDigests": []
+    }
+  },
+  "failure": {
+    "AT": "AT-hermes-config-75",
+    "runExit": 1,
+    "showExit": 1,
+    "failedCases": [
+      {
+        "caseId": "generated-gateway-consumed",
+        "generatedKeys": 7,
+        "profileArtifactsBefore": 0,
+        "profileArtifactsAfter": 1,
+        "receipt": null,
+        "errorCode": "ATTESTATION_INVALID",
+        "sourceValidation": "reviewed-native-files-and-locked-git-blobs",
+        "completeProfileValidated": false,
+        "wholeATComplete": false
+      },
+      {
+        "caseId": "nondefault-gateway-consumed",
+        "generatedKeys": 7,
+        "profileArtifactsBefore": 1,
+        "profileArtifactsAfter": 2,
+        "receipt": null,
+        "errorCode": "ATTESTATION_INVALID",
+        "sourceValidation": "reviewed-native-files-and-locked-git-blobs",
+        "completeProfileValidated": false,
+        "wholeATComplete": false
+      }
+    ]
+  },
+  "completeProfileValidated": false,
+  "wholeAcceptanceComplete": false,
+  "liveProviderSends": 0
+}

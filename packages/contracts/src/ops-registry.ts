@@ -221,6 +221,7 @@ export const testStackCheckInventory = [
   declaration("backup.capacity", "ops", "probe.run"),
   declaration("auth.native-runtime", "hermes", "probe.run"),
   declaration("auth.native-fixture", "hermes", "probe.run"),
+  declaration("profile.native-gateway", "hermes", "probe.run"),
   declaration("bootstrap.reference.connector", "sources", "probe.run"), declaration("bootstrap.reference.tool", "self-improvement", "probe.run"),
   declaration("bootstrap.reference.skill", "self-improvement", "probe.run"), declaration("bootstrap.reference.migration", "ops", "probe.run"),
   declaration("bootstrap.fixture-runtime", "ops", "stack.up"), declaration("bootstrap.fixture-identities", "ops", "doctor"),

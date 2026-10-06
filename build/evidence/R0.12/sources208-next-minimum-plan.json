@@ -1,0 +1,179 @@
+{
+  "schemaVersion": "toy.r0.12.sources208-next-minimum-plan.v1",
+  "createdAt": "2026-10-06T21:59:54Z",
+  "status": "MINIMUM_PUBLIC_BEHAVIOR_IDENTIFIED",
+  "admissionBasis": {
+    "source": "Parent-provided fresh doctor at 2026-10-06T21:56:42Z",
+    "pressure": "normal",
+    "availableBytes": "2245935104",
+    "helperNeedBytes": "268435456",
+    "marginBytes": "536870912",
+    "state": "admitted",
+    "refreshedByThisTask": false
+  },
+  "acceptance": {
+    "id": "AT-sources-208",
+    "source": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/sources.md:4201",
+    "sourceAssertion": "- **AT-sources-208 [R0]** Given the protected process/secret manifest and `_toy_agent` runtime identity, When denial probes use shell, filesystem, MCP, and GUI paths, Then Sources token projects/IPC and raw browser/controller credentials are inaccessible, one gateway/worker owner remains, and signed GUI read bridges expose fixed read operations only.",
+    "sourceAssertionHash": "ab68381944cfd0bdaf5921702347c9b1003d9618b069664cf4e57dcee718d6f1",
+    "sourceDigest": "7caa4347326c27ed528e96106b729fd9f5d0ae3da69518302b519c98b0fa6645",
+    "testPlan": {
+      "source": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/TEST-PLAN.md:484",
+      "rung": "CLI",
+      "requiredEvidence": [
+        "stack",
+        "device/account",
+        "probe:AT-sources-208"
+      ]
+    }
+  },
+  "currentOwnerBehavior": {
+    "publicOwner": "packages/ops RoleControlProbe, exported from packages/ops/src/public.ts and dispatched by the existing toy probe.run command.",
+    "existingCoverage": "AT-authority-35 only: on Darwin, an already-root controller stages an immutable fixed probe, starts a child that drops to actual _toy_agent UID/GID and sole group, verifies six root-owned filesystem mutation attempts are denied, confirms one permitted scratch write/readback, and checks protected canary bytes/inodes/modes plus cleanup.",
+    "concreteGap": "The fixed contract has only six mutation operations and no read probe. RoleControlProbe.run accepts AT-authority-35/control-filesystem-denial only. It does not inspect a protected process/secret manifest, token-projection reads, shell/MCP/GUI credential access, signed GUI operations, or gateway/worker uniqueness. packages/sources/src/public.ts exports Sources types and a reference adapter, not a process-security probe.",
+    "routingGap": "AT-sources-208 appears in tests/acceptance-index.json and in the behavior.sources feature-map row, but tests/registry.yaml has no authored AT-sources-208 CLI manifest. The current CLI dispatch reaches RoleControlProbe only for AT-authority-35."
+  },
+  "selectedMinimumBehavior": {
+    "name": "Actual _toy_agent denial when reading a fixed synthetic protected-projection canary",
+    "rationale": "This adds one read-denial assertion to the existing root-staged, actual-UID RoleControlProbe path. It is the smallest bounded extension adjacent to the existing six-operation OS denial probe and can be observed at the assigned CLI rung without consulting or exposing any actual token, account, browser credential, or controller credential.",
+    "proofLimit": "This proves only a filesystem read denial against a non-secret sentinel under the observed _toy_agent identity. It does not satisfy or promote the whole AT-sources-208 assertion."
+  },
+  "minimalImplementation": {
+    "publicInterface": "Extend the existing RoleControlProbe.run case contract for AT-sources-208; add no module, service, protocol, dependency, or CLI command.",
+    "ownerChanges": [
+      {
+        "path": "packages/contracts/src/identity-bootstrap.ts",
+        "change": "Add one fixed read-canary operation to roleControlDenialOperationSchema and widen the canonical attempt count to seven; keep the existing generated contract path."
+      },
+      {
+        "path": "control/bootstrap/denial-probe.ts",
+        "change": "Attempt one read of the staged root-owned 0400 synthetic projection sentinel under _toy_agent; discard read bytes and report only denied plus EACCES/EPERM/OTHER."
+      },
+      {
+        "path": "packages/ops/src/role-control-probe.ts",
+        "change": "For the AT-sources-208 assigned case, stage and independently read back the fixed non-secret sentinel, bind actual child UID/GID/groups and the source assertion digest, and require the new read attempt to be denied."
+      },
+      {
+        "path": "cli/src/main.ts",
+        "change": "Dispatch the new probe case to the existing public RoleControlProbe."
+      },
+      {
+        "path": "tests/registry.yaml",
+        "change": "Author the CLI manifest and mandatory case for AT-sources-208 through RoleControlProbe.run; after this source edit, regenerate registered probe metadata and contract schemas with scripts/generate-contracts.mjs."
+      },
+      {
+        "path": "skills/toy-control/FEATURE-MAP.md",
+        "change": "Update the existing behavior.sources entry, which already indexes AT-sources-208, to link the actual ops owner/contract/probe path and its CLI operation while leaving the remaining acceptance gates visibly incomplete."
+      }
+    ],
+    "safetyInvariant": "Use a fixed synthetic sentinel only; never read or copy real Sources tokens or browser/controller credentials. Receipt contains no sentinel bytes. The root controller stages only the request-scoped root-owned test fixture, compares its bytes/mode/inode after the child attempt, and removes disposable scratch."
+  },
+  "assignedCliProof": {
+    "run": "On a fresh owned fake R0 stack after retiring the frozen pending denial payload, run toy --env test --stack <stack-id> probe run AT-sources-208 --request-id <uuid> --json without --case; retain exact show and down proof.",
+    "expected": "The seven-operation result records actual child identity/groups; only the new sentinel-read attempt is used for this minimum slice and it is denied with EACCES/EPERM. The receipt binds the exact source assertion hash, sentinel digest, unchanged root-owned sentinel metadata, and no sentinel contents; operation remains a partial assigned proof with wholeATComplete=false.",
+    "readbackAndTeardown": "Use public `probe show` to compare the persisted receipt/check, then public `stack down` and retain its receipt. The independent readback must confirm scratch cleanup and exact request/source binding. No actual credential inventory or account state is included."
+  },
+  "featureMapStatus": {
+    "current": "behavior.sources already lists AT-sources-208 under the indexed acceptance assertions, but its owner is the written Sources requirements and its route is labeled future assigned-rung owner route.",
+    "required": "Keep the existing acceptance mapping and update owner/public-file/command links to the implemented ops denial probe when the behavior lands; no extra CLI feature or duplicate acceptance row is needed."
+  },
+  "deferredGates": {
+    "implementationGaps": [
+      "Denied reads through actual shell and MCP access paths.",
+      "Authenticated or signed GUI read bridges with a fixed read-operation allowlist.",
+      "An observed one-gateway/one-worker owner inventory bound to the protected process manifest."
+    ],
+    "evidenceGaps": [
+      "Actual protected process/secret manifest assertions beyond the disposable canary.",
+      "Actual browser/controller credential non-access proof without exposing credential material.",
+      "The full assigned device/account evidence and independent probes for every path named in AT-sources-208."
+    ],
+    "scope": "These are explicit incomplete implementation/evidence items, not reasons to await an outside adapter or approval. No live credential, browser profile, account, gateway, worker, or protected manifest was read. Whole AT and R0 promotion remain false."
+  },
+  "sourceDigests": [
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/sources.md",
+      "sha256": "7caa4347326c27ed528e96106b729fd9f5d0ae3da69518302b519c98b0fa6645"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/TEST-PLAN.md",
+      "sha256": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2"
+    },
+    {
+      "path": "tests/acceptance-index.json",
+      "sha256": "c9b645eab7f55b2ebf35d7db769a534a4837de23ad3dc3d913f3189e781d44fa"
+    },
+    {
+      "path": "tests/registry.yaml",
+      "sha256": "500311309bf1d71db12d70a18069569de24cf8366fae9f3c335940519bf7820f"
+    },
+    {
+      "path": "packages/contracts/src/identity-bootstrap.ts",
+      "sha256": "61735b32635352b317cfaed1e03890b1680d3b124299c96a40d61b858118880c"
+    },
+    {
+      "path": "packages/ops/src/role-control-probe.ts",
+      "sha256": "76520cf44ae26f431b8e1003003940abd1763a74e8c32bfe289527dc26745905"
+    },
+    {
+      "path": "control/bootstrap/denial-probe.ts",
+      "sha256": "d47caee10470e21a28e5815283f95d92870dd6dcc705850c0a93c8d40e9ade64"
+    },
+    {
+      "path": "packages/ops/src/public.ts",
+      "sha256": "9646f70f89434cf774e66a602eed45f751c353f200b2f3e1a2cf41968e079284"
+    },
+    {
+      "path": "cli/src/main.ts",
+      "sha256": "a31ba6b03829108b390f5b1228b476794bde4346eb051f4a7601a8cae0e4f95b"
+    },
+    {
+      "path": "packages/ops/src/fixture-stack.ts",
+      "sha256": "c1eebace98edb5ec7059f38339b6af2e589aa5733eb80536831f086d52e2c577"
+    },
+    {
+      "path": "packages/sources/src/public.ts",
+      "sha256": "d892f901476c743543c27e16470483e54ab48384aacd887f35992036aeeaad82"
+    },
+    {
+      "path": "skills/toy-control/FEATURE-MAP.md",
+      "sha256": "50f006a8e8b28930cea88fd9fb77c89f3862a702066f3d8e4b5a25a9c0fbed5f"
+    },
+    {
+      "path": "docs/adr/0026-role-identity-bootstrap.md",
+      "sha256": "673adfc4ab4b9354fba8d699539b3df1e3a6c94f8aa0ff91da1787876b3603d7"
+    },
+    {
+      "path": "scripts/generate-contracts.mjs",
+      "sha256": "4af296522897059f2d54d63077535da25a9fdbce7eeaad3ceba818962ffdc371"
+    },
+    {
+      "path": "packages/contracts/src/public.ts",
+      "sha256": "ad77e5aca06fc1d0445476c8ce7a159a6b9ed94a5f58f1807bcff439795e97dc"
+    },
+    {
+      "path": "packages/contracts/src/generated-probe-registry.ts",
+      "sha256": "2a9979fd234c28d4f1f1191750210be01453d77a4e4b4fea5e4d7ac9031c4e33"
+    },
+    {
+      "path": "build/evidence/R0.12/sources-cli/summary.json",
+      "sha256": "90fe7c2fb8037006e2756777051767f94854485904a30260bf002d4a2f5f480d"
+    }
+  ],
+  "workPerformed": "Read-only inspection of the exact assignment, current owner/contract/CLI registry/map, and saved R0.12 Sources baselines; authored only this plan. No R0.10 files, source, contracts, runtime, stack, root state, credentials, or external research were touched.",
+  "parentReview": {
+    "recordedAt": "2026-10-06T22:02:54.362683+00:00",
+    "queuedPinsMustRemainUnchanged": true,
+    "frozenPaths": [
+      "control/bootstrap/denial-probe.ts",
+      "packages/ops/src/role-control-probe.ts",
+      "control/dist/bootstrap/denial-probe.js",
+      "packages/ops/dist/role-control-probe.js"
+    ],
+    "rootRequest": "ROOT-R005-20261006-01",
+    "mutationAllowedAfter": "Exact queued root result verified and frozen request retired; pending request is not permission to change its payload",
+    "requiredProofCorrection": "Assigned proof must use unfiltered probe run AT-sources-208, exact show and complete teardown. --case is diagnostic only and cannot be the claimed assigned proof.",
+    "minimumDispatchCorrection": "Any future change must update CLI, public owner, FixtureProbe registration/CheckView guard, authored registry and architecture/features.json; regenerate the feature map rather than hand-editing it.",
+    "rejectedShortcut": "Do not widen the existing six-operation canonical contract while a pending root command expects its fixed shape. Preserve the old version and authored six-operation manifest even after request retirement."
+  }
+}

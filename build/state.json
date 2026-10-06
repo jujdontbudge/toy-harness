@@ -2,7 +2,7 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-06T21:53:44.696195+00:00",
+  "updatedAt": "2026-10-06T22:20:21.875723+00:00",
   "phase": "R0_FEASIBILITY",
   "activeCard": "R0.10",
   "cardCount": 87,
@@ -848,6 +848,12 @@
         "unfiltered": true,
         "runShowExact": true,
         "cleanupComplete": true
+      },
+      "staleResponsePlan": {
+        "evidence": "build/evidence/R0.03/stale-response-next-minimum-plan.json",
+        "state": "PARENT_REVIEW_REQUIRED_BEFORE_IMPLEMENTATION",
+        "wholeATComplete": false,
+        "concern": "Adding a separate credential does not establish a newer rotation of the existing credential; serial lock ordering may prevent the proposed held-response-before-add choreography. Do not report rejected from marker timing alone."
       }
     },
     "R0.04": {
@@ -1428,7 +1434,11 @@
         "build/evidence/R0.10/contracts-inventory-minimum-plan.json",
         "build/evidence/R0.10/delegation-baseline.json",
         "build/evidence/R0.10/delegation-owner-gap-assessment.json",
-        "build/evidence/R0.10/delegation-verification.json"
+        "build/evidence/R0.10/delegation-verification.json",
+        "build/evidence/R0.10/profile-verification.json",
+        "build/evidence/R0.10/profile-recovery.json",
+        "build/evidence/R0.10/profile-check-result.json",
+        "build/evidence/R0.10/profile-root-pins.json"
       ],
       "requiredATs": [
         "AT-activity-focus-86",
@@ -1480,9 +1490,10 @@
         }
       },
       "lastVerification": {
-        "evidence": "build/evidence/R0.10/unfiltered-queue-verification.json",
-        "verdict": "PASS_NINE_UNFILTERED_SOURCE_BOUND_NATIVE_QUEUE_DIAGNOSTICS",
-        "checks": 9,
+        "evidence": "build/evidence/R0.10/profile-verification.json",
+        "verdict": "PASS_EIGHT_NATIVE_GATEWAY_FRAGMENT_AND_NINE_ROUTE_DIAGNOSTICS",
+        "checks": 8,
+        "regressionChecks": 9,
         "runShowExact": true,
         "cleanupPassed": true,
         "ownedWorldsDown": true,
@@ -1588,7 +1599,34 @@
         ]
       },
       "nativeProfileKeyPlan": "build/evidence/R0.10/native-profile-key-minimum-plan.json",
-      "nativeProfileKeyBaseline": "build/evidence/R0.10/profile-baseline.json"
+      "nativeProfileKeyBaseline": "build/evidence/R0.10/profile-baseline.json",
+      "nativeProfileKeyUnit": {
+        "startedAt": "2026-10-06T21:58:00Z",
+        "targetStopAt": "2026-10-06T23:58:00Z",
+        "stoppedAt": "2026-10-06T22:20:21.875723+00:00",
+        "state": "STOPPED_EIGHT_UNFILTERED_NATIVE_GATEWAY_FRAGMENT_CHECKS_VERIFIED",
+        "scope": "Seven reviewed gateway/platform/streaming keys consumed by the real locked exported native loader; strict invalid-key/value refusals before disposable profile effects",
+        "interface": "HermesProfile.generateGateway/consumeGateway; HermesProfileProbe.run",
+        "evidence": "build/evidence/R0.10/profile-verification.json",
+        "recoveryEvidence": "build/evidence/R0.10/profile-recovery.json",
+        "diagnostics": 8,
+        "regressionDiagnostics": 9,
+        "unfiltered": true,
+        "runShowExact": true,
+        "cleanupComplete": true,
+        "nativeUid": 501,
+        "nativeGid": 20,
+        "serviceIdentityVerified": false,
+        "wholeATsPassed": [],
+        "acceptanceComplete": false,
+        "profilePublicationPerformed": false,
+        "liveProviderSends": 0,
+        "deferrals": [
+          "Remaining documented profile fragments and real owner inputs, including attention/budgets",
+          "Protected publication, service identity, provider binding and complete AT75",
+          "Swift contract generation and compilation until R3"
+        ]
+      }
     },
     "R0.11": {
       "implementation": "NOT_IMPLEMENTED",
@@ -1688,6 +1726,11 @@
           "Sources208 broad native/process/secret/GUI matrix",
           "No report or component fixture permits whole register admission"
         ]
+      },
+      "sources208Plan": {
+        "evidence": "build/evidence/R0.12/sources208-next-minimum-plan.json",
+        "state": "PARENT_REVIEWED_AFTER_FROZEN_ROOT_REQUEST_ONLY",
+        "wholeATComplete": false
       }
     },
     "R0.13": {
@@ -10310,7 +10353,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Implement the bounded AT-hermes-config-75 native-profile-key source unit from its fresh unfiltered NOT_IMPLEMENTED baseline. Inspect only required documented native keys and already-locked local consumers; write the existing Hermes module interface/strict canonical DTO first, include CLI/public-owner/fixture dispatch and manifest/map, then assigned CLI run/show/down proof. Absent attention/budget/other-owner fragments stay explicit; raw config round-trip is not consumer proof. Poll ROOT-REQUESTS.md; verified root02 DONE immediately takes priority for R0.01 native grant-owner load. Pending root never blocks the active goal.",
+  "nextAction": "Close and push the verified AT75 gateway fragment. Review the R0.03 held-successful-refresh-response plan against the actual existing native transaction lock and generation semantics before any mutation; separate-grant persistence is not stale-response rejection. Use a fresh unfiltered assigned CLI baseline and bounded scope if reachable. Poll ROOT-REQUESTS.md; exact root02 DONE takes immediate R0.01 native grant-owner-load priority. Pending root never blocks the active goal.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -20830,8 +20873,8 @@
     "deadlineUtc": "2026-10-06T21:05:00Z"
   },
   "continuationAssessment": {
-    "observedAt": "2026-10-06T21:04:08.970141+00:00",
-    "reason": "R0.12 generic missing-ID/outside-selected unit and R0.03 unfiltered native fresh-process unit are committed/pushed with strict checks, exact run/show and complete teardown. R0.11 real ordering gap is recorded without invented thresholds or caller-only proof. Both root requests remain pending, never blocking goal. No live trial/deployment/whole acceptance promotion.",
+    "observedAt": "2026-10-06T22:20:21.875723+00:00",
+    "reason": "Seven-key native gateway fragment verified with 8 assigned unfiltered diagnostics plus 9 route regressions, exact readbacks and complete teardown. Full profile and protected acceptance remain pending. Two exact root requests remain pending without blocking goal. Next auth helper plan requires parent correction before source changes.",
     "goalStatus": "active"
   },
   "executionPolicy": {
@@ -20869,16 +20912,17 @@
     "queuedRootReserveAdmissionGate": false
   },
   "latestStaticVerification": {
+    "recordedAt": "2026-10-06T22:20:21.875723+00:00",
     "command": "npm run check",
     "exitCode": 0,
-    "artifacts": 370,
-    "contracts": 302,
-    "cliManifests": 18,
-    "features": 97,
+    "artifacts": 374,
+    "contracts": 306,
+    "cliManifests": 19,
+    "features": 98,
     "commands": 55,
     "indexedATs": 1447,
-    "schemaDigest": "f509080a6f77a7ccac9701af9c4dd5ef1e951f8aaa469907ba833b35b7abdd88",
-    "evidence": "build/evidence/R0.02/route-check-result.json",
+    "schemaDigest": "7798d085965af38a039922143b282be466d42ca88ffaa75d3923b1a3b3392dcc",
+    "evidence": "build/evidence/R0.10/profile-check.txt",
     "languages": [
       "TypeScript",
       "Python"
@@ -20925,15 +20969,15 @@
     }
   },
   "resourceAdmission": {
-    "measuredAt": "2026-10-06T21:47:28.626Z",
-    "availableBytes": "3059974144",
-    "pressure": "normal",
+    "measuredAt": "2026-10-06T22:19:26.520Z",
+    "availableBytes": "2516434944",
+    "pressure": "warning",
     "strictlyFreeAdmission": false,
     "repairFloorApplied": false,
     "ownedWorldsRunning": 0,
     "helpersRunning": 0,
     "helperNeedBytes": "0",
-    "measurementSource": "build/evidence/R0.02/route-cli/up.json",
+    "measurementSource": "build/evidence/R0.10/profile-doctor-final.json",
     "marginBytes": "536870912",
     "ownedStackId": null,
     "stackAndNativeChildrenNeedBytes": "0",

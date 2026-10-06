@@ -811,6 +811,7 @@ RegisteredCheckIdV1 = Literal[
     "backup.capacity",
     "auth.native-runtime",
     "auth.native-fixture",
+    "profile.native-gateway",
     "bootstrap.reference.connector",
     "bootstrap.reference.tool",
     "bootstrap.reference.skill",
@@ -5383,6 +5384,79 @@ class NativeReleaseEligibilityDecisionV1Capabilities(TypedDict):
 NativeReleaseEligibilityDecisionV1DeliveryBranch = Literal[
     "web-pwa-plus-discord",
     "native-candidate-plus-web-and-discord",
+]
+
+class HermesGatewayProfileV1(TypedDict):
+    gateway: "HermesGatewayProfileV1Gateway"
+    platforms: "HermesGatewayProfileV1Platforms"
+    streaming: "HermesGatewayProfileV1PlatformsDiscord"
+
+class HermesGatewayProfileV1Gateway(TypedDict):
+    multiplex_profiles: bool
+    loop_watchdog: bool
+    loop_watchdog_probe_interval_s: float
+    loop_watchdog_probe_timeout_s: float
+    loop_watchdog_max_strikes: int
+
+class HermesGatewayProfileV1Platforms(TypedDict):
+    discord: "HermesGatewayProfileV1PlatformsDiscord"
+
+class HermesGatewayProfileV1PlatformsDiscord(TypedDict):
+    enabled: bool
+
+class HermesGatewayConsumerInventoryV1(TypedDict):
+    sourceCommit: "HermesGatewayConsumerInventoryV1SourceCommit"
+    sources: list["HermesGatewayConsumerInventoryV1SourcesItem"]
+    keys: list["HermesGatewayConsumerInventoryV1KeysItem"]
+
+HermesGatewayConsumerInventoryV1SourceCommit = Literal[
+    "8d5e3e412138342e8bf30443e72bd4e6a9abd057",
+]
+
+class HermesGatewayConsumerInventoryV1SourcesItem(TypedDict):
+    path: "HermesGatewayConsumerInventoryV1SourcesItemPath"
+    digest: str
+
+HermesGatewayConsumerInventoryV1SourcesItemPath = Literal[
+    "gateway/config.py",
+    "gateway/config_loader.py",
+    "hermes_cli/config.py",
+]
+
+class HermesGatewayConsumerInventoryV1KeysItem(TypedDict):
+    path: str
+    consumer: "HermesGatewayConsumerInventoryV1KeysItemConsumer"
+
+HermesGatewayConsumerInventoryV1KeysItemConsumer = Literal[
+    "GatewayConfig",
+    "PlatformConfig",
+    "StreamingConfig",
+]
+
+class HermesGatewayNativeObservationV1(TypedDict):
+    effective: "HermesGatewayProfileV1"
+    pid: int
+    parentPid: int
+    uid: int
+    gid: int
+    networkAttempts: int
+    blockedSocketBinds: int
+
+class HermesGatewayProfileReceiptV1(TypedDict):
+    scope: "HermesGatewayProfileReceiptV1Scope"
+    profile: "HermesGatewayProfileV1"
+    profileDigest: str
+    consumerInventoryDigest: str
+    sourceCommit: "HermesGatewayConsumerInventoryV1SourceCommit"
+    native: "HermesGatewayNativeObservationV1"
+    nativeExitCode: "ModelRouteReceiptV1ReservationTokensVariant0"
+    nativeConsumerMatched: "CliBootstrapIdentitiesResultOk"
+    profilePublicationPerformed: "RoleBootstrapReportV1IdentityGateVerified"
+    liveProviderSends: "ModelRouteReceiptV1ReservationTokensVariant0"
+    acceptanceComplete: "RoleBootstrapReportV1IdentityGateVerified"
+
+HermesGatewayProfileReceiptV1Scope = Literal[
+    "gateway-fragment",
 ]
 
 class InstalledHermesDependencyRecordV1(TypedDict):

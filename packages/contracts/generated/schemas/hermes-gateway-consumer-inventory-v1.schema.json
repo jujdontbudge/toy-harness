@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "sourceCommit": {
+      "type": "string",
+      "const": "8d5e3e412138342e8bf30443e72bd4e6a9abd057"
+    },
+    "sources": {
+      "minItems": 3,
+      "maxItems": 3,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "enum": [
+              "gateway/config.py",
+              "gateway/config_loader.py",
+              "hermes_cli/config.py"
+            ]
+          },
+          "digest": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        },
+        "required": [
+          "path",
+          "digest"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "keys": {
+      "minItems": 7,
+      "maxItems": 7,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "consumer": {
+            "type": "string",
+            "enum": [
+              "GatewayConfig",
+              "PlatformConfig",
+              "StreamingConfig"
+            ]
+          }
+        },
+        "required": [
+          "path",
+          "consumer"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "sourceCommit",
+    "sources",
+    "keys"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:HermesGatewayConsumerInventoryV1"
+}

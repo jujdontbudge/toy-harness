@@ -1,0 +1,185 @@
+{
+  "schema": "toy.r0.03.stale-response-next-minimum-plan.v1",
+  "kind": "read-only-minimum-plan",
+  "recordedAt": "2026-10-06T22:16:22Z",
+  "decision": "The smallest remaining AT-hermes-config-87 gap is a successful refresh response held until after the independent auth-add has committed, followed by a public fresh-process check that the newest accepted refresh generation and added grant both survive. The current refresh-first choreography releases the response before observing auth-add completion, and records stale-response handling as not-exercised.",
+  "scope": {
+    "authorizedWrite": "This plan artifact only.",
+    "implementationFiles": [
+      "packages/hermes/src/auth-fixture.ts",
+      "patches/hermes-auth-fixture.patch"
+    ],
+    "noInterfaceOrRegistrationChange": "The existing CLI dispatch, AT registration, and observation schema already reach and represent the needed case. No contract, manifest, public route, protocol, or infrastructure change is indicated by this source review.",
+    "preserve": [
+      "AT-hermes-config-87 strict newest-generation and added-grant assertions",
+      "the independent public auth-add and expired-chat subprocesses",
+      "the existing external provider response barrier and native OS crash cuts",
+      "installed Hermes and protected/native/whole-AT boundaries"
+    ]
+  },
+  "assignedAcceptance": {
+    "id": "AT-hermes-config-87",
+    "rung": "CLI",
+    "source": "../personal-assistant-harness/specs/hermes-config.md:3051",
+    "assertion": "Given concurrent real subprocess refresh/add with fake-provider barriers and OS/storage crash cuts, When both orders persist and fresh processes reload, Then the newest accepted refresh generation and added grant survive without a lost update.",
+    "assertionSha256": "b8ba9587534e2983742157a3ab9ae8911da4928e48e3ab0894944914bb91e6bb",
+    "acceptanceIndexSourceDigest": "d3548fde13180bc750660f306caa0041101832e398ccdabd6cfdac0b3de8f4af",
+    "acceptanceIndexSha256": "c9b645eab7f55b2ebf35d7db769a534a4837de23ad3dc3d913f3189e781d44fa",
+    "registrySha256": "9c8b984d411a294c4841badf72291a242064755b613aaaf927d3764bc3deb039",
+    "assignedManifestCases": [
+      "add-first",
+      "refresh-first",
+      "before-replace",
+      "after-replace"
+    ],
+    "sourceFileSha256": "d3548fde13180bc750660f306caa0041101832e398ccdabd6cfdac0b3de8f4af",
+    "supportingCompletedSubsetAssertions": [
+      {
+        "id": "AT-hermes-config-84",
+        "assertionSha256": "c3002739bea88d5199c702493f348084adb65b3042fc8f9b679925ffc0d13726"
+      },
+      {
+        "id": "AT-hermes-config-85",
+        "assertionSha256": "1945ba7e3df83056f7a11ddb1cc4f6f74b3c2e91744c47f77a85e3f34e21ff67"
+      }
+    ]
+  },
+  "currentProof": {
+    "at87Run": {
+      "path": "build/evidence/R0.03/unfiltered-refresh-cli/AT-hermes-config-87-run.json",
+      "sha256": "87f99149a6d3cef8ec2da5cc7202b5383e3deaede4f1aae12850292109c5ccae"
+    },
+    "at87Show": {
+      "path": "build/evidence/R0.03/unfiltered-refresh-cli/AT-hermes-config-87-show.json",
+      "sha256": "83e0620315b43db11861958e74b38983c2789894da5befed8349f82ad3fd063f",
+      "operationId": "4a2b8edb-8d42-4ec3-ae84-77f14aab8940",
+      "stackId": "e535681b-7289-4d0c-86fb-17e7be441253",
+      "caseManifestDigest": "e7ef1b5667a4e3e7b70b32005868d283ad2ab01963791e828154a99452c6917a",
+      "caseChecks": "26 PASS; registered result state NOT_IMPLEMENTED and complete=false",
+      "refreshFirstPrimaryObservation": {
+        "providerEffect": "rotated -> stale; response barrier was released",
+        "acceptedModelGeneration": "stale",
+        "staleRefreshResponse": "not-exercised",
+        "freshAddedGrant": "added -> added-rotated; fresh process usable",
+        "networkDenials": 0
+      },
+      "addFirstPrimaryObservation": {
+        "acceptedModelGeneration": "rotated",
+        "staleRefreshResponse": "not-exercised",
+        "freshAddedGrant": "fresh process usable"
+      }
+    },
+    "refreshVerification": {
+      "path": "build/evidence/R0.03/unfiltered-refresh-verification.json",
+      "sha256": "9fb0374c2011413074b18a2ab62101ae3684d802d037ec75d8ed077d3b97541c",
+      "unfiltered": true,
+      "rung": "CLI",
+      "teardownComplete": true,
+      "acceptanceComplete": false,
+      "wholeATsPassed": [],
+      "liveProviderSends": 0
+    },
+    "at84At85Verification": {
+      "path": "build/evidence/R0.03/unfiltered-save-verification.json",
+      "sha256": "9f355ad346b89ca04e1f1c6d7736a594de095e4b2fc7a09c7822570bdeedaa0f",
+      "unfiltered": true,
+      "teardownComplete": true,
+      "acceptanceComplete": false,
+      "wholeATsPassed": [],
+      "liveProviderSends": 0,
+      "limit": "The saved AT-84/85 public CLI subsets do not establish the missing AT-87 late-response ordering."
+    },
+    "rootPins": {
+      "path": "build/evidence/R0.03/unfiltered-refresh-root-pins.json",
+      "sha256": "d6a79c95cb9dd578d80fc275748e5db77e38ea47337d195636eacedd024b17b2",
+      "verified": true,
+      "meaning": "Recorded protected/root pins are unchanged; this does not complete the separate frozen Root02 dependency."
+    },
+    "frozenRootDependency": {
+      "path": "build/evidence/R0.03/unfiltered-auth-verification.json",
+      "sha256": "06d6e619ab4eab35aee72fb0ffdc616e2cd795392ebb3777810b50b9d35631be",
+      "root02Status": "PENDING",
+      "instruction": "Leave Root02 and its frozen files untouched."
+    }
+  },
+  "sourceDiagnosis": [
+    {
+      "path": "packages/hermes/src/auth-fixture.ts",
+      "sha256": "22f6ca68c6efb2316488bcb5ed051492735c0e51efdb06d3e7f636a23c762df1",
+      "references": [
+        "444-451: concurrencyMatches requires both staleRefreshTokenRejected and staleRefreshResponse to remain not-exercised, so passing cases cannot assert stale-response behavior.",
+        "535-545: refresh-first launches expired chat, holds refresh-response-pending, starts auth-add, then releases release-refresh-token before auth-add completion is observed.",
+        "553-559: only after refresh/catalog observation does this path release auth-add, wait for its command result, and parse the public add result.",
+        "587-608: subsequent fresh public reloads verify refresh generation and added-grant use, but do not exercise a late response after add persistence."
+      ]
+    },
+    {
+      "path": "patches/hermes-auth-fixture.patch",
+      "sha256": "3451e9c644f71614925648bda6083915ff77af3d2883c78cfd541dffcd43c2b5",
+      "references": [
+        "138-156: _concurrency_result hard-codes staleRefreshResponse as not-exercised.",
+        "323-345: existing external fake OAuth response barrier for the auth-add child.",
+        "355-382: existing fake HTTP refresh response is held/released by refresh-response-pending and release-refresh-token; provider ledger records the successful generation transition.",
+        "709-718: the wrapper exposes auth-add command-returned and a separately released result, allowing the public command outcome to be observed before releasing the held refresh response."
+      ]
+    },
+    {
+      "path": "packages/contracts/src/hermes-runtime.ts",
+      "sha256": "c31ac6435069eae51c7ccfa7f6b97326861ac5cfcfccf94cb85e75127ce3db8d",
+      "references": [
+        "48-57: staleRefreshResponse already permits not-exercised or rejected; no contract change is needed."
+      ]
+    },
+    {
+      "path": "tests/registry.yaml",
+      "sha256": "9c8b984d411a294c4841badf72291a242064755b613aaaf927d3764bc3deb039",
+      "references": [
+        "174-247: AT-87 already assigns both persistence orders, the provider barrier, expired-access clock control, native-process-crash cuts, and public fresh-process/provider/readback/teardown observations."
+      ]
+    },
+    {
+      "path": "cli/src/main.ts",
+      "sha256": "909d39d2c65540d2d7718ef237caa6093c74b1242e2a4102ead6e01879def46b",
+      "references": [
+        "241: unfiltered AT-84/85/87 dispatches through HermesAuthProbe.run."
+      ]
+    },
+    {
+      "path": "packages/hermes/src/auth-probe.ts",
+      "sha256": "200447c5904ea435fec0026d23c5c5385452ef143b4e770fd29ea8bd1ef02666",
+      "references": [
+        "19-24: unfiltered input is admitted only for the registered auth probes and AT-87 manifest.",
+        "80: AT-87 reaches runHermesAuthFixture with the existing concurrent-refresh-add fixture."
+      ]
+    }
+  ],
+  "minimumNextUnit": {
+    "files": [
+      "packages/hermes/src/auth-fixture.ts",
+      "patches/hermes-auth-fixture.patch"
+    ],
+    "boundedChange": "Reorder only the existing refresh-first external-barrier choreography: keep the original successful refresh response held; release the public auth-add token; wait for and parse its successful public command result; use a fresh public auth list/readback to establish the added row is committed; then release the held refresh response and finish the public expired-chat process. Feed the observed completion into the existing staleRefreshResponse field instead of hard-coding not-exercised. Preserve both primary children, generation/effect ledger, existing fresh chat/list/priority checks, add-first order, and before/after replace cuts.",
+    "acceptanceOracle": "After the response is released later than the committed add, require the public fresh-process/readback evidence to show the newest accepted refresh generation and added grant together, with no lost row, no duplicate refresh rotation, no network denial, and unchanged independent root. Report staleRefreshResponse as rejected only when those observations demonstrate the older completion was not accepted as the active newer state; any overwrite, missing grant, or ambiguity stays FAIL/incomplete.",
+    "outOfScope": [
+      "Do not equate stale refresh-token rejection with stale successful-response handling; keep staleRefreshTokenRejected separate.",
+      "Do not bypass public auth commands or add private-function tests, internal mocks, a new protocol, provider service, or CLI route.",
+      "Do not weaken existing generation, persistence-order, crash-cut, no-lost-update, or root-preservation assertions."
+    ]
+  },
+  "largestInterfaceVerificationAfterImplementation": {
+    "sourceBinding": "Confirm source/spec digest d3548fde13180bc750660f306caa0041101832e398ccdabd6cfdac0b3de8f4af, exact AT assertion hash b8ba9587534e2983742157a3ab9ae8911da4928e48e3ab0894944914bb91e6bb, and registered mandatory cases before the run.",
+    "commands": [
+      "toy --env test stack up --release <R0-R5> --request-id <UUID> --json",
+      "toy --env test --stack <stack-id> probe run AT-hermes-config-87 --request-id <UUID> --timeout-ms 120000 --wait-ms 120000 --json",
+      "toy --env test --stack <stack-id> probe show <operation-id> --json",
+      "toy --env test --stack <stack-id> stack down --request-id <UUID> --json"
+    ],
+    "readback": "Require sourceRegistration.sourceAssertionHash and caseManifestDigest binding; inspect public subprocess argv/identity/exit, provider generation/effects, the held-response-after-add ordering, fresh public list/priority/chat outcomes for both orders and crash cuts, independent root digest, all case states, and completed owned-stack teardown. Do not call this the whole AT while the registered operation remains incomplete or higher native/protected gates are open."
+  },
+  "unresolvedWholeAndIdentityGates": [
+    "The current AT-87 probe state is NOT_IMPLEMENTED despite passing diagnostic checks; acceptanceComplete=false and wholeATsPassed is empty.",
+    "The proof has zero live provider sends and proves behavior only against the registered fake external endpoints.",
+    "protectedControllerVerified=false and nativeServiceIdentityVerified=false; caller subprocess UID evidence does not establish service identity.",
+    "The separate frozen Root02 dependency is still PENDING and must remain untouched."
+  ]
+}

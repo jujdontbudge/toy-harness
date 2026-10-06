@@ -1,0 +1,258 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "scope": {
+      "type": "string",
+      "const": "gateway-fragment"
+    },
+    "profile": {
+      "type": "object",
+      "properties": {
+        "gateway": {
+          "type": "object",
+          "properties": {
+            "multiplex_profiles": {
+              "type": "boolean"
+            },
+            "loop_watchdog": {
+              "type": "boolean"
+            },
+            "loop_watchdog_probe_interval_s": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 3600
+            },
+            "loop_watchdog_probe_timeout_s": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 600
+            },
+            "loop_watchdog_max_strikes": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000
+            }
+          },
+          "required": [
+            "multiplex_profiles",
+            "loop_watchdog",
+            "loop_watchdog_probe_interval_s",
+            "loop_watchdog_probe_timeout_s",
+            "loop_watchdog_max_strikes"
+          ],
+          "additionalProperties": false
+        },
+        "platforms": {
+          "type": "object",
+          "properties": {
+            "discord": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "enabled"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "discord"
+          ],
+          "additionalProperties": false
+        },
+        "streaming": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "enabled"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "gateway",
+        "platforms",
+        "streaming"
+      ],
+      "additionalProperties": false
+    },
+    "profileDigest": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "consumerInventoryDigest": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "sourceCommit": {
+      "type": "string",
+      "const": "8d5e3e412138342e8bf30443e72bd4e6a9abd057"
+    },
+    "native": {
+      "type": "object",
+      "properties": {
+        "effective": {
+          "type": "object",
+          "properties": {
+            "gateway": {
+              "type": "object",
+              "properties": {
+                "multiplex_profiles": {
+                  "type": "boolean"
+                },
+                "loop_watchdog": {
+                  "type": "boolean"
+                },
+                "loop_watchdog_probe_interval_s": {
+                  "type": "number",
+                  "minimum": 1,
+                  "maximum": 3600
+                },
+                "loop_watchdog_probe_timeout_s": {
+                  "type": "number",
+                  "minimum": 1,
+                  "maximum": 600
+                },
+                "loop_watchdog_max_strikes": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 1000
+                }
+              },
+              "required": [
+                "multiplex_profiles",
+                "loop_watchdog",
+                "loop_watchdog_probe_interval_s",
+                "loop_watchdog_probe_timeout_s",
+                "loop_watchdog_max_strikes"
+              ],
+              "additionalProperties": false
+            },
+            "platforms": {
+              "type": "object",
+              "properties": {
+                "discord": {
+                  "type": "object",
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "enabled"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "discord"
+              ],
+              "additionalProperties": false
+            },
+            "streaming": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "enabled"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "gateway",
+            "platforms",
+            "streaming"
+          ],
+          "additionalProperties": false
+        },
+        "pid": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "parentPid": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "uid": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "gid": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "networkAttempts": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "blockedSocketBinds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "effective",
+        "pid",
+        "parentPid",
+        "uid",
+        "gid",
+        "networkAttempts",
+        "blockedSocketBinds"
+      ],
+      "additionalProperties": false
+    },
+    "nativeExitCode": {
+      "type": "number",
+      "const": 0
+    },
+    "nativeConsumerMatched": {
+      "type": "boolean",
+      "const": true
+    },
+    "profilePublicationPerformed": {
+      "type": "boolean",
+      "const": false
+    },
+    "liveProviderSends": {
+      "type": "number",
+      "const": 0
+    },
+    "acceptanceComplete": {
+      "type": "boolean",
+      "const": false
+    }
+  },
+  "required": [
+    "scope",
+    "profile",
+    "profileDigest",
+    "consumerInventoryDigest",
+    "sourceCommit",
+    "native",
+    "nativeExitCode",
+    "nativeConsumerMatched",
+    "profilePublicationPerformed",
+    "liveProviderSends",
+    "acceptanceComplete"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:HermesGatewayProfileReceiptV1"
+}
