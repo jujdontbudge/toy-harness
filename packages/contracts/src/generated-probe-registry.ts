@@ -4491,6 +4491,121 @@ export const registeredCliAcceptanceManifestInventory = [
       }
     ],
     "simUnavailableReason": "SIM cannot invoke administrative pre-build research gates or replace indexed research documents. CLI drives the real owner through the owned external report seam."
+  },
+  {
+    "id": "AT-sources-190",
+    "rung": "CLI",
+    "sourceAssertionHash": "dfc4c143354044cd88c82c6868b2f0b3fc6ab39a9fe45aa595692bf881f9831a",
+    "commandId": "probe.run",
+    "scenarioId": "research.component-comparison",
+    "owner": "self-improvement",
+    "firstRelease": "R0",
+    "kind": "static_gate",
+    "mandatoryCases": [
+      {
+        "id": "missing-route-receipt",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "missing-route-receipt"
+      },
+      {
+        "id": "wrong-observed-model",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "wrong-observed-model"
+      },
+      {
+        "id": "wrong-observed-reasoning",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "wrong-observed-reasoning"
+      },
+      {
+        "id": "wrong-observed-tier",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "wrong-observed-tier"
+      },
+      {
+        "id": "missing-research-skill",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "missing-research-skill"
+      },
+      {
+        "id": "wrong-skill-revision",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "wrong-skill-revision"
+      },
+      {
+        "id": "wrong-loaded-skill-digest",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "wrong-loaded-skill-digest"
+      },
+      {
+        "id": "missing-outside-option",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "missing-outside-option"
+      },
+      {
+        "id": "unsupported-outside-option",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "unsupported-outside-option"
+      },
+      {
+        "id": "complete-research-receipt",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "complete-research-receipt"
+      }
+    ],
+    "trigger": "Inspect indexed connector decisions with canonical research receipts, shared observed route, exact loaded skill and proven outside alternative; preserve whole authentication gates.",
+    "faultControls": [
+      {
+        "id": "external-research-receipt-and-option-faults",
+        "seam": "provider",
+        "affectedPhases": [
+          "missing-route-receipt",
+          "wrong-observed-model",
+          "wrong-observed-reasoning",
+          "wrong-observed-tier",
+          "missing-research-skill",
+          "wrong-skill-revision",
+          "wrong-loaded-skill-digest",
+          "missing-outside-option",
+          "unsupported-outside-option"
+        ]
+      }
+    ],
+    "observations": [
+      {
+        "id": "research-execution-admission",
+        "independentReader": "EngineeringControl.checkResearch: indexed report, canonical receipt and exact validation IDs",
+        "caseIds": [
+          "missing-route-receipt",
+          "wrong-observed-model",
+          "wrong-observed-reasoning",
+          "wrong-observed-tier",
+          "missing-research-skill",
+          "wrong-skill-revision",
+          "wrong-loaded-skill-digest",
+          "missing-outside-option",
+          "unsupported-outside-option",
+          "complete-research-receipt"
+        ]
+      },
+      {
+        "id": "persisted-research-receipt",
+        "independentReader": "toy probe.show: exact stored route/skill admission diagnostics and source binding",
+        "caseIds": [
+          "missing-route-receipt",
+          "wrong-observed-model",
+          "wrong-observed-reasoning",
+          "wrong-observed-tier",
+          "missing-research-skill",
+          "wrong-skill-revision",
+          "wrong-loaded-skill-digest",
+          "missing-outside-option",
+          "unsupported-outside-option",
+          "complete-research-receipt"
+        ]
+      }
+    ],
+    "simUnavailableReason": "SIM cannot replace administrative pre-build research reports or inspect execution metadata. CLI drives the real indexed owner with external report/receipt fixtures."
   }
 ] as const;
 export const acceptanceSourceDigest = "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2";

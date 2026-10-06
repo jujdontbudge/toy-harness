@@ -4168,6 +4168,367 @@ ResearchSourcesComponentComparisonV1Scope = Literal[
     "sources-component",
 ]
 
+class ResearchSourcesComponentComparisonV2(TypedDict):
+    scope: "ResearchSourcesComponentComparisonV2Scope"
+    componentId: str
+    mappedRequirements: list[str]
+    options: list["ResearchComponentComparisonV2OptionsItem"]
+    evidence: list["ResearchComponentComparisonV1EvidenceItem"]
+    selectedOptionId: str
+    unresolvedFacts: list["ResearchComponentComparisonCheckV1UnresolvedFactsItem"]
+    acceptanceIds: list[str]
+    validationPlan: str
+    releaseGate: str
+    validations: list["ResearchComponentComparisonV2ValidationsItem"]
+    accountValidationPlan: str
+    regionValidationPlan: str
+    executionReceipt: Optional["ModelRouteDelegationReceiptV1"]
+
+ResearchSourcesComponentComparisonV2Scope = Literal[
+    "sources-research-component",
+]
+
+class ModelRouteDelegationReceiptV1(TypedDict):
+    requestId: str
+    purpose: "ModelRouteDelegationReceiptV1Purpose"
+    executionBackend: "ModelRouteDelegationReceiptV1ExecutionBackend"
+    state: "ModelRouteDelegationReceiptV1State"
+    reasonCode: "ModelRouteDelegationReceiptV1ReasonCode"
+    skill: Optional["LoadedResearchSkillV1"]
+    invocation: Optional["ModelRouteReceiptV1"]
+    taskDigest: Optional["Digest"]
+    requestDigest: Optional["Digest"]
+    nativeExecutionVerified: "RoleBootstrapReportV1IdentityGateVerified"
+    acceptanceComplete: "RoleBootstrapReportV1IdentityGateVerified"
+
+ModelRouteDelegationReceiptV1Purpose = Literal[
+    "research",
+    "implementation",
+]
+
+ModelRouteDelegationReceiptV1ExecutionBackend = Literal[
+    "codex_exec",
+]
+
+ModelRouteDelegationReceiptV1State = Literal[
+    "observed",
+    "refused",
+]
+
+ModelRouteDelegationReceiptV1ReasonCode = Literal[
+    "DELEGATION_ROUTE_OBSERVED",
+    "DELEGATION_ROUTE_REFUSED",
+    "RESEARCH_SKILL_UNAVAILABLE",
+    "RESEARCH_SKILL_MISMATCH",
+]
+
+class LoadedResearchSkillV1(TypedDict):
+    repository: "LoadedResearchSkillV1Repository"
+    sourcePath: "LoadedResearchSkillV1SourcePath"
+    sourceCommit: str
+    contentDigest: "Digest"
+    loadedDigest: "Digest"
+    semanticVersion: Optional[str]
+    resources: list["LoadedResearchSkillV1ResourcesItem"]
+
+LoadedResearchSkillV1Repository = Literal[
+    "https://github.com/mattpocock/skills",
+]
+
+LoadedResearchSkillV1SourcePath = Literal[
+    "skills/engineering/research/SKILL.md",
+]
+
+class LoadedResearchSkillV1ResourcesItem(TypedDict):
+    path: "LoadedResearchSkillV1ResourcesItemPath"
+    digest: "Digest"
+
+LoadedResearchSkillV1ResourcesItemPath = Literal[
+    "LICENSE",
+    "agents/openai.yaml",
+]
+
+class ModelRouteReceiptV1(TypedDict):
+    requested: "ModelRouteSelectionV1"
+    observed: Optional["ModelRouteSettingsV1"]
+    terminal: "ModelRouteReceiptV1Terminal"
+    completion: "ModelRouteReceiptV1Completion"
+    usage: Optional["ModelRouteUsageV1"]
+    usageState: "ModelRouteReceiptV1UsageState"
+    reservationTokens: "ModelRouteReceiptV1ReservationTokens"
+    outputStarted: bool
+    reasonCode: Optional["ModelRouteReceiptV1ReasonCodeValue"]
+    paidFallbackAttempted: "RoleBootstrapReportV1IdentityGateVerified"
+
+ModelRouteSelectionV1 = Union[
+    "ModelRouteSelectionV1Variant0",
+    "ModelRouteSelectionV1Variant1",
+    "ModelRouteSelectionV1Variant2",
+    "ModelRouteSelectionV1Variant3",
+    "ModelRouteSelectionV1Variant4",
+    "ModelRouteSelectionV1Variant5",
+    "ModelRouteSelectionV1Variant6",
+    "ModelRouteSelectionV1Variant7",
+    "ModelRouteSelectionV1Variant8",
+]
+
+class ModelRouteSelectionV1Variant0(TypedDict):
+    role: "ModelRouteSelectionV1Variant0Role"
+    arm: "ModelRouteSelectionV1Variant0Arm"
+    provider: "ModelRouteSelectionV1Variant0Provider"
+    settings: "ModelRouteSelectionV1Variant0Settings"
+    policyDigest: "Digest"
+    localOutputReservationTokens: "ModelRouteSelectionV1Variant0LocalOutputReservationTokens"
+    outputLimitKind: "ModelRouteSelectionV1Variant0OutputLimitKind"
+    providerOutputCap: None
+    paidFallbackPermitted: "RoleBootstrapReportV1IdentityGateVerified"
+
+ModelRouteSelectionV1Variant0Role = Literal[
+    "foreground",
+]
+
+ModelRouteSelectionV1Variant0Arm = Literal[
+    "original",
+]
+
+ModelRouteSelectionV1Variant0Provider = Literal[
+    "siwc_responses",
+]
+
+class ModelRouteSelectionV1Variant0Settings(TypedDict):
+    model: "ModelRouteSelectionV1Variant0SettingsModel"
+    effort: "ModelRouteSelectionV1Variant0SettingsEffort"
+    serviceTier: "ModelRouteSelectionV1Variant0SettingsServiceTier"
+
+ModelRouteSelectionV1Variant0SettingsModel = Literal[
+    "gpt-6.1-sol",
+]
+
+ModelRouteSelectionV1Variant0SettingsEffort = Literal[
+    "max",
+]
+
+ModelRouteSelectionV1Variant0SettingsServiceTier = Literal[
+    "priority",
+]
+
+ModelRouteSelectionV1Variant0LocalOutputReservationTokens = Literal[
+    4096,
+]
+
+ModelRouteSelectionV1Variant0OutputLimitKind = Literal[
+    "estimate",
+]
+
+class ModelRouteSelectionV1Variant1(TypedDict):
+    role: "ModelRouteSelectionV1Variant1Role"
+    arm: "ModelRouteSelectionV1Variant0Arm"
+    provider: "ModelRouteSelectionV1Variant0Provider"
+    settings: "ModelRouteSelectionV1Variant0Settings"
+    policyDigest: "Digest"
+    localOutputReservationTokens: "ModelRouteSelectionV1Variant0LocalOutputReservationTokens"
+    outputLimitKind: "ModelRouteSelectionV1Variant0OutputLimitKind"
+    providerOutputCap: None
+    paidFallbackPermitted: "RoleBootstrapReportV1IdentityGateVerified"
+
+ModelRouteSelectionV1Variant1Role = Literal[
+    "background",
+]
+
+class ModelRouteSelectionV1Variant2(TypedDict):
+    role: "ModelRouteSelectionV1Variant2Role"
+    arm: "ModelRouteSelectionV1Variant0Arm"
+    provider: "ModelRouteSelectionV1Variant0Provider"
+    settings: "ModelRouteSelectionV1Variant0Settings"
+    policyDigest: "Digest"
+    localOutputReservationTokens: "ModelRouteSelectionV1Variant0LocalOutputReservationTokens"
+    outputLimitKind: "ModelRouteSelectionV1Variant0OutputLimitKind"
+    providerOutputCap: None
+    paidFallbackPermitted: "RoleBootstrapReportV1IdentityGateVerified"
+
+ModelRouteSelectionV1Variant2Role = Literal[
+    "cron",
+]
+
+class ModelRouteSelectionV1Variant3(TypedDict):
+    role: "ModelRouteSelectionV1Variant3Role"
+    arm: "ModelRouteSelectionV1Variant0Arm"
+    provider: "ModelRouteSelectionV1Variant0Provider"
+    settings: "ModelRouteSelectionV1Variant0Settings"
+    policyDigest: "Digest"
+    localOutputReservationTokens: "ModelRouteSelectionV1Variant0LocalOutputReservationTokens"
+    outputLimitKind: "ModelRouteSelectionV1Variant0OutputLimitKind"
+    providerOutputCap: None
+    paidFallbackPermitted: "RoleBootstrapReportV1IdentityGateVerified"
+
+ModelRouteSelectionV1Variant3Role = Literal[
+    "auxiliary",
+]
+
+class ModelRouteSelectionV1Variant4(TypedDict):
+    role: "ModelRouteSelectionV1Variant4Role"
+    arm: "ModelRouteSelectionV1Variant0Arm"
+    provider: "ModelRouteSelectionV1Variant0Provider"
+    settings: "ModelRouteSelectionV1Variant0Settings"
+    policyDigest: "Digest"
+    localOutputReservationTokens: "ModelRouteSelectionV1Variant0LocalOutputReservationTokens"
+    outputLimitKind: "ModelRouteSelectionV1Variant0OutputLimitKind"
+    providerOutputCap: None
+    paidFallbackPermitted: "RoleBootstrapReportV1IdentityGateVerified"
+
+ModelRouteSelectionV1Variant4Role = Literal[
+    "continuation",
+]
+
+class ModelRouteSelectionV1Variant5(TypedDict):
+    role: "ModelRouteSelectionV1Variant5Role"
+    arm: "ModelRouteSelectionV1Variant0Arm"
+    provider: "ModelRouteSelectionV1Variant0Provider"
+    settings: "ModelRouteSelectionV1Variant5Settings"
+    policyDigest: "Digest"
+    localOutputReservationTokens: "ModelRouteSelectionV1Variant0LocalOutputReservationTokens"
+    outputLimitKind: "ModelRouteSelectionV1Variant0OutputLimitKind"
+    providerOutputCap: None
+    paidFallbackPermitted: "RoleBootstrapReportV1IdentityGateVerified"
+
+ModelRouteSelectionV1Variant5Role = Literal[
+    "research",
+]
+
+class ModelRouteSelectionV1Variant5Settings(TypedDict):
+    model: "ModelRouteSelectionV1Variant0SettingsModel"
+    effort: "ModelRouteSelectionV1Variant5SettingsEffort"
+    serviceTier: "ModelRouteSelectionV1Variant0SettingsServiceTier"
+
+ModelRouteSelectionV1Variant5SettingsEffort = Literal[
+    "medium",
+]
+
+class ModelRouteSelectionV1Variant6(TypedDict):
+    role: "ModelRouteSelectionV1Variant6Role"
+    arm: "ModelRouteSelectionV1Variant0Arm"
+    provider: "ModelRouteSelectionV1Variant0Provider"
+    settings: "ModelRouteSelectionV1Variant6Settings"
+    policyDigest: "Digest"
+    localOutputReservationTokens: "ModelRouteSelectionV1Variant0LocalOutputReservationTokens"
+    outputLimitKind: "ModelRouteSelectionV1Variant0OutputLimitKind"
+    providerOutputCap: None
+    paidFallbackPermitted: "RoleBootstrapReportV1IdentityGateVerified"
+
+ModelRouteSelectionV1Variant6Role = Literal[
+    "child",
+]
+
+class ModelRouteSelectionV1Variant6Settings(TypedDict):
+    model: "ModelRouteSelectionV1Variant6SettingsModel"
+    effort: "ModelRouteSelectionV1Variant0SettingsEffort"
+    serviceTier: "ModelRouteSelectionV1Variant0SettingsServiceTier"
+
+ModelRouteSelectionV1Variant6SettingsModel = Literal[
+    "gpt-6-luna",
+]
+
+class ModelRouteSelectionV1Variant7(TypedDict):
+    role: "ModelRouteSelectionV1Variant1Role"
+    arm: "ModelRouteSelectionV1Variant7Arm"
+    provider: "ModelRouteSelectionV1Variant0Provider"
+    settings: "ModelRouteSelectionV1Variant7Settings"
+    policyDigest: "Digest"
+    localOutputReservationTokens: "ModelRouteSelectionV1Variant0LocalOutputReservationTokens"
+    outputLimitKind: "ModelRouteSelectionV1Variant0OutputLimitKind"
+    providerOutputCap: None
+    paidFallbackPermitted: "RoleBootstrapReportV1IdentityGateVerified"
+
+ModelRouteSelectionV1Variant7Arm = Literal[
+    "experimental-background-high-standard",
+]
+
+class ModelRouteSelectionV1Variant7Settings(TypedDict):
+    model: "ModelRouteSelectionV1Variant0SettingsModel"
+    effort: "ModelRouteSelectionV1Variant7SettingsEffort"
+    serviceTier: "ModelRouteSelectionV1Variant7SettingsServiceTier"
+
+ModelRouteSelectionV1Variant7SettingsEffort = Literal[
+    "high",
+]
+
+ModelRouteSelectionV1Variant7SettingsServiceTier = Literal[
+    "default",
+]
+
+class ModelRouteSelectionV1Variant8(TypedDict):
+    role: "ModelRouteSelectionV1Variant2Role"
+    arm: "ModelRouteSelectionV1Variant7Arm"
+    provider: "ModelRouteSelectionV1Variant0Provider"
+    settings: "ModelRouteSelectionV1Variant7Settings"
+    policyDigest: "Digest"
+    localOutputReservationTokens: "ModelRouteSelectionV1Variant0LocalOutputReservationTokens"
+    outputLimitKind: "ModelRouteSelectionV1Variant0OutputLimitKind"
+    providerOutputCap: None
+    paidFallbackPermitted: "RoleBootstrapReportV1IdentityGateVerified"
+
+class ModelRouteSettingsV1(TypedDict):
+    model: "ModelRouteSettingsV1Model"
+    effort: "ModelRouteSettingsV1Effort"
+    serviceTier: "ModelRouteSettingsV1ServiceTier"
+
+ModelRouteSettingsV1Model = Literal[
+    "gpt-6.1-sol",
+    "gpt-6-luna",
+]
+
+ModelRouteSettingsV1Effort = Literal[
+    "max",
+    "medium",
+    "high",
+]
+
+ModelRouteSettingsV1ServiceTier = Literal[
+    "priority",
+    "default",
+]
+
+ModelRouteReceiptV1Terminal = Literal[
+    "completed",
+    "failed",
+    "interrupted",
+]
+
+ModelRouteReceiptV1Completion = Literal[
+    "complete",
+    "pending",
+]
+
+class ModelRouteUsageV1(TypedDict):
+    inputTokens: int
+    outputTokens: int
+    reasoningTokens: int
+
+ModelRouteReceiptV1UsageState = Literal[
+    "known",
+    "uncertain",
+]
+
+ModelRouteReceiptV1ReservationTokens = Union[
+    "ModelRouteReceiptV1ReservationTokensVariant0",
+    "ModelRouteSelectionV1Variant0LocalOutputReservationTokens",
+]
+
+ModelRouteReceiptV1ReservationTokensVariant0 = Literal[
+    0,
+]
+
+ModelRouteReceiptV1ReasonCodeValue = Literal[
+    "quota_exhausted",
+    "authentication_unavailable",
+    "provider_failed",
+    "protocol_invalid",
+    "route_mismatch",
+    "route_unobserved",
+    "usage_unavailable",
+    "stream_interrupted",
+]
+
 class InstalledCodexRuntimeV1(TypedDict):
     expectedVersion: "InstalledCodexRuntimeV1ExpectedVersion"
     observedVersion: Optional[str]
@@ -4213,262 +4574,29 @@ ModelArmV1 = Literal[
     "experimental-background-high-standard",
 ]
 
-class ModelRouteSettingsV1(TypedDict):
-    model: "ModelRouteSettingsV1Model"
-    effort: "ModelRouteSettingsV1Effort"
-    serviceTier: "ModelRouteSettingsV1ServiceTier"
-
-ModelRouteSettingsV1Model = Literal[
-    "gpt-6.1-sol",
-    "gpt-6-luna",
-]
-
-ModelRouteSettingsV1Effort = Literal[
-    "max",
-    "medium",
-    "high",
-]
-
-ModelRouteSettingsV1ServiceTier = Literal[
-    "priority",
-    "default",
-]
-
 class ModelRoutePolicyV1(TypedDict):
     schemaVersion: "ModelRoutePolicyV1SchemaVersion"
-    provider: "ModelRoutePolicyV1Provider"
+    provider: "ModelRouteSelectionV1Variant0Provider"
     paidFallbackPermitted: "RoleBootstrapReportV1IdentityGateVerified"
     original: "ModelRoutePolicyV1Original"
-    experimentalBackgroundHighStandard: "ModelRoutePolicyV1ExperimentalBackgroundHighStandard"
+    experimentalBackgroundHighStandard: "ModelRouteSelectionV1Variant7Settings"
 
 ModelRoutePolicyV1SchemaVersion = Literal[
     "toy.models.v1",
 ]
 
-ModelRoutePolicyV1Provider = Literal[
-    "siwc_responses",
-]
-
 class ModelRoutePolicyV1Original(TypedDict):
-    foreground: "ModelRoutePolicyV1OriginalForeground"
-    background: "ModelRoutePolicyV1OriginalForeground"
-    cron: "ModelRoutePolicyV1OriginalForeground"
-    auxiliary: "ModelRoutePolicyV1OriginalForeground"
-    continuation: "ModelRoutePolicyV1OriginalForeground"
-    research: "ModelRoutePolicyV1OriginalResearch"
-    child: "ModelRoutePolicyV1OriginalChild"
-
-class ModelRoutePolicyV1OriginalForeground(TypedDict):
-    model: "ModelRoutePolicyV1OriginalForegroundModel"
-    effort: "ModelRoutePolicyV1OriginalForegroundEffort"
-    serviceTier: "ModelRoutePolicyV1OriginalForegroundServiceTier"
-
-ModelRoutePolicyV1OriginalForegroundModel = Literal[
-    "gpt-6.1-sol",
-]
-
-ModelRoutePolicyV1OriginalForegroundEffort = Literal[
-    "max",
-]
-
-ModelRoutePolicyV1OriginalForegroundServiceTier = Literal[
-    "priority",
-]
-
-class ModelRoutePolicyV1OriginalResearch(TypedDict):
-    model: "ModelRoutePolicyV1OriginalForegroundModel"
-    effort: "ModelRoutePolicyV1OriginalResearchEffort"
-    serviceTier: "ModelRoutePolicyV1OriginalForegroundServiceTier"
-
-ModelRoutePolicyV1OriginalResearchEffort = Literal[
-    "medium",
-]
-
-class ModelRoutePolicyV1OriginalChild(TypedDict):
-    model: "ModelRoutePolicyV1OriginalChildModel"
-    effort: "ModelRoutePolicyV1OriginalForegroundEffort"
-    serviceTier: "ModelRoutePolicyV1OriginalForegroundServiceTier"
-
-ModelRoutePolicyV1OriginalChildModel = Literal[
-    "gpt-6-luna",
-]
-
-class ModelRoutePolicyV1ExperimentalBackgroundHighStandard(TypedDict):
-    model: "ModelRoutePolicyV1OriginalForegroundModel"
-    effort: "ModelRoutePolicyV1ExperimentalBackgroundHighStandardEffort"
-    serviceTier: "ModelRoutePolicyV1ExperimentalBackgroundHighStandardServiceTier"
-
-ModelRoutePolicyV1ExperimentalBackgroundHighStandardEffort = Literal[
-    "high",
-]
-
-ModelRoutePolicyV1ExperimentalBackgroundHighStandardServiceTier = Literal[
-    "default",
-]
+    foreground: "ModelRouteSelectionV1Variant0Settings"
+    background: "ModelRouteSelectionV1Variant0Settings"
+    cron: "ModelRouteSelectionV1Variant0Settings"
+    auxiliary: "ModelRouteSelectionV1Variant0Settings"
+    continuation: "ModelRouteSelectionV1Variant0Settings"
+    research: "ModelRouteSelectionV1Variant5Settings"
+    child: "ModelRouteSelectionV1Variant6Settings"
 
 class ModelRouteSelectInputV1(TypedDict):
     role: "ModelRoleV1"
     arm: "ModelArmV1"
-
-ModelRouteSelectionV1 = Union[
-    "ModelRouteSelectionV1Variant0",
-    "ModelRouteSelectionV1Variant1",
-    "ModelRouteSelectionV1Variant2",
-    "ModelRouteSelectionV1Variant3",
-    "ModelRouteSelectionV1Variant4",
-    "ModelRouteSelectionV1Variant5",
-    "ModelRouteSelectionV1Variant6",
-    "ModelRouteSelectionV1Variant7",
-    "ModelRouteSelectionV1Variant8",
-]
-
-class ModelRouteSelectionV1Variant0(TypedDict):
-    role: "ModelRouteSelectionV1Variant0Role"
-    arm: "ModelRouteSelectionV1Variant0Arm"
-    provider: "ModelRoutePolicyV1Provider"
-    settings: "ModelRoutePolicyV1OriginalForeground"
-    policyDigest: "Digest"
-    localOutputReservationTokens: "ModelRouteSelectionV1Variant0LocalOutputReservationTokens"
-    outputLimitKind: "ModelRouteSelectionV1Variant0OutputLimitKind"
-    providerOutputCap: None
-    paidFallbackPermitted: "RoleBootstrapReportV1IdentityGateVerified"
-
-ModelRouteSelectionV1Variant0Role = Literal[
-    "foreground",
-]
-
-ModelRouteSelectionV1Variant0Arm = Literal[
-    "original",
-]
-
-ModelRouteSelectionV1Variant0LocalOutputReservationTokens = Literal[
-    4096,
-]
-
-ModelRouteSelectionV1Variant0OutputLimitKind = Literal[
-    "estimate",
-]
-
-class ModelRouteSelectionV1Variant1(TypedDict):
-    role: "ModelRouteSelectionV1Variant1Role"
-    arm: "ModelRouteSelectionV1Variant0Arm"
-    provider: "ModelRoutePolicyV1Provider"
-    settings: "ModelRoutePolicyV1OriginalForeground"
-    policyDigest: "Digest"
-    localOutputReservationTokens: "ModelRouteSelectionV1Variant0LocalOutputReservationTokens"
-    outputLimitKind: "ModelRouteSelectionV1Variant0OutputLimitKind"
-    providerOutputCap: None
-    paidFallbackPermitted: "RoleBootstrapReportV1IdentityGateVerified"
-
-ModelRouteSelectionV1Variant1Role = Literal[
-    "background",
-]
-
-class ModelRouteSelectionV1Variant2(TypedDict):
-    role: "ModelRouteSelectionV1Variant2Role"
-    arm: "ModelRouteSelectionV1Variant0Arm"
-    provider: "ModelRoutePolicyV1Provider"
-    settings: "ModelRoutePolicyV1OriginalForeground"
-    policyDigest: "Digest"
-    localOutputReservationTokens: "ModelRouteSelectionV1Variant0LocalOutputReservationTokens"
-    outputLimitKind: "ModelRouteSelectionV1Variant0OutputLimitKind"
-    providerOutputCap: None
-    paidFallbackPermitted: "RoleBootstrapReportV1IdentityGateVerified"
-
-ModelRouteSelectionV1Variant2Role = Literal[
-    "cron",
-]
-
-class ModelRouteSelectionV1Variant3(TypedDict):
-    role: "ModelRouteSelectionV1Variant3Role"
-    arm: "ModelRouteSelectionV1Variant0Arm"
-    provider: "ModelRoutePolicyV1Provider"
-    settings: "ModelRoutePolicyV1OriginalForeground"
-    policyDigest: "Digest"
-    localOutputReservationTokens: "ModelRouteSelectionV1Variant0LocalOutputReservationTokens"
-    outputLimitKind: "ModelRouteSelectionV1Variant0OutputLimitKind"
-    providerOutputCap: None
-    paidFallbackPermitted: "RoleBootstrapReportV1IdentityGateVerified"
-
-ModelRouteSelectionV1Variant3Role = Literal[
-    "auxiliary",
-]
-
-class ModelRouteSelectionV1Variant4(TypedDict):
-    role: "ModelRouteSelectionV1Variant4Role"
-    arm: "ModelRouteSelectionV1Variant0Arm"
-    provider: "ModelRoutePolicyV1Provider"
-    settings: "ModelRoutePolicyV1OriginalForeground"
-    policyDigest: "Digest"
-    localOutputReservationTokens: "ModelRouteSelectionV1Variant0LocalOutputReservationTokens"
-    outputLimitKind: "ModelRouteSelectionV1Variant0OutputLimitKind"
-    providerOutputCap: None
-    paidFallbackPermitted: "RoleBootstrapReportV1IdentityGateVerified"
-
-ModelRouteSelectionV1Variant4Role = Literal[
-    "continuation",
-]
-
-class ModelRouteSelectionV1Variant5(TypedDict):
-    role: "ModelRouteSelectionV1Variant5Role"
-    arm: "ModelRouteSelectionV1Variant0Arm"
-    provider: "ModelRoutePolicyV1Provider"
-    settings: "ModelRoutePolicyV1OriginalResearch"
-    policyDigest: "Digest"
-    localOutputReservationTokens: "ModelRouteSelectionV1Variant0LocalOutputReservationTokens"
-    outputLimitKind: "ModelRouteSelectionV1Variant0OutputLimitKind"
-    providerOutputCap: None
-    paidFallbackPermitted: "RoleBootstrapReportV1IdentityGateVerified"
-
-ModelRouteSelectionV1Variant5Role = Literal[
-    "research",
-]
-
-class ModelRouteSelectionV1Variant6(TypedDict):
-    role: "ModelRouteSelectionV1Variant6Role"
-    arm: "ModelRouteSelectionV1Variant0Arm"
-    provider: "ModelRoutePolicyV1Provider"
-    settings: "ModelRoutePolicyV1OriginalChild"
-    policyDigest: "Digest"
-    localOutputReservationTokens: "ModelRouteSelectionV1Variant0LocalOutputReservationTokens"
-    outputLimitKind: "ModelRouteSelectionV1Variant0OutputLimitKind"
-    providerOutputCap: None
-    paidFallbackPermitted: "RoleBootstrapReportV1IdentityGateVerified"
-
-ModelRouteSelectionV1Variant6Role = Literal[
-    "child",
-]
-
-class ModelRouteSelectionV1Variant7(TypedDict):
-    role: "ModelRouteSelectionV1Variant1Role"
-    arm: "ModelRouteSelectionV1Variant7Arm"
-    provider: "ModelRoutePolicyV1Provider"
-    settings: "ModelRoutePolicyV1ExperimentalBackgroundHighStandard"
-    policyDigest: "Digest"
-    localOutputReservationTokens: "ModelRouteSelectionV1Variant0LocalOutputReservationTokens"
-    outputLimitKind: "ModelRouteSelectionV1Variant0OutputLimitKind"
-    providerOutputCap: None
-    paidFallbackPermitted: "RoleBootstrapReportV1IdentityGateVerified"
-
-ModelRouteSelectionV1Variant7Arm = Literal[
-    "experimental-background-high-standard",
-]
-
-class ModelRouteSelectionV1Variant8(TypedDict):
-    role: "ModelRouteSelectionV1Variant2Role"
-    arm: "ModelRouteSelectionV1Variant7Arm"
-    provider: "ModelRoutePolicyV1Provider"
-    settings: "ModelRoutePolicyV1ExperimentalBackgroundHighStandard"
-    policyDigest: "Digest"
-    localOutputReservationTokens: "ModelRouteSelectionV1Variant0LocalOutputReservationTokens"
-    outputLimitKind: "ModelRouteSelectionV1Variant0OutputLimitKind"
-    providerOutputCap: None
-    paidFallbackPermitted: "RoleBootstrapReportV1IdentityGateVerified"
-
-class ModelRouteUsageV1(TypedDict):
-    inputTokens: int
-    outputTokens: int
-    reasoningTokens: int
 
 ModelRouteProviderEventV1 = Union[
     "ModelRouteProviderEventV1Variant0",
@@ -4542,54 +4670,6 @@ class ModelRouteProviderEventV1Variant6(TypedDict):
 
 ModelRouteProviderEventV1Variant6Type = Literal[
     "interrupted",
-]
-
-class ModelRouteReceiptV1(TypedDict):
-    requested: "ModelRouteSelectionV1"
-    observed: Optional["ModelRouteSettingsV1"]
-    terminal: "ModelRouteReceiptV1Terminal"
-    completion: "ModelRouteReceiptV1Completion"
-    usage: Optional["ModelRouteUsageV1"]
-    usageState: "ModelRouteReceiptV1UsageState"
-    reservationTokens: "ModelRouteReceiptV1ReservationTokens"
-    outputStarted: bool
-    reasonCode: Optional["ModelRouteReceiptV1ReasonCodeValue"]
-    paidFallbackAttempted: "RoleBootstrapReportV1IdentityGateVerified"
-
-ModelRouteReceiptV1Terminal = Literal[
-    "completed",
-    "failed",
-    "interrupted",
-]
-
-ModelRouteReceiptV1Completion = Literal[
-    "complete",
-    "pending",
-]
-
-ModelRouteReceiptV1UsageState = Literal[
-    "known",
-    "uncertain",
-]
-
-ModelRouteReceiptV1ReservationTokens = Union[
-    "ModelRouteReceiptV1ReservationTokensVariant0",
-    "ModelRouteSelectionV1Variant0LocalOutputReservationTokens",
-]
-
-ModelRouteReceiptV1ReservationTokensVariant0 = Literal[
-    0,
-]
-
-ModelRouteReceiptV1ReasonCodeValue = Literal[
-    "quota_exhausted",
-    "authentication_unavailable",
-    "provider_failed",
-    "protocol_invalid",
-    "route_mismatch",
-    "route_unobserved",
-    "usage_unavailable",
-    "stream_interrupted",
 ]
 
 ModelRouteStreamEventV1 = Union[
@@ -4903,66 +4983,31 @@ ResearchSkillResourcePathV1 = Literal[
 
 class ResearchSkillPinV1(TypedDict):
     schemaVersion: "ResearchSkillPinV1SchemaVersion"
-    repository: "ResearchSkillPinV1Repository"
-    sourcePath: "ResearchSkillPinV1SourcePath"
+    repository: "LoadedResearchSkillV1Repository"
+    sourcePath: "LoadedResearchSkillV1SourcePath"
     sourceCommit: str
     contentDigest: "Digest"
     semanticVersion: Optional[str]
-    resources: list["ResearchSkillPinV1ResourcesItem"]
+    resources: list["LoadedResearchSkillV1ResourcesItem"]
 
 ResearchSkillPinV1SchemaVersion = Literal[
     "toy.research-skill-pin.v1",
 ]
 
-ResearchSkillPinV1Repository = Literal[
-    "https://github.com/mattpocock/skills",
-]
-
-ResearchSkillPinV1SourcePath = Literal[
-    "skills/engineering/research/SKILL.md",
-]
-
-class ResearchSkillPinV1ResourcesItem(TypedDict):
-    path: "ResearchSkillPinV1ResourcesItemPath"
-    digest: "Digest"
-
-ResearchSkillPinV1ResourcesItemPath = Literal[
-    "LICENSE",
-    "agents/openai.yaml",
-]
-
-class LoadedResearchSkillV1(TypedDict):
-    repository: "ResearchSkillPinV1Repository"
-    sourcePath: "ResearchSkillPinV1SourcePath"
-    sourceCommit: str
-    contentDigest: "Digest"
-    loadedDigest: "Digest"
-    semanticVersion: Optional[str]
-    resources: list["ResearchSkillPinV1ResourcesItem"]
-
 class ModelRouteDelegationInputV1(TypedDict):
     requestId: str
-    purpose: "ModelRouteDelegationInputV1Purpose"
+    purpose: "ModelRouteDelegationReceiptV1Purpose"
     objective: str
-
-ModelRouteDelegationInputV1Purpose = Literal[
-    "research",
-    "implementation",
-]
 
 class CodexDelegationRequestV1(TypedDict):
     requestId: str
-    purpose: "ModelRouteDelegationInputV1Purpose"
-    executionBackend: "CodexDelegationRequestV1ExecutionBackend"
+    purpose: "ModelRouteDelegationReceiptV1Purpose"
+    executionBackend: "ModelRouteDelegationReceiptV1ExecutionBackend"
     workspace: str
     arguments: list[str]
     requested: "ModelRouteSelectionV1"
     taskDigest: "Digest"
     skill: Optional["LoadedResearchSkillV1"]
-
-CodexDelegationRequestV1ExecutionBackend = Literal[
-    "codex_exec",
-]
 
 CodexDelegationEventV1 = Union[
     "CodexDelegationEventV1Variant0",
@@ -4983,31 +5028,6 @@ class CodexDelegationEventV1Variant0(TypedDict):
 CodexDelegationEventV1Variant0ServiceTier = Literal[
     "fast",
     "default",
-]
-
-class ModelRouteDelegationReceiptV1(TypedDict):
-    requestId: str
-    purpose: "ModelRouteDelegationInputV1Purpose"
-    executionBackend: "CodexDelegationRequestV1ExecutionBackend"
-    state: "ModelRouteDelegationReceiptV1State"
-    reasonCode: "ModelRouteDelegationReceiptV1ReasonCode"
-    skill: Optional["LoadedResearchSkillV1"]
-    invocation: Optional["ModelRouteReceiptV1"]
-    taskDigest: Optional["Digest"]
-    requestDigest: Optional["Digest"]
-    nativeExecutionVerified: "RoleBootstrapReportV1IdentityGateVerified"
-    acceptanceComplete: "RoleBootstrapReportV1IdentityGateVerified"
-
-ModelRouteDelegationReceiptV1State = Literal[
-    "observed",
-    "refused",
-]
-
-ModelRouteDelegationReceiptV1ReasonCode = Literal[
-    "DELEGATION_ROUTE_OBSERVED",
-    "DELEGATION_ROUTE_REFUSED",
-    "RESEARCH_SKILL_UNAVAILABLE",
-    "RESEARCH_SKILL_MISMATCH",
 ]
 
 class CodexDelegationTaskV1(TypedDict):
@@ -5073,7 +5093,7 @@ class ModelQuotaWindowV1(TypedDict):
 
 class ModelQuotaObservationV1(TypedDict):
     id: "UUID"
-    provider: "ModelRoutePolicyV1Provider"
+    provider: "ModelRouteSelectionV1Variant0Provider"
     accountRef: str
     reportedAt: "Instant"
     sourceAuthorized: bool

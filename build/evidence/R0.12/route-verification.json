@@ -1,0 +1,1619 @@
+{
+  "recordedAt": "2026-10-06T21:43:52.699515+00:00",
+  "card": "R0.12",
+  "rung": "CLI",
+  "stackId": "21b5c30f-cfd4-4b3b-83fe-b7af333b4fd8",
+  "records": [
+    {
+      "AT": "AT-sources-190",
+      "unfiltered": true,
+      "operationId": "e7387309-0110-46ca-bb9d-d10250a35222",
+      "runExit": 0,
+      "showExit": 0,
+      "runShowExact": true,
+      "wholeState": "NOT_IMPLEMENTED",
+      "acceptanceComplete": false,
+      "maximumPrerequisiteLength": 1358,
+      "runtimeBinding": {
+        "releaseDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "controlDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "schemaDigest": "f509080a6f77a7ccac9701af9c4dd5ef1e951f8aaa469907ba833b35b7abdd88",
+        "fixtureDigest": "afcb0e005ebbdd24dbb332da2bd174e8eabd4365448eafe7a4ebe9d3a731dbc5"
+      },
+      "caseManifestDigest": "3d21a7d74cb695f07a9bf3196a156ac2107500c18c95a73b893790c58043efdf",
+      "sourceRegistration": {
+        "id": "AT-sources-190",
+        "rung": "CLI",
+        "sourceAssertionHash": "dfc4c143354044cd88c82c6868b2f0b3fc6ab39a9fe45aa595692bf881f9831a",
+        "commandId": "probe.run",
+        "scenarioId": "research.component-comparison",
+        "owner": "self-improvement",
+        "firstRelease": "R0",
+        "kind": "static_gate",
+        "mandatoryCases": [
+          {
+            "id": "missing-route-receipt",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-route-receipt"
+          },
+          {
+            "id": "wrong-observed-model",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "wrong-observed-model"
+          },
+          {
+            "id": "wrong-observed-reasoning",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "wrong-observed-reasoning"
+          },
+          {
+            "id": "wrong-observed-tier",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "wrong-observed-tier"
+          },
+          {
+            "id": "missing-research-skill",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-research-skill"
+          },
+          {
+            "id": "wrong-skill-revision",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "wrong-skill-revision"
+          },
+          {
+            "id": "wrong-loaded-skill-digest",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "wrong-loaded-skill-digest"
+          },
+          {
+            "id": "missing-outside-option",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-outside-option"
+          },
+          {
+            "id": "unsupported-outside-option",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "unsupported-outside-option"
+          },
+          {
+            "id": "complete-research-receipt",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "complete-research-receipt"
+          }
+        ],
+        "trigger": "Inspect indexed connector decisions with canonical research receipts, shared observed route, exact loaded skill and proven outside alternative; preserve whole authentication gates.",
+        "faultControls": [
+          {
+            "id": "external-research-receipt-and-option-faults",
+            "seam": "provider",
+            "affectedPhases": [
+              "missing-route-receipt",
+              "wrong-observed-model",
+              "wrong-observed-reasoning",
+              "wrong-observed-tier",
+              "missing-research-skill",
+              "wrong-skill-revision",
+              "wrong-loaded-skill-digest",
+              "missing-outside-option",
+              "unsupported-outside-option"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "research-execution-admission",
+            "independentReader": "EngineeringControl.checkResearch: indexed report, canonical receipt and exact validation IDs",
+            "caseIds": [
+              "missing-route-receipt",
+              "wrong-observed-model",
+              "wrong-observed-reasoning",
+              "wrong-observed-tier",
+              "missing-research-skill",
+              "wrong-skill-revision",
+              "wrong-loaded-skill-digest",
+              "missing-outside-option",
+              "unsupported-outside-option",
+              "complete-research-receipt"
+            ]
+          },
+          {
+            "id": "persisted-research-receipt",
+            "independentReader": "toy probe.show: exact stored route/skill admission diagnostics and source binding",
+            "caseIds": [
+              "missing-route-receipt",
+              "wrong-observed-model",
+              "wrong-observed-reasoning",
+              "wrong-observed-tier",
+              "missing-research-skill",
+              "wrong-skill-revision",
+              "wrong-loaded-skill-digest",
+              "missing-outside-option",
+              "unsupported-outside-option",
+              "complete-research-receipt"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot replace administrative pre-build research reports or inspect execution metadata. CLI drives the real indexed owner with external report/receipt fixtures."
+      },
+      "checks": 10,
+      "proofs": [
+        {
+          "caseId": "missing-route-receipt",
+          "actualUid": 501,
+          "archive": {
+            "key": "DC",
+            "path": "research/v2/data-connectors.md",
+            "originalDigest": "817397eb64804b1733b8078854583b2d15a7fd16e3c839e65703698892180235",
+            "contentDigest": "80584172f339c3b72ea921da929c96066d1babcc3bcca5d6efb22bec81c2c58a",
+            "origin": "seeded_document"
+          },
+          "result": {
+            "componentId": "D01",
+            "comparisonDigest": "7437ab90e6e0768b216d013d0db26a3d6a7c427261bf7350b28d2f526fa472ea",
+            "state": "BLOCKED",
+            "findings": [
+              "VALIDATION_ID_MISSING"
+            ],
+            "selectedTool": "Supported Gmail API read adapter",
+            "validationPlan": "Validate the pinned read adapter in an owned fixture before activation.",
+            "unresolvedFacts": [
+              {
+                "optionId": "imap",
+                "fact": "Account-specific IMAP limits remain unvalidated"
+              }
+            ],
+            "scope": "component_comparison",
+            "researchAttestationVerified": false,
+            "acceptanceComplete": false,
+            "selectedOptionId": "gmail-api",
+            "missingRequirementIds": [],
+            "missingSourceIds": [],
+            "missingValidationIds": [
+              "ROUTE:R0:D01",
+              "SKILL:R0:D01"
+            ]
+          },
+          "execution": {
+            "receiptDigest": null,
+            "observed": null,
+            "sourceCommit": null,
+            "loadedDigest": null,
+            "nativeExecutionVerified": false
+          },
+          "registerAdmission": "BLOCKED",
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "wrong-observed-model",
+          "actualUid": 501,
+          "archive": {
+            "key": "DC",
+            "path": "research/v2/data-connectors.md",
+            "originalDigest": "817397eb64804b1733b8078854583b2d15a7fd16e3c839e65703698892180235",
+            "contentDigest": "2db26a478c3741d418a8d9acb1d3fe6eafc7c49d2eeee4b50efed6fd5b7f2db5",
+            "origin": "seeded_document"
+          },
+          "result": {
+            "componentId": "D01",
+            "comparisonDigest": "2c972118ba9aba7cc803833ee75ba745ce7fc4fe1f2ed5000f8acb96945fe948",
+            "state": "BLOCKED",
+            "findings": [
+              "VALIDATION_ID_MISSING"
+            ],
+            "selectedTool": "Supported Gmail API read adapter",
+            "validationPlan": "Validate the pinned read adapter in an owned fixture before activation.",
+            "unresolvedFacts": [
+              {
+                "optionId": "imap",
+                "fact": "Account-specific IMAP limits remain unvalidated"
+              }
+            ],
+            "scope": "component_comparison",
+            "researchAttestationVerified": false,
+            "acceptanceComplete": false,
+            "selectedOptionId": "gmail-api",
+            "missingRequirementIds": [],
+            "missingSourceIds": [],
+            "missingValidationIds": [
+              "ROUTE:R0:D01"
+            ]
+          },
+          "execution": {
+            "receiptDigest": "160326b499b24bf2817c58111ceecae85602236ff0a5ee2c67e926609f2c5850",
+            "observed": {
+              "model": "gpt-6-luna",
+              "effort": "medium",
+              "serviceTier": "priority"
+            },
+            "sourceCommit": "6fd947921b935b7e1e69293a200400f0fdd5c15f",
+            "loadedDigest": "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4",
+            "nativeExecutionVerified": false
+          },
+          "registerAdmission": "BLOCKED",
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "wrong-observed-reasoning",
+          "actualUid": 501,
+          "archive": {
+            "key": "DC",
+            "path": "research/v2/data-connectors.md",
+            "originalDigest": "817397eb64804b1733b8078854583b2d15a7fd16e3c839e65703698892180235",
+            "contentDigest": "4d0e021d6022045fe7a057a755875ecb53e20f5ab58dba1aaee51104c3846b98",
+            "origin": "seeded_document"
+          },
+          "result": {
+            "componentId": "D01",
+            "comparisonDigest": "286bd6857fad75ca625ccc482a480c42c28f2e90393e9936ef39188550396e28",
+            "state": "BLOCKED",
+            "findings": [
+              "VALIDATION_ID_MISSING"
+            ],
+            "selectedTool": "Supported Gmail API read adapter",
+            "validationPlan": "Validate the pinned read adapter in an owned fixture before activation.",
+            "unresolvedFacts": [
+              {
+                "optionId": "imap",
+                "fact": "Account-specific IMAP limits remain unvalidated"
+              }
+            ],
+            "scope": "component_comparison",
+            "researchAttestationVerified": false,
+            "acceptanceComplete": false,
+            "selectedOptionId": "gmail-api",
+            "missingRequirementIds": [],
+            "missingSourceIds": [],
+            "missingValidationIds": [
+              "ROUTE:R0:D01"
+            ]
+          },
+          "execution": {
+            "receiptDigest": "54f2765c756555018048a6fa0685cdd940a06f25e3d271ab1a436624818fdf0c",
+            "observed": {
+              "model": "gpt-6.1-sol",
+              "effort": "max",
+              "serviceTier": "priority"
+            },
+            "sourceCommit": "6fd947921b935b7e1e69293a200400f0fdd5c15f",
+            "loadedDigest": "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4",
+            "nativeExecutionVerified": false
+          },
+          "registerAdmission": "BLOCKED",
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "wrong-observed-tier",
+          "actualUid": 501,
+          "archive": {
+            "key": "DC",
+            "path": "research/v2/data-connectors.md",
+            "originalDigest": "817397eb64804b1733b8078854583b2d15a7fd16e3c839e65703698892180235",
+            "contentDigest": "344f1754d53d45a20fb10a185dadce833c882c55229798cd4ed9e6d4fda6febe",
+            "origin": "seeded_document"
+          },
+          "result": {
+            "componentId": "D01",
+            "comparisonDigest": "dbe0c60f853ba6ebba860b1b770f4940bcde3e2261a22f1d554171c00e2a314e",
+            "state": "BLOCKED",
+            "findings": [
+              "VALIDATION_ID_MISSING"
+            ],
+            "selectedTool": "Supported Gmail API read adapter",
+            "validationPlan": "Validate the pinned read adapter in an owned fixture before activation.",
+            "unresolvedFacts": [
+              {
+                "optionId": "imap",
+                "fact": "Account-specific IMAP limits remain unvalidated"
+              }
+            ],
+            "scope": "component_comparison",
+            "researchAttestationVerified": false,
+            "acceptanceComplete": false,
+            "selectedOptionId": "gmail-api",
+            "missingRequirementIds": [],
+            "missingSourceIds": [],
+            "missingValidationIds": [
+              "ROUTE:R0:D01"
+            ]
+          },
+          "execution": {
+            "receiptDigest": "a3bddb47132ac85b3ff94a978dc7a97b4abf4e3bd5b2f07b7f2dab60a0c1f58a",
+            "observed": {
+              "model": "gpt-6.1-sol",
+              "effort": "medium",
+              "serviceTier": "default"
+            },
+            "sourceCommit": "6fd947921b935b7e1e69293a200400f0fdd5c15f",
+            "loadedDigest": "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4",
+            "nativeExecutionVerified": false
+          },
+          "registerAdmission": "BLOCKED",
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "missing-research-skill",
+          "actualUid": 501,
+          "archive": {
+            "key": "DC",
+            "path": "research/v2/data-connectors.md",
+            "originalDigest": "817397eb64804b1733b8078854583b2d15a7fd16e3c839e65703698892180235",
+            "contentDigest": "06ab8756979048929f82edfbaf1f08a934222b031c03272e383500b2aebf4b35",
+            "origin": "seeded_document"
+          },
+          "result": {
+            "componentId": "D01",
+            "comparisonDigest": "80e4ecb4bf2d2cf762dfceb1ac450fabb22b111905ab06adb4c70881d52fda70",
+            "state": "BLOCKED",
+            "findings": [
+              "VALIDATION_ID_MISSING"
+            ],
+            "selectedTool": "Supported Gmail API read adapter",
+            "validationPlan": "Validate the pinned read adapter in an owned fixture before activation.",
+            "unresolvedFacts": [
+              {
+                "optionId": "imap",
+                "fact": "Account-specific IMAP limits remain unvalidated"
+              }
+            ],
+            "scope": "component_comparison",
+            "researchAttestationVerified": false,
+            "acceptanceComplete": false,
+            "selectedOptionId": "gmail-api",
+            "missingRequirementIds": [],
+            "missingSourceIds": [],
+            "missingValidationIds": [
+              "ROUTE:R0:D01",
+              "SKILL:R0:D01"
+            ]
+          },
+          "execution": {
+            "receiptDigest": "b57f9ce149dd2baeaa90f043972e0c25c6576bb7bc42f0286156ade8fabd82b8",
+            "observed": null,
+            "sourceCommit": null,
+            "loadedDigest": null,
+            "nativeExecutionVerified": false
+          },
+          "registerAdmission": "BLOCKED",
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "wrong-skill-revision",
+          "actualUid": 501,
+          "archive": {
+            "key": "DC",
+            "path": "research/v2/data-connectors.md",
+            "originalDigest": "817397eb64804b1733b8078854583b2d15a7fd16e3c839e65703698892180235",
+            "contentDigest": "9c9ef627ddc0eb4fdb78866823b486a29dfadbf7018afba5f87cc5487b623307",
+            "origin": "seeded_document"
+          },
+          "result": {
+            "componentId": "D01",
+            "comparisonDigest": "7cd5a89edd038e54740693bea53a24ace2f737e6821653f4efc60b64caf1ba75",
+            "state": "BLOCKED",
+            "findings": [
+              "VALIDATION_ID_MISSING"
+            ],
+            "selectedTool": "Supported Gmail API read adapter",
+            "validationPlan": "Validate the pinned read adapter in an owned fixture before activation.",
+            "unresolvedFacts": [
+              {
+                "optionId": "imap",
+                "fact": "Account-specific IMAP limits remain unvalidated"
+              }
+            ],
+            "scope": "component_comparison",
+            "researchAttestationVerified": false,
+            "acceptanceComplete": false,
+            "selectedOptionId": "gmail-api",
+            "missingRequirementIds": [],
+            "missingSourceIds": [],
+            "missingValidationIds": [
+              "SKILL:R0:D01"
+            ]
+          },
+          "execution": {
+            "receiptDigest": "1d455967f72a1f95a7df627484983874fd3e1eca32ae819a0934368cfbdd1c5d",
+            "observed": {
+              "model": "gpt-6.1-sol",
+              "effort": "medium",
+              "serviceTier": "priority"
+            },
+            "sourceCommit": "0000000000000000000000000000000000000000",
+            "loadedDigest": "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4",
+            "nativeExecutionVerified": false
+          },
+          "registerAdmission": "BLOCKED",
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "wrong-loaded-skill-digest",
+          "actualUid": 501,
+          "archive": {
+            "key": "DC",
+            "path": "research/v2/data-connectors.md",
+            "originalDigest": "817397eb64804b1733b8078854583b2d15a7fd16e3c839e65703698892180235",
+            "contentDigest": "e6c30cb14e2dba289076582d3679625a62d83e78b3932c2c7255136f3eb65812",
+            "origin": "seeded_document"
+          },
+          "result": {
+            "componentId": "D01",
+            "comparisonDigest": "9ffc6020d78e2373a9a0ac6405da85265db7bd57a3e0c67c38321149ecf3323e",
+            "state": "BLOCKED",
+            "findings": [
+              "VALIDATION_ID_MISSING"
+            ],
+            "selectedTool": "Supported Gmail API read adapter",
+            "validationPlan": "Validate the pinned read adapter in an owned fixture before activation.",
+            "unresolvedFacts": [
+              {
+                "optionId": "imap",
+                "fact": "Account-specific IMAP limits remain unvalidated"
+              }
+            ],
+            "scope": "component_comparison",
+            "researchAttestationVerified": false,
+            "acceptanceComplete": false,
+            "selectedOptionId": "gmail-api",
+            "missingRequirementIds": [],
+            "missingSourceIds": [],
+            "missingValidationIds": [
+              "SKILL:R0:D01"
+            ]
+          },
+          "execution": {
+            "receiptDigest": "d79fd0e0c1b62735fe8722935656d5a474985db01872869ec7b7f59552c54ff8",
+            "observed": {
+              "model": "gpt-6.1-sol",
+              "effort": "medium",
+              "serviceTier": "priority"
+            },
+            "sourceCommit": "6fd947921b935b7e1e69293a200400f0fdd5c15f",
+            "loadedDigest": "0000000000000000000000000000000000000000000000000000000000000000",
+            "nativeExecutionVerified": false
+          },
+          "registerAdmission": "BLOCKED",
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "missing-outside-option",
+          "actualUid": 501,
+          "archive": {
+            "key": "DC",
+            "path": "research/v2/data-connectors.md",
+            "originalDigest": "817397eb64804b1733b8078854583b2d15a7fd16e3c839e65703698892180235",
+            "contentDigest": "4b6e6cf5746571610af15f6a82c5d7aaba59c20c177ece88ab9db21d9811f05f",
+            "origin": "seeded_document"
+          },
+          "result": {
+            "componentId": "D01",
+            "comparisonDigest": "637ee30fba187675f408922afbfd91a06c48c68dce7cedb9510d99465a762bb8",
+            "state": "BLOCKED",
+            "findings": [
+              "OUTSIDE_OPTION_MISSING"
+            ],
+            "selectedTool": "Supported Gmail API read adapter",
+            "validationPlan": "Validate the pinned read adapter in an owned fixture before activation.",
+            "unresolvedFacts": [
+              {
+                "optionId": "imap",
+                "fact": "Account-specific IMAP limits remain unvalidated"
+              }
+            ],
+            "scope": "component_comparison",
+            "researchAttestationVerified": false,
+            "acceptanceComplete": false,
+            "selectedOptionId": "gmail-api",
+            "missingRequirementIds": [],
+            "missingSourceIds": [],
+            "missingValidationIds": []
+          },
+          "execution": {
+            "receiptDigest": "10ffce104d0def1eba9b072a2199d9d87cb5ff07a974808f9fe6e028762b35e7",
+            "observed": {
+              "model": "gpt-6.1-sol",
+              "effort": "medium",
+              "serviceTier": "priority"
+            },
+            "sourceCommit": "6fd947921b935b7e1e69293a200400f0fdd5c15f",
+            "loadedDigest": "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4",
+            "nativeExecutionVerified": false
+          },
+          "registerAdmission": "BLOCKED",
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "unsupported-outside-option",
+          "actualUid": 501,
+          "archive": {
+            "key": "DC",
+            "path": "research/v2/data-connectors.md",
+            "originalDigest": "817397eb64804b1733b8078854583b2d15a7fd16e3c839e65703698892180235",
+            "contentDigest": "f2e9d8c40a2c9d98abe410d99e7897627b284bd537ccc9096145d36cc629c282",
+            "origin": "seeded_document"
+          },
+          "result": {
+            "componentId": "D01",
+            "comparisonDigest": "28f4353ce48655e8139230b16cc99d0419aec2ece2bfb94e61928b2d2aae59b3",
+            "state": "BLOCKED",
+            "findings": [
+              "OUTSIDE_OPTION_MISSING"
+            ],
+            "selectedTool": "Supported Gmail API read adapter",
+            "validationPlan": "Validate the pinned read adapter in an owned fixture before activation.",
+            "unresolvedFacts": [
+              {
+                "optionId": "imap",
+                "fact": "Account-specific IMAP limits remain unvalidated"
+              }
+            ],
+            "scope": "component_comparison",
+            "researchAttestationVerified": false,
+            "acceptanceComplete": false,
+            "selectedOptionId": "gmail-api",
+            "missingRequirementIds": [],
+            "missingSourceIds": [],
+            "missingValidationIds": []
+          },
+          "execution": {
+            "receiptDigest": "fd23cc6d8faef1e7f28fbfcfdda3267013520774bd6ceeedd533101022432bcc",
+            "observed": {
+              "model": "gpt-6.1-sol",
+              "effort": "medium",
+              "serviceTier": "priority"
+            },
+            "sourceCommit": "6fd947921b935b7e1e69293a200400f0fdd5c15f",
+            "loadedDigest": "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4",
+            "nativeExecutionVerified": false
+          },
+          "registerAdmission": "BLOCKED",
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "complete-research-receipt",
+          "actualUid": 501,
+          "archive": {
+            "key": "DC",
+            "path": "research/v2/data-connectors.md",
+            "originalDigest": "817397eb64804b1733b8078854583b2d15a7fd16e3c839e65703698892180235",
+            "contentDigest": "e0870f89f75c24dec5a052d110e007eceb7ae2b2308da0db551ba0717fe91d37",
+            "origin": "seeded_document"
+          },
+          "result": {
+            "componentId": "D01",
+            "comparisonDigest": "b93bc7f498d4d8967f4ced35fccd6ac98c0f955624018fe040ff7c4af2ca05c8",
+            "state": "PASS",
+            "findings": [],
+            "selectedTool": "Supported Gmail API read adapter",
+            "validationPlan": "Validate the pinned read adapter in an owned fixture before activation.",
+            "unresolvedFacts": [
+              {
+                "optionId": "imap",
+                "fact": "Account-specific IMAP limits remain unvalidated"
+              }
+            ],
+            "scope": "component_comparison",
+            "researchAttestationVerified": false,
+            "acceptanceComplete": false,
+            "selectedOptionId": "gmail-api",
+            "missingRequirementIds": [],
+            "missingSourceIds": [],
+            "missingValidationIds": []
+          },
+          "execution": {
+            "receiptDigest": "ea27faf9404a0dcd8bef687e72931d8e1737d496b2a78c95870f6a45824aaf6a",
+            "observed": {
+              "model": "gpt-6.1-sol",
+              "effort": "medium",
+              "serviceTier": "priority"
+            },
+            "sourceCommit": "6fd947921b935b7e1e69293a200400f0fdd5c15f",
+            "loadedDigest": "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4",
+            "nativeExecutionVerified": false
+          },
+          "registerAdmission": "BLOCKED",
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        }
+      ]
+    },
+    {
+      "AT": "AT-sources-188",
+      "unfiltered": true,
+      "operationId": "0381c869-df3a-488e-a9b9-c010bf5f4707",
+      "runExit": 0,
+      "showExit": 0,
+      "runShowExact": true,
+      "wholeState": "NOT_IMPLEMENTED",
+      "acceptanceComplete": false,
+      "maximumPrerequisiteLength": 1062,
+      "runtimeBinding": {
+        "releaseDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "controlDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "schemaDigest": "f509080a6f77a7ccac9701af9c4dd5ef1e951f8aaa469907ba833b35b7abdd88",
+        "fixtureDigest": "afcb0e005ebbdd24dbb332da2bd174e8eabd4365448eafe7a4ebe9d3a731dbc5"
+      },
+      "caseManifestDigest": "4eb8b99a95da63b957ee37fc85748e379cc5335aa8830093b7007cb934997c9b",
+      "sourceRegistration": {
+        "id": "AT-sources-188",
+        "rung": "CLI",
+        "sourceAssertionHash": "a48e7e62ba9db3bb04742ebe1f7784943ad1a9353aaf5b878fe8a71df0d5b456",
+        "commandId": "probe.run",
+        "scenarioId": "research.component-comparison",
+        "owner": "self-improvement",
+        "firstRelease": "R0",
+        "kind": "static_gate",
+        "mandatoryCases": [
+          {
+            "id": "missing-primary-evidence",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-primary-evidence"
+          },
+          {
+            "id": "missing-compared-alternatives",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-compared-alternatives"
+          },
+          {
+            "id": "missing-reliability-rationale",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-reliability-rationale"
+          },
+          {
+            "id": "missing-account-validation-plan",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-account-validation-plan"
+          },
+          {
+            "id": "missing-region-validation-plan",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-region-validation-plan"
+          },
+          {
+            "id": "missing-sources-requirement",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-sources-requirement"
+          },
+          {
+            "id": "complete-linked-sources-decision",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "complete-linked-sources-decision"
+          }
+        ],
+        "trigger": "Check indexed Sources decisions for primary evidence, integration alternatives, reliability rationale, account/region plans and requirement links before dependent implementation; retain whole admission gaps.",
+        "faultControls": [
+          {
+            "id": "external-sources-decision-omissions",
+            "seam": "provider",
+            "affectedPhases": [
+              "missing-primary-evidence",
+              "missing-compared-alternatives",
+              "missing-reliability-rationale",
+              "missing-account-validation-plan",
+              "missing-region-validation-plan",
+              "missing-sources-requirement"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "sources-decision-result",
+            "independentReader": "EngineeringControl.checkResearch: indexed archive and exact missing requirement/source/validation IDs",
+            "caseIds": [
+              "missing-primary-evidence",
+              "missing-compared-alternatives",
+              "missing-reliability-rationale",
+              "missing-account-validation-plan",
+              "missing-region-validation-plan",
+              "missing-sources-requirement",
+              "complete-linked-sources-decision"
+            ]
+          },
+          {
+            "id": "stored-cli-readback",
+            "independentReader": "toy probe.show: persisted exact Sources decisions and retained unresolved facts",
+            "caseIds": [
+              "missing-primary-evidence",
+              "missing-compared-alternatives",
+              "missing-reliability-rationale",
+              "missing-account-validation-plan",
+              "missing-region-validation-plan",
+              "missing-sources-requirement",
+              "complete-linked-sources-decision"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot invoke administrative pre-build research gates or replace indexed research documents. CLI drives the real owner through the owned external report seam."
+      },
+      "checks": 7,
+      "proofs": [
+        {
+          "caseId": "missing-primary-evidence",
+          "actualUid": 501,
+          "archive": {
+            "key": "DC",
+            "path": "research/v2/data-connectors.md",
+            "originalDigest": "817397eb64804b1733b8078854583b2d15a7fd16e3c839e65703698892180235",
+            "contentDigest": "0f227f892a2443f64db27d6923a8e3c41370a28e577ff1ed0a61674da176f526",
+            "origin": "seeded_document"
+          },
+          "result": {
+            "componentId": "D01",
+            "comparisonDigest": "7508619597447fee607acc08c0787f13fb334ca348376de5c2d7b7570a7c90ff",
+            "state": "BLOCKED",
+            "findings": [
+              "PRIMARY_EVIDENCE_MISSING",
+              "VALIDATION_ID_MISSING"
+            ],
+            "selectedTool": "Supported Gmail API read adapter",
+            "validationPlan": "Validate the pinned read adapter in an owned fixture before activation.",
+            "unresolvedFacts": [
+              {
+                "optionId": "imap",
+                "fact": "Account-specific IMAP limits remain unvalidated"
+              }
+            ],
+            "scope": "component_comparison",
+            "researchAttestationVerified": false,
+            "acceptanceComplete": false,
+            "selectedOptionId": "gmail-api",
+            "missingRequirementIds": [],
+            "missingSourceIds": [
+              "DC"
+            ],
+            "missingValidationIds": [
+              "G0:R0:D01"
+            ]
+          },
+          "execution": null,
+          "registerAdmission": "BLOCKED",
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "missing-compared-alternatives",
+          "actualUid": 501,
+          "archive": {
+            "key": "DC",
+            "path": "research/v2/data-connectors.md",
+            "originalDigest": "817397eb64804b1733b8078854583b2d15a7fd16e3c839e65703698892180235",
+            "contentDigest": "40a5026180542d30cab82762ca99afae616365b4e641e81dbf4a3b0d877dd08a",
+            "origin": "seeded_document"
+          },
+          "result": {
+            "componentId": "D01",
+            "comparisonDigest": "e088f1feacb8f5bdb7ca2ea138b9d684c15266729126793937a59e6de1ebb55b",
+            "state": "BLOCKED",
+            "findings": [
+              "REQUIRED_OPTIONS_MISSING"
+            ],
+            "selectedTool": "Supported Gmail API read adapter",
+            "validationPlan": "Validate the pinned read adapter in an owned fixture before activation.",
+            "unresolvedFacts": [
+              {
+                "optionId": "imap",
+                "fact": "Account-specific IMAP limits remain unvalidated"
+              }
+            ],
+            "scope": "component_comparison",
+            "researchAttestationVerified": false,
+            "acceptanceComplete": false,
+            "selectedOptionId": "gmail-api",
+            "missingRequirementIds": [],
+            "missingSourceIds": [],
+            "missingValidationIds": []
+          },
+          "execution": null,
+          "registerAdmission": "BLOCKED",
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "missing-reliability-rationale",
+          "actualUid": 501,
+          "archive": {
+            "key": "DC",
+            "path": "research/v2/data-connectors.md",
+            "originalDigest": "817397eb64804b1733b8078854583b2d15a7fd16e3c839e65703698892180235",
+            "contentDigest": "17ed304a77c8142355952934dd91de12f160b49645327986457c8cbd7e073fba",
+            "origin": "seeded_document"
+          },
+          "result": {
+            "componentId": "D01",
+            "comparisonDigest": "d7d78dc833612f8119b3751324724d12fc0989e18b5840bedc7dfb6234621c8e",
+            "state": "BLOCKED",
+            "findings": [
+              "TRADEOFFS_MISSING"
+            ],
+            "selectedTool": "Supported Gmail API read adapter",
+            "validationPlan": "Validate the pinned read adapter in an owned fixture before activation.",
+            "unresolvedFacts": [
+              {
+                "optionId": "imap",
+                "fact": "Account-specific IMAP limits remain unvalidated"
+              }
+            ],
+            "scope": "component_comparison",
+            "researchAttestationVerified": false,
+            "acceptanceComplete": false,
+            "selectedOptionId": "gmail-api",
+            "missingRequirementIds": [],
+            "missingSourceIds": [],
+            "missingValidationIds": []
+          },
+          "execution": null,
+          "registerAdmission": "BLOCKED",
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "missing-account-validation-plan",
+          "actualUid": 501,
+          "archive": {
+            "key": "DC",
+            "path": "research/v2/data-connectors.md",
+            "originalDigest": "817397eb64804b1733b8078854583b2d15a7fd16e3c839e65703698892180235",
+            "contentDigest": "f2563894031508b4e8e1749a36b186237c3d4da42a336df16dc3769ab583c384",
+            "origin": "seeded_document"
+          },
+          "result": {
+            "componentId": "D01",
+            "comparisonDigest": "48f8c4632cb3914df614a24fd86fea4f997f23371ecbc29fb81e946b135152dd",
+            "state": "BLOCKED",
+            "findings": [
+              "VALIDATION_PLAN_MISSING",
+              "VALIDATION_ID_MISSING"
+            ],
+            "selectedTool": "Supported Gmail API read adapter",
+            "validationPlan": "Validate the pinned read adapter in an owned fixture before activation.",
+            "unresolvedFacts": [
+              {
+                "optionId": "imap",
+                "fact": "Account-specific IMAP limits remain unvalidated"
+              }
+            ],
+            "scope": "component_comparison",
+            "researchAttestationVerified": false,
+            "acceptanceComplete": false,
+            "selectedOptionId": "gmail-api",
+            "missingRequirementIds": [],
+            "missingSourceIds": [],
+            "missingValidationIds": [
+              "ACCOUNT:R0:D01"
+            ]
+          },
+          "execution": null,
+          "registerAdmission": "BLOCKED",
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "missing-region-validation-plan",
+          "actualUid": 501,
+          "archive": {
+            "key": "DC",
+            "path": "research/v2/data-connectors.md",
+            "originalDigest": "817397eb64804b1733b8078854583b2d15a7fd16e3c839e65703698892180235",
+            "contentDigest": "d3772d92890dbb14c8f75aa22caa7dd8fa0185fb0dd3196b671890c11ff7509c",
+            "origin": "seeded_document"
+          },
+          "result": {
+            "componentId": "D01",
+            "comparisonDigest": "e43e15f09254605edeb3affb5ac4b1b45b313a06e483c1f5ee7979c563aa3086",
+            "state": "BLOCKED",
+            "findings": [
+              "VALIDATION_PLAN_MISSING",
+              "VALIDATION_ID_MISSING"
+            ],
+            "selectedTool": "Supported Gmail API read adapter",
+            "validationPlan": "Validate the pinned read adapter in an owned fixture before activation.",
+            "unresolvedFacts": [
+              {
+                "optionId": "imap",
+                "fact": "Account-specific IMAP limits remain unvalidated"
+              }
+            ],
+            "scope": "component_comparison",
+            "researchAttestationVerified": false,
+            "acceptanceComplete": false,
+            "selectedOptionId": "gmail-api",
+            "missingRequirementIds": [],
+            "missingSourceIds": [],
+            "missingValidationIds": [
+              "REGION:R0:D01"
+            ]
+          },
+          "execution": null,
+          "registerAdmission": "BLOCKED",
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "missing-sources-requirement",
+          "actualUid": 501,
+          "archive": {
+            "key": "DC",
+            "path": "research/v2/data-connectors.md",
+            "originalDigest": "817397eb64804b1733b8078854583b2d15a7fd16e3c839e65703698892180235",
+            "contentDigest": "3649fd0d322cae76afb60cf6019acf23e2e5c98179021e965b5f208eb4cbdf00",
+            "origin": "seeded_document"
+          },
+          "result": {
+            "componentId": "D01",
+            "comparisonDigest": "16677a6d043d9b90517b4cb235117cae39c19925f7778abd1ec0527e8154c71b",
+            "state": "BLOCKED",
+            "findings": [
+              "MAPPED_REQUIREMENTS_MISSING"
+            ],
+            "selectedTool": "Supported Gmail API read adapter",
+            "validationPlan": "Validate the pinned read adapter in an owned fixture before activation.",
+            "unresolvedFacts": [
+              {
+                "optionId": "imap",
+                "fact": "Account-specific IMAP limits remain unvalidated"
+              }
+            ],
+            "scope": "component_comparison",
+            "researchAttestationVerified": false,
+            "acceptanceComplete": false,
+            "selectedOptionId": "gmail-api",
+            "missingRequirementIds": [
+              "0.9"
+            ],
+            "missingSourceIds": [],
+            "missingValidationIds": []
+          },
+          "execution": null,
+          "registerAdmission": "BLOCKED",
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "complete-linked-sources-decision",
+          "actualUid": 501,
+          "archive": {
+            "key": "DC",
+            "path": "research/v2/data-connectors.md",
+            "originalDigest": "817397eb64804b1733b8078854583b2d15a7fd16e3c839e65703698892180235",
+            "contentDigest": "59cbb49adf3089f46e977890c706294e32a1b2a7d544b78773e116eb1957149c",
+            "origin": "seeded_document"
+          },
+          "result": {
+            "componentId": "D01",
+            "comparisonDigest": "405204e27718c6933bfd7ad2ba6a16ac4d9266e21c40a3547dc448d09f6c01d6",
+            "state": "PASS",
+            "findings": [],
+            "selectedTool": "Supported Gmail API read adapter",
+            "validationPlan": "Validate the pinned read adapter in an owned fixture before activation.",
+            "unresolvedFacts": [
+              {
+                "optionId": "imap",
+                "fact": "Account-specific IMAP limits remain unvalidated"
+              }
+            ],
+            "scope": "component_comparison",
+            "researchAttestationVerified": false,
+            "acceptanceComplete": false,
+            "selectedOptionId": "gmail-api",
+            "missingRequirementIds": [],
+            "missingSourceIds": [],
+            "missingValidationIds": []
+          },
+          "execution": null,
+          "registerAdmission": "BLOCKED",
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        }
+      ]
+    },
+    {
+      "AT": "AT-self-improvement-54",
+      "unfiltered": true,
+      "operationId": "46ae6a2c-14bb-4fd7-876a-8699b59d9fdc",
+      "runExit": 0,
+      "showExit": 0,
+      "runShowExact": true,
+      "wholeState": "NOT_IMPLEMENTED",
+      "acceptanceComplete": false,
+      "maximumPrerequisiteLength": 1050,
+      "runtimeBinding": {
+        "releaseDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "controlDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "schemaDigest": "f509080a6f77a7ccac9701af9c4dd5ef1e951f8aaa469907ba833b35b7abdd88",
+        "fixtureDigest": "afcb0e005ebbdd24dbb332da2bd174e8eabd4365448eafe7a4ebe9d3a731dbc5"
+      },
+      "caseManifestDigest": "b3cc544584d0bbc085013a71d4ce4638ed39f02dbd3b991b881c29b8562fef6a",
+      "sourceRegistration": {
+        "id": "AT-self-improvement-54",
+        "rung": "CLI",
+        "sourceAssertionHash": "b4141538d262d66d789eb55ef7608df4effefb5dd4c7c6fc801f1c54e41e4c23",
+        "commandId": "probe.run",
+        "scenarioId": "research.component-comparison",
+        "owner": "self-improvement",
+        "firstRelease": "R0",
+        "kind": "static_gate",
+        "mandatoryCases": [
+          {
+            "id": "required-component-absent",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "required-component-absent"
+          },
+          {
+            "id": "required-component-unsupported",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "required-component-unsupported"
+          },
+          {
+            "id": "required-component-incomplete-ids",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "required-component-incomplete-ids"
+          },
+          {
+            "id": "required-component-complete-outside-selected",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "required-component-complete-outside-selected"
+          }
+        ],
+        "trigger": "Check absent, unsupported, incomplete and outside-selected required-component decisions through the real indexed research owner; report exact missing IDs while whole admission remains unresolved.",
+        "faultControls": [
+          {
+            "id": "external-required-decision-omissions",
+            "seam": "provider",
+            "affectedPhases": [
+              "required-component-absent",
+              "required-component-unsupported",
+              "required-component-incomplete-ids"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "indexed-required-component-result",
+            "independentReader": "EngineeringControl.checkResearch: bound archive digests and exact requirement/source/validation IDs",
+            "caseIds": [
+              "required-component-absent",
+              "required-component-unsupported",
+              "required-component-incomplete-ids",
+              "required-component-complete-outside-selected"
+            ]
+          },
+          {
+            "id": "stored-cli-readback",
+            "independentReader": "toy probe.show: persisted exact required-component decisions",
+            "caseIds": [
+              "required-component-absent",
+              "required-component-unsupported",
+              "required-component-incomplete-ids",
+              "required-component-complete-outside-selected"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot invoke administrative pre-build research gates or replace indexed external research documents. The CLI drives the real public owner through its owned document seam."
+      },
+      "checks": 4,
+      "proofs": [
+        {
+          "caseId": "required-component-absent",
+          "actualUid": 501,
+          "archive": {
+            "key": "TS",
+            "path": "research/v2/tool-stack.md",
+            "originalDigest": "de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3",
+            "contentDigest": "b6d8323d49be7c1f40e1f46b01b03b0da841cba53c13f740b1dcf671f83d7587",
+            "origin": "seeded_document"
+          },
+          "result": {
+            "componentId": "M02",
+            "comparisonDigest": null,
+            "state": "BLOCKED",
+            "findings": [
+              "DECISION_MISSING",
+              "MAPPED_REQUIREMENTS_MISSING",
+              "REQUIRED_OPTIONS_MISSING",
+              "CHOICE_UNSUPPORTED",
+              "PRIMARY_EVIDENCE_MISSING",
+              "RELEASE_GATE_MISSING",
+              "VALIDATION_PLAN_MISSING",
+              "ACCEPTANCE_LINK_MISSING",
+              "VALIDATION_ID_MISSING"
+            ],
+            "selectedTool": null,
+            "validationPlan": "",
+            "unresolvedFacts": [],
+            "scope": "component_comparison",
+            "researchAttestationVerified": false,
+            "acceptanceComplete": false,
+            "selectedOptionId": null,
+            "missingRequirementIds": [
+              "0.1",
+              "0.2",
+              "0.10"
+            ],
+            "missingSourceIds": [
+              "TS",
+              "AF"
+            ],
+            "missingValidationIds": [
+              "G0:R0:M02"
+            ]
+          },
+          "registerAdmission": "BLOCKED",
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "required-component-unsupported",
+          "actualUid": 501,
+          "archive": {
+            "key": "TS",
+            "path": "research/v2/tool-stack.md",
+            "originalDigest": "de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3",
+            "contentDigest": "ecb2a3ae9fca209185313f0761eb4d9bf1b0b36a3a605982c11ee0143207d18d",
+            "origin": "seeded_document"
+          },
+          "result": {
+            "componentId": "M02",
+            "comparisonDigest": "3719f259526bda8ed72a4394f2dd1c8f0e9697561babb26890719ff61a19dd31",
+            "state": "BLOCKED",
+            "findings": [
+              "CHOICE_UNSUPPORTED",
+              "PRIMARY_EVIDENCE_MISSING",
+              "VALIDATION_ID_MISSING"
+            ],
+            "selectedTool": "Self-hosted workflow engine",
+            "validationPlan": "Run the pinned shared-connection rollback, lost-claim fencing and generated-schema CLI fault probe before component admission.",
+            "unresolvedFacts": [],
+            "scope": "component_comparison",
+            "researchAttestationVerified": false,
+            "acceptanceComplete": false,
+            "selectedOptionId": "outside",
+            "missingRequirementIds": [],
+            "missingSourceIds": [
+              "TS"
+            ],
+            "missingValidationIds": [
+              "G0:R0:M02"
+            ]
+          },
+          "registerAdmission": "BLOCKED",
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "required-component-incomplete-ids",
+          "actualUid": 501,
+          "archive": {
+            "key": "TS",
+            "path": "research/v2/tool-stack.md",
+            "originalDigest": "de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3",
+            "contentDigest": "65a69a552f28e9845904213edf670facc44a8eb7c4941d805788db4108481c1e",
+            "origin": "seeded_document"
+          },
+          "result": {
+            "componentId": "M02",
+            "comparisonDigest": "e3f050b4ffb75013ff7e4aa0e1f2e12f9bac8ebd5c23770ed39bb824669187c5",
+            "state": "BLOCKED",
+            "findings": [
+              "MAPPED_REQUIREMENTS_MISSING",
+              "PRIMARY_EVIDENCE_MISSING",
+              "VALIDATION_ID_MISSING"
+            ],
+            "selectedTool": "Self-hosted workflow engine",
+            "validationPlan": "Run the pinned shared-connection rollback, lost-claim fencing and generated-schema CLI fault probe before component admission.",
+            "unresolvedFacts": [],
+            "scope": "component_comparison",
+            "researchAttestationVerified": false,
+            "acceptanceComplete": false,
+            "selectedOptionId": "outside",
+            "missingRequirementIds": [
+              "0.10"
+            ],
+            "missingSourceIds": [
+              "TS"
+            ],
+            "missingValidationIds": [
+              "G0:R0:M02"
+            ]
+          },
+          "registerAdmission": "BLOCKED",
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "required-component-complete-outside-selected",
+          "actualUid": 501,
+          "archive": {
+            "key": "TS",
+            "path": "research/v2/tool-stack.md",
+            "originalDigest": "de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3",
+            "contentDigest": "935ed85fc834e4c415a8466e8ff7ce9199f054d2fd06facb04c811c9ff3ac465",
+            "origin": "seeded_document"
+          },
+          "result": {
+            "componentId": "M02",
+            "comparisonDigest": "2488cd5e4ca64f84083e681bf5e4dcf257c1bb72a47e25f3880942141ed4fc17",
+            "state": "PASS",
+            "findings": [],
+            "selectedTool": "Self-hosted workflow engine",
+            "validationPlan": "Run the pinned shared-connection rollback, lost-claim fencing and generated-schema CLI fault probe before component admission.",
+            "unresolvedFacts": [],
+            "scope": "component_comparison",
+            "researchAttestationVerified": false,
+            "acceptanceComplete": false,
+            "selectedOptionId": "outside",
+            "missingRequirementIds": [],
+            "missingSourceIds": [],
+            "missingValidationIds": []
+          },
+          "registerAdmission": "BLOCKED",
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        }
+      ]
+    },
+    {
+      "AT": "AT-obligations-74",
+      "unfiltered": true,
+      "operationId": "f4985aa9-4e28-49bf-8963-c1efbb77d8c8",
+      "runExit": 0,
+      "showExit": 0,
+      "runShowExact": true,
+      "wholeState": "NOT_IMPLEMENTED",
+      "acceptanceComplete": false,
+      "maximumPrerequisiteLength": 899,
+      "runtimeBinding": {
+        "releaseDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "controlDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "schemaDigest": "f509080a6f77a7ccac9701af9c4dd5ef1e951f8aaa469907ba833b35b7abdd88",
+        "fixtureDigest": "afcb0e005ebbdd24dbb332da2bd174e8eabd4365448eafe7a4ebe9d3a731dbc5"
+      },
+      "caseManifestDigest": "92270590e82ff538fff2888d5cbde07dbb076eadd7b6dca898159cf38cf7bedc",
+      "sourceRegistration": {
+        "id": "AT-obligations-74",
+        "rung": "CLI",
+        "sourceAssertionHash": "36411038b27cdb5922439aa3c32c12816bdf12ecfa39a5e46892e13158066ccb",
+        "commandId": "probe.run",
+        "scenarioId": "research.component-comparison",
+        "owner": "self-improvement",
+        "firstRelease": "R0",
+        "kind": "static_gate",
+        "mandatoryCases": [
+          {
+            "id": "missing-primary-evidence",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-primary-evidence"
+          },
+          {
+            "id": "unsupported-choice",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "unsupported-choice"
+          },
+          {
+            "id": "missing-acceptance-link",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-acceptance-link"
+          },
+          {
+            "id": "complete-outside-comparison",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "complete-outside-comparison"
+          }
+        ],
+        "trigger": "Check fixed archived external research comparisons through the real EngineeringControl owner, preserving the selected tool and validation plan while whole-register admission remains unresolved.",
+        "faultControls": [
+          {
+            "id": "external-report-omissions",
+            "seam": "provider",
+            "affectedPhases": [
+              "missing-primary-evidence",
+              "unsupported-choice",
+              "missing-acceptance-link"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "component-decision-result",
+            "independentReader": "EngineeringControl.checkResearch archive binding and persisted probe.show readback",
+            "caseIds": [
+              "missing-primary-evidence",
+              "unsupported-choice",
+              "missing-acceptance-link",
+              "complete-outside-comparison"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM ingress cannot submit engineering research archives or inspect a pre-build component gate. The CLI exercises the real checker with fixed external-document inputs."
+      },
+      "checks": 4,
+      "proofs": [
+        {
+          "caseId": "missing-primary-evidence",
+          "externalResearch": "seeded_archived_report",
+          "actualUid": 501,
+          "archive": {
+            "key": "TS",
+            "path": "research/v2/tool-stack.md",
+            "originalDigest": "de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3",
+            "contentDigest": "386e67db8924764d8545e26f06fc836b0d6c27f33042e150473466a1bedd8c81",
+            "origin": "seeded_document"
+          },
+          "result": {
+            "componentId": "M02",
+            "comparisonDigest": "8c475d28b7e0e8a48cf6feebbf995c14990dc12c71348a3fab31c0b15e0d3a33",
+            "state": "BLOCKED",
+            "findings": [
+              "PRIMARY_EVIDENCE_MISSING"
+            ],
+            "selectedTool": "PostgreSQL + pg-boss",
+            "validationPlan": "Run the pinned shared-connection rollback, lost-claim fencing and generated-schema CLI fault probe before component admission.",
+            "unresolvedFacts": [],
+            "scope": "component_comparison",
+            "researchAttestationVerified": false,
+            "acceptanceComplete": false
+          },
+          "registerAdmission": "BLOCKED",
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "unsupported-choice",
+          "externalResearch": "seeded_archived_report",
+          "actualUid": 501,
+          "archive": {
+            "key": "TS",
+            "path": "research/v2/tool-stack.md",
+            "originalDigest": "de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3",
+            "contentDigest": "9604ccaa56747edef393e6485946f212cdb8a29f3bdbbdd10b459f85da8e0f6c",
+            "origin": "seeded_document"
+          },
+          "result": {
+            "componentId": "M02",
+            "comparisonDigest": "1ae1165bc6b6994c287d53eb174698e771f2129cc1fa327fab442b6a23f518e6",
+            "state": "BLOCKED",
+            "findings": [
+              "CHOICE_UNSUPPORTED"
+            ],
+            "selectedTool": null,
+            "validationPlan": "Run the pinned shared-connection rollback, lost-claim fencing and generated-schema CLI fault probe before component admission.",
+            "unresolvedFacts": [],
+            "scope": "component_comparison",
+            "researchAttestationVerified": false,
+            "acceptanceComplete": false
+          },
+          "registerAdmission": "BLOCKED",
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "missing-acceptance-link",
+          "externalResearch": "seeded_archived_report",
+          "actualUid": 501,
+          "archive": {
+            "key": "TS",
+            "path": "research/v2/tool-stack.md",
+            "originalDigest": "de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3",
+            "contentDigest": "2374206455bea6f62911555f136415057886b1c67691c76cf47a24169f6f4a0c",
+            "origin": "seeded_document"
+          },
+          "result": {
+            "componentId": "M02",
+            "comparisonDigest": "9233b4b3aec3c7833b8fbb01d6b000fc6e0b747934c25c530e368974a21e1465",
+            "state": "BLOCKED",
+            "findings": [
+              "ACCEPTANCE_LINK_MISSING"
+            ],
+            "selectedTool": "PostgreSQL + pg-boss",
+            "validationPlan": "Run the pinned shared-connection rollback, lost-claim fencing and generated-schema CLI fault probe before component admission.",
+            "unresolvedFacts": [],
+            "scope": "component_comparison",
+            "researchAttestationVerified": false,
+            "acceptanceComplete": false
+          },
+          "registerAdmission": "BLOCKED",
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        },
+        {
+          "caseId": "complete-outside-comparison",
+          "externalResearch": "seeded_archived_report",
+          "actualUid": 501,
+          "archive": {
+            "key": "TS",
+            "path": "research/v2/tool-stack.md",
+            "originalDigest": "de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3",
+            "contentDigest": "27d61963fb78ff9527791afb574a65caa49975aba7a4279734a41fa051b0364d",
+            "origin": "seeded_document"
+          },
+          "result": {
+            "componentId": "M02",
+            "comparisonDigest": "fd8cc9e62bada53f375eca0cced0401c12ab6ee3798dbde15bb8b4fa4d76dfbd",
+            "state": "PASS",
+            "findings": [],
+            "selectedTool": "PostgreSQL + pg-boss",
+            "validationPlan": "Run the pinned shared-connection rollback, lost-claim fencing and generated-schema CLI fault probe before component admission.",
+            "unresolvedFacts": [],
+            "scope": "component_comparison",
+            "researchAttestationVerified": false,
+            "acceptanceComplete": false
+          },
+          "registerAdmission": "BLOCKED",
+          "liveProviderSends": 0,
+          "wholeATComplete": false
+        }
+      ]
+    }
+  ],
+  "stackDown": {
+    "schemaVersion": "toy.cli.v1",
+    "commandId": "stack.down",
+    "invocationId": "9df83b20-abd2-46c7-8567-dd3fc07f89e5",
+    "generatedAt": "2026-10-06T21:43:52.691Z",
+    "cliVersion": "1.0.0",
+    "contractsVersion": "1.0.0",
+    "schemaDigest": "f509080a6f77a7ccac9701af9c4dd5ef1e951f8aaa469907ba833b35b7abdd88",
+    "environment": {
+      "kind": "test",
+      "instanceId": null,
+      "stackId": "21b5c30f-cfd4-4b3b-83fe-b7af333b4fd8"
+    },
+    "meta": {
+      "exitCode": 0,
+      "releaseDigest": null,
+      "controlDigest": null,
+      "evaluatedAt": null,
+      "operationId": "78677655-3616-4b30-8a3e-d60488a69896",
+      "effectState": "confirmed",
+      "recordRefs": [],
+      "evidence": []
+    },
+    "ok": true,
+    "data": {
+      "operation": {
+        "operationId": "78677655-3616-4b30-8a3e-d60488a69896",
+        "state": "succeeded",
+        "acceptedAt": "2026-10-06T21:43:52.690Z"
+      },
+      "requestId": "af70e8c5-2f81-47b7-b1e1-a30543cb8fe6",
+      "stackId": "21b5c30f-cfd4-4b3b-83fe-b7af333b4fd8",
+      "result": {
+        "stackId": "21b5c30f-cfd4-4b3b-83fe-b7af333b4fd8",
+        "release": "R0",
+        "manifestDigest": "afcb0e005ebbdd24dbb332da2bd174e8eabd4365448eafe7a4ebe9d3a731dbc5",
+        "clock": "fake",
+        "model": "fake",
+        "ready": false,
+        "components": [
+          {
+            "id": "bootstrap.resource-admission",
+            "owner": "ops",
+            "state": "PASS",
+            "checkedAt": "2026-10-06T21:43:49.813Z",
+            "reasonCode": "AVAILABLE_MEMORY_AND_OBSERVED_PRESSURE",
+            "prerequisite": "{\"schemaVersion\":\"toy.bootstrap-resource-preflight.v2\",\"measuredAt\":\"2026-10-06T21:43:49.813Z\",\"samples\":[{\"observedAt\":\"2026-10-06T21:43:49.813Z\",\"monotonicNanoseconds\":\"192321613864041\",\"physicalBytes\":\"8589934592\",\"pageSizeBytes\":\"16384\",\"freeBytes\":\"758136832\",\"inactiveBytes\":\"1438285824\",\"purgeableBytes\":\"41058304\",\"speculativeBytes\":\"189104128\",\"availableBytes\":\"2426585088\",\"pressure\":\"normal\",\"pressureSource\":\"os\",\"pressureQueryOutput\":\"1\\n\"}],\"completeMeasurements\":true,\"jobNeedBytes\":\"1073741824\",\"marginBytes\":\"536870912\",\"requiredAvailableBytes\":\"1610612736\",\"minimumAvailableBytes\":\"2426585088\",\"normalPressureObserved\":true,\"headroomSatisfied\":true,\"reasons\":[],\"resourcePermitIssued\":false,\"admissionState\":\"admitted\"}",
+            "nextCommandId": "stack.up",
+            "links": {
+              "recordRefs": [],
+              "observations": [],
+              "artifactDigests": []
+            }
+          },
+          {
+            "id": "bootstrap.fixture-runtime",
+            "owner": "ops",
+            "state": "PASS",
+            "checkedAt": "2026-10-06T21:43:52.689Z",
+            "reasonCode": "OWNED_FIXTURE_STOPPED",
+            "prerequisite": null,
+            "nextCommandId": "stack.up",
+            "links": {
+              "recordRefs": [],
+              "observations": [],
+              "artifactDigests": []
+            }
+          },
+          {
+            "id": "bootstrap.fixture-identities",
+            "owner": "ops",
+            "state": "NOT_IMPLEMENTED",
+            "checkedAt": "2026-10-06T21:43:52.689Z",
+            "reasonCode": "R0_04_05_ACTUAL_PREREQUISITES_PENDING",
+            "prerequisite": "Actual protected service identities and signed target launcher remain pending.",
+            "nextCommandId": "doctor",
+            "links": {
+              "recordRefs": [],
+              "observations": [],
+              "artifactDigests": []
+            }
+          }
+        ],
+        "ownedResourceRefs": [
+          {
+            "module": "ops",
+            "kind": "test_world",
+            "id": "21b5c30f-cfd4-4b3b-83fe-b7af333b4fd8"
+          }
+        ],
+        "evidenceLocation": "1939b395-5671-479b-bd0c-faa26ee0098a",
+        "teardown": {
+          "stackId": "21b5c30f-cfd4-4b3b-83fe-b7af333b4fd8",
+          "checkpointRefs": [],
+          "fenceRefs": [],
+          "stoppedResourceRefs": [
+            {
+              "module": "ops",
+              "kind": "test_world",
+              "id": "21b5c30f-cfd4-4b3b-83fe-b7af333b4fd8"
+            }
+          ],
+          "retainedArtifactRefs": [
+            {
+              "module": "ops",
+              "kind": "test_world",
+              "id": "21b5c30f-cfd4-4b3b-83fe-b7af333b4fd8"
+            }
+          ],
+          "unresolvedResourceRefs": [],
+          "complete": true
+        }
+      },
+      "links": {
+        "recordRefs": [],
+        "observations": [],
+        "artifactDigests": []
+      }
+    }
+  },
+  "nativeExecutionVerified": false,
+  "liveProviderSends": 0,
+  "acceptanceComplete": false,
+  "static": {
+    "command": "npm run check",
+    "recordedAt": "2026-10-06T21:43:35.590001+00:00",
+    "exitCode": 0,
+    "log": "build/evidence/R0.12/route-check.txt",
+    "swiftInvoked": false,
+    "artifacts": 370,
+    "contracts": 302,
+    "cliManifests": 17,
+    "features": 97,
+    "commands": 55,
+    "indexedATs": 1447,
+    "schemaDigest": "f509080a6f77a7ccac9701af9c4dd5ef1e951f8aaa469907ba833b35b7abdd88"
+  },
+  "sourceDigests": {
+    "packages/contracts/src/engineering-control.ts": "79c5c11333975cb94cb88dcbab664a64a05f4caac501c6c47c2e1aceab8657b3",
+    "packages/self-improvement/src/engineering-control.ts": "c23dc016b991f8b30e9e34473b5a0c3ba2b496804582807368e468d1343bf06e",
+    "packages/self-improvement/src/component-comparison-probe.ts": "f9d5b8ba69f44b07b58a9a203d92c83d4028a47d22496daf87c36aa9e1ddc713",
+    "packages/self-improvement/src/public.ts": "f06a33fbdd6587b5f82ca575528148e1a6965c6ff15dbe39ef2d86dad61c84ff",
+    "packages/ops/src/fixture-stack.ts": "f1e4d85e0e2adc4fe0fcd44347c9c2101515ec6aa4676c533b23755be2ead736",
+    "tests/registry.yaml": "96a0309ed6cc73481e6b99ec63e7c3efd34edf0c52b632b116bcf251a43dbbc0",
+    "behavior/research-skill.json": "676190b93eccbee205a5ec7e2609b2f4100a27bac73f808704095fa0229d2f72"
+  },
+  "rootRequestPins": {
+    "verified": true,
+    "unchanged": {
+      "scripts/probe-siwc-control-runtime.mts": "96e1fd2d98469772c3d0d203386c3f7aa56af57db025c420fa93f1f4ecd7e70d",
+      "scripts/stage-siwc-control-runtime.mts": "13ff53e341ab7670dbed967ce810d5aa2834df7a47ffe1620f037ff1da3ee0d4",
+      "control/dist/bootstrap/siwc-runtime-probe.js": "06870b8dd41d2ffc093cc04680ba56c4570f07b4aa0a27a9ab70796cdd8204bd",
+      "scripts/probe-unfiltered-control-denials.mts": "1cb93d375df931a482d946170e31549450d8efb71d6a251f5d2bcea8c5b92529",
+      "packages/ops/dist/role-control-probe.js": "1764a98e5ae45694118007c242320711a7bd9e0d021b7c6d6ee0cbb8cff73ec2",
+      "control/dist/bootstrap/denial-probe.js": "7fda1824ec7bc308cac97d07c7c92cadd5527e87e89d79b410d33d95d1b30672"
+    }
+  },
+  "deferred": [
+    "Authenticated native research receipt provenance and protected controller",
+    "All remaining assigned R0.12 assertions",
+    "Sources208 broad native/process/secret/GUI matrix",
+    "No report or component fixture permits whole register admission"
+  ]
+}

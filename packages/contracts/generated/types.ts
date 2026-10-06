@@ -218,6 +218,7 @@ export type ResearchComponentComparisonV2 = z.infer<typeof schemaInventory.Resea
 export type ResearchComponentComparisonCheckV2 = z.infer<typeof schemaInventory.ResearchComponentComparisonCheckV2>;
 export type ResearchRegisterInspectionV2 = z.infer<typeof schemaInventory.ResearchRegisterInspectionV2>;
 export type ResearchSourcesComponentComparisonV1 = z.infer<typeof schemaInventory.ResearchSourcesComponentComparisonV1>;
+export type ResearchSourcesComponentComparisonV2 = z.infer<typeof schemaInventory.ResearchSourcesComponentComparisonV2>;
 export type InstalledCodexRuntimeV1 = z.infer<typeof schemaInventory.InstalledCodexRuntimeV1>;
 export type CodexProtocolInspectionV1 = z.infer<typeof schemaInventory.CodexProtocolInspectionV1>;
 export type ModelRoleV1 = z.infer<typeof schemaInventory.ModelRoleV1>;
