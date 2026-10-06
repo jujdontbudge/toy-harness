@@ -2,9 +2,9 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-06T23:55:04.828886+00:00",
+  "updatedAt": "2026-10-06T23:56:58.550592+00:00",
   "phase": "R0_FEASIBILITY",
-  "activeCard": "R0.03",
+  "activeCard": "R0.02",
   "cardCount": 87,
   "acceptanceCount": 1447,
   "cards": {
@@ -545,6 +545,17 @@
         "scope": "Source-derived Ops requirement/component mapping only; do not substitute M02/D01 or fabricate AT44 proof",
         "status": "ACCEPTED_NEXT_INDEPENDENT_SOURCE_UNIT",
         "wholeATComplete": false
+      },
+      "opsScopeUnit": {
+        "status": "LUNA_SOURCE_PHASE_IN_PROGRESS",
+        "startedAt": "2026-10-06T23:57:00Z",
+        "targetStopAt": "2026-10-07T01:57:00Z",
+        "helperStopAt": "2026-10-07T00:25:00Z",
+        "baselineEvidence": "build/evidence/R0.02/ops43-scope-baseline.json",
+        "planEvidence": "build/evidence/R0.02/ops43-44-next-minimum-plan.json",
+        "scope": "Enforce the canonical per-spec Ops requirement mapping for the full source-derived Ops component set; no AT44 or positive primary evidence invention",
+        "acceptanceComplete": false,
+        "wholeATsPassed": []
       }
     },
     "R0.03": {
@@ -942,8 +953,8 @@
         "acceptanceComplete": false,
         "liveProviderSends": 0,
         "SwiftDeferredTo": "R3",
-        "sourceCommit": null,
-        "sourcePushed": false
+        "sourceCommit": "43970a8",
+        "sourcePushed": true
       }
     },
     "R0.04": {
@@ -10736,7 +10747,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Commit/push the stopped R0.03 borrowed-root source unit and evidence. Poll ROOT-REQUESTS; exact root02 DONE immediately prioritizes R0.01 native owner load. Otherwise continue the bounded source-derived Ops requirement/component mapping under R0.02; AT44 remains pending genuine source-bound research and protected route/account proof. Pending root work never blocks the goal.",
+  "nextAction": "Poll ROOT-REQUESTS and review the independent Luna R0.02 source handoff when ready. Exact root02 DONE immediately prioritizes R0.01 native owner load. No parent same-card implementation or builds/probes while the worker is mutating its owned source. R0.03 source43970a8 is pushed and stopped after six borrowed-root cells plus32 shared regressions pass. Pending root work never blocks the goal.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -21267,13 +21278,21 @@
   },
   "pullRequest": "https://github.com/JohanSardar/toy-harness/pull/1",
   "lastWorker": {
-    "card": "R0.10",
-    "task": "r010_pin_revalidation",
+    "task": "r005_control_probe_review",
+    "card": "R0.02",
     "model": "gpt-6-luna",
     "reasoning": "max",
-    "state": "completed_read_only",
-    "evidence": "build/evidence/R0.10/dto-roundtrip-next-minimum-plan.json",
-    "ownedScope": "Corrected exact canonical DTO minimum plan only; parent owned implementation after helper completion"
+    "state": "running_source_only",
+    "ownedScope": [
+      "docs/adr/0043-ops-research-scope.md",
+      "packages/contracts/src/engineering-control.ts",
+      "packages/self-improvement/src/engineering-control.ts",
+      "build/evidence/R0.02/ops-scope-source-handoff.json"
+    ],
+    "admissionEvidence": "build/evidence/R0.02/ops43-scope-baseline-cli/up.json",
+    "ownNeedBytes": "268435456",
+    "marginBytes": "536870912",
+    "deadline": "2026-10-07T00:25:00Z"
   },
   "continuationAssessment": {
     "observedAt": "2026-10-06T23:55:04.828886+00:00",
@@ -21309,7 +21328,7 @@
       "pendingRootDoesNotBlockGoal": true,
       "pollWhileIndependentWork": true,
       "exactRegisteredCommandOrRepoScriptRequired": true,
-      "lastPollAt": "2026-10-06T23:55:04.828886+00:00",
+      "lastPollAt": "2026-10-06T23:56:58.550592+00:00",
       "pendingRequests": [
         "ROOT-R004-20261006-02",
         "ROOT-R005-20261006-01"
@@ -21339,7 +21358,7 @@
     "command": "npm run check; toy feature-map update/check after metadata-only refresh",
     "featureMapEvidence": "build/evidence/R0.03/borrowed88-map-check-final.json"
   },
-  "sourceCheckpointCommit": "d141e9b",
+  "sourceCheckpointCommit": "43970a8",
   "sourceCheckpointPushed": true,
   "rootRequests": {
     "ROOT-R004-20261006-01": {
@@ -21379,15 +21398,15 @@
     }
   },
   "resourceAdmission": {
-    "measuredAt": "2026-10-06T23:52:21.794Z",
-    "availableBytes": "2143666176",
+    "measuredAt": "2026-10-06T23:55:44.884Z",
+    "availableBytes": "2098069504",
     "pressure": "normal",
     "strictlyFreeAdmission": false,
     "repairFloorApplied": false,
     "ownedWorldsRunning": 0,
-    "helpersRunning": 0,
+    "helpersRunning": 1,
     "helperNeedBytes": "268435456",
-    "measurementSource": "build/evidence/R0.03/borrowed88-regression-cli/up.json",
+    "measurementSource": "build/evidence/R0.02/ops43-scope-baseline-cli/up.json",
     "marginBytes": "536870912",
     "ownedStackId": null,
     "stackAndNativeChildrenNeedBytes": "0",
@@ -21397,6 +21416,24 @@
     "queuedRootReserveGate": false,
     "rule": "Normal OS pressure and available memory at least the current job declared need plus512MiB; no strictly-free, hypothetical reserve, swap or second physical-fit gate"
   },
-  "activeWorkers": [],
-  "pullRequestUpdatedAt": "2026-10-06T23:37:21.831146+00:00"
+  "activeWorkers": [
+    {
+      "task": "r005_control_probe_review",
+      "card": "R0.02",
+      "model": "gpt-6-luna",
+      "reasoning": "max",
+      "state": "running_source_only",
+      "ownedScope": [
+        "docs/adr/0043-ops-research-scope.md",
+        "packages/contracts/src/engineering-control.ts",
+        "packages/self-improvement/src/engineering-control.ts",
+        "build/evidence/R0.02/ops-scope-source-handoff.json"
+      ],
+      "admissionEvidence": "build/evidence/R0.02/ops43-scope-baseline-cli/up.json",
+      "ownNeedBytes": "268435456",
+      "marginBytes": "536870912",
+      "deadline": "2026-10-07T00:25:00Z"
+    }
+  ],
+  "pullRequestUpdatedAt": "2026-10-06T23:56:58.550592+00:00"
 }
