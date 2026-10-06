@@ -754,6 +754,7 @@ RegisteredCheckIdV1 = Literal[
     "engineering.map",
     "engineering.static",
     "accounting.model-admission",
+    "capacity.trial-journal",
     "queue.obligation-faults",
     "release.native-eligibility",
     "backup.local-inventory",
@@ -3178,6 +3179,7 @@ RegisteredTestCaseV1 = Literal[
     "backup-capacity",
     "control-filesystem-denial",
     "queue-transaction-faults",
+    "capacity-trial",
 ]
 
 ElapsedDurationV1 = NewType("ElapsedDurationV1", str)
@@ -5593,6 +5595,104 @@ SiwcControlRuntimeReportV1Reason = Literal[
     "CONTROL_RUNTIME_UNAVAILABLE",
     "CONTROL_KEYCHAIN_READ_UNAVAILABLE",
     "PARENT_RESTORE_FAILED",
+]
+
+class CapacityTrialArmV1(TypedDict):
+    armId: "UUID"
+    requestId: "UUID"
+    jobKey: "CapacityTrialArmV1JobKey"
+    anchor: "Instant"
+    designation: "CapacityTrialArmV1Designation"
+    aiEverySeconds: "CapacityTrialArmV1AiEverySeconds"
+    clock: "CapacityTrialArmV1Clock"
+    policyDigest: "Digest"
+    configurationDigest: "Digest"
+    routeDigest: "Digest"
+    hostDigest: "Digest"
+    workloadDigest: "Digest"
+
+CapacityTrialArmV1JobKey = Literal[
+    "capacity.full-review",
+]
+
+CapacityTrialArmV1Designation = Literal[
+    "original",
+    "experimental",
+]
+
+CapacityTrialArmV1AiEverySeconds = Union[
+    "CadenceCoverageV1RequiredAiEverySeconds",
+    "CapacityTrialArmV1AiEverySecondsVariant1",
+]
+
+CapacityTrialArmV1AiEverySecondsVariant1 = Literal[
+    900,
+]
+
+CapacityTrialArmV1Clock = Literal[
+    "fake_model",
+]
+
+class CapacityTrialSlotV1(TypedDict):
+    armId: "UUID"
+    index: int
+    slotAt: "Instant"
+    state: "CadenceSlotState"
+    reason: Optional[str]
+    updatedAt: "Instant"
+
+class CapacityTrialDeferralV1(TypedDict):
+    armId: "UUID"
+    index: int
+    state: "CapacityTrialDeferralV1State"
+    reason: str
+
+CapacityTrialDeferralV1State = Literal[
+    "deferred_quota",
+    "deferred_auth",
+    "deferred_network",
+    "deferred_busy",
+    "failed",
+]
+
+class CapacityTrialReportV1(TypedDict):
+    arm: "CapacityTrialArmV1"
+    endsAt: "Instant"
+    denominator: "CapacityTrialReportV1Denominator"
+    cadenceSeconds: "CadenceCoverageV1RequiredAiEverySeconds"
+    totalSlots: int
+    sequenceIntact: bool
+    firstSlotAt: Optional["Instant"]
+    lastSlotAt: Optional["Instant"]
+    counts: "CapacityTrialReportV1Counts"
+    reasons: list["CapacityTrialReportV1ReasonsItem"]
+    acceptanceComplete: "RoleBootstrapReportV1IdentityGateVerified"
+    fullCadenceVerdict: "CapacityTrialReportV1FullCadenceVerdict"
+
+CapacityTrialReportV1Denominator = Literal[
+    3360,
+]
+
+class CapacityTrialReportV1Counts(TypedDict):
+    scheduled: int
+    running: int
+    swept: int
+    reviewed: int
+    deferred_quota: int
+    deferred_auth: int
+    deferred_network: int
+    deferred_busy: int
+    maintenance: int
+    failed: int
+    missed: int
+    coalesced_after_outage: int
+
+class CapacityTrialReportV1ReasonsItem(TypedDict):
+    reason: str
+    count: int
+
+CapacityTrialReportV1FullCadenceVerdict = Literal[
+    "NOT_EVALUATED",
 ]
 
 ToyCaptureParametersV1 = Union[

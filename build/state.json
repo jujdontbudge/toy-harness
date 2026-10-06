@@ -2,9 +2,9 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-06T18:29:26.064345+00:00",
-  "phase": "R0.03 add-first diagnostic verified; refresh-first replan after3failures; independent R0.07 source unit",
-  "activeCard": "R0.07",
+  "updatedAt": "2026-10-06T18:50:38.348777+00:00",
+  "phase": "R0.07 fixture journal12checksverified/receiptboundrepairplanned; root02pending; R003catalogobservationnext",
+  "activeCard": "R0.03",
   "cardCount": 87,
   "acceptanceCount": 1447,
   "cards": {
@@ -985,17 +985,41 @@
       }
     },
     "R0.07": {
-      "implementation": "NOT_IMPLEMENTED",
+      "implementation": "IN_PROGRESS",
       "acceptance": "PENDING",
       "sourceRowHash": "acdf83458f9dd7e13183a3cc37f353317822a101ea8fc035048c362b8a5d6b8f",
       "dependsOn": "R0.03, R0.05, R0.06",
-      "evidence": [],
+      "evidence": [
+        "build/evidence/R0.07/journal-verification.json",
+        "build/evidence/R0.07/journal-replan.json"
+      ],
       "requiredATs": [
         "AT-RESEARCH-REGISTER-6",
         "AT-ops-47",
         "AT-self-improvement-59",
         "AT-self-improvement-60"
-      ]
+      ],
+      "journalUnit": {
+        "startedAt": "2026-10-06T18:31:50Z",
+        "targetStopAt": "2026-10-06T20:31:50Z",
+        "state": "CLOSED_THREE_DIAGNOSTIC_FAILURES_REPLAN",
+        "scope": "Fixture-only immutable arm and canonical cadence-slot bookkeeping through existing PostgreSQL/CLI path",
+        "liveTrialStarted": false,
+        "wholeATComplete": false,
+        "stoppedAt": "2026-10-06T18:50:38.348777+00:00",
+        "actualDiagnosticAttempts": 3,
+        "verifiedChecks": 12,
+        "verification": "build/evidence/R0.07/journal-verification.json",
+        "replan": "build/evidence/R0.07/journal-replan.json"
+      },
+      "lastVerification": {
+        "diagnosticChecksPassed": 12,
+        "wholeATsPassed": [],
+        "acceptanceComplete": false,
+        "liveTrialStarted": false,
+        "cleanupComplete": true,
+        "evidence": "build/evidence/R0.07/journal-verification.json"
+      }
     },
     "R0.08": {
       "implementation": "IN_PROGRESS",
@@ -9866,7 +9890,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Commit and push bounded R003 evidence, then implement the smallest missing canonical cadence-slot owner identified by independent R007 discovery. Poll root02 and consume its exact result immediately when DONE. Keep trial unstarted until live prerequisites.",
+  "nextAction": "Commit and push R007 bounded source/evidence; parent moves to R003 finite catalog generation observation. Independent Luna may perform only minimum R007 envelope repair after checkpoint. Pollroot02; no live trial/wholeacceptanceclaim.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -20405,17 +20429,17 @@
   "latestStaticVerification": {
     "command": "npm run check",
     "exitCode": 0,
-    "log": "build/evidence/R0.03/concurrent-auth-generation-effects-check-3-output.txt",
-    "artifacts": 348,
-    "contracts": 280,
-    "features": 95,
+    "output": "build/evidence/R0.07/journal-check-5-output.txt",
+    "artifacts": 352,
+    "contracts": 284,
+    "features": 97,
     "commands": 55,
     "ATs": 1447,
+    "schemaDigest": "c5ca22578616f7949615493f70b8b9ac048de1156efcae9b519eba4a12ce4d21",
     "swiftInvoked": false,
-    "completedAt": "2026-10-06T18:26:14.980Z",
-    "schemaDigest": "07598a99449ba6c9bbd1061c2f34f729824ddbcb15c3707a1e708c0d1e938799"
+    "completedAt": "2026-10-06T18:45:52.440Z"
   },
-  "sourceCheckpointCommit": "8be2842",
+  "sourceCheckpointCommit": "56ea427",
   "sourceCheckpointPushed": true,
   "rootRequests": {
     "ROOT-R004-20261006-01": {
@@ -20441,15 +20465,15 @@
     }
   },
   "resourceAdmission": {
-    "measuredAt": "2026-10-06T18:26:48.521Z",
-    "availableBytes": "2194292736",
+    "measuredAt": "2026-10-06T18:46:25.065Z",
+    "availableBytes": "2756608000",
     "pressure": "normal",
     "strictlyFreeAdmission": false,
     "repairFloorApplied": false,
     "ownedWorldsRunning": 0,
-    "helpersRunning": 1,
-    "helperNeedBytes": "268435456",
-    "measurementSource": "build/evidence/R0.03/concurrent-auth-generation-effects-stack-up-3.json",
+    "helpersRunning": 0,
+    "helperNeedBytes": "0",
+    "measurementSource": "build/evidence/R0.07/journal-stack-up-3.json",
     "marginBytes": "536870912",
     "ownedStackId": null,
     "stackAndNativeChildrenNeedBytes": "0",
@@ -20459,7 +20483,5 @@
     "queuedRootReserveGate": false,
     "rule": "Normal OS pressure and available memory at least the current job declared need plus512MiB; no strictly-free, hypothetical reserve, swap or second physical-fit gate"
   },
-  "activeWorkers": [
-    "/root/r007_minimum_trial_journal"
-  ]
+  "activeWorkers": []
 }

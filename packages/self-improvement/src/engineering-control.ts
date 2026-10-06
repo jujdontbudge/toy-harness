@@ -6,6 +6,7 @@ import { acceptanceIndexSchema, checkoutPathSchema, cliDeclarations, featureFact
 import type { CheckViewV1, FeatureFactsV1, FilePatchV1, GeneratorInputV1, GeneratorPlanV1, FeatureMapCheckV1, FeatureMapUpdateV1, MapCheckInputV1, MapUpdateInputV1, GardenerInputV1, GardenerReportV1, OpsControlContextV1, ResearchCatalogCoverageFindingV1, ResearchCatalogMemberV1, ResearchCatalogSectionV1, ResearchInspectionFindingV1, ResearchRegisterInspectionV1, Result } from "@toy/contracts";
 import { trustedCheckoutRoot, trustedToolEnvironment } from "@toy/ops/public";
 import { modelAdmissionMigration } from "./model-admission-migration.js";
+import { capacityTrialMigration } from "./capacity-trial-migration.js";
 
 const hash = (value: string): string => createHash("sha256").update(value).digest("hex");
 const mapPath = "skills/toy-control/FEATURE-MAP.md";
@@ -507,7 +508,9 @@ export const EngineeringControl = {
     try {
       generatorInputSchema.parse(input); opsControlContextSchema.parse(context);
       const accountingMigration = input.kind === "migration" && input.owner === "self-improvement" && input.name === "model-admission";
-      if (input.kind === "connector" && (input.owner !== "sources" || input.provider !== "toy-k4a-empty") || input.kind === "tool" && (input.owner !== "ops" || input.operation !== "OpsControlRead.status") || input.kind === "skill" && input.owner !== "self-improvement" || input.kind === "migration" && input.owner !== "ops" && !accountingMigration) return refused("DEPENDENCY_UNAVAILABLE");
+      const capacityMigration = input.kind === "migration" && input.owner === "self-improvement" && input.name === "capacity-trial";
+      const postgresMigration = accountingMigration || capacityMigration;
+      if (input.kind === "connector" && (input.owner !== "sources" || input.provider !== "toy-k4a-empty") || input.kind === "tool" && (input.owner !== "ops" || input.operation !== "OpsControlRead.status") || input.kind === "skill" && input.owner !== "self-improvement" || input.kind === "migration" && input.owner !== "ops" && !postgresMigration) return refused("DEPENDENCY_UNAVAILABLE");
       const referencePaths = { connector: "packages/sources/src/adapters/k4a-reference.ts", tool: "packages/self-improvement/src/reference-tools/ops-status.ts", skill: "skills/toy-control/SKILL.md", migration: "packages/ops/migrations/0001-k4a-reference.sql" };
       const sourcePath = referencePaths[input.kind];
       const source = read(sourcePath);
@@ -536,22 +539,22 @@ export const EngineeringControl = {
         patches.push(patch(`skills/${input.name}/FEATURE-MAP.md`, read(mapPath)));
       } else {
         target = `packages/${input.owner}/migrations/${input.name}.sql`;
-        content = accountingMigration ? modelAdmissionMigration : source.replaceAll("k4a_reference_marker", input.name.replaceAll("-", "_") + "_marker").replaceAll("R0.K4a", featureId);
-        const descriptor = accountingMigration
-          ? { migration_id: featureId, owner: input.owner, dialect: "postgresql", target_database: "toy", target_schema: "toy_si", target_tables: ["budget_group", "model_call", "quota_snapshot"], source_path: target, source_sha256: hash(content), transactional: true, disposable_only: true, production_allowed: false, automatic_rollback: false, runtime_verified: false }
+        content = capacityMigration ? capacityTrialMigration : accountingMigration ? modelAdmissionMigration : source.replaceAll("k4a_reference_marker", input.name.replaceAll("-", "_") + "_marker").replaceAll("R0.K4a", featureId);
+        const descriptor = postgresMigration
+          ? { migration_id: featureId, owner: input.owner, dialect: "postgresql", target_database: "toy", target_schema: "toy_si", target_tables: capacityMigration ? ["capacity_trial_arm", "cadence_slot"] : ["budget_group", "model_call", "quota_snapshot"], source_path: target, source_sha256: hash(content), transactional: true, disposable_only: true, production_allowed: false, automatic_rollback: false, runtime_verified: false }
           : { migration_id: featureId, owner: "ops", dialect: "sqlite", target_database: "private_disposable_sqlite_world", target_schema: "main", target_table: input.name.replaceAll("-", "_") + "_marker", source_path: target, source_sha256: hash(content), transactional: true, disposable_only: true, production_allowed: false, automatic_rollback: false };
         patches.push(patch(`packages/${input.owner}/migrations/${input.name}.json`, JSON.stringify(descriptor, null, 2) + "\n"));
       }
       if (existsSync(safePath(target)) || patches.some((item) => item.kind === "update" && item.path !== "packages/sources/src/public.ts" && item.path !== "packages/self-improvement/src/public.ts")) return refused("CONFLICT");
       patches.unshift(patch(target, content));
-      facts.features.push({ id: featureId, description: "Generated feasibility-only " + input.kind + "; production activation remains pending assigned owner acceptance", implementation: "specified", requirementIds: accountingMigration ? ["spec:ops", "spec:self-improvement"] : ["0.17"], entry: target, owner: input.owner, publicInterface: input.kind === "connector" ? "SourceAdapterR0" : input.kind === "tool" ? "OpsControlRead.status" : input.kind === "skill" ? "EngineeringControl.generate" : accountingMigration ? "ModelAdmission migrations" : "Ops migrations", paths: patches.map((item) => item.path), firstRelease: "R0", commands: ["new." + input.kind], atIds: accountingMigration ? ["AT-hermes-config-101", "AT-cli-25", "AT-ops-51"] : ["AT-hermes-config-101", "AT-cli-25"] });
+      facts.features.push({ id: featureId, description: "Generated feasibility-only " + input.kind + "; production activation remains pending assigned owner acceptance", implementation: "specified", requirementIds: postgresMigration ? ["spec:ops", "spec:self-improvement"] : ["0.17"], entry: target, owner: input.owner, publicInterface: input.kind === "connector" ? "SourceAdapterR0" : input.kind === "tool" ? "OpsControlRead.status" : input.kind === "skill" ? "EngineeringControl.generate" : capacityMigration ? "CapacityTrialJournal migrations" : accountingMigration ? "ModelAdmission migrations" : "Ops migrations", paths: patches.map((item) => item.path), firstRelease: "R0", commands: ["new." + input.kind], atIds: capacityMigration ? ["AT-hermes-config-101", "AT-cli-25", "AT-ops-47"] : accountingMigration ? ["AT-hermes-config-101", "AT-cli-25", "AT-ops-51"] : ["AT-hermes-config-101", "AT-cli-25"] });
       const beforeInventoryDigest = hash(read(factsPath));
       const afterFacts = JSON.stringify(facts, null, 2) + "\n";
       const indexRaw = read("tests/acceptance-index.json");
       patches.push(patch(factsPath, afterFacts));
       patches.push(patch(mapPath, render(facts, hash(JSON.stringify([hash(afterFacts), hash(indexRaw), cliDeclarations])))));
       if (!input.plan) apply(patches);
-      return { ok: true, data: generatorPlanSchema.parse({ kind: input.kind, name: input.name, owner: input.owner, templateDigest: hash(accountingMigration ? modelAdmissionMigration : source), patches, featureIds: [featureId], requiredAtIds: accountingMigration ? ["AT-hermes-config-101", "AT-cli-25", "AT-ops-51"] : ["AT-hermes-config-101", "AT-cli-25"], prerequisites: [accountingMigration ? "Canonical PostgreSQL schema is source preparation only; real database execution, owner role grants and assigned R0.06 runtime acceptance remain pending" : "Full runtime acceptance remains assigned to R1; generated output does not activate production"], applied: !input.plan, beforeInventoryDigest, afterInventoryDigest: hash(afterFacts) }) };
+      return { ok: true, data: generatorPlanSchema.parse({ kind: input.kind, name: input.name, owner: input.owner, templateDigest: hash(capacityMigration ? capacityTrialMigration : accountingMigration ? modelAdmissionMigration : source), patches, featureIds: [featureId], requiredAtIds: capacityMigration ? ["AT-hermes-config-101", "AT-cli-25", "AT-ops-47"] : accountingMigration ? ["AT-hermes-config-101", "AT-cli-25", "AT-ops-51"] : ["AT-hermes-config-101", "AT-cli-25"], prerequisites: [postgresMigration ? "Canonical PostgreSQL schema is source preparation only; real database execution, owner role grants and assigned owner runtime acceptance remain pending" : "Full runtime acceptance remains assigned to R1; generated output does not activate production"], applied: !input.plan, beforeInventoryDigest, afterInventoryDigest: hash(afterFacts) }) };
     } catch { return refused("ARTIFACT_MISMATCH"); }
   },
   garden(input: GardenerInputV1, context: OpsControlContextV1): Result<GardenerReportV1> {

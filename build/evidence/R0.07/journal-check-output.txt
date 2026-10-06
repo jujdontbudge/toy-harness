@@ -1,0 +1,51 @@
+
+> toy-harness@1.0.0 check
+> npm run typecheck && node scripts/typecheck-tests.mjs && npm run boundaries && npm run python:check && npm run lint && npm run contracts:check && node cli/dist/main.js feature-map check --json
+
+
+> toy-harness@1.0.0 typecheck
+> tsc -b --pretty false && tsc -p scripts/tsconfig.json --pretty false
+
+
+> toy-harness@1.0.0 boundaries
+> depcruise --config .dependency-cruiser.cjs packages cli tests control
+
+
+✔ no dependency violations found (252 modules, 829 dependencies cruised)
+
+
+> toy-harness@1.0.0 python:check
+> pyright && .venv/bin/ruff check python && PYTHONPATH=python .venv/bin/lint-imports
+
+0 errors, 0 warnings, 0 informations
+All checks passed!
+[1m=============[0m
+[1mImport Linter[0m
+[1m=============[0m
+[22m[0m
+[1m---------[0m
+[1mContracts[0m
+[1m---------[0m
+[22m[0m
+[1mAnalyzed 13 files, 9 dependencies.[0m
+[1m----------------------------------[0m
+[22m[0m
+[22mHermes adapter cannot import protected controls [0m[32m[22mKEPT[0m[33m[22m[0m[22m[0m
+[22mProtected controls cannot depend on agent implementation [0m[32m[22mKEPT[0m[33m[22m[0m[22m[0m
+[22m[0m
+[22mContracts: 2 kept, 0 broken.[0m
+
+> toy-harness@1.0.0 lint
+> node scripts/run-eslint.mjs && node scripts/check-source-policy.mjs && .venv/bin/python scripts/check-python-policy.py && node scripts/check-contract-ownership.mjs && node scripts/check-contract-pin.mjs && node scripts/check-int-registry.mjs
+
+107 source files passed comment and debt policy
+8 Python source files passed comment and type policy
+79 TypeScript source files passed schema-inventory ownership policy for 284 contracts
+The sole Zod runtime pin is @toy/contracts 4.6.5.
+0 INT entries match 0 internal test files and 1 CLI acceptance registrations satisfy the public contract; 5 total test files declare a rung
+
+> toy-harness@1.0.0 contracts:check
+> tsc -b packages/contracts --pretty false && node scripts/generate-contracts.mjs --check && tsc --noEmit --strict --noUncheckedIndexedAccess --target ES2024 --module NodeNext --moduleResolution NodeNext packages/contracts/generated/types.ts
+
+Verified 352 contract artifacts
+{"schemaVersion":"toy.cli.v1","commandId":"feature-map.check","invocationId":"b34e3616-8083-4079-9dd7-b6fdc0cc9194","generatedAt":"2026-10-06T18:37:43.463Z","cliVersion":"1.0.0","contractsVersion":"1.0.0","schemaDigest":"c5ca22578616f7949615493f70b8b9ac048de1156efcae9b519eba4a12ce4d21","environment":{"kind":"prod","instanceId":null,"stackId":null},"meta":{"exitCode":1,"releaseDigest":null,"controlDigest":null,"evaluatedAt":null,"operationId":null,"effectState":"none","recordRefs":[],"evidence":[]},"ok":true,"data":{"sourceDigest":"9936222e4e5352f44005182512445567fee334b6047eebaa1e82bec7b079ad42","actualMapDigest":"fe9fcfecf451f0ddb3f092905edb8079bd17f78f3bbce7d2aa04a4ac586db2aa","expectedMapDigest":"43e821fc21ec904cee5fb684fae1623cf9dabd87b0eb9c7424815e81781b1b02","featureCount":"97","commandCount":"55","atCount":"1447","findings":[{"id":"engineering.map","owner":"self-improvement","state":"FAIL","checkedAt":"2026-10-06T18:37:43.453Z","reasonCode":"INTERFACE_DANGLING","prerequisite":"generated.migration.capacity-trial:CapacityTrialJournal migrations","nextCommandId":"feature-map.check","links":{"recordRefs":[],"observations":[],"artifactDigests":["1392adf848beeeec601937fb0ea9c254ea96eae9afe97d47cb59e8b2e2c5541f"]}},{"id":"engineering.map","owner":"self-improvement","state":"FAIL","checkedAt":"2026-10-06T18:37:43.454Z","reasonCode":"REQUIREMENT_DANGLING","prerequisite":"self-improvement.capacity-trial-journal:spec:TEST-PLAN","nextCommandId":"feature-map.check","links":{"recordRefs":[],"observations":[],"artifactDigests":["e82aedf6fdca237fdaee3ea9cfc09d979611ac74571d0a2972bf06e271e98ea4"]}},{"id":"engineering.map","owner":"self-improvement","state":"FAIL","checkedAt":"2026-10-06T18:37:43.454Z","reasonCode":"INTERFACE_DANGLING","prerequisite":"self-improvement.capacity-trial-journal:CapacityTrialJournal.withTest","nextCommandId":"feature-map.check","links":{"recordRefs":[],"observations":[],"artifactDigests":["c2d1f76b733a1f761e4f7030d5f9b90b421eaf68687d6e8a4a6b952f77b7e126"]}},{"id":"engineering.map","owner":"self-improvement","state":"FAIL","checkedAt":"2026-10-06T18:37:43.461Z","reasonCode":"MAP_FEATURE_MISSING","prerequisite":"self-improvement.capacity-trial-journal","nextCommandId":"feature-map.check","links":{"recordRefs":[],"observations":[],"artifactDigests":["128d8f5d6deed23ffec435a7ebe4ebe8e88a15373db7a671d5cde3bc3d017e9d"]}},{"id":"engineering.map","owner":"self-improvement","state":"FAIL","checkedAt":"2026-10-06T18:37:43.461Z","reasonCode":"MAP_DIGEST_STALE","prerequisite":"skills/toy-control/FEATURE-MAP.md","nextCommandId":"feature-map.check","links":{"recordRefs":[],"observations":[],"artifactDigests":["3aaf5154ec0e80d198d2180046de7d2d3799ebdff45afa2c4d25a3a531206928"]}}],"state":"FAIL"}}

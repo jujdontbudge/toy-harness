@@ -9,7 +9,7 @@ export { registeredCliProbeInventory, acceptanceSourceDigest } from "./generated
 export const registeredCliAcceptanceManifestInventory = generatedCliAcceptanceManifestInventory.map(manifest => registeredCliAcceptanceManifestSchema.parse(manifest));
 export const registeredCliProbeIdSchema = z.enum(registeredCliProbeInventory.map((entry) => entry.id));
 export const registeredTestWorldSchema = z.enum(["r0-bootstrap"]);
-export const registeredTestCaseSchema = z.enum(["native-entry", "native-denials", "postgres-unix", "stack-lifecycle", "k4a-connector", "k4a-tool", "k4a-skill", "k4a-migration", "model-route-policy", "model-route-stream", "model-admission", "native-release-eligibility", "native-auth-cli", "backup-capacity", "control-filesystem-denial", "queue-transaction-faults"]);
+export const registeredTestCaseSchema = z.enum(["native-entry", "native-denials", "postgres-unix", "stack-lifecycle", "k4a-connector", "k4a-tool", "k4a-skill", "k4a-migration", "model-route-policy", "model-route-stream", "model-admission", "native-release-eligibility", "native-auth-cli", "backup-capacity", "control-filesystem-denial", "queue-transaction-faults", "capacity-trial"]);
 export const testStackClockSchema = z.enum(["fake", "real"]);
 export const testStackModelSchema = z.enum(["fake", "supported"]);
 export const elapsedDurationSchema = z.string().min(3).max(80).regex(/^P(?=\d|T\d)(?:\d+D)?(?:T(?=\d)(?:\d+H)?(?:\d+M)?(?:\d+(?:\.\d{1,3})?S)?)?(?![\s\S])/);

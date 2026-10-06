@@ -1,11 +1,13 @@
 export type { ModuleId } from "@toy/contracts";
 export { EngineeringControl } from "./engineering-control.js";
 export { ModelAdmission } from "./model-admission.js";
+export { CapacityTrialJournal } from "./capacity-trial.js";
 import { opsErrorMessages, registeredProbeInputSchema } from "@toy/contracts";
 import type { OpsControlContextV1, RegisteredProbeInputV1, RegisteredProbeOperationV1, RegisteredProbeShowInputV1, Result } from "@toy/contracts";
 import { OpsTestStack, QueueFaultProbe, TestProbeControl } from "@toy/ops/public";
 import { referenceCheck } from "./reference-check.js";
 import { accountingProbe } from "./accounting-probe.js";
+import { capacityTrialProbe } from "./capacity-trial-probe.js";
 import { accountingTestConnection, withAccountingFixture } from "./accounting-postgres.js";
 
 export const ReplayEnvironment = {
@@ -14,6 +16,7 @@ export const ReplayEnvironment = {
     if (!owned.ok) return owned;
     if (!registeredProbeInputSchema.safeParse(input).success) return { ok: false, error: { module: "ops", code: "INVALID_INPUT", message: opsErrorMessages.INVALID_INPUT, retryable: false } };
     if (input.caseId === "model-admission") return accountingProbe(input, context);
+    if (input.caseId === "capacity-trial") return capacityTrialProbe(input, context);
     if (input.caseId === "queue-transaction-faults" && input.probeId !== "AT-obligations-76") return { ok: false, error: { module: "ops", code: "INVALID_INPUT", message: opsErrorMessages.INVALID_INPUT, retryable: false } };
     try {
       if (input.caseId === "queue-transaction-faults" && context.environment.stackId !== null) {

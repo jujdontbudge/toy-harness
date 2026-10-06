@@ -3622,12 +3622,11 @@
     {
       "id": "ops.actual-control-denials",
       "description": "Fixed root-controller diagnostic runs actual agent UID/GID/groups through six OS filesystem denials, permitted scratch and protected canary readbacks; full assigned certification remains pending.",
+      "implementation": "built",
       "requirementIds": [
         "spec:authority",
         "spec:ops"
       ],
-      "firstRelease": "R0",
-      "implementation": "built",
       "entry": "cli/src/main.ts",
       "owner": "ops",
       "publicInterface": "RoleControlProbe.run",
@@ -3641,6 +3640,7 @@
         "packages/contracts/src/ops-registry.ts",
         "docs/adr/0030-actual-control-denials.md"
       ],
+      "firstRelease": "R0",
       "commands": [
         "probe.run",
         "probe.show"
@@ -3652,12 +3652,11 @@
     {
       "id": "ops.siwc-control-stage",
       "description": "Frozen pinned SIWC control runtime is prepared locally and staged/read back by the exact root-request script; no pointer, service, credential or inference activation.",
+      "implementation": "built",
       "requirementIds": [
         "spec:ops",
         "spec:hermes-config"
       ],
-      "firstRelease": "R0",
-      "implementation": "built",
       "entry": "scripts/stage-siwc-control-runtime.mts",
       "owner": "ops",
       "publicInterface": "SiwcControlStage.run",
@@ -3666,6 +3665,7 @@
         "packages/contracts/src/siwc-control-stage.ts",
         "docs/adr/0031-siwc-control-runtime-staging.md"
       ],
+      "firstRelease": "R0",
       "commands": [
         "doctor",
         "bootstrap.identities"
@@ -3678,11 +3678,10 @@
     {
       "id": "contracts.obligation-tool-schemas",
       "description": "Five normative Obligations parameter schemas and digest-checked Draft2020-12 validation through the contracts-owned Ajv2020 boundary; whole AT76 certification remains pending.",
+      "implementation": "built",
       "requirementIds": [
         "spec:obligations"
       ],
-      "firstRelease": "R0",
-      "implementation": "built",
       "entry": "packages/contracts/src/public.ts",
       "owner": "contracts",
       "publicInterface": "obligationToolParameters; validateObligationToolParameters; obligationToolSchemaDialect",
@@ -3693,6 +3692,7 @@
         "docs/adr/0032-r0-obligation-tool-schemas.md",
         "scripts/generate-contracts.mjs"
       ],
+      "firstRelease": "R0",
       "commands": [
         "probe.run",
         "probe.show"
@@ -3704,12 +3704,11 @@
     {
       "id": "ops.native-queue-faults",
       "description": "Fixed CLI probe uses real PostgreSQL17 and native pg-boss transactions to falsify rollback/lost-claim fencing, reads schema44/drift and recurrence storage, checks monthly/DST previews and all five generated schemas; whole AT certification remains pending.",
+      "implementation": "built",
       "requirementIds": [
         "spec:obligations",
         "spec:ops"
       ],
-      "firstRelease": "R0",
-      "implementation": "built",
       "entry": "cli/src/main.ts",
       "owner": "ops",
       "publicInterface": "QueueFaultProbe.exercise",
@@ -3724,6 +3723,7 @@
         "packages/contracts/src/ops-registry.ts",
         "docs/adr/0033-r0-native-pg-boss-fault-probe.md"
       ],
+      "firstRelease": "R0",
       "commands": [
         "probe.run",
         "probe.show"
@@ -3735,12 +3735,11 @@
     {
       "id": "ops.siwc-control-runtime-probe",
       "description": "Exact root-request diagnostic backs up fixed parent metadata, runs the frozen Secrets import and native Keychain read as measured control UID, discards credential bytes and restores original permissions; no service or inference activation.",
+      "implementation": "built",
       "requirementIds": [
         "spec:ops",
         "spec:hermes-config"
       ],
-      "firstRelease": "R0",
-      "implementation": "built",
       "entry": "scripts/probe-siwc-control-runtime.mts",
       "owner": "ops",
       "publicInterface": "SiwcControlRuntimeProbe.run",
@@ -3750,6 +3749,7 @@
         "packages/contracts/src/siwc-control-stage.ts",
         "docs/adr/0034-siwc-control-runtime-probe.md"
       ],
+      "firstRelease": "R0",
       "commands": [
         "doctor",
         "bootstrap.identities"
@@ -3757,6 +3757,69 @@
       "atIds": [
         "AT-authority-34",
         "AT-ops-30"
+      ]
+    },
+    {
+      "id": "generated.migration.capacity-trial",
+      "description": "Generated feasibility-only migration; production activation remains pending assigned owner acceptance",
+      "implementation": "specified",
+      "requirementIds": [
+        "spec:ops",
+        "spec:self-improvement"
+      ],
+      "entry": "packages/self-improvement/migrations/capacity-trial.sql",
+      "owner": "self-improvement",
+      "publicInterface": "CapacityTrialJournal migrations",
+      "paths": [
+        "packages/self-improvement/migrations/capacity-trial.sql",
+        "packages/self-improvement/migrations/capacity-trial.json"
+      ],
+      "firstRelease": "R0",
+      "commands": [
+        "new.migration"
+      ],
+      "atIds": [
+        "AT-hermes-config-101",
+        "AT-cli-25",
+        "AT-ops-47"
+      ]
+    },
+    {
+      "id": "self-improvement.capacity-trial-journal",
+      "description": "Prepare a separate immutable 3,360-slot fixture arm in the sole PostgreSQL cadence ledger, preserve deferrals and missed boundaries across database restart, and refuse simulated coverage claims; live trial admission remains pending",
+      "implementation": "built",
+      "requirementIds": [
+        "spec:ops",
+        "spec:self-improvement",
+        "spec:RESEARCH-REGISTER"
+      ],
+      "entry": "docs/adr/0036-r0-capacity-trial-journal.md",
+      "owner": "self-improvement",
+      "publicInterface": "CapacityTrialJournal.withTest",
+      "paths": [
+        "packages/self-improvement/src/capacity-trial.ts",
+        "packages/self-improvement/src/capacity-trial-migration.ts",
+        "packages/self-improvement/src/capacity-trial-probe.ts",
+        "packages/self-improvement/src/public.ts",
+        "packages/contracts/src/capacity-trial.ts",
+        "packages/contracts/src/test-control.ts",
+        "packages/contracts/src/ops-registry.ts",
+        "packages/ops/src/fixture-stack.ts",
+        "packages/self-improvement/migrations/capacity-trial.sql",
+        "packages/self-improvement/migrations/capacity-trial.json",
+        "docs/adr/0036-r0-capacity-trial-journal.md"
+      ],
+      "firstRelease": "R0",
+      "commands": [
+        "probe.run",
+        "probe.show",
+        "new.migration"
+      ],
+      "atIds": [
+        "AT-ops-47",
+        "AT-self-improvement-59",
+        "AT-self-improvement-60",
+        "AT-RESEARCH-REGISTER-6"
       ]
     }
   ],
@@ -4260,6 +4323,16 @@
       "id": "SiwcControlRuntimeProbe.run",
       "owner": "ops",
       "path": "docs/adr/0034-siwc-control-runtime-probe.md"
+    },
+    {
+      "id": "CapacityTrialJournal.withTest",
+      "owner": "self-improvement",
+      "path": "docs/adr/0036-r0-capacity-trial-journal.md"
+    },
+    {
+      "id": "CapacityTrialJournal migrations",
+      "owner": "self-improvement",
+      "path": "packages/self-improvement/src/capacity-trial-migration.ts"
     }
   ],
   "commands": [

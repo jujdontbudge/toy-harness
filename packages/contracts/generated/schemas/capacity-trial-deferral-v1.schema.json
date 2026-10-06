@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "armId": {
+      "type": "string",
+      "minLength": 36,
+      "maxLength": 36,
+      "format": "uuid",
+      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    },
+    "index": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 3359
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "deferred_quota",
+        "deferred_auth",
+        "deferred_network",
+        "deferred_busy",
+        "failed"
+      ]
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "pattern": "^[A-Z][A-Z0-9_]*$"
+    }
+  },
+  "required": [
+    "armId",
+    "index",
+    "state",
+    "reason"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:CapacityTrialDeferralV1"
+}
