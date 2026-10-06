@@ -74,7 +74,10 @@ export const capacityTrialProbe = async (input: RegisteredProbeInputV1, context:
         return experimentalStart;
       }
       const experimental = experimentalStart.data;
-      diagnostic("experimental-arm-has-separate-denominator", experimental.arm.designation === "experimental" && experimental.totalSlots === 3360 && experimental.counts.scheduled === 3360 && JSON.stringify(take(owner.reportArm(arm.armId))) === JSON.stringify(original), { original, experimental });
+      const experimentalReadback = take(owner.reportArm(experimental.arm.armId));
+      diagnostic("experimental-arm-has-separate-denominator", experimentalReadback.arm.designation === "experimental" && experimentalReadback.totalSlots === 3360 && experimentalReadback.counts.scheduled === 3360, experimentalReadback);
+      const originalAfterExperimental = take(owner.reportArm(arm.armId));
+      diagnostic("original-arm-unchanged-after-experimental-start", JSON.stringify(originalAfterExperimental) === JSON.stringify(original), originalAfterExperimental);
       return { ok: true, data: undefined };
     }, value => checks.push(value));
     take(restarted);

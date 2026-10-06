@@ -2,7 +2,7 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-06T18:50:38.348777+00:00",
+  "updatedAt": "2026-10-06T18:56:25.839124+00:00",
   "phase": "R0.07 fixture journal12checksverified/receiptboundrepairplanned; root02pending; R003catalogobservationnext",
   "activeCard": "R0.03",
   "cardCount": 87,
@@ -670,6 +670,13 @@
         "actualDiagnosticAttempts": 3,
         "verification": "build/evidence/R0.03/concurrent-auth-generation-effects-verification.json",
         "verifiedAddFirstDiagnosticChecks": 8
+      },
+      "catalogObservationUnit": {
+        "startedAt": "2026-10-06T18:52:00Z",
+        "targetStopAt": "2026-10-06T20:52:00Z",
+        "state": "SOURCE_IMPLEMENTED_VERIFICATION_PENDING",
+        "scope": "Finite catalog generation at the existing external seam; authorization unchanged until evidence",
+        "wholeATComplete": false
       }
     },
     "R0.04": {
@@ -991,7 +998,8 @@
       "dependsOn": "R0.03, R0.05, R0.06",
       "evidence": [
         "build/evidence/R0.07/journal-verification.json",
-        "build/evidence/R0.07/journal-replan.json"
+        "build/evidence/R0.07/journal-replan.json",
+        "build/evidence/R0.07/receipt-repair-verification.json"
       ],
       "requiredATs": [
         "AT-RESEARCH-REGISTER-6",
@@ -1013,12 +1021,22 @@
         "replan": "build/evidence/R0.07/journal-replan.json"
       },
       "lastVerification": {
-        "diagnosticChecksPassed": 12,
+        "diagnosticChecksPassed": 14,
         "wholeATsPassed": [],
         "acceptanceComplete": false,
         "liveTrialStarted": false,
         "cleanupComplete": true,
-        "evidence": "build/evidence/R0.07/journal-verification.json"
+        "evidence": "build/evidence/R0.07/receipt-repair-verification.json"
+      },
+      "receiptRepairUnit": {
+        "startedAt": "2026-10-06T18:51:45Z",
+        "state": "CLOSED_FOURTEEN_DIAGNOSTICS_VERIFIED",
+        "scope": "Split final two-report CheckView into two individually bounded canonical observations",
+        "wholeATComplete": false,
+        "stoppedAt": "2026-10-06T18:56:25.839124+00:00",
+        "verification": "build/evidence/R0.07/receipt-repair-verification.json",
+        "maximumPrerequisiteCharacters": 1678,
+        "cleanupComplete": true
       }
     },
     "R0.08": {
@@ -9890,7 +9908,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Commit and push R007 bounded source/evidence; parent moves to R003 finite catalog generation observation. Independent Luna may perform only minimum R007 envelope repair after checkpoint. Pollroot02; no live trial/wholeacceptanceclaim.",
+  "nextAction": "Run finite catalog-generation observation through existing AT87 native-auth CLI diagnostic while polling frozen root request02; whole acceptance and live trial remain pending.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -20429,17 +20447,16 @@
   "latestStaticVerification": {
     "command": "npm run check",
     "exitCode": 0,
-    "output": "build/evidence/R0.07/journal-check-5-output.txt",
+    "result": "build/evidence/R0.07/receipt-repair-check-result.json",
     "artifacts": 352,
     "contracts": 284,
     "features": 97,
     "commands": 55,
     "ATs": 1447,
-    "schemaDigest": "c5ca22578616f7949615493f70b8b9ac048de1156efcae9b519eba4a12ce4d21",
-    "swiftInvoked": false,
-    "completedAt": "2026-10-06T18:45:52.440Z"
+    "schemaDigest": "0b8ed3c0298b6629a0f42935b07cd0238a6bf53122e7fadc47c76485aab09b65",
+    "swiftInvoked": false
   },
-  "sourceCheckpointCommit": "56ea427",
+  "sourceCheckpointCommit": "5577b3a",
   "sourceCheckpointPushed": true,
   "rootRequests": {
     "ROOT-R004-20261006-01": {
@@ -20483,5 +20500,12 @@
     "queuedRootReserveGate": false,
     "rule": "Normal OS pressure and available memory at least the current job declared need plus512MiB; no strictly-free, hypothetical reserve, swap or second physical-fit gate"
   },
-  "activeWorkers": []
+  "activeWorkers": [
+    {
+      "task": "r010_pin_revalidation",
+      "card": "R0.10",
+      "scope": "Independent bounded next reachable source plan only",
+      "jobNeedBytes": 268435456
+    }
+  ]
 }
