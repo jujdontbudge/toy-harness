@@ -1,6 +1,6 @@
 --- /dev/null
 +++ b/tests/fixtures/toy_auth_httpx_fixture.py
-@@ -0,0 +1,673 @@
+@@ -0,0 +1,677 @@
 +from __future__ import annotations
 +
 +import base64
@@ -20,6 +20,7 @@
 +_OPERATION = ""
 +_PHASE = ""
 +_ACCEPTED_ACCESS_GENERATION: str | None = None
++_CATALOG_ACCESS_GENERATION: str | None = None
 +_SOCKET_ORIGIN: str | None = None
 +_STORAGE_FAULT_TRIGGERED = False
 +_TOKEN_RESPONSE_ISSUED = False
@@ -264,7 +265,7 @@
 +
 +
 +def _route(request: httpx.Request, asynchronous: bool = False) -> httpx.Response:
-+    global _CONCURRENCY_BARRIER_STATE, _TOKEN_RESPONSE_ISSUED
++    global _CONCURRENCY_BARRIER_STATE, _TOKEN_RESPONSE_ISSUED, _CATALOG_ACCESS_GENERATION
 +    if request.url.scheme != "https":
 +        return _deny_request()
 +    host = request.url.host.lower()
@@ -390,13 +391,15 @@
 +        generation = next(
 +            (
 +                name
-+                for name in _expected_access_generations()
++                for name in _GENERATION_EXPIRATIONS
 +                if request.headers.get("authorization")
 +                == "Bearer " + _access_token(_GENERATION_EXPIRATIONS[name], name)
 +            ),
 +            None,
 +        )
-+        if generation is None:
++        _CATALOG_ACCESS_GENERATION = generation
++        catalog_generations = ("added-rotated",) if _PHASE == "chat-expired" and os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR") == "expired-chat" and os.environ.get("TOY_AUTH_CONCURRENCY_ORDER") == "refresh-first" else _expected_access_generations()
++        if generation is None or generation not in catalog_generations:
 +            return _deny_request("authorization-mismatch")
 +        if os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR") == "expired-chat":
 +            if not _signal_barrier("refresh-catalog-observed"):
@@ -541,6 +544,7 @@
 +        "provider": "openai-chatgpt" if _PHASE == "siwc-unbound" else "openai-codex",
 +        "phase": _PHASE,
 +        "access_generation": _ACCEPTED_ACCESS_GENERATION,
++        "catalog_access_generation": _CATALOG_ACCESS_GENERATION,
 +        "network_denials": list(_DENIALS),
 +        "socket_origin": _SOCKET_ORIGIN,
 +        "storage_fault_triggered": _STORAGE_FAULT_TRIGGERED,

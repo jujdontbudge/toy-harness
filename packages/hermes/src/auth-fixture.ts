@@ -433,6 +433,9 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
             : actor === "fresh-refresh-reload"
               ? result.observations.access_generation === (order === "add-first" ? "rotated" : "stale")
               : result.observations.access_generation === null;
+        const catalogGenerationMatches = addOperation || listOperation || priorityOperation
+          ? result.observations.catalog_access_generation === null
+          : result.observations.catalog_access_generation === (actor === "expired-chat" && order === "refresh-first" ? "added-rotated" : result.observations.access_generation);
         const concurrencyMatches = concurrency !== undefined
           && concurrency.order === order
           && concurrency.actor === actor
@@ -461,6 +464,7 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
           && refreshEffectsMatch
           && expectedLedger
           && expectedGeneration
+          && catalogGenerationMatches
           && concurrencyMatches
           && countMatches
           && crashMatches
@@ -541,7 +545,12 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
           addObserved = parseConcurrentChild("add", order, "auth-add", addOutcome, "none");
           concurrencyChecks.push(check(addObserved.passed ? "PASS" : "FAIL", addObserved.passed ? "NATIVE_AUTH_CONCURRENCY_ADD_OBSERVED" : "NATIVE_AUTH_CONCURRENCY_ADD_FAILED", { order, result: addObserved.result, primaryChildCount: 2, childProcessesStartedBeforeFirstRelease: true, bothPrePersistenceBarriersReached, refreshBarrierKind: "provider-response", commandOrderObserved: addObserved.passed, wholeATComplete: false }, [...artifacts, ...(addObserved.result ? [digest(JSON.stringify(addObserved.result))] : [])]));
           release(barrierDirectory, "release-refresh-model");
-          if (!await waitForFixtureMarker(join(barrierDirectory, "result-emitted"), Math.max(1, Math.min(remainingMs(), 45000)))) return fail("FAIL", "NATIVE_AUTH_CONCURRENCY_REFRESH_RESULT_BARRIER_FAILED", { order, wholeATComplete: false });
+          if (!await waitForFixtureMarker(join(barrierDirectory, "result-emitted"), Math.max(1, Math.min(remainingMs(), 45000)))) {
+            if (chatChild.isRunning()) chatChild.kill();
+            const failedChat = await chatChild.result;
+            const failedObservation = parseConcurrentChild("chat-expired", order, "expired-chat", failedChat, primaryCrashCut);
+            return fail("FAIL", "NATIVE_AUTH_CONCURRENCY_REFRESH_RESULT_BARRIER_FAILED", { order, result: failedObservation.result, childExitCode: failedChat.status, childSignal: failedChat.signal, timedOut: failedChat.timedOut, oversized: failedChat.oversized, spawnError: failedChat.spawnError });
+          }
           chatChild.kill();
           chatOutcome = await chatChild.result;
         }

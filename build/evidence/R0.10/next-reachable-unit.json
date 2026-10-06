@@ -1,0 +1,92 @@
+{
+  "card": "R0.10",
+  "snapshot": {
+    "head": "ed98d32",
+    "state": {
+      "implementation": "IN_PROGRESS",
+      "acceptance": "PENDING",
+      "dependsOn": ["R0.02", "R0.05"],
+      "wholeATsPassed": [],
+      "acceptanceComplete": false,
+      "lastDiagnostic": "PASS_NINE_NATIVE_QUEUE_SCHEMA_AND_RECURRENCE_CLI_CHECKS"
+    },
+    "dependencyStates": {
+      "R0.02": {"implementation": "IN_PROGRESS", "acceptance": "PENDING"},
+      "R0.05": {"implementation": "IN_PROGRESS", "acceptance": "PENDING"}
+    }
+  },
+  "assignedATs": [
+    "AT-activity-focus-86",
+    "AT-authority-60",
+    "AT-authority-61",
+    "AT-hermes-config-50",
+    "AT-hermes-config-69",
+    "AT-hermes-config-75",
+    "AT-hermes-config-81",
+    "AT-obligations-74",
+    "AT-obligations-75",
+    "AT-obligations-76"
+  ],
+  "nextUnit": {
+    "at": "AT-obligations-74",
+    "rung": "CLI",
+    "requiredEvidence": "static, probe:AT-obligations-74",
+    "assertion": "Given Obligations' mapped requirements and component decisions, missing primary evidence, an unsupported choice, or a missing acceptance link blocks the pre-build register check; a complete comparison including a viable option outside Johan's examples passes with the selected proven tool and its validation plan.",
+    "sourceAssertionHash": "36411038b27cdb5922439aa3c32c12816bdf12ecfa39a5e46892e13158066ccb",
+    "whySmallest": "Recommended smallest source slice, not the only static-only AT: it attaches directly to the existing research-register checker and its mapped component-decision predicates. AT-authority-60 additionally requires Hermes research-routing receipts and a resolved skill hash; AT-activity-focus-86 and AT-authority-61 cover wider generated-contract/ownership gates; AT-hermes-config-50/69/75/81 cover cross-contract, configuration, or transport behavior; AT-obligations-75/76 add delegation or transaction runtime behavior.",
+    "exactMissingPredicates": [
+      "A missing or non-primary evidence reference must block; the current source only detects a listed report whose digest is null and has no primary-evidence finding predicate.",
+      "An unsupported component choice must block; the current source checks only that alternatives/reason text is non-empty and has no support/viability predicate.",
+      "A missing acceptance link must block; the current inspection schema has no acceptance-link finding predicate, and the current gate check for a release label is not an AT-to-acceptance link check.",
+      "A complete comparison must pass its component-decision gate when it includes a viable option outside Johan's examples, selects a proven tool, and states a validation plan; the current source has no such semantic checks.",
+      "The existing inspection unconditionally adds GATE_EVIDENCE_UNVERIFIED, RESEARCH_ATTESTATION_UNVERIFIED, and DEPENDENCY_CLOSURE_UNVERIFIED and returns admission BLOCKED. Keep that global release/readiness result separate so the positive component-decision case does not certify the whole register or card."
+    ],
+    "observedRouteGap": "AT-obligations-74 is present in the generated CLI probe ID inventory with the indexed source assertion hash, but has no authored row in tests/registry.yaml and therefore no sealed owner acceptance manifest. The generic probe path has no AT-74 owner evaluator and returns NOT_IMPLEMENTED/incomplete when no registered observations exist. EngineeringControl.checkResearch is callable from research.check but currently cannot produce the AT-74 positive component-decision outcome.",
+    "smallestImplementation": [
+      "Add one source-bound AT-obligations-74 CLI manifest to tests/registry.yaml with fixed mandatory cases for missing primary evidence, unsupported choice, missing acceptance link, and a complete outside-example comparison; bind it to the existing sourceAssertionHash and run scripts/generate-contracts.mjs to refresh the generated registry.",
+      "Extend the existing research-register decision predicate in packages/self-improvement/src/engineering-control.ts and route that same predicate through the fixed full-manifest branch in packages/self-improvement/src/public.ts. Return the four case observations through the existing RegisteredProbeOperation/CheckView surface; do not accept caller-supplied fixtures, paths, SQL, or case expressions.",
+      "Allow only the exact AT-obligations-74 full-manifest tuple in packages/ops/src/fixture-stack.ts, update the existing control.research.check and behavior.obligations feature-map rows to point AT-74 to that route, and cover the public CLI invocation in tests/cli/research.cli.test.ts. Keep the existing probe.run command schema and omit --case so the sealed manifest runs in full."
+    ],
+    "commandAfterImplementationAndPrerequisites": "toy --env test --stack <UUID> probe run AT-obligations-74 --request-id <UUID> --json",
+    "prerequisites": [
+      "R0.02 and R0.05 remain IN_PROGRESS/PENDING. Source implementation can proceed independently, but a full CLI probe run requires their acceptance prerequisites and the authenticated evaluator/controller test stack required by specs/cli.md.",
+      "The command must execute the full sealed manifest. A source-only check, generic registered-ID result, current schema-44/native fault diagnostics, or partial case run does not prove AT-obligations-74 or R0.10."
+    ],
+    "wholeATStatus": "PENDING; this plan is not implementation evidence or acceptance proof."
+  },
+  "prospectiveAuthoredFiles": [
+    "tests/registry.yaml",
+    "packages/self-improvement/src/engineering-control.ts",
+    "packages/self-improvement/src/public.ts",
+    "packages/ops/src/fixture-stack.ts",
+    "skills/toy-control/FEATURE-MAP.md",
+    "tests/cli/research.cli.test.ts"
+  ],
+  "generatedOutput": ["packages/contracts/src/generated-probe-registry.ts"],
+  "unchangedSharedInterfaces": [
+    "packages/contracts/src/test-control.ts",
+    "packages/contracts/src/cli-declarations.ts",
+    "cli/src/main.ts"
+  ],
+  "sourceAndSpecSha256": {
+    "build/state.json": "564508a4341d751889b58d7de1eec14b3b03089808a01969c262429a96894d07",
+    "tests/acceptance-index.json": "87d21b7f24f9f900bb202e1e813ba46bbc51282b96e14cb2739d5fd67b32d9e6",
+    "tests/registry.yaml": "33d59af1dd3511c8018def6865d07188bf0f603ab4a9d81aea303d312670ba55",
+    "scripts/generate-contracts.mjs": "4af296522897059f2d54d63077535da25a9fdbce7eeaad3ceba818962ffdc371",
+    "packages/contracts/src/generated-probe-registry.ts": "cedc1e5b96e35bcbd44342be00402317ae9f4ae0996c998202dcf01f8819dce2",
+    "packages/contracts/src/test-control.ts": "0af0d0e4349cae05bfdc06a77592e32c5171f0dc5d0e5964f2ef87faeaa4111c",
+    "packages/contracts/src/cli-declarations.ts": "b7623e62057d5a1c607db7867a019940478dcefa4c6043498b3af596bca90ee6",
+    "packages/contracts/src/ops-registry.ts": "acf6fbe1097ab35d0b682ac3524ab4618e2f557cd814ae03dfb65cf4eb76f3fd",
+    "packages/self-improvement/src/engineering-control.ts": "cf540434ace102f4053939830a3d70eb242de1604c2aae21447e7f7e85f52cd2",
+    "packages/self-improvement/src/public.ts": "c61cc6fd065f6c120f984aa53f21d9d22a5bcd6dee7921fdf9cd152a600e7f39",
+    "packages/ops/src/fixture-stack.ts": "6a3c5e3468d8c588e332ac8e0ad0a7a4d226071151ab36f25fdcb2fd12c19d0e",
+    "cli/src/main.ts": "1074dbe6283b6b0a6e941a2b1a4098da4d603f1f56137d04c2039858f87c3e66",
+    "skills/toy-control/FEATURE-MAP.md": "516e43ee814defe425526182f93f17c93935553aa8af27557277b4ff6b348913",
+    "tests/cli/research.cli.test.ts": "945b8faef13a4750864b487a3478348d2a03ec0ad5fa5c9f3c536039e66a5bf0",
+    "specs/BUILD-PLAN.md": "aa84eb600e53bc65e6c6b1ed4fce45870ead861e0d18bf00d81613ff2595f49a",
+    "specs/TEST-PLAN.md": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2",
+    "specs/obligations.md": "5379f943578b4248dc21379a029acead930047c091316deb796fae0d49f4eb0f",
+    "specs/cli.md": "30d03260c42bbfd15c1986b6012806f2320646de84f7a2d0b1eeb6db48e464d6"
+  },
+  "scope": "Plan-only evidence artifact. No source, shared state, generated output, test, stack, build, process, or runtime state was changed or exercised."
+}

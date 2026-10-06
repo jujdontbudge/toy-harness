@@ -138,6 +138,23 @@
             }
           ]
         },
+        "catalog_access_generation": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "initial",
+                "rotated",
+                "added",
+                "added-rotated",
+                "stale"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "storage_fault_triggered": {
           "type": "boolean"
         },
@@ -189,6 +206,7 @@
         "provider",
         "phase",
         "access_generation",
+        "catalog_access_generation",
         "storage_fault_triggered",
         "token_hygiene",
         "success_claim_absent",

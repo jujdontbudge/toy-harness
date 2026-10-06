@@ -2,7 +2,7 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-06T18:56:25.839124+00:00",
+  "updatedAt": "2026-10-06T19:07:51.289051+00:00",
   "phase": "R0.07 fixture journal12checksverified/receiptboundrepairplanned; root02pending; R003catalogobservationnext",
   "activeCard": "R0.03",
   "cardCount": 87,
@@ -520,7 +520,9 @@
         "build/evidence/R0.03/auth-save-fault-fixture-verification.json",
         "build/evidence/R0.03/concurrent-auth-verification.json",
         "build/evidence/R0.03/concurrent-auth-generation-effects-verification.json",
-        "build/evidence/R0.03/concurrent-auth-generation-effects-replan.json"
+        "build/evidence/R0.03/concurrent-auth-generation-effects-replan.json",
+        "build/evidence/R0.03/catalog-observation-verification.json",
+        "build/evidence/R0.03/catalog-observation-replan.json"
       ],
       "requiredATs": [
         "AT-hermes-config-34",
@@ -616,10 +618,11 @@
         "sourceUnitStoppedAt": "2026-10-06T09:56:39.219348+00:00"
       },
       "lastVerification": {
-        "evidence": "build/evidence/R0.03/concurrent-auth-generation-effects-verification.json",
+        "evidence": "build/evidence/R0.03/catalog-observation-verification.json",
         "wholeATsPassed": [],
         "acceptanceComplete": false,
         "addFirstDiagnosticChecksPassed": 8,
+        "refreshFirstIndependentAddPassed": true,
         "cleanupComplete": true
       },
       "concurrentAuthUnit": {
@@ -674,9 +677,26 @@
       "catalogObservationUnit": {
         "startedAt": "2026-10-06T18:52:00Z",
         "targetStopAt": "2026-10-06T20:52:00Z",
-        "state": "SOURCE_IMPLEMENTED_VERIFICATION_PENDING",
+        "state": "CLOSED_THREE_FAILURE_REPLAN",
         "scope": "Finite catalog generation at the existing external seam; authorization unchanged until evidence",
-        "wholeATComplete": false
+        "wholeATComplete": false,
+        "actualDiagnosticAttempts": 3,
+        "observedCatalogGeneration": "added-rotated",
+        "expectedModelGeneration": "stale",
+        "observationEvidence": "build/evidence/R0.03/catalog-observation-probe.json",
+        "firstRunShowExact": true,
+        "firstTeardownComplete": true,
+        "secondEvidence": "build/evidence/R0.03/catalog-observation-corrected-probe.json",
+        "secondFailure": "NATIVE_AUTH_CONCURRENCY_REFRESH_RESULT_BARRIER_FAILED",
+        "refreshFirstIndependentAddPassed": true,
+        "secondRunShowExact": true,
+        "secondTeardownComplete": true,
+        "temporaryWarningPressureEvidence": "build/evidence/R0.03/catalog-observation-correction-admission.json",
+        "normalPressureReturnedEvidence": "build/evidence/R0.03/catalog-observation-correction-admission-2.json",
+        "stoppedAt": "2026-10-06T19:07:51.289051+00:00",
+        "verification": "build/evidence/R0.03/catalog-observation-verification.json",
+        "replan": "build/evidence/R0.03/catalog-observation-replan.json",
+        "passedConcurrencyChecks": 9
       }
     },
     "R0.04": {
@@ -1187,7 +1207,8 @@
         "build/evidence/R0.10/pg-boss-fault-spike-plan.json",
         "build/evidence/R0.10/tool-schema-preparation.json",
         "build/evidence/R0.10/native-queue-verification.json",
-        "build/evidence/R0.10/native-recurrence-verification.json"
+        "build/evidence/R0.10/native-recurrence-verification.json",
+        "build/evidence/R0.10/next-reachable-unit.json"
       ],
       "requiredATs": [
         "AT-activity-focus-86",
@@ -1248,6 +1269,12 @@
         "stoppedAt": "2026-10-06T16:34:59.226Z",
         "state": "STOPPED_NINE_CLI_CHECKS_AND_STATIC_VERIFIED",
         "scope": "Only schema44/drift public readback, existing native transaction/claim/schema regression, three bounded recurrence previews and schedule persistence/removal; no product recurrence engine",
+        "acceptanceComplete": false
+      },
+      "nextReachableUnitPlan": {
+        "state": "SOURCE_BOUND_PLAN_ONLY",
+        "AT": "AT-obligations-74",
+        "evidence": "build/evidence/R0.10/next-reachable-unit.json",
         "acceptanceComplete": false
       }
     },
@@ -9908,7 +9935,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Run finite catalog-generation observation through existing AT87 native-auth CLI diagnostic while polling frozen root request02; whole acceptance and live trial remain pending.",
+  "nextAction": "Collect independent unfiltered AT-obligations-74 baseline, then apply re-planned minimal fake OAuth expiration alignment; poll frozen root02 and consume exact native-role result on DONE.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -20447,7 +20474,7 @@
   "latestStaticVerification": {
     "command": "npm run check",
     "exitCode": 0,
-    "result": "build/evidence/R0.07/receipt-repair-check-result.json",
+    "result": "build/evidence/R0.03/catalog-observation-final-check-result.json",
     "artifacts": 352,
     "contracts": 284,
     "features": 97,
@@ -20456,7 +20483,7 @@
     "schemaDigest": "0b8ed3c0298b6629a0f42935b07cd0238a6bf53122e7fadc47c76485aab09b65",
     "swiftInvoked": false
   },
-  "sourceCheckpointCommit": "5577b3a",
+  "sourceCheckpointCommit": "ed98d32",
   "sourceCheckpointPushed": true,
   "rootRequests": {
     "ROOT-R004-20261006-01": {
@@ -20500,12 +20527,5 @@
     "queuedRootReserveGate": false,
     "rule": "Normal OS pressure and available memory at least the current job declared need plus512MiB; no strictly-free, hypothetical reserve, swap or second physical-fit gate"
   },
-  "activeWorkers": [
-    {
-      "task": "r010_pin_revalidation",
-      "card": "R0.10",
-      "scope": "Independent bounded next reachable source plan only",
-      "jobNeedBytes": 268435456
-    }
-  ]
+  "activeWorkers": []
 }

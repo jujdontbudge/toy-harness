@@ -5153,6 +5153,7 @@ class HermesAuthFixtureResultV1Observations(TypedDict):
     phase: "HermesAuthFixtureResultV1ObservationsPhase"
     credential_count: NotRequired[int]
     access_generation: Optional["HermesAuthConcurrencyObservationV1RefreshGenerationValue"]
+    catalog_access_generation: Optional["HermesAuthConcurrencyObservationV1RefreshGenerationValue"]
     storage_fault_triggered: bool
     token_hygiene: bool
     success_claim_absent: bool
