@@ -4149,6 +4149,25 @@ class ResearchComponentComparisonV2ValidationsItem(TypedDict):
     sourceIds: list[str]
     testIds: list[str]
 
+class ResearchSourcesComponentComparisonV1(TypedDict):
+    scope: "ResearchSourcesComponentComparisonV1Scope"
+    componentId: str
+    mappedRequirements: list[str]
+    options: list["ResearchComponentComparisonV2OptionsItem"]
+    evidence: list["ResearchComponentComparisonV1EvidenceItem"]
+    selectedOptionId: str
+    unresolvedFacts: list["ResearchComponentComparisonCheckV1UnresolvedFactsItem"]
+    acceptanceIds: list[str]
+    validationPlan: str
+    releaseGate: str
+    validations: list["ResearchComponentComparisonV2ValidationsItem"]
+    accountValidationPlan: str
+    regionValidationPlan: str
+
+ResearchSourcesComponentComparisonV1Scope = Literal[
+    "sources-component",
+]
+
 class InstalledCodexRuntimeV1(TypedDict):
     expectedVersion: "InstalledCodexRuntimeV1ExpectedVersion"
     observedVersion: Optional[str]

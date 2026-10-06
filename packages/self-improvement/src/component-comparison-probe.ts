@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
-import { checkViewSchema, opsErrorMessages, registeredCliAcceptanceManifestInventory, researchComponentComparisonSchema, researchComponentComparisonV2Schema } from "@toy/contracts";
+import { checkViewSchema, opsErrorMessages, registeredCliAcceptanceManifestInventory, researchComponentComparisonSchema, researchComponentComparisonV2Schema, researchSourcesComponentComparisonSchema } from "@toy/contracts";
 import type { CheckViewV1, OpsControlContextV1, RegisteredProbeInputV1, RegisteredProbeOperationV1, ResearchComponentComparisonV1, Result } from "@toy/contracts";
 import { TestProbeControl } from "@toy/ops/public";
 import { EngineeringControl } from "./engineering-control.js";
@@ -24,6 +24,7 @@ const completeReport = (): ResearchComponentComparisonV1 => researchComponentCom
   validationPlan: "Run the pinned shared-connection rollback, lost-claim fencing and generated-schema CLI fault probe before component admission."
 });
 export const componentComparisonProbe = (input: RegisteredProbeInputV1, context: OpsControlContextV1): Result<RegisteredProbeOperationV1> => {
+  if (input.probeId === "AT-sources-188") return sourcesComponentProbe(input, context);
   if (input.probeId === "AT-self-improvement-54") return requiredComponentProbe(input, context);
   if (input.probeId !== "AT-obligations-74" || input.caseId !== undefined) return { ok: false, error: { module: "ops", code: "INVALID_INPUT", message: opsErrorMessages.INVALID_INPUT, retryable: false } };
   const manifest = registeredCliAcceptanceManifestInventory.find(entry => entry.id === input.probeId);
@@ -104,6 +105,57 @@ const requiredComponentProbe = (input: RegisteredProbeInputV1, context: OpsContr
           : observed.state === "PASS" && observed.findings.length === 0 && observed.selectedOptionId === "outside" && report.options.some(option => option.id === observed.selectedOptionId && option.example === null) && observed.missingRequirementIds.length + observed.missingSourceIds.length + observed.missingValidationIds.length === 0;
     const archiveBound = bound.path === archive.path && bound.originalDigest === archive.originalDigest && bound.digest === digest(markdown) && bound.origin === "seeded_document";
     checks.push(checkViewSchema.parse({ id: "research.component-comparison", owner: "self-improvement", state: passed && archiveBound ? "PASS" : "FAIL", checkedAt: new Date().toISOString(), reasonCode: passed && archiveBound ? "REQUIRED_COMPONENT_DIAGNOSTIC_PASS" : "REQUIRED_COMPONENT_DIAGNOSTIC_FAIL", prerequisite: JSON.stringify({ caseId, actualUid: process.getuid?.() ?? null, archive: { key: bound.key, path: bound.path, originalDigest: bound.originalDigest, contentDigest: bound.digest, origin: bound.origin }, result: observed, registerAdmission: inspection.data.admission, liveProviderSends: 0, wholeATComplete: false }), nextCommandId: "probe.show", links: { recordRefs: [], observations: [], artifactDigests: [digest(markdown), digest(readFileSync(new URL("./component-comparison-probe.js", import.meta.url))), digest(readFileSync(new URL("./engineering-control.js", import.meta.url)))] } }));
+  }
+  return TestProbeControl.run(input, context, checks);
+};
+const sourcesComponentProbe = (input: RegisteredProbeInputV1, context: OpsControlContextV1): Result<RegisteredProbeOperationV1> => {
+  if (input.caseId !== undefined) return { ok: false, error: { module: "ops", code: "INVALID_INPUT", message: opsErrorMessages.INVALID_INPUT, retryable: false } };
+  const cases = ["missing-primary-evidence", "missing-compared-alternatives", "missing-reliability-rationale", "missing-account-validation-plan", "missing-region-validation-plan", "missing-sources-requirement", "complete-linked-sources-decision"];
+  const manifest = registeredCliAcceptanceManifestInventory.find(entry => entry.id === input.probeId);
+  if (!manifest || manifest.scenarioId !== "research.component-comparison" || JSON.stringify(manifest.mandatoryCases.map(entry => entry.id)) !== JSON.stringify(cases)) return { ok: false, error: { module: "ops", code: "ATTESTATION_INVALID", message: opsErrorMessages.ATTESTATION_INVALID, retryable: false } };
+  const baseline = EngineeringControl.checkResearch({ release: "R0" }, context);
+  if (!baseline.ok) return baseline;
+  const archive = baseline.data.reports.find(entry => entry.key === "DC" && entry.originalDigest !== null);
+  const component = baseline.data.components.find(entry => entry.id === "D01" && entry.reportKeys.includes("DC"));
+  const absent = baseline.data.componentDecisions.find(entry => entry.componentId === component?.id);
+  if (!archive?.originalDigest || !component || !absent || absent.comparisonDigest !== null || !absent.missingRequirementIds.includes("0.9")) return { ok: false, error: { module: "ops", code: "ARTIFACT_MISMATCH", message: opsErrorMessages.ARTIFACT_MISMATCH, retryable: false } };
+  const validationId = "G0:R0:" + component.id;
+  const checks: CheckViewV1[] = [];
+  for (const caseId of cases) {
+    const report = researchSourcesComponentComparisonSchema.parse({
+      scope: "sources-component", componentId: component.id, mappedRequirements: absent.missingRequirementIds,
+      options: [
+        { id: "gmail-api", tool: "Supported Gmail API read adapter", example: "gmail-api", viable: true, support: "proven", primaryEvidenceIds: ["DC"], reliability: "History checkpoints and bounded full-resync", maintenance: "Pin discovery schema and adapter", resources: "Shared local process and store" },
+        { id: "imap", tool: "IMAP read adapter", example: "imap", viable: false, support: "proven", primaryEvidenceIds: ["DC"], reliability: "Limited label and history coverage", maintenance: "Separate protocol maintenance", resources: "Additional local connection state" }
+      ],
+      evidence: [{ id: "DC", url: "https://primary.example.test/gmail", publisher: "Seeded primary Sources report", kind: "primary", supportedOptionIds: ["gmail-api", "imap"] }],
+      selectedOptionId: "gmail-api", unresolvedFacts: [{ optionId: "imap", fact: "Account-specific IMAP limits remain unvalidated" }],
+      acceptanceIds: ["AT-sources-188"], validationPlan: "Validate the pinned read adapter in an owned fixture before activation.", releaseGate: component.releaseGate,
+      validations: [{ id: validationId, support: "proven", sourceIds: component.reportKeys, testIds: ["AT-sources-188"] }],
+      accountValidationPlan: "Verify the selected account and least-privilege read grant against the pinned adapter before activation.",
+      regionValidationPlan: "Verify the selected route and provider policy for the account region; unsupported regions remain unavailable."
+    });
+    const selected = report.options.find(option => option.id === report.selectedOptionId);
+    if (!selected) return { ok: false, error: { module: "ops", code: "ARTIFACT_MISMATCH", message: opsErrorMessages.ARTIFACT_MISMATCH, retryable: false } };
+    if (caseId === "missing-primary-evidence") report.evidence = [];
+    if (caseId === "missing-compared-alternatives") report.options = [selected];
+    if (caseId === "missing-reliability-rationale") selected.reliability = "";
+    if (caseId === "missing-account-validation-plan") report.accountValidationPlan = " \n";
+    if (caseId === "missing-region-validation-plan") report.regionValidationPlan = "";
+    if (caseId === "missing-sources-requirement") report.mappedRequirements = report.mappedRequirements.filter(id => id !== "0.9");
+    const markdown = "# Seeded external Sources report\n\n```ResearchSourcesComponentComparisonV1\n" + JSON.stringify(report) + "\n```\n";
+    const inspection = EngineeringControl.checkResearch({ release: "R0" }, context, [{ reportKey: archive.key, originalDigest: archive.originalDigest, contentDigest: digest(markdown), markdown }]);
+    if (!inspection.ok) return inspection;
+    const observed = inspection.data.componentDecisions.find(entry => entry.componentId === component.id);
+    const bound = inspection.data.reports.find(entry => entry.key === archive.key);
+    if (!observed || !bound) return { ok: false, error: { module: "ops", code: "ARTIFACT_MISMATCH", message: opsErrorMessages.ARTIFACT_MISMATCH, retryable: false } };
+    const expectedFinding = caseId === "missing-primary-evidence" ? "PRIMARY_EVIDENCE_MISSING" : caseId === "missing-compared-alternatives" ? "REQUIRED_OPTIONS_MISSING" : caseId === "missing-reliability-rationale" ? "TRADEOFFS_MISSING" : caseId === "missing-sources-requirement" ? "MAPPED_REQUIREMENTS_MISSING" : caseId === "complete-linked-sources-decision" ? null : "VALIDATION_PLAN_MISSING";
+    const missingPlan = caseId === "missing-account-validation-plan" ? "ACCOUNT:R0:D01" : caseId === "missing-region-validation-plan" ? "REGION:R0:D01" : null;
+    const passed = observed.comparisonDigest === digest(JSON.stringify(report)) && JSON.stringify(observed.unresolvedFacts) === JSON.stringify(report.unresolvedFacts) && (expectedFinding === null
+      ? observed.state === "PASS" && observed.findings.length === 0 && observed.selectedOptionId === report.selectedOptionId && observed.missingRequirementIds.length + observed.missingSourceIds.length + observed.missingValidationIds.length === 0
+      : observed.state === "BLOCKED" && observed.findings.includes(expectedFinding) && (missingPlan === null || JSON.stringify(observed.missingValidationIds) === JSON.stringify([missingPlan])) && (caseId !== "missing-sources-requirement" || JSON.stringify(observed.missingRequirementIds) === JSON.stringify(["0.9"])));
+    const archiveBound = bound.path === archive.path && bound.originalDigest === archive.originalDigest && bound.digest === digest(markdown) && bound.origin === "seeded_document";
+    checks.push(checkViewSchema.parse({ id: "research.component-comparison", owner: "self-improvement", state: passed && archiveBound ? "PASS" : "FAIL", checkedAt: new Date().toISOString(), reasonCode: passed && archiveBound ? "SOURCES_DECISION_DIAGNOSTIC_PASS" : "SOURCES_DECISION_DIAGNOSTIC_FAIL", prerequisite: JSON.stringify({ caseId, actualUid: process.getuid?.() ?? null, archive: { key: bound.key, path: bound.path, originalDigest: bound.originalDigest, contentDigest: bound.digest, origin: bound.origin }, result: observed, registerAdmission: inspection.data.admission, liveProviderSends: 0, wholeATComplete: false }), nextCommandId: "probe.show", links: { recordRefs: [], observations: [], artifactDigests: [digest(markdown), digest(readFileSync(new URL("./component-comparison-probe.js", import.meta.url))), digest(readFileSync(new URL("./engineering-control.js", import.meta.url)))] } }));
   }
   return TestProbeControl.run(input, context, checks);
 };

@@ -4223,6 +4223,97 @@ export const registeredCliAcceptanceManifestInventory = [
       }
     ],
     "simUnavailableReason": "SIM cannot inspect pre-build immutable journal identities or drive the native PostgreSQL restart boundary. The CLI reaches the real journal owner with a fixed external fake clock; no elapsed native trial is certified."
+  },
+  {
+    "id": "AT-sources-188",
+    "rung": "CLI",
+    "sourceAssertionHash": "a48e7e62ba9db3bb04742ebe1f7784943ad1a9353aaf5b878fe8a71df0d5b456",
+    "commandId": "probe.run",
+    "scenarioId": "research.component-comparison",
+    "owner": "self-improvement",
+    "firstRelease": "R0",
+    "kind": "static_gate",
+    "mandatoryCases": [
+      {
+        "id": "missing-primary-evidence",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "missing-primary-evidence"
+      },
+      {
+        "id": "missing-compared-alternatives",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "missing-compared-alternatives"
+      },
+      {
+        "id": "missing-reliability-rationale",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "missing-reliability-rationale"
+      },
+      {
+        "id": "missing-account-validation-plan",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "missing-account-validation-plan"
+      },
+      {
+        "id": "missing-region-validation-plan",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "missing-region-validation-plan"
+      },
+      {
+        "id": "missing-sources-requirement",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "missing-sources-requirement"
+      },
+      {
+        "id": "complete-linked-sources-decision",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "complete-linked-sources-decision"
+      }
+    ],
+    "trigger": "Check indexed Sources decisions for primary evidence, integration alternatives, reliability rationale, account/region plans and requirement links before dependent implementation; retain whole admission gaps.",
+    "faultControls": [
+      {
+        "id": "external-sources-decision-omissions",
+        "seam": "provider",
+        "affectedPhases": [
+          "missing-primary-evidence",
+          "missing-compared-alternatives",
+          "missing-reliability-rationale",
+          "missing-account-validation-plan",
+          "missing-region-validation-plan",
+          "missing-sources-requirement"
+        ]
+      }
+    ],
+    "observations": [
+      {
+        "id": "sources-decision-result",
+        "independentReader": "EngineeringControl.checkResearch: indexed archive and exact missing requirement/source/validation IDs",
+        "caseIds": [
+          "missing-primary-evidence",
+          "missing-compared-alternatives",
+          "missing-reliability-rationale",
+          "missing-account-validation-plan",
+          "missing-region-validation-plan",
+          "missing-sources-requirement",
+          "complete-linked-sources-decision"
+        ]
+      },
+      {
+        "id": "stored-cli-readback",
+        "independentReader": "toy probe.show: persisted exact Sources decisions and retained unresolved facts",
+        "caseIds": [
+          "missing-primary-evidence",
+          "missing-compared-alternatives",
+          "missing-reliability-rationale",
+          "missing-account-validation-plan",
+          "missing-region-validation-plan",
+          "missing-sources-requirement",
+          "complete-linked-sources-decision"
+        ]
+      }
+    ],
+    "simUnavailableReason": "SIM cannot invoke administrative pre-build research gates or replace indexed research documents. CLI drives the real owner through the owned external report seam."
   }
 ] as const;
 export const acceptanceSourceDigest = "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2";
