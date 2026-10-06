@@ -2,7 +2,7 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-06T23:33:12.731951+00:00",
+  "updatedAt": "2026-10-06T23:37:21.831146+00:00",
   "phase": "R0_FEASIBILITY",
   "activeCard": "R0.10",
   "cardCount": 87,
@@ -879,6 +879,13 @@
         "allStoredReadbacksExact": true,
         "allTeardownsComplete": true,
         "staleSuccessfulResponseRejected": false
+      },
+      "publicAuthAddStagePlan": {
+        "status": "READ_ONLY_PLAN_REVIEWED_DEFERRED",
+        "artifact": "build/evidence/R0.03/public-auth-add-stage-minimum-plan.json",
+        "parentDecision": "The extra endpoint/lock observer does not add required behavior beyond the retained passed diagnostic slice",
+        "implementationStarted": false,
+        "wholeATComplete": false
       }
     },
     "R0.04": {
@@ -1311,6 +1318,16 @@
         "wholeATComplete": false,
         "liveTrialStarted": false,
         "scope": "No competing journal writer; missing canonical Run/TurnReview implementation is source work, not external approval"
+      },
+      "canonicalOwnerReview": {
+        "recordedAt": "2026-10-06T23:37:21.831146+00:00",
+        "status": "CANONICAL_WRITER_PREREQUISITE_PENDING",
+        "specInterface": "RunAdmission.admit/heartbeat/terminal and TurnReview.checkStop/review/get in self-improvement.md \u00a73",
+        "normativeTables": "toy_si.run/run_event/review_work/review/cadence_slot, with identity.principals and current contract binding",
+        "currentAvailability": "Only the test journal methods and R1 read/review command declarations exist; RunAdmission/TurnReview implementation and RunRef/Review DTOs are absent",
+        "rule": "Publish and implement these with the canonical owner, then integrate existing arm slots in its transaction; the journal must never add a second reviewed-state writer",
+        "liveTrialStarted": false,
+        "goalBlocked": false
       }
     },
     "R0.08": {
@@ -21233,7 +21250,12 @@
       "builderRootExecution": false,
       "pendingRootDoesNotBlockGoal": true,
       "pollWhileIndependentWork": true,
-      "exactRegisteredCommandOrRepoScriptRequired": true
+      "exactRegisteredCommandOrRepoScriptRequired": true,
+      "lastPollAt": "2026-10-06T23:37:21.831146+00:00",
+      "pendingRequests": [
+        "ROOT-R004-20261006-02",
+        "ROOT-R005-20261006-01"
+      ]
     },
     "jobOwnDeclaredNeedOnly": true,
     "additionalMemoryFitGate": false,
@@ -21257,7 +21279,7 @@
     ],
     "SwiftDeferredTo": "R3"
   },
-  "sourceCheckpointCommit": "acf498b",
+  "sourceCheckpointCommit": "d141e9b",
   "sourceCheckpointPushed": true,
   "rootRequests": {
     "ROOT-R004-20261006-01": {
@@ -21315,5 +21337,6 @@
     "queuedRootReserveGate": false,
     "rule": "Normal OS pressure and available memory at least the current job declared need plus512MiB; no strictly-free, hypothetical reserve, swap or second physical-fit gate"
   },
-  "activeWorkers": []
+  "activeWorkers": [],
+  "pullRequestUpdatedAt": "2026-10-06T23:37:21.831146+00:00"
 }
