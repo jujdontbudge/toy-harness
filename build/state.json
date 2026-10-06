@@ -2,9 +2,9 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-06T22:36:16.865800+00:00",
+  "updatedAt": "2026-10-06T22:44:48.364324+00:00",
   "phase": "R0_FEASIBILITY",
-  "activeCard": "R0.12",
+  "activeCard": "R0.10",
   "cardCount": 87,
   "acceptanceCount": 1447,
   "cards": {
@@ -1690,7 +1690,8 @@
         "evidence": "build/evidence/R0.11/minimum-assigned-at-plan.json",
         "dependency": "R0.07 actual canonical work/trial admission integration remains incomplete",
         "wholeATComplete": false
-      }
+      },
+      "nextPlan": "build/evidence/R0.11/run-review-next-minimum-plan.json"
     },
     "R0.12": {
       "implementation": "IN_PROGRESS",
@@ -1704,7 +1705,10 @@
         "build/evidence/R0.12/sources-verification.json",
         "build/evidence/R0.12/sources-next-minimum-plan.json",
         "build/evidence/R0.12/route-verification.json",
-        "build/evidence/R0.12/attention66-baseline.json"
+        "build/evidence/R0.12/attention66-baseline.json",
+        "build/evidence/R0.12/attention66-preparation.json",
+        "build/evidence/R0.12/attention66-verification.json",
+        "build/evidence/R0.12/attention66-check-result.json"
       ],
       "requiredATs": [
         "AT-adhd-features-106",
@@ -1773,12 +1777,41 @@
       },
       "attention66Plan": {
         "evidence": "build/evidence/R0.12/attention66-next-minimum-plan.json",
-        "state": "PARENT_REVIEWED_ASSIGNED_UNFILTERED_BASELINE_COLLECTED",
+        "state": "STOPPED_UNFILTERED_CLI_OWNER_GATE_VERIFIED_AUTH_PENDING",
         "wholeATComplete": false,
         "baseline": "build/evidence/R0.12/attention66-baseline.json",
         "baselineOperationId": "f8087592-df7c-4421-8453-6038adfb32c7",
         "baselineRunShowExact": true,
         "baselineCleanupComplete": true
+      },
+      "attentionDecisionUnit": {
+        "startedAt": "2026-10-06T22:39:21Z",
+        "stoppedAt": "2026-10-06T22:44:48.364324+00:00",
+        "state": "STOPPED_UNFILTERED_CLI_OWNER_GATE_VERIFIED_AUTH_PENDING",
+        "assignedAT": "AT-attention-66",
+        "unfiltered": true,
+        "cases": 22,
+        "diagnostics": 88,
+        "regressionDiagnostics": 23,
+        "verification": "build/evidence/R0.12/attention66-verification.json",
+        "interface": "docs/adr/0038-attention-research-decisions.md",
+        "canonicalInput": "ResearchAttentionDecisionV1",
+        "canonicalOutput": "ResearchRegisterInspectionV3",
+        "publicOwners": [
+          "ModelRoute.delegationReceipt",
+          "EngineeringControl.checkResearch"
+        ],
+        "operationId": "316b9e52-46fb-4505-bd29-38166d45c47c",
+        "runShowExact": true,
+        "teardownComplete": true,
+        "maximumPrerequisiteLength": 1450,
+        "wholeATsPassed": [],
+        "acceptanceComplete": false,
+        "deferrals": [
+          "Authenticated actual research and primary-claim provenance",
+          "Protected whole register/controller admission",
+          "Remaining assigned R0.12 ATs and actual dependent capabilities"
+        ]
       }
     },
     "R0.13": {
@@ -10401,7 +10434,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Implement the parent-reviewed AT-attention-66 four-decision research-gate behavior from the fresh unfiltered NOT_IMPLEMENTED baseline. Write a minimum strict versioned central interface first, preserving V1/V2 consumers; enforce four distinct decisions and canonical route/skill receipt per decision in the existing EngineeringControl gate, with orchestrated public receipts in the existing Hermes owner (no reverse import). Include thin CLI/public-owner/FixtureProbe and generated feature map, run all assigned checks unfiltered plus affected research regressions, exact show and teardown. No actual research/native/account/whole claim from fake fixture. Begin a two-hour source timebox at actual implementation start. R0.03 observer unit stopped after three failures and source restored; no new repair without real public readiness attribution. Poll ROOT-REQUESTS; exact root02 DONE immediately prioritizes R0.01 native grant-owner load. Pending root never blocks goal.",
+  "nextAction": "Poll ROOT-REQUESTS; exact root02 DONE immediately prioritizes R0.01 native grant-owner load after validated actual UID310 read/restoration. R0.12 Attention source unit stopped after 88 passing unfiltered central decision checks plus 23 affected regressions and full strict checks; whole admission remains pending. Continue the next independent R0.10 source-assigned minimum from current evidence, collecting an unfiltered baseline before implementation. Preserve frozen root payloads, existing V1/V2 contracts, TS/Python-only generation, 2h/card-unit stop and three-failure replan. Do not restart the failed R0.03 observer without attributable public readiness evidence; no inferred lock cause. Root pending never blocks goal.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -10812,7 +10845,17 @@
       "rung": "CLI",
       "firstRelease": "R0",
       "sourceAssertionHash": "19bd2c265bd8baa95cbb780ca34b0ad5f53ba75f1bde7891147eb2838d4842f9",
-      "evidence": []
+      "evidence": [
+        "build/evidence/R0.12/attention66-verification.json"
+      ],
+      "diagnosticUnit": {
+        "checks": 88,
+        "allChecksPass": true,
+        "sourceBound": true,
+        "unfiltered": true,
+        "runShowExact": true,
+        "wholeComplete": false
+      }
     },
     "AT-attention-67": {
       "state": "NOT_IMPLEMENTED",
@@ -20912,13 +20955,13 @@
   },
   "pullRequest": "https://github.com/JohanSardar/toy-harness/pull/1",
   "lastWorker": {
-    "card": "R0.12",
+    "card": "R0.11",
     "task": "r007_minimum_trial_journal",
     "model": "gpt-6-luna",
     "reasoning": "max",
-    "state": "deadline_interrupted_no_artifact",
-    "ownedScope": "build/evidence/R0.12/next-required-gate-minimum-plan.json only; no source/runtime edits",
-    "deadlineUtc": "2026-10-06T21:05:00Z"
+    "state": "completed_read_only",
+    "evidence": "build/evidence/R0.11/run-review-next-minimum-plan.json",
+    "ownedScope": "Read-only independent card plan; no source/runtime changes"
   },
   "continuationAssessment": {
     "observedAt": "2026-10-06T22:36:16.865800+00:00",
@@ -20960,25 +21003,24 @@
     "queuedRootReserveAdmissionGate": false
   },
   "latestStaticVerification": {
-    "recordedAt": "2026-10-06T22:34:54.964331+00:00",
+    "recordedAt": "2026-10-06T22:44:18.265730+00:00",
     "command": "npm run check",
     "exitCode": 0,
-    "artifacts": 374,
-    "contracts": 306,
-    "cliManifests": 19,
+    "artifacts": 379,
+    "contracts": 311,
+    "cliManifests": 20,
     "features": 98,
     "commands": 55,
     "indexedATs": 1447,
-    "schemaDigest": "7798d085965af38a039922143b282be466d42ca88ffaa75d3923b1a3b3392dcc",
-    "evidence": "build/evidence/R0.03/held-response-restored-check.txt",
+    "schemaDigest": "5275b3e9508033070467c6ad0d227f48023d15a43b93511c8389c0168d0216b3",
+    "evidence": "build/evidence/R0.12/attention66-check.txt",
     "languages": [
       "TypeScript",
       "Python"
     ],
-    "SwiftDeferredTo": "R3",
-    "unpassedSourceRestoredExactly": true
+    "SwiftDeferredTo": "R3"
   },
-  "sourceCheckpointCommit": "063e347",
+  "sourceCheckpointCommit": "3586993",
   "sourceCheckpointPushed": true,
   "rootRequests": {
     "ROOT-R004-20261006-01": {

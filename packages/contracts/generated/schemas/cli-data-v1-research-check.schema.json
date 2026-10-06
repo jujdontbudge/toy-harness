@@ -963,6 +963,180 @@
         ],
         "additionalProperties": false
       }
+    },
+    "attentionDecisions": {
+      "maxItems": 4,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "componentId": {
+            "type": "string",
+            "pattern": "^[A-Z][0-9]{2}(?![\\s\\S])"
+          },
+          "comparisonDigest": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 64,
+                "maxLength": 64,
+                "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "PASS",
+              "BLOCKED"
+            ]
+          },
+          "findings": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "MAPPED_REQUIREMENTS_MISSING",
+                "REQUIRED_OPTIONS_MISSING",
+                "OUTSIDE_OPTION_MISSING",
+                "PRIMARY_EVIDENCE_MISSING",
+                "CHOICE_UNSUPPORTED",
+                "TRADEOFFS_MISSING",
+                "ACCEPTANCE_LINK_MISSING",
+                "VALIDATION_PLAN_MISSING",
+                "SELECTED_FACT_UNRESOLVED",
+                "DUPLICATE_REFERENCE",
+                "DECISION_MISSING",
+                "RELEASE_GATE_MISSING",
+                "VALIDATION_ID_MISSING"
+              ]
+            }
+          },
+          "selectedTool": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "validationPlan": {
+            "type": "string",
+            "maxLength": 4000
+          },
+          "unresolvedFacts": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "optionId": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "fact": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 2000
+                }
+              },
+              "required": [
+                "optionId",
+                "fact"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "scope": {
+            "type": "string",
+            "const": "component_comparison"
+          },
+          "researchAttestationVerified": {
+            "type": "boolean",
+            "const": false
+          },
+          "acceptanceComplete": {
+            "type": "boolean",
+            "const": false
+          },
+          "selectedOptionId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 120
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "missingRequirementIds": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 120
+            }
+          },
+          "missingSourceIds": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 120
+            }
+          },
+          "missingValidationIds": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 120
+            }
+          },
+          "decisionId": {
+            "type": "string",
+            "enum": [
+              "discord-delivery",
+              "push-delivery",
+              "alarm-delivery",
+              "reminder-scheduling"
+            ]
+          }
+        },
+        "required": [
+          "componentId",
+          "comparisonDigest",
+          "state",
+          "findings",
+          "selectedTool",
+          "validationPlan",
+          "unresolvedFacts",
+          "scope",
+          "researchAttestationVerified",
+          "acceptanceComplete",
+          "selectedOptionId",
+          "missingRequirementIds",
+          "missingSourceIds",
+          "missingValidationIds",
+          "decisionId"
+        ],
+        "additionalProperties": false
+      }
     }
   },
   "required": [
@@ -980,7 +1154,8 @@
     "scope",
     "admission",
     "acceptanceComplete",
-    "componentDecisions"
+    "componentDecisions",
+    "attentionDecisions"
   ],
   "additionalProperties": false,
   "$id": "urn:toy:contracts:v1:CliDataV1:research.check"

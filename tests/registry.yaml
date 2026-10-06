@@ -1456,5 +1456,228 @@
       }
     ],
     "simUnavailableReason": "SIM cannot generate administrative native configuration or inspect the locked parser and isolated OS loader. The public Toy CLI drives the real owner and native consumers without loading a live profile."
+  },
+  {
+    "id": "AT-attention-66",
+    "rung": "CLI",
+    "sourceAssertionHash": "19bd2c265bd8baa95cbb780ca34b0ad5f53ba75f1bde7891147eb2838d4842f9",
+    "commandId": "probe.run",
+    "scenarioId": "research.attention-decisions",
+    "owner": "hermes",
+    "firstRelease": "R0",
+    "kind": "static_gate",
+    "mandatoryCases": [
+      {
+        "id": "complete-set",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "complete-set"
+      },
+      {
+        "id": "missing-discord-delivery",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "missing-discord-delivery"
+      },
+      {
+        "id": "missing-push-delivery",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "missing-push-delivery"
+      },
+      {
+        "id": "missing-alarm-delivery",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "missing-alarm-delivery"
+      },
+      {
+        "id": "missing-reminder-scheduling",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "missing-reminder-scheduling"
+      },
+      {
+        "id": "duplicate-decision",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "duplicate-decision"
+      },
+      {
+        "id": "missing-primary-evidence",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "missing-primary-evidence"
+      },
+      {
+        "id": "missing-required-option",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "missing-required-option"
+      },
+      {
+        "id": "missing-tradeoffs",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "missing-tradeoffs"
+      },
+      {
+        "id": "missing-acceptance-link",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "missing-acceptance-link"
+      },
+      {
+        "id": "unrelated-acceptance-link",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "unrelated-acceptance-link"
+      },
+      {
+        "id": "missing-requirement",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "missing-requirement"
+      },
+      {
+        "id": "unsupported-selection",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "unsupported-selection"
+      },
+      {
+        "id": "missing-outside-option",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "missing-outside-option"
+      },
+      {
+        "id": "unsupported-outside-option",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "unsupported-outside-option"
+      },
+      {
+        "id": "missing-route-receipt",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "missing-route-receipt"
+      },
+      {
+        "id": "wrong-observed-model",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "wrong-observed-model"
+      },
+      {
+        "id": "wrong-observed-reasoning",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "wrong-observed-reasoning"
+      },
+      {
+        "id": "wrong-observed-tier",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "wrong-observed-tier"
+      },
+      {
+        "id": "missing-research-skill",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "missing-research-skill"
+      },
+      {
+        "id": "wrong-skill-revision",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "wrong-skill-revision"
+      },
+      {
+        "id": "wrong-loaded-skill-digest",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "wrong-loaded-skill-digest"
+      }
+    ],
+    "trigger": "Inspect four distinct indexed Attention decisions with public ModelRoute owner receipts, primary-supported alternatives and the shared central gate; retain native/authenticated research and whole admission as pending.",
+    "faultControls": [
+      {
+        "id": "external-research-documents",
+        "seam": "provider",
+        "affectedPhases": [
+          "missing-discord-delivery",
+          "missing-push-delivery",
+          "missing-alarm-delivery",
+          "missing-reminder-scheduling",
+          "duplicate-decision",
+          "missing-primary-evidence",
+          "missing-required-option",
+          "missing-tradeoffs",
+          "missing-acceptance-link",
+          "missing-requirement",
+          "unsupported-selection",
+          "missing-outside-option",
+          "unsupported-outside-option",
+          "missing-route-receipt",
+          "wrong-skill-revision",
+          "unrelated-acceptance-link"
+        ]
+      },
+      {
+        "id": "external-cli-route-observations",
+        "seam": "provider",
+        "affectedPhases": [
+          "wrong-observed-model",
+          "wrong-observed-reasoning",
+          "wrong-observed-tier"
+        ]
+      },
+      {
+        "id": "published-research-artifact-faults",
+        "seam": "os",
+        "affectedPhases": [
+          "missing-research-skill",
+          "wrong-loaded-skill-digest"
+        ]
+      }
+    ],
+    "observations": [
+      {
+        "id": "four-distinct-central-decisions",
+        "independentReader": "EngineeringControl.checkResearch: four indexed decisions and exact central route/skill validation IDs",
+        "caseIds": [
+          "complete-set",
+          "missing-discord-delivery",
+          "missing-push-delivery",
+          "missing-alarm-delivery",
+          "missing-reminder-scheduling",
+          "duplicate-decision",
+          "missing-primary-evidence",
+          "missing-required-option",
+          "missing-tradeoffs",
+          "missing-acceptance-link",
+          "unrelated-acceptance-link",
+          "missing-requirement",
+          "unsupported-selection",
+          "missing-outside-option",
+          "unsupported-outside-option",
+          "missing-route-receipt",
+          "wrong-observed-model",
+          "wrong-observed-reasoning",
+          "wrong-observed-tier",
+          "missing-research-skill",
+          "wrong-skill-revision",
+          "wrong-loaded-skill-digest"
+        ]
+      },
+      {
+        "id": "public-model-route-receipts",
+        "independentReader": "External Codex CLI: task/skill readback; toy probe.show: stored source-bound decision and receipt diagnostics",
+        "caseIds": [
+          "complete-set",
+          "missing-discord-delivery",
+          "missing-push-delivery",
+          "missing-alarm-delivery",
+          "missing-reminder-scheduling",
+          "duplicate-decision",
+          "missing-primary-evidence",
+          "missing-required-option",
+          "missing-tradeoffs",
+          "missing-acceptance-link",
+          "unrelated-acceptance-link",
+          "missing-requirement",
+          "unsupported-selection",
+          "missing-outside-option",
+          "unsupported-outside-option",
+          "missing-route-receipt",
+          "wrong-observed-model",
+          "wrong-observed-reasoning",
+          "wrong-observed-tier",
+          "missing-research-skill",
+          "wrong-skill-revision",
+          "wrong-loaded-skill-digest"
+        ]
+      }
+    ],
+    "simUnavailableReason": "SIM cannot inspect administrative pre-build report bindings and delegated research metadata. CLI drives the real public route and central owner with external CLI, document and OS artifact fakes."
   }
 ]

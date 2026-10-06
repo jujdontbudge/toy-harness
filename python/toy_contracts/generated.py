@@ -1885,7 +1885,7 @@ class DoctorReportV1(TypedDict):
 
 CliResult = Union[
     "CliBootstrapIdentitiesResult",
-    "CliResearchCheckResultV2",
+    "CliResearchCheckResultV3",
     "CliFailure",
     "CliHelpResult",
     "CliVersionResult",
@@ -1908,7 +1908,7 @@ CliResult = Union[
     "CliGardenResult",
 ]
 
-class CliResearchCheckResultV2(TypedDict):
+class CliResearchCheckResultV3(TypedDict):
     schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
     commandId: "CliResearchCheckResultCommandId"
     invocationId: "UUID"
@@ -1919,9 +1919,9 @@ class CliResearchCheckResultV2(TypedDict):
     environment: "CliEnvironment"
     meta: "CliMetadata"
     ok: "CliBootstrapIdentitiesResultOk"
-    data: "ResearchRegisterInspectionV2"
+    data: "ResearchRegisterInspectionV3"
 
-class ResearchRegisterInspectionV2(TypedDict):
+class ResearchRegisterInspectionV3(TypedDict):
     requestedRelease: Optional["Release"]
     registerPath: str
     registerDigest: "Digest"
@@ -1937,6 +1937,7 @@ class ResearchRegisterInspectionV2(TypedDict):
     admission: "ResearchRegisterInspectionV1Admission"
     acceptanceComplete: "RoleBootstrapReportV1IdentityGateVerified"
     componentDecisions: list["ResearchComponentComparisonCheckV2"]
+    attentionDecisions: list["ResearchAttentionDecisionCheckV1"]
 
 class ResearchComponentComparisonCheckV2(TypedDict):
     componentId: str
@@ -1968,6 +1969,30 @@ ResearchComponentComparisonCheckV2FindingsItem = Literal[
     "DECISION_MISSING",
     "RELEASE_GATE_MISSING",
     "VALIDATION_ID_MISSING",
+]
+
+class ResearchAttentionDecisionCheckV1(TypedDict):
+    componentId: str
+    comparisonDigest: Optional["Digest"]
+    state: "ResearchComponentComparisonCheckV1State"
+    findings: list["ResearchComponentComparisonCheckV2FindingsItem"]
+    selectedTool: Optional[str]
+    validationPlan: str
+    unresolvedFacts: list["ResearchComponentComparisonCheckV1UnresolvedFactsItem"]
+    scope: "ResearchComponentComparisonCheckV1Scope"
+    researchAttestationVerified: "RoleBootstrapReportV1IdentityGateVerified"
+    acceptanceComplete: "RoleBootstrapReportV1IdentityGateVerified"
+    selectedOptionId: Optional[str]
+    missingRequirementIds: list[str]
+    missingSourceIds: list[str]
+    missingValidationIds: list[str]
+    decisionId: "ResearchAttentionDecisionCheckV1DecisionId"
+
+ResearchAttentionDecisionCheckV1DecisionId = Literal[
+    "discord-delivery",
+    "push-delivery",
+    "alarm-delivery",
+    "reminder-scheduling",
 ]
 
 class CliStackUpResult(TypedDict):
@@ -3154,6 +3179,41 @@ class CliProbeShowCommandResultVariant1(TypedDict):
     meta: "CliMetadata"
     ok: "RoleBootstrapReportV1IdentityGateVerified"
     error: "CliError"
+
+CliResearchCheckCommandResultV3 = Union[
+    "CliResearchCheckResultV3",
+    "CliResearchCheckCommandResultVariant1",
+]
+
+class CliResearchCheckResultV2(TypedDict):
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
+    commandId: "CliResearchCheckResultCommandId"
+    invocationId: "UUID"
+    generatedAt: "Instant"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
+    schemaDigest: "Digest"
+    environment: "CliEnvironment"
+    meta: "CliMetadata"
+    ok: "CliBootstrapIdentitiesResultOk"
+    data: "ResearchRegisterInspectionV2"
+
+class ResearchRegisterInspectionV2(TypedDict):
+    requestedRelease: Optional["Release"]
+    registerPath: str
+    registerDigest: "Digest"
+    components: list["ResearchComponentInspectionV1"]
+    componentComparisons: list["ResearchComponentComparisonCheckV1"]
+    reports: list["ResearchRegisterInspectionV1ReportsItem"]
+    specReferences: list["ResearchSpecReferencesV1"]
+    sourcesCatalogCoverage: "ResearchCatalogCoverageV1"
+    dependencyClosureVerified: "RoleBootstrapReportV1IdentityGateVerified"
+    findings: list["ResearchInspectionFindingV1"]
+    wholeATsPassed: list[str]
+    scope: "ResearchRegisterInspectionV1Scope"
+    admission: "ResearchRegisterInspectionV1Admission"
+    acceptanceComplete: "RoleBootstrapReportV1IdentityGateVerified"
+    componentDecisions: list["ResearchComponentComparisonCheckV2"]
 
 CliResearchCheckCommandResultV2 = Union[
     "CliResearchCheckResultV2",
@@ -4528,6 +4588,29 @@ ModelRouteReceiptV1ReasonCodeValue = Literal[
     "route_unobserved",
     "usage_unavailable",
     "stream_interrupted",
+]
+
+class ResearchAttentionDecisionV1(TypedDict):
+    scope: "ResearchAttentionDecisionV1Scope"
+    componentId: "ResearchAttentionDecisionV1ComponentId"
+    mappedRequirements: list[str]
+    options: list["ResearchComponentComparisonV2OptionsItem"]
+    evidence: list["ResearchComponentComparisonV1EvidenceItem"]
+    selectedOptionId: str
+    unresolvedFacts: list["ResearchComponentComparisonCheckV1UnresolvedFactsItem"]
+    acceptanceIds: list[str]
+    validationPlan: str
+    releaseGate: str
+    validations: list["ResearchComponentComparisonV2ValidationsItem"]
+    decisionId: "ResearchAttentionDecisionCheckV1DecisionId"
+    executionReceipt: Optional["ModelRouteDelegationReceiptV1"]
+
+ResearchAttentionDecisionV1Scope = Literal[
+    "attention-research-decision",
+]
+
+ResearchAttentionDecisionV1ComponentId = Literal[
+    "M02",
 ]
 
 class InstalledCodexRuntimeV1(TypedDict):

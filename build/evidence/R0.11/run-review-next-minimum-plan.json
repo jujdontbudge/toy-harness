@@ -1,0 +1,273 @@
+{
+  "artifact": "R0.11 run/review and assigned-AT minimum implementation plan",
+  "scope": "Source-bound read-only plan. No source edits, stacks, probes, account access, live trial, external research, or root operation. Root requests remain PENDING and frozen.",
+  "card": {
+    "id": "R0.11",
+    "purpose": "Audit early trial slot/usage reconciliation, separate original and experimental arms, compare foreground baseline, and ensure uncertain cancellation does not restore reserve.",
+    "dependency": "R0.07 trial running",
+    "assignedATs": [
+      {
+        "id": "AT-ops-47",
+        "source": "specs/ops.md:1968",
+        "assertionHash": "a5197df8ac45e7cc1e660210288ad85e534204870ede21d629ca12fa19e4e799",
+        "rung": "CLI",
+        "evidence": [
+          "stack",
+          "elapsed",
+          "device/account",
+          "probe"
+        ]
+      },
+      {
+        "id": "AT-ops-49",
+        "source": "specs/ops.md:1970",
+        "assertionHash": "bdc522a1d838c3bb62a91ca17cf28b26ccb5431aa145f9c25052e0a9b6e10ba7",
+        "rung": "CLI",
+        "evidence": [
+          "stack",
+          "probe"
+        ]
+      },
+      {
+        "id": "AT-ops-50",
+        "source": "specs/ops.md:1971",
+        "assertionHash": "bf08ca7e57784f55768174c9dad4eac4c45d9fb662dec229f9b6240374c65177",
+        "assertion": "Given approaching quota limits, when outstanding reservations and shared-client use reduce headroom, optional repair pauses first, quiet-tick reviews next and event reviews/Continuation last, with durable reason/wake state and no shrinking percentage-of-remainder reserve claim.",
+        "rung": "CLI",
+        "evidence": [
+          "stack",
+          "probe"
+        ]
+      },
+      {
+        "id": "AT-ops-51",
+        "source": "specs/ops.md:1972",
+        "assertionHash": "ea41b9bcca501eb9ae00aa97b991ea915a418bc288913850f49b0e7c15555f26",
+        "rung": "CLI",
+        "evidence": [
+          "stack",
+          "probe"
+        ]
+      },
+      {
+        "id": "AT-ops-52",
+        "source": "specs/ops.md:1973",
+        "assertionHash": "87ee3745c00c15de26f5d6a48ff61b23324352e932f5e1e6e7cb1af89819a4dd",
+        "rung": "CLI",
+        "evidence": [
+          "stack",
+          "probe"
+        ]
+      },
+      {
+        "id": "AT-self-improvement-59",
+        "source": "specs/self-improvement.md:1778",
+        "assertionHash": "e976ade51b0316f155936944aedb1c6f59d095df0f227607c9a6b9c5c4599b7d",
+        "rung": "CLI",
+        "evidence": [
+          "stack",
+          "elapsed",
+          "device/account",
+          "probe"
+        ]
+      },
+      {
+        "id": "AT-hermes-config-37",
+        "source": "specs/hermes-config.md:3392",
+        "assertionHash": "7019c5ca241b5567513e230bc170f0c6168ba3362eee667058e301d3b7d7d983",
+        "rung": "CLI",
+        "evidence": [
+          "stack",
+          "elapsed",
+          "device/account",
+          "probe"
+        ]
+      }
+    ]
+  },
+  "selectedSmallestSourceUnit": {
+    "id": "AT-ops-50",
+    "reason": "It is the smallest R0.11 assigned CLI assertion with a source behavior gap independent of the live seven-day trial. The neighboring quota assertions AT-ops-49/51/52 already have source-bound public ModelAdmission/PostgreSQL probe routes; AT-ops-50 has no manifest row, probe case, or ReplayEnvironment route.",
+    "existingVersionedPublicBoundary": {
+      "policy": "ModelAdmissionPolicy.evaluate(ModelAdmissionInputV1): uses work.class, fresh quota observation, shared account ledger, unreflected upper-bound reservations and per-request expected five-hour/weekly percentages.",
+      "durableOwner": "ModelAdmissionApi.reserve(ModelAdmissionRequestV1) returns ModelAdmissionRecordV1; the owner persists the work class and ModelAdmissionDecisionV1.reason/retryAt in toy_si.model_call.",
+      "types": [
+        "ModelAdmissionInputV1",
+        "ModelAdmissionRequestV1",
+        "ModelAdmissionDecisionV1",
+        "ModelAdmissionRecordV1",
+        "ModelAdmissionStoreViewV1"
+      ],
+      "databaseAndSeams": "Existing disposable PostgreSQL ModelAdmission.withTest/accounting fixture is the real persistence boundary; virtual clock and fixed authorized/unavailable quota observations are the existing external seams. No mock internal collaborators or real provider call is needed."
+    },
+    "actualCurrentBehavior": "The policy has hard stops at 60% five-hour / 70% weekly, applies reservation risk, persists reason and retryAt, and pauses repair/replay when required windows are unavailable. For measured windows it currently applies the same projected 60/70 veto to every autonomous work class. It does not preserve tiered headroom by class when approaching the hard limits.",
+    "minimumBehavior": "Add work-class preemption to the existing ModelAdmissionPolicy: preserve the canonical order repair/replay, then quiet-tick, then event/continuation as shared observations and outstanding reservations approach the hard ceilings. Keep foreground accepted. Persist each denied class with its durable decision reason and retryAt, and keep the stop limits fixed against the named windows rather than applying a percentage to the remaining allowance. Reuse ModelAdmissionInputV1, ModelAdmissionDecisionV1, and toy_si.model_call; no new DTO, module, service, database, or queue.",
+    "policyPrerequisite": "Ops \u00a713 names the 60%/70% hard ceilings and the required work-class order but gives no numeric headroom or fixed reservation amounts for the earlier stepwise pauses. No current behavior policy file supplies those tier amounts. The Ops policy owner must write the fixed tier boundary/reservation rule before implementation can select numeric cases; do not invent cutoffs in code or tests. Existing decision.retryAt is durable retry metadata, not proof that a separate Obligations wake was scheduled.",
+    "smallestFiles": [
+      {
+        "path": "packages/ops/src/model-admission-policy.ts",
+        "ownership": "Implement the written class-aware preemption rule in the existing policy owner."
+      },
+      {
+        "path": "packages/self-improvement/src/accounting-probe.ts",
+        "ownership": "Add source-required AT-ops-50 diagnostics through ModelAdmission.withTest and public ModelAdmissionApi; assert decisions and persisted class/reason/retryAt readbacks."
+      },
+      {
+        "path": "packages/self-improvement/src/public.ts",
+        "ownership": "Dispatch omitted-case AT-ops-50 through the existing accountingProbe owner."
+      },
+      {
+        "path": "tests/registry.yaml",
+        "ownership": "Add source-bound AT-ops-50 mandatory cases under existing accounting.model-admission scenario; regenerate the derived probe registry through its existing generator."
+      }
+    ],
+    "contractMigration": "No contract or migration change is required if the existing decision reason and retryAt fields can express the chosen tiers. Add no fields until a concrete unmet report requirement is found.",
+    "featureMap": "architecture/features.json already maps AT-ops-50 to self-improvement.model-admission-accounting, public interface ModelAdmission, and command probe.run. No new feature-map entry is needed; run the existing feature-map check after the source/manifest change.",
+    "minimumCasesAfterPolicyBoundariesAreWritten": [
+      "repair-pauses-first-while-higher-priority-work-remains-eligible",
+      "quiet-tick-pauses-next-while-event-and-continuation-remain-eligible",
+      "event-and-continuation-pause-at-their-final-fixed-headroom",
+      "shared-client-usage-and-unreflected-reservations-drive-the-order",
+      "denial-reason-and-retryAt-survive-PostgreSQL-reopen",
+      "foreground-remains-accepted-and-no-percent-of-remainder-reserve-is-derived"
+    ],
+    "dispatchAndMap": "ReplayEnvironment currently routes AT-ops-49/51/52 unfiltered to accountingProbe but not AT-ops-50. Add only that ID to the existing accounting owner dispatch. tests/registry.yaml has no AT-ops-50 manifest. The existing feature map already lists the AT and probe.run; generated-probe-registry output is derived, not hand-edited.",
+    "unfilteredCLIProof": [
+      "toy --env test stack up --release R0 --request-id <UUID> --json",
+      "toy --env test --stack <stack-id> probe run AT-ops-50 --request-id <UUID> --json",
+      "toy --env test --stack <stack-id> probe show <operation-id> --json",
+      "toy --env test --stack <stack-id> stack down --request-id <UUID> --json"
+    ],
+    "assignedRungProofLimit": "Run without --case; retain the operation ID and require probe.show to match the returned persisted operation, then fully down the owned stack. This is the AT-ops-50 assigned CLI stack/probe evidence only; it does not claim quota-account authentication or a live trial."
+  },
+  "canonicalRunReviewPrerequisite": {
+    "source": "Prior read-only evidence: build/evidence/R0.07/journal-next-minimum-plan.json.",
+    "finding": "R0.07 slots are fake_model-only; trial-bound rows disallow run_id/review_id/start/inference/review timestamps. CLI declarations name R1 RunControlRead and TurnReview, but the source review found no implementing owner.",
+    "effect": "AT-ops-47, AT-self-improvement-59, and AT-hermes-config-37 still require accepted full reviews, separate 168-hour arms, shared-account/device evidence, and their other trial metrics. The local AT-ops-50 source unit cannot unblock or pass those assignments or R0.11 as a whole."
+  },
+  "remainingGates": {
+    "R0.11Whole": "PENDING. R0.07 live trial and Run/TurnReview integration remain prerequisites for trial checkpoint assertions. AT-ops-49/51/52 and the candidate AT-ops-50 each require their own unfiltered CLI proof; no new probe was run in this task.",
+    "trialMetrics": [
+      "168 continuous hours per arm",
+      "3,360 anchored opportunities per arm",
+      "in-slot full scan and accepted terminal review before each next-slot boundary",
+      "original/reduced reports separate",
+      "latency",
+      "allowance freshness",
+      "RAM/swap",
+      "shared Ops admission and foreground priority",
+      "no paid usage",
+      "missed/deferred/unfinished reasons retained"
+    ],
+    "queue": "Root requests remain PENDING and frozen."
+  },
+  "resourceAdmission": {
+    "path": null,
+    "observedAtUtc": "2026-10-06T22:38:05Z",
+    "pressure": "normal",
+    "availableBytes": "2249785344",
+    "declaredNeedBytes": "268435456",
+    "marginBytes": "536870912",
+    "requiredBytes": "805306368",
+    "admitted": true,
+    "evidenceNote": "Parent supplied the fresh-doctor measurement in the task message; no workspace artifact path was given."
+  },
+  "sourceHashes": [
+    {
+      "path": "../personal-assistant-harness/specs/BUILD-PLAN.md",
+      "sha256": "aa84eb600e53bc65e6c6b1ed4fce45870ead861e0d18bf00d81613ff2595f49a"
+    },
+    {
+      "path": "../personal-assistant-harness/specs/TEST-PLAN.md",
+      "sha256": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2"
+    },
+    {
+      "path": "../personal-assistant-harness/specs/ops.md",
+      "sha256": "f07aab65088c82e4ff21e4d63edb2f279e2324e6d7e2bbb801e0fd7494104b0b"
+    },
+    {
+      "path": "../personal-assistant-harness/specs/self-improvement.md",
+      "sha256": "23e69b258189148328f029acd3ec7c4c125544bf49d670757eee2bf071ab7014"
+    },
+    {
+      "path": "../personal-assistant-harness/specs/RESEARCH-REGISTER.md",
+      "sha256": "e89b3336e0c2458ac204fb0927da30f4541abfab48a9d55735c4655719a3f10d"
+    },
+    {
+      "path": "../personal-assistant-harness/specs/hermes-config.md",
+      "sha256": "d3548fde13180bc750660f306caa0041101832e398ccdabd6cfdac0b3de8f4af"
+    },
+    {
+      "path": "packages/contracts/src/model-admission.ts",
+      "sha256": "13482e15d4ad97b3bd73ec76c2aeeb040c28fbafd46c57b99f6e993d0c7da794"
+    },
+    {
+      "path": "packages/ops/src/model-admission-policy.ts",
+      "sha256": "553eb6805c9779c924d16c3bdb8eeac9a92727086b64a673d317f9dddcbc2c95"
+    },
+    {
+      "path": "packages/ops/src/public.ts",
+      "sha256": "9646f70f89434cf774e66a602eed45f751c353f200b2f3e1a2cf41968e079284"
+    },
+    {
+      "path": "packages/self-improvement/src/model-admission.ts",
+      "sha256": "029783a3dee495d6d15a8a2c59ec6493627815ed2841f475f0b5a852a0fd7840"
+    },
+    {
+      "path": "packages/self-improvement/src/accounting-postgres.ts",
+      "sha256": "b9b2b721acec01d490a247b9fd415b6bd3e8ecc6d55fc4adab4b1b7bb91557f0"
+    },
+    {
+      "path": "packages/self-improvement/src/accounting-probe.ts",
+      "sha256": "a8cded8b2dde0cd7481725e8080e77f18354092d560a5206384b0ee106ea7235"
+    },
+    {
+      "path": "packages/self-improvement/src/public.ts",
+      "sha256": "f06a33fbdd6587b5f82ca575528148e1a6965c6ff15dbe39ef2d86dad61c84ff"
+    },
+    {
+      "path": "packages/self-improvement/migrations/model-admission.sql",
+      "sha256": "aeda7e6b9c5a9cf3c5a97ae5d547fb38dda95b4587303dc730787d349d2c3bbc"
+    },
+    {
+      "path": "packages/self-improvement/src/model-admission-migration.ts",
+      "sha256": "c517c58e822f5aad03928a460a457d8a9c847c608bbc549ee6950b564bb3aaee"
+    },
+    {
+      "path": "tests/registry.yaml",
+      "sha256": "9c8b984d411a294c4841badf72291a242064755b613aaaf927d3764bc3deb039"
+    },
+    {
+      "path": "tests/acceptance-index.json",
+      "sha256": "c9b645eab7f55b2ebf35d7db769a534a4837de23ad3dc3d913f3189e781d44fa"
+    },
+    {
+      "path": "packages/contracts/src/generated-probe-registry.ts",
+      "sha256": "3e732d32e56713802e15344b5ed83299c9c0a1aef77163460bf172410bcc3bed"
+    },
+    {
+      "path": "architecture/features.json",
+      "sha256": "c1e3706ec124ef460eb77b6dbfdbeb7298be76b985d4fa05be1f5d4d07b9ad2a"
+    },
+    {
+      "path": "skills/toy-control/FEATURE-MAP.md",
+      "sha256": "a0bc28b03e40a22df19b36841bc4c90caf98f47a134e16a2e4ba62ee5923e305"
+    },
+    {
+      "path": "packages/contracts/src/cli-declarations.ts",
+      "sha256": "b7623e62057d5a1c607db7867a019940478dcefa4c6043498b3af596bca90ee6"
+    },
+    {
+      "path": "cli/src/main.ts",
+      "sha256": "909d39d2c65540d2d7718ef237caa6093c74b1242e2a4102ead6e01879def46b"
+    },
+    {
+      "path": "behavior/models.yaml",
+      "sha256": "8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67"
+    },
+    {
+      "path": "build/evidence/R0.07/journal-next-minimum-plan.json",
+      "sha256": "878f4a083e82a7c59e550da9210ba275a02cb108a6156cf2603b06def6110449"
+    }
+  ]
+}

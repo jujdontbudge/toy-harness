@@ -2,8 +2,8 @@ import { createHash, randomUUID } from "node:crypto";
 import { spawnSync } from "node:child_process";
 import { existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, realpathSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
-import { acceptanceIndexSchema, checkoutPathSchema, cliDeclarations, featureFactsSchema, featureMapCheckSchema, featureMapUpdateSchema, generatorInputSchema, generatorPlanSchema, gardenerInputSchema, gardenerReportSchema, kitchenGateSummarySchema, mapCheckInputSchema, mapUpdateInputSchema, opsControlContextSchema, opsErrorMessages, referenceAdmissionEvidenceSchema, researchCatalogCoverageSchema, researchComponentComparisonSchema, researchComponentComparisonCheckSchema, researchDocumentOverlaySchema, researchRegisterInspectionV2Schema, researchComponentComparisonV2Schema, researchComponentComparisonCheckV2Schema, researchSourcesComponentComparisonSchema, researchSourcesComponentComparisonV2Schema, researchSkillPinSchema, modelRoutePolicySchema } from "@toy/contracts";
-import type { CheckViewV1, FeatureFactsV1, FilePatchV1, GeneratorInputV1, GeneratorPlanV1, FeatureMapCheckV1, FeatureMapUpdateV1, MapCheckInputV1, MapUpdateInputV1, GardenerInputV1, GardenerReportV1, OpsControlContextV1, ResearchCatalogCoverageFindingV1, ResearchCatalogMemberV1, ResearchCatalogSectionV1, ResearchInspectionFindingV1, ResearchComponentComparisonV1, ResearchComponentComparisonCheckV1, ResearchDocumentOverlayV1, ResearchRegisterInspectionV1, ResearchRegisterInspectionV2, ResearchComponentComparisonV2, ResearchComponentComparisonCheckV2, ResearchSourcesComponentComparisonV1, ResearchSourcesComponentComparisonV2, Result } from "@toy/contracts";
+import { acceptanceIndexSchema, checkoutPathSchema, cliDeclarations, featureFactsSchema, featureMapCheckSchema, featureMapUpdateSchema, generatorInputSchema, generatorPlanSchema, gardenerInputSchema, gardenerReportSchema, kitchenGateSummarySchema, mapCheckInputSchema, mapUpdateInputSchema, opsControlContextSchema, opsErrorMessages, referenceAdmissionEvidenceSchema, researchCatalogCoverageSchema, researchComponentComparisonSchema, researchComponentComparisonCheckSchema, researchDocumentOverlaySchema, researchRegisterInspectionV3Schema, researchAttentionDecisionSchema, researchAttentionDecisionCheckSchema, researchAttentionDecisionIdSchema, researchComponentComparisonV2Schema, researchComponentComparisonCheckV2Schema, researchSourcesComponentComparisonSchema, researchSourcesComponentComparisonV2Schema, researchSkillPinSchema, modelRoutePolicySchema } from "@toy/contracts";
+import type { CheckViewV1, FeatureFactsV1, FilePatchV1, GeneratorInputV1, GeneratorPlanV1, FeatureMapCheckV1, FeatureMapUpdateV1, MapCheckInputV1, MapUpdateInputV1, GardenerInputV1, GardenerReportV1, OpsControlContextV1, ResearchCatalogCoverageFindingV1, ResearchCatalogMemberV1, ResearchCatalogSectionV1, ResearchInspectionFindingV1, ResearchComponentComparisonV1, ResearchComponentComparisonCheckV1, ResearchDocumentOverlayV1, ResearchRegisterInspectionV1, ResearchComponentComparisonV2, ResearchComponentComparisonCheckV2, ResearchSourcesComponentComparisonV1, ResearchSourcesComponentComparisonV2, ResearchAttentionDecisionV1, ResearchAttentionDecisionCheckV1, ResearchRegisterInspectionV3, Result } from "@toy/contracts";
 import { OpsTestStack, trustedCheckoutRoot, trustedToolEnvironment } from "@toy/ops/public";
 import { modelAdmissionMigration } from "./model-admission-migration.js";
 import { capacityTrialMigration } from "./capacity-trial-migration.js";
@@ -498,70 +498,110 @@ const inspectComponentDecisions = (reports: ResearchRegisterInspectionV1["report
       } catch { findings.push({ componentId: null, code: "COMPONENT_COMPARISON_INVALID", sourceLine, sourcePath: report.path }); }
     }
   }
-  const acceptance = acceptanceIndexSchema.parse(JSON.parse(read("tests/acceptance-index.json"))).acceptance;
-  const acceptanceIds = new Set(acceptance.map(entry => entry.id));
-  return components.map(component => {
-    const record = decisions.get(component.id);
-    const codes: ResearchComponentComparisonCheckV2["findings"] = [];
-    const add = (code: ResearchComponentComparisonCheckV2["findings"][number]): void => { if (!codes.includes(code)) codes.push(code); };
-    const validationId = "G0:" + release + ":" + component.id;
-    const options = new Map(record?.options.map(option => [option.id, option]) ?? []);
-    const sources = new Map(record?.evidence.map(source => [source.id, source]) ?? []);
-    const selected = record ? options.get(record.selectedOptionId) : undefined;
-    const sourceSupports = (id: string, optionId: string): boolean => {
-      const source = sources.get(id);
-      return source?.kind === "primary" && source.supportedOptionIds.includes(optionId);
+  const acceptanceIds = new Set(acceptanceIndexSchema.parse(JSON.parse(read("tests/acceptance-index.json"))).acceptance.map(entry => entry.id));
+  return components.map(component => compareDecision(decisions.get(component.id), component, findings, requirementIds, release, acceptanceIds));
+};
+const compareDecision = (record: ResearchComponentComparisonV2 | ResearchSourcesComponentComparisonV1 | ResearchSourcesComponentComparisonV2 | ResearchAttentionDecisionV1 | undefined, component: ResearchRegisterInspectionV1["components"][number], findings: ResearchInspectionFindingV1[], requirementIds: readonly string[], release: string, acceptanceIds: ReadonlySet<string>): ResearchComponentComparisonCheckV2 => {
+  const codes: ResearchComponentComparisonCheckV2["findings"] = [];
+  const add = (code: ResearchComponentComparisonCheckV2["findings"][number]): void => { if (!codes.includes(code)) codes.push(code); };
+  const validationId = "G0:" + release + ":" + component.id + (record?.scope === "attention-research-decision" ? ":" + record.decisionId : "");
+  const options = new Map(record?.options.map(option => [option.id, option]) ?? []);
+  const sources = new Map(record?.evidence.map(source => [source.id, source]) ?? []);
+  const selected = record ? options.get(record.selectedOptionId) : undefined;
+  const sourceSupports = (id: string, optionId: string): boolean => {
+    const source = sources.get(id);
+    return source?.kind === "primary" && source.supportedOptionIds.includes(optionId);
+  };
+  const sourcesComponent = component.id.startsWith("D");
+  const expectedRequirements = sourcesComponent ? [...new Set([...requirementIds, "0.9"])] : requirementIds;
+  const missingRequirementIds = expectedRequirements.filter(id => !record?.mappedRequirements.includes(id));
+  const missingSourceIds = new Set(component.reportKeys.filter(id => !selected || !sourceSupports(id, selected.id)));
+  if (component.reportKeys.length === 0) missingSourceIds.add("REGISTER:" + component.id);
+  const missingValidationIds = new Set<string>();
+  if (sourcesComponent) {
+    if ((record?.scope !== "sources-component" && record?.scope !== "sources-research-component") || !record.accountValidationPlan.trim()) missingValidationIds.add("ACCOUNT:" + release + ":" + component.id);
+    if ((record?.scope !== "sources-component" && record?.scope !== "sources-research-component") || !record.regionValidationPlan.trim()) missingValidationIds.add("REGION:" + release + ":" + component.id);
+    if (missingValidationIds.size) add("VALIDATION_PLAN_MISSING");
+  }
+  if (record?.scope === "sources-research-component" || record?.scope === "attention-research-decision") {
+    const policyBytes = read("behavior/models.yaml");
+    const expected = modelRoutePolicySchema.parse(JSON.parse(policyBytes)).original.research;
+    const pin = researchSkillPinSchema.parse(JSON.parse(read("behavior/research-skill.json")));
+    const receipt = record.executionReceipt;
+    const invocation = receipt?.invocation;
+    const observed = invocation?.observed;
+    if (!receipt || receipt.purpose !== "research" || receipt.state !== "observed" || receipt.executionBackend !== "codex_exec" || invocation?.completion !== "complete" || invocation.requested.role !== "research" || invocation.requested.arm !== "original" || invocation.requested.policyDigest !== hash(policyBytes) || !observed || observed.model !== expected.model || observed.effort !== expected.effort || observed.serviceTier !== expected.serviceTier) missingValidationIds.add("ROUTE:" + release + ":" + component.id);
+    const skill = receipt?.skill;
+    if (!skill || skill.repository !== pin.repository || skill.sourcePath !== pin.sourcePath || skill.sourceCommit !== pin.sourceCommit || skill.contentDigest !== pin.contentDigest || skill.loadedDigest !== pin.contentDigest || skill.semanticVersion !== pin.semanticVersion || skill.resources.length !== pin.resources.length || !pin.resources.every(resource => skill.resources.some(loaded => loaded.path === resource.path && loaded.digest === resource.digest))) missingValidationIds.add("SKILL:" + release + ":" + component.id);
+    if (!record.options.some(option => option.example === null && option.viable && option.support === "proven" && option.primaryEvidenceIds.length > 0 && option.primaryEvidenceIds.every(id => sourceSupports(id, option.id)))) add("OUTSIDE_OPTION_MISSING");
+  }
+  if (record?.scope === "attention-research-decision") {
+    const required = {
+      "discord-delivery": ["gateway-coupled", "protected-discord-rest"],
+      "push-delivery": ["web-push", "gated-native-expo"],
+      "alarm-delivery": ["passive-local-notifications", "alarmkit"],
+      "reminder-scheduling": ["postgres-pg-boss", "per-reminder-agent-cron"]
     };
-    const sourcesComponent = component.id.startsWith("D");
-    const expectedRequirements = sourcesComponent ? [...new Set([...requirementIds, "0.9"])] : requirementIds;
-    const missingRequirementIds = expectedRequirements.filter(id => !record?.mappedRequirements.includes(id));
-    const missingSourceIds = new Set(component.reportKeys.filter(id => !selected || !sourceSupports(id, selected.id)));
-    if (component.reportKeys.length === 0) missingSourceIds.add("REGISTER:" + component.id);
-    const missingValidationIds = new Set<string>();
-    if (sourcesComponent) {
-      if ((record?.scope !== "sources-component" && record?.scope !== "sources-research-component") || !record.accountValidationPlan.trim()) missingValidationIds.add("ACCOUNT:" + release + ":" + component.id);
-      if ((record?.scope !== "sources-component" && record?.scope !== "sources-research-component") || !record.regionValidationPlan.trim()) missingValidationIds.add("REGION:" + release + ":" + component.id);
-      if (missingValidationIds.size) add("VALIDATION_PLAN_MISSING");
+    if (required[record.decisionId].some(example => !record.options.some(option => option.example === example))) add("REQUIRED_OPTIONS_MISSING");
+    if (!record.acceptanceIds.some(id => id.startsWith("AT-attention-"))) add("ACCEPTANCE_LINK_MISSING");
+  }
+  if (!record) add("DECISION_MISSING");
+  if (missingRequirementIds.length) add("MAPPED_REQUIREMENTS_MISSING");
+  if (!record || options.size < 2) add("REQUIRED_OPTIONS_MISSING");
+  if (!selected || !selected.viable || selected.support !== "proven") add("CHOICE_UNSUPPORTED");
+  for (const option of record?.options ?? []) {
+    if (!option.reliability.trim() || !option.maintenance.trim() || !option.resources.trim()) add("TRADEOFFS_MISSING");
+    if (option.support !== "proven") continue;
+    if (option.primaryEvidenceIds.length === 0) add("PRIMARY_EVIDENCE_MISSING");
+    for (const id of option.primaryEvidenceIds) if (!sourceSupports(id, option.id)) missingSourceIds.add(id);
+  }
+  if (missingSourceIds.size) add("PRIMARY_EVIDENCE_MISSING");
+  if (!record || record.releaseGate !== component.releaseGate || !/\[R[0-5]\b/.test(record.releaseGate)) add("RELEASE_GATE_MISSING");
+  if (!record?.validationPlan.trim()) add("VALIDATION_PLAN_MISSING");
+  const validation = record?.validations.find(entry => entry.id === validationId);
+  if (!validation || validation.support !== "proven" || validation.sourceIds.length === 0 || validation.testIds.length === 0) missingValidationIds.add(validationId);
+  for (const id of validation?.sourceIds ?? []) if (!selected || !sourceSupports(id, selected.id)) { missingSourceIds.add(id); missingValidationIds.add(validationId); }
+  for (const id of validation?.testIds ?? []) if (!acceptanceIds.has(id) || !record?.acceptanceIds.includes(id)) { missingValidationIds.add(id); missingValidationIds.add(validationId); }
+  if (!record?.acceptanceIds.length || record.acceptanceIds.some(id => !acceptanceIds.has(id))) add("ACCEPTANCE_LINK_MISSING");
+  if (missingValidationIds.size) add("VALIDATION_ID_MISSING");
+  if (missingSourceIds.size) add("PRIMARY_EVIDENCE_MISSING");
+  if (record && (options.size !== record.options.length || sources.size !== record.evidence.length || new Set(record.validations.map(entry => entry.id)).size !== record.validations.length)) add("DUPLICATE_REFERENCE");
+  if (record?.unresolvedFacts.some(fact => fact.optionId === null || fact.optionId === record.selectedOptionId)) add("SELECTED_FACT_UNRESOLVED");
+  if (codes.length) findings.push({ componentId: component.id, code: record ? "COMPONENT_COMPARISON_BLOCKED" : "COMPONENT_COMPARISON_MISSING", sourceLine: component.sourceLine });
+  return researchComponentComparisonCheckV2Schema.parse({ componentId: component.id, comparisonDigest: record ? hash(JSON.stringify(record)) : null, state: codes.length ? "BLOCKED" : "PASS", findings: codes, selectedOptionId: record?.selectedOptionId ?? null, selectedTool: selected?.tool ?? null, validationPlan: record?.validationPlan ?? "", unresolvedFacts: record?.unresolvedFacts ?? [], missingRequirementIds, missingSourceIds: [...missingSourceIds], missingValidationIds: [...missingValidationIds], scope: "component_comparison", researchAttestationVerified: false, acceptanceComplete: false });
+};
+const inspectAttentionDecisions = (reports: ResearchRegisterInspectionV1["reports"], components: ResearchRegisterInspectionV1["components"], findings: ResearchInspectionFindingV1[], documents: ReadonlyMap<string, ResearchDocumentOverlayV1>, requirementIds: readonly string[], release: string): ResearchAttentionDecisionCheckV1[] => {
+  const component = components.find(entry => entry.id === "M02");
+  if (!component) throw new Error("ATTENTION_COMPONENT_MISSING");
+  const records = new Map<ResearchAttentionDecisionV1["decisionId"], ResearchAttentionDecisionV1>();
+  const duplicates = new Set<ResearchAttentionDecisionV1["decisionId"]>();
+  for (const report of reports) {
+    if (report.digest === null) continue;
+    const original = readResearchFile(report.path);
+    const raw = documents.get(report.key)?.markdown ?? original;
+    if (hash(original) !== report.originalDigest || hash(raw) !== report.digest) throw new Error("RESEARCH_DOCUMENT_CHANGED");
+    for (const match of raw.matchAll(/^```ResearchAttentionDecisionV1\r?\n([\s\S]*?)^```[ \t]*$/gm)) {
+      const sourceLine = raw.slice(0, match.index).split(/\r?\n/).length;
+      try {
+        const record = researchAttentionDecisionSchema.parse(JSON.parse(match[1] ?? ""));
+        if (!component.reportKeys.includes(report.key)) throw new Error("COMPARISON_BINDING_INVALID");
+        if (records.has(record.decisionId)) duplicates.add(record.decisionId);
+        else records.set(record.decisionId, record);
+      } catch { findings.push({ componentId: "M02", code: "COMPONENT_COMPARISON_INVALID", sourceLine, sourcePath: report.path }); }
     }
-    if (record?.scope === "sources-research-component") {
-      const policyBytes = read("behavior/models.yaml");
-      const expected = modelRoutePolicySchema.parse(JSON.parse(policyBytes)).original.research;
-      const pin = researchSkillPinSchema.parse(JSON.parse(read("behavior/research-skill.json")));
-      const receipt = record.executionReceipt;
-      const invocation = receipt?.invocation;
-      const observed = invocation?.observed;
-      if (!receipt || receipt.purpose !== "research" || receipt.state !== "observed" || receipt.executionBackend !== "codex_exec" || invocation?.completion !== "complete" || invocation.requested.role !== "research" || invocation.requested.arm !== "original" || invocation.requested.policyDigest !== hash(policyBytes) || !observed || observed.model !== expected.model || observed.effort !== expected.effort || observed.serviceTier !== expected.serviceTier) missingValidationIds.add("ROUTE:" + release + ":" + component.id);
-      const skill = receipt?.skill;
-      if (!skill || skill.repository !== pin.repository || skill.sourcePath !== pin.sourcePath || skill.sourceCommit !== pin.sourceCommit || skill.contentDigest !== pin.contentDigest || skill.loadedDigest !== pin.contentDigest || skill.semanticVersion !== pin.semanticVersion || skill.resources.length !== pin.resources.length || !pin.resources.every(resource => skill.resources.some(loaded => loaded.path === resource.path && loaded.digest === resource.digest))) missingValidationIds.add("SKILL:" + release + ":" + component.id);
-      if (!record.options.some(option => option.example === null && option.viable && option.support === "proven" && option.primaryEvidenceIds.length > 0 && option.primaryEvidenceIds.every(id => sourceSupports(id, option.id)))) add("OUTSIDE_OPTION_MISSING");
+  }
+  const acceptanceIds = new Set(acceptanceIndexSchema.parse(JSON.parse(read("tests/acceptance-index.json"))).acceptance.map(entry => entry.id));
+  return researchAttentionDecisionIdSchema.options.map(decisionId => {
+    const checked = compareDecision(records.get(decisionId), component, findings, requirementIds, release, acceptanceIds);
+    if (duplicates.has(decisionId)) {
+      checked.state = "BLOCKED";
+      checked.findings.push("DUPLICATE_REFERENCE");
+      findings.push({ componentId: "M02", code: "COMPONENT_COMPARISON_INVALID", sourceLine: component.sourceLine });
     }
-    if (!record) add("DECISION_MISSING");
-    if (missingRequirementIds.length) add("MAPPED_REQUIREMENTS_MISSING");
-    if (!record || options.size < 2) add("REQUIRED_OPTIONS_MISSING");
-    if (!selected || !selected.viable || selected.support !== "proven") add("CHOICE_UNSUPPORTED");
-    for (const option of record?.options ?? []) {
-      if (!option.reliability.trim() || !option.maintenance.trim() || !option.resources.trim()) add("TRADEOFFS_MISSING");
-      if (option.support !== "proven") continue;
-      if (option.primaryEvidenceIds.length === 0) add("PRIMARY_EVIDENCE_MISSING");
-      for (const id of option.primaryEvidenceIds) if (!sourceSupports(id, option.id)) missingSourceIds.add(id);
-    }
-    if (missingSourceIds.size) add("PRIMARY_EVIDENCE_MISSING");
-    if (!record || record.releaseGate !== component.releaseGate || !/\[R[0-5]\b/.test(record.releaseGate)) add("RELEASE_GATE_MISSING");
-    if (!record?.validationPlan.trim()) add("VALIDATION_PLAN_MISSING");
-    const validation = record?.validations.find(entry => entry.id === validationId);
-    if (!validation || validation.support !== "proven" || validation.sourceIds.length === 0 || validation.testIds.length === 0) missingValidationIds.add(validationId);
-    for (const id of validation?.sourceIds ?? []) if (!selected || !sourceSupports(id, selected.id)) { missingSourceIds.add(id); missingValidationIds.add(validationId); }
-    for (const id of validation?.testIds ?? []) if (!acceptanceIds.has(id) || !record?.acceptanceIds.includes(id)) { missingValidationIds.add(id); missingValidationIds.add(validationId); }
-    if (!record?.acceptanceIds.length || record.acceptanceIds.some(id => !acceptanceIds.has(id))) add("ACCEPTANCE_LINK_MISSING");
-    if (missingValidationIds.size) add("VALIDATION_ID_MISSING");
-    if (missingSourceIds.size) add("PRIMARY_EVIDENCE_MISSING");
-    if (record && (options.size !== record.options.length || sources.size !== record.evidence.length || new Set(record.validations.map(entry => entry.id)).size !== record.validations.length)) add("DUPLICATE_REFERENCE");
-    if (record?.unresolvedFacts.some(fact => fact.optionId === null || fact.optionId === record.selectedOptionId)) add("SELECTED_FACT_UNRESOLVED");
-    if (codes.length) findings.push({ componentId: component.id, code: record ? "COMPONENT_COMPARISON_BLOCKED" : "COMPONENT_COMPARISON_MISSING", sourceLine: component.sourceLine });
-    return researchComponentComparisonCheckV2Schema.parse({ componentId: component.id, comparisonDigest: record ? hash(JSON.stringify(record)) : null, state: codes.length ? "BLOCKED" : "PASS", findings: codes, selectedOptionId: record?.selectedOptionId ?? null, selectedTool: selected?.tool ?? null, validationPlan: record?.validationPlan ?? "", unresolvedFacts: record?.unresolvedFacts ?? [], missingRequirementIds, missingSourceIds: [...missingSourceIds], missingValidationIds: [...missingValidationIds], scope: "component_comparison", researchAttestationVerified: false, acceptanceComplete: false });
+    return researchAttentionDecisionCheckSchema.parse({ ...checked, decisionId });
   });
 };
-const inspectResearch = (input: MapCheckInputV1, testDocuments: readonly ResearchDocumentOverlayV1[]): ResearchRegisterInspectionV2 => {
+const inspectResearch = (input: MapCheckInputV1, testDocuments: readonly ResearchDocumentOverlayV1[]): ResearchRegisterInspectionV3 => {
   const documents = new Map(testDocuments.map(document => [document.reportKey, document]));
   if (documents.size !== testDocuments.length) throw new Error("RESEARCH_DOCUMENT_DUPLICATE");
   const registerPath = "specs/RESEARCH-REGISTER.md";
@@ -626,11 +666,12 @@ const inspectResearch = (input: MapCheckInputV1, testDocuments: readonly Researc
   const requirementIds = [...new Set(globalMapping?.match(/\b[0-9]+\.[0-9]+\b/g) ?? [])];
   if (requirementIds.length === 0) throw new Error("REGISTER_GLOBAL_REQUIREMENTS_MISSING");
   const componentDecisions = inspectComponentDecisions(reports, components, findings, documents, requirementIds, input.release ?? "R0");
-  return researchRegisterInspectionV2Schema.parse({ componentDecisions, requestedRelease: input.release, registerPath, registerDigest: hash(raw), components, componentComparisons, reports, specReferences, sourcesCatalogCoverage, dependencyClosureVerified: false, findings, wholeATsPassed: [], scope: "register_inventory", admission: "BLOCKED", acceptanceComplete: false });
+  const attentionDecisions = inspectAttentionDecisions(reports, components, findings, documents, requirementIds, input.release ?? "R0");
+  return researchRegisterInspectionV3Schema.parse({ attentionDecisions, componentDecisions, requestedRelease: input.release, registerPath, registerDigest: hash(raw), components, componentComparisons, reports, specReferences, sourcesCatalogCoverage, dependencyClosureVerified: false, findings, wholeATsPassed: [], scope: "register_inventory", admission: "BLOCKED", acceptanceComplete: false });
 };
 
 export const EngineeringControl = {
-  checkResearch(input: MapCheckInputV1, context: OpsControlContextV1, testDocuments: readonly ResearchDocumentOverlayV1[] = []): Result<ResearchRegisterInspectionV2> {
+  checkResearch(input: MapCheckInputV1, context: OpsControlContextV1, testDocuments: readonly ResearchDocumentOverlayV1[] = []): Result<ResearchRegisterInspectionV3> {
     if (!mapCheckInputSchema.safeParse(input).success || !opsControlContextSchema.safeParse(context).success || testDocuments.length > 100 || testDocuments.some(document => !researchDocumentOverlaySchema.safeParse(document).success)) return refused("INVALID_INPUT");
     if (testDocuments.length > 0) {
       const owned = OpsTestStack.inspect(context);
