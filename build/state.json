@@ -2,8 +2,8 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-06T16:30:29.372Z",
-  "phase": "R0.01 critical; actual-control runtime root diagnostic queued; independent R0.10 recurrence compatibility next",
+  "updatedAt": "2026-10-06T16:34:59.226Z",
+  "phase": "R0.01 critical; actual-control root diagnostic pending; native queue/schema44/recurrence CLI spike verified",
   "activeCard": "R0.01",
   "cardCount": 87,
   "acceptanceCount": 1447,
@@ -1019,7 +1019,8 @@
         "build/evidence/R0.10/exact-pin-alignment.json",
         "build/evidence/R0.10/pg-boss-fault-spike-plan.json",
         "build/evidence/R0.10/tool-schema-preparation.json",
-        "build/evidence/R0.10/native-queue-verification.json"
+        "build/evidence/R0.10/native-queue-verification.json",
+        "build/evidence/R0.10/native-recurrence-verification.json"
       ],
       "requiredATs": [
         "AT-activity-focus-86",
@@ -1056,15 +1057,31 @@
         "jointCheck": "build/evidence/R0.10/queue-check-complete.txt",
         "toolSchemasGenerated": true,
         "toolSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
-        "nativeQueueFaultSpikeVerified": true
+        "nativeQueueFaultSpikeVerified": true,
+        "nativeSchema44Verified": true,
+        "recurrenceLibraryVerified": true,
+        "nativeRecurrenceEvidence": "build/evidence/R0.10/native-recurrence-verification.json"
       },
       "lastVerification": {
-        "evidence": "build/evidence/R0.10/native-queue-verification.json",
-        "verdict": "PASS_SIX_CLI_DIAGNOSTIC_CHECKS_AND_COMPLETE_TEARDOWNS",
-        "acceptanceComplete": false,
-        "wholeATsPassed": [],
+        "evidence": "build/evidence/R0.10/native-recurrence-verification.json",
+        "verdict": "PASS_NINE_NATIVE_QUEUE_SCHEMA_AND_RECURRENCE_CLI_CHECKS",
+        "checks": 9,
         "readbackExact": true,
-        "checkCount": 6
+        "nativeSchemaVersion": 44,
+        "schemaDriftPassed": true,
+        "recurrenceCells": 3,
+        "cleanupPassed": true,
+        "ownedWorldsDown": true,
+        "wholeATsPassed": [],
+        "acceptanceComplete": false
+      },
+      "recurrenceUnit": {
+        "startedAt": "2026-10-06T16:31:27.000Z",
+        "targetStopAt": "2026-10-06T18:31:27.000Z",
+        "stoppedAt": "2026-10-06T16:34:59.226Z",
+        "state": "STOPPED_NINE_CLI_CHECKS_AND_STATIC_VERIFIED",
+        "scope": "Only schema44/drift public readback, existing native transaction/claim/schema regression, three bounded recurrence previews and schedule persistence/removal; no product recurrence engine",
+        "acceptanceComplete": false
       }
     },
     "R0.11": {
@@ -9717,7 +9734,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Poll build/ROOT-REQUESTS.md for ROOT-R004-20261006-02 while implementing only existing R0.10 CLI schema44/recurrence spike. Keep compiled root-request entry/digest stable. Consume DONE immediately; on FAILED diagnose actual public reason. No root execution by builder.",
+  "nextAction": "Poll ROOT-R004-20261006-02 and consume sanitized Claude result immediately; meanwhile integrate only the smallest assigned-rung R0.02 inventory unit from Luna plan. Native R0.10 spike stops after9checks/static/readback/teardown passed; no new kitchen work.",
   "previousTurnClassification": "NO_PROGRESS",
   "failures": [
     {
@@ -20207,24 +20224,22 @@
   },
   "pullRequest": "https://github.com/JohanSardar/toy-harness/pull/1",
   "lastWorker": {
-    "card": "R0.10",
-    "task": "r010_pg_boss_fault_plan",
+    "card": "R0.02",
+    "task": "r002_minimum_inventory_plan",
     "model": "gpt-6-luna",
     "reasoning": "max",
-    "state": "completed",
-    "ownedScope": "Read-only smallest remaining native schema44/recurrence spike plan; parent owns implementation",
-    "evidence": "build/evidence/R0.10/remaining-native-spike-plan.json"
+    "state": "running",
+    "ownedScope": "Read-only exact next assigned-rung inventory unit; parent owns all source/compiler/runtime"
   },
   "continuationAssessment": {
-    "generatedAt": "2026-10-06T16:30:29.372Z",
+    "generatedAt": "2026-10-06T16:34:59.226Z",
     "classification": "progress",
-    "reason": "Strictly verified exact actual-control diagnostic and recovery prepared as pending Claude root request; three review attempts caused narrow full-inventory ACL replan; independent native recurrence plan prepared",
+    "reason": "Nine native CLI checks verify schema44/drift, all transaction/claim/schema cells and monthly/DST recurrence with exact stored readback and complete teardown; root request remains pending while independent R0.02 plan proceeds",
     "consecutiveGoalTurnsAtSameImpasse": 0,
     "goalStatus": "active",
     "evidence": [
-      "build/evidence/R0.04/control-runtime-probe-preparation.json",
-      "build/evidence/R0.04/control-runtime-probe-replan.json",
-      "build/evidence/R0.10/remaining-native-spike-plan.json"
+      "build/evidence/R0.10/native-recurrence-verification.json",
+      "build/evidence/R0.04/control-runtime-probe-preparation.json"
     ],
     "blockedStatusThresholdReached": false
   },
@@ -20262,18 +20277,20 @@
   "latestStaticVerification": {
     "command": "npm run check",
     "exitCode": 0,
-    "log": "build/evidence/R0.04-runtime-probe-check.txt",
     "artifacts": 340,
     "contracts": 272,
+    "featureCount": "95",
+    "commandCount": "55",
+    "indexedATs": 1447,
+    "schemaDigest": "ace1c9d4f159ec0e140e2ff9a9623c9d6de4c670eba5fb7dddd8b9050cb57c62",
+    "generatedAt": "2026-10-06T16:34:25.304Z",
+    "log": "build/evidence/R0.10/recurrence-check.txt",
+    "swiftInvoked": false,
     "features": 95,
     "commands": 55,
-    "indexedATs": 1447,
-    "swiftInvoked": false,
-    "schemaDigest": "ace1c9d4f159ec0e140e2ff9a9623c9d6de4c670eba5fb7dddd8b9050cb57c62",
-    "generatedAt": "2026-10-06T16:29:19.796Z",
     "wholeATComplete": false
   },
-  "sourceCheckpointCommit": "0523138",
+  "sourceCheckpointCommit": "99bcc3d",
   "sourceCheckpointPushed": true,
   "rootRequests": {
     "ROOT-R004-20261006-01": {
@@ -20299,13 +20316,14 @@
     }
   },
   "resourceAdmission": {
-    "measuredAt": "2026-10-06T16:22:03.085Z",
-    "availableBytes": "2222424064",
+    "measuredAt": "2026-10-06T16:32:43.109Z",
+    "availableBytes": "2568355840",
     "pressure": "normal",
     "strictlyFreeAdmission": false,
     "repairFloorApplied": false,
     "ownedWorldsRunning": 0,
-    "helpersRunning": 0,
-    "measurementSource": "build/evidence/R0.04-runtime-probe-doctor.json"
+    "helpersRunning": 1,
+    "helperNeedBytes": "268435456",
+    "measurementSource": "build/evidence/R0.10/recurrence-stack-up.json"
   }
 }

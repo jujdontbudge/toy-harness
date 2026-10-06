@@ -65,6 +65,14 @@ const artifactNames = {
   toy_defer: "toy-defer-parameters-v1.schema.json",
   toy_satisfy: "toy-satisfy-parameters-v1.schema.json"
 } satisfies Record<ToolName, string>;
+const recurrenceCases = [
+  { id: "monthly-day-31", expression: "DTSTART;TZID=America/Chicago:20270131T090000\nRRULE:FREQ=MONTHLY;BYMONTHDAY=31", from: "2027-01-01T00:00:00.000Z",
+    expected: ["2027-01-31T15:00:00.000Z", "2027-03-31T14:00:00.000Z", "2027-05-31T14:00:00.000Z"] },
+  { id: "spring-gap", expression: "DTSTART;TZID=America/Chicago:20270313T023000\nRRULE:FREQ=DAILY", from: "2027-03-01T00:00:00.000Z",
+    expected: ["2027-03-13T08:30:00.000Z", "2027-03-15T07:30:00.000Z", "2027-03-16T07:30:00.000Z"] },
+  { id: "fall-overlap", expression: "DTSTART;TZID=America/Chicago:20271106T013000\nRRULE:FREQ=DAILY", from: "2027-11-05T00:00:00.000Z",
+    expected: ["2027-11-06T06:30:00.000Z", "2027-11-07T06:30:00.000Z", "2027-11-08T07:30:00.000Z"] }
+];
 
 const schemaProbe = async (): Promise<{ passed: boolean; observations: unknown[]; artifactDigests: string[] }> => {
   const observations = await Promise.all(schemaCases.map(async (sample) => {
@@ -149,6 +157,11 @@ export const QueueFaultProbe = {
     const onError = (): void => { backgroundErrors += 1; };
     let operations: Record<string, unknown> = { schemas: [] };
     let failureStage: string | null = null;
+    const recurrenceKey = "r010.recurrence";
+    let recurrenceObservations: unknown[] = [];
+    let recurrencePassed = false;
+    let nativeSchemaVersion: number | null = null;
+    let schemaDriftPassed = false;
 
     try {
       schema = await schemaProbe();
@@ -167,6 +180,10 @@ export const QueueFaultProbe = {
       boss.on("error", onError);
       await boss.start();
       started = true;
+      stage = "native-schema44-readback";
+      nativeSchemaVersion = await boss.schemaVersion();
+      schemaDriftPassed = (await boss.detectSchemaDrift()).ok;
+      scenarios.nativeSchema44 = nativeSchemaVersion === 44 && schemaDriftPassed;
       const database = boss.getDb();
       if (!database.beginTransaction) throw new Error("QUEUE_FAULT_TRANSACTION_API_UNAVAILABLE");
       stage = "domain-table-create";
@@ -175,6 +192,24 @@ export const QueueFaultProbe = {
       stage = "native-queue-create";
       await boss.createQueue(queueName, { retryLimit: 0, expireInSeconds: 30, deleteAfterSeconds: 300, policy: "standard", notify: false });
       queueCreated = true;
+
+      stage = "native-recurrence-preview";
+      const recurrenceResults = recurrenceCases.map(sample => {
+        const observed = boss?.previewSchedule(sample.expression, { tz: "America/Chicago", from: new Date(sample.from), count: 3 }).map(date => date.toISOString()) ?? [];
+        return { ...sample, observed, passed: JSON.stringify(observed) === JSON.stringify(sample.expected) };
+      });
+      recurrenceObservations = recurrenceResults;
+      recurrencePassed = recurrenceResults.length === 3 && recurrenceResults.every(result => result.passed);
+      scenarios.recurrencePreview = recurrencePassed;
+      stage = "native-recurrence-storage-readback";
+      const monthly = recurrenceCases[0];
+      if (monthly === undefined) throw new Error("QUEUE_RECURRENCE_CASE_UNAVAILABLE");
+      await boss.schedule(queueName, monthly.expression, { stackId, invocationId: input.requestId }, { key: recurrenceKey, tz: "America/Chicago", missed: "skip" });
+      const stored = await boss.getSchedule(queueName, recurrenceKey);
+      await boss.unschedule(queueName, recurrenceKey);
+      const removed = await boss.getSchedule(queueName, recurrenceKey);
+      scenarios.recurrenceStorage = stored?.name === queueName && stored.key === recurrenceKey && stored.kind === "rrule"
+        && stored.cron === monthly.expression && stored.timezone === "America/Chicago" && removed === null;
 
       stage = "application-rollback";
       const rollback = await database.beginTransaction();
@@ -267,7 +302,8 @@ export const QueueFaultProbe = {
       const lostRows = await database.executeSql("SELECT 1 FROM public.toy_ops_queue_spike WHERE stack_id = $1 AND invocation_id = $2 AND scenario = 'lost-claim'", [stackId, input.requestId]);
       scenarios.nativeLostClaimFence = duringCancellation?.state === "cancelled" && lostJob?.state === "cancelled" && lostRows.rows.length === 0;
       operations = { applicationRollback: scenarios.applicationRollback, applicationCommitControl: scenarios.applicationCommitControl,
-        nativeWorkerThrowRollback: scenarios.nativeWorkerThrowRollback, nativeLostClaimFence: scenarios.nativeLostClaimFence, backgroundErrors };
+        nativeWorkerThrowRollback: scenarios.nativeWorkerThrowRollback, nativeLostClaimFence: scenarios.nativeLostClaimFence,
+        nativeSchemaVersion, schemaDriftPassed, recurrencePreview: recurrencePassed, recurrenceStorage: scenarios.recurrenceStorage, backgroundErrors };
     } catch {
       failureStage = stage;
       operations = { scenarios, failureStage };
@@ -280,7 +316,7 @@ export const QueueFaultProbe = {
           catch { cleanupPassed = false; }
         }
         if (started && queueCreated) {
-          try { await boss.deleteAllJobs(queueName); await boss.deleteQueue(queueName); }
+          try { await boss.unschedule(queueName, recurrenceKey); await boss.deleteAllJobs(queueName); await boss.deleteQueue(queueName); }
           catch { cleanupPassed = false; }
         }
         if (started) {
@@ -295,13 +331,15 @@ export const QueueFaultProbe = {
     }
     const passed = failureStage === null && schema.passed && scenarios.applicationRollback === true
       && scenarios.applicationCommitControl === true && scenarios.nativeWorkerThrowRollback === true
-      && scenarios.nativeLostClaimFence === true && cleanupPassed && backgroundErrors === 0;
+      && scenarios.nativeLostClaimFence === true && scenarios.nativeSchema44 === true && recurrencePassed
+      && scenarios.recurrenceStorage === true && cleanupPassed && backgroundErrors === 0;
     const artifactDigests = [...new Set([
       createHash("sha256").update(readFileSync(new URL("./queue-fault-probe.js", import.meta.url))).digest("hex"),
       ...schema.artifactDigests
     ])];
     return [
       ...schema.observations.map(observation => checkView(schema.passed, observation, schema.artifactDigests)),
+      ...recurrenceObservations.map(observation => checkView(recurrencePassed, { recurrence: observation }, artifactDigests)),
       checkView(passed, { wholeAcceptance: "PENDING", stackId, requestId: input.requestId, queueName, schemasPassed: schema.passed, scenarios, operations, cleanupPassed, failureStage }, artifactDigests)
     ];
   }
