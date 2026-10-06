@@ -1,0 +1,206 @@
+{
+  "recordedAt": "2026-10-06T20:35:38.614526+00:00",
+  "card": "R0.05",
+  "AT": "AT-authority-35",
+  "rung": "CLI",
+  "state": "SOURCE_UNIT_CLOSED_ROOT_REQUEST_PENDING",
+  "sourceRegistration": {
+    "id": "AT-authority-35",
+    "rung": "CLI",
+    "sourceAssertionHash": "934a98cc59306705d350903d2a8f21a05b987a09458c148e657f65b8485c1d2c",
+    "commandId": "probe.run",
+    "scenarioId": "control-filesystem-denial",
+    "owner": "ops",
+    "firstRelease": "R0",
+    "kind": "behavioral",
+    "mandatoryCases": [
+      {
+        "id": "control-filesystem-denial",
+        "publicOperation": "RoleControlProbe.run",
+        "phase": "control-filesystem-denial"
+      }
+    ],
+    "trigger": "An already-root controller invokes the existing fixed six-operation denial owner under actual _toy_agent; ordinary callers refuse before staging and whole protected certification remains incomplete.",
+    "faultControls": [
+      {
+        "id": "fixed-os-denial-attempts",
+        "seam": "os",
+        "affectedPhases": [
+          "control-filesystem-denial"
+        ]
+      }
+    ],
+    "observations": [
+      {
+        "id": "actual-child-identity-and-errno",
+        "independentReader": "RoleControlProbe.run: actual child identity/groups, six OS denial results and permitted scratch write",
+        "caseIds": [
+          "control-filesystem-denial"
+        ]
+      },
+      {
+        "id": "independent-protected-readbacks",
+        "independentReader": "Root controller: canary bytes/inodes/modes, parent identity, bootstrap receipt, scratch readback and cleanup",
+        "caseIds": [
+          "control-filesystem-denial"
+        ]
+      },
+      {
+        "id": "stored-cli-readback",
+        "independentReader": "toy probe.show and stack.down: exact persisted operation and complete root-owned world teardown",
+        "caseIds": [
+          "control-filesystem-denial"
+        ]
+      }
+    ],
+    "simUnavailableReason": "SIM cannot drive pre-build actual OS service-identity denials. The CLI invokes only the fixed root-owned owner with real OS results and independent canary readbacks."
+  },
+  "baselineOperationId": "a87b6213-468a-43de-8b1b-6e0d84bd8770",
+  "baselineReason": "REGISTERED_CASE_NOT_IMPLEMENTED",
+  "baselineRunShowExact": true,
+  "baselineTeardown": {
+    "stackId": "6c43ede4-b060-430c-9c8e-ea1bed6e93b2",
+    "checkpointRefs": [],
+    "fenceRefs": [],
+    "stoppedResourceRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "6c43ede4-b060-430c-9c8e-ea1bed6e93b2"
+      }
+    ],
+    "retainedArtifactRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "6c43ede4-b060-430c-9c8e-ea1bed6e93b2"
+      }
+    ],
+    "unresolvedResourceRefs": [],
+    "complete": true
+  },
+  "ordinaryCliRefusal": {
+    "code": "UNAUTHORIZED",
+    "effectState": "none",
+    "exitCode": 3
+  },
+  "ordinaryScriptRefusal": {
+    "requestId": "bd041f4e-8176-46a7-9108-b9c4a89b965e",
+    "state": "ROOT_CALLER_REQUIRED",
+    "rootExecuted": false
+  },
+  "request": "ROOT-R005-20261006-01",
+  "requestId": "bd041f4e-8176-46a7-9108-b9c4a89b965e",
+  "exactCommand": "/Users/johansardar/.local/share/node/node-v24.21.0-darwin-arm64/bin/node /Users/johansardar/Documents/Codex/toy-harness/scripts/probe-unfiltered-control-denials.mts bd041f4e-8176-46a7-9108-b9c4a89b965e",
+  "scriptHash": "1cb93d375df931a482d946170e31549450d8efb71d6a251f5d2bcea8c5b92529",
+  "pinnedInputs": {
+    "packages/ops/dist/role-control-probe.js": "1764a98e5ae45694118007c242320711a7bd9e0d021b7c6d6ee0cbb8cff73ec2",
+    "control/dist/bootstrap/denial-probe.js": "7fda1824ec7bc308cac97d07c7c92cadd5527e87e89d79b410d33d95d1b30672"
+  },
+  "rootExecuted": false,
+  "wholeATsPassed": [],
+  "acceptanceComplete": false,
+  "liveProviderSends": 0,
+  "staticResult": {
+    "startedAt": "2026-10-06T20:34:02.162271+00:00",
+    "finishedAt": "2026-10-06T20:34:50.282497+00:00",
+    "exitCode": 0,
+    "command": "npm run check",
+    "languages": [
+      "TypeScript",
+      "Python"
+    ],
+    "SwiftDeferredTo": "R3"
+  },
+  "staticInventory": {
+    "artifacts": 355,
+    "contracts": 287,
+    "cliManifests": 12,
+    "features": 97,
+    "commands": 55,
+    "indexedATs": 1447
+  },
+  "root02Status": "PENDING",
+  "root02FrozenHashesUnchanged": true,
+  "root02FrozenHashes": {
+    "scripts/probe-siwc-control-runtime.mts": "96e1fd2d98469772c3d0d203386c3f7aa56af57db025c420fa93f1f4ecd7e70d",
+    "scripts/stage-siwc-control-runtime.mts": "13ff53e341ab7670dbed967ce810d5aa2834df7a47ffe1620f037ff1da3ee0d4",
+    "control/dist/bootstrap/siwc-runtime-probe.js": "06870b8dd41d2ffc093cc04680ba56c4570f07b4aa0a27a9ab70796cdd8204bd"
+  },
+  "remainingGates": [
+    "current unfiltered actual-root receipt and independent readback",
+    "protected controller certification",
+    "AT-authority-36 fixed privilege and safe original-access checks",
+    "other assigned R0.05 matrices"
+  ],
+  "languages": [
+    "TypeScript",
+    "Python"
+  ],
+  "SwiftDeferredTo": "R3",
+  "doctorIdentityInventory": {
+    "schemaVersion": "toy.service-role-identity-inventory.v1",
+    "observedAt": "2026-10-06T20:35:05.770Z",
+    "roles": [
+      {
+        "role": "_toy_agent",
+        "state": "observed",
+        "uid": 309,
+        "gid": 309,
+        "adminGroupObserved": false
+      },
+      {
+        "role": "_toy_control",
+        "state": "observed",
+        "uid": 310,
+        "gid": 310,
+        "adminGroupObserved": false
+      },
+      {
+        "role": "_toy_review",
+        "state": "observed",
+        "uid": 311,
+        "gid": 311,
+        "adminGroupObserved": false
+      },
+      {
+        "role": "_toy_repair",
+        "state": "observed",
+        "uid": 312,
+        "gid": 312,
+        "adminGroupObserved": false
+      },
+      {
+        "role": "_toy_evaluator",
+        "state": "observed",
+        "uid": 313,
+        "gid": 313,
+        "adminGroupObserved": false
+      },
+      {
+        "role": "_toy_pg",
+        "state": "observed",
+        "uid": 314,
+        "gid": 314,
+        "adminGroupObserved": false
+      },
+      {
+        "role": "_toy_app",
+        "state": "observed",
+        "uid": 315,
+        "gid": 315,
+        "adminGroupObserved": false
+      },
+      {
+        "role": "_toy_ops",
+        "state": "observed",
+        "uid": 316,
+        "gid": 316,
+        "adminGroupObserved": false
+      }
+    ],
+    "allExpectedIdentitiesObserved": true,
+    "identityGateVerified": false,
+    "maintenanceIdentityVerified": false
+  }
+}

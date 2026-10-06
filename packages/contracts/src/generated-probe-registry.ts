@@ -3338,6 +3338,57 @@ export const registeredCliProbeInventory = [
 ] as const;
 export const registeredCliAcceptanceManifestInventory = [
   {
+    "id": "AT-authority-35",
+    "rung": "CLI",
+    "sourceAssertionHash": "934a98cc59306705d350903d2a8f21a05b987a09458c148e657f65b8485c1d2c",
+    "commandId": "probe.run",
+    "scenarioId": "control-filesystem-denial",
+    "owner": "ops",
+    "firstRelease": "R0",
+    "kind": "behavioral",
+    "mandatoryCases": [
+      {
+        "id": "control-filesystem-denial",
+        "publicOperation": "RoleControlProbe.run",
+        "phase": "control-filesystem-denial"
+      }
+    ],
+    "trigger": "An already-root controller invokes the existing fixed six-operation denial owner under actual _toy_agent; ordinary callers refuse before staging and whole protected certification remains incomplete.",
+    "faultControls": [
+      {
+        "id": "fixed-os-denial-attempts",
+        "seam": "os",
+        "affectedPhases": [
+          "control-filesystem-denial"
+        ]
+      }
+    ],
+    "observations": [
+      {
+        "id": "actual-child-identity-and-errno",
+        "independentReader": "RoleControlProbe.run: actual child identity/groups, six OS denial results and permitted scratch write",
+        "caseIds": [
+          "control-filesystem-denial"
+        ]
+      },
+      {
+        "id": "independent-protected-readbacks",
+        "independentReader": "Root controller: canary bytes/inodes/modes, parent identity, bootstrap receipt, scratch readback and cleanup",
+        "caseIds": [
+          "control-filesystem-denial"
+        ]
+      },
+      {
+        "id": "stored-cli-readback",
+        "independentReader": "toy probe.show and stack.down: exact persisted operation and complete root-owned world teardown",
+        "caseIds": [
+          "control-filesystem-denial"
+        ]
+      }
+    ],
+    "simUnavailableReason": "SIM cannot drive pre-build actual OS service-identity denials. The CLI invokes only the fixed root-owned owner with real OS results and independent canary readbacks."
+  },
+  {
     "id": "AT-hermes-config-85",
     "rung": "CLI",
     "sourceAssertionHash": "1945ba7e3df83056f7a11ddb1cc4f6f74b3c2e91744c47f77a85e3f34e21ff67",

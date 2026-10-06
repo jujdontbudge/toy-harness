@@ -1,0 +1,85 @@
+{
+  "schemaVersion": "toy.r0.06.remaining-accounting-minimum-plan.v1",
+  "createdAt": "2026-10-06T20:30:50Z",
+  "status": "MINIMUM_REQUIRED_GAP_IDENTIFIED",
+  "acceptanceState": {
+    "wholeATsComplete": false,
+    "verdict": "NOT_IMPLEMENTED"
+  },
+  "admission": {
+    "evidencePath": "build/evidence/R0.05/unfiltered-control-admission.json",
+    "evidenceSha256": "9f8128e0d13be2a3f7c8fe645e8c96a27719523589c3bd0ea8899d597d57e69c",
+    "availableBytes": "2240364544",
+    "jobNeedBytes": "1073741824",
+    "marginBytes": "536870912",
+    "requiredAvailableBytes": "1610612736",
+    "pressure": "normal",
+    "pressureSource": "os",
+    "admissionState": "admitted"
+  },
+  "sourceDigests": [
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/ops.md",
+      "sha256": "f07aab65088c82e4ff21e4d63edb2f279e2324e6d7e2bbb801e0fd7494104b0b"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/TEST-PLAN.md",
+      "sha256": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2"
+    },
+    {
+      "path": "packages/self-improvement/src/accounting-probe.ts",
+      "sha256": "67ac193030cd07f72d140be4789e50d5b0095339f4560f14ae897468fcd2f461"
+    },
+    {
+      "path": "packages/ops/src/model-admission-policy.ts",
+      "sha256": "553eb6805c9779c924d16c3bdb8eeac9a92727086b64a673d317f9dddcbc2c95"
+    },
+    {
+      "path": "packages/contracts/src/model-admission.ts",
+      "sha256": "13482e15d4ad97b3bd73ec76c2aeeb040c28fbafd46c57b99f6e993d0c7da794"
+    },
+    {
+      "path": "packages/contracts/src/generated-probe-registry.ts",
+      "sha256": "e68d1971d7bdfefd5d9c8b90ff115265b36deb76b856d409175d4ee9b8779def"
+    },
+    {
+      "path": "packages/self-improvement/src/public.ts",
+      "sha256": "2d9d2897ab26c2d896a02d87fa957858dc0f54a3c38636f1ea42aed2c21066b6"
+    },
+    {
+      "path": "packages/ops/src/fixture-stack.ts",
+      "sha256": "fbd3b05a231e8e13c6936d36429958c47a823911875689b74cfbd56b9110eff1"
+    }
+  ],
+  "comparison": {
+    "AT-ops-49": "The three equality-threshold fixtures test 59.9/69.9 eligibility, five-hour equality pause, and weekly equality pause while preserving foreground acceptance.",
+    "AT-ops-51": "The eight-reservation and restart/ninth-send phases use public reserve/claim/settle/inspect, check null usage and charged reservations, then check the daily ceiling and foreground exemption. finish() settles with nativeTerminalAcknowledged=false and null usage and verifies the charge remains while reconciliation is pending.",
+    "AT-ops-52": "The four veto phases cover weekly-only, reversed array order, five-hour-only, and unavailable observation with a fresh known weekly veto. The reversed-array fixture uses the normal primary=300-minute and secondary=10080-minute metadata unchanged; it does not swap duration metadata across bucket IDs.",
+    "policy": "ModelAdmissionPolicy groups windows by durationMinutes (300 and 10080), applies fresh known threshold vetoes before fixed-count fallback, and does not use array position or bucketId to select threshold type. No current policy defect was established by this read-only comparison."
+  },
+  "selectedGap": {
+    "acceptanceId": "AT-ops-52",
+    "behavior": "Explicitly prove that swapping 300-minute and 10080-minute metadata across the primary/secondary bucket IDs cannot hide the threshold associated with the actual duration.",
+    "minimumPublicChange": {
+      "ownedSourceFile": "packages/self-improvement/src/accounting-probe.ts",
+      "edit": "Extend the existing fresh-known-veto-1 mandatory phase with swapped-duration metadata observations whose used percentages distinguish duration-based interpretation from bucket-ID-based interpretation. Assert the veto reason follows duration metadata. Keep the existing reversed-array-order vector and aggregate the added observations in this same phase so no mandatory-case registry change is needed.",
+      "cli": "Reuse the existing public `toy probe run AT-ops-52 --case model-admission` operation and probe readback.",
+      "externalSeam": "Reuse the existing fixed external quota observation fixture passed through ModelAdmission.observe; add no provider or infrastructure seam.",
+      "expectedRed": "A policy mutant that binds thresholds to primary/secondary bucket IDs or array position will accept a crafted swapped-metadata case or return the wrong named-window threshold.",
+      "expectedGreen": "The real public ModelAdmission reserve decision vetoes based on durationMinutes under the swapped mapping, with the expected five-hour or weekly threshold reason."
+    }
+  },
+  "notSelected": {
+    "distinctCancellation": "The assigned public ModelAdmission interface has reserve, claimSend, settle, observe, and inspect, with no separate cancel operation or cancelled record state. The current AT-ops-51 fixture exercises unacknowledged settlement with null usage and verifies the reservation remains charged during uncertainty. A new cancellation state/operation would broaden the contract beyond the smallest remaining gap.",
+    "contentionPriority": "Quota contention ordering belongs to the separate AT-ops-50/53 assertions and full shared-account provider-send integration, outside this AT-ops-49/51/52 slice."
+  },
+  "ownedFilesForMinimumFollowUp": [
+    "packages/self-improvement/src/accounting-probe.ts"
+  ],
+  "deferred": [
+    "protected provider and live account evidence",
+    "full shared-slot/provider-send contention integration",
+    "whole AT completion and any release promotion"
+  ],
+  "workPerformed": "Read-only source comparison and admission review; no source, state, build, test, stack, process, account, or credential action was performed."
+}

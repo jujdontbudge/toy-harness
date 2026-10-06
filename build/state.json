@@ -2,9 +2,9 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-06T20:28:43.412866+00:00",
-  "phase": "R0.07 unfiltered fixture journal unit verified; root02 pending without goal blockage",
-  "activeCard": "R0.07",
+  "updatedAt": "2026-10-06T20:35:38.614526+00:00",
+  "phase": "R0.05 denial source unit closed; two exact root requests pending without goal blockage",
+  "activeCard": "R0.05",
   "cardCount": 87,
   "acceptanceCount": 1447,
   "cards": {
@@ -936,7 +936,8 @@
         "build/evidence/R0.05/launcher-design.json",
         "build/evidence/R0.05/supervisor-preparation-review.json",
         "build/evidence/R0.05/minimal-actual-denial-plan.json",
-        "build/evidence/R0.05/actual-control-denial-verification.json"
+        "build/evidence/R0.05/actual-control-denial-verification.json",
+        "build/evidence/R0.05/unfiltered-control-preparation.json"
       ],
       "requiredATs": [
         "AT-attention-67",
@@ -986,6 +987,18 @@
         ],
         "startEvidence": "build/evidence/R0.05-control-denial-preflight.json",
         "sourceDraftStartedBeforeAdmission": true
+      },
+      "unfilteredControlUnit": {
+        "startedAt": "2026-10-06T20:30:45.522185+00:00",
+        "targetStopAt": "2026-10-06T22:30:45.522185+00:00",
+        "state": "SOURCE_UNIT_CLOSED_ROOT_REQUEST_PENDING",
+        "sourcePlan": "build/evidence/R0.05/remaining-role-minimum-plan.json",
+        "scope": "Existing exact unfiltered denial owner and fixed root CLI orchestration only",
+        "rootExecuted": false,
+        "wholeATComplete": false,
+        "stoppedAt": "2026-10-06T20:35:38.614526+00:00",
+        "rootRequest": "ROOT-R005-20261006-01",
+        "preparationEvidence": "build/evidence/R0.05/unfiltered-control-preparation.json"
       }
     },
     "R0.06": {
@@ -10119,7 +10132,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Consume independent R0.05 minimum role plan and act on the smallest assigned-AT gap; poll root02 and proceed to R0.01 immediately on verified DONE.",
+  "nextAction": "Run the minimum assigned AT-ops-52 swapped-duration metadata vectors on the existing accounting owner; poll root02 and rootR005. Proceed to R0.01 immediately on verified root02 DONE.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -20663,16 +20676,16 @@
     "features": 97,
     "commands": 55,
     "indexedATs": 1447,
-    "cliManifests": 11,
+    "cliManifests": 12,
     "schemaDigest": "1a768d76525382bf74bf62c4b5e645d26daebde2c55b079402d85a48d79c990e",
-    "evidence": "build/evidence/R0.07/unfiltered-trial-check-result.json",
+    "evidence": "build/evidence/R0.05/unfiltered-control-check-result.json",
     "languages": [
       "TypeScript",
       "Python"
     ],
     "SwiftDeferredTo": "R3"
   },
-  "sourceCheckpointCommit": "2a57936",
+  "sourceCheckpointCommit": "cb1e094",
   "sourceCheckpointPushed": true,
   "rootRequests": {
     "ROOT-R004-20261006-01": {
@@ -20693,6 +20706,20 @@
       "artifactDigest": "927562c37b764041c752a6a8d71168aedef088599d1a077ecac0b2228d7e2f71",
       "file": "build/ROOT-REQUESTS.md",
       "preparedEvidence": "build/evidence/R0.04/control-runtime-probe-preparation.json",
+      "rootExecuted": false,
+      "rootExecutor": "Claude"
+    },
+    "ROOT-R005-20261006-01": {
+      "requestId": "bd041f4e-8176-46a7-9108-b9c4a89b965e",
+      "card": "R0.05",
+      "state": "PENDING",
+      "file": "build/ROOT-REQUESTS.md",
+      "preparedEvidence": "build/evidence/R0.05/unfiltered-control-preparation.json",
+      "scriptSha256": "1cb93d375df931a482d946170e31549450d8efb71d6a251f5d2bcea8c5b92529",
+      "pinnedInputs": {
+        "packages/ops/dist/role-control-probe.js": "1764a98e5ae45694118007c242320711a7bd9e0d021b7c6d6ee0cbb8cff73ec2",
+        "control/dist/bootstrap/denial-probe.js": "7fda1824ec7bc308cac97d07c7c92cadd5527e87e89d79b410d33d95d1b30672"
+      },
       "rootExecuted": false,
       "rootExecutor": "Claude"
     }
@@ -20716,17 +20743,5 @@
     "queuedRootReserveGate": false,
     "rule": "Normal OS pressure and available memory at least the current job declared need plus512MiB; no strictly-free, hypothetical reserve, swap or second physical-fit gate"
   },
-  "activeWorkers": [
-    {
-      "task": "r005_control_probe_review",
-      "card": "R0.05",
-      "model": "gpt-6-luna",
-      "reasoning": "max",
-      "scope": "read-only remaining role minimum plan",
-      "targetStopAt": "2026-10-06T20:31:00Z",
-      "ownNeedBytes": "268435456",
-      "marginBytes": "536870912",
-      "admission": "build/evidence/R0.07/unfiltered-trial-pressure-normal-readback.json"
-    }
-  ]
+  "activeWorkers": []
 }

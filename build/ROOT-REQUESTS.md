@@ -59,3 +59,21 @@ Recovery only if interrupted or restoration is not confirmed: ensure the origina
 ```
 
 Claude result: pending. Append public exit/report and restoration verification here; mark DONE only for verified native read plus restoration, otherwise FAILED with the public error/reason. Pending root work never blocks the goal.
+
+## ROOT-R005-20261006-01 — PENDING
+
+- Request ID: `bd041f4e-8176-46a7-9108-b9c4a89b965e`
+- Card: R0.05; exact unfiltered AT-authority-35 native denial diagnostic.
+- Purpose: invoke the existing fixed filesystem denial owner through the current unfiltered source-bound CLI route under an already-root controller; measure actual _toy_agent UID/EUID/GID309/groups[309], six OS denials and independent protected readbacks. Whole controller/AT certification stays incomplete.
+- Exact command (already-root Claude; no sudo or escalation):
+
+```sh
+/Users/johansardar/.local/share/node/node-v24.21.0-darwin-arm64/bin/node /Users/johansardar/Documents/Codex/toy-harness/scripts/probe-unfiltered-control-denials.mts bd041f4e-8176-46a7-9108-b9c4a89b965e
+```
+
+- Script SHA256: `1cb93d375df931a482d946170e31549450d8efb71d6a251f5d2bcea8c5b92529`. Pinned compiled owner SHA256: `1764a98e5ae45694118007c242320711a7bd9e0d021b7c6d6ee0cbb8cff73ec2`; unchanged child SHA256: `7fda1824ec7bc308cac97d07c7c92cadd5527e87e89d79b410d33d95d1b30672`. Refuse changed pins before effects.
+- Expected result: exit0 and public `DIAGNOSTIC_PASS` summary; one PASS CheckView with controllerUid0, actual child UID/EUID/GID/EGID309, groups[309], permitted scratch write/readback, all six fixed denials, canaries/parents/bootstrap receipt unchanged and scratch cleanup complete. Exact generated run/show data match; fresh root-owned world tears down completely with zero unresolved resources. Eight identities verify before and after with identical original bootstrap receipt digest. Whole result remains NOT_IMPLEMENTED/complete=false; zero live sends.
+- How to verify: the script itself uses registered `toy bootstrap identities --verify`, `toy doctor --deep`, `toy --env test stack up --release R0 --clock fake --model fake`, unfiltered `toy probe run AT-authority-35`, `toy probe show`, and `toy stack down`. Read the generated public `probe-run.json`, `probe-show.json`, `stack-down.json`, identity and doctor envelopes in `build/evidence/R0.05/root-unfiltered-control-bd041f4e-8176-46a7-9108-b9c4a89b965e/`. Append the summary plus actual identity/denial/readback/teardown output here, then mark DONE or FAILED with the fixed stage/error. Do not append raw child streams or secret values.
+- Scope/recovery: only the existing root-owned retained nonsecret case canaries and declared agent scratch plus a fresh disposable test world. No service, account, profile, provider, original control file or SIWC queued artifact changes. The request directory is collision-refused; do not rerun after effects. If interrupted or FAILED with a stackId, run the registered `toy --env test --stack <observed-stackId> stack down --request-id <fresh-UUID> --wait-ms 10000 --json` after the original script is terminated, append its public receipt, and retain all original output.
+- Preparation: full strict check exit0,355artifacts/287contracts/12CLI-manifests/97features/55commands/1447ATs, TypeScript/Python only. Ordinary unfiltered CLI refusal is UNAUTHORIZED/effectState none; ordinary script refuses before effects. Source/evidence: `build/evidence/R0.05/unfiltered-control-preparation.json`. No root operation has been executed by the builder.
+- Claude result: PENDING.

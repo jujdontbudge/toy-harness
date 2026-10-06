@@ -2,7 +2,7 @@ import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { chmodSync, chownSync, constants, copyFileSync, existsSync, lstatSync, mkdirSync, readFileSync, readlinkSync, rmdirSync, unlinkSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { checkViewSchema, opsControlContextSchema, opsErrorMessages, registeredCliProbeInventory, registeredProbeInputSchema, roleBootstrapRoot, roleControlDenialOperationSchema, roleControlDenialReceiptSchema } from "@toy/contracts";
+import { checkViewSchema, opsControlContextSchema, opsErrorMessages, registeredCliAcceptanceManifestInventory, registeredCliProbeInventory, registeredProbeInputSchema, roleBootstrapRoot, roleControlDenialOperationSchema, roleControlDenialReceiptSchema } from "@toy/contracts";
 import type { CheckViewV1, OpsControlContextV1, RegisteredProbeInputV1, RegisteredProbeOperationV1, Result } from "@toy/contracts";
 import { trustedCheckoutRoot } from "./checkout-root.js";
 import { FixtureProbe, fixtureStackInspect } from "./fixture-stack.js";
@@ -127,9 +127,11 @@ const observe = (input: RegisteredProbeInputV1, context: OpsControlContextV1): C
 
 export const RoleControlProbe = {
   run(input: RegisteredProbeInputV1, context: OpsControlContextV1): Result<RegisteredProbeOperationV1> {
-    const invalid = (code: "INVALID_INPUT" | "UNAUTHORIZED"): Result<RegisteredProbeOperationV1> => ({ ok: false, error: { module: "ops", code, retryable: false, message: opsErrorMessages[code] } });
-    if (!opsControlContextSchema.safeParse(context).success || !registeredProbeInputSchema.safeParse(input).success || input.probeId !== "AT-authority-35" || input.caseId !== "control-filesystem-denial") return invalid("INVALID_INPUT");
+    const invalid = (code: "INVALID_INPUT" | "UNAUTHORIZED" | "ATTESTATION_INVALID"): Result<RegisteredProbeOperationV1> => ({ ok: false, error: { module: "ops", code, retryable: false, message: opsErrorMessages[code] } });
+    if (!opsControlContextSchema.safeParse(context).success || !registeredProbeInputSchema.safeParse(input).success || input.probeId !== "AT-authority-35" || (input.caseId !== undefined && input.caseId !== "control-filesystem-denial")) return invalid("INVALID_INPUT");
     if (context.environment.kind !== "test" || context.environment.stackId === null || process.getuid?.() !== 0 || process.geteuid?.() !== 0) return invalid("UNAUTHORIZED");
+    const manifest = registeredCliAcceptanceManifestInventory.find(entry => entry.id === input.probeId);
+    if (!manifest || manifest.scenarioId !== "control-filesystem-denial" || JSON.stringify(manifest.mandatoryCases) !== JSON.stringify([{ id: "control-filesystem-denial", publicOperation: "RoleControlProbe.run", phase: "control-filesystem-denial" }])) return invalid("ATTESTATION_INVALID");
     const owned = fixtureStackInspect(context);
     if (!owned.ok) return owned;
     if (!owned.data.result?.ready) return invalid("UNAUTHORIZED");

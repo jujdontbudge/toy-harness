@@ -1,0 +1,159 @@
+{
+  "schemaVersion": "toy.r0.05.remaining-role-minimum-plan.v1",
+  "status": "PLAN_ONLY_NO_ROOT_EXECUTION",
+  "goalStatus": "active",
+  "wholeAcceptance": "incomplete",
+  "admission": {
+    "source": "build/evidence/R0.07/unfiltered-trial-pressure-normal-readback.json",
+    "observedAt": "2026-10-06T20:26:58.608Z",
+    "pressure": "normal",
+    "availableBytes": "2798747648",
+    "helperNeedBytes": "268435456",
+    "marginBytes": "536870912",
+    "helperRequiredBytes": "805306368",
+    "helperHeadroomSatisfied": true,
+    "doctorRequiredBytes": "1610612736",
+    "doctorHeadroomSatisfied": true,
+    "aggregateOrRootReserveGateUsed": false
+  },
+  "acceptanceIdCorrection": {
+    "roleDenialTargets": [
+      {
+        "id": "AT-authority-35",
+        "release": "R0",
+        "sourceAssertionHash": "934a98cc59306705d350903d2a8f21a05b987a09458c148e657f65b8485c1d2c",
+        "assertion": "Actual _toy_agent OS denials for write, unlink, rename, symlink replacement, chmod and parent-directory replacement in control."
+      },
+      {
+        "id": "AT-authority-36",
+        "release": "R0",
+        "sourceAssertionHash": "6608acc53403c4d48fccdaf75ea67eee801c07536709e0e0ff721eddce12799b",
+        "assertion": "Actual _toy_agent gains no privilege through sudo, su, privileged SSH, launchctl system mutation or Johan's SSH agent; Johan's original access remains functional."
+      }
+    ],
+    "literalSelfImprovementIds": [
+      {
+        "id": "AT-self-improvement-35",
+        "release": "R1",
+        "sourceAssertionHash": "38bdcb7020c4d2b44f263461c9686a3bdf7bdf4b6eaac63ce07cea116386ccdd",
+        "assertion": "Implied-correction localization retains two candidate session/message UIDs, sealed references, unresolved disposition and R2 owner/wake without replay or routine clarification."
+      },
+      {
+        "id": "AT-self-improvement-36",
+        "release": "R2",
+        "sourceAssertionHash": "dc6568a64fe64e4ddd2c9bacbc6154e0dd213a8301e0060294a90fef8f23b4b2",
+        "assertion": "Publication of a changed prompt is rejected when evaluation uses only recorded answers."
+      }
+    ],
+    "finding": "RoleControlProbe and the UID 309 denial evidence map to AT-authority-35/36. They do not implement the literal AT-self-improvement-35/36 assertions."
+  },
+  "currentAt35Proof": {
+    "evidence": "build/evidence/R0.05/actual-control-denial-verification.json",
+    "cliRun": "build/evidence/R0.05-control-denial-actual-run.json",
+    "cliShow": "build/evidence/R0.05-control-denial-actual-show.json",
+    "probeId": "AT-authority-35",
+    "caseId": "control-filesystem-denial",
+    "requestId": "a56924fc-e235-4f44-b162-5e7516f8f62c",
+    "operationId": "624c1376-e0ab-43eb-848c-ad5514e29bb4",
+    "stackId": "79e2868b-c3c5-4704-adf0-fb2d592df31a",
+    "actualIdentity": {"uid":309,"euid":309,"gid":309,"egid":309,"groups":[309],"permittedScratchWrite":true},
+    "denials": [
+      {"operation":"write","errno":"EACCES"},
+      {"operation":"unlink","errno":"EACCES"},
+      {"operation":"rename","errno":"EACCES"},
+      {"operation":"symlink-replacement","errno":"EACCES"},
+      {"operation":"chmod","errno":"EACCES"},
+      {"operation":"parent-replacement","errno":"EACCES"}
+    ],
+    "independentReadbacks": {"permittedScratchReadback":true,"canariesUnchanged":true,"protectedParentsUnchanged":true,"originalControlReceiptUnchanged":true,"cleanupComplete":true},
+    "exactRunShowRetry": true,
+    "teardownComplete": true,
+    "unresolvedResources": [],
+    "resultState": "NOT_IMPLEMENTED",
+    "resultComplete": false,
+    "wholeATsPassed": [],
+    "filtering": "The saved proof used --case control-filesystem-denial; it is a filtered actual-identity diagnostic, not an unfiltered probe run or whole-AT pass.",
+    "sourceFreshness": "Saved source hashes for RoleControlProbe and denial-probe match current source. Saved cli/src/main.ts and fixture-stack hashes differ from current source, so this proof does not attest the current unfiltered dispatch."
+  },
+  "unfilteredAt35": {
+    "currentCanReachOwner": false,
+    "exactGuards": [
+      "cli/src/main.ts dispatches RoleControlProbe only when caseId === control-filesystem-denial; an omitted case falls through to ReplayEnvironment.",
+      "RoleControlProbe.run requires probeId === AT-authority-35 and caseId === control-filesystem-denial.",
+      "FixtureProbe.roleDenials requires caseId === control-filesystem-denial and probeId === AT-authority-35.",
+      "registeredProbeInputSchema makes caseId optional, so the input boundary already supports an unfiltered request; the current guard/dispatch chain does not."
+    ],
+    "minimumSourceTouchSet": [
+      {"path":"cli/src/main.ts","change":"Dispatch an omitted-case request to RoleControlProbe only when probeId is exactly AT-authority-35."},
+      {"path":"packages/ops/src/role-control-probe.ts","change":"Accept omitted caseId only for AT-authority-35; preserve refusal for all mismatched explicit cases."},
+      {"path":"packages/ops/src/fixture-stack.ts","change":"Recognize roleDenials for the exact AT-authority-35 ID when caseId is omitted, while retaining check owner/id validation."},
+      {"path":"tests/registry.yaml","change":"Add the source-bound AT-authority-35 CLI manifest if whole source registration is required; regenerate the existing probe registry through its current generator."}
+    ],
+    "contractOrInfrastructureChange": "No new CLI command, case enum, DTO, child runtime, or infrastructure is needed for unfiltered AT-authority-35. Existing filesystem denial owner and child can be reused.",
+    "commandAfterGuardChange": [
+      "toy --env test stack up --release R0 --clock fake --model fake --request-id <fresh-uuid> --json",
+      "toy --env test --stack <stack-id> probe run AT-authority-35 --request-id <fresh-uuid> --json",
+      "toy --env test --stack <stack-id> probe show <operation-id> --json",
+      "toy --env test --stack <stack-id> stack down --request-id <fresh-uuid> --json",
+      "toy bootstrap identities --verify --request-id <fresh-uuid> --json",
+      "toy doctor --deep --json"
+    ],
+    "expectedPublicReadback": "The existing six fixed denials, actual child UID/EUID/GID 309 and groups [309], canary/parent/receipt readbacks, cleanup, exact persisted show and teardown. Preserve result.state=NOT_IMPLEMENTED, complete=false, and wholeATsPassed=[] until all source-bound and whole-AT gates are independently met."
+  },
+  "at36": {
+    "currentRoute": "No AT-authority-36 owner case exists. RoleControlProbe accepts only AT-authority-35/control-filesystem-denial; the child only executes the six filesystem denials; contracts have no control-privilege-denial case.",
+    "preparedFixedCaseId": "control-privilege-denial",
+    "mandatoryCasesFromSavedPlan": ["actual-child-identity","sudo-noop-denied","su-noop-denied","privileged-ssh-no-credential-denied","launchctl-system-mutation-denied","johan-ssh-agent-unreachable","johan-original-access-preserved"],
+    "smallestExistingPathExtension": [
+      {"path":"packages/contracts/src/test-control.ts","change":"Register the fixed control-privilege-denial case ID."},
+      {"path":"packages/contracts/src/identity-bootstrap.ts","change":"Add a strict bounded receipt schema for the fixed privilege-attempt outcomes; the existing receipt schema is constrained to exactly six filesystem operations."},
+      {"path":"cli/src/main.ts","change":"Dispatch only the exact AT-authority-36/control-privilege-denial pair to RoleControlProbe."},
+      {"path":"packages/ops/src/role-control-probe.ts","change":"Extend the existing root-only owner to stage and invoke only the fixed registered no-op case after checking actual child identity."},
+      {"path":"control/bootstrap/denial-probe.ts","change":"Add only fixed noninteractive, no-op attempts and bounded sanitized outcomes; accept no caller command, target, path or environment."},
+      {"path":"packages/ops/src/fixture-stack.ts","change":"Recognize only the exact AT-authority-36/case pair and validate the ops-owned check."},
+      {"path":"tests/registry.yaml","change":"Add the source-bound AT-authority-36 manifest; regenerate generated contracts through existing generators."}
+    ],
+    "potentialRootRequest": {
+      "queueStatus": "Do not queue until the fixed case is registered, source and generated artifacts pass ordinary-caller guard review, and a fresh owned test stack is ready. Root execution is not authorized in this task.",
+      "registeredToyCliOperationAfterImplementation": "toy --env test --stack <owned-stack-id> probe run AT-authority-36 --case control-privilege-denial --request-id <fresh-uuid> --json",
+      "publicVerification": [
+        "toy --env test --stack <owned-stack-id> probe show <operation-id> --json",
+        "toy --env test --stack <owned-stack-id> stack down --request-id <fresh-uuid> --json",
+        "toy bootstrap identities --verify --request-id <fresh-uuid> --json",
+        "toy doctor --deep --json"
+      ],
+      "reversibleScope": "Only fixed sudo/su/privileged-SSH no-op attempts under actual _toy_agent, fixed disposable canaries if required by the registered case, and read-only persisted-result/identity/teardown verification. Root caller runs the registered CLI operation; no direct caller shell escalation commands.",
+      "hardDeferrals": [
+        "Do not attempt launchctl system mutation until the assigned check has a non-destructive collision-checked disposable target and independent cleanup/readback.",
+        "Do not read or record SSH_AUTH_SOCK, Johan's environment/home, keys, agent responses or secrets; current plan has no safe independent proof that Johan's SSH agent is unreachable.",
+        "No safe independent before/after route currently proves Johan's original sudo/SSH access remains functional.",
+        "A sudo/su/SSH no-op subset must remain diagnostic/incomplete and cannot be reported as AT-authority-36 PASS."
+      ],
+      "rootQueueWorkflow": "Use the existing build/ROOT-REQUESTS.md workflow with exact repository CLI arguments and sanitized public JSON only; pending root work does not block the goal."
+    }
+  },
+  "currentWholeGates": [
+    "AT-authority-35 evidence is a filtered diagnostic; unfiltered case dispatch and current-source run are missing.",
+    "No source-bound CLI manifests are present for AT-authority-35/36 in tests/registry.yaml.",
+    "AT-authority-36 lacks an implementation for its fixed privilege cases; SSH-agent and Johan-access predicates lack safe independent evidence routes, and launchctl lacks a safe disposable mutation target.",
+    "Other R0.05 assigned filesystem, MCP, GUI, CDP, CUA, database-group, approval-signer and authority assertions remain outside this bounded plan."
+  ],
+  "sourceHashes": {
+    "tests/acceptance-index.json": "87d21b7f24f9f900bb202e1e813ba46bbc51282b96e14cb2739d5fd67b32d9e6",
+    "tests/registry.yaml": "9514fd9ac8461947ebc1ad8f3334cdbf23c79746d2cfa0b5434dc4a40eaaa75d",
+    "packages/contracts/src/test-control.ts": "0af0d0e4349cae05bfdc06a77592e32c5171f0dc5d0e5964f2ef87faeaa4111c",
+    "packages/contracts/src/identity-bootstrap.ts": "61735b32635352b317cfaed1e03890b1680d3b124299c96a40d61b858118880c",
+    "packages/contracts/src/generated-probe-registry.ts": "e68d1971d7bdfefd5d9c8b90ff115265b36deb76b856d409175d4ee9b8779def",
+    "packages/ops/src/role-control-probe.ts": "541e4d17ff38f4e3bcc174afb1c60e4933ff9a32409676251c31cec9c5045244",
+    "packages/ops/src/fixture-stack.ts": "fbd3b05a231e8e13c6936d36429958c47a823911875689b74cfbd56b9110eff1",
+    "control/bootstrap/denial-probe.ts": "d47caee10470e21a28e5815283f95d92870dd6dcc705850c0a93c8d40e9ade64",
+    "cli/src/main.ts": "20865cd6b42e0d859213cc606ea797764b228f7a9a2b93dbe74ac37ef60c7e01",
+    "docs/adr/0030-actual-control-denials.md": "f45b80412fb98a21a745349d33ea46883f62a89ba1a0b873ce3dddd8d6573f13"
+  },
+  "savedProofSourceHashes": {
+    "packages/ops/src/role-control-probe.ts": "541e4d17ff38f4e3bcc174afb1c60e4933ff9a32409676251c31cec9c5045244",
+    "control/bootstrap/denial-probe.ts": "d47caee10470e21a28e5815283f95d92870dd6dcc705850c0a93c8d40e9ade64",
+    "cli/src/main.ts": "1074dbe6283b6b0a6e941a2b1a4098da4d603f1f56137d04c2039858f87c3e66",
+    "packages/ops/src/fixture-stack.ts": "008f39ade1bd1d9992f70c2d347791bb6bcaa9b9f6fabda0b256c59db86bc1d9"
+  }
+}
