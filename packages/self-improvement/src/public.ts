@@ -17,7 +17,7 @@ export const ReplayEnvironment = {
     if (!owned.ok) return owned;
     if (!registeredProbeInputSchema.safeParse(input).success) return { ok: false, error: { module: "ops", code: "INVALID_INPUT", message: opsErrorMessages.INVALID_INPUT, retryable: false } };
     if (input.probeId === "AT-obligations-74") return componentComparisonProbe(input, context);
-    if (input.caseId === "model-admission") return accountingProbe(input, context);
+    if (input.caseId === "model-admission" || (input.caseId === undefined && ["AT-ops-49", "AT-ops-51", "AT-ops-52"].includes(input.probeId))) return accountingProbe(input, context);
     if (input.caseId === "capacity-trial") return capacityTrialProbe(input, context);
     if (input.caseId === "queue-transaction-faults" && input.probeId !== "AT-obligations-76") return { ok: false, error: { module: "ops", code: "INVALID_INPUT", message: opsErrorMessages.INVALID_INPUT, retryable: false } };
     try {

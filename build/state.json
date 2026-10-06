@@ -2,9 +2,9 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-06T20:15:33.236498+00:00",
-  "phase": "R0.10 source-bound unfiltered native queue9 verified; root02 pending; independent accounting route plan running",
-  "activeCard": "R0.10",
+  "updatedAt": "2026-10-06T20:24:02.837764+00:00",
+  "phase": "R0.06 unfiltered accounting route unit verified; root02 pending without goal blockage",
+  "activeCard": "R0.06",
   "cardCount": 87,
   "acceptanceCount": 1447,
   "cards": {
@@ -998,7 +998,8 @@
         "build/evidence/R0.06/accounting-owner-preparation.json",
         "build/evidence/R0.06/migration-artifact-readback.json",
         "build/evidence/R0.06/accounting-runtime-blocker.json",
-        "build/evidence/R0.06/accounting-runtime-verification.json"
+        "build/evidence/R0.06/accounting-runtime-verification.json",
+        "build/evidence/R0.06/unfiltered-accounting-verification.json"
       ],
       "requiredATs": [
         "AT-hermes-config-59",
@@ -1096,6 +1097,17 @@
         "stoppedAt": "2026-10-06T15:19:59.556248+00:00",
         "state": "CLI_SUBSETS_VERIFIED_CLEAN_TEARDOWN",
         "evidence": "build/evidence/R0.06/accounting-runtime-verification.json"
+      },
+      "unfilteredAccountingUnit": {
+        "startedAt": "2026-10-06T20:18:51.651560+00:00",
+        "targetStopAt": "2026-10-06T22:18:51.651560+00:00",
+        "state": "VERIFIED_UNIT_CLOSED",
+        "sourcePlan": "build/evidence/R0.06/unfiltered-accounting-minimum-plan.json",
+        "scope": "Three exact unfiltered IDs invoke existing nine real-PG diagnostics; retain whole-incomplete and pending source edge cases",
+        "wholeATComplete": false,
+        "stoppedAt": "2026-10-06T20:24:02.837764+00:00",
+        "diagnosticPasses": 9,
+        "verificationEvidence": "build/evidence/R0.06/unfiltered-accounting-verification.json"
       }
     },
     "R0.07": {
@@ -10094,7 +10106,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Stop the passed R0.10 queue unit; consume the independent bounded R0.06 unfiltered accounting plan when ready. Poll root02 and continue R0.01 immediately on verified DONE.",
+  "nextAction": "Consume independent R0.07 minimum plan and verify existing fixture-only journal route; poll root02 and proceed to R0.01 immediately on verified DONE.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -20638,16 +20650,16 @@
     "features": 97,
     "commands": 55,
     "indexedATs": 1447,
-    "cliManifests": 4,
+    "cliManifests": 7,
     "schemaDigest": "1a768d76525382bf74bf62c4b5e645d26daebde2c55b079402d85a48d79c990e",
-    "evidence": "build/evidence/R0.10/unfiltered-queue-check-result.json",
+    "evidence": "build/evidence/R0.06/unfiltered-accounting-check-result.json",
     "languages": [
       "TypeScript",
       "Python"
     ],
     "SwiftDeferredTo": "R3"
   },
-  "sourceCheckpointCommit": "795e6c2",
+  "sourceCheckpointCommit": "b011e70",
   "sourceCheckpointPushed": true,
   "rootRequests": {
     "ROOT-R004-20261006-01": {
@@ -20693,15 +20705,15 @@
   },
   "activeWorkers": [
     {
-      "task": "r005_control_probe_review",
-      "card": "R0.06",
+      "task": "r007_minimum_trial_journal",
+      "card": "R0.07",
       "model": "gpt-6-luna",
       "reasoning": "max",
-      "scope": "read-only minimum unfiltered accounting routing plan",
-      "targetStopAt": "2026-10-06T20:19:00Z",
+      "scope": "read-only unfiltered fixture trial route plan",
+      "targetStopAt": "2026-10-06T20:23:00Z",
       "ownNeedBytes": "268435456",
       "marginBytes": "536870912",
-      "admission": "build/evidence/R0.10/unfiltered-queue-admission.json"
+      "admission": "build/evidence/R0.06/unfiltered-accounting-admission.json"
     }
   ]
 }

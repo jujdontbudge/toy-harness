@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { checkViewSchema, modelAdmissionRequestSchema, modelQuotaObservationSchema, modelRoutePolicySchema, opsErrorMessages } from "@toy/contracts";
+import { checkViewSchema, modelAdmissionRequestSchema, modelQuotaObservationSchema, modelRoutePolicySchema, opsErrorMessages, registeredCliAcceptanceManifestInventory } from "@toy/contracts";
 import type { CheckViewV1, ModelAdmissionApi, ModelAdmissionRecordV1, ModelAdmissionRequestV1, ModelAdmissionWorkV1, ModelQuotaWindowV1, ModelRoleV1, OpsControlContextV1, OpsError, RegisteredProbeInputV1, RegisteredProbeOperationV1, Result } from "@toy/contracts";
 import { TestClockControl, TestProbeControl, trustedCheckoutRoot } from "@toy/ops/public";
 import { ModelAdmission } from "./model-admission.js";
@@ -39,8 +39,11 @@ const finish = (owner: ModelAdmissionApi, record: ModelAdmissionRecordV1, known:
 };
 
 export const accountingProbe = async (input: RegisteredProbeInputV1, context: OpsControlContextV1): Promise<Result<RegisteredProbeOperationV1>> => {
-  if (input.caseId !== "model-admission" || !["AT-ops-49","AT-ops-51","AT-ops-52"].includes(input.probeId))
+  if ((input.caseId !== undefined && input.caseId !== "model-admission") || !["AT-ops-49","AT-ops-51","AT-ops-52"].includes(input.probeId))
     return {ok:false,error:{module:"ops",code:"INVALID_INPUT",message:opsErrorMessages.INVALID_INPUT,retryable:false,effectState:"none"}};
+  const phases = input.probeId === "AT-ops-49" ? ["named-window-equality-0", "named-window-equality-1", "named-window-equality-2"] : input.probeId === "AT-ops-51" ? ["eight-durable-background-reservations", "restart-new-goal-ninth-refused-foreground-exempt"] : ["fresh-known-veto-0", "fresh-known-veto-1", "fresh-known-veto-2", "fresh-known-veto-3"];
+  const manifest = registeredCliAcceptanceManifestInventory.find(entry => entry.id === input.probeId);
+  if (!manifest || manifest.scenarioId !== "accounting.model-admission" || JSON.stringify(manifest.mandatoryCases) !== JSON.stringify(phases.map(phase => ({ id: phase, publicOperation: "ReplayEnvironment.runRegisteredProbe", phase })))) return {ok:false,error:{module:"ops",code:"ATTESTATION_INVALID",message:opsErrorMessages.ATTESTATION_INVALID,retryable:false,effectState:"none"}};
   try {
     const content = readFileSync(join(trustedCheckoutRoot(),"behavior/models.yaml"));
     const policy = modelRoutePolicySchema.parse(JSON.parse(content.toString("utf8")));

@@ -1,0 +1,796 @@
+{
+  "recordedAt": "2026-10-06T20:24:02.837764+00:00",
+  "card": "R0.06",
+  "rung": "CLI",
+  "unfiltered": true,
+  "diagnosticPasses": 9,
+  "probes": [
+    {
+      "AT": "AT-ops-49",
+      "command": "toy --env test --stack 6a9f8e86-584e-48a0-8da2-bc98ec39d9bb probe run AT-ops-49 --request-id 8d0bca6a-5b20-4bd4-bdc2-dbbf31086d77 --json",
+      "operationId": "227ac1c7-7a42-47f6-b6de-c4b1aa9e30fb",
+      "diagnosticPasses": 3,
+      "sourceRegistration": {
+        "id": "AT-ops-49",
+        "rung": "CLI",
+        "sourceAssertionHash": "bdc522a1d838c3bb62a91ca17cf28b26ccb5431aa145f9c25052e0a9b6e10ba7",
+        "commandId": "probe.run",
+        "scenarioId": "accounting.model-admission",
+        "owner": "self-improvement",
+        "firstRelease": "R0",
+        "kind": "behavioral",
+        "mandatoryCases": [
+          {
+            "id": "named-window-equality-0",
+            "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+            "phase": "named-window-equality-0"
+          },
+          {
+            "id": "named-window-equality-1",
+            "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+            "phase": "named-window-equality-1"
+          },
+          {
+            "id": "named-window-equality-2",
+            "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+            "phase": "named-window-equality-2"
+          }
+        ],
+        "trigger": "Run the current named accounting diagnostics through the real public ModelAdmission owner and PostgreSQL fixture; remaining assertion coverage and protected admission stay incomplete.",
+        "faultControls": [
+          {
+            "id": "fixed-quota-observation",
+            "seam": "provider",
+            "affectedPhases": [
+              "named-window-equality-0",
+              "named-window-equality-1",
+              "named-window-equality-2"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "public-owner-decisions",
+            "independentReader": "accountingProbe: real ModelAdmission reserve/claim/settle decisions and quota observations",
+            "caseIds": [
+              "named-window-equality-0",
+              "named-window-equality-1",
+              "named-window-equality-2"
+            ]
+          },
+          {
+            "id": "durable-ledger-readback",
+            "independentReader": "accountingProbe: ModelAdmission.inspect persisted counters, charges and native PostgreSQL restart",
+            "caseIds": [
+              "named-window-equality-0",
+              "named-window-equality-1",
+              "named-window-equality-2"
+            ]
+          },
+          {
+            "id": "stored-cli-readback",
+            "independentReader": "toy probe.show and stack.down: exact persisted operation and complete owned-world teardown",
+            "caseIds": [
+              "named-window-equality-0",
+              "named-window-equality-1",
+              "named-window-equality-2"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot inspect pre-build admission counters or drive the native PostgreSQL restart boundary. The CLI exercises the real accounting owner with fixed external quota and clock observations."
+      },
+      "caseManifestDigest": "5307bc669c1402578cb6f42a49716e84499af4fc7a3603a5d223fb687f3e845f",
+      "runtimeBinding": {
+        "releaseDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "controlDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "schemaDigest": "1a768d76525382bf74bf62c4b5e645d26daebde2c55b079402d85a48d79c990e",
+        "fixtureDigest": "fc4f54afc4955695d8f0ce6b3aefbfb843b8636f731e3fbbc5ee96d5253adec6"
+      },
+      "observations": [
+        {
+          "name": "named-window-equality-0",
+          "evidence": {
+            "fiveHour": 59.9,
+            "weekly": 69.9,
+            "autonomous": [
+              {
+                "class": "event",
+                "eligible": true,
+                "reason": "ELIGIBLE"
+              },
+              {
+                "class": "quiet-tick",
+                "eligible": true,
+                "reason": "ELIGIBLE"
+              },
+              {
+                "class": "repair",
+                "eligible": true,
+                "reason": "ELIGIBLE"
+              },
+              {
+                "class": "replay",
+                "eligible": true,
+                "reason": "ELIGIBLE"
+              },
+              {
+                "class": "continuation",
+                "eligible": true,
+                "reason": "ELIGIBLE"
+              },
+              {
+                "class": "child",
+                "eligible": true,
+                "reason": "ELIGIBLE"
+              },
+              {
+                "class": "research",
+                "eligible": true,
+                "reason": "ELIGIBLE"
+              },
+              {
+                "class": "judge",
+                "eligible": true,
+                "reason": "ELIGIBLE"
+              },
+              {
+                "class": "auxiliary",
+                "eligible": true,
+                "reason": "ELIGIBLE"
+              }
+            ],
+            "foreground": {
+              "eligible": true,
+              "mode": "foreground",
+              "reason": "ELIGIBLE",
+              "retryAt": null,
+              "quotaSnapshotId": "847ad8da-24f3-43ec-89dc-761c9688a0e5",
+              "foregroundInputAccepted": true,
+              "providerSendPermitIssued": false,
+              "paidFallbackPermitted": false
+            }
+          }
+        },
+        {
+          "name": "named-window-equality-1",
+          "evidence": {
+            "fiveHour": 60,
+            "weekly": 20,
+            "autonomous": [
+              {
+                "class": "event",
+                "eligible": false,
+                "reason": "FIVE_HOUR_THRESHOLD"
+              },
+              {
+                "class": "quiet-tick",
+                "eligible": false,
+                "reason": "FIVE_HOUR_THRESHOLD"
+              },
+              {
+                "class": "repair",
+                "eligible": false,
+                "reason": "FIVE_HOUR_THRESHOLD"
+              },
+              {
+                "class": "replay",
+                "eligible": false,
+                "reason": "FIVE_HOUR_THRESHOLD"
+              },
+              {
+                "class": "continuation",
+                "eligible": false,
+                "reason": "FIVE_HOUR_THRESHOLD"
+              },
+              {
+                "class": "child",
+                "eligible": false,
+                "reason": "FIVE_HOUR_THRESHOLD"
+              },
+              {
+                "class": "research",
+                "eligible": false,
+                "reason": "FIVE_HOUR_THRESHOLD"
+              },
+              {
+                "class": "judge",
+                "eligible": false,
+                "reason": "FIVE_HOUR_THRESHOLD"
+              },
+              {
+                "class": "auxiliary",
+                "eligible": false,
+                "reason": "FIVE_HOUR_THRESHOLD"
+              }
+            ],
+            "foreground": {
+              "eligible": true,
+              "mode": "foreground",
+              "reason": "ELIGIBLE",
+              "retryAt": null,
+              "quotaSnapshotId": "90d21f75-9f76-4f3b-8d8a-9598b0773d65",
+              "foregroundInputAccepted": true,
+              "providerSendPermitIssued": false,
+              "paidFallbackPermitted": false
+            }
+          }
+        },
+        {
+          "name": "named-window-equality-2",
+          "evidence": {
+            "fiveHour": 20,
+            "weekly": 70,
+            "autonomous": [
+              {
+                "class": "event",
+                "eligible": false,
+                "reason": "WEEKLY_THRESHOLD"
+              },
+              {
+                "class": "quiet-tick",
+                "eligible": false,
+                "reason": "WEEKLY_THRESHOLD"
+              },
+              {
+                "class": "repair",
+                "eligible": false,
+                "reason": "WEEKLY_THRESHOLD"
+              },
+              {
+                "class": "replay",
+                "eligible": false,
+                "reason": "WEEKLY_THRESHOLD"
+              },
+              {
+                "class": "continuation",
+                "eligible": false,
+                "reason": "WEEKLY_THRESHOLD"
+              },
+              {
+                "class": "child",
+                "eligible": false,
+                "reason": "WEEKLY_THRESHOLD"
+              },
+              {
+                "class": "research",
+                "eligible": false,
+                "reason": "WEEKLY_THRESHOLD"
+              },
+              {
+                "class": "judge",
+                "eligible": false,
+                "reason": "WEEKLY_THRESHOLD"
+              },
+              {
+                "class": "auxiliary",
+                "eligible": false,
+                "reason": "WEEKLY_THRESHOLD"
+              }
+            ],
+            "foreground": {
+              "eligible": true,
+              "mode": "foreground",
+              "reason": "ELIGIBLE",
+              "retryAt": null,
+              "quotaSnapshotId": "39cbf855-e4a4-41fa-8cb0-0c682f14b00f",
+              "foregroundInputAccepted": true,
+              "providerSendPermitIssued": false,
+              "paidFallbackPermitted": false
+            }
+          }
+        }
+      ],
+      "runShowExact": true,
+      "wholeResult": {
+        "state": "NOT_IMPLEMENTED",
+        "complete": false
+      }
+    },
+    {
+      "AT": "AT-ops-51",
+      "command": "toy --env test --stack 6a9f8e86-584e-48a0-8da2-bc98ec39d9bb probe run AT-ops-51 --request-id 0c725c54-c745-4399-bc24-d17d95fbc4bc --json",
+      "operationId": "33ad68e2-94b7-43c4-b1ad-b3df8e3113eb",
+      "diagnosticPasses": 2,
+      "sourceRegistration": {
+        "id": "AT-ops-51",
+        "rung": "CLI",
+        "sourceAssertionHash": "ea41b9bcca501eb9ae00aa97b991ea915a418bc288913850f49b0e7c15555f26",
+        "commandId": "probe.run",
+        "scenarioId": "accounting.model-admission",
+        "owner": "self-improvement",
+        "firstRelease": "R0",
+        "kind": "behavioral",
+        "mandatoryCases": [
+          {
+            "id": "eight-durable-background-reservations",
+            "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+            "phase": "eight-durable-background-reservations"
+          },
+          {
+            "id": "restart-new-goal-ninth-refused-foreground-exempt",
+            "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+            "phase": "restart-new-goal-ninth-refused-foreground-exempt"
+          }
+        ],
+        "trigger": "Run the current named accounting diagnostics through the real public ModelAdmission owner and PostgreSQL fixture; remaining assertion coverage and protected admission stay incomplete.",
+        "faultControls": [
+          {
+            "id": "fixed-quota-observation",
+            "seam": "provider",
+            "affectedPhases": [
+              "eight-durable-background-reservations",
+              "restart-new-goal-ninth-refused-foreground-exempt"
+            ]
+          },
+          {
+            "id": "native-postgresql-restart",
+            "seam": "os",
+            "affectedPhases": [
+              "restart-new-goal-ninth-refused-foreground-exempt"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "public-owner-decisions",
+            "independentReader": "accountingProbe: real ModelAdmission reserve/claim/settle decisions and quota observations",
+            "caseIds": [
+              "eight-durable-background-reservations",
+              "restart-new-goal-ninth-refused-foreground-exempt"
+            ]
+          },
+          {
+            "id": "durable-ledger-readback",
+            "independentReader": "accountingProbe: ModelAdmission.inspect persisted counters, charges and native PostgreSQL restart",
+            "caseIds": [
+              "eight-durable-background-reservations",
+              "restart-new-goal-ninth-refused-foreground-exempt"
+            ]
+          },
+          {
+            "id": "stored-cli-readback",
+            "independentReader": "toy probe.show and stack.down: exact persisted operation and complete owned-world teardown",
+            "caseIds": [
+              "eight-durable-background-reservations",
+              "restart-new-goal-ninth-refused-foreground-exempt"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot inspect pre-build admission counters or drive the native PostgreSQL restart boundary. The CLI exercises the real accounting owner with fixed external quota and clock observations."
+      },
+      "caseManifestDigest": "226aac522e80f9ea191e4b3264f44870720e028da0cf4b85ef75b98a4ed3e689",
+      "runtimeBinding": {
+        "releaseDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "controlDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "schemaDigest": "1a768d76525382bf74bf62c4b5e645d26daebde2c55b079402d85a48d79c990e",
+        "fixtureDigest": "fc4f54afc4955695d8f0ce6b3aefbfb843b8636f731e3fbbc5ee96d5253adec6"
+      },
+      "observations": [
+        {
+          "name": "eight-durable-background-reservations",
+          "evidence": {
+            "states": [
+              {
+                "class": "event",
+                "state": "settled",
+                "charged": true,
+                "leaseActive": false
+              },
+              {
+                "class": "judge",
+                "state": "uncertain",
+                "charged": true,
+                "leaseActive": false
+              },
+              {
+                "class": "child",
+                "state": "settled",
+                "charged": true,
+                "leaseActive": false
+              },
+              {
+                "class": "continuation",
+                "state": "uncertain",
+                "charged": true,
+                "leaseActive": false
+              },
+              {
+                "class": "auxiliary",
+                "state": "settled",
+                "charged": true,
+                "leaseActive": false
+              },
+              {
+                "class": "research",
+                "state": "uncertain",
+                "charged": true,
+                "leaseActive": false
+              },
+              {
+                "class": "quiet-tick",
+                "state": "settled",
+                "charged": true,
+                "leaseActive": false
+              },
+              {
+                "class": "event",
+                "state": "uncertain",
+                "charged": true,
+                "leaseActive": false
+              }
+            ],
+            "ledger": {
+              "accountRef": "fixture.daily.6a9f8e86-584e-48a0-8da2-bc98ec39d9bb:0c725c54-c745-4399-bc24-d17d95fbc4bc",
+              "utcDay": "2026-10-05",
+              "policyDigest": "8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67",
+              "ready": true,
+              "restoredUnreconciled": false,
+              "providerLeaseActive": false,
+              "foregroundWaiting": false,
+              "fallbackJobsReserved": 8,
+              "unreflectedFiveHourUpperPercent": null,
+              "unreflectedWeeklyUpperPercent": null
+            },
+            "observation": null
+          }
+        },
+        {
+          "name": "restart-new-goal-ninth-refused-foreground-exempt",
+          "evidence": {
+            "postgresqlRestarted": true,
+            "ninth": {
+              "eligible": false,
+              "mode": "fixed-count",
+              "reason": "DAILY_JOB_CEILING",
+              "retryAt": "2026-10-06T00:00:00.000Z",
+              "quotaSnapshotId": null,
+              "foregroundInputAccepted": true,
+              "providerSendPermitIssued": false,
+              "paidFallbackPermitted": false
+            },
+            "foreground": {
+              "eligible": true,
+              "mode": "foreground",
+              "reason": "ELIGIBLE",
+              "retryAt": null,
+              "quotaSnapshotId": null,
+              "foregroundInputAccepted": true,
+              "providerSendPermitIssued": false,
+              "paidFallbackPermitted": false
+            },
+            "ledger": {
+              "accountRef": "fixture.daily.6a9f8e86-584e-48a0-8da2-bc98ec39d9bb:0c725c54-c745-4399-bc24-d17d95fbc4bc",
+              "utcDay": "2026-10-05",
+              "policyDigest": "8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67",
+              "ready": true,
+              "restoredUnreconciled": false,
+              "providerLeaseActive": false,
+              "foregroundWaiting": false,
+              "fallbackJobsReserved": 8,
+              "unreflectedFiveHourUpperPercent": null,
+              "unreflectedWeeklyUpperPercent": null
+            },
+            "observation": null
+          }
+        }
+      ],
+      "runShowExact": true,
+      "wholeResult": {
+        "state": "NOT_IMPLEMENTED",
+        "complete": false
+      }
+    },
+    {
+      "AT": "AT-ops-52",
+      "command": "toy --env test --stack 6a9f8e86-584e-48a0-8da2-bc98ec39d9bb probe run AT-ops-52 --request-id 0ea104d2-808b-4367-a40b-ef88db0cc378 --json",
+      "operationId": "76ca2848-ee7f-46b4-8d92-c8fa1c0d2558",
+      "diagnosticPasses": 4,
+      "sourceRegistration": {
+        "id": "AT-ops-52",
+        "rung": "CLI",
+        "sourceAssertionHash": "87ee3745c00c15de26f5d6a48ff61b23324352e932f5e1e6e7cb1af89819a4dd",
+        "commandId": "probe.run",
+        "scenarioId": "accounting.model-admission",
+        "owner": "self-improvement",
+        "firstRelease": "R0",
+        "kind": "behavioral",
+        "mandatoryCases": [
+          {
+            "id": "fresh-known-veto-0",
+            "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+            "phase": "fresh-known-veto-0"
+          },
+          {
+            "id": "fresh-known-veto-1",
+            "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+            "phase": "fresh-known-veto-1"
+          },
+          {
+            "id": "fresh-known-veto-2",
+            "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+            "phase": "fresh-known-veto-2"
+          },
+          {
+            "id": "fresh-known-veto-3",
+            "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+            "phase": "fresh-known-veto-3"
+          }
+        ],
+        "trigger": "Run the current named accounting diagnostics through the real public ModelAdmission owner and PostgreSQL fixture; remaining assertion coverage and protected admission stay incomplete.",
+        "faultControls": [
+          {
+            "id": "fixed-quota-observation",
+            "seam": "provider",
+            "affectedPhases": [
+              "fresh-known-veto-0",
+              "fresh-known-veto-1",
+              "fresh-known-veto-2",
+              "fresh-known-veto-3"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "public-owner-decisions",
+            "independentReader": "accountingProbe: real ModelAdmission reserve/claim/settle decisions and quota observations",
+            "caseIds": [
+              "fresh-known-veto-0",
+              "fresh-known-veto-1",
+              "fresh-known-veto-2",
+              "fresh-known-veto-3"
+            ]
+          },
+          {
+            "id": "durable-ledger-readback",
+            "independentReader": "accountingProbe: ModelAdmission.inspect persisted counters, charges and native PostgreSQL restart",
+            "caseIds": [
+              "fresh-known-veto-0",
+              "fresh-known-veto-1",
+              "fresh-known-veto-2",
+              "fresh-known-veto-3"
+            ]
+          },
+          {
+            "id": "stored-cli-readback",
+            "independentReader": "toy probe.show and stack.down: exact persisted operation and complete owned-world teardown",
+            "caseIds": [
+              "fresh-known-veto-0",
+              "fresh-known-veto-1",
+              "fresh-known-veto-2",
+              "fresh-known-veto-3"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot inspect pre-build admission counters or drive the native PostgreSQL restart boundary. The CLI exercises the real accounting owner with fixed external quota and clock observations."
+      },
+      "caseManifestDigest": "69bcacd8526721369d84e206ca07db96bd5400961e99b0d15984ac1a3034d8cb",
+      "runtimeBinding": {
+        "releaseDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "controlDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "schemaDigest": "1a768d76525382bf74bf62c4b5e645d26daebde2c55b079402d85a48d79c990e",
+        "fixtureDigest": "fc4f54afc4955695d8f0ce6b3aefbfb843b8636f731e3fbbc5ee96d5253adec6"
+      },
+      "observations": [
+        {
+          "name": "fresh-known-veto-0",
+          "evidence": {
+            "windows": [
+              {
+                "bucketId": "secondary",
+                "durationMinutes": 10080,
+                "usedPercent": 70,
+                "resetAt": "2026-10-12T00:00:00.000Z"
+              }
+            ],
+            "status": "available",
+            "decision": {
+              "eligible": false,
+              "mode": "fixed-count",
+              "reason": "WEEKLY_THRESHOLD",
+              "retryAt": "2026-10-12T00:00:00.000Z",
+              "quotaSnapshotId": "63288454-d985-4bd2-8456-64067e371f8d",
+              "foregroundInputAccepted": true,
+              "providerSendPermitIssued": false,
+              "paidFallbackPermitted": false
+            }
+          }
+        },
+        {
+          "name": "fresh-known-veto-1",
+          "evidence": {
+            "windows": [
+              {
+                "bucketId": "secondary",
+                "durationMinutes": 10080,
+                "usedPercent": 70,
+                "resetAt": "2026-10-12T00:00:00.000Z"
+              },
+              {
+                "bucketId": "primary",
+                "durationMinutes": 300,
+                "usedPercent": 20,
+                "resetAt": "2026-10-05T05:00:00.000Z"
+              }
+            ],
+            "status": "available",
+            "decision": {
+              "eligible": false,
+              "mode": "measured",
+              "reason": "WEEKLY_THRESHOLD",
+              "retryAt": "2026-10-12T00:00:00.000Z",
+              "quotaSnapshotId": "5e4e4aae-eee8-482c-8146-264055f8f125",
+              "foregroundInputAccepted": true,
+              "providerSendPermitIssued": false,
+              "paidFallbackPermitted": false
+            }
+          }
+        },
+        {
+          "name": "fresh-known-veto-2",
+          "evidence": {
+            "windows": [
+              {
+                "bucketId": "primary",
+                "durationMinutes": 300,
+                "usedPercent": 60,
+                "resetAt": "2026-10-05T05:00:00.000Z"
+              }
+            ],
+            "status": "available",
+            "decision": {
+              "eligible": false,
+              "mode": "fixed-count",
+              "reason": "FIVE_HOUR_THRESHOLD",
+              "retryAt": "2026-10-05T05:00:00.000Z",
+              "quotaSnapshotId": "30618e35-386a-442c-880f-61f178579fb8",
+              "foregroundInputAccepted": true,
+              "providerSendPermitIssued": false,
+              "paidFallbackPermitted": false
+            }
+          }
+        },
+        {
+          "name": "fresh-known-veto-3",
+          "evidence": {
+            "windows": [
+              {
+                "bucketId": "secondary",
+                "durationMinutes": 10080,
+                "usedPercent": 70,
+                "resetAt": "2026-10-12T00:00:00.000Z"
+              }
+            ],
+            "status": "unavailable",
+            "decision": {
+              "eligible": false,
+              "mode": "fixed-count",
+              "reason": "WEEKLY_THRESHOLD",
+              "retryAt": "2026-10-12T00:00:00.000Z",
+              "quotaSnapshotId": "d8607841-76f9-4c9c-838c-ad9e9c08e54f",
+              "foregroundInputAccepted": true,
+              "providerSendPermitIssued": false,
+              "paidFallbackPermitted": false
+            }
+          }
+        }
+      ],
+      "runShowExact": true,
+      "wholeResult": {
+        "state": "NOT_IMPLEMENTED",
+        "complete": false
+      }
+    }
+  ],
+  "baselines": [
+    {
+      "AT": "AT-ops-49",
+      "operationId": "a08689ec-0d1b-4341-bf1d-3196f8c4cc02",
+      "reason": "REGISTERED_CASE_NOT_IMPLEMENTED",
+      "runShowExact": true
+    },
+    {
+      "AT": "AT-ops-51",
+      "operationId": "10f2f927-ab05-4bb5-a691-0252973c3d80",
+      "reason": "REGISTERED_CASE_NOT_IMPLEMENTED",
+      "runShowExact": true
+    },
+    {
+      "AT": "AT-ops-52",
+      "operationId": "85a2cdf2-a85a-4271-90d1-d6975773389f",
+      "reason": "REGISTERED_CASE_NOT_IMPLEMENTED",
+      "runShowExact": true
+    }
+  ],
+  "maxPrerequisiteCharacters": 1101,
+  "callerScope": "ordinary owned fixture; protected native-role proof pending",
+  "liveProviderSends": 0,
+  "wholeATsPassed": [],
+  "acceptanceComplete": false,
+  "teardowns": [
+    {
+      "stackId": "5b28f2d3-b98b-4c83-8f9e-6d5bbe9fc0f2",
+      "checkpointRefs": [],
+      "fenceRefs": [],
+      "stoppedResourceRefs": [
+        {
+          "module": "ops",
+          "kind": "test_world",
+          "id": "5b28f2d3-b98b-4c83-8f9e-6d5bbe9fc0f2"
+        }
+      ],
+      "retainedArtifactRefs": [
+        {
+          "module": "ops",
+          "kind": "test_world",
+          "id": "5b28f2d3-b98b-4c83-8f9e-6d5bbe9fc0f2"
+        }
+      ],
+      "unresolvedResourceRefs": [],
+      "complete": true
+    },
+    {
+      "stackId": "6a9f8e86-584e-48a0-8da2-bc98ec39d9bb",
+      "checkpointRefs": [],
+      "fenceRefs": [],
+      "stoppedResourceRefs": [
+        {
+          "module": "ops",
+          "kind": "test_world",
+          "id": "6a9f8e86-584e-48a0-8da2-bc98ec39d9bb"
+        }
+      ],
+      "retainedArtifactRefs": [
+        {
+          "module": "ops",
+          "kind": "test_world",
+          "id": "6a9f8e86-584e-48a0-8da2-bc98ec39d9bb"
+        }
+      ],
+      "unresolvedResourceRefs": [],
+      "complete": true
+    }
+  ],
+  "ownedWorldsDown": [
+    "5b28f2d3-b98b-4c83-8f9e-6d5bbe9fc0f2",
+    "6a9f8e86-584e-48a0-8da2-bc98ec39d9bb"
+  ],
+  "staticResult": {
+    "startedAt": "2026-10-06T20:19:29.802055+00:00",
+    "finishedAt": "2026-10-06T20:20:18.285090+00:00",
+    "exitCode": 0,
+    "command": "npm run check",
+    "languages": [
+      "TypeScript",
+      "Python"
+    ],
+    "SwiftDeferredTo": "R3"
+  },
+  "staticInventory": {
+    "artifacts": 355,
+    "contracts": 287,
+    "cliManifests": 7,
+    "features": 97,
+    "commands": 55,
+    "indexedATs": 1447
+  },
+  "root02Status": "PENDING",
+  "root02FrozenHashesUnchanged": true,
+  "root02FrozenHashes": {
+    "scripts/probe-siwc-control-runtime.mts": "96e1fd2d98469772c3d0d203386c3f7aa56af57db025c420fa93f1f4ecd7e70d",
+    "scripts/stage-siwc-control-runtime.mts": "13ff53e341ab7670dbed967ce810d5aa2834df7a47ffe1620f037ff1da3ee0d4",
+    "control/dist/bootstrap/siwc-runtime-probe.js": "06870b8dd41d2ffc093cc04680ba56c4570f07b4aa0a27a9ab70796cdd8204bd"
+  },
+  "reviewCorrection": "Rejected filtered-command-as-unfiltered and local-diagnostic-as-whole-PASS suggestions before source changes; preserved exact unfiltered guards and whole-incomplete boundary.",
+  "remainingGates": [
+    "foreground priority under contention",
+    "distinct cancellation semantics where source requires",
+    "swapped quota duration metadata",
+    "canonical protected provider/controller/native role proof",
+    "durable deferred-slot/wake integration"
+  ],
+  "languages": [
+    "TypeScript",
+    "Python"
+  ],
+  "SwiftDeferredTo": "R3"
+}

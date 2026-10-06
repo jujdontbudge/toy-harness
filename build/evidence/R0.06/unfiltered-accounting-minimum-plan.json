@@ -1,0 +1,209 @@
+{
+  "schemaVersion": "toy.r0.06.unfiltered-accounting-minimum-plan.v1",
+  "disposition": "FILTERED_ACCOUNTING_ROUTE_PROVEN_UNFILTERED_ROUTE_MISSING",
+  "scope": "read-only source/evidence review; this file is the only write",
+  "admission": {
+    "source": "build/evidence/R0.10/unfiltered-queue-admission.json",
+    "observedAt": "2026-10-06T20:12:06.116Z",
+    "pressure": "normal",
+    "availableBytes": "2294398976",
+    "workerNeedBytes": "268435456",
+    "marginBytes": "536870912",
+    "workerRequiredBytes": "805306368",
+    "workerHeadroomSatisfied": true,
+    "doctorRequiredBytes": "1610612736",
+    "doctorHeadroomSatisfied": true,
+    "aggregateOrRootReserveGateUsed": false
+  },
+  "publicRoute": {
+    "boundary": "toy CLI probe.run -> ReplayEnvironment.runRegisteredProbe in @toy/self-improvement/public -> accountingProbe -> ModelAdmission.withTest -> stack-scoped real PostgreSQL fixture -> TestProbeControl.run; persisted readback is toy probe.show",
+    "ownerInterface": "ReplayEnvironment.runRegisteredProbe(input: RegisteredProbeInputV1, context: OpsControlContextV1)",
+    "acceptedInput": "registeredTestCaseSchema already includes model-admission; registeredCliProbeInventory already includes AT-ops-49, AT-ops-51, AT-ops-52; accountingProbe accepts exactly those IDs with caseId=model-admission",
+    "dispatchFinding": "Filtered dispatch exists only when --case model-admission is supplied. Unfiltered input (caseId omitted) currently misses accountingProbe: packages/self-improvement/src/public.ts dispatches only on input.caseId === model-admission; packages/self-improvement/src/accounting-probe.ts rejects any input whose caseId is not model-admission; packages/ops/src/fixture-stack.ts recognizes the accounting report only when caseId === model-admission. The CLI schema already makes caseId optional, and cli/src/main.ts already forwards omitted caseId to ReplayEnvironment.",
+    "testSeams": "Fake clock and fixed quota observations; real stack-owned PostgreSQL 17; no provider send is issued. ModelAdmission.open protected runtime is not used by this test route."
+  },
+  "acceptanceAssertions": [
+    {
+      "id": "AT-ops-49",
+      "sourceAssertionHash": "bdc522a1d838c3bb62a91ca17cf28b26ccb5431aa145f9c25052e0a9b6e10ba7",
+      "sourceDigest": "f07aab65088c82e4ff21e4d63edb2f279e2324e6d7e2bbb801e0fd7494104b0b",
+      "requiredCases": [
+        "59.9%/69.9% eligible",
+        "60%/20% equality veto",
+        "20%/70% equality veto",
+        "all autonomous semantic classes",
+        "foreground accepted and prioritized"
+      ],
+      "currentProbeChecks": [
+        "named-window-equality-0",
+        "named-window-equality-1",
+        "named-window-equality-2"
+      ],
+      "residual": "Foreground acceptance and foreground mode are recorded; the existing checks do not independently demonstrate queue priority under contention. Keep this acceptance assertion pending."
+    },
+    {
+      "id": "AT-ops-51",
+      "sourceAssertionHash": "ea41b9bcca501eb9ae00aa97b991ea915a418bc288913850f49b0e7c15555f26",
+      "sourceDigest": "f07aab65088c82e4ff21e4d63edb2f279e2324e6d7e2bbb801e0fd7494104b0b",
+      "requiredCases": [
+        "missing usage observation",
+        "eight charged background reservations across judge/retry/delegate classes",
+        "uncertain outcome retained as charged",
+        "PostgreSQL restart and new-goal ninth denial",
+        "foreground remains uncharged and eligible"
+      ],
+      "currentProbeChecks": [
+        "eight-durable-background-reservations",
+        "restart-new-goal-ninth-refused-foreground-exempt"
+      ],
+      "residual": "The current filtered probe exercises uncertain and settled outcomes, but has no distinct cancellation case. Keep the assertion pending until cancellation semantics are resolved against the assigned check."
+    },
+    {
+      "id": "AT-ops-52",
+      "sourceAssertionHash": "87ee3745c00c15de26f5d6a48ff61b23324352e932f5e1e6e7cb1af89819a4dd",
+      "sourceDigest": "f07aab65088c82e4ff21e4d63edb2f279e2324e6d7e2bbb801e0fd7494104b0b",
+      "requiredCases": [
+        "weekly veto with five-hour bucket missing",
+        "fresh weekly veto wins",
+        "primary/secondary order and durations cannot evade named thresholds"
+      ],
+      "currentProbeChecks": [
+        "fresh-known-veto-0",
+        "fresh-known-veto-1",
+        "fresh-known-veto-2",
+        "fresh-known-veto-3"
+      ],
+      "residual": "The filtered probe reverses array order while retaining each bucket's normal duration; it does not swap the duration values. Keep the assertion pending."
+    }
+  ],
+  "currentAcceptanceBinding": {
+    "authoredManifestSource": "tests/registry.yaml",
+    "authoredManifestIdsPresent": [],
+    "generatedManifestIdsPresent": [
+      "AT-hermes-config-85",
+      "AT-hermes-config-87",
+      "AT-obligations-74",
+      "AT-obligations-76"
+    ],
+    "historicalRunsUsedCaseFilter": true,
+    "historicalRunSourceRegistration": null,
+    "historicalRunState": "NOT_IMPLEMENTED",
+    "historicalRunComplete": false,
+    "cause": "Historical runs supplied --case model-admission. They are filtered diagnostics. No authored or generated source-bound manifests exist for these ATs. Whole results must remain state=NOT_IMPLEMENTED and complete=false; local observations cannot establish protected controller/native roles or the remaining whole gates."
+  },
+  "minimumSourceWork": [
+    {
+      "path": "packages/self-improvement/src/public.ts",
+      "owner": "self-improvement public registered-probe dispatch",
+      "change": "Accept omitted caseId only for AT-ops-49/51/52 and route to the same accountingProbe; preserve explicit model-admission support."
+    },
+    {
+      "path": "tests/registry.yaml",
+      "owner": "contracts/authored CLI acceptance manifest source",
+      "change": "Add one R0 CLI manifest per AT-ops-49/51/52, bound to the existing sourceAssertionHash and owner self-improvement. Bind the exact no-case public invocation and list independent observations for the required subchecks; these manifests record source binding but do not authorize whole-result completion."
+    },
+    {
+      "path": "packages/contracts/src/generated-probe-registry.ts",
+      "owner": "generated artifact; scripts/generate-contracts.mjs",
+      "change": "Regenerate from tests/registry.yaml after the authored rows exist. No hand-written DTO or new case enum is needed."
+    },
+    {
+      "path": "packages/ops/src/fixture-stack.ts",
+      "owner": "ops test probe persistence/result boundary",
+      "change": "Recognize the exact three accounting probe IDs when caseId is omitted and permit their accounting observations to persist with the source registration. Preserve result.state=NOT_IMPLEMENTED and complete=false for the whole result pending protected controller/native role evidence and all other assigned gates."
+    },
+    {
+      "path": "packages/self-improvement/src/accounting-probe.ts",
+      "owner": "self-improvement accounting probe",
+      "change": "Accept omitted caseId only for the exact three accounting probe IDs, while rejecting other explicit case IDs. Keep foreground-priority evidence for AT-ops-49, cancellation semantics for AT-ops-51, and swapped named-window durations for AT-ops-52 pending until their assigned checks are resolved."
+    }
+  ],
+  "requiredCliProof": {
+    "stack": "toy --env test stack up --release R0 --clock fake --model fake --request-id <fresh-uuid> --json",
+    "runs": [
+      "toy --env test --stack <stack-id> probe run AT-ops-49 --request-id <fresh-uuid> --json",
+      "toy --env test --stack <stack-id> probe run AT-ops-51 --request-id <fresh-uuid> --json",
+      "toy --env test --stack <stack-id> probe run AT-ops-52 --request-id <fresh-uuid> --json"
+    ],
+    "readbacks": "toy --env test --stack <stack-id> probe show <each-operation-id> --json",
+    "teardown": "toy --env test --stack <stack-id> stack down --request-id <fresh-uuid> --json",
+    "mustReadBack": [
+      "no caseId supplied in run input",
+      "sourceRegistration with exact indexed hash",
+      "all observed diagnostics preserved in probe.show",
+      "whole result remains state=NOT_IMPLEMENTED and complete=false",
+      "stable caseManifestDigest and exact probe.show result",
+      "real PostgreSQL fixture restart and clean teardown",
+      "liveProviderSends=0"
+    ]
+  },
+  "priorRealPostgresEvidence": {
+    "path": "build/evidence/R0.06/accounting-runtime-verification.json",
+    "observedAt": "2026-10-06T15:19:59.556248+00:00",
+    "verdict": "PASS_REAL_POSTGRESQL_ACCOUNTING_CLI_SUBSETS",
+    "stackId": "e67cbecd-9f33-4087-bea7-d5868eb29eb8",
+    "database": "real PostgreSQL17 canonical Self-Improvement accounting tables",
+    "postgresqlRestartVerified": true,
+    "cleanupComplete": true,
+    "liveProviderSends": 0,
+    "readbacks": [
+      {
+        "probeId": "AT-ops-49",
+        "operationId": "10390376-2b14-4505-aecd-08a443867b4d",
+        "checksPassed": 3,
+        "exactReadback": true,
+        "run": "build/evidence/R0.06-unrestricted-ops49-run.json",
+        "show": "build/evidence/R0.06-unrestricted-ops49-show.json"
+      },
+      {
+        "probeId": "AT-ops-51",
+        "operationId": "5a7f4aec-c996-452b-82ea-51b18b8b5339",
+        "checksPassed": 2,
+        "exactReadback": true,
+        "run": "build/evidence/R0.06-unrestricted-ops51-run.json",
+        "show": "build/evidence/R0.06-unrestricted-ops51-show.json"
+      },
+      {
+        "probeId": "AT-ops-52",
+        "operationId": "2fff3b44-e02c-4e08-b770-70176422444a",
+        "checksPassed": 4,
+        "exactReadback": true,
+        "run": "build/evidence/R0.06-unrestricted-ops52-run.json",
+        "show": "build/evidence/R0.06-unrestricted-ops52-show.json"
+      }
+    ],
+    "wholeATsPassed": [],
+    "acceptanceComplete": false,
+    "remainingWholeGates": [
+      "protected provider-send ownership and native ModelRoute integration",
+      "complete per-AT source manifest/controller and unfiltered assertions",
+      "durable deferred slot/wake integration and remaining assigned scenarios"
+    ]
+  },
+  "currentSourceHashes": {
+    "tests/acceptance-index.json": "87d21b7f24f9f900bb202e1e813ba46bbc51282b96e14cb2739d5fd67b32d9e6",
+    "tests/registry.yaml": "314f9d8b0ae38937fa617f505e3f51ded84f5fac10efcba577bcdcadaa7d23c2",
+    "scripts/generate-contracts.mjs": "4af296522897059f2d54d63077535da25a9fdbce7eeaad3ceba818962ffdc371",
+    "packages/contracts/src/ops-registry.ts": "5917c9e4365fa07cdecf8c82402d24878c67dfb20f188b8e7d48e57d187ad93a",
+    "packages/contracts/src/cli-declarations.ts": "b7623e62057d5a1c607db7867a019940478dcefa4c6043498b3af596bca90ee6",
+    "packages/contracts/src/test-control.ts": "0af0d0e4349cae05bfdc06a77592e32c5171f0dc5d0e5964f2ef87faeaa4111c",
+    "packages/contracts/src/generated-probe-registry.ts": "039a8946e1225ac9b420269084dd858f419a379409920b93b535f110603396b8",
+    "packages/self-improvement/src/public.ts": "f544b6e9418465c0ca8ee2bcb169e03383d2133ed527b2050275a33f322af73c",
+    "packages/self-improvement/src/accounting-probe.ts": "10d8900c79deb5d5599bc670f537380013950672d5022d08291ccbb88e34cdcd",
+    "packages/self-improvement/src/accounting-postgres.ts": "b9b2b721acec01d490a247b9fd415b6bd3e8ecc6d55fc4adab4b1b7bb91557f0",
+    "packages/self-improvement/src/model-admission.ts": "029783a3dee495d6d15a8a2c59ec6493627815ed2841f475f0b5a852a0fd7840",
+    "packages/ops/src/model-admission-policy.ts": "553eb6805c9779c924d16c3bdb8eeac9a92727086b64a673d317f9dddcbc2c95",
+    "packages/ops/src/fixture-stack.ts": "0beab842765c79b3e71a9ad57aac617824ed8a6d265cd4df1a749b6b2d3a9cec",
+    "cli/src/main.ts": "20865cd6b42e0d859213cc606ea797764b228f7a9a2b93dbe74ac37ef60c7e01"
+  },
+  "boundedNextAction": "Add source-bound manifests and allow the exact three IDs through the existing owner path with omitted caseId: update the public.ts dispatch guard, accountingProbe input guard, and FixtureProbe accounting-recognition guard. Keep whole results NOT_IMPLEMENTED/incomplete and the identified AT49/51/52 coverage gaps pending.",
+  "reviewCorrection": {
+    "reviewer": "parent",
+    "errorsRejected": [
+      "filtered commands mislabelled as unfiltered proof",
+      "whole PASS/complete=true without protected/controller evidence"
+    ],
+    "resolvedInPlan": true,
+    "fixtureWholeIncompleteInvariantRetained": true
+  }
+}
