@@ -1,6 +1,6 @@
 import { createHash, randomUUID } from "node:crypto";
 import { spawnSync } from "node:child_process";
-import { existsSync, lstatSync, mkdirSync, readFileSync, realpathSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
+import { existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, realpathSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { acceptanceIndexSchema, checkoutPathSchema, cliDeclarations, featureFactsSchema, featureMapCheckSchema, featureMapUpdateSchema, generatorInputSchema, generatorPlanSchema, gardenerInputSchema, gardenerReportSchema, kitchenGateSummarySchema, mapCheckInputSchema, mapUpdateInputSchema, opsControlContextSchema, opsErrorMessages, referenceAdmissionEvidenceSchema, researchRegisterInspectionSchema } from "@toy/contracts";
 import type { CheckViewV1, FeatureFactsV1, FilePatchV1, GeneratorInputV1, GeneratorPlanV1, FeatureMapCheckV1, FeatureMapUpdateV1, MapCheckInputV1, MapUpdateInputV1, GardenerInputV1, GardenerReportV1, OpsControlContextV1, ResearchInspectionFindingV1, ResearchRegisterInspectionV1, Result } from "@toy/contracts";
@@ -158,7 +158,7 @@ const inspect = (): { facts: FeatureFactsV1; check: FeatureMapCheckV1; expected:
 
 const readResearchFile = (path: string): string => {
   checkoutPathSchema.parse(path);
-  if (path !== "specs/RESEARCH-REGISTER.md" && !path.startsWith("research/")) throw new Error("RESEARCH_PATH_REFUSED");
+  if (!/^specs\/[^/]+\.md$/.test(path) && !path.startsWith("research/")) throw new Error("RESEARCH_PATH_REFUSED");
   let current = realpathSync(planning());
   for (const part of path.split("/")) {
     current = join(current, part);
@@ -166,6 +166,63 @@ const readResearchFile = (path: string): string => {
     if (file.isSymbolicLink() || !file.isDirectory() && !file.isFile()) throw new Error("RESEARCH_PATH_REFUSED");
   }
   return readFileSync(current, "utf8");
+};
+const markdownTableCells = (line: string): string[] | null => {
+  const trimmed = line.trim();
+  if (!trimmed.startsWith("|")) return null;
+  const inner = trimmed.endsWith("|") ? trimmed.slice(1, -1) : trimmed.slice(1);
+  return inner.split("|");
+};
+const isMarkdownTableSeparator = (cells: string[]): boolean => cells.length > 0 && cells.every((cell) => /^:?-{3,}:?$/.test(cell.trim()));
+const isRequirementHeader = (cell: string): boolean => /^requirements?\b/i.test(cell.replace(/[*_~`]/g, "").trim());
+const inspectResearchSpecs = (components: ResearchRegisterInspectionV1["components"], findings: ResearchInspectionFindingV1[]): ResearchRegisterInspectionV1["specReferences"] => {
+  const specDirectory = join(realpathSync(planning()), "specs");
+  const directory = lstatSync(specDirectory);
+  if (directory.isSymbolicLink() || !directory.isDirectory()) throw new Error("RESEARCH_SPECS_UNSAFE");
+  const paths = readdirSync(specDirectory).filter((name) => name.endsWith(".md")).map((name) => "specs/" + name).sort();
+  if (paths.length === 0) throw new Error("RESEARCH_SPECS_MISSING");
+  const inventoryIds = new Set(components.map((component) => component.id));
+  return paths.map((path) => {
+    const raw = readResearchFile(path);
+    const lines = raw.split(/\r?\n/);
+    const referenceLines = new Map<string, Set<number>>();
+    const requirementMappingRows: ResearchRegisterInspectionV1["specReferences"][number]["requirementMappingRows"] = [];
+    for (let lineIndex = 0; lineIndex < lines.length; lineIndex += 1) {
+      const line = lines[lineIndex];
+      if (line === undefined) continue;
+      const lineNumber = lineIndex + 1;
+      const lineIds = new Set<string>();
+      for (const match of line.matchAll(/\b([ABNCEDM][0-9]{2})\b/g)) {
+        const id = match[1];
+        if (id) lineIds.add(id);
+      }
+      for (const id of lineIds) {
+        const sourceLines = referenceLines.get(id) ?? new Set<number>();
+        sourceLines.add(lineNumber);
+        referenceLines.set(id, sourceLines);
+      }
+      const headerCells = markdownTableCells(line);
+      const separatorCells = markdownTableCells(lines[lineIndex + 1] ?? "");
+      const header = headerCells?.[0];
+      if (!headerCells || !separatorCells || headerCells.length !== separatorCells.length || !isMarkdownTableSeparator(separatorCells) || header === undefined || !isRequirementHeader(header)) continue;
+      for (let rowIndex = lineIndex + 2; rowIndex < lines.length; rowIndex += 1) {
+        const row = lines[rowIndex];
+        if (row === undefined) continue;
+        const cells = markdownTableCells(row);
+        const requirementCell = cells?.[0];
+        if (!cells || isMarkdownTableSeparator(cells) || requirementCell === undefined) break;
+        requirementMappingRows.push({ sourceLine: rowIndex + 1, rowDigest: hash(row), requirementCell });
+      }
+    }
+    const componentReferences: ResearchRegisterInspectionV1["specReferences"][number]["componentReferences"] = [...referenceLines.entries()]
+      .sort(([left], [right]) => left < right ? -1 : left > right ? 1 : 0)
+      .map(([id, sourceLines]) => ({ id, sourceLines: [...sourceLines].sort((left, right) => left - right) }));
+    for (const reference of componentReferences) {
+      if (inventoryIds.has(reference.id)) continue;
+      for (const sourceLine of reference.sourceLines) findings.push({ componentId: reference.id, code: "COMPONENT_REFERENCE_UNMAPPED", sourceLine, sourcePath: path });
+    }
+    return { path, digest: hash(raw), componentReferences, requirementMappingRows };
+  });
 };
 const inspectResearch = (input: MapCheckInputV1): ResearchRegisterInspectionV1 => {
   const registerPath = "specs/RESEARCH-REGISTER.md";
@@ -220,7 +277,8 @@ const inspectResearch = (input: MapCheckInputV1): ResearchRegisterInspectionV1 =
     components.push({ id, sourceLine, rowDigest: hash(row), componentAndPin, consumingSpecs, researchReference, alternativesAndReason, releaseGate, missingPinDeclared, reportKeys: keys, certification: "UNVERIFIED" });
   }
   for (const code of ["GATE_EVIDENCE_UNVERIFIED", "RESEARCH_ATTESTATION_UNVERIFIED", "DEPENDENCY_CLOSURE_UNVERIFIED"] as const) findings.push({ componentId: null, code, sourceLine: null });
-  return researchRegisterInspectionSchema.parse({ requestedRelease: input.release, registerPath, registerDigest: hash(raw), components, reports, findings, scope: "register_inventory", admission: "BLOCKED", acceptanceComplete: false });
+  const specReferences = inspectResearchSpecs(components, findings);
+  return researchRegisterInspectionSchema.parse({ requestedRelease: input.release, registerPath, registerDigest: hash(raw), components, reports, specReferences, dependencyClosureVerified: false, findings, scope: "register_inventory", admission: "BLOCKED", acceptanceComplete: false });
 };
 
 export const EngineeringControl = {

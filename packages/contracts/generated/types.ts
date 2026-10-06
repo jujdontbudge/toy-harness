@@ -187,6 +187,7 @@ export type ToySourcesStatusErrorV1 = z.infer<typeof schemaInventory.ToySourcesS
 export type ToySourcesStatusResultV1 = z.infer<typeof schemaInventory.ToySourcesStatusResultV1>;
 export type ResearchInspectionFindingV1 = z.infer<typeof schemaInventory.ResearchInspectionFindingV1>;
 export type ResearchComponentInspectionV1 = z.infer<typeof schemaInventory.ResearchComponentInspectionV1>;
+export type ResearchSpecReferencesV1 = z.infer<typeof schemaInventory.ResearchSpecReferencesV1>;
 export type ResearchRegisterInspectionV1 = z.infer<typeof schemaInventory.ResearchRegisterInspectionV1>;
 export type FilePatchV1 = z.infer<typeof schemaInventory.FilePatchV1>;
 export type GeneratorInputV1 = z.infer<typeof schemaInventory.GeneratorInputV1>;

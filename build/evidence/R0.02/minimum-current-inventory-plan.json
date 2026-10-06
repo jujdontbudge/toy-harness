@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "toy.r0.02.minimum-current-inventory-plan.v1",
+  "card": "R0.02",
+  "scope": "Read-only planning artifact; no implementation or probe was run.",
+  "selectedNextUnit": {
+    "assertion": "AT-RESEARCH-REGISTER-1",
+    "rung": "CLI",
+    "requiredEvidence": [
+      "static",
+      "probe:AT-RESEARCH-REGISTER-1"
+    ],
+    "whyThisUnit": "The existing built research.check command already returns the register rows and report inventory. Its bounded remaining gap is source closure: the assertion requires comparing selected components and requirement references across specs/*.md with the register and report index, including proof that no selected dependency is left unmapped. This can extend the existing read-only owner and registered toy CLI probe without adding an owner, command, stack, provider, or account dependency.",
+    "implementation": [
+      "Extend the existing EngineeringControl.checkResearch public operation behind research.check to enumerate the selected component and requirement references in the fixed planning checkout's specs/*.md files and compare them with RESEARCH-REGISTER sections 2–4 and the report index.",
+      "Return a precise finding for each unmatched reference or incomplete register row. Require an exact pin or explicit PIN-MISSING, consuming specs, report file and section or explicit UNRESEARCHED status, alternatives and reason, release, and concrete gate; keep report-file presence distinct from primary-evidence or gate certification.",
+      "Exercise the real command through the existing registered AT-RESEARCH-REGISTER-1 CLI probe. Save fresh static and probe output under build/evidence/R0.02. Do not add private-function tests or use an unregistered script."
+    ],
+    "passCriteria": [
+      "Every selected component and requirement reference discovered in specs/*.md resolves to a register entry and report-index entry or an explicit UNRESEARCHED state.",
+      "Every selected register row exposes all required fields; any missing field or unmapped dependency is visible as a failing finding and cannot be silently admitted.",
+      "Fresh CLI evidence covers the complete current source inventory and records the assertion result at its assigned CLI rung."
+    ],
+    "bounds": [
+      "Keep research.check read-only and bound to its existing fixed planning checkout; callers supply no path, digest, receipt, or override.",
+      "Use TypeScript for the owner change and existing CLI/probe route; add no infrastructure or external research.",
+      "Do not reopen the completed command/help or kitchen diagnostics."
+    ]
+  },
+  "priorVerifiedInventory": [
+    {
+      "evidence": "build/evidence/R0.02/research-inspection-preparation.json",
+      "capturedAt": "2026-10-06T05:05:20.166081+00:00",
+      "observation": "The read-only research.check invocation inventoried 165 source-bound component rows across groups A/B/N/C/E/D/M and 15 available report files. Invalid release and override inputs were rejected, and help showed one read-only owner command.",
+      "limit": "This is inventory evidence only: admission was BLOCKED, acceptanceComplete was false, no assigned AT passed, and the command made no stack, provider, browser, Keychain, production-service, or account operation."
+    },
+    {
+      "evidence": "build/evidence/R0.02/register-all-final.json",
+      "observation": "The saved output contains the complete register row projection and findings, including an unresolved dependency-closure finding.",
+      "limit": "It does not prove closure against selected references in every specs/*.md file or satisfy the whole AT-RESEARCH-REGISTER-1 assertion."
+    }
+  ],
+  "stillMissingProof": [
+    "No fresh assigned-rung AT-RESEARCH-REGISTER-1 static and CLI-probe evidence establishes all-spec reference closure or that no dependency is unmapped.",
+    "The prior evidence snapshot is historical. Its 106 PIN_MISSING findings are not current evidence for the exact TypeScript 5.9.3, Zod 4.6.5, Ajv 8.17.1, pg 8.23.1, pg-boss 12.36.0, and OpenTelemetry 1.9.0 pins reported installed and locked in the current task context.",
+    "AT-RESEARCH-REGISTER-2 still lacks a card-preserving pre-build denial probe with independent admitted work; AT-RESEARCH-REGISTER-3, AT-hands-63, AT-ops-45, AT-workflows-10, and AT-workflows-11 still lack the required protected research route and loaded-skill receipts; AT-RESEARCH-REGISTER-4 still lacks complete Sources 9.1–9.48 to D01–D66 coverage proof.",
+    "AT-hands-62 and AT-ops-43 still lack their assigned negative gate probes for missing decision or primary evidence. AT-ops-44, AT-workflows-1, AT-workflows-2, and AT-workflows-11 still lack their respective research-choice, evidence, pre-build-gate, or denial evidence."
+  ],
+  "notClaimed": [
+    "R0.02 completion or passage of any assigned AT",
+    "Current machine/store/service/Chrome/port/FileVault/Pro inventory",
+    "Freshness of old PIN_MISSING counts",
+    "Authenticated research, account/device evidence, or primary-source research"
+  ]
+}

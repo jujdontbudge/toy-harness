@@ -338,6 +338,8 @@ class ResearchRegisterInspectionV1(TypedDict):
     registerDigest: "Digest"
     components: list["ResearchComponentInspectionV1"]
     reports: list["ResearchRegisterInspectionV1ReportsItem"]
+    specReferences: list["ResearchSpecReferencesV1"]
+    dependencyClosureVerified: "RoleBootstrapReportV1IdentityGateVerified"
     findings: list["ResearchInspectionFindingV1"]
     scope: "ResearchRegisterInspectionV1Scope"
     admission: "ResearchRegisterInspectionV1Admission"
@@ -366,10 +368,26 @@ class ResearchRegisterInspectionV1ReportsItem(TypedDict):
     listedSections: str
     digest: Optional["Digest"]
 
+class ResearchSpecReferencesV1(TypedDict):
+    path: str
+    digest: "Digest"
+    componentReferences: list["ResearchSpecReferencesV1ComponentReferencesItem"]
+    requirementMappingRows: list["ResearchSpecReferencesV1RequirementMappingRowsItem"]
+
+class ResearchSpecReferencesV1ComponentReferencesItem(TypedDict):
+    id: str
+    sourceLines: list[int]
+
+class ResearchSpecReferencesV1RequirementMappingRowsItem(TypedDict):
+    sourceLine: int
+    rowDigest: "Digest"
+    requirementCell: str
+
 class ResearchInspectionFindingV1(TypedDict):
     componentId: Optional[str]
     code: "ResearchInspectionFindingV1Code"
     sourceLine: Optional[int]
+    sourcePath: NotRequired[str]
 
 ResearchInspectionFindingV1Code = Literal[
     "PIN_MISSING",
@@ -382,6 +400,7 @@ ResearchInspectionFindingV1Code = Literal[
     "GATE_EVIDENCE_UNVERIFIED",
     "RESEARCH_ATTESTATION_UNVERIFIED",
     "DEPENDENCY_CLOSURE_UNVERIFIED",
+    "COMPONENT_REFERENCE_UNMAPPED",
 ]
 
 ResearchRegisterInspectionV1Scope = Literal[
