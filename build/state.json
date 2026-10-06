@@ -2,7 +2,7 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-06T19:07:51.289051+00:00",
+  "updatedAt": "2026-10-06T19:22:54.644584+00:00",
   "phase": "R0.07 fixture journal12checksverified/receiptboundrepairplanned; root02pending; R003catalogobservationnext",
   "activeCard": "R0.03",
   "cardCount": 87,
@@ -522,7 +522,9 @@
         "build/evidence/R0.03/concurrent-auth-generation-effects-verification.json",
         "build/evidence/R0.03/concurrent-auth-generation-effects-replan.json",
         "build/evidence/R0.03/catalog-observation-verification.json",
-        "build/evidence/R0.03/catalog-observation-replan.json"
+        "build/evidence/R0.03/catalog-observation-replan.json",
+        "build/evidence/R0.03/model-observation-verification.json",
+        "build/evidence/R0.03/model-observation-replan.json"
       ],
       "requiredATs": [
         "AT-hermes-config-34",
@@ -618,11 +620,14 @@
         "sourceUnitStoppedAt": "2026-10-06T09:56:39.219348+00:00"
       },
       "lastVerification": {
-        "evidence": "build/evidence/R0.03/catalog-observation-verification.json",
+        "evidence": "build/evidence/R0.03/model-observation-verification.json",
         "wholeATsPassed": [],
         "acceptanceComplete": false,
+        "passedConcurrencyChecks": 13,
         "addFirstDiagnosticChecksPassed": 8,
-        "refreshFirstIndependentAddPassed": true,
+        "refreshFirstDiagnosticChecksPassed": 5,
+        "newestRotatedFreshProcessVerified": true,
+        "freshAddedGrantUsable": false,
         "cleanupComplete": true
       },
       "concurrentAuthUnit": {
@@ -697,6 +702,33 @@
         "verification": "build/evidence/R0.03/catalog-observation-verification.json",
         "replan": "build/evidence/R0.03/catalog-observation-replan.json",
         "passedConcurrencyChecks": 9
+      },
+      "modelObservationUnit": {
+        "startedAt": "2026-10-06T19:09:56.267475+00:00",
+        "targetStopAt": "2026-10-06T19:39:56.271461+00:00",
+        "state": "CLOSED_THREE_FAILURE_REPLAN",
+        "scope": "Finite fixed model generation/denial marker on existing external HTTP/barrier seam only",
+        "wholeATComplete": false,
+        "actualDiagnosticAttempts": 3,
+        "observedModelGeneration": "added-rotated",
+        "modelAuthorizationDenied": true,
+        "observation": "build/evidence/R0.03/model-observation-probe.json",
+        "firstRunShowExact": true,
+        "firstTeardownComplete": true,
+        "correctedModelExpectation": "added-rotated",
+        "freshRefreshModelExpectationUnchanged": "stale",
+        "currentStackId": null,
+        "passedConcurrencyChecks": 13,
+        "freshRefreshGeneration": "stale",
+        "freshAddedCatalogGeneration": "stale",
+        "freshAddedModelExpectation": "added-rotated",
+        "secondEvidence": "build/evidence/R0.03/model-observation-corrected-probe.json",
+        "stoppedAt": "2026-10-06T19:22:54.644584+00:00",
+        "verification": "build/evidence/R0.03/model-observation-verification.json",
+        "replan": "build/evidence/R0.03/model-observation-replan.json",
+        "newestRotatedFreshProcessVerified": true,
+        "freshAddedGrantUsable": false,
+        "cleanupComplete": true
       }
     },
     "R0.04": {
@@ -1208,7 +1240,8 @@
         "build/evidence/R0.10/tool-schema-preparation.json",
         "build/evidence/R0.10/native-queue-verification.json",
         "build/evidence/R0.10/native-recurrence-verification.json",
-        "build/evidence/R0.10/next-reachable-unit.json"
+        "build/evidence/R0.10/next-reachable-unit.json",
+        "build/evidence/R0.10/decision-baseline-verification.json"
       ],
       "requiredATs": [
         "AT-activity-focus-86",
@@ -1276,6 +1309,13 @@
         "AT": "AT-obligations-74",
         "evidence": "build/evidence/R0.10/next-reachable-unit.json",
         "acceptanceComplete": false
+      },
+      "componentDecisionBaseline": {
+        "state": "REGISTERED_CASE_NOT_IMPLEMENTED",
+        "wholeATComplete": false,
+        "evidence": "build/evidence/R0.10/decision-baseline-verification.json",
+        "runShowExact": true,
+        "cleanupComplete": true
       }
     },
     "R0.11": {
@@ -9935,7 +9975,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Collect independent unfiltered AT-obligations-74 baseline, then apply re-planned minimal fake OAuth expiration alignment; poll frozen root02 and consume exact native-role result on DONE.",
+  "nextAction": "Move to independent R0.10 AT-obligations-74 minimum component-decision predicates while Luna traces the exact failed R0.03 fresh model-selection path; poll frozen root02, consume exact native UID310 read/restoration on DONE and advance R0.01.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -20474,7 +20514,7 @@
   "latestStaticVerification": {
     "command": "npm run check",
     "exitCode": 0,
-    "result": "build/evidence/R0.03/catalog-observation-final-check-result.json",
+    "result": "build/evidence/R0.03/model-observation-final-scoped-check-result.json",
     "artifacts": 352,
     "contracts": 284,
     "features": 97,
@@ -20483,7 +20523,7 @@
     "schemaDigest": "0b8ed3c0298b6629a0f42935b07cd0238a6bf53122e7fadc47c76485aab09b65",
     "swiftInvoked": false
   },
-  "sourceCheckpointCommit": "ed98d32",
+  "sourceCheckpointCommit": "a331398",
   "sourceCheckpointPushed": true,
   "rootRequests": {
     "ROOT-R004-20261006-01": {

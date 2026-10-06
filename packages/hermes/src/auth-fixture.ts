@@ -427,7 +427,7 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
             ? result.http_ledger.device_code_requests === 0 && result.http_ledger.device_code_polls === 0 && result.http_ledger.token_exchanges === 0 && result.http_ledger.token_refreshes === 0 && result.http_ledger.model_catalog_requests === 0 && result.http_ledger.model_requests === 0 && result.http_ledger.denied_http_requests === 0 && result.http_ledger.blocked_socket_events === 0
             : result.http_ledger.device_code_requests === 0 && result.http_ledger.device_code_polls === 0 && result.http_ledger.token_exchanges === 0 && result.http_ledger.token_refreshes === expectedRefreshEffects.length && result.http_ledger.model_catalog_requests === 1 && result.http_ledger.model_requests === 1 && result.http_ledger.denied_http_requests === 0 && result.http_ledger.blocked_socket_events === 0;
         const expectedGeneration = priorityOperation ? result.observations.access_generation === null : actor === "expired-chat"
-          ? result.observations.access_generation === (order === "add-first" ? "rotated" : "stale")
+          ? result.observations.access_generation === (order === "add-first" ? "rotated" : "added-rotated")
           : actor === "fresh-add-reload"
             ? result.observations.access_generation === "added-rotated"
             : actor === "fresh-refresh-reload"
@@ -435,7 +435,7 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
               : result.observations.access_generation === null;
         const catalogGenerationMatches = addOperation || listOperation || priorityOperation
           ? result.observations.catalog_access_generation === null
-          : result.observations.catalog_access_generation === (actor === "expired-chat" && order === "refresh-first" ? "added-rotated" : result.observations.access_generation);
+          : result.observations.catalog_access_generation === (actor === "fresh-add-reload" && order === "refresh-first" ? "stale" : result.observations.access_generation);
         const concurrencyMatches = concurrency !== undefined
           && concurrency.order === order
           && concurrency.actor === actor
@@ -473,6 +473,12 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
           && JSON.stringify(privateStoreDigests(hermesRoot).rootEnv) === JSON.stringify(storesBefore.rootEnv);
         return { result, passed };
       };
+      const readModelMarkers = (barrierDirectory: string) => ({
+        modelRequestGenerations: hermesAuthFixtureResultSchema.shape.observations.shape.catalog_access_generation.unwrap().options.filter(generation => existsSync(join(barrierDirectory, `model-request-${generation}`))),
+        modelUnknownGeneration: existsSync(join(barrierDirectory, "model-request-unknown")),
+        modelAuthorizationDenied: existsSync(join(barrierDirectory, "model-request-authorization-denied")),
+        modelPayloadDenied: existsSync(join(barrierDirectory, "model-request-model-denied"))
+      });
       const release = (barrierDirectory: string, marker: string): void => writeFileSync(join(barrierDirectory, marker), "release", { flag: "wx", mode: 0o600 });
       const createBarrierDirectory = (label: string): string => {
         const path = join(scratch, `concurrent-${label}-${process.hrtime.bigint()}`);
@@ -549,7 +555,7 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
             if (chatChild.isRunning()) chatChild.kill();
             const failedChat = await chatChild.result;
             const failedObservation = parseConcurrentChild("chat-expired", order, "expired-chat", failedChat, primaryCrashCut);
-            return fail("FAIL", "NATIVE_AUTH_CONCURRENCY_REFRESH_RESULT_BARRIER_FAILED", { order, result: failedObservation.result, childExitCode: failedChat.status, childSignal: failedChat.signal, timedOut: failedChat.timedOut, oversized: failedChat.oversized, spawnError: failedChat.spawnError });
+            return fail("FAIL", "NATIVE_AUTH_CONCURRENCY_REFRESH_RESULT_BARRIER_FAILED", { order, result: failedObservation.result, ...readModelMarkers(barrierDirectory), childExitCode: failedChat.status, childSignal: failedChat.signal, timedOut: failedChat.timedOut, oversized: failedChat.oversized, spawnError: failedChat.spawnError });
           }
           chatChild.kill();
           chatOutcome = await chatChild.result;
@@ -585,13 +591,14 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
         const priorityObserved = parseConcurrentChild("priority-added", order, "fresh-add-reload", priorityOutcome, "none");
         concurrencyChecks.push(check(priorityObserved.passed ? "PASS" : "FAIL", priorityObserved.passed ? "NATIVE_AUTH_CONCURRENCY_ADDED_PRIORITY_OBSERVED" : "NATIVE_AUTH_CONCURRENCY_ADDED_PRIORITY_FAILED", { order, result: priorityObserved.result, childExitCode: priorityOutcome.status, childSignal: priorityOutcome.signal, timedOut: priorityOutcome.timedOut, oversized: priorityOutcome.oversized, spawnError: priorityOutcome.spawnError, rootStoreUnchanged, wholeATComplete: false }, artifacts));
         if (!priorityObserved.passed) return [...operationChecks, ...concurrencyChecks];
-        const freshAddChild = launchFixture("chat-reloaded", order, "fresh-add-reload", reloadDirectory, "none", false);
+        const freshAddDirectory = createBarrierDirectory(`${order}-fresh-add-reload`);
+        const freshAddChild = launchFixture("chat-reloaded", order, "fresh-add-reload", freshAddDirectory, "none", false);
         if (!freshAddChild) return fail("BLOCKED", "NATIVE_AUTH_CONCURRENCY_FRESH_ADD_RELOAD_COMMAND_UNAVAILABLE", { order, wholeATComplete: false });
         const freshAddOutcome = await freshAddChild.result;
         const freshAddObserved = parseConcurrentChild("chat-reloaded", order, "fresh-add-reload", freshAddOutcome, "none");
         const freshGeneration = freshAddObserved.result?.observations.access_generation === "added-rotated";
         const freshResult = freshAddObserved.passed && freshGeneration && rootStoreUnchanged;
-        concurrencyChecks.push(check(freshResult ? "PASS" : "FAIL", freshResult ? "NATIVE_AUTH_CONCURRENCY_FRESH_GRANT_RELOAD_OBSERVED" : "NATIVE_AUTH_CONCURRENCY_FRESH_GRANT_RELOAD_FAILED", { order, result: freshAddObserved.result, childExitCode: freshAddOutcome.status, childSignal: freshAddOutcome.signal, timedOut: freshAddOutcome.timedOut, oversized: freshAddOutcome.oversized, spawnError: freshAddOutcome.spawnError, staleRefreshTokenRejected: freshAddObserved.result?.concurrency?.staleRefreshTokenRejected ?? "not-exercised", staleRefreshResponse: freshAddObserved.result?.concurrency?.staleRefreshResponse ?? "not-exercised", addedGrantUsable: freshGeneration, lostUpdateAbsent: listObserved.result?.observations.credential_count === expectedCount && freshRefreshGeneration && freshGeneration && chatObserved.passed, rootStoreUnchanged, wholeATComplete: false }, [...artifacts, ...(freshAddObserved.result ? [digest(JSON.stringify(freshAddObserved.result))] : [])]));
+        concurrencyChecks.push(check(freshResult ? "PASS" : "FAIL", freshResult ? "NATIVE_AUTH_CONCURRENCY_FRESH_GRANT_RELOAD_OBSERVED" : "NATIVE_AUTH_CONCURRENCY_FRESH_GRANT_RELOAD_FAILED", { order, result: freshAddObserved.result, ...readModelMarkers(freshAddDirectory), childExitCode: freshAddOutcome.status, childSignal: freshAddOutcome.signal, timedOut: freshAddOutcome.timedOut, oversized: freshAddOutcome.oversized, spawnError: freshAddOutcome.spawnError, staleRefreshTokenRejected: freshAddObserved.result?.concurrency?.staleRefreshTokenRejected ?? "not-exercised", staleRefreshResponse: freshAddObserved.result?.concurrency?.staleRefreshResponse ?? "not-exercised", addedGrantUsable: freshGeneration, lostUpdateAbsent: listObserved.result?.observations.credential_count === expectedCount && freshRefreshGeneration && freshGeneration && chatObserved.passed, rootStoreUnchanged, wholeATComplete: false }, [...artifacts, ...(freshAddObserved.result ? [digest(JSON.stringify(freshAddObserved.result))] : [])]));
         if (!freshResult) return [...operationChecks, ...concurrencyChecks];
         const restoreChild = launchFixture("priority-restored", order, "fresh-refresh-reload", reloadDirectory, "none", false);
         if (!restoreChild) return fail("BLOCKED", "NATIVE_AUTH_CONCURRENCY_RESTORE_COMMAND_UNAVAILABLE", { order, wholeATComplete: false });

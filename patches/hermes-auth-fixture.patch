@@ -1,6 +1,6 @@
 --- /dev/null
 +++ b/tests/fixtures/toy_auth_httpx_fixture.py
-@@ -0,0 +1,677 @@
+@@ -0,0 +1,685 @@
 +from __future__ import annotations
 +
 +import base64
@@ -81,7 +81,7 @@
 +        if order == "add-first":
 +            return ("rotated",)
 +        if order == "refresh-first":
-+            return ("stale",)
++            return ("added-rotated",)
 +        return ("rotated", "added-rotated")
 +    if _PHASE == "chat":
 +        return ("initial",)
@@ -91,7 +91,7 @@
 +
 +
 +def _barrier_path(name: str) -> Path | None:
-+    if name not in {"add-response-pending", "release-add-token", "add-command-returned", "release-add-result", "refresh-lock-pending", "release-refresh-lock", "refresh-response-pending", "release-refresh-token", "refresh-catalog-observed", "release-refresh-model", "result-emitted", "release-result"}:
++    if name not in {"add-response-pending", "release-add-token", "add-command-returned", "release-add-result", "refresh-lock-pending", "release-refresh-lock", "refresh-response-pending", "release-refresh-token", "refresh-catalog-observed", "release-refresh-model", "result-emitted", "release-result", "model-request-initial", "model-request-rotated", "model-request-added", "model-request-added-rotated", "model-request-stale", "model-request-unknown", "model-request-authorization-denied", "model-request-model-denied"}:
 +        return None
 +    directory = os.environ.get("TOY_AUTH_CONCURRENCY_BARRIER_DIR")
 +    if not directory:
@@ -214,11 +214,17 @@
 +
 +def _model_response(request: httpx.Request, asynchronous: bool) -> httpx.Response:
 +    global _ACCEPTED_ACCESS_GENERATION
++    observed_generation = next((name for name in _GENERATION_EXPIRATIONS if request.headers.get("authorization") == "Bearer " + _access_token(_GENERATION_EXPIRATIONS[name], name)), None)
++    observe_model = os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR") in {"expired-chat", "fresh-add-reload", "fresh-refresh-reload"}
++    if observe_model:
++        _signal_barrier("model-request-" + (observed_generation or "unknown"))
 +    try:
 +        payload = json.loads(request.read())
 +    except Exception:
 +        payload = {}
 +    if not isinstance(payload, dict) or payload.get("model") != _EXPECTED_MODEL:
++        if observe_model:
++            _signal_barrier("model-request-model-denied")
 +        return _deny_request("model-mismatch")
 +    expected_generations = _expected_access_generations()
 +    expected_generation = next(
@@ -231,6 +237,8 @@
 +        None,
 +    )
 +    if expected_generation is None:
++        if observe_model:
++            _signal_barrier("model-request-authorization-denied")
 +        return _deny_request("authorization-mismatch")
 +    _ACCEPTED_ACCESS_GENERATION = expected_generation
 +    if payload.get("stream") is not False:
@@ -398,7 +406,7 @@
 +            None,
 +        )
 +        _CATALOG_ACCESS_GENERATION = generation
-+        catalog_generations = ("added-rotated",) if _PHASE == "chat-expired" and os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR") == "expired-chat" and os.environ.get("TOY_AUTH_CONCURRENCY_ORDER") == "refresh-first" else _expected_access_generations()
++        catalog_generations = ("stale",) if _PHASE == "chat-reloaded" and os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR") == "fresh-add-reload" and os.environ.get("TOY_AUTH_CONCURRENCY_ORDER") == "refresh-first" else _expected_access_generations()
 +        if generation is None or generation not in catalog_generations:
 +            return _deny_request("authorization-mismatch")
 +        if os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR") == "expired-chat":
