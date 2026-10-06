@@ -1,1 +1,116 @@
-[]
+[
+  {
+    "id": "AT-hermes-config-85",
+    "rung": "CLI",
+    "sourceAssertionHash": "1945ba7e3df83056f7a11ddb1cc4f6f74b3c2e91744c47f77a85e3f34e21ff67",
+    "commandId": "probe.run",
+    "scenarioId": "auth.fresh-process",
+    "owner": "hermes",
+    "firstRelease": "R0",
+    "kind": "behavioral",
+    "mandatoryCases": [
+      {
+        "id": "add",
+        "publicOperation": "hermes --profile toy auth add openai-codex --type oauth --no-browser",
+        "phase": "add"
+      },
+      {
+        "id": "list",
+        "publicOperation": "hermes --profile toy auth list openai-codex",
+        "phase": "list"
+      },
+      {
+        "id": "chat",
+        "publicOperation": "hermes --profile toy chat --provider openai-codex --model gpt-6.1-sol --toolsets none -q \"Return the fixed fixture marker.\"",
+        "phase": "chat"
+      },
+      {
+        "id": "chat-expired",
+        "publicOperation": "hermes --profile toy chat --provider openai-codex --model gpt-6.1-sol --toolsets none -q \"Return the fixed fixture marker.\"",
+        "phase": "chat-expired"
+      },
+      {
+        "id": "chat-reloaded",
+        "publicOperation": "hermes --profile toy chat --provider openai-codex --model gpt-6.1-sol --toolsets none -q \"Return the fixed fixture marker.\"",
+        "phase": "chat-reloaded"
+      }
+    ],
+    "trigger": "Save a fresh synthetic Codex profile grant with real auth-add, terminate that process, use it in a fresh chat process, expire the fake access token, then refresh and use the newest grant in another fresh process.",
+    "faultControls": [
+      {
+        "id": "access-token-expiry",
+        "seam": "clock",
+        "affectedPhases": [
+          "chat-expired"
+        ]
+      }
+    ],
+    "observations": [
+      {
+        "id": "process-identity-exit",
+        "independentReader": "HermesAuthProbe.run: result.processIdentity, exit_code and child/fresh-child/parent/UID/GID matches",
+        "caseIds": [
+          "add",
+          "list",
+          "chat",
+          "chat-expired",
+          "chat-reloaded"
+        ]
+      },
+      {
+        "id": "public-argv",
+        "independentReader": "HermesAuthProbe.run: result.public_argv",
+        "caseIds": [
+          "add",
+          "list",
+          "chat",
+          "chat-expired",
+          "chat-reloaded"
+        ]
+      },
+      {
+        "id": "fake-provider-ledger",
+        "independentReader": "HermesAuthProbe.run: result.http_ledger and observations.network_denials",
+        "caseIds": [
+          "add",
+          "list",
+          "chat",
+          "chat-expired",
+          "chat-reloaded"
+        ]
+      },
+      {
+        "id": "root-profile-store-readback",
+        "independentReader": "HermesAuthProbe.run: rootStoreUnchanged, profileAuthAfterAdd, profileAuthCurrent and root/profile digests",
+        "caseIds": [
+          "add",
+          "list",
+          "chat",
+          "chat-expired",
+          "chat-reloaded"
+        ]
+      },
+      {
+        "id": "token-hygiene",
+        "independentReader": "HermesAuthProbe.run: result.observations.token_hygiene",
+        "caseIds": [
+          "add",
+          "list",
+          "chat",
+          "chat-expired",
+          "chat-reloaded"
+        ]
+      },
+      {
+        "id": "fresh-process-usability",
+        "independentReader": "HermesAuthProbe.run: fresh chat CHAT_RESPONSE_OK and observations.access_generation",
+        "caseIds": [
+          "chat",
+          "chat-expired",
+          "chat-reloaded"
+        ]
+      }
+    ],
+    "simUnavailableReason": "SIM ingress cannot start Hermes's administrative auth-add flow or select independent native subprocess exit/restart boundaries. The CLI drives those public commands in a seeded disposable profile and reads independent provider/store evidence."
+  }
+]

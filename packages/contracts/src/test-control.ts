@@ -2,9 +2,11 @@ import { z } from "zod";
 import { digestSchema, instantSchema, releaseSchema, revisionSchema, uint64Schema, uuidSchema } from "./primitives.js";
 import { acceptanceStateSchema, checkViewSchema, evidenceLinksSchema, recordRefSchema } from "./control-evidence.js";
 import { cadenceCoverageSchema, operationRefSchema, opsResultSchema } from "./ops.js";
-import { registeredCliProbeInventory } from "./generated-probe-registry.js";
+import { registeredCliAcceptanceManifestSchema } from "./ops-registry.js";
+import { registeredCliAcceptanceManifestInventory as generatedCliAcceptanceManifestInventory, registeredCliProbeInventory } from "./generated-probe-registry.js";
 
 export { registeredCliProbeInventory, acceptanceSourceDigest } from "./generated-probe-registry.js";
+export const registeredCliAcceptanceManifestInventory = generatedCliAcceptanceManifestInventory.map(manifest => registeredCliAcceptanceManifestSchema.parse(manifest));
 export const registeredCliProbeIdSchema = z.enum(registeredCliProbeInventory.map((entry) => entry.id));
 export const registeredTestWorldSchema = z.enum(["r0-bootstrap"]);
 export const registeredTestCaseSchema = z.enum(["native-entry", "native-denials", "postgres-unix", "stack-lifecycle", "k4a-connector", "k4a-tool", "k4a-skill", "k4a-migration", "model-route-policy", "model-route-stream", "model-admission", "native-release-eligibility", "native-auth-cli", "backup-capacity", "control-filesystem-denial", "queue-transaction-faults"]);
@@ -43,7 +45,8 @@ export const clockAdvanceOperationSchema = z.strictObject({
 });
 export const registeredProbeReportSchema = z.strictObject({
   probeId: registeredCliProbeIdSchema, caseManifestDigest: digestSchema, cases: z.array(checkViewSchema),
-  state: acceptanceStateSchema, complete: z.boolean(), links: evidenceLinksSchema
+  state: acceptanceStateSchema, complete: z.boolean(), links: evidenceLinksSchema,
+  sourceRegistration: registeredCliAcceptanceManifestSchema.optional()
 });
 export const registeredProbeOperationSchema = z.strictObject({
   operation: operationRefSchema, requestId: uuidSchema, stackId: uuidSchema.nullable(), result: registeredProbeReportSchema.nullable(),

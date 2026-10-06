@@ -953,7 +953,7 @@
     },
     {
       "id": "control.probe.run",
-      "description": "Request the registered owner operation",
+      "description": "Request the registered owner operation and expose explicitly authored source-bound CLI case metadata; missing protected controller and executable registration remain unimplemented",
       "implementation": "built",
       "requirementIds": [
         "0.17"
@@ -963,7 +963,16 @@
       "publicInterface": "ReplayEnvironment.runRegisteredProbe",
       "paths": [
         "packages/contracts/src/cli-declarations.ts",
-        "packages/self-improvement/src/public.ts"
+        "packages/self-improvement/src/public.ts",
+        "tests/registry.yaml",
+        "scripts/generate-contracts.mjs",
+        "scripts/check-int-registry.mjs",
+        "packages/contracts/src/test-control.ts",
+        "packages/contracts/src/ops-registry.ts",
+        "packages/ops/src/fixture-stack.ts",
+        "docs/adr/0035-source-bound-cli-acceptance-registration.md",
+        "scripts/check-k2.mjs",
+        "package.json"
       ],
       "firstRelease": "R0",
       "commands": [
@@ -972,7 +981,8 @@
       "atIds": [
         "AT-cli-4",
         "AT-cli-5",
-        "AT-cli-6"
+        "AT-cli-6",
+        "AT-hermes-config-85"
       ]
     },
     {
@@ -1135,7 +1145,7 @@
     },
     {
       "id": "control.gardener.run",
-      "description": "Run the registered source engineering operation",
+      "description": "Run the registered source engineering operation, including source-bound CLI manifest rejection and output-preservation checks",
       "implementation": "built",
       "requirementIds": [
         "0.17"
@@ -1145,7 +1155,10 @@
       "publicInterface": "EngineeringControl.garden",
       "paths": [
         "packages/contracts/src/cli-declarations.ts",
-        "packages/self-improvement/src/public.ts"
+        "packages/self-improvement/src/public.ts",
+        "scripts/check-k2.mjs",
+        "scripts/generate-contracts.mjs",
+        "tests/registry.yaml"
       ],
       "firstRelease": "R0",
       "commands": [

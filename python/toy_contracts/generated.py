@@ -2077,6 +2077,7 @@ class RegisteredProbeReportV1(TypedDict):
     state: "AcceptanceStateV1"
     complete: bool
     links: "EvidenceLinksV1"
+    sourceRegistration: NotRequired["RegisteredCliAcceptanceManifestV1"]
 
 RegisteredCliProbeIdV1 = Literal[
     "AT-activity-focus-1",
@@ -2747,6 +2748,53 @@ RegisteredCliProbeIdV1 = Literal[
     "AT-workflows-50",
     "AT-workflows-58",
 ]
+
+class RegisteredCliAcceptanceManifestV1(TypedDict):
+    id: str
+    rung: "RegisteredCliAcceptanceManifestV1Rung"
+    sourceAssertionHash: "Digest"
+    commandId: "CliProbeRunResultCommandId"
+    scenarioId: str
+    owner: "ModuleId"
+    firstRelease: "Release"
+    kind: "RegisteredCliAcceptanceManifestV1Kind"
+    mandatoryCases: list["RegisteredCliAcceptanceManifestV1MandatoryCasesItem"]
+    trigger: str
+    faultControls: list["RegisteredCliAcceptanceManifestV1FaultControlsItem"]
+    observations: list["RegisteredCliAcceptanceManifestV1ObservationsItem"]
+    simUnavailableReason: str
+
+RegisteredCliAcceptanceManifestV1Rung = Literal[
+    "CLI",
+]
+
+RegisteredCliAcceptanceManifestV1Kind = Literal[
+    "static_gate",
+    "behavioral",
+    "mixed",
+]
+
+class RegisteredCliAcceptanceManifestV1MandatoryCasesItem(TypedDict):
+    id: str
+    publicOperation: str
+    phase: str
+
+class RegisteredCliAcceptanceManifestV1FaultControlsItem(TypedDict):
+    id: str
+    seam: "RegisteredCliAcceptanceManifestV1FaultControlsItemSeam"
+    affectedPhases: list[str]
+
+RegisteredCliAcceptanceManifestV1FaultControlsItemSeam = Literal[
+    "provider",
+    "clock",
+    "model-route",
+    "os",
+]
+
+class RegisteredCliAcceptanceManifestV1ObservationsItem(TypedDict):
+    id: str
+    independentReader: str
+    caseIds: list[str]
 
 class ArtifactBindingV1(TypedDict):
     releaseDigest: "Digest"

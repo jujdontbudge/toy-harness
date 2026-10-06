@@ -75,6 +75,38 @@ const digest = async (path) => {
     return null;
   }
 };
+const rejectCliManifestMutation = async (id, change) => {
+  const registryPath = resolve(root, "tests/registry.yaml");
+  const generatedPath = resolve(root, "packages/contracts/src/generated-probe-registry.ts");
+  const originalRegistry = await readFile(registryPath, "utf8");
+  const originalGenerated = await readFile(generatedPath, "utf8");
+  const registryIdentity = await stat(registryPath);
+  const generatedIdentity = await stat(generatedPath);
+  const rows = JSON.parse(originalRegistry);
+  const manifest = rows.find(row => row.id === "AT-hermes-config-85");
+  if (!manifest) throw new Error("The fixed AT85 source registration is required");
+  change(manifest);
+  const mutatedRegistry = `${JSON.stringify(rows, null, 2)}\n`;
+  await writeFile(registryPath, mutatedRegistry, "utf8");
+  let observedGenerated;
+  try {
+    execute(id, "node", ["scripts/generate-contracts.mjs", "--registry-only"], { reject: true, diagnostic: "CLI acceptance manifest" });
+    observedGenerated = await readFile(generatedPath, "utf8");
+    results.push({ id: `${id}-no-output-write`, passed: observedGenerated === originalGenerated });
+  } finally {
+    for (const [path, identity, currentContents, originalContents] of [
+      [registryPath, registryIdentity, mutatedRegistry, originalRegistry],
+      [generatedPath, generatedIdentity, observedGenerated, originalGenerated]
+    ]) {
+      const current = await stat(path);
+      if (current.dev === identity.dev && current.ino === identity.ino && await readFile(path, "utf8") === currentContents) {
+        await writeFile(path, originalContents, "utf8");
+      } else {
+        results.push({ id: `${id}-cleanup`, passed: false, error: "Fixture file changed; preserved current contents." });
+      }
+    }
+  }
+};
 let driftedOutput;
 let originalGeneratedTypes;
 let driftedGeneratedTypes;
@@ -83,6 +115,8 @@ let generatedTypesIdentity;
 try {
   execute("bootstrap-contract-generation", "npm", ["run", "contracts:generate"]);
   execute("baseline-static-gates", "npm", ["run", "check"]);
+  await rejectCliManifestMutation("cli-manifest-wrong-owner-denied", manifest => { manifest.owner = "ops"; });
+  await rejectCliManifestMutation("cli-manifest-missing-phase-denied", manifest => { manifest.mandatoryCases.pop(); });
 
   const fixtureFiles = [
     ["cli/src/k2-any-fixture.ts", "export const unsafe: any = 1;\n"],
@@ -124,7 +158,7 @@ try {
     ["eslint-denies-any", process.execPath, ["node_modules/eslint/bin/eslint.js", "cli/src/k2-any-fixture.ts"], { reject: true, diagnostic: "no-explicit-any" }],
     ["eslint-denies-unchecked-cast", process.execPath, ["node_modules/eslint/bin/eslint.js", "cli/src/k2-cast-fixture.ts"], { reject: true, diagnostic: "no-unchecked-casts" }],
     ["eslint-denies-floating-promise", process.execPath, ["node_modules/eslint/bin/eslint.js", "cli/src/k2-promise-fixture.ts"], { reject: true, diagnostic: "no-floating-promises" }],
-    ["tsc-denies-unchecked-index", process.execPath, ["node_modules/typescript/bin/tsc", "--ignoreConfig", "--strict", "--noUncheckedIndexedAccess", "--noEmit", "--target", "ES2024", "--module", "NodeNext", "--moduleResolution", "NodeNext", "--types", "node", "cli/src/k2-compiler-fixture.ts"], { reject: true, diagnostic: "TS2322" }],
+    ["tsc-denies-unchecked-index", process.execPath, ["node_modules/typescript/bin/tsc", "--strict", "--noUncheckedIndexedAccess", "--noEmit", "--target", "ES2024", "--module", "NodeNext", "--moduleResolution", "NodeNext", "--types", "node", "cli/src/k2-compiler-fixture.ts"], { reject: true, diagnostic: "TS2322" }],
     ["ownership-denies-renamed-structural-copy", "node", ["scripts/check-contract-ownership.mjs", "tests/fixtures/k2-copy.ts"], { reject: true, diagnostic: "structural copy of generated contract ModuleId" }],
     ["python-policy-denies-any-and-cast", ".venv/bin/python", ["scripts/check-python-policy.py", "python/toy_adapter/k2-python-fixture.py"], { reject: true, diagnostic: "explicit Any is forbidden" }],
     ["python-policy-denies-aliased-any", ".venv/bin/python", ["scripts/check-python-policy.py", "python/toy_adapter/k2-python-any-alias-fixture.py"], { reject: true, diagnostic: "explicit Any is forbidden" }],

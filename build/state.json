@@ -2,8 +2,8 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-06T17:42:09.635322Z",
-  "phase": "R0.02 catalog CLI verified; R0.03 three-attempt replan saved; R0.01 root02 pending; minimum protected AT85 registration planning",
+  "updatedAt": "2026-10-06T17:45:44.838814Z",
+  "phase": "R0.04 AT85 source registration verified; R0.01 native root02 pending; R0.03 per-generation fixture repair replan ready",
   "activeCard": "R0.04",
   "cardCount": 87,
   "acceptanceCount": 1447,
@@ -764,6 +764,34 @@
         "cliInvocations": 15,
         "accountsVerified": 8,
         "directoriesVerified": 13
+      },
+      "minimumAcceptanceRegistrationPlan": {
+        "state": "SOURCE_REGISTRATION_VERIFIED_WHOLE_ACCEPTANCE_PENDING",
+        "startedAt": "2026-10-06T17:40:00Z",
+        "targetStopAt": "2026-10-06T19:48:00Z",
+        "purpose": "Extend existing protected test-controller/public probe path only enough for exact unfiltered AT85 assertion registration",
+        "sourceUnitRoot02Reopened": false,
+        "baseline": "build/evidence/R0.04/at85-unfiltered-before-registration.json",
+        "baselineOperationId": "c505ccea-7cf6-4f0e-b4a3-82d3d2e6090e",
+        "baselineExitCode": 5,
+        "baselineState": "NOT_IMPLEMENTED",
+        "teardownComplete": true,
+        "wholeATComplete": false,
+        "planComplete": true,
+        "planEvidence": "build/evidence/R0.04/minimum-at85-registration-plan.json",
+        "sourceStartedAt": "2026-10-06T17:48:00Z",
+        "sourceTargetStopAt": "2026-10-06T18:18:00Z",
+        "ownerInterface": "docs/adr/0035-source-bound-cli-acceptance-registration.md",
+        "stoppedAt": "2026-10-06T18:05:23.861589Z",
+        "verification": "build/evidence/R0.04/at85-registration-verification.json",
+        "sourceRegistrationComplete": true,
+        "protectedExecutableComplete": false,
+        "operationId": "63c55a2d-e1fa-4e06-b87a-92a785d446d3",
+        "deferred": [
+          "Protected executable/controller role and import closure",
+          "Actual Ops/evaluator/agent target execution and native-launcher predicates",
+          "Whole assigned acceptance verdicts"
+        ]
       }
     },
     "R0.05": {
@@ -9750,9 +9778,12 @@
   "blockers": [
     {
       "condition": "PRESSURE_QUERY_DENIED",
-      "scope": "Automatic OS pressure-level measurement remains unavailable; this does not block the current Johan-observed normal-pressure fake-stack/helper admission",
+      "scope": "Historical pressure-query denial; automatic native OS pressure measurement now works and current work is admitted under job-own-need plus512MiB",
       "independentProgress": "Multiple real fake stacks and one Luna/max helper were admitted under available-memory plus operator-observed normal pressure. Strictly-free pages never blocked native CLI fixture work.",
-      "historicalResolvedBy": "2026-10-06 unrestricted execution profile and actual service-account observation; original failed evidence retained"
+      "historicalResolvedBy": "2026-10-06 unrestricted execution profile and actual service-account observation; original failed evidence retained",
+      "status": "HISTORICAL_RESOLVED",
+      "goalBlocking": false,
+      "currentEvidence": "build/evidence/R0.04/acceptance-registration-admission.json"
     },
     {
       "condition": "GIT_METADATA_READ_ONLY",
@@ -9768,9 +9799,12 @@
     },
     {
       "condition": "PRIVILEGED_RUNTIME_OUTSIDE_WORKSPACE",
-      "scope": "Root installer, service identities and protected runtime paths; current caller is non-root and writes are limited to the workspace",
+      "scope": "Builder remains non-root; prepared exact privileged operations use build/ROOT-REQUESTS.md and Claude execution, while independent work continues",
       "independentProgress": "Prepared bounded source and real CLI refusals; no privilege escalation or permission bypass",
-      "historicalResolvedBy": "2026-10-06 unrestricted execution profile and actual service-account observation; original failed evidence retained"
+      "historicalResolvedBy": "2026-10-06 unrestricted execution profile and actual service-account observation; original failed evidence retained",
+      "status": "HISTORICAL_SUPERSEDED_BY_ROOT_REQUEST_WORKFLOW",
+      "goalBlocking": false,
+      "currentEvidence": "build/ROOT-REQUESTS.md"
     },
     {
       "condition": "POSTGRESQL_INITIALIZATION_PERMISSION_DENIED",
@@ -9813,7 +9847,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Commit/push verified catalog coverage and honest concurrent-auth replan; inspect bounded Luna minimum AT85 protected-registration plan, then implement only required registration/identity source within existing interfaces. Poll root02; do not alter queued scripts or retry AT87 without revised per-generation fake-provider plan.",
+  "nextAction": "Commit/push bounded source-registration evidence; poll frozen root02 and consume only exact sanitized result. Continue minimum R0.03 external-provider/clock fixture repair from recorded replan; no whole AT claim or new infrastructure.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -9935,22 +9969,22 @@
     "contractsSwiftSDK": "/Library/Developer/CommandLineTools/SDKs/MacOSX26.5.sdk"
   },
   "admission": {
-    "concurrentChildren": 2,
+    "concurrentChildren": 1,
     "maximumChildren": 2,
     "semanticStackAdmitted": false,
     "testStackMemoryAdmitted": true,
-    "observedAt": "2026-10-06T17:03:51.008Z",
+    "observedAt": "2026-10-06T17:44:39.224Z",
     "availableBytesVerified": true,
-    "measurementEvidence": "build/evidence/R0.01/keychain-owner-plan-admission.json",
-    "measurementMeaning": "Two independent source helpers at256MiB each, parent512MiB, queued root512MiB and512MiB margin fit actual normal-pressure available memory; no test stack.",
-    "availableBytes": 2447638528,
+    "measurementEvidence": "build/evidence/R0.04/acceptance-registration-admission.json",
+    "measurementMeaning": "Fresh normal OS pressure and four-category available memory; each admitted job uses its own declared need plus512MiB only",
+    "availableBytes": "2634203136",
     "testStackNeedBytes": "1073741824",
-    "helperNeedBytes": "536870912",
+    "helperNeedBytes": "268435456",
     "marginBytes": "536870912",
     "pressure": "normal",
     "headroomSatisfied": true,
     "resourcePermitIssued": false,
-    "childAdmission": "R003_AUTH_AND_R002_CATALOG_DISJOINT_SOURCE_LUNA_MAX",
+    "childAdmission": "R004_MINIMUM_EXACT_AT85_REGISTRATION_PLAN_LUNA_MAX",
     "testStackHeadroomSatisfied": true,
     "normalPressureObserved": true,
     "physicalAdmissionDependency": null,
@@ -9962,7 +9996,7 @@
     },
     "admissionScope": "Confined R0 fake stack and current helper; fresh headroom measurement per new physical work",
     "userReportedPressure": "normal",
-    "currentEvidence": "build/evidence/R0.02/catalog-coverage-admission.json",
+    "currentEvidence": "build/evidence/R0.04/acceptance-registration-admission.json",
     "pressureSource": "os",
     "testStackRuntimeWasAdmitted": true,
     "testStackCurrentlyRunning": false,
@@ -20304,11 +20338,11 @@
   "pullRequest": "https://github.com/JohanSardar/toy-harness/pull/1",
   "lastWorker": {
     "card": "R0.03",
-    "task": "r002_minimum_inventory_plan",
+    "task": "r003_per_generation_refresh_plan",
     "model": "gpt-6-luna",
     "reasoning": "max",
-    "state": "completed_source_only",
-    "ownedScope": "Native public auth concurrency fixture/contract source; parent owns thin routing, map, compilation and CLI verification"
+    "state": "completed_read_only_plan",
+    "ownedScope": "Minimum external provider/barrier repair plan only; no commands or source edits"
   },
   "continuationAssessment": {
     "observedAt": "2026-10-06T17:42:09.635322Z",
@@ -20335,7 +20369,7 @@
     "pressureRequired": "normal",
     "strictlyFreeAdmission": false,
     "repairWorkerFloorScope": "R5 repair worker only",
-    "updatedAt": "2026-10-06T10:38:55.221804+00:00",
+    "updatedAt": "2026-10-06T17:45:44.838814Z",
     "rootWorkflow": {
       "authority": "Johan direct 2026-10-06 instruction",
       "file": "build/ROOT-REQUESTS.md",
@@ -20344,7 +20378,10 @@
       "pendingRootDoesNotBlockGoal": true,
       "pollWhileIndependentWork": true,
       "exactRegisteredCommandOrRepoScriptRequired": true
-    }
+    },
+    "jobOwnDeclaredNeedOnly": true,
+    "additionalMemoryFitGate": false,
+    "queuedRootReserveAdmissionGate": false
   },
   "latestStaticVerification": {
     "command": "npm run check",
@@ -20359,7 +20396,7 @@
     "schemaDigest": "da7b3542f9797e49fce5bda46ebc71481024291610273492b1d15188a93a974d",
     "swiftInvoked": false
   },
-  "sourceCheckpointCommit": "c93296d",
+  "sourceCheckpointCommit": "ca82a13",
   "sourceCheckpointPushed": true,
   "rootRequests": {
     "ROOT-R004-20261006-01": {
@@ -20385,25 +20422,23 @@
     }
   },
   "resourceAdmission": {
-    "measuredAt": "2026-10-06T17:38:27.280Z",
-    "availableBytes": "2501836800",
+    "measuredAt": "2026-10-06T17:57:46.719Z",
+    "availableBytes": "2958901248",
     "pressure": "normal",
     "strictlyFreeAdmission": false,
     "repairFloorApplied": false,
     "ownedWorldsRunning": 0,
-    "helpersRunning": 1,
-    "helperNeedBytes": "268435456",
-    "measurementSource": "build/evidence/R0.02/catalog-review-admission.json",
-    "sourceHelpersNeedBytes": "268435456",
-    "parentNeedBytes": "536870912",
-    "queuedRootReserveBytes": "536870912",
+    "helpersRunning": 0,
+    "helperNeedBytes": "0",
+    "measurementSource": "build/evidence/R0.04/at85-registration-stack-up-retry.json",
     "marginBytes": "536870912",
-    "combinedRequiredBytes": "2415919104",
     "ownedStackId": null,
     "stackAndNativeChildrenNeedBytes": "0",
-    "compileNeedBytes": "536870912"
+    "jobNeedBytes": "1073741824",
+    "requiredAvailableBytes": "1610612736",
+    "secondPhysicalFitGate": false,
+    "queuedRootReserveGate": false,
+    "rule": "Normal OS pressure and available memory at least the current job declared need plus512MiB; no strictly-free, hypothetical reserve, swap or second physical-fit gate"
   },
-  "activeWorkers": [
-    "/root/r004_minimum_acceptance_registration"
-  ]
+  "activeWorkers": []
 }

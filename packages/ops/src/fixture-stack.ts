@@ -10,7 +10,7 @@ import { fileURLToPath } from "node:url";
 import {
   bootstrapUpRequestSchema, fixtureStackRecordSchema, fixtureWorkerStateSchema, opsErrorMessages,
   schemaBundleDigest, testClockReceiptSchema, testClockStateSchema, testStackOperationSchema,
-  registeredProbeOperationSchema, registeredCliProbeInventory, clockAdvanceOperationSchema, checkViewSchema, roleBootstrapRoot
+  registeredProbeOperationSchema, registeredCliProbeInventory, registeredCliAcceptanceManifestInventory, clockAdvanceOperationSchema, checkViewSchema, roleBootstrapRoot
 } from "@toy/contracts";
 import type {
   FixtureStackRecordV1, OpsControlContextV1, OpsErrorCode, Result, TestStackOperationV1, TestStackUpInputV1,
@@ -303,6 +303,7 @@ export const FixtureProbe = {
       if (old) { if (old.digest !== hash) refuse("CONFLICT"); return registeredProbeOperationSchema.parse(decode(old.receipt)); }
       const registered = registeredCliProbeInventory.find(entry => entry.id === input.probeId);
       if (!registered) refuse("INVALID_INPUT");
+      const sourceRegistration = registeredCliAcceptanceManifestInventory.find(entry => entry.id === input.probeId);
       const lifecycle = (input.probeId === "AT-cli-4" || input.probeId === "AT-hermes-config-100") && (input.caseId === undefined || input.caseId === "stack-lifecycle");
       const checks = observations.map(check => checkViewSchema.parse(check));
       const reference = input.probeId === "AT-hermes-config-101" && ["k4a-connector", "k4a-tool", "k4a-skill"].includes(input.caseId ?? "");
@@ -332,10 +333,10 @@ export const FixtureProbe = {
         checks.push(checkViewSchema.parse({ id: "bootstrap.reference.migration", owner: "ops", state: readback?.owner === "ops" ? "PASS" : "FAIL", checkedAt: new Date().toISOString(), reasonCode: "DISPOSABLE_OWNER_MIGRATION_READBACK", prerequisite: JSON.stringify({ migrationId: "ops.k4a.reference.0001", schema: "main", readback }), nextCommandId: "probe.show", links: { ...links, artifactDigests: [digest(sql), digest(descriptor)] } }));
       }
       const implemented = lifecycle || checks.length > 0;
-      const caseManifestDigest = digest(JSON.stringify({ probeId: input.probeId, caseId: input.caseId ?? "stack-lifecycle", source: registered, artifacts: checks.flatMap(check => check.links.artifactDigests) }));
+      const caseManifestDigest = digest(JSON.stringify({ probeId: input.probeId, caseId: input.caseId ?? sourceRegistration?.scenarioId ?? "stack-lifecycle", source: registered, sourceRegistration: sourceRegistration ?? null, artifacts: checks.flatMap(check => check.links.artifactDigests) }));
       const observed = worker(db, value);
       const operation = registeredProbeOperationSchema.parse({ operation: { operationId: randomUUID(), state: implemented ? "succeeded" : "blocked", acceptedAt: new Date().toISOString() }, requestId: input.requestId, stackId: value.stackId, links,
-        probeId: input.probeId, binding: { releaseDigest: value.runtimeDigest, controlDigest: value.runtimeDigest, schemaDigest: value.schemaDigest, fixtureDigest: digest(readFileSync(join(worldPath(value.stackId), "manifest.json"))) }, caseManifestDigest, result: { probeId: input.probeId, caseManifestDigest, state: "NOT_IMPLEMENTED", complete: false, links, cases: checks.length > 0 ? checks : [{ id: "bootstrap.fixture-runtime", owner: "ops", state: implemented && observed?.state === "running" ? "PASS" : "BLOCKED", checkedAt: new Date().toISOString(), reasonCode: implemented ? "TRUSTED_FIXTURE_LIFECYCLE_SUBSET" : "REGISTERED_CASE_NOT_IMPLEMENTED", nextCommandId: "probe.show", links, prerequisite: JSON.stringify(observed) }] } });
+        probeId: input.probeId, binding: { releaseDigest: value.runtimeDigest, controlDigest: value.runtimeDigest, schemaDigest: value.schemaDigest, fixtureDigest: digest(readFileSync(join(worldPath(value.stackId), "manifest.json"))) }, caseManifestDigest, result: { probeId: input.probeId, caseManifestDigest, ...(sourceRegistration === undefined ? {} : { sourceRegistration }), state: "NOT_IMPLEMENTED", complete: false, links, cases: checks.length > 0 ? checks : [{ id: "bootstrap.fixture-runtime", owner: "ops", state: implemented && observed?.state === "running" ? "PASS" : "BLOCKED", checkedAt: new Date().toISOString(), reasonCode: implemented ? "TRUSTED_FIXTURE_LIFECYCLE_SUBSET" : "REGISTERED_CASE_NOT_IMPLEMENTED", nextCommandId: "probe.show", links, prerequisite: JSON.stringify(observed) }] } });
       db.prepare("INSERT INTO request VALUES (?,?,?)").run(key, hash, JSON.stringify(operation));
       return operation;
     });

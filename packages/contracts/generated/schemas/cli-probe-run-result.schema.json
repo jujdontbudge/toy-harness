@@ -1369,6 +1369,206 @@
                     "artifactDigests"
                   ],
                   "additionalProperties": false
+                },
+                "sourceRegistration": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120,
+                      "pattern": "^AT-[A-Za-z0-9-]+(?![\\s\\S])"
+                    },
+                    "rung": {
+                      "type": "string",
+                      "const": "CLI"
+                    },
+                    "sourceAssertionHash": {
+                      "type": "string",
+                      "minLength": 64,
+                      "maxLength": 64,
+                      "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+                    },
+                    "commandId": {
+                      "type": "string",
+                      "const": "probe.run"
+                    },
+                    "scenarioId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120,
+                      "pattern": "^[a-z][a-z0-9.-]*(?![\\s\\S])"
+                    },
+                    "owner": {
+                      "type": "string",
+                      "enum": [
+                        "contracts",
+                        "obligations",
+                        "attention",
+                        "authority",
+                        "sources",
+                        "lifestore",
+                        "hermes",
+                        "client",
+                        "hands",
+                        "self-improvement",
+                        "adhd",
+                        "ops"
+                      ]
+                    },
+                    "firstRelease": {
+                      "type": "string",
+                      "enum": [
+                        "R0",
+                        "R1",
+                        "R2",
+                        "R3",
+                        "R4",
+                        "R5"
+                      ]
+                    },
+                    "kind": {
+                      "type": "string",
+                      "enum": [
+                        "static_gate",
+                        "behavioral",
+                        "mixed"
+                      ]
+                    },
+                    "mandatoryCases": {
+                      "minItems": 1,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 80,
+                            "pattern": "^[a-z][a-z0-9-]*(?![\\s\\S])"
+                          },
+                          "publicOperation": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 512
+                          },
+                          "phase": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 80,
+                            "pattern": "^[a-z][a-z0-9-]*(?![\\s\\S])"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "publicOperation",
+                          "phase"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "trigger": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 2000
+                    },
+                    "faultControls": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 80,
+                            "pattern": "^[a-z][a-z0-9-]*(?![\\s\\S])"
+                          },
+                          "seam": {
+                            "type": "string",
+                            "enum": [
+                              "provider",
+                              "clock",
+                              "model-route",
+                              "os"
+                            ]
+                          },
+                          "affectedPhases": {
+                            "minItems": 1,
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 80,
+                              "pattern": "^[a-z][a-z0-9-]*(?![\\s\\S])"
+                            }
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "seam",
+                          "affectedPhases"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "observations": {
+                      "minItems": 1,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 80,
+                            "pattern": "^[a-z][a-z0-9-]*(?![\\s\\S])"
+                          },
+                          "independentReader": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 120
+                          },
+                          "caseIds": {
+                            "minItems": 1,
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 80,
+                              "pattern": "^[a-z][a-z0-9-]*(?![\\s\\S])"
+                            }
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "independentReader",
+                          "caseIds"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "simUnavailableReason": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 2000
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "rung",
+                    "sourceAssertionHash",
+                    "commandId",
+                    "scenarioId",
+                    "owner",
+                    "firstRelease",
+                    "kind",
+                    "mandatoryCases",
+                    "trigger",
+                    "faultControls",
+                    "observations",
+                    "simUnavailableReason"
+                  ],
+                  "additionalProperties": false
                 }
               },
               "required": [

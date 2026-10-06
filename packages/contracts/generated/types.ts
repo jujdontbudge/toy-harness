@@ -87,6 +87,7 @@ export type CapabilityManifest = z.infer<typeof schemaInventory.CapabilityManife
 export type ServiceId = z.infer<typeof schemaInventory.ServiceId>;
 export type OpsControlProbeDeclarationV1 = z.infer<typeof schemaInventory.OpsControlProbeDeclarationV1>;
 export type RegisteredCheckIdV1 = z.infer<typeof schemaInventory.RegisteredCheckIdV1>;
+export type RegisteredCliAcceptanceManifestV1 = z.infer<typeof schemaInventory.RegisteredCliAcceptanceManifestV1>;
 export type ServiceStatus = z.infer<typeof schemaInventory.ServiceStatus>;
 export type BackupDestinationStatus = z.infer<typeof schemaInventory.BackupDestinationStatus>;
 export type QuotaWindow = z.infer<typeof schemaInventory.QuotaWindow>;
