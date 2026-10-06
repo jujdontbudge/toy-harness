@@ -1,0 +1,106 @@
+{
+  "artifact": "R0.07 unfiltered fixture-diagnostic route minimum",
+  "observedAtUtc": "2026-10-06T20:23:24Z",
+  "status": "SOURCE_ROUTE_GAP",
+  "scope": {
+    "inspection": "read-only source/spec/evidence inspection",
+    "onlyFileWritten": "build/evidence/R0.07/unfiltered-trial-minimum-plan.json",
+    "probeOrStackRun": false,
+    "liveTrialStarted": false,
+    "wholeATComplete": false,
+    "wholeATState": "NOT_IMPLEMENTED"
+  },
+  "resourceAdmission": {
+    "doctorEvidence": "build/evidence/R0.06/unfiltered-accounting-admission.json",
+    "doctorObservedAtUtc": "2026-10-06T20:17:56.011Z",
+    "pressure": "normal",
+    "availableBytes": "2269691904",
+    "declaredNeedBytes": "268435456",
+    "marginBytes": "536870912",
+    "requiredBytes": "805306368",
+    "admitted": true,
+    "basis": "Own declared 256 MiB task need plus 512 MiB margin only."
+  },
+  "currentRoute": {
+    "acceptedProbeIds": [
+      {"id": "AT-ops-47", "sourceAssertionHash": "a5197df8ac45e7cc1e660210288ad85e534204870ede21d629ca12fa19e4e799"},
+      {"id": "AT-self-improvement-59", "sourceAssertionHash": "e976ade51b0316f155936944aedb1c6f59d095df0f227607c9a6b9c5c4599b7d"},
+      {"id": "AT-self-improvement-60", "sourceAssertionHash": "19f87129019d0e1c4e42d224ab40dca80e3b25a03949a56e205598f93bf05917"},
+      {"id": "AT-RESEARCH-REGISTER-6", "sourceAssertionHash": "22a0f9e2fc9184ec5954426c4cb34e6f43cc553eff2772456b5f36ec8d9d91d1"}
+    ],
+    "registeredCase": "capacity-trial",
+    "checkId": "capacity.trial-journal",
+    "manifestCase": {"id": "capacity-trial", "publicOperation": "ReplayEnvironment.runRegisteredProbe", "phase": "capacity-trial"},
+    "manifestCaseLimit": "This binds only the existing fixture route. The 14 diagnostic names below are not the 3,360-slot acceptance denominator and must not be registered as a whole-AT PASS.",
+    "explicitCaseCliShape": "toy --env test --stack <UUID> probe run <AT-ID> --request-id <UUID> --case capacity-trial --json",
+    "explicitCaseRouting": "With --case capacity-trial, cli/src/main.ts passes the case to ReplayEnvironment.runRegisteredProbe; packages/self-improvement/src/public.ts dispatches to capacityTrialProbe; its allowlist accepts exactly these four AT IDs; FixtureProbe permits check id capacity.trial-journal for this case/ID set.",
+    "unfilteredGap": "The CLI case argument is optional, but an omitted caseId does not reach capacityTrialProbe: ReplayEnvironment routes only when caseId is capacity-trial. tests/registry.yaml and registeredCliAcceptanceManifestInventory contain no source-bound acceptance manifest for these four IDs, so there is no current manifest scenario to supply that default. The report sourceRegistration is consequently absent on the explicit fixture route.",
+    "smallestChange": "Add source-bound manifest rows for these four already-registered AT IDs in tests/registry.yaml, all mapped to scenarioId=capacity-trial with the single fixture-routing case capacity-trial. In ReplayEnvironment.runRegisteredProbe, resolve an omitted caseId from that registered scenario and pass the normalized caseId to the existing capacityTrialProbe. Keep the explicit-case route unchanged; do not alter the journal or add live-run behavior.",
+    "unfilteredCliShapeAfterThatChange": "toy --env test --stack <UUID> probe run <AT-ID> --request-id <UUID> --json",
+    "proofLimit": "These are source-derived command paths only; no CLI invocation was run in this task."
+  },
+  "currentFixtureDiagnostics": [
+    "complete-anchored-original-denominator",
+    "same-bindings-idempotent",
+    "arm-rebinding-refused",
+    "request-rebinding-refused",
+    "overlapping-arm-refused",
+    "original-cadence-cannot-be-reduced",
+    "quota-deferral-retained",
+    "expired-opportunity-remains-missed",
+    "past-outcome-replacement-refused",
+    "reconciliation-idempotent",
+    "real-postgres-restart-preserves-slots",
+    "simulated-week-does-not-prove-ai-coverage",
+    "experimental-arm-has-separate-denominator",
+    "original-arm-unchanged-after-experimental-start"
+  ],
+  "manifestInventoryFinding": {
+    "authoredSource": "tests/registry.yaml",
+    "acceptanceManifestEntriesObserved": [
+      "AT-hermes-config-85",
+      "AT-hermes-config-87",
+      "AT-obligations-74",
+      "AT-obligations-76",
+      "AT-ops-49",
+      "AT-ops-51",
+      "AT-ops-52"
+    ],
+    "targetATsHaveManifest": false,
+    "probeInventoryHasTargetATs": true,
+    "fixtureCaseExistsInTestControl": true,
+    "fixtureDiagnosticIsPartialEvidenceOnly": true
+  },
+  "pendingGates": {
+    "elapsedNativeTrial": "PENDING: 168 actual UTC hours, 3,360 anchored live opportunities, real supported no-spend/native account, actual identity/send enforcement, usage freshness, shared traffic, and host/latency measurements remain required.",
+    "wholeAcceptance": "PENDING: assigned ATs remain NOT_IMPLEMENTED/complete=false. Fake clock advancement over 168 hours is diagnostic only and cannot satisfy elapsed/native gates.",
+    "fixtureWeek": "The current probe explicitly checks simulated-week-does-not-prove-ai-coverage, with acceptanceComplete=false and fullCadenceVerdict=NOT_EVALUATED; do not turn fixture diagnostics into PASS or complete=true."
+  },
+  "priorEvidence": {
+    "fixtureJournalVerification": "build/evidence/R0.07/journal-verification.json",
+    "fixtureJournalReplan": "build/evidence/R0.07/journal-replan.json",
+    "R0.06ParentStatus": "Parent reports the R0.06 runtime's nine checks PASS and owned world down; this does not close any R0.07 elapsed/native/whole gate."
+  },
+  "sourceHashes": [
+    {"path": "packages/self-improvement/src/capacity-trial-probe.ts", "sha256": "b03208cf10fef1ce798e2d30ce42cc01f0a638247fd1d9c4589180353db2684d"},
+    {"path": "packages/self-improvement/src/public.ts", "sha256": "5539bfc82321fe580e7a37d1011e8cb16da9ad60c0ab310b7985f33a3d4f0ef9"},
+    {"path": "packages/self-improvement/src/capacity-trial.ts", "sha256": "dab2b52588bd6f905690551101aeb916bcca6db7afd0afe7068520575171f82b"},
+    {"path": "packages/self-improvement/migrations/capacity-trial.sql", "sha256": "c4ee9357ea602ed4c3848362082ee3d6b2a13069b8b892e64e94e410bbe5e41e"},
+    {"path": "packages/contracts/src/generated-probe-registry.ts", "sha256": "a93063049796ccb8ac93baf8106444c317bc666211434c19f0b0c7c0af92c651"},
+    {"path": "packages/contracts/src/test-control.ts", "sha256": "0af0d0e4349cae05bfdc06a77592e32c5171f0dc5d0e5964f2ef87faeaa4111c"},
+    {"path": "packages/contracts/src/ops-registry.ts", "sha256": "5917c9e4365fa07cdecf8c82402d24878c67dfb20f188b8e7d48e57d187ad93a"},
+    {"path": "packages/contracts/src/cli-declarations.ts", "sha256": "b7623e62057d5a1c607db7867a019940478dcefa4c6043498b3af596bca90ee6"},
+    {"path": "packages/contracts/src/ops.ts", "sha256": "f99adefbea806be7fe4a4ddd50e37bde156d4edbae55b8d68f80b08678dddf1d"},
+    {"path": "packages/ops/src/fixture-stack.ts", "sha256": "d366044fc691a0ab34c80b6a33555070bac8a6f89f2b8f80c49bbc7aad3a9090"},
+    {"path": "cli/src/main.ts", "sha256": "20865cd6b42e0d859213cc606ea797764b228f7a9a2b93dbe74ac37ef60c7e01"},
+    {"path": "tests/registry.yaml", "sha256": "b8da313710b1e2bfd52ae125e822258887f8ccad88ecafe5be15287f67629452"},
+    {"path": "tests/acceptance-index.json", "sha256": "87d21b7f24f9f900bb202e1e813ba46bbc51282b96e14cb2739d5fd67b32d9e6"},
+    {"path": "docs/adr/0035-source-bound-cli-acceptance-registration.md", "sha256": "7abd6a03a60aa6cd397b2b4dda27865c8fd2b5d47deca1a090e1b436967a9f41"},
+    {"path": "../personal-assistant-harness/specs/TEST-PLAN.md", "sha256": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2"},
+    {"path": "../personal-assistant-harness/specs/ops.md", "sha256": "f07aab65088c82e4ff21e4d63edb2f279e2324e6d7e2bbb801e0fd7494104b0b"},
+    {"path": "../personal-assistant-harness/specs/self-improvement.md", "sha256": "23e69b258189148328f029acd3ec7c4c125544bf49d670757eee2bf071ab7014"},
+    {"path": "../personal-assistant-harness/specs/RESEARCH-REGISTER.md", "sha256": "8ebbcfb9e2e63041fd004dd55787a02473d36d9bcaa733eb4d322722b1ae4942"},
+    {"path": "build/evidence/R0.07/journal-verification.json", "sha256": "fd5d286e507fb0a61764113455aa1e3aa39078b8a3d203e81c813c361dfb635f"},
+    {"path": "build/evidence/R0.06/unfiltered-accounting-admission.json", "sha256": "555ab60bcbd0347875cbcf338dfa027af37b5594846147f1c4eca77c7aa468b0"}
+  ]
+}

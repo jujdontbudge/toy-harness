@@ -1,0 +1,90 @@
+{
+  "schema": "toy.r0.03.remaining-auth-minimum-plan.v1",
+  "recordedAt": "2026-10-06T20:25:00Z",
+  "scope": "Read-only source diagnosis and bounded next-unit plan for AT-hermes-config-87. No source, runtime, or installed Hermes changes were made.",
+  "selectedGap": "Exact original-priority row identity is the smallest remaining observable gap: the fixture already uses public auth list and auth priority, and needs to carry the pre-concurrency public row label through restoration. The held older successful response needs a distinct response-ordering scenario and is deferred.",
+  "acceptance": {
+    "source": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/hermes-config.md",
+    "line": 3051,
+    "assertion": "AT-hermes-config-87 [R0]: Given concurrent real subprocess refresh/add with fake-provider barriers and OS/storage crash cuts, When both orders persist and fresh processes reload, Then the newest accepted refresh generation and added grant survive without a lost update.",
+    "sha256": "d3548fde13180bc750660f306caa0041101832e398ccdabd6cfdac0b3de8f4af",
+    "index": "tests/acceptance-index.json",
+    "indexLine": 825,
+    "indexAssertionHash": "b8ba9587534e2983742157a3ab9ae8911da4928e48e3ab0894944914bb91e6bb",
+    "indexSha256": "87d21b7f24f9f900bb202e1e813ba46bbc51282b96e14cb2739d5fd67b32d9e6",
+    "rung": "CLI",
+    "requiredEvidence": "stack, probe:AT-hermes-config-87"
+  },
+  "currentProof": {
+    "verification": "build/evidence/R0.03/unfiltered-auth-verification.json",
+    "sha256": "06d6e619ab4eab35aee72fb0ffdc616e2cd795392ebb3777810b50b9d35631be",
+    "recordedAt": "2026-10-06T20:11:44.741569+00:00",
+    "probeOperationId": "bcb6bfab-eec9-4131-8189-9688b5149b7b",
+    "diagnosticPasses": 26,
+    "concurrencyPasses": 16,
+    "storagePasses": 7,
+    "unfiltered": true,
+    "runShowExact": true,
+    "wholeResult": {"state": "NOT_IMPLEMENTED", "complete": false},
+    "remainingGates": [
+      "protected controller/native-role execution",
+      "separately required held older successful response proof",
+      "exact original-priority row identity"
+    ]
+  },
+  "sourceAssertions": [
+    {
+      "file": "packages/hermes/src/auth-fixture.ts",
+      "sha256": "22f6ca68c6efb2316488bcb5ed051492735c0e51efdb06d3e7f636a23c762df1",
+      "lines": "22-28",
+      "evidence": "publicArgv maps priority-restored to auth priority openai-codex 2 0; this restores by ordinal rather than a captured row identity. Lines 610-619 perform the restore and final list check, but only require the command result and credential count."
+    },
+    {
+      "file": "patches/hermes-auth-fixture.patch",
+      "sha256": "3451e9c644f71614925648bda6083915ff77af3d2883c78cfd541dffcd43c2b5",
+      "lines": "498-507, 606-622",
+      "evidence": "The pinned public auth priority command targets the added grant by fixture label, but targets the restored grant as string 2. The current success marker checks the added label only; list parsing checks count and, in storage context, added-label presence, not the exact pre-run primary row identity."
+    },
+    {
+      "file": "patches/hermes-auth-fixture.patch",
+      "sha256": "3451e9c644f71614925648bda6083915ff77af3d2883c78cfd541dffcd43c2b5",
+      "lines": "138-156, 350-379",
+      "evidence": "Concurrency evidence currently emits staleRefreshResponse=not-exercised. The fake provider has a refresh response barrier, but the saved proof does not hold an older successful response until after a newer accepted generation; the verifier records that as a separate remaining gate."
+    },
+    {
+      "file": "packages/contracts/src/hermes-runtime.ts",
+      "sha256": "cced12dcc924d769227a8f84ea37e559d73d56c6a6f27e06426883ec7f72180d",
+      "lines": "23-34",
+      "evidence": "The strict fixture result currently has no typed field for the original public priority-row label."
+    }
+  ],
+  "minimumChange": {
+    "files": [
+      "packages/contracts/src/hermes-runtime.ts",
+      "patches/hermes-auth-fixture.patch",
+      "packages/hermes/src/auth-fixture.ts"
+    ],
+    "writtenInterfaceChange": "Add one optional, bounded original-primary-label observation to the generated Hermes fixture result schema. Capture the unique #1 row label from a fresh public auth list before starting each order; pass it to the restore child; target that label with the existing public auth priority command; assert the restore response names that same label at #1 and a fresh public auth list preserves it. Reject missing or ambiguous labels. Keep the existing added-grant priority and both persistence-order/generation assertions unchanged.",
+    "noNewCLICommandOrProtocol": true,
+    "externalSeam": "The pinned public Hermes auth list/priority subprocesses plus the existing fake-provider fixture. No private auth helpers or internal collaborator mocks."
+  },
+  "largestVerification": {
+    "rung": "Toy CLI against the disposable local stack and fake provider",
+    "sequence": [
+      "toy probe.run with probeId AT-hermes-config-87 and --json",
+      "toy probe.show for the returned operationId and --json",
+      "Check fresh run/show exactness, exact original row label at #1, both order results, newest accepted refresh generation, added grant survival, all storage cuts, and zero unexpected provider denials."
+    ],
+    "doNotMarkComplete": "The operation must remain wholeResult NOT_IMPLEMENTED unless every protected and whole-AT gate is independently satisfied."
+  },
+  "deferrals": [
+    "Held older successful response suppression remains unimplemented/unproven; keep staleRefreshResponse=not-exercised until a separate public-subprocess response-ordering scenario demonstrates it.",
+    "Protected controller/native-role execution remains unresolved.",
+    "Do not claim AT-hermes-config-87 complete from this identity repair alone; the saved whole result is incomplete."
+  ],
+  "guardrails": [
+    "No builds, tests, stacks, process launches, credential-store reads, source edits, or installed Hermes operations were performed for this plan.",
+    "No inference about service identity is made from UID 501.",
+    "R0.07 and root02 state remain untouched."
+  ]
+}

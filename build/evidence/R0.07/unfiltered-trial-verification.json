@@ -1,0 +1,938 @@
+{
+  "recordedAt": "2026-10-06T20:28:43.412866+00:00",
+  "card": "R0.07",
+  "rung": "CLI",
+  "unfiltered": true,
+  "diagnosticPassesPerCommand": 14,
+  "probes": [
+    {
+      "AT": "AT-ops-47",
+      "command": "toy --env test --stack 5c9c06e1-8df3-4bd6-aae0-3dc0ff796081 probe run AT-ops-47 --request-id b28206aa-2c72-44cc-b820-6c490bc345be --json",
+      "operationId": "f0699b37-0ece-4661-ba35-8788a350d497",
+      "diagnosticPasses": 14,
+      "sourceRegistration": {
+        "id": "AT-ops-47",
+        "rung": "CLI",
+        "sourceAssertionHash": "a5197df8ac45e7cc1e660210288ad85e534204870ede21d629ca12fa19e4e799",
+        "commandId": "probe.run",
+        "scenarioId": "capacity-trial",
+        "owner": "self-improvement",
+        "firstRelease": "R0",
+        "kind": "behavioral",
+        "mandatoryCases": [
+          {
+            "id": "capacity-trial",
+            "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+            "phase": "capacity-trial"
+          }
+        ],
+        "trigger": "Run the existing fourteen fixture-only journal diagnostics through the real public owner and PostgreSQL; elapsed native and whole acceptance remain incomplete.",
+        "faultControls": [
+          {
+            "id": "seeded-fake-clock",
+            "seam": "clock",
+            "affectedPhases": [
+              "capacity-trial"
+            ]
+          },
+          {
+            "id": "native-postgresql-restart",
+            "seam": "os",
+            "affectedPhases": [
+              "capacity-trial"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "public-journal-readbacks",
+            "independentReader": "capacityTrialProbe: immutable 3360-slot arm bindings, public reports, conflict refusals and retained outcomes",
+            "caseIds": [
+              "capacity-trial"
+            ]
+          },
+          {
+            "id": "restart-and-independent-arm-readbacks",
+            "independentReader": "CapacityTrialJournal.withTest: real PostgreSQL restart and separate original/experimental arm reports",
+            "caseIds": [
+              "capacity-trial"
+            ]
+          },
+          {
+            "id": "stored-cli-readback",
+            "independentReader": "toy probe.show and stack.down: exact persisted operation and complete owned-world teardown",
+            "caseIds": [
+              "capacity-trial"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot inspect pre-build immutable journal identities or drive the native PostgreSQL restart boundary. The CLI reaches the real journal owner with a fixed external fake clock; no elapsed native trial is certified."
+      },
+      "caseManifestDigest": "abd8e19b26737c5333fdae1f12d181ed08871557896b03bd84b5f4e2bc71b49b",
+      "runtimeBinding": {
+        "releaseDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "controlDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "schemaDigest": "1a768d76525382bf74bf62c4b5e645d26daebde2c55b079402d85a48d79c990e",
+        "fixtureDigest": "f950b0781b11f0bc10515acc65c32ab7b1a562e8150c24260e457e11c3e27f53"
+      },
+      "runShowExact": true,
+      "diagnosticNames": [
+        "complete-anchored-original-denominator",
+        "same-bindings-idempotent",
+        "arm-rebinding-refused",
+        "request-rebinding-refused",
+        "overlapping-arm-refused",
+        "original-cadence-cannot-be-reduced",
+        "quota-deferral-retained",
+        "expired-opportunity-remains-missed",
+        "past-outcome-replacement-refused",
+        "reconciliation-idempotent",
+        "real-postgres-restart-preserves-slots",
+        "simulated-week-does-not-prove-ai-coverage",
+        "experimental-arm-has-separate-denominator",
+        "original-arm-unchanged-after-experimental-start"
+      ],
+      "originalArmReport": {
+        "arm": {
+          "armId": "1e37c2be-aef7-49df-945f-3daceece2b51",
+          "requestId": "373f1b18-057d-4f80-9557-79d3037c2455",
+          "jobKey": "capacity.full-review",
+          "anchor": "2026-10-05T00:00:00.000Z",
+          "designation": "original",
+          "aiEverySeconds": 180,
+          "clock": "fake_model",
+          "policyDigest": "547c192157c78e7d20296793c224f1514ab8fade5a8633b43b5b0699e0ff2c46",
+          "configurationDigest": "843ee083dbba1f6e320f67e7f7e7f44bd8eebcfc5623138c16c77be6d0ae4170",
+          "routeDigest": "b9349f6afade57d7b86de23322baaeeb21f1c3956f5be32222d660566afc6ad8",
+          "hostDigest": "f66caaf36ac1a87532d76fd6bc503cad2c54b4b41d6c660ace1ee44a48a10e32",
+          "workloadDigest": "81d596bf2066f0eb843f22dfae55e39dad3c72d7645873a1cefc5f5eaf76a9fe"
+        },
+        "endsAt": "2026-10-12T00:00:00.000Z",
+        "denominator": 3360,
+        "cadenceSeconds": 180,
+        "totalSlots": 3360,
+        "sequenceIntact": true,
+        "firstSlotAt": "2026-10-05T00:00:00.000Z",
+        "lastSlotAt": "2026-10-11T23:57:00.000Z",
+        "counts": {
+          "scheduled": 0,
+          "running": 0,
+          "swept": 0,
+          "reviewed": 0,
+          "deferred_quota": 1,
+          "deferred_auth": 0,
+          "deferred_network": 0,
+          "deferred_busy": 0,
+          "maintenance": 0,
+          "failed": 1,
+          "missed": 3358,
+          "coalesced_after_outage": 0
+        },
+        "reasons": [
+          {
+            "reason": "MODEL_UNAVAILABLE",
+            "count": 1
+          },
+          {
+            "reason": "SLOT_BOUNDARY_PASSED",
+            "count": 3358
+          },
+          {
+            "reason": "WEEKLY_THRESHOLD",
+            "count": 1
+          }
+        ],
+        "acceptanceComplete": false,
+        "fullCadenceVerdict": "NOT_EVALUATED"
+      },
+      "experimentalArmReport": {
+        "arm": {
+          "armId": "380794f4-19d4-43c9-892d-3154b108507f",
+          "requestId": "1eaaf8d6-9847-4217-b079-1e3e65e73e05",
+          "jobKey": "capacity.full-review",
+          "anchor": "2026-10-12T00:00:00.000Z",
+          "designation": "experimental",
+          "aiEverySeconds": 900,
+          "clock": "fake_model",
+          "policyDigest": "547c192157c78e7d20296793c224f1514ab8fade5a8633b43b5b0699e0ff2c46",
+          "configurationDigest": "97fed04225f3c74a98d8e684c58c2842cf11f6501553294a090fa24d0977106f",
+          "routeDigest": "b9349f6afade57d7b86de23322baaeeb21f1c3956f5be32222d660566afc6ad8",
+          "hostDigest": "f66caaf36ac1a87532d76fd6bc503cad2c54b4b41d6c660ace1ee44a48a10e32",
+          "workloadDigest": "81d596bf2066f0eb843f22dfae55e39dad3c72d7645873a1cefc5f5eaf76a9fe"
+        },
+        "endsAt": "2026-10-19T00:00:00.000Z",
+        "denominator": 3360,
+        "cadenceSeconds": 180,
+        "totalSlots": 3360,
+        "sequenceIntact": true,
+        "firstSlotAt": "2026-10-12T00:00:00.000Z",
+        "lastSlotAt": "2026-10-18T23:57:00.000Z",
+        "counts": {
+          "scheduled": 3360,
+          "running": 0,
+          "swept": 0,
+          "reviewed": 0,
+          "deferred_quota": 0,
+          "deferred_auth": 0,
+          "deferred_network": 0,
+          "deferred_busy": 0,
+          "maintenance": 0,
+          "failed": 0,
+          "missed": 0,
+          "coalesced_after_outage": 0
+        },
+        "reasons": [],
+        "acceptanceComplete": false,
+        "fullCadenceVerdict": "NOT_EVALUATED"
+      },
+      "originalUnchanged": true,
+      "wholeResult": {
+        "state": "NOT_IMPLEMENTED",
+        "complete": false
+      }
+    },
+    {
+      "AT": "AT-self-improvement-59",
+      "command": "toy --env test --stack 38c3eb8f-90a6-4020-ad84-7e33c1ee5c60 probe run AT-self-improvement-59 --request-id d66e2fc4-b00f-45a1-ba92-f2fc246a0fd8 --json",
+      "operationId": "55faf202-ea21-4769-8b8d-9b2298ed8986",
+      "diagnosticPasses": 14,
+      "sourceRegistration": {
+        "id": "AT-self-improvement-59",
+        "rung": "CLI",
+        "sourceAssertionHash": "e976ade51b0316f155936944aedb1c6f59d095df0f227607c9a6b9c5c4599b7d",
+        "commandId": "probe.run",
+        "scenarioId": "capacity-trial",
+        "owner": "self-improvement",
+        "firstRelease": "R0",
+        "kind": "behavioral",
+        "mandatoryCases": [
+          {
+            "id": "capacity-trial",
+            "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+            "phase": "capacity-trial"
+          }
+        ],
+        "trigger": "Run the existing fourteen fixture-only journal diagnostics through the real public owner and PostgreSQL; elapsed native and whole acceptance remain incomplete.",
+        "faultControls": [
+          {
+            "id": "seeded-fake-clock",
+            "seam": "clock",
+            "affectedPhases": [
+              "capacity-trial"
+            ]
+          },
+          {
+            "id": "native-postgresql-restart",
+            "seam": "os",
+            "affectedPhases": [
+              "capacity-trial"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "public-journal-readbacks",
+            "independentReader": "capacityTrialProbe: immutable 3360-slot arm bindings, public reports, conflict refusals and retained outcomes",
+            "caseIds": [
+              "capacity-trial"
+            ]
+          },
+          {
+            "id": "restart-and-independent-arm-readbacks",
+            "independentReader": "CapacityTrialJournal.withTest: real PostgreSQL restart and separate original/experimental arm reports",
+            "caseIds": [
+              "capacity-trial"
+            ]
+          },
+          {
+            "id": "stored-cli-readback",
+            "independentReader": "toy probe.show and stack.down: exact persisted operation and complete owned-world teardown",
+            "caseIds": [
+              "capacity-trial"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot inspect pre-build immutable journal identities or drive the native PostgreSQL restart boundary. The CLI reaches the real journal owner with a fixed external fake clock; no elapsed native trial is certified."
+      },
+      "caseManifestDigest": "3e11c403c5c3870d82a26813c6f283bf6b2330c1397b8cd800b7d79e75a0e5d1",
+      "runtimeBinding": {
+        "releaseDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "controlDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "schemaDigest": "1a768d76525382bf74bf62c4b5e645d26daebde2c55b079402d85a48d79c990e",
+        "fixtureDigest": "c3c282813604a57614bca999b359067e578565a24248d6897b0049a9d23a623b"
+      },
+      "runShowExact": true,
+      "diagnosticNames": [
+        "complete-anchored-original-denominator",
+        "same-bindings-idempotent",
+        "arm-rebinding-refused",
+        "request-rebinding-refused",
+        "overlapping-arm-refused",
+        "original-cadence-cannot-be-reduced",
+        "quota-deferral-retained",
+        "expired-opportunity-remains-missed",
+        "past-outcome-replacement-refused",
+        "reconciliation-idempotent",
+        "real-postgres-restart-preserves-slots",
+        "simulated-week-does-not-prove-ai-coverage",
+        "experimental-arm-has-separate-denominator",
+        "original-arm-unchanged-after-experimental-start"
+      ],
+      "originalArmReport": {
+        "arm": {
+          "armId": "de1f8c44-9f4f-455e-a094-c0a4cd0ed986",
+          "requestId": "673f4315-f7c1-4e29-a835-8b27af32e3a2",
+          "jobKey": "capacity.full-review",
+          "anchor": "2026-10-05T00:00:00.000Z",
+          "designation": "original",
+          "aiEverySeconds": 180,
+          "clock": "fake_model",
+          "policyDigest": "547c192157c78e7d20296793c224f1514ab8fade5a8633b43b5b0699e0ff2c46",
+          "configurationDigest": "843ee083dbba1f6e320f67e7f7e7f44bd8eebcfc5623138c16c77be6d0ae4170",
+          "routeDigest": "b9349f6afade57d7b86de23322baaeeb21f1c3956f5be32222d660566afc6ad8",
+          "hostDigest": "f66caaf36ac1a87532d76fd6bc503cad2c54b4b41d6c660ace1ee44a48a10e32",
+          "workloadDigest": "81d596bf2066f0eb843f22dfae55e39dad3c72d7645873a1cefc5f5eaf76a9fe"
+        },
+        "endsAt": "2026-10-12T00:00:00.000Z",
+        "denominator": 3360,
+        "cadenceSeconds": 180,
+        "totalSlots": 3360,
+        "sequenceIntact": true,
+        "firstSlotAt": "2026-10-05T00:00:00.000Z",
+        "lastSlotAt": "2026-10-11T23:57:00.000Z",
+        "counts": {
+          "scheduled": 0,
+          "running": 0,
+          "swept": 0,
+          "reviewed": 0,
+          "deferred_quota": 1,
+          "deferred_auth": 0,
+          "deferred_network": 0,
+          "deferred_busy": 0,
+          "maintenance": 0,
+          "failed": 1,
+          "missed": 3358,
+          "coalesced_after_outage": 0
+        },
+        "reasons": [
+          {
+            "reason": "MODEL_UNAVAILABLE",
+            "count": 1
+          },
+          {
+            "reason": "SLOT_BOUNDARY_PASSED",
+            "count": 3358
+          },
+          {
+            "reason": "WEEKLY_THRESHOLD",
+            "count": 1
+          }
+        ],
+        "acceptanceComplete": false,
+        "fullCadenceVerdict": "NOT_EVALUATED"
+      },
+      "experimentalArmReport": {
+        "arm": {
+          "armId": "c358fcbf-ec65-4689-b2c5-764bf856986f",
+          "requestId": "115880ce-4553-4412-a23b-db656db5ad49",
+          "jobKey": "capacity.full-review",
+          "anchor": "2026-10-12T00:00:00.000Z",
+          "designation": "experimental",
+          "aiEverySeconds": 900,
+          "clock": "fake_model",
+          "policyDigest": "547c192157c78e7d20296793c224f1514ab8fade5a8633b43b5b0699e0ff2c46",
+          "configurationDigest": "97fed04225f3c74a98d8e684c58c2842cf11f6501553294a090fa24d0977106f",
+          "routeDigest": "b9349f6afade57d7b86de23322baaeeb21f1c3956f5be32222d660566afc6ad8",
+          "hostDigest": "f66caaf36ac1a87532d76fd6bc503cad2c54b4b41d6c660ace1ee44a48a10e32",
+          "workloadDigest": "81d596bf2066f0eb843f22dfae55e39dad3c72d7645873a1cefc5f5eaf76a9fe"
+        },
+        "endsAt": "2026-10-19T00:00:00.000Z",
+        "denominator": 3360,
+        "cadenceSeconds": 180,
+        "totalSlots": 3360,
+        "sequenceIntact": true,
+        "firstSlotAt": "2026-10-12T00:00:00.000Z",
+        "lastSlotAt": "2026-10-18T23:57:00.000Z",
+        "counts": {
+          "scheduled": 3360,
+          "running": 0,
+          "swept": 0,
+          "reviewed": 0,
+          "deferred_quota": 0,
+          "deferred_auth": 0,
+          "deferred_network": 0,
+          "deferred_busy": 0,
+          "maintenance": 0,
+          "failed": 0,
+          "missed": 0,
+          "coalesced_after_outage": 0
+        },
+        "reasons": [],
+        "acceptanceComplete": false,
+        "fullCadenceVerdict": "NOT_EVALUATED"
+      },
+      "originalUnchanged": true,
+      "wholeResult": {
+        "state": "NOT_IMPLEMENTED",
+        "complete": false
+      }
+    },
+    {
+      "AT": "AT-self-improvement-60",
+      "command": "toy --env test --stack 295dc637-7f3c-43c7-9067-8ee1c7eee3ba probe run AT-self-improvement-60 --request-id 17348b94-8464-494c-aec2-9c8ac9441881 --json",
+      "operationId": "c15717e8-d900-40c2-b48c-bab154c01c47",
+      "diagnosticPasses": 14,
+      "sourceRegistration": {
+        "id": "AT-self-improvement-60",
+        "rung": "CLI",
+        "sourceAssertionHash": "19f87129019d0e1c4e42d224ab40dca80e3b25a03949a56e205598f93bf05917",
+        "commandId": "probe.run",
+        "scenarioId": "capacity-trial",
+        "owner": "self-improvement",
+        "firstRelease": "R0",
+        "kind": "behavioral",
+        "mandatoryCases": [
+          {
+            "id": "capacity-trial",
+            "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+            "phase": "capacity-trial"
+          }
+        ],
+        "trigger": "Run the existing fourteen fixture-only journal diagnostics through the real public owner and PostgreSQL; elapsed native and whole acceptance remain incomplete.",
+        "faultControls": [
+          {
+            "id": "seeded-fake-clock",
+            "seam": "clock",
+            "affectedPhases": [
+              "capacity-trial"
+            ]
+          },
+          {
+            "id": "native-postgresql-restart",
+            "seam": "os",
+            "affectedPhases": [
+              "capacity-trial"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "public-journal-readbacks",
+            "independentReader": "capacityTrialProbe: immutable 3360-slot arm bindings, public reports, conflict refusals and retained outcomes",
+            "caseIds": [
+              "capacity-trial"
+            ]
+          },
+          {
+            "id": "restart-and-independent-arm-readbacks",
+            "independentReader": "CapacityTrialJournal.withTest: real PostgreSQL restart and separate original/experimental arm reports",
+            "caseIds": [
+              "capacity-trial"
+            ]
+          },
+          {
+            "id": "stored-cli-readback",
+            "independentReader": "toy probe.show and stack.down: exact persisted operation and complete owned-world teardown",
+            "caseIds": [
+              "capacity-trial"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot inspect pre-build immutable journal identities or drive the native PostgreSQL restart boundary. The CLI reaches the real journal owner with a fixed external fake clock; no elapsed native trial is certified."
+      },
+      "caseManifestDigest": "617ad6b66be0b12182d1731499febe98657f4be48de451f18a9986ae08ac9a2f",
+      "runtimeBinding": {
+        "releaseDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "controlDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "schemaDigest": "1a768d76525382bf74bf62c4b5e645d26daebde2c55b079402d85a48d79c990e",
+        "fixtureDigest": "ad4e28a6b8c4235c2fd93cebedefd9e25bfd7c47c969c5fd58d871df506d1f54"
+      },
+      "runShowExact": true,
+      "diagnosticNames": [
+        "complete-anchored-original-denominator",
+        "same-bindings-idempotent",
+        "arm-rebinding-refused",
+        "request-rebinding-refused",
+        "overlapping-arm-refused",
+        "original-cadence-cannot-be-reduced",
+        "quota-deferral-retained",
+        "expired-opportunity-remains-missed",
+        "past-outcome-replacement-refused",
+        "reconciliation-idempotent",
+        "real-postgres-restart-preserves-slots",
+        "simulated-week-does-not-prove-ai-coverage",
+        "experimental-arm-has-separate-denominator",
+        "original-arm-unchanged-after-experimental-start"
+      ],
+      "originalArmReport": {
+        "arm": {
+          "armId": "c5f4b3c4-213e-4ac4-baa3-f3763e8c2ae2",
+          "requestId": "14c5106d-52fe-418e-9aa2-c8d262805de4",
+          "jobKey": "capacity.full-review",
+          "anchor": "2026-10-05T00:00:00.000Z",
+          "designation": "original",
+          "aiEverySeconds": 180,
+          "clock": "fake_model",
+          "policyDigest": "547c192157c78e7d20296793c224f1514ab8fade5a8633b43b5b0699e0ff2c46",
+          "configurationDigest": "843ee083dbba1f6e320f67e7f7e7f44bd8eebcfc5623138c16c77be6d0ae4170",
+          "routeDigest": "b9349f6afade57d7b86de23322baaeeb21f1c3956f5be32222d660566afc6ad8",
+          "hostDigest": "f66caaf36ac1a87532d76fd6bc503cad2c54b4b41d6c660ace1ee44a48a10e32",
+          "workloadDigest": "81d596bf2066f0eb843f22dfae55e39dad3c72d7645873a1cefc5f5eaf76a9fe"
+        },
+        "endsAt": "2026-10-12T00:00:00.000Z",
+        "denominator": 3360,
+        "cadenceSeconds": 180,
+        "totalSlots": 3360,
+        "sequenceIntact": true,
+        "firstSlotAt": "2026-10-05T00:00:00.000Z",
+        "lastSlotAt": "2026-10-11T23:57:00.000Z",
+        "counts": {
+          "scheduled": 0,
+          "running": 0,
+          "swept": 0,
+          "reviewed": 0,
+          "deferred_quota": 1,
+          "deferred_auth": 0,
+          "deferred_network": 0,
+          "deferred_busy": 0,
+          "maintenance": 0,
+          "failed": 1,
+          "missed": 3358,
+          "coalesced_after_outage": 0
+        },
+        "reasons": [
+          {
+            "reason": "MODEL_UNAVAILABLE",
+            "count": 1
+          },
+          {
+            "reason": "SLOT_BOUNDARY_PASSED",
+            "count": 3358
+          },
+          {
+            "reason": "WEEKLY_THRESHOLD",
+            "count": 1
+          }
+        ],
+        "acceptanceComplete": false,
+        "fullCadenceVerdict": "NOT_EVALUATED"
+      },
+      "experimentalArmReport": {
+        "arm": {
+          "armId": "ba654e87-e65c-46ba-8fff-7a09983da1a8",
+          "requestId": "bac3de14-c70c-42f4-af26-be3696b5cf78",
+          "jobKey": "capacity.full-review",
+          "anchor": "2026-10-12T00:00:00.000Z",
+          "designation": "experimental",
+          "aiEverySeconds": 900,
+          "clock": "fake_model",
+          "policyDigest": "547c192157c78e7d20296793c224f1514ab8fade5a8633b43b5b0699e0ff2c46",
+          "configurationDigest": "97fed04225f3c74a98d8e684c58c2842cf11f6501553294a090fa24d0977106f",
+          "routeDigest": "b9349f6afade57d7b86de23322baaeeb21f1c3956f5be32222d660566afc6ad8",
+          "hostDigest": "f66caaf36ac1a87532d76fd6bc503cad2c54b4b41d6c660ace1ee44a48a10e32",
+          "workloadDigest": "81d596bf2066f0eb843f22dfae55e39dad3c72d7645873a1cefc5f5eaf76a9fe"
+        },
+        "endsAt": "2026-10-19T00:00:00.000Z",
+        "denominator": 3360,
+        "cadenceSeconds": 180,
+        "totalSlots": 3360,
+        "sequenceIntact": true,
+        "firstSlotAt": "2026-10-12T00:00:00.000Z",
+        "lastSlotAt": "2026-10-18T23:57:00.000Z",
+        "counts": {
+          "scheduled": 3360,
+          "running": 0,
+          "swept": 0,
+          "reviewed": 0,
+          "deferred_quota": 0,
+          "deferred_auth": 0,
+          "deferred_network": 0,
+          "deferred_busy": 0,
+          "maintenance": 0,
+          "failed": 0,
+          "missed": 0,
+          "coalesced_after_outage": 0
+        },
+        "reasons": [],
+        "acceptanceComplete": false,
+        "fullCadenceVerdict": "NOT_EVALUATED"
+      },
+      "originalUnchanged": true,
+      "wholeResult": {
+        "state": "NOT_IMPLEMENTED",
+        "complete": false
+      }
+    },
+    {
+      "AT": "AT-RESEARCH-REGISTER-6",
+      "command": "toy --env test --stack bd6d70f4-2d28-4a08-a19b-abb1305dfc7b probe run AT-RESEARCH-REGISTER-6 --request-id 408130e8-e1b9-414c-a0c0-e4b347564c44 --json",
+      "operationId": "1f95486d-010f-4af3-a0e2-d56df73a6449",
+      "diagnosticPasses": 14,
+      "sourceRegistration": {
+        "id": "AT-RESEARCH-REGISTER-6",
+        "rung": "CLI",
+        "sourceAssertionHash": "22a0f9e2fc9184ec5954426c4cb34e6f43cc553eff2772456b5f36ec8d9d91d1",
+        "commandId": "probe.run",
+        "scenarioId": "capacity-trial",
+        "owner": "self-improvement",
+        "firstRelease": "R0",
+        "kind": "behavioral",
+        "mandatoryCases": [
+          {
+            "id": "capacity-trial",
+            "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+            "phase": "capacity-trial"
+          }
+        ],
+        "trigger": "Run the existing fourteen fixture-only journal diagnostics through the real public owner and PostgreSQL; elapsed native and whole acceptance remain incomplete.",
+        "faultControls": [
+          {
+            "id": "seeded-fake-clock",
+            "seam": "clock",
+            "affectedPhases": [
+              "capacity-trial"
+            ]
+          },
+          {
+            "id": "native-postgresql-restart",
+            "seam": "os",
+            "affectedPhases": [
+              "capacity-trial"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "public-journal-readbacks",
+            "independentReader": "capacityTrialProbe: immutable 3360-slot arm bindings, public reports, conflict refusals and retained outcomes",
+            "caseIds": [
+              "capacity-trial"
+            ]
+          },
+          {
+            "id": "restart-and-independent-arm-readbacks",
+            "independentReader": "CapacityTrialJournal.withTest: real PostgreSQL restart and separate original/experimental arm reports",
+            "caseIds": [
+              "capacity-trial"
+            ]
+          },
+          {
+            "id": "stored-cli-readback",
+            "independentReader": "toy probe.show and stack.down: exact persisted operation and complete owned-world teardown",
+            "caseIds": [
+              "capacity-trial"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot inspect pre-build immutable journal identities or drive the native PostgreSQL restart boundary. The CLI reaches the real journal owner with a fixed external fake clock; no elapsed native trial is certified."
+      },
+      "caseManifestDigest": "67fc79b17369a4ee8ad82d69f1ba1d7ca225aabaaeca16578cda5008dd60b0a5",
+      "runtimeBinding": {
+        "releaseDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "controlDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "schemaDigest": "1a768d76525382bf74bf62c4b5e645d26daebde2c55b079402d85a48d79c990e",
+        "fixtureDigest": "9b089e8cc854a6a01cce23dd2c52e7b5456f5edc58e3379414deabe82d154c48"
+      },
+      "runShowExact": true,
+      "diagnosticNames": [
+        "complete-anchored-original-denominator",
+        "same-bindings-idempotent",
+        "arm-rebinding-refused",
+        "request-rebinding-refused",
+        "overlapping-arm-refused",
+        "original-cadence-cannot-be-reduced",
+        "quota-deferral-retained",
+        "expired-opportunity-remains-missed",
+        "past-outcome-replacement-refused",
+        "reconciliation-idempotent",
+        "real-postgres-restart-preserves-slots",
+        "simulated-week-does-not-prove-ai-coverage",
+        "experimental-arm-has-separate-denominator",
+        "original-arm-unchanged-after-experimental-start"
+      ],
+      "originalArmReport": {
+        "arm": {
+          "armId": "57705c73-cae1-40a4-87e9-3bac1a9140bc",
+          "requestId": "c1f7559a-40e1-40e3-a39f-3787d9c55b7b",
+          "jobKey": "capacity.full-review",
+          "anchor": "2026-10-05T00:00:00.000Z",
+          "designation": "original",
+          "aiEverySeconds": 180,
+          "clock": "fake_model",
+          "policyDigest": "547c192157c78e7d20296793c224f1514ab8fade5a8633b43b5b0699e0ff2c46",
+          "configurationDigest": "843ee083dbba1f6e320f67e7f7e7f44bd8eebcfc5623138c16c77be6d0ae4170",
+          "routeDigest": "b9349f6afade57d7b86de23322baaeeb21f1c3956f5be32222d660566afc6ad8",
+          "hostDigest": "f66caaf36ac1a87532d76fd6bc503cad2c54b4b41d6c660ace1ee44a48a10e32",
+          "workloadDigest": "81d596bf2066f0eb843f22dfae55e39dad3c72d7645873a1cefc5f5eaf76a9fe"
+        },
+        "endsAt": "2026-10-12T00:00:00.000Z",
+        "denominator": 3360,
+        "cadenceSeconds": 180,
+        "totalSlots": 3360,
+        "sequenceIntact": true,
+        "firstSlotAt": "2026-10-05T00:00:00.000Z",
+        "lastSlotAt": "2026-10-11T23:57:00.000Z",
+        "counts": {
+          "scheduled": 0,
+          "running": 0,
+          "swept": 0,
+          "reviewed": 0,
+          "deferred_quota": 1,
+          "deferred_auth": 0,
+          "deferred_network": 0,
+          "deferred_busy": 0,
+          "maintenance": 0,
+          "failed": 1,
+          "missed": 3358,
+          "coalesced_after_outage": 0
+        },
+        "reasons": [
+          {
+            "reason": "MODEL_UNAVAILABLE",
+            "count": 1
+          },
+          {
+            "reason": "SLOT_BOUNDARY_PASSED",
+            "count": 3358
+          },
+          {
+            "reason": "WEEKLY_THRESHOLD",
+            "count": 1
+          }
+        ],
+        "acceptanceComplete": false,
+        "fullCadenceVerdict": "NOT_EVALUATED"
+      },
+      "experimentalArmReport": {
+        "arm": {
+          "armId": "a0c13472-d7e7-4873-bd93-850dc6dc38b6",
+          "requestId": "f542a4d9-a786-4f22-907e-867b53b6f770",
+          "jobKey": "capacity.full-review",
+          "anchor": "2026-10-12T00:00:00.000Z",
+          "designation": "experimental",
+          "aiEverySeconds": 900,
+          "clock": "fake_model",
+          "policyDigest": "547c192157c78e7d20296793c224f1514ab8fade5a8633b43b5b0699e0ff2c46",
+          "configurationDigest": "97fed04225f3c74a98d8e684c58c2842cf11f6501553294a090fa24d0977106f",
+          "routeDigest": "b9349f6afade57d7b86de23322baaeeb21f1c3956f5be32222d660566afc6ad8",
+          "hostDigest": "f66caaf36ac1a87532d76fd6bc503cad2c54b4b41d6c660ace1ee44a48a10e32",
+          "workloadDigest": "81d596bf2066f0eb843f22dfae55e39dad3c72d7645873a1cefc5f5eaf76a9fe"
+        },
+        "endsAt": "2026-10-19T00:00:00.000Z",
+        "denominator": 3360,
+        "cadenceSeconds": 180,
+        "totalSlots": 3360,
+        "sequenceIntact": true,
+        "firstSlotAt": "2026-10-12T00:00:00.000Z",
+        "lastSlotAt": "2026-10-18T23:57:00.000Z",
+        "counts": {
+          "scheduled": 3360,
+          "running": 0,
+          "swept": 0,
+          "reviewed": 0,
+          "deferred_quota": 0,
+          "deferred_auth": 0,
+          "deferred_network": 0,
+          "deferred_busy": 0,
+          "maintenance": 0,
+          "failed": 0,
+          "missed": 0,
+          "coalesced_after_outage": 0
+        },
+        "reasons": [],
+        "acceptanceComplete": false,
+        "fullCadenceVerdict": "NOT_EVALUATED"
+      },
+      "originalUnchanged": true,
+      "wholeResult": {
+        "state": "NOT_IMPLEMENTED",
+        "complete": false
+      }
+    }
+  ],
+  "baselines": [
+    {
+      "AT": "AT-ops-47",
+      "operationId": "01f6a905-297b-49fc-84c6-24621bdf506d",
+      "reason": "REGISTERED_CASE_NOT_IMPLEMENTED",
+      "runShowExact": true
+    },
+    {
+      "AT": "AT-self-improvement-59",
+      "operationId": "1c358638-fc7e-4670-bb72-ce25f6530c37",
+      "reason": "REGISTERED_CASE_NOT_IMPLEMENTED",
+      "runShowExact": true
+    },
+    {
+      "AT": "AT-self-improvement-60",
+      "operationId": "360f0caa-f624-4907-ae0e-f4e60d14bb01",
+      "reason": "REGISTERED_CASE_NOT_IMPLEMENTED",
+      "runShowExact": true
+    },
+    {
+      "AT": "AT-RESEARCH-REGISTER-6",
+      "operationId": "519bdc32-b205-488f-b155-6ce79ef3cd72",
+      "reason": "REGISTERED_CASE_NOT_IMPLEMENTED",
+      "runShowExact": true
+    }
+  ],
+  "maxPrerequisiteCharacters": 1678,
+  "callerUid": 501,
+  "clock": "fake_model",
+  "liveProviderSends": 0,
+  "liveTrialStarted": false,
+  "wholeATsPassed": [],
+  "acceptanceComplete": false,
+  "teardowns": [
+    {
+      "stackId": "5c9c06e1-8df3-4bd6-aae0-3dc0ff796081",
+      "checkpointRefs": [],
+      "fenceRefs": [],
+      "stoppedResourceRefs": [
+        {
+          "module": "ops",
+          "kind": "test_world",
+          "id": "5c9c06e1-8df3-4bd6-aae0-3dc0ff796081"
+        }
+      ],
+      "retainedArtifactRefs": [
+        {
+          "module": "ops",
+          "kind": "test_world",
+          "id": "5c9c06e1-8df3-4bd6-aae0-3dc0ff796081"
+        }
+      ],
+      "unresolvedResourceRefs": [],
+      "complete": true
+    },
+    {
+      "stackId": "38c3eb8f-90a6-4020-ad84-7e33c1ee5c60",
+      "checkpointRefs": [],
+      "fenceRefs": [],
+      "stoppedResourceRefs": [
+        {
+          "module": "ops",
+          "kind": "test_world",
+          "id": "38c3eb8f-90a6-4020-ad84-7e33c1ee5c60"
+        }
+      ],
+      "retainedArtifactRefs": [
+        {
+          "module": "ops",
+          "kind": "test_world",
+          "id": "38c3eb8f-90a6-4020-ad84-7e33c1ee5c60"
+        }
+      ],
+      "unresolvedResourceRefs": [],
+      "complete": true
+    },
+    {
+      "stackId": "295dc637-7f3c-43c7-9067-8ee1c7eee3ba",
+      "checkpointRefs": [],
+      "fenceRefs": [],
+      "stoppedResourceRefs": [
+        {
+          "module": "ops",
+          "kind": "test_world",
+          "id": "295dc637-7f3c-43c7-9067-8ee1c7eee3ba"
+        }
+      ],
+      "retainedArtifactRefs": [
+        {
+          "module": "ops",
+          "kind": "test_world",
+          "id": "295dc637-7f3c-43c7-9067-8ee1c7eee3ba"
+        }
+      ],
+      "unresolvedResourceRefs": [],
+      "complete": true
+    },
+    {
+      "stackId": "bd6d70f4-2d28-4a08-a19b-abb1305dfc7b",
+      "checkpointRefs": [],
+      "fenceRefs": [],
+      "stoppedResourceRefs": [
+        {
+          "module": "ops",
+          "kind": "test_world",
+          "id": "bd6d70f4-2d28-4a08-a19b-abb1305dfc7b"
+        }
+      ],
+      "retainedArtifactRefs": [
+        {
+          "module": "ops",
+          "kind": "test_world",
+          "id": "bd6d70f4-2d28-4a08-a19b-abb1305dfc7b"
+        }
+      ],
+      "unresolvedResourceRefs": [],
+      "complete": true
+    },
+    {
+      "stackId": "49f43b07-5c63-4be1-9e2b-02d4e4e1a3fc",
+      "checkpointRefs": [],
+      "fenceRefs": [],
+      "stoppedResourceRefs": [
+        {
+          "module": "ops",
+          "kind": "test_world",
+          "id": "49f43b07-5c63-4be1-9e2b-02d4e4e1a3fc"
+        }
+      ],
+      "retainedArtifactRefs": [
+        {
+          "module": "ops",
+          "kind": "test_world",
+          "id": "49f43b07-5c63-4be1-9e2b-02d4e4e1a3fc"
+        }
+      ],
+      "unresolvedResourceRefs": [],
+      "complete": true
+    }
+  ],
+  "ownedWorldsDown": [
+    "5c9c06e1-8df3-4bd6-aae0-3dc0ff796081",
+    "38c3eb8f-90a6-4020-ad84-7e33c1ee5c60",
+    "295dc637-7f3c-43c7-9067-8ee1c7eee3ba",
+    "bd6d70f4-2d28-4a08-a19b-abb1305dfc7b",
+    "49f43b07-5c63-4be1-9e2b-02d4e4e1a3fc"
+  ],
+  "staticResult": {
+    "startedAt": "2026-10-06T20:25:25.763475+00:00",
+    "finishedAt": "2026-10-06T20:26:14.078526+00:00",
+    "exitCode": 0,
+    "command": "npm run check",
+    "languages": [
+      "TypeScript",
+      "Python"
+    ],
+    "SwiftDeferredTo": "R3"
+  },
+  "staticInventory": {
+    "artifacts": 355,
+    "contracts": 287,
+    "cliManifests": 11,
+    "features": 97,
+    "commands": 55,
+    "indexedATs": 1447
+  },
+  "root02Status": "PENDING",
+  "root02FrozenHashesUnchanged": true,
+  "root02FrozenHashes": {
+    "scripts/probe-siwc-control-runtime.mts": "96e1fd2d98469772c3d0d203386c3f7aa56af57db025c420fa93f1f4ecd7e70d",
+    "scripts/stage-siwc-control-runtime.mts": "13ff53e341ab7670dbed967ce810d5aa2834df7a47ffe1620f037ff1da3ee0d4",
+    "control/dist/bootstrap/siwc-runtime-probe.js": "06870b8dd41d2ffc093cc04680ba56c4570f07b4aa0a27a9ab70796cdd8204bd"
+  },
+  "remainingGates": [
+    "supported no-spend/native route and independent auth consent",
+    "actual protected identity/provider/controller proof",
+    "canonical run/review foreign keys and accepted Turn Review transition",
+    "168 actual UTC hours and original 3360 accepted in-slot reviews",
+    "representative shared foreground traffic, allowance freshness, latency and RAM/swap measurements"
+  ],
+  "languages": [
+    "TypeScript",
+    "Python"
+  ],
+  "SwiftDeferredTo": "R3"
+}

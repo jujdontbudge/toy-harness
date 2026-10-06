@@ -3661,6 +3661,64 @@ export const registeredCliAcceptanceManifestInventory = [
     "simUnavailableReason": "SIM cannot check generated pre-build schema artifacts or native queue transaction/worker fault boundaries. The CLI drives the real public queue interface in an owned PostgreSQL fixture."
   },
   {
+    "id": "AT-ops-47",
+    "rung": "CLI",
+    "sourceAssertionHash": "a5197df8ac45e7cc1e660210288ad85e534204870ede21d629ca12fa19e4e799",
+    "commandId": "probe.run",
+    "scenarioId": "capacity-trial",
+    "owner": "self-improvement",
+    "firstRelease": "R0",
+    "kind": "behavioral",
+    "mandatoryCases": [
+      {
+        "id": "capacity-trial",
+        "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+        "phase": "capacity-trial"
+      }
+    ],
+    "trigger": "Run the existing fourteen fixture-only journal diagnostics through the real public owner and PostgreSQL; elapsed native and whole acceptance remain incomplete.",
+    "faultControls": [
+      {
+        "id": "seeded-fake-clock",
+        "seam": "clock",
+        "affectedPhases": [
+          "capacity-trial"
+        ]
+      },
+      {
+        "id": "native-postgresql-restart",
+        "seam": "os",
+        "affectedPhases": [
+          "capacity-trial"
+        ]
+      }
+    ],
+    "observations": [
+      {
+        "id": "public-journal-readbacks",
+        "independentReader": "capacityTrialProbe: immutable 3360-slot arm bindings, public reports, conflict refusals and retained outcomes",
+        "caseIds": [
+          "capacity-trial"
+        ]
+      },
+      {
+        "id": "restart-and-independent-arm-readbacks",
+        "independentReader": "CapacityTrialJournal.withTest: real PostgreSQL restart and separate original/experimental arm reports",
+        "caseIds": [
+          "capacity-trial"
+        ]
+      },
+      {
+        "id": "stored-cli-readback",
+        "independentReader": "toy probe.show and stack.down: exact persisted operation and complete owned-world teardown",
+        "caseIds": [
+          "capacity-trial"
+        ]
+      }
+    ],
+    "simUnavailableReason": "SIM cannot inspect pre-build immutable journal identities or drive the native PostgreSQL restart boundary. The CLI reaches the real journal owner with a fixed external fake clock; no elapsed native trial is certified."
+  },
+  {
     "id": "AT-ops-49",
     "rung": "CLI",
     "sourceAssertionHash": "bdc522a1d838c3bb62a91ca17cf28b26ccb5431aa145f9c25052e0a9b6e10ba7",
@@ -3873,6 +3931,180 @@ export const registeredCliAcceptanceManifestInventory = [
       }
     ],
     "simUnavailableReason": "SIM cannot inspect pre-build admission counters or drive the native PostgreSQL restart boundary. The CLI exercises the real accounting owner with fixed external quota and clock observations."
+  },
+  {
+    "id": "AT-RESEARCH-REGISTER-6",
+    "rung": "CLI",
+    "sourceAssertionHash": "22a0f9e2fc9184ec5954426c4cb34e6f43cc553eff2772456b5f36ec8d9d91d1",
+    "commandId": "probe.run",
+    "scenarioId": "capacity-trial",
+    "owner": "self-improvement",
+    "firstRelease": "R0",
+    "kind": "behavioral",
+    "mandatoryCases": [
+      {
+        "id": "capacity-trial",
+        "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+        "phase": "capacity-trial"
+      }
+    ],
+    "trigger": "Run the existing fourteen fixture-only journal diagnostics through the real public owner and PostgreSQL; elapsed native and whole acceptance remain incomplete.",
+    "faultControls": [
+      {
+        "id": "seeded-fake-clock",
+        "seam": "clock",
+        "affectedPhases": [
+          "capacity-trial"
+        ]
+      },
+      {
+        "id": "native-postgresql-restart",
+        "seam": "os",
+        "affectedPhases": [
+          "capacity-trial"
+        ]
+      }
+    ],
+    "observations": [
+      {
+        "id": "public-journal-readbacks",
+        "independentReader": "capacityTrialProbe: immutable 3360-slot arm bindings, public reports, conflict refusals and retained outcomes",
+        "caseIds": [
+          "capacity-trial"
+        ]
+      },
+      {
+        "id": "restart-and-independent-arm-readbacks",
+        "independentReader": "CapacityTrialJournal.withTest: real PostgreSQL restart and separate original/experimental arm reports",
+        "caseIds": [
+          "capacity-trial"
+        ]
+      },
+      {
+        "id": "stored-cli-readback",
+        "independentReader": "toy probe.show and stack.down: exact persisted operation and complete owned-world teardown",
+        "caseIds": [
+          "capacity-trial"
+        ]
+      }
+    ],
+    "simUnavailableReason": "SIM cannot inspect pre-build immutable journal identities or drive the native PostgreSQL restart boundary. The CLI reaches the real journal owner with a fixed external fake clock; no elapsed native trial is certified."
+  },
+  {
+    "id": "AT-self-improvement-59",
+    "rung": "CLI",
+    "sourceAssertionHash": "e976ade51b0316f155936944aedb1c6f59d095df0f227607c9a6b9c5c4599b7d",
+    "commandId": "probe.run",
+    "scenarioId": "capacity-trial",
+    "owner": "self-improvement",
+    "firstRelease": "R0",
+    "kind": "behavioral",
+    "mandatoryCases": [
+      {
+        "id": "capacity-trial",
+        "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+        "phase": "capacity-trial"
+      }
+    ],
+    "trigger": "Run the existing fourteen fixture-only journal diagnostics through the real public owner and PostgreSQL; elapsed native and whole acceptance remain incomplete.",
+    "faultControls": [
+      {
+        "id": "seeded-fake-clock",
+        "seam": "clock",
+        "affectedPhases": [
+          "capacity-trial"
+        ]
+      },
+      {
+        "id": "native-postgresql-restart",
+        "seam": "os",
+        "affectedPhases": [
+          "capacity-trial"
+        ]
+      }
+    ],
+    "observations": [
+      {
+        "id": "public-journal-readbacks",
+        "independentReader": "capacityTrialProbe: immutable 3360-slot arm bindings, public reports, conflict refusals and retained outcomes",
+        "caseIds": [
+          "capacity-trial"
+        ]
+      },
+      {
+        "id": "restart-and-independent-arm-readbacks",
+        "independentReader": "CapacityTrialJournal.withTest: real PostgreSQL restart and separate original/experimental arm reports",
+        "caseIds": [
+          "capacity-trial"
+        ]
+      },
+      {
+        "id": "stored-cli-readback",
+        "independentReader": "toy probe.show and stack.down: exact persisted operation and complete owned-world teardown",
+        "caseIds": [
+          "capacity-trial"
+        ]
+      }
+    ],
+    "simUnavailableReason": "SIM cannot inspect pre-build immutable journal identities or drive the native PostgreSQL restart boundary. The CLI reaches the real journal owner with a fixed external fake clock; no elapsed native trial is certified."
+  },
+  {
+    "id": "AT-self-improvement-60",
+    "rung": "CLI",
+    "sourceAssertionHash": "19f87129019d0e1c4e42d224ab40dca80e3b25a03949a56e205598f93bf05917",
+    "commandId": "probe.run",
+    "scenarioId": "capacity-trial",
+    "owner": "self-improvement",
+    "firstRelease": "R0",
+    "kind": "behavioral",
+    "mandatoryCases": [
+      {
+        "id": "capacity-trial",
+        "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+        "phase": "capacity-trial"
+      }
+    ],
+    "trigger": "Run the existing fourteen fixture-only journal diagnostics through the real public owner and PostgreSQL; elapsed native and whole acceptance remain incomplete.",
+    "faultControls": [
+      {
+        "id": "seeded-fake-clock",
+        "seam": "clock",
+        "affectedPhases": [
+          "capacity-trial"
+        ]
+      },
+      {
+        "id": "native-postgresql-restart",
+        "seam": "os",
+        "affectedPhases": [
+          "capacity-trial"
+        ]
+      }
+    ],
+    "observations": [
+      {
+        "id": "public-journal-readbacks",
+        "independentReader": "capacityTrialProbe: immutable 3360-slot arm bindings, public reports, conflict refusals and retained outcomes",
+        "caseIds": [
+          "capacity-trial"
+        ]
+      },
+      {
+        "id": "restart-and-independent-arm-readbacks",
+        "independentReader": "CapacityTrialJournal.withTest: real PostgreSQL restart and separate original/experimental arm reports",
+        "caseIds": [
+          "capacity-trial"
+        ]
+      },
+      {
+        "id": "stored-cli-readback",
+        "independentReader": "toy probe.show and stack.down: exact persisted operation and complete owned-world teardown",
+        "caseIds": [
+          "capacity-trial"
+        ]
+      }
+    ],
+    "simUnavailableReason": "SIM cannot inspect pre-build immutable journal identities or drive the native PostgreSQL restart boundary. The CLI reaches the real journal owner with a fixed external fake clock; no elapsed native trial is certified."
   }
 ] as const;
 export const acceptanceSourceDigest = "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2";

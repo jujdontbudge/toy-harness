@@ -1,6 +1,6 @@
 import { createHash, randomUUID } from "node:crypto";
 import { readFileSync } from "node:fs";
-import { checkViewSchema, capacityTrialArmSchema, opsErrorMessages } from "@toy/contracts";
+import { checkViewSchema, capacityTrialArmSchema, opsErrorMessages, registeredCliAcceptanceManifestInventory } from "@toy/contracts";
 import type { CapacityTrialArmV1, CheckViewV1, OpsControlContextV1, OpsError, RegisteredProbeInputV1, RegisteredProbeOperationV1, Result } from "@toy/contracts";
 import { TestClockControl, TestProbeControl } from "@toy/ops/public";
 import { CapacityTrialJournal } from "./capacity-trial.js";
@@ -14,7 +14,9 @@ const take = <Data>(result: Result<Data>): Data => {
 };
 const hash = (value: string | Buffer): string => createHash("sha256").update(value).digest("hex");
 export const capacityTrialProbe = async (input: RegisteredProbeInputV1, context: OpsControlContextV1): Promise<Result<RegisteredProbeOperationV1>> => {
-  if (input.caseId !== "capacity-trial" || !["AT-ops-47", "AT-self-improvement-59", "AT-self-improvement-60", "AT-RESEARCH-REGISTER-6"].includes(input.probeId)) return { ok: false, error: { module: "ops", code: "INVALID_INPUT", message: opsErrorMessages.INVALID_INPUT, retryable: false } };
+  if ((input.caseId !== undefined && input.caseId !== "capacity-trial") || !["AT-ops-47", "AT-self-improvement-59", "AT-self-improvement-60", "AT-RESEARCH-REGISTER-6"].includes(input.probeId)) return { ok: false, error: { module: "ops", code: "INVALID_INPUT", message: opsErrorMessages.INVALID_INPUT, retryable: false } };
+  const manifest = registeredCliAcceptanceManifestInventory.find(entry => entry.id === input.probeId);
+  if (!manifest || manifest.scenarioId !== "capacity-trial" || JSON.stringify(manifest.mandatoryCases) !== JSON.stringify([{ id: "capacity-trial", publicOperation: "ReplayEnvironment.runRegisteredProbe", phase: "capacity-trial" }])) return { ok: false, error: { module: "ops", code: "ATTESTATION_INVALID", message: opsErrorMessages.ATTESTATION_INVALID, retryable: false } };
   const checks: CheckViewV1[] = [];
   const diagnostic = (name: string, passed: boolean, evidence: unknown): void => {
     checks.push(checkViewSchema.parse({
