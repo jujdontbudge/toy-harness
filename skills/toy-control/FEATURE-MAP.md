@@ -1,6 +1,6 @@
 # Toy feature map
 
-Canonical source: architecture/features.json, generated owner command declarations and source-bound acceptance index. Source digest: 90031ba4d3cc81ebcc8324719f12cffe418458f6333de10d3184b577c8e15fc8. States describe implementation availability; acceptance requires saved whole-assertion evidence. Future declarations remain specified.
+Canonical source: architecture/features.json, generated owner command declarations and source-bound acceptance index. Source digest: ee11b000629f5c894c86281f1a2ad92f9f5d76ad28d2f98fbae24dfe207f8b22. States describe implementation availability; acceptance requires saved whole-assertion evidence. Future declarations remain specified.
 
 | Feature ID | Behavior | Requirements | First release / state | User entry | Public interface | Source paths | CLI | Assigned proof and assertion digest |
 |---|---|---|---|---|---|---|---|---|
