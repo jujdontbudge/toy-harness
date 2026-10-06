@@ -1,6 +1,6 @@
 --- /dev/null
 +++ b/tests/fixtures/toy_auth_httpx_fixture.py
-@@ -0,0 +1,688 @@
+@@ -0,0 +1,726 @@
 +from __future__ import annotations
 +
 +import base64
@@ -91,7 +91,7 @@
 +
 +
 +def _barrier_path(name: str) -> Path | None:
-+    if name not in {"add-response-pending", "release-add-token", "add-command-returned", "release-add-result", "refresh-lock-pending", "release-refresh-lock", "refresh-response-pending", "release-refresh-token", "refresh-catalog-observed", "release-refresh-model", "result-emitted", "release-result", "model-request-initial", "model-request-rotated", "model-request-added", "model-request-added-rotated", "model-request-stale", "model-request-unknown", "model-request-authorization-denied", "model-request-model-denied"}:
++    if name not in {"add-response-pending", "release-add-token", "add-command-returned", "release-add-result", "refresh-lock-pending", "release-refresh-lock", "refresh-response-pending", "release-refresh-token", "refresh-catalog-observed", "release-refresh-model", "result-emitted", "release-result", "model-request-initial", "model-request-rotated", "model-request-added", "model-request-added-rotated", "model-request-stale", "model-request-unknown", "model-request-authorization-denied", "model-request-model-denied", "storage-before-replace", "storage-after-replace", "storage-child-identity", "release-storage-cut"}:
 +        return None
 +    directory = os.environ.get("TOY_AUTH_CONCURRENCY_BARRIER_DIR")
 +    if not directory:
@@ -432,8 +432,39 @@
 +    return _route(request, asynchronous=True)
 +
 +
++def _storage_replace_target(destination: object) -> bool:
++    home = os.environ.get("HERMES_HOME")
++    return _PHASE == "add" and _TOKEN_RESPONSE_ISSUED and isinstance(home, str) and bool(home) and os.path.abspath(os.fsdecode(os.fspath(destination))) == os.path.abspath(os.path.join(home, "auth.json"))
++
++
++def _hold_storage_cut(cut: str) -> None:
++    identity = _barrier_path("storage-child-identity")
++    if identity is None:
++        raise SystemExit(1)
++    with identity.open("x", encoding="ascii") as handle:
++        json.dump({"pid": os.getpid(), "parentPid": os.getppid(), "uid": os.getuid(), "gid": os.getgid()}, handle)
++    if not _signal_barrier("storage-" + cut) or not _wait_barrier("release-storage-cut"):
++        raise SystemExit(1)
++
++
++def _install_storage_replace_cut() -> None:
++    if os.environ.get("TOY_AUTH_STORAGE_CUT") != "after-replace":
++        return
++    original_replace = os.replace
++
++    def replace(source, destination, *args, **kwargs):
++        result = original_replace(source, destination, *args, **kwargs)
++        if _storage_replace_target(destination):
++            _hold_storage_cut("after-replace")
++        return result
++
++    os.replace = replace
++
++
 +def _deny_socket(event: str, args: tuple[object, ...]) -> None:
 +    global _SOCKET_ORIGIN, _STORAGE_FAULT_TRIGGERED
++    if event == "os.rename" and os.environ.get("TOY_AUTH_STORAGE_CUT") == "before-replace" and len(args) > 1 and _storage_replace_target(args[1]):
++        _hold_storage_cut("before-replace")
 +    if event == "os.rename" and _PHASE in {"add-enospc", "add-replace-fault"} and _TOKEN_RESPONSE_ISSUED and not _STORAGE_FAULT_TRIGGERED and len(args) > 1:
 +        home = os.environ.get("HERMES_HOME")
 +        if isinstance(home, str) and home:
@@ -460,15 +491,19 @@
 +        raise RuntimeError("fixture socket access is disabled")
 +
 +
++def _fixture_label() -> str:
++    return "toy-fixture-storage-cut" if os.environ.get("TOY_AUTH_STORAGE_CONTEXT") == "1" else "toy-fixture-added-" + os.environ.get("TOY_AUTH_CONCURRENCY_ORDER", "")
++
++
 +def _public_argv(operation: str) -> list[str]:
 +    prefix = ["hermes", "--profile", "toy"]
 +    if operation == "add":
-+        label = ["--label", "toy-fixture-added-" + os.environ.get("TOY_AUTH_CONCURRENCY_ORDER", "")] if os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR") == "auth-add" else []
++        label = ["--label", _fixture_label()] if os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR") == "auth-add" else []
 +        return [*prefix, "auth", "add", "openai-codex", "--type", "oauth", "--no-browser", *label]
 +    if operation == "list":
 +        return [*prefix, "auth", "list", "openai-codex"]
 +    if operation == "priority":
-+        target = "toy-fixture-added-" + os.environ.get("TOY_AUTH_CONCURRENCY_ORDER", "") if _PHASE == "priority-added" else "2"
++        target = _fixture_label() if _PHASE == "priority-added" else "2"
 +        return [*prefix, "auth", "priority", "openai-codex", target, "0"]
 +    provider = "siwc_responses" if _PHASE == "siwc-unbound" else "openai-codex"
 +    return [*prefix, "chat", "--provider", provider, "--model", _EXPECTED_MODEL, "--toolsets", "none", "-q", _PROMPT]
@@ -569,7 +604,7 @@
 +            added = exit_code == 0 and "Added openai-codex OAuth credential #" in combined_output
 +            markers.append("AUTH_ADD_OK" if added else "AUTH_ADD_NOT_CONFIRMED")
 +    elif operation == "priority":
-+        expected_label = "toy-fixture-added-" + os.environ.get("TOY_AUTH_CONCURRENCY_ORDER", "")
++        expected_label = _fixture_label()
 +        label_matches = _PHASE != "priority-added" or f'Set openai-codex credential "{expected_label}" to priority 0 (#1' in stdout
 +        moved = exit_code == 0 and label_matches and "Set openai-codex credential" in stdout and "to priority 0 (#1" in stdout
 +        markers.append("AUTH_PRIORITY_OK" if moved else "AUTH_PRIORITY_NOT_CONFIRMED")
@@ -582,6 +617,8 @@
 +                    count = int(raw)
 +                    break
 +        observations["credential_count"] = count
++        if os.environ.get("TOY_AUTH_STORAGE_CONTEXT") == "1":
++            observations["target_label_present"] = _fixture_label() in stdout
 +        markers.append("AUTH_LIST_READBACK_OK" if count > 0 else "AUTH_LIST_EMPTY")
 +    else:
 +        if _PHASE == "siwc-unbound":
@@ -666,6 +703,7 @@
 +    httpx.Client.send = _sync_send
 +    httpx.AsyncClient.send = _async_send
 +    sys.addaudithook(_deny_socket)
++    _install_storage_replace_cut()
 +    _hold_refresh_lock()
 +    exit_code, stdout, stderr, failure = _run_cli(argv)
 +    if os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR") == "auth-add":

@@ -2,9 +2,9 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-06T19:57:26.828517+00:00",
-  "phase": "R0.07 fixture journal12checksverified/receiptboundrepairplanned; root02pending; R003catalogobservationnext",
-  "activeCard": "R0.10",
+  "updatedAt": "2026-10-06T20:05:08.431146+00:00",
+  "phase": "R0.03 two atomic storage process-crash cuts verified; R0.10 indexed archive proof closed; root02 pending without blocking goal",
+  "activeCard": "R0.03",
   "cardCount": 87,
   "acceptanceCount": 1447,
   "cards": {
@@ -525,7 +525,9 @@
         "build/evidence/R0.03/catalog-observation-replan.json",
         "build/evidence/R0.03/model-observation-verification.json",
         "build/evidence/R0.03/model-observation-replan.json",
-        "build/evidence/R0.03/client-selection-verification.json"
+        "build/evidence/R0.03/client-selection-verification.json",
+        "build/evidence/R0.03/storage-crash-minimum-plan.json",
+        "build/evidence/R0.03/storage-crash-verification.json"
       ],
       "requiredATs": [
         "AT-hermes-config-34",
@@ -621,11 +623,12 @@
         "sourceUnitStoppedAt": "2026-10-06T09:56:39.219348+00:00"
       },
       "lastVerification": {
-        "evidence": "build/evidence/R0.03/client-selection-verification.json",
-        "verdict": "PASS_SIXTEEN_EXACT_GENERATION_CONCURRENCY_DIAGNOSTICS",
-        "concurrencyChecks": 16,
-        "totalChecks": 19,
+        "evidence": "build/evidence/R0.03/storage-crash-verification.json",
+        "verdict": "PASS_26_NATIVE_DIAGNOSTICS_INCLUDING_SEVEN_ATOMIC_STORAGE_CHECKS",
+        "checks": 26,
         "runShowExact": true,
+        "cleanupPassed": true,
+        "ownedWorldsDown": true,
         "wholeATsPassed": [],
         "acceptanceComplete": false
       },
@@ -752,6 +755,22 @@
         "runShowExact": true,
         "ownedWorldsDown": true,
         "installedHermesModified": false
+      },
+      "storageCrashUnit": {
+        "startedAt": "2026-10-06T20:00:33.069357+00:00",
+        "targetStopAt": "2026-10-06T22:00:33.069357+00:00",
+        "state": "CLOSED_TWO_ATOMIC_PROCESS_CRASH_CUTS_AND_FRESH_PUBLIC_READBACKS_VERIFIED",
+        "sourcePlan": "build/evidence/R0.03/storage-crash-minimum-plan.json",
+        "scope": "Two SIGKILL cuts immediately before/after actual disposable-profile os.replace; fresh public list/priority/chat readback",
+        "wholeATComplete": false,
+        "stoppedAt": "2026-10-06T20:05:08.431146+00:00",
+        "diagnosticPasses": 26,
+        "concurrencyPasses": 16,
+        "storagePasses": 7,
+        "runShowExact": true,
+        "unfilteredRunShowExact": true,
+        "cleanupComplete": true,
+        "powerLossDurabilityVerified": false
       }
     },
     "R0.04": {
@@ -10035,7 +10054,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Consume the independent bounded R0.03 storage-crash plan after Luna finishes. Poll root02 and continue R0.01 immediately on a verified DONE receipt. Pending root work never blocks the active goal.",
+  "nextAction": "Stop the passed R0.03 storage unit. Consume Luna R0.07 canonical relationship plan when ready and poll root02. Continue R0.01 immediately on verified root02 DONE.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -20579,15 +20598,15 @@
     "features": 97,
     "commands": 55,
     "indexedATs": 1447,
-    "schemaDigest": "d0d2c5af3ed652eef803a23427f1b949bbc5484a18257d9e88ff74b3bb0c320f",
-    "evidence": "build/evidence/R0.10/archive-binding-check-result.json",
+    "schemaDigest": "1a768d76525382bf74bf62c4b5e645d26daebde2c55b079402d85a48d79c990e",
+    "evidence": "build/evidence/R0.03/storage-crash-check-result.json",
     "languages": [
       "TypeScript",
       "Python"
     ],
     "SwiftDeferredTo": "R3"
   },
-  "sourceCheckpointCommit": "02a946a",
+  "sourceCheckpointCommit": "d26b4d9",
   "sourceCheckpointPushed": true,
   "rootRequests": {
     "ROOT-R004-20261006-01": {
@@ -20633,15 +20652,15 @@
   },
   "activeWorkers": [
     {
-      "task": "r003_per_generation_refresh_plan",
-      "card": "R0.03",
+      "task": "r007_minimum_trial_journal",
+      "card": "R0.07",
       "model": "gpt-6-luna",
       "reasoning": "max",
-      "scope": "read-only storage-crash plan",
-      "targetStopAt": "2026-10-06T20:02:00Z",
+      "scope": "read-only canonical run/review relationship minimum plan",
+      "targetStopAt": "2026-10-06T20:10:33.069357+00:00",
       "ownNeedBytes": "268435456",
       "marginBytes": "536870912",
-      "admission": "build/evidence/R0.03/storage-plan-admission.json"
+      "admission": "build/evidence/R0.03/storage-crash-admission.json"
     }
   ]
 }

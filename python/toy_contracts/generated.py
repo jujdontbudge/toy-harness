@@ -5258,6 +5258,7 @@ class HermesAuthFixtureResultV1Observations(TypedDict):
     provider: "HermesAuthFixtureResultV1ObservationsProvider"
     phase: "HermesAuthFixtureResultV1ObservationsPhase"
     credential_count: NotRequired[int]
+    target_label_present: NotRequired[bool]
     access_generation: Optional["HermesAuthConcurrencyObservationV1RefreshGenerationValue"]
     catalog_access_generation: Optional["HermesAuthConcurrencyObservationV1RefreshGenerationValue"]
     storage_fault_triggered: bool

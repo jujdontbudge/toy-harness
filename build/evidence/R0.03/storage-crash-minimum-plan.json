@@ -1,0 +1,127 @@
+{
+  "schemaVersion": "toy.r0.03-storage-crash-minimum-plan.v1",
+  "recordedAt": "2026-10-06T19:59:20Z",
+  "workspaceCommit": "d26b4d9",
+  "card": "R0.03",
+  "acceptanceTest": "AT-hermes-config-87",
+  "state": "PLAN_ONLY",
+  "wholeATComplete": false,
+  "indexedAssertion": {
+    "source": "specs/hermes-config.md:3051",
+    "sourceAssertion": "Given concurrent real subprocess refresh/add with fake-provider barriers and OS/storage crash cuts, When both orders persist and fresh processes reload, Then the newest accepted refresh generation and added grant survive without a lost update.",
+    "sourceAssertionHash": "b8ba9587534e2983742157a3ab9ae8911da4928e48e3ab0894944914bb91e6bb",
+    "acceptanceIndex": "tests/acceptance-index.json:821-830",
+    "rung": "CLI",
+    "requiredEvidence": "stack, probe:AT-hermes-config-87"
+  },
+  "currentEvidence": {
+    "source": "build/evidence/R0.03/client-selection-verification.json",
+    "diagnosticsPassed": 19,
+    "concurrencyPassed": 16,
+    "acceptanceComplete": false,
+    "unfilteredRoute": "NOT_IMPLEMENTED",
+    "remainingAtomicGate": "Actual atomic storage-boundary crash/restart",
+    "installedHermesModified": false,
+    "root02": "PENDING; untouched"
+  },
+  "sourceFinding": "Current add-enospc/add-replace-fault checks inject OSError at the auth.json rename audit event, then assert sanitized save denial and fresh list/chat refusal. They do not terminate a native child at the atomic commit boundary or prove post-restart old-versus-new state. Pinned auth add persists through _save_auth_store → atomic_json_write → _atomic_write: staged file write/flush/fsync, atomic_replace, metadata restore, then directory fsync.",
+  "minimumProof": {
+    "existingFiles": [
+      "patches/hermes-auth-fixture.patch",
+      "packages/hermes/src/auth-fixture.ts"
+    ],
+    "writtenInterfaceChange": "None required. Keep the killed child's boundary record in the existing CheckView prerequisite/reason evidence; its fixture JSON result is unavailable by design. Use existing add/list/priority/chat phases and result fields for fresh subprocess readbacks. Do not extend the public CLI or contract enums unless implementation later needs typed returned crash-cut data.",
+    "disposableProfile": "Reuse runHermesAuthFixture's temporary home, pinned candidate archive and profile created by the public profile command. Restrict the fault to the candidate profile's exact HERMES_HOME/auth.json after fake token response; do not target installed Hermes or global-root auth.json.",
+    "faultBoundaries": [
+      {
+        "cut": "before-replace",
+        "boundary": "At the existing os.rename audit event for the exact disposable profile auth.json, after the staged payload has been flushed and fsynced but before the real replace syscall.",
+        "action": "Signal the existing external barrier and hold the auth-add child there; once the parent observes that exact marker, send SIGKILL and wait for child exit.",
+        "restartOracle": "Run a fresh public auth list and target the unique storage-cut label with public auth priority. The old row count remains and the uncommitted label is absent; the existing grant remains usable."
+      },
+      {
+        "cut": "after-replace",
+        "boundary": "Wrap only the external os.replace seam for the exact disposable profile auth.json: call the real os.replace, then signal and hold before returning to Hermes, before metadata restoration and directory fsync.",
+        "action": "Once the parent observes the post-replace marker, send SIGKILL and wait for child exit.",
+        "restartOracle": "Fresh public auth list observes one additional row; public auth priority by the unique storage-cut label succeeds at #1; a fresh public chat uses the surviving added grant through the existing fake-provider refresh path and must observe added-rotated with no denials."
+      }
+    ],
+    "sequence": "Use a unique deterministic add label so it cannot collide with the earlier concurrency grant. Perform the pre-replace cut and verify absence, then retry that same add in the same disposable profile and perform the post-replace cut. In both cases the add itself is the real public auth add command. The parent records only boundary marker, child signal/exit, sanitized fixture results and public list/priority/chat readbacks; it does not inspect auth.json contents or raw streams.",
+    "externalSeam": "Extend the existing fixture OS audit seam and barrier directory only. The pre-replace cut uses its registered rename event; the post-replace cut calls the original OS replace before pausing. Do not mock _save_auth_store, atomic_json_write, _atomic_write, CredentialPool collaborators, or private functions. Do not add stale-response ordering work unless an existing AT87 assertion is found to require it."
+  },
+  "largestCliVerification": {
+    "rung": "CLI",
+    "route": "After the bounded fixture addition, run the assigned AT-hermes-config-87 through Toy probe.run against the local stack/fake providers, then probe.show the same operation and require exact run/show equality.",
+    "currentLimit": "The latest evidence still reports the unfiltered AT route NOT_IMPLEMENTED and incomplete; this plan cannot certify whole-AT completion."
+  },
+  "preservedUnknownGates": [
+    "Held older successful rotation response suppression.",
+    "Exact original-priority row identity on restore.",
+    "Protected unfiltered manifest/controller/native-role execution.",
+    "Whole AT-hermes-config-87 evidence and exact run/show readback through the assigned route."
+  ],
+  "oracleLimits": [
+    "The post-replace SIGKILL proves same-running-system process-crash visibility after atomic replace; it does not prove power-loss durability before the later directory fsync.",
+    "An orphan staging file after the pre-replace SIGKILL is not inspected; the oracle is the fresh public view of the active credential store.",
+    "No implementation, build, test, stack, process, CLI, provider, browser, credential-store/raw-stream read, external research, or root02 action was performed."
+  ],
+  "sourceEvidence": [
+    {
+      "path": "build/evidence/R0.03/client-selection-verification.json",
+      "sha256": "0531cb5205208238c570c0662049c62b1d4d8a182daf07be2a9cd43aedb3f165",
+      "lines": "whole file",
+      "supports": "Nineteen diagnostics and sixteen concurrency checks pass; actual atomic crash/restart and whole-route gates remain."
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/hermes-config.md",
+      "sha256": "d3548fde13180bc750660f306caa0041101832e398ccdabd6cfdac0b3de8f4af",
+      "lines": "3051",
+      "supports": "Exact source assertion for AT-hermes-config-87."
+    },
+    {
+      "path": "tests/acceptance-index.json",
+      "sha256": "87d21b7f24f9f900bb202e1e813ba46bbc51282b96e14cb2739d5fd67b32d9e6",
+      "lines": "821-830",
+      "supports": "Indexed assertion, CLI rung and required evidence."
+    },
+    {
+      "path": "patches/hermes-auth-fixture.patch",
+      "sha256": "aedb9f60d1b5be5d1ee4aa66d2afb5afb05c1dda7d6f57f77c9593204383d6f3",
+      "lines": "435-445, 563-585, 634-685",
+      "supports": "Current external OS seam raises ENOSPC/EIO at auth.json rename; save-denial/list/chat phases and existing marker barrier machinery."
+    },
+    {
+      "path": "packages/hermes/src/auth-fixture.ts",
+      "sha256": "41f875849f271302b1806391be3a358788676c73dad70462ab3c20322c523f38",
+      "lines": "148-168, 282-335, 372-390, 400-470",
+      "supports": "Disposable candidate/profile setup, existing save-fault checks, bounded child launcher and SIGKILL/result criteria."
+    },
+    {
+      "path": "packages/contracts/src/hermes-runtime.ts",
+      "sha256": "978c863f2cfdf3d95072b3fd314fbfcf33f74b6c1157b6b19e14d426b6a98134",
+      "lines": "12-34",
+      "supports": "Current child crashCut enum describes only post-public-command cuts; planned native cut evidence can stay at parent CheckView level without widening this schema."
+    },
+    {
+      "path": "pinned:hermes_cli/auth.py",
+      "commit": "8d5e3e412138342e8bf30443e72bd4e6a9abd057",
+      "sha256": "99d04d861b6437927aee2e6976d02be2c0e4875a8fc8c4dcc51485c909eb7b0e",
+      "lines": "791-812",
+      "supports": "Public auth store save delegates to private atomic JSON persistence with parent-directory fsync enabled."
+    },
+    {
+      "path": "pinned:utils.py",
+      "commit": "8d5e3e412138342e8bf30443e72bd4e6a9abd057",
+      "sha256": "cfe09d9eb4ad803bd855fb2672e7021d9e533b0358ddb1d5a4468e43ca2b61d2",
+      "lines": "167-205, 289-329, 379-393",
+      "supports": "Exact replace and staging sequence: temp write/flush/fsync, os.replace, metadata restoration and optional directory fsync."
+    },
+    {
+      "path": "pinned:hermes_cli/auth_commands.py",
+      "commit": "8d5e3e412138342e8bf30443e72bd4e6a9abd057",
+      "sha256": "16c18f21402ac9940815450a41854cfeaadad6a34bffeb98d27de648df749d1a",
+      "lines": "414-444",
+      "supports": "The public auth add flow accepts an explicit label, persists an independent pool row, and emits success only after add returns."
+    }
+  ]
+}

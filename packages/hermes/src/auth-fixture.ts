@@ -19,11 +19,12 @@ const isWithin = (base: string, target: string): boolean => {
   return path === "" || (!isAbsolute(path) && path !== ".." && !path.startsWith(`..${sep}`));
 };
 
-const publicArgv = (operation: FixtureOperation, order?: HermesAuthConcurrencyObservationV1["order"]): string[] => {
+const publicArgv = (operation: FixtureOperation, order?: HermesAuthConcurrencyObservationV1["order"], storageContext = false): string[] => {
   const prefix = ["hermes", "--profile", "toy"];
-  if (operation.startsWith("add")) return [...prefix, "auth", "add", "openai-codex", "--type", "oauth", "--no-browser", ...(order === undefined ? [] : ["--label", `toy-fixture-added-${order}`])];
+  const label = storageContext ? "toy-fixture-storage-cut" : `toy-fixture-added-${order}`;
+  if (operation.startsWith("add")) return [...prefix, "auth", "add", "openai-codex", "--type", "oauth", "--no-browser", ...(order === undefined ? [] : ["--label", label])];
   if (operation.startsWith("list")) return [...prefix, "auth", "list", "openai-codex"];
-  if (operation === "priority-added" || operation === "priority-restored") return [...prefix, "auth", "priority", "openai-codex", operation === "priority-added" ? `toy-fixture-added-${order}` : "2", "0"];
+  if (operation === "priority-added" || operation === "priority-restored") return [...prefix, "auth", "priority", "openai-codex", operation === "priority-added" ? label : "2", "0"];
   return [...prefix, "chat", "--provider", operation === "siwc-unbound" ? "siwc_responses" : "openai-codex", "--model", "gpt-6.1-sol", "--toolsets", "none", "-q", "Return the fixed fixture marker."];
 };
 
@@ -369,7 +370,7 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
       if (!operationPassed) return operationChecks;
     }
     if (concurrentRun) {
-      const launchFixture = (operation: FixtureOperation, order: HermesAuthConcurrencyObservationV1["order"], actor: HermesAuthConcurrencyObservationV1["actor"], barrierDirectory: string, crashCut: HermesAuthConcurrencyObservationV1["crashCut"], holdAfterResult: boolean): ConcurrentChildHandle | null => {
+      const launchFixture = (operation: FixtureOperation, order: HermesAuthConcurrencyObservationV1["order"], actor: HermesAuthConcurrencyObservationV1["actor"], barrierDirectory: string, crashCut: HermesAuthConcurrencyObservationV1["crashCut"], holdAfterResult: boolean, storage?: { cut?: "before-replace" | "after-replace" }): ConcurrentChildHandle | null => {
         const commandRequest = bounded(interpreter, ["-B", "-I", candidateStore, "--print-runtime-command", "--module", fixtureModule, "--", operation], maxChildBytes, 5000);
         if (commandRequest.timedOut || !commandRequest.result || commandRequest.result.error || commandRequest.result.status !== 0) return null;
         const rawCommand: unknown = JSON.parse(commandRequest.result.stdout.toString("utf8"));
@@ -383,11 +384,15 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
         childEnvironment.TOY_AUTH_CONCURRENCY_BARRIER_DIR = barrierDirectory;
         childEnvironment.TOY_AUTH_CONCURRENCY_CRASH_CUT = crashCut;
         childEnvironment.TOY_AUTH_CONCURRENCY_HOLD_AFTER_RESULT = holdAfterResult ? "1" : "0";
+        if (storage) {
+          childEnvironment.TOY_AUTH_STORAGE_CONTEXT = "1";
+          if (storage.cut) childEnvironment.TOY_AUTH_STORAGE_CUT = storage.cut;
+        }
         const child = runConcurrentChild(interpreter, ["-B", ...publicCommand.slice(1)], homeRoot, childEnvironment, Math.max(1, Math.min(remainingMs(), 30000)));
         concurrentChildren.push(child);
         return child;
       };
-      const parseConcurrentChild = (operation: FixtureOperation, order: HermesAuthConcurrencyObservationV1["order"], actor: HermesAuthConcurrencyObservationV1["actor"], outcome: ConcurrentChildResult, expectedCrashCut: HermesAuthConcurrencyObservationV1["crashCut"], expectedCount?: number): { result: HermesAuthFixtureResultV1 | null; passed: boolean } => {
+      const parseConcurrentChild = (operation: FixtureOperation, order: HermesAuthConcurrencyObservationV1["order"], actor: HermesAuthConcurrencyObservationV1["actor"], outcome: ConcurrentChildResult, expectedCrashCut: HermesAuthConcurrencyObservationV1["crashCut"], expectedCount?: number, targetLabelPresent?: boolean): { result: HermesAuthFixtureResultV1 | null; passed: boolean } => {
         let rawResult: unknown;
         try {
           rawResult = JSON.parse(outcome.stdout.toString("utf8").trim());
@@ -402,7 +407,7 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
         const addOperation = operation === "add";
         const listOperation = operation === "list";
         const priorityOperation = operation === "priority-added" || operation === "priority-restored";
-        const expectedArgv = publicArgv(operation, order);
+        const expectedArgv = publicArgv(operation, order, targetLabelPresent !== undefined);
         const identityMatches = outcome.pid !== null && identity.pid === outcome.pid && identity.parentPid === process.pid && typeof process.getuid === "function" && identity.uid === process.getuid() && typeof process.getgid === "function" && identity.gid === process.getgid();
         const commandSucceeded = result.exit_code === 0 && (outcome.status === 0 || outcome.signal === "SIGKILL");
         const markerMatches = listOperation
@@ -445,6 +450,7 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
           && concurrency.staleRefreshTokenRejected === "not-exercised"
           && concurrency.staleRefreshResponse === "not-exercised";
         const countMatches = expectedCount === undefined || result.observations.credential_count === expectedCount;
+        const labelMatches = !listOperation || targetLabelPresent === undefined || result.observations.target_label_present === targetLabelPresent;
         const crashMatches = expectedCrashCut === "none" ? outcome.status === 0 && outcome.signal === null : outcome.status === null && outcome.signal === "SIGKILL";
         const passed = result.operation === (listOperation ? "list" : addOperation ? "add" : priorityOperation ? "priority" : "chat")
           && result.observations.phase === operation
@@ -467,6 +473,7 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
           && catalogGenerationMatches
           && concurrencyMatches
           && countMatches
+          && labelMatches
           && crashMatches
           && result.network_audit === "socket-audit-hook-installed"
           && JSON.stringify(privateStoreDigests(hermesRoot).rootAuth) === JSON.stringify(storesBefore.rootAuth)
@@ -611,6 +618,53 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
         const finalListObserved = parseConcurrentChild("list", order, "fresh-list-reload", await finalListChild.result, "none", expectedCount);
         concurrencyChecks.push(check(finalListObserved.passed ? "PASS" : "FAIL", finalListObserved.passed ? "NATIVE_AUTH_CONCURRENCY_FINAL_LIST_OBSERVED" : "NATIVE_AUTH_CONCURRENCY_FINAL_LIST_FAILED", { order, result: finalListObserved.result, credentialCountExpected: expectedCount, wholeATComplete: false }, artifacts));
         if (!finalListObserved.passed) return [...operationChecks, ...concurrencyChecks];
+      }
+      for (const cut of ["before-replace", "after-replace"] as const) {
+        const order = "refresh-first";
+        const barrierDirectory = createBarrierDirectory(`storage-${cut}`);
+        const beforeCut = privateStoreDigests(hermesRoot);
+        const addChild = launchFixture("add", order, "auth-add", barrierDirectory, "none", false, { cut });
+        if (!addChild || !await waitForFixtureMarker(join(barrierDirectory, "add-response-pending"), Math.max(1, Math.min(remainingMs(), 15000)))) return fail("FAIL", "NATIVE_AUTH_STORAGE_ADD_BARRIER_FAILED", { cut });
+        release(barrierDirectory, "release-add-token");
+        const boundary = await waitForFixtureMarkerOrCompletion(join(barrierDirectory, `storage-${cut}`), addChild, Math.max(1, Math.min(remainingMs(), 15000)));
+        if (boundary !== "reached") return fail("FAIL", "NATIVE_AUTH_STORAGE_BOUNDARY_UNOBSERVED", { cut, boundary });
+        const identityFile = join(barrierDirectory, "storage-child-identity");
+        const identityStat = lstatSync(identityFile);
+        if (!identityStat.isFile() || identityStat.isSymbolicLink() || identityStat.size > 2048) return fail("FAIL", "NATIVE_AUTH_STORAGE_IDENTITY_INVALID", { cut });
+        const identityInput: unknown = JSON.parse(readFileSync(identityFile, "utf8"));
+        const identity = hermesAuthFixtureResultSchema.shape.processIdentity.parse(identityInput);
+        addChild.kill();
+        const outcome = await addChild.result;
+        const afterCut = privateStoreDigests(hermesRoot);
+        const rootStoreUnchanged = JSON.stringify(afterCut.rootAuth) === JSON.stringify(beforeCut.rootAuth) && JSON.stringify(afterCut.rootEnv) === JSON.stringify(beforeCut.rootEnv);
+        const profileCommitMatches = afterCut.profileAuth.exists && (cut === "before-replace" ? JSON.stringify(afterCut.profileAuth) === JSON.stringify(beforeCut.profileAuth) : afterCut.profileAuth.digest !== beforeCut.profileAuth.digest);
+        const killedAtBoundary = outcome.status === null && outcome.signal === "SIGKILL" && !outcome.spawnError && !outcome.timedOut && !outcome.oversized && outcome.stdout.byteLength === 0 && outcome.stderr.byteLength === 0 && identity.pid === outcome.pid && identity.parentPid === process.pid && identity.uid === process.getuid?.() && identity.gid === process.getgid?.();
+        const cutPassed = killedAtBoundary && rootStoreUnchanged && profileCommitMatches;
+        concurrencyChecks.push(check(cutPassed ? "PASS" : "FAIL", cutPassed ? "NATIVE_AUTH_STORAGE_CRASH_CUT_OBSERVED" : "NATIVE_AUTH_STORAGE_CRASH_CUT_FAILED", { cut, boundary, processIdentity: identity, childSignal: outcome.signal, killedAtBoundary, profileCommitMatches, rootStoreUnchanged, powerLossDurabilityVerified: false, wholeATComplete: false }, artifacts));
+        if (!cutPassed) return [...operationChecks, ...concurrencyChecks];
+        const targetLabelPresent = cut === "after-replace";
+        const expectedCount = targetLabelPresent ? 4 : 3;
+        const reloadDirectory = createBarrierDirectory(`storage-${cut}-reload`);
+        const listChild = launchFixture("list", order, "fresh-list-reload", reloadDirectory, "none", false, {});
+        if (!listChild) return fail("BLOCKED", "NATIVE_AUTH_STORAGE_LIST_UNAVAILABLE", { cut });
+        const listObserved = parseConcurrentChild("list", order, "fresh-list-reload", await listChild.result, "none", expectedCount, targetLabelPresent);
+        concurrencyChecks.push(check(listObserved.passed ? "PASS" : "FAIL", listObserved.passed ? "NATIVE_AUTH_STORAGE_FRESH_LIST_OBSERVED" : "NATIVE_AUTH_STORAGE_FRESH_LIST_FAILED", { cut, result: listObserved.result, credentialCountExpected: expectedCount, targetLabelPresentExpected: targetLabelPresent, wholeATComplete: false }, artifacts));
+        if (!listObserved.passed) return [...operationChecks, ...concurrencyChecks];
+        if (targetLabelPresent) {
+          const priorityChild = launchFixture("priority-added", order, "fresh-add-reload", reloadDirectory, "none", false, {});
+          if (!priorityChild) return fail("BLOCKED", "NATIVE_AUTH_STORAGE_PRIORITY_UNAVAILABLE", { cut });
+          const priorityObserved = parseConcurrentChild("priority-added", order, "fresh-add-reload", await priorityChild.result, "none", undefined, true);
+          concurrencyChecks.push(check(priorityObserved.passed ? "PASS" : "FAIL", priorityObserved.passed ? "NATIVE_AUTH_STORAGE_EXACT_PRIORITY_OBSERVED" : "NATIVE_AUTH_STORAGE_EXACT_PRIORITY_FAILED", { cut, result: priorityObserved.result, wholeATComplete: false }, artifacts));
+          if (!priorityObserved.passed) return [...operationChecks, ...concurrencyChecks];
+        }
+        const actor = targetLabelPresent ? "fresh-add-reload" : "fresh-refresh-reload";
+        const chatDirectory = createBarrierDirectory(`storage-${cut}-chat`);
+        const chatChild = launchFixture("chat-reloaded", order, actor, chatDirectory, "none", false, {});
+        if (!chatChild) return fail("BLOCKED", "NATIVE_AUTH_STORAGE_CHAT_UNAVAILABLE", { cut });
+        const chatOutcome = await chatChild.result;
+        const chatObserved = parseConcurrentChild("chat-reloaded", order, actor, chatOutcome, "none", undefined, targetLabelPresent);
+        concurrencyChecks.push(check(chatObserved.passed ? "PASS" : "FAIL", chatObserved.passed ? "NATIVE_AUTH_STORAGE_FRESH_USE_OBSERVED" : "NATIVE_AUTH_STORAGE_FRESH_USE_FAILED", { cut, result: chatObserved.result, ...readModelMarkers(chatDirectory), childExitCode: chatOutcome.status, childSignal: chatOutcome.signal, timedOut: chatOutcome.timedOut, wholeATComplete: false }, artifacts));
+        if (!chatObserved.passed) return [...operationChecks, ...concurrencyChecks];
       }
       return [...operationChecks, ...concurrencyChecks];
     }
