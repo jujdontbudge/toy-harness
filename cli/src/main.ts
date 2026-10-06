@@ -238,7 +238,7 @@ const run = async (): Promise<CliResult> => {
       if (probeInput?.caseId === "control-filesystem-denial") result = RoleControlProbe.run(probeInput, context);
       else if (probeInput?.caseId === "backup-capacity") result = BackupCapacityProbe.run(probeInput, context);
       else if (probeInput?.caseId === "native-release-eligibility") result = NativeReleaseEligibilityProbe.run(probeInput, context);
-      else if (probeInput?.caseId === "native-auth-cli") result = await HermesAuthProbe.run(probeInput, context);
+      else if (probeInput?.caseId === "native-auth-cli" || (probeInput?.probeId === "AT-hermes-config-87" && probeInput.caseId === undefined)) result = await HermesAuthProbe.run(probeInput, context);
       else if (probeInput?.caseId === "model-route-policy" || probeInput?.caseId === "model-route-stream") result = await ModelRouteProbe.run(probeInput, context);
       else if (probeInput) result = await ReplayEnvironment.runRegisteredProbe(probeInput, context);
       else result = ReplayEnvironment.registeredProbeStatus(cliCommandSchemas["probe.show"].input.parse({ operationId: operands[0] }), context);

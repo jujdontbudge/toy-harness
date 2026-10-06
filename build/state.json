@@ -2,8 +2,8 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-06T20:05:08.431146+00:00",
-  "phase": "R0.03 two atomic storage process-crash cuts verified; R0.10 indexed archive proof closed; root02 pending without blocking goal",
+  "updatedAt": "2026-10-06T20:11:44.741569+00:00",
+  "phase": "R0.03 unfiltered source-bound native matrix26 verified; root02 pending; R0.10 queue route plan ready",
   "activeCard": "R0.03",
   "cardCount": 87,
   "acceptanceCount": 1447,
@@ -527,7 +527,8 @@
         "build/evidence/R0.03/model-observation-replan.json",
         "build/evidence/R0.03/client-selection-verification.json",
         "build/evidence/R0.03/storage-crash-minimum-plan.json",
-        "build/evidence/R0.03/storage-crash-verification.json"
+        "build/evidence/R0.03/storage-crash-verification.json",
+        "build/evidence/R0.03/unfiltered-auth-verification.json"
       ],
       "requiredATs": [
         "AT-hermes-config-34",
@@ -623,8 +624,8 @@
         "sourceUnitStoppedAt": "2026-10-06T09:56:39.219348+00:00"
       },
       "lastVerification": {
-        "evidence": "build/evidence/R0.03/storage-crash-verification.json",
-        "verdict": "PASS_26_NATIVE_DIAGNOSTICS_INCLUDING_SEVEN_ATOMIC_STORAGE_CHECKS",
+        "evidence": "build/evidence/R0.03/unfiltered-auth-verification.json",
+        "verdict": "PASS_26_UNFILTERED_SOURCE_BOUND_NATIVE_DIAGNOSTICS",
         "checks": 26,
         "runShowExact": true,
         "cleanupPassed": true,
@@ -771,6 +772,18 @@
         "unfilteredRunShowExact": true,
         "cleanupComplete": true,
         "powerLossDurabilityVerified": false
+      },
+      "unfilteredAuthUnit": {
+        "startedAt": "2026-10-06T20:08:13.661243+00:00",
+        "targetStopAt": "2026-10-06T22:08:13.661243+00:00",
+        "state": "CLOSED_26_SOURCE_BOUND_UNFILTERED_CLI_DIAGNOSTICS_VERIFIED",
+        "scope": "Unfiltered AT87 invokes existing 26-check native matrix through one registered owner; whole incomplete remains",
+        "wholeATComplete": false,
+        "stoppedAt": "2026-10-06T20:11:44.741569+00:00",
+        "diagnosticPasses": 26,
+        "unfiltered": true,
+        "runShowExact": true,
+        "cleanupComplete": true
       }
     },
     "R0.04": {
@@ -1093,7 +1106,8 @@
       "evidence": [
         "build/evidence/R0.07/journal-verification.json",
         "build/evidence/R0.07/journal-replan.json",
-        "build/evidence/R0.07/receipt-repair-verification.json"
+        "build/evidence/R0.07/receipt-repair-verification.json",
+        "build/evidence/R0.07/canonical-relationship-minimum-plan.json"
       ],
       "requiredATs": [
         "AT-RESEARCH-REGISTER-6",
@@ -1131,6 +1145,13 @@
         "verification": "build/evidence/R0.07/receipt-repair-verification.json",
         "maximumPrerequisiteCharacters": 1678,
         "cleanupComplete": true
+      },
+      "canonicalRelationshipPlan": {
+        "state": "DEFERRED_UNTIL_SUPPORTED_ROUTE_AND_ACTUAL_ADMISSION_PREREQUISITES",
+        "evidence": "build/evidence/R0.07/canonical-relationship-minimum-plan.json",
+        "liveTrialStarted": false,
+        "wholeATComplete": false,
+        "newRunReviewInfrastructurePrepared": false
       }
     },
     "R0.08": {
@@ -1395,6 +1416,11 @@
         "runShowExact": true,
         "cleanupComplete": true,
         "originalArchiveReadbackUnchanged": true
+      },
+      "unfilteredQueuePlan": {
+        "state": "SOURCE_BOUND_GAP_PLAN_ONLY",
+        "evidence": "build/evidence/R0.10/unfiltered-queue-minimum-plan.json",
+        "wholeATComplete": false
       }
     },
     "R0.11": {
@@ -10054,7 +10080,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Stop the passed R0.03 storage unit. Consume Luna R0.07 canonical relationship plan when ready and poll root02. Continue R0.01 immediately on verified root02 DONE.",
+  "nextAction": "Stop passed R0.03 unfiltered route unit. Implement the bounded existing R0.10 unfiltered queue route from the independent plan. Poll root02 and continue R0.01 immediately on a verified DONE receipt.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -20598,15 +20624,16 @@
     "features": 97,
     "commands": 55,
     "indexedATs": 1447,
+    "cliManifests": 3,
     "schemaDigest": "1a768d76525382bf74bf62c4b5e645d26daebde2c55b079402d85a48d79c990e",
-    "evidence": "build/evidence/R0.03/storage-crash-check-result.json",
+    "evidence": "build/evidence/R0.03/unfiltered-auth-check-result.json",
     "languages": [
       "TypeScript",
       "Python"
     ],
     "SwiftDeferredTo": "R3"
   },
-  "sourceCheckpointCommit": "d26b4d9",
+  "sourceCheckpointCommit": "7abaa39",
   "sourceCheckpointPushed": true,
   "rootRequests": {
     "ROOT-R004-20261006-01": {
@@ -20650,17 +20677,5 @@
     "queuedRootReserveGate": false,
     "rule": "Normal OS pressure and available memory at least the current job declared need plus512MiB; no strictly-free, hypothetical reserve, swap or second physical-fit gate"
   },
-  "activeWorkers": [
-    {
-      "task": "r007_minimum_trial_journal",
-      "card": "R0.07",
-      "model": "gpt-6-luna",
-      "reasoning": "max",
-      "scope": "read-only canonical run/review relationship minimum plan",
-      "targetStopAt": "2026-10-06T20:10:33.069357+00:00",
-      "ownNeedBytes": "268435456",
-      "marginBytes": "536870912",
-      "admission": "build/evidence/R0.03/storage-crash-admission.json"
-    }
-  ]
+  "activeWorkers": []
 }

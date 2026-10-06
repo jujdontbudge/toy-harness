@@ -2,7 +2,7 @@ import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { mkdtempSync, mkdirSync, readFileSync, realpathSync, statSync } from "node:fs";
 import { isAbsolute, join, relative } from "node:path";
-import { checkViewSchema, hermesPublicRuntimeCommandSchema, installedHermesDependencyRecordSchema, opsErrorMessages, registeredProbeInputSchema } from "@toy/contracts";
+import { checkViewSchema, hermesPublicRuntimeCommandSchema, installedHermesDependencyRecordSchema, opsErrorMessages, registeredCliAcceptanceManifestInventory, registeredProbeInputSchema } from "@toy/contracts";
 import type { OpsControlContextV1, RegisteredProbeInputV1, RegisteredProbeOperationV1, Result } from "@toy/contracts";
 import { OpsTestStack, TestProbeControl, trustedCheckoutRoot, trustedToolEnvironment } from "@toy/ops/public";
 import { runHermesAuthFixture } from "./auth-fixture.js";
@@ -16,7 +16,13 @@ export const HermesAuthProbe = {
   async run(input: RegisteredProbeInputV1, context: OpsControlContextV1): Promise<Result<RegisteredProbeOperationV1>> {
     const started = process.hrtime.bigint();
     const invalid: Result<RegisteredProbeOperationV1> = { ok: false, error: { module: "ops", code: "INVALID_INPUT", message: opsErrorMessages.INVALID_INPUT, retryable: false } };
-    if (!registeredProbeInputSchema.safeParse(input).success || input.caseId !== "native-auth-cli" || !["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-87", "AT-hermes-config-78", "AT-ops-55"].includes(input.probeId)) return Promise.resolve(invalid);
+    const unfilteredConcurrency = input.probeId === "AT-hermes-config-87" && input.caseId === undefined;
+    if (!registeredProbeInputSchema.safeParse(input).success || (!unfilteredConcurrency && input.caseId !== "native-auth-cli") || !["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-87", "AT-hermes-config-78", "AT-ops-55"].includes(input.probeId)) return Promise.resolve(invalid);
+    if (input.probeId === "AT-hermes-config-87") {
+      const manifest = registeredCliAcceptanceManifestInventory.find(entry => entry.id === input.probeId);
+      const mandatoryCases = ["add-first", "refresh-first", "before-replace", "after-replace"].map(id => ({ id, publicOperation: "HermesAuthProbe.run", phase: id }));
+      if (!manifest || manifest.scenarioId !== "auth.concurrent-persistence" || JSON.stringify(manifest.mandatoryCases) !== JSON.stringify(mandatoryCases)) return Promise.resolve({ ok: false, error: { module: "ops", code: "ATTESTATION_INVALID", message: opsErrorMessages.ATTESTATION_INVALID, retryable: false } });
+    }
     const owned = OpsTestStack.inspect(context);
     if (!owned.ok) return Promise.resolve(owned);
     const snapshot = owned.data.result;

@@ -313,7 +313,7 @@ export const FixtureProbe = {
       const componentComparison = input.probeId === "AT-obligations-74" && input.caseId === undefined;
       const capacityTrial = input.caseId === "capacity-trial" && ["AT-ops-47", "AT-self-improvement-59", "AT-self-improvement-60", "AT-RESEARCH-REGISTER-6"].includes(input.probeId);
       const nativeEligibility = input.caseId === "native-release-eligibility" && ["AT-ops-81", "AT-client-apps-49", "AT-activity-focus-64"].includes(input.probeId);
-      const nativeAuth = input.caseId === "native-auth-cli" && ["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-87", "AT-hermes-config-78", "AT-ops-55"].includes(input.probeId);
+      const nativeAuth = (input.probeId === "AT-hermes-config-87" && input.caseId === undefined) || (input.caseId === "native-auth-cli" && ["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-87", "AT-hermes-config-78", "AT-ops-55"].includes(input.probeId));
       const roleDenials = input.caseId === "control-filesystem-denial" && input.probeId === "AT-authority-35";
       const queueFaults = input.caseId === "queue-transaction-faults" && input.probeId === "AT-obligations-76";
       const backupCapacity = input.caseId === "backup-capacity" && ["AT-ops-62", "AT-lifestore-63", "AT-sources-216"].includes(input.probeId);

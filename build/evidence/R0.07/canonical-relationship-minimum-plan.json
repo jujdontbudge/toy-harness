@@ -1,0 +1,140 @@
+{
+  "artifact": "R0.07 canonical run/review relationship minimum",
+  "observedAtUtc": "2026-10-06T20:03:17Z",
+  "status": "BLOCKED_BEFORE_LIVE_ARM",
+  "scope": {
+    "inspection": "read-only repository/spec inspection",
+    "onlyFileWritten": "build/evidence/R0.07/canonical-relationship-minimum-plan.json",
+    "liveTrialStartedByThisTask": false,
+    "wholeAcceptanceSetProven": false,
+    "buildsTestsStacksProbesProcessesRun": false
+  },
+  "minimumPrerequisite": {
+    "owner": "Durable admission / Turn Review, the sole owner of toy_si.cadence_slot, toy_si.run, and toy_si.review",
+    "operationNeeded": "The existing owner must admit an anchored scheduled slot and bind its canonical run id and generation in the same transaction; inference completion remains a run_event; only the trusted accepted Turn Review commit binds the canonical review id and changes that slot to reviewed. Preserve deferred, missed, and swept outcomes as distinct slot states.",
+    "canonicalRelationship": {
+      "slotKey": "(job_key, slot_at), anchored at the persisted native schedule",
+      "runLink": "cadence_slot.run_id references toy_si.run(id); the bound run carries the generation and scheduled_slot_at matching that anchored slot",
+      "reviewLink": "cadence_slot.review_id references toy_si.review(id); only an accepted review commit may set this link and state=reviewed",
+      "inferenceCompletion": "append the run_event milestone while cadence_slot remains running"
+    },
+    "smallestPostgresRequirement": [
+      "Use the canonical owner migration/table for toy_si.cadence_slot, retaining its unique (job_key, slot_at) key.",
+      "Enforce run_id -> toy_si.run(id) and review_id -> toy_si.review(id) foreign keys on canonical slot rows.",
+      "Keep trial arm metadata associated with those owner-managed anchored slots; do not create a second writable cadence_slot ledger."
+    ],
+    "liveTrialGate": "Do not arm until this relationship is reachable through the canonical owner and its assigned CLI acceptance path, and the R0.01 supported no-spend route/native account admission plus R0.03, R0.05, and R0.06 prerequisites are proven."
+  },
+  "currentImplementationEvidence": [
+    {
+      "source": "packages/self-improvement/src/capacity-trial.ts",
+      "lines": "102-123",
+      "finding": "CapacityTrialJournal exposes only withTest and requires a test environment with a stack id; it operates through a disposable accounting fixture and its trial migration. Its journal API has startArm, deferSlot, reconcileArm, reportArm, and slot, with no canonical run admission or accepted-review operation."
+    },
+    {
+      "source": "packages/self-improvement/migrations/capacity-trial.sql",
+      "lines": "14-30",
+      "finding": "The test migration creates its own toy_si.cadence_slot. run_id and review_id are nullable UUID columns without foreign keys. Its arm-row CHECK requires run_id, review_id, started_at, inference_done_at, and reviewed_at to remain NULL, and excludes running/reviewed states. This fixture cannot represent canonical run/review linkage for a live arm."
+    },
+    {
+      "source": "packages/contracts/src/capacity-trial.ts",
+      "lines": "34-40",
+      "finding": "The public CapacityTrialJournalApi contains only the fixture journal methods; it has no run or Turn Review relation."
+    },
+    {
+      "source": "packages/self-improvement/src/public.ts",
+      "lines": "2-21",
+      "finding": "The public package exports CapacityTrialJournal and dispatches caseId=capacity-trial to its registered fixture probe. The inspected public surface contains no Durable admission/Turn Review writer."
+    }
+  ],
+  "publicBoundaryAndCliProof": {
+    "fixtureRoute": "toy probe.run is declared as an R0 test operation mapped to ReplayEnvironment.runRegisteredProbe; case=capacity-trial dispatches to capacityTrialProbe. That probe accepts AT-ops-47, AT-self-improvement-59, AT-self-improvement-60, and AT-RESEARCH-REGISTER-6 only, and records fake_model, liveProviderSends=0, liveTrialStarted=false, wholeATComplete=false. It verifies a test journal, not real accepted reviews.",
+    "readRoute": "review.slots is declared as an R1 read operation mapped to RunControlRead.slots; it is not an arm-start or write operation.",
+    "gap": "The current CLI declarations expose no capacity.trial.start command, and the journal-specific probe does not accept assigned IDs AT-hermes-config-37 or AT-adhd-features-95. The CLI path therefore does not prove a live canonical run/review relationship or the complete assigned acceptance set."
+  },
+  "assignedAcceptance": [
+    {
+      "id": "AT-ops-47",
+      "requiredClaim": "Separate seven-day arm reports with 3,360 anchored opportunities, settings, accepted reviews, slot outcomes/reasons, latency, allowance freshness, RAM/swap; original and reduced verdicts stay separate.",
+      "rung": "CLI",
+      "requiredEvidence": ["stack", "elapsed", "device/account", "probe"]
+    },
+    {
+      "id": "AT-self-improvement-59",
+      "requiredClaim": "Same per-arm 3,360 opportunity and measurement report; full-cadence PASS requires each original slot's accepted review before its next-slot boundary, with no reserve violation or paid usage.",
+      "rung": "CLI",
+      "requiredEvidence": ["stack", "elapsed", "device/account", "probe"]
+    },
+    {
+      "id": "AT-self-improvement-60",
+      "requiredClaim": "All 3,360 original slots require a full scan started in-slot and accepted terminal review before the next slot; swept, deferred, unfinished, missed, missing usage, or paid sends fail full coverage.",
+      "rung": "CLI",
+      "requiredEvidence": ["stack", "elapsed", "device/account", "probe"]
+    },
+    {
+      "id": "AT-hermes-config-37",
+      "requiredClaim": "Same seven-day arm evidence, with the M2/8 GB host's preliminary 24-hour soak completed before the representative arm.",
+      "rung": "CLI",
+      "requiredEvidence": ["stack", "elapsed", "device/account", "probe"]
+    },
+    {
+      "id": "AT-adhd-features-95",
+      "requiredClaim": "Same separate original/reduced arm report and accepted-review/coverage evidence.",
+      "rung": "CLI",
+      "requiredEvidence": ["stack", "elapsed", "device/account", "probe"]
+    },
+    {
+      "id": "AT-RESEARCH-REGISTER-6",
+      "requiredClaim": "Same separate seven-day arm report and no-spend/full-cadence verdict evidence.",
+      "rung": "CLI",
+      "requiredEvidence": ["stack", "elapsed", "device/account", "probe"]
+    }
+  ],
+  "dependenciesAndDeferredGates": [
+    {
+      "dependency": "R0.01 supported route and native account admission",
+      "reason": "TEST-PLAN preflight requires supported first-party route/account/auth, independent refresh, exact settings, no paid fallback, and actual identity/send enforcement before a live trial. The build plan places R0.01 on the critical path.",
+      "status": "Not verified in this read-only pass; live arm remains blocked."
+    },
+    {
+      "dependency": "R0.03, R0.05, R0.06",
+      "reason": "BUILD-PLAN R0.07 explicitly depends on these. R0.06 supplies the shared provider-send admission/accounting seam and durable reservations; R0.05 is the actual _toy_agent denial matrix.",
+      "status": "Parent reports one R0.03 storage unit passed; the full R0.03 gate and R0.05/R0.06 readiness are not claimed complete here."
+    },
+    {
+      "dependency": "Canonical owner relationship and assigned CLI proof",
+      "reason": "A test-only journal row cannot prove run id, generation, immutable inference completion, accepted review id, or reviewed state in the canonical owner table.",
+      "status": "Missing from the inspected public implementation; implement only within the existing canonical owner when its prerequisites are ready."
+    },
+    {
+      "dependency": "Seven-day evidence gates",
+      "reason": "Each original arm needs 168 continuous UTC hours and 3,360 slots; preserve every outcome and prove actual requested/observed route, accepted reviews, shared-account allowance, foreground/reminder latency, and host RAM/swap. Any reduced arm has its own independent 168-hour denominator."
+    }
+  ],
+  "evidenceLimits": [
+    "This artifact is source/spec analysis only; no AT passed and no live-trial behavior was observed.",
+    "No R0.01/native account, R0.05 identity, R0.06 accounting, or seven-day runtime proof is inferred from the fixture journal.",
+    "The current test migration is not a production migration candidate for the canonical cadence owner."
+  ],
+  "sourceHashes": [
+    {"path": "packages/self-improvement/src/capacity-trial.ts", "sha256": "dab2b52588bd6f905690551101aeb916bcca6db7afd0afe7068520575171f82b"},
+    {"path": "packages/self-improvement/src/capacity-trial-probe.ts", "sha256": "b03208cf10fef1ce798e2d30ce42cc01f0a638247fd1d9c4589180353db2684d"},
+    {"path": "packages/self-improvement/src/capacity-trial-migration.ts", "sha256": "6673e1acab2f5853df7d208ce1e377a2f9e23fe56416d6164e2c3000f2f01bbe"},
+    {"path": "packages/self-improvement/migrations/capacity-trial.sql", "sha256": "c4ee9357ea602ed4c3848362082ee3d6b2a13069b8b892e64e94e410bbe5e41e"},
+    {"path": "packages/self-improvement/src/public.ts", "sha256": "a64c91103ac6e2da09c6a9f8169be7cca7969bd19afc4899e6342a3ade43ce84"},
+    {"path": "packages/contracts/src/capacity-trial.ts", "sha256": "116d8248e229ee0bcc0727b53ec826d6baa5a9aa694311d8caba630ecdfc5bd6"},
+    {"path": "packages/contracts/src/cli-declarations.ts", "sha256": "b7623e62057d5a1c607db7867a019940478dcefa4c6043498b3af596bca90ee6"},
+    {"path": "packages/contracts/src/test-control.ts", "sha256": "0af0d0e4349cae05bfdc06a77592e32c5171f0dc5d0e5964f2ef87faeaa4111c"},
+    {"path": "packages/contracts/src/ops-registry.ts", "sha256": "5917c9e4365fa07cdecf8c82402d24878c67dfb20f188b8e7d48e57d187ad93a"},
+    {"path": "cli/src/main.ts", "sha256": "1074dbe6283b6b0a6e941a2b1a4098da4d603f1f56137d04c2039858f87c3e66"},
+    {"path": "skills/toy-control/FEATURE-MAP.md", "sha256": "1a9227c6576ab98d86ded9b3537015aa6d15b5660c60093004e56e3b31fedc1b"},
+    {"path": "../personal-assistant-harness/specs/CONTRACTS.md", "sha256": "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d"},
+    {"path": "../personal-assistant-harness/specs/ops.md", "sha256": "f07aab65088c82e4ff21e4d63edb2f279e2324e6d7e2bbb801e0fd7494104b0b"},
+    {"path": "../personal-assistant-harness/specs/self-improvement.md", "sha256": "23e69b258189148328f029acd3ec7c4c125544bf49d670757eee2bf071ab7014"},
+    {"path": "../personal-assistant-harness/specs/TEST-PLAN.md", "sha256": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2"},
+    {"path": "../personal-assistant-harness/specs/BUILD-PLAN.md", "sha256": "aa84eb600e53bc65e6c6b1ed4fce45870ead861e0d18bf00d81613ff2595f49a"},
+    {"path": "../personal-assistant-harness/specs/hermes-config.md", "sha256": "d3548fde13180bc750660f306caa0041101832e398ccdabd6cfdac0b3de8f4af"},
+    {"path": "../personal-assistant-harness/specs/adhd-features.md", "sha256": "5e85be6346da1a9e8dd4795232c30205a9b9556b00b3cde52ee9788d6b5697ad"},
+    {"path": "../personal-assistant-harness/specs/RESEARCH-REGISTER.md", "sha256": "8ebbcfb9e2e63041fd004dd55787a02473d36d9bcaa733eb4d322722b1ae4942"}
+  ]
+}

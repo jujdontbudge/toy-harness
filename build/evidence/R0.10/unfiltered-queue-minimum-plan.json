@@ -1,0 +1,86 @@
+{
+  "schemaVersion": "toy.r010-unfiltered-queue-minimum-plan.v1",
+  "observedAt": "2026-10-06T20:09:52Z",
+  "head": "7abaa399bed671ef764a63f76e1f719e94592bd8",
+  "result": "GAP_PRESENT",
+  "acceptance": {
+    "id": "AT-obligations-76",
+    "rung": "CLI",
+    "commandId": "probe.run",
+    "sourceAssertionHash": "b2af7cd7997b6fb3db4123e05f46ddc89c9e1ca597f98a7b4d5e2073cd8b539e",
+    "sourceDigest": "5379f943578b4248dc21379a029acead930047c091316deb796fae0d49f4eb0f",
+    "assertion": "Given the pinned shared queue and generated @toy/contracts artifacts When both checked-out application transactions and native pg-boss worker transactions run the fault spike Then job/domain rollback and lost-claim fencing pass through executeSql, the five schemas validate with their declared dialect, and no homemade polling queue or second schema owner is needed."
+  },
+  "finding": {
+    "currentBehavior": "An unfiltered probe.run AT-obligations-76 has caseId omitted. ReplayEnvironment therefore skips its queue-transaction-faults dispatch and calls TestProbeControl.run with no observations. The registered CLI probe is found, but there is no authored AT-obligations-76 acceptance-manifest row; the result falls back to REGISTERED_CASE_NOT_IMPLEMENTED. The existing explicit-case route does execute QueueFaultProbe through withAccountingFixture.",
+    "minimumChange": [
+      {
+        "path": "tests/registry.yaml",
+        "change": "Add the authored CLI acceptance-manifest entry for AT-obligations-76, bound to the exact sourceAssertionHash above, probe.run, owner ops, scenario queue-transaction-faults, and one mandatory case queue-transaction-faults. Its observation must bind the QueueFaultProbe result/readback for the five schema checks plus application rollback/commit control, native worker rollback, and lost-claim fencing. Keep faultControls empty because these are the probe's fixed native queue effects, not a new external fault seam."
+      },
+      {
+        "path": "packages/self-improvement/src/public.ts",
+        "change": "Extend the existing registered-probe dispatch so exact AT-obligations-76 with caseId omitted reaches the same withAccountingFixture -> QueueFaultProbe.exercise -> TestProbeControl.run path as the explicit queue-transaction-faults diagnostic route. Keep the explicit case/probe mismatch rejection."
+      },
+      {
+        "path": "packages/ops/src/queue-fault-probe.ts",
+        "change": "Allow the public AT-obligations-76 invocation with omitted caseId at this existing owner boundary while retaining the exact probe ID, test environment, ready owned stack, and connection fences; retain explicit queue-transaction-faults support."
+      },
+      {
+        "path": "packages/ops/src/fixture-stack.ts",
+        "change": "Permit queue.obligation-faults CheckViews only for either the existing explicit pair (AT-obligations-76, queue-transaction-faults) or the exact unfiltered AT-obligations-76 input; continue requiring owner ops and the exact check ID."
+      },
+      {
+        "path": "packages/contracts/src/generated-probe-registry.ts",
+        "change": "Regenerate from tests/registry.yaml with the existing contract generator so the authored AT-obligations-76 manifest is present in registeredCliAcceptanceManifestInventory. Do not hand-edit generated output."
+      }
+    ],
+    "noChangeNeeded": [
+      "packages/contracts/src/test-control.ts already registers queue-transaction-faults.",
+      "packages/contracts/src/ops-registry.ts already defines the registered CLI acceptance-manifest contract.",
+      "packages/ops/src/queue-fault-probe.ts already contains the native queue transaction/schema matrix; no new probe, protocol, DTO, store, or infrastructure is needed.",
+      "skills/toy-control/FEATURE-MAP.md already maps ops.native-queue-faults to AT-obligations-76."
+    ]
+  },
+  "existingEvidence": {
+    "nativeQueueVerification": {
+      "path": "build/evidence/R0.10/native-queue-verification.json",
+      "sha256": "7405c9bc59a20e73b9b0c97ee6fe2527a0d706ed618cb91f96c0622dfee660c6",
+      "shows": "Explicit case queue-transaction-faults; five declared-dialect schema cells pass; application rollback and commit control, native worker throw rollback, lost-claim fencing, exact readback and teardown pass; wholeAcceptance remains PENDING."
+    },
+    "explicitCaseCliRecord": {
+      "path": "build/evidence/R0.10/queue-fault-run-final.json",
+      "sha256": "d4bedc92d41a24a0e52ee02ad83a91f477053398414d1c6e59b3964703ac9b28",
+      "shows": "Existing probe.run diagnostic persisted queue.obligation-faults results; it is explicit-case evidence and its result remains state NOT_IMPLEMENTED, complete false. It does not prove the unfiltered acceptance route."
+    }
+  },
+  "minimumCliProofAfterImplementation": {
+    "precondition": "Use an already admitted, disposable ready R0 test stack; do not create or start one as part of this plan.",
+    "run": "toy --env test --stack <ready-stack-id> probe run AT-obligations-76 --request-id <uuid> --json",
+    "requiredInput": "Omit --case so the public unfiltered manifest path is exercised.",
+    "readback": "toy --env test --stack <ready-stack-id> probe show <returned-operation-id> --json",
+    "passPredicates": [
+      "The generated source registration is attached to the persisted operation.",
+      "All mandatory manifest cases pass and the probe.show readback matches the saved operation.",
+      "The result evidence shows all five schema dialect/validity checks, application rollback with commit control, native worker throw rollback, and lost-claim fencing through executeSql, with cleanup complete.",
+      "No second queue/schema owner or homemade polling queue is introduced."
+    ]
+  },
+  "wholeAcceptance": {
+    "state": "PENDING",
+    "reason": "The current evidence is a diagnostic explicit-case proof, not an unfiltered manifest proof. Full AT certification also remains subject to protected R0.02/R0.05 prerequisites and all other R0.10 assertions. No promotion is supported by this plan."
+  },
+  "sourceHashes": [
+    { "path": "tests/acceptance-index.json", "sha256": "87d21b7f24f9f900bb202e1e813ba46bbc51282b96e14cb2739d5fd67b32d9e6" },
+    { "path": "tests/registry.yaml", "sha256": "9216987d4d725aa237df29582ecf242b2e58dac9449b93a7de392fa73be546d3" },
+    { "path": "packages/self-improvement/src/public.ts", "sha256": "a64c91103ac6e2da09c6a9f8169be7cca7969bd19afc4899e6342a3ade43ce84" },
+    { "path": "packages/ops/src/queue-fault-probe.ts", "sha256": "3c5ec150aa57889d41dd6c3ddd7a63ddcbf0604189814fe23ea637515a64426b" },
+    { "path": "packages/ops/src/fixture-stack.ts", "sha256": "1da2cf9c00693b816397a8addbf0c46e3cde82cb05ccde05a92e0ec4f660facd" },
+    { "path": "packages/contracts/src/generated-probe-registry.ts", "sha256": "1f186695f86c8deae7324a04b2697f12a1fa5ee06f33e537f9256e680841e940" },
+    { "path": "packages/contracts/src/ops-registry.ts", "sha256": "5917c9e4365fa07cdecf8c82402d24878c67dfb20f188b8e7d48e57d187ad93a" },
+    { "path": "packages/contracts/src/test-control.ts", "sha256": "0af0d0e4349cae05bfdc06a77592e32c5171f0dc5d0e5964f2ef87faeaa4111c" },
+    { "path": "skills/toy-control/FEATURE-MAP.md", "sha256": "1a9227c6576ab98d86ded9b3537015aa6d15b5660c60093004e56e3b31fedc1b" },
+    { "path": "build/evidence/R0.10/native-queue-verification.json", "sha256": "7405c9bc59a20e73b9b0c97ee6fe2527a0d706ed618cb91f96c0622dfee660c6" },
+    { "path": "build/evidence/R0.10/queue-fault-run-final.json", "sha256": "d4bedc92d41a24a0e52ee02ad83a91f477053398414d1c6e59b3964703ac9b28" }
+  ]
+}
