@@ -3463,22 +3463,22 @@ export const registeredCliAcceptanceManifestInventory = [
     "mandatoryCases": [
       {
         "id": "missing-primary-evidence",
-        "publicOperation": "EngineeringControl.checkComponentComparison",
+        "publicOperation": "EngineeringControl.checkResearch",
         "phase": "missing-primary-evidence"
       },
       {
         "id": "unsupported-choice",
-        "publicOperation": "EngineeringControl.checkComponentComparison",
+        "publicOperation": "EngineeringControl.checkResearch",
         "phase": "unsupported-choice"
       },
       {
         "id": "missing-acceptance-link",
-        "publicOperation": "EngineeringControl.checkComponentComparison",
+        "publicOperation": "EngineeringControl.checkResearch",
         "phase": "missing-acceptance-link"
       },
       {
         "id": "complete-outside-comparison",
-        "publicOperation": "EngineeringControl.checkComponentComparison",
+        "publicOperation": "EngineeringControl.checkResearch",
         "phase": "complete-outside-comparison"
       }
     ],
@@ -3497,7 +3497,7 @@ export const registeredCliAcceptanceManifestInventory = [
     "observations": [
       {
         "id": "component-decision-result",
-        "independentReader": "EngineeringControl.checkComponentComparison result and persisted probe.show readback",
+        "independentReader": "EngineeringControl.checkResearch archive binding and persisted probe.show readback",
         "caseIds": [
           "missing-primary-evidence",
           "unsupported-choice",

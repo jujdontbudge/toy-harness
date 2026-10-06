@@ -494,13 +494,35 @@
                         "type": "null"
                       }
                     ]
+                  },
+                  "originalDigest": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "minLength": 64,
+                        "maxLength": 64,
+                        "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "origin": {
+                    "type": "string",
+                    "enum": [
+                      "planning_archive",
+                      "seeded_document"
+                    ]
                   }
                 },
                 "required": [
                   "key",
                   "path",
                   "listedSections",
-                  "digest"
+                  "digest",
+                  "originalDigest",
+                  "origin"
                 ],
                 "additionalProperties": false
               }

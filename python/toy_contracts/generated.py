@@ -408,6 +408,13 @@ class ResearchRegisterInspectionV1ReportsItem(TypedDict):
     path: str
     listedSections: str
     digest: Optional["Digest"]
+    originalDigest: Optional["Digest"]
+    origin: "ResearchRegisterInspectionV1ReportsItemOrigin"
+
+ResearchRegisterInspectionV1ReportsItemOrigin = Literal[
+    "planning_archive",
+    "seeded_document",
+]
 
 class ResearchSpecReferencesV1(TypedDict):
     path: str
@@ -3876,6 +3883,12 @@ class ToySourcesStatusResultV1Variant0(TypedDict):
 class ToySourcesStatusResultV1Variant1(TypedDict):
     ok: "RoleBootstrapReportV1IdentityGateVerified"
     error: "ToySourcesStatusErrorV1"
+
+class ResearchDocumentOverlayV1(TypedDict):
+    reportKey: str
+    originalDigest: "Digest"
+    contentDigest: "Digest"
+    markdown: str
 
 class ResearchComponentComparisonV1(TypedDict):
     scope: "ResearchComponentComparisonV1Scope"

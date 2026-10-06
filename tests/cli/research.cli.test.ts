@@ -25,6 +25,7 @@ await test("Sources named-member coverage remains visible through toy research c
   assert.equal(result.data.dependencyClosureVerified, false);
   assert.equal(result.data.acceptanceComplete, false);
   assert.deepEqual(result.data.wholeATsPassed, []);
+  assert.ok(result.data.reports.every(report => report.origin === "planning_archive" && report.digest === report.originalDigest && report.path.endsWith(".md")));
   assert.deepEqual(result.data.componentComparisons, []);
   for (const componentId of ["A08", "A09", "M02"]) {
     assert.ok(result.data.findings.some(finding => finding.componentId === componentId && finding.code === "COMPONENT_COMPARISON_MISSING"));

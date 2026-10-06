@@ -2,9 +2,9 @@ import { createHash, randomUUID } from "node:crypto";
 import { spawnSync } from "node:child_process";
 import { existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, realpathSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
-import { acceptanceIndexSchema, checkoutPathSchema, cliDeclarations, featureFactsSchema, featureMapCheckSchema, featureMapUpdateSchema, generatorInputSchema, generatorPlanSchema, gardenerInputSchema, gardenerReportSchema, kitchenGateSummarySchema, mapCheckInputSchema, mapUpdateInputSchema, opsControlContextSchema, opsErrorMessages, referenceAdmissionEvidenceSchema, researchCatalogCoverageSchema, researchComponentComparisonSchema, researchComponentComparisonCheckSchema, researchRegisterInspectionSchema } from "@toy/contracts";
-import type { CheckViewV1, FeatureFactsV1, FilePatchV1, GeneratorInputV1, GeneratorPlanV1, FeatureMapCheckV1, FeatureMapUpdateV1, MapCheckInputV1, MapUpdateInputV1, GardenerInputV1, GardenerReportV1, OpsControlContextV1, ResearchCatalogCoverageFindingV1, ResearchCatalogMemberV1, ResearchCatalogSectionV1, ResearchInspectionFindingV1, ResearchComponentComparisonV1, ResearchComponentComparisonCheckV1, ResearchRegisterInspectionV1, Result } from "@toy/contracts";
-import { trustedCheckoutRoot, trustedToolEnvironment } from "@toy/ops/public";
+import { acceptanceIndexSchema, checkoutPathSchema, cliDeclarations, featureFactsSchema, featureMapCheckSchema, featureMapUpdateSchema, generatorInputSchema, generatorPlanSchema, gardenerInputSchema, gardenerReportSchema, kitchenGateSummarySchema, mapCheckInputSchema, mapUpdateInputSchema, opsControlContextSchema, opsErrorMessages, referenceAdmissionEvidenceSchema, researchCatalogCoverageSchema, researchComponentComparisonSchema, researchComponentComparisonCheckSchema, researchDocumentOverlaySchema, researchRegisterInspectionSchema } from "@toy/contracts";
+import type { CheckViewV1, FeatureFactsV1, FilePatchV1, GeneratorInputV1, GeneratorPlanV1, FeatureMapCheckV1, FeatureMapUpdateV1, MapCheckInputV1, MapUpdateInputV1, GardenerInputV1, GardenerReportV1, OpsControlContextV1, ResearchCatalogCoverageFindingV1, ResearchCatalogMemberV1, ResearchCatalogSectionV1, ResearchInspectionFindingV1, ResearchComponentComparisonV1, ResearchComponentComparisonCheckV1, ResearchDocumentOverlayV1, ResearchRegisterInspectionV1, Result } from "@toy/contracts";
+import { OpsTestStack, trustedCheckoutRoot, trustedToolEnvironment } from "@toy/ops/public";
 import { modelAdmissionMigration } from "./model-admission-migration.js";
 import { capacityTrialMigration } from "./capacity-trial-migration.js";
 
@@ -159,7 +159,7 @@ const inspect = (): { facts: FeatureFactsV1; check: FeatureMapCheckV1; expected:
 
 const readResearchFile = (path: string): string => {
   checkoutPathSchema.parse(path);
-  if (!/^specs\/[^/]+\.md$/.test(path) && !path.startsWith("research/")) throw new Error("RESEARCH_PATH_REFUSED");
+  if (!/^specs\/[^/]+\.md$/.test(path) && !(path.startsWith("research/") && path.endsWith(".md"))) throw new Error("RESEARCH_PATH_REFUSED");
   let current = realpathSync(planning());
   for (const part of path.split("/")) {
     current = join(current, part);
@@ -456,12 +456,14 @@ const compareComponent = (input: ResearchComponentComparisonV1): ResearchCompone
   if (input.unresolvedFacts.some(fact => fact.optionId === null || fact.optionId === input.selectedOptionId)) add("SELECTED_FACT_UNRESOLVED");
   return researchComponentComparisonCheckSchema.parse({ componentId: input.componentId, comparisonDigest: hash(JSON.stringify(input)), state: findings.length ? "BLOCKED" : "PASS", findings, selectedTool: selected?.tool ?? null, validationPlan: input.validationPlan, unresolvedFacts: input.unresolvedFacts, scope: "component_comparison", researchAttestationVerified: false, acceptanceComplete: false });
 };
-const inspectComponentComparisons = (reports: ResearchRegisterInspectionV1["reports"], components: ResearchRegisterInspectionV1["components"], findings: ResearchInspectionFindingV1[]): ResearchComponentComparisonCheckV1[] => {
+const inspectComponentComparisons = (reports: ResearchRegisterInspectionV1["reports"], components: ResearchRegisterInspectionV1["components"], findings: ResearchInspectionFindingV1[], documents: ReadonlyMap<string, ResearchDocumentOverlayV1>): ResearchComponentComparisonCheckV1[] => {
   const comparisons = new Map<string, ResearchComponentComparisonCheckV1>();
   for (const report of reports) {
     if (report.digest === null) continue;
-    const raw = readResearchFile(report.path);
-    if (hash(raw) !== report.digest) throw new Error("RESEARCH_REPORT_CHANGED");
+    const original = readResearchFile(report.path);
+    if (hash(original) !== report.originalDigest) throw new Error("RESEARCH_REPORT_CHANGED");
+    const raw = documents.get(report.key)?.markdown ?? original;
+    if (hash(raw) !== report.digest) throw new Error("RESEARCH_DOCUMENT_CHANGED");
     for (const match of raw.matchAll(/^```ResearchComponentComparisonV1\r?\n([\s\S]*?)^```[ \t]*$/gm)) {
       const sourceLine = raw.slice(0, match.index).split(/\r?\n/).length;
       try {
@@ -479,7 +481,9 @@ const inspectComponentComparisons = (reports: ResearchRegisterInspectionV1["repo
   }
   return [...comparisons.values()];
 };
-const inspectResearch = (input: MapCheckInputV1): ResearchRegisterInspectionV1 => {
+const inspectResearch = (input: MapCheckInputV1, testDocuments: readonly ResearchDocumentOverlayV1[]): ResearchRegisterInspectionV1 => {
+  const documents = new Map(testDocuments.map(document => [document.reportKey, document]));
+  if (documents.size !== testDocuments.length) throw new Error("RESEARCH_DOCUMENT_DUPLICATE");
   const registerPath = "specs/RESEARCH-REGISTER.md";
   const raw = readResearchFile(registerPath);
   const lines = raw.split(/\r?\n/);
@@ -494,11 +498,14 @@ const inspectResearch = (input: MapCheckInputV1): ResearchRegisterInspectionV1 =
     const [, key, path, listedSections] = match;
     if (!key || !path || !listedSections || reportKeys.has(key)) throw new Error("REGISTER_REPORT_INVALID");
     reportKeys.add(key);
-    let digest: string | null = null;
-    try { digest = hash(readResearchFile(path)); } catch { digest = null; }
-    reports.push({ key, path, listedSections, digest });
+    let originalDigest: string | null = null;
+    try { originalDigest = hash(readResearchFile(path)); } catch { originalDigest = null; }
+    const document = documents.get(key);
+    if (document && (document.originalDigest !== originalDigest || document.contentDigest !== hash(document.markdown))) throw new Error("RESEARCH_DOCUMENT_BINDING_INVALID");
+    reports.push({ key, path, listedSections, digest: document?.contentDigest ?? originalDigest, originalDigest, origin: document ? "seeded_document" : "planning_archive" });
   }
   if (reports.length === 0) throw new Error("REGISTER_REPORTS_MISSING");
+  if ([...documents.keys()].some(key => !reportKeys.has(key))) throw new Error("RESEARCH_DOCUMENT_KEY_UNKNOWN");
   const inHousePinMissing = lines.slice(start, end).some((line) => /^All in-house implementations\b/.test(line) && line.includes("PIN-MISSING"));
   const components: ResearchRegisterInspectionV1["components"] = [];
   const findings: ResearchInspectionFindingV1[] = [];
@@ -532,20 +539,20 @@ const inspectResearch = (input: MapCheckInputV1): ResearchRegisterInspectionV1 =
     components.push({ id, sourceLine, rowDigest: hash(row), componentAndPin, consumingSpecs, researchReference, alternativesAndReason, releaseGate, missingPinDeclared, reportKeys: keys, certification: "UNVERIFIED" });
   }
   for (const code of ["GATE_EVIDENCE_UNVERIFIED", "RESEARCH_ATTESTATION_UNVERIFIED", "DEPENDENCY_CLOSURE_UNVERIFIED"] as const) findings.push({ componentId: null, code, sourceLine: null });
-  const componentComparisons = inspectComponentComparisons(reports, components, findings);
+  const componentComparisons = inspectComponentComparisons(reports, components, findings, documents);
   const specReferences = inspectResearchSpecs(components, findings);
   const sourcesCatalogCoverage = inspectSourcesCatalog(components);
   return researchRegisterInspectionSchema.parse({ requestedRelease: input.release, registerPath, registerDigest: hash(raw), components, componentComparisons, reports, specReferences, sourcesCatalogCoverage, dependencyClosureVerified: false, findings, wholeATsPassed: [], scope: "register_inventory", admission: "BLOCKED", acceptanceComplete: false });
 };
 
 export const EngineeringControl = {
-  checkComponentComparison(input: ResearchComponentComparisonV1, context: OpsControlContextV1): Result<ResearchComponentComparisonCheckV1> {
-    if (!researchComponentComparisonSchema.safeParse(input).success || !opsControlContextSchema.safeParse(context).success) return refused("INVALID_INPUT");
-    return { ok: true, data: compareComponent(input) };
-  },
-  checkResearch(input: MapCheckInputV1, context: OpsControlContextV1): Result<ResearchRegisterInspectionV1> {
-    if (!mapCheckInputSchema.safeParse(input).success || !opsControlContextSchema.safeParse(context).success) return refused("INVALID_INPUT");
-    try { return { ok: true, data: inspectResearch(input) }; } catch { return refused("ARTIFACT_MISMATCH"); }
+  checkResearch(input: MapCheckInputV1, context: OpsControlContextV1, testDocuments: readonly ResearchDocumentOverlayV1[] = []): Result<ResearchRegisterInspectionV1> {
+    if (!mapCheckInputSchema.safeParse(input).success || !opsControlContextSchema.safeParse(context).success || testDocuments.length > 100 || testDocuments.some(document => !researchDocumentOverlaySchema.safeParse(document).success)) return refused("INVALID_INPUT");
+    if (testDocuments.length > 0) {
+      const owned = OpsTestStack.inspect(context);
+      if (!owned.ok) return owned;
+    }
+    try { return { ok: true, data: inspectResearch(input, testDocuments) }; } catch { return refused("ARTIFACT_MISMATCH"); }
   },
   checkFeatureMap(input: MapCheckInputV1, context: OpsControlContextV1): Result<FeatureMapCheckV1> {
     try { mapCheckInputSchema.parse(input); opsControlContextSchema.parse(context); return { ok: true, data: inspect().check }; } catch { return refused("ARTIFACT_MISMATCH"); }

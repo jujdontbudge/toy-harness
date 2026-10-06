@@ -2,7 +2,7 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-06T19:49:14.170386+00:00",
+  "updatedAt": "2026-10-06T19:57:26.828517+00:00",
   "phase": "R0.07 fixture journal12checksverified/receiptboundrepairplanned; root02pending; R003catalogobservationnext",
   "activeCard": "R0.10",
   "cardCount": 87,
@@ -1266,7 +1266,9 @@
         "build/evidence/R0.10/next-reachable-unit.json",
         "build/evidence/R0.10/decision-baseline-verification.json",
         "build/evidence/R0.10/component-comparison-verification.json",
-        "build/evidence/R0.10/component-comparison-review.json"
+        "build/evidence/R0.10/component-comparison-review.json",
+        "build/evidence/R0.10/archive-binding-minimum-plan.json",
+        "build/evidence/R0.10/archive-binding-verification.json"
       ],
       "requiredATs": [
         "AT-activity-focus-86",
@@ -1309,8 +1311,8 @@
         "nativeRecurrenceEvidence": "build/evidence/R0.10/native-recurrence-verification.json"
       },
       "lastVerification": {
-        "evidence": "build/evidence/R0.10/component-comparison-verification.json",
-        "verdict": "PASS_FOUR_UNFILTERED_COMPONENT_COMPARISON_DIAGNOSTICS",
+        "evidence": "build/evidence/R0.10/archive-binding-verification.json",
+        "verdict": "PASS_FOUR_UNFILTERED_INDEXED_ARCHIVE_DIAGNOSTICS",
         "checks": 4,
         "runShowExact": true,
         "cleanupPassed": true,
@@ -1355,10 +1357,25 @@
         "archiveBinding": "Canonical ResearchComponentComparisonV1 JSON payloads within existing indexed Markdown reports"
       },
       "componentDecisionReview": {
-        "state": "ACCEPTANCE_SCOPE_AND_MARKDOWN_BOUNDARY_FINDINGS_OPEN",
+        "state": "ARCHIVE_BINDING_AND_MARKDOWN_FINDINGS_CLOSED_BY_FRESH_CLI_PROOF",
         "evidence": "build/evidence/R0.10/component-comparison-review.json",
         "scope": "Four predicate diagnostics do not yet exercise positive indexed archive binding; enforce Markdown report path as written",
-        "wholeATComplete": false
+        "wholeATComplete": false,
+        "closureEvidence": "build/evidence/R0.10/archive-binding-verification.json"
+      },
+      "archiveBindingUnit": {
+        "startedAt": "2026-10-06T19:51:43.931088+00:00",
+        "targetStopAt": "2026-10-06T21:51:43.931088+00:00",
+        "state": "CLOSED_FOUR_INDEXED_ARCHIVE_CLI_DIAGNOSTICS_VERIFIED",
+        "scope": "Four fixed Markdown variants through real register report/key/digest/component path; enforce .md scope",
+        "sourcePlan": "build/evidence/R0.10/archive-binding-minimum-plan.json",
+        "wholeATComplete": false,
+        "stoppedAt": "2026-10-06T19:57:26.828517+00:00",
+        "diagnosticPasses": 4,
+        "unfiltered": true,
+        "runShowExact": true,
+        "cleanupComplete": true,
+        "originalArchiveReadbackUnchanged": true
       }
     },
     "R0.11": {
@@ -10018,7 +10035,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Close the R0.10 indexed archive-binding diagnostic gap using the bounded Luna plan; enforce existing Markdown input scope. Poll root02 and continue R0.01 immediately on a verified DONE receipt. Root pending never blocks the goal.",
+  "nextAction": "Consume the independent bounded R0.03 storage-crash plan after Luna finishes. Poll root02 and continue R0.01 immediately on a verified DONE receipt. Pending root work never blocks the active goal.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -20557,20 +20574,20 @@
   "latestStaticVerification": {
     "command": "npm run check",
     "exitCode": 0,
-    "artifacts": 354,
-    "contracts": 286,
+    "artifacts": 355,
+    "contracts": 287,
     "features": 97,
     "commands": 55,
     "indexedATs": 1447,
-    "schemaDigest": "b9b777782eabc898610e0219c7d09f2b9f28e6b9ae3be2e902bcbd71d6fb7090",
-    "evidence": "build/evidence/R0.03/client-selection-check-final-result.json",
+    "schemaDigest": "d0d2c5af3ed652eef803a23427f1b949bbc5484a18257d9e88ff74b3bb0c320f",
+    "evidence": "build/evidence/R0.10/archive-binding-check-result.json",
     "languages": [
       "TypeScript",
       "Python"
     ],
     "SwiftDeferredTo": "R3"
   },
-  "sourceCheckpointCommit": "8f4d5db",
+  "sourceCheckpointCommit": "02a946a",
   "sourceCheckpointPushed": true,
   "rootRequests": {
     "ROOT-R004-20261006-01": {
@@ -20616,15 +20633,15 @@
   },
   "activeWorkers": [
     {
-      "task": "r010_pin_revalidation",
-      "card": "R0.10",
+      "task": "r003_per_generation_refresh_plan",
+      "card": "R0.03",
       "model": "gpt-6-luna",
       "reasoning": "max",
-      "scope": "read-only minimum archive-binding plan",
-      "targetStopAt": "2026-10-06T19:51:00Z",
+      "scope": "read-only storage-crash plan",
+      "targetStopAt": "2026-10-06T20:02:00Z",
       "ownNeedBytes": "268435456",
       "marginBytes": "536870912",
-      "admission": "build/evidence/R0.10/archive-plan-admission.json"
+      "admission": "build/evidence/R0.03/storage-plan-admission.json"
     }
   ]
 }

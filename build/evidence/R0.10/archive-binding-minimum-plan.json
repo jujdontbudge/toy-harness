@@ -1,0 +1,67 @@
+{
+  "card": "R0.10",
+  "head": "79e844a",
+  "finding": "No existing public EngineeringControl input accepts raw Markdown document content. The smallest existing owner boundary to extend is EngineeringControl.checkResearch(MapCheckInputV1, OpsControlContextV1), because it already resolves the real research-register links and performs report-path, digest, key, and component binding. MapCheckInputV1 currently contains only release; OpsControlContextV1 contains only environment, invocationId, and timeoutMs. checkComponentComparison accepts a normalized DTO and bypasses archive parsing/binding.",
+  "minimumBoundary": {
+    "method": "EngineeringControl.checkResearch",
+    "existingInput": "MapCheckInputV1 = { release: Release | null }",
+    "minimalExtension": "Add a narrow optional AT74-test-only document overlay to the existing research-check input. It carries fixed Markdown bodies keyed by report key only; it must not accept caller paths or comparison results. Permit it only through the sealed AT-obligations-74 test manifest in test context. Resolve each key and path from the real RESEARCH-REGISTER index, retain the existing path/digest/report-key/component-ID checks, and hash the exact supplied Markdown body. Normal research.check CLI input remains release-only.",
+    "reasonExtensionIsNecessary": "No current public input can express document content: checkResearch takes only MapCheckInputV1.release, checkComponentComparison takes an already parsed ResearchComponentComparisonV1, and OpsControlContextV1 has no document adapter. Reuse the existing method and CLI route; do not add a command, service, store, provider protocol, or standalone parser. If the overlay cannot be sealed from general callers, stop before implementation."
+  },
+  "fourCaseRoute": [
+    "Keep the existing registered AT-obligations-74 manifest and CLI probe dispatch.",
+    "Replace the probe's in-memory ResearchComponentComparisonV1 mutations with four fixed Markdown documents containing fenced ResearchComponentComparisonV1 records for the same four mandatory cases.",
+    "For each case, call EngineeringControl.checkResearch through the existing owner boundary with the fixed report body keyed to the report key resolved from the real register. Extract the componentComparison result for the bound component and emit the existing registered probe observations.",
+    "The fixture body must not overwrite planning files or be available as a caller-supplied CLI argument. Include the resolved indexed path, report key, content digest, component ID, and comparison digest in the diagnostic readback."
+  ],
+  "minimalAuthoredFiles": [
+    {
+      "path": "packages/contracts/src/engineering-control.ts",
+      "change": "Narrow optional field on the existing MapCheckInputV1 for the sealed AT74 Markdown overlay; retain strict shape and generate language outputs through the existing contracts generator."
+    },
+    {
+      "path": "packages/self-improvement/src/engineering-control.ts",
+      "change": "Pass the overlay through the current checkResearch/inspectResearch archive path; bind only to indexed report keys and their resolved paths, verify exact content digest/component binding, and restrict research archive entries to Markdown. Preserve ordinary filesystem reads when no overlay is present."
+    },
+    {
+      "path": "packages/self-improvement/src/component-comparison-probe.ts",
+      "change": "Provide the four fixed Markdown bodies and call checkResearch rather than calling checkComponentComparison directly. Keep expected local predicates and provisional result labeling."
+    }
+  ],
+  "existingFilesNotNeedingChangeForThisMinimum": [
+    "packages/self-improvement/src/public.ts: existing AT74 dispatch is present",
+    "packages/ops/src/fixture-stack.ts: existing exact AT74 observation guard is present",
+    "tests/registry.yaml: four-case sealed manifest is present",
+    "packages/contracts/src/ops-registry.ts: manifest structure already records cases and observation bindings"
+  ],
+  "verificationAfterImplementation": {
+    "noPrivateTests": true,
+    "staticCommand": "npm run check",
+    "assignedRungCommand": "toy --env test --stack <authorized-test-stack-UUID> probe run AT-obligations-74 --request-id <UUID> --json",
+    "requiredEvidence": [
+      "The unfiltered CLI run executes all four manifest cases through checkResearch and exact probe.show readback matches the stored operation.",
+      "Each case reports the indexed report key/path, digest of the exact fixed Markdown body, and bound component ID; missing-evidence, unsupported-choice, and missing-link cases block for their respective predicates, while the complete outside-option case passes its component comparison.",
+      "The current repository archive remains unchanged; A08/A09/M02 prose without normalized records remains explicitly unresolved.",
+      "Record cleanup and retain whole-result NOT_IMPLEMENTED/incomplete until the protected acceptance prerequisites are met."
+    ]
+  },
+  "remainingProtectedGates": [
+    "The reviewed verification artifact says R0.02 is PENDING; protected controller/identity prerequisites remain unmet.",
+    "Research-route attestation, dependency closure, and whole-register/release admission remain unverified and blocked.",
+    "R0.05 was not re-read as part of this bounded plan; confirm its current full acceptance state before any promotion.",
+    "Four local component-comparison cases or a successful static check alone do not pass AT-obligations-74 or R0.10."
+  ],
+  "sourceSha256": {
+    "docs/adr/0037-component-comparison-gate.md": "531275d07fa24d81f415b4a77f6941b7e7d9e7a4c04dac97f318fa047e779ab1",
+    "packages/contracts/src/engineering-control.ts": "c9b8f81179cdd4a34550c68e94252c51298c2397bdae458ea26603202db0afbd",
+    "packages/contracts/src/ops.ts": "f99adefbea806be7fe4a4ddd50e37bde156d4edbae55b8d68f80b08678dddf1d",
+    "packages/contracts/src/ops-registry.ts": "5917c9e4365fa07cdecf8c82402d24878c67dfb20f188b8e7d48e57d187ad93a",
+    "packages/self-improvement/src/engineering-control.ts": "b4d9a69b35fd9dfc30fc9370fe838f3d6552446eab82923af50c6a0f092ea1bf",
+    "packages/self-improvement/src/component-comparison-probe.ts": "a48c15182a64b927cb4750810b6b487ea94f091be67a4311dbe3f602cbf29ac3",
+    "packages/self-improvement/src/public.ts": "a64c91103ac6e2da09c6a9f8169be7cca7969bd19afc4899e6342a3ade43ce84",
+    "packages/ops/src/fixture-stack.ts": "a7808b6503880ca13f4cad9b2de16788e6f0ba0dbe60ff41eaf59980589fee51",
+    "tests/registry.yaml": "4a00bbe0643863b3debe1d44049cf30bb9c050455b8d323da44cbbda66ed8e7d",
+    "build/evidence/R0.10/component-comparison-verification.json": "a5b55a4d01d4396a28af6b22869f2bbf0c4710e98523bc9c2e61f689012ba6d8"
+  },
+  "scopeStatement": "Plan-only artifact. No source/shared state, planning archive, generated output, tests, builds, stacks, or processes were changed or exercised."
+}
