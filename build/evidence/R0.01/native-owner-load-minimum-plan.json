@@ -1,0 +1,62 @@
+{
+  "schemaVersion": "toy.r0.01.native-owner-load-minimum-plan.v1",
+  "card": "R0.01",
+  "status": "CONDITIONAL_READ_ONLY_PLAN",
+  "scope": "Plan only. No source, contract, CLI, host, Keychain, or account operation was performed.",
+  "sourcesRead": [
+    "control/secrets/public.ts",
+    "control/secrets/keychain.ts",
+    "control/secrets/siwc-owner.ts",
+    "control/bootstrap/siwc-runtime-probe.ts",
+    "scripts/probe-siwc-control-runtime.mts",
+    "packages/contracts/src/model-route.ts",
+    "packages/contracts/src/siwc-control-stage.ts",
+    "packages/contracts/src/public.ts"
+  ],
+  "observedSourceState": [
+    "The existing public secrets entry exports SiwcGrantOwner and createMacOsSiwcKeychain. The owner implements the generated SiwcCredentialOwner interface; the keychain factory accepts generated SiwcKeychainLauncherV1 and returns the generated SiwcKeychainStore interface.",
+    "SiwcGrantOwner.load reads and validates an existing vault without writing it. If the vault is absent, it may compare-and-write only the canonical empty vault containing a generated host ID and null registration, pending client, and grant, then performs a readback. It returns host and registration metadata, which must remain in child memory only.",
+    "The current frozen child dynamically imports the staged public module and checks expected export names, then reads the native helper directly. It does not call createMacOsSiwcKeychain or SiwcGrantOwner.load.",
+    "The current root-owned probe path verifies the staged artifact, sets the measured control UID/GID for the child, validates the child identity, and restores protected parent modes. Its generated receipt carries safe runtime state but has no explicit owner-load or fresh-load-readback result."
+  ],
+  "gateBeforeAnyFutureMutation": {
+    "currentState": "ROOT-R004-20261006-02 is PENDING; this plan has no actual native Keychain read result.",
+    "proceedOnlyIf": [
+      "The exact existing root probe completes with a verified result and restored parents/bootstrap receipt.",
+      "Its receipt proves the child actually ran with UID/EUID 310 and the measured control GID, with the expected single-group restriction.",
+      "The frozen module is verified and the actual native helper result is present or absent, not unavailable or terminated."
+    ],
+    "otherwise": "Stop before changing the child or queueing work. Use the actual root result to diagnose the specific stage, identity, or native-helper cause. Do not infer native availability from a staged artifact, a fake UID, or another account; do not retry through an alternate profile or route.",
+    "rootRequest": "ROOT-R004-20261006-02",
+    "queuedSourceMustStayFrozen": "Do not modify or rebuild the queued child/probe sources until Claude completes request02; its recorded script and child digests remain binding."
+  },
+  "smallestFutureUnit": {
+    "placement": "One bounded extension to control/bootstrap/siwc-runtime-probe.ts, behind the existing root-owned frozen-artifact probe path.",
+    "operation": "After the actual present/absent helper preflight, construct a SiwcKeychainLauncherV1 for the exact payload Python and helper, validate it with siwcKeychainLauncherSchema, and invoke the frozen public createMacOsSiwcKeychain and SiwcGrantOwner.load interfaces. Do not call owner.read, retainClientId, or save.",
+    "existingVault": [
+      "Read the baseline bytes through the public keychain store and keep them only in child memory.",
+      "Call public load once, construct a second independent public owner/keychain instance, and call load again.",
+      "Read the bytes again and compare exact byte content with the baseline. Validate the vault with siwcGrantVaultSchema as needed. Preserve any registration or grant exactly; emit only a bounded success state."
+    ],
+    "absentVault": [
+      "Call public load once; permit only its canonical empty-vault creation through the existing compare-and-write seam.",
+      "Validate the persisted vault with siwcGrantVaultSchema: host metadata is valid, registration/pending client/grant are null, and no extra fields exist.",
+      "Create a fresh owner and keychain store and call load again. Confirm in memory that the host identifier matches, the empty fields remain null, and the final bytes are unchanged from the first canonical write. Do not retry or overwrite a concurrent nonempty result."
+    ],
+    "output": "Keep all values in memory. Never serialize a credential, host ID, registration, vault/helper bytes, vault-derived digest, byte length, or exception text. If the existing receipt cannot distinguish the new proof, parent may extend that same generated receipt with a finite ownerLoadState enum and freshLoadVerified boolean; a verified top-level report must require both. No free-form error field or separate protocol is needed.",
+    "typeSafety": "Keep the dynamic import value and all dynamic call results as unknown. Do not cast the module to an interface or use any. Confirm stage verification before invocation; check the named public exports for callability without claiming that typeof proves their signatures. Invoke only those public exports through checked reflective calls, validate the launcher and persisted vault with generated @toy/contracts schemas, and inspect the load result with checked structure against the generated SiwcCredentialOwner/SiwcRegistration contracts. This adds no handwritten DTO, private-function test, mock, adapter, module, or staging path.",
+    "effects": [
+      "Allowed: native Keychain read; when initially absent only, creation of the canonical empty host-metadata vault; private readback and byte comparison.",
+      "Forbidden: token/grant creation or update, registration/client-ID retention, consent, OAuth/provider calls, service activation, pointer changes, or messages."
+    ]
+  },
+  "verificationBoundary": {
+    "thisPlanDoesNotProve": [
+      "That UID 310 can currently access the native Keychain.",
+      "That an existing vault is present, valid, or unchanged in a live run.",
+      "That an absent vault has been initialized or independently read back.",
+      "Any account consent, grant validity, model route, service readiness, or assigned acceptance passage."
+    ],
+    "nextEvidenceOwner": "Parent decides on source or queue work only after the exact actual root read result; if it is unavailable, diagnose that cause first."
+  }
+}
