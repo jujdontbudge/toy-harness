@@ -11,7 +11,8 @@
       "enum": [
         "add",
         "list",
-        "chat"
+        "chat",
+        "priority"
       ]
     },
     "public_argv": {
@@ -42,6 +43,8 @@
           "AUTH_LIST_READBACK_OK",
           "AUTH_LIST_EMPTY",
           "AUTH_LIST_NOT_CONFIRMED",
+          "AUTH_PRIORITY_OK",
+          "AUTH_PRIORITY_NOT_CONFIRMED",
           "CHAT_RESPONSE_OK",
           "CHAT_RESPONSE_NOT_CONFIRMED",
           "CHAT_GRANT_UNUSABLE",
@@ -108,7 +111,9 @@
             "list-after-fault",
             "chat-after-fault",
             "siwc-unbound",
-            "concurrent-refresh-add"
+            "concurrent-refresh-add",
+            "priority-added",
+            "priority-restored"
           ]
         },
         "credential_count": {
@@ -268,6 +273,44 @@
               "type": "null"
             }
           ]
+        },
+        "refreshEffects": {
+          "maxItems": 16,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "from": {
+                "type": "string",
+                "enum": [
+                  "initial",
+                  "rotated",
+                  "added"
+                ]
+              },
+              "to": {
+                "type": "string",
+                "enum": [
+                  "rotated",
+                  "stale",
+                  "added-rotated"
+                ]
+              },
+              "barrier": {
+                "type": "string",
+                "enum": [
+                  "primary-released",
+                  "not-used"
+                ]
+              }
+            },
+            "required": [
+              "from",
+              "to",
+              "barrier"
+            ],
+            "additionalProperties": false
+          }
         }
       },
       "required": [
@@ -278,7 +321,8 @@
         "staleRefreshTokenRejected",
         "staleRefreshResponse",
         "freshProcessUse",
-        "refreshGeneration"
+        "refreshGeneration",
+        "refreshEffects"
       ],
       "additionalProperties": false
     },

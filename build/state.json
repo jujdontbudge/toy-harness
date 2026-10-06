@@ -2,9 +2,9 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-06T17:45:44.838814Z",
-  "phase": "R0.04 AT85 source registration verified; R0.01 native root02 pending; R0.03 per-generation fixture repair replan ready",
-  "activeCard": "R0.04",
+  "updatedAt": "2026-10-06T18:29:26.064345+00:00",
+  "phase": "R0.03 add-first diagnostic verified; refresh-first replan after3failures; independent R0.07 source unit",
+  "activeCard": "R0.07",
   "cardCount": 87,
   "acceptanceCount": 1447,
   "cards": {
@@ -518,7 +518,9 @@
         "build/evidence/R0.03/httpx-fixture-source-preparation.json",
         "build/evidence/R0.03/auth-fresh-process-fixture-verification.json",
         "build/evidence/R0.03/auth-save-fault-fixture-verification.json",
-        "build/evidence/R0.03/concurrent-auth-verification.json"
+        "build/evidence/R0.03/concurrent-auth-verification.json",
+        "build/evidence/R0.03/concurrent-auth-generation-effects-verification.json",
+        "build/evidence/R0.03/concurrent-auth-generation-effects-replan.json"
       ],
       "requiredATs": [
         "AT-hermes-config-34",
@@ -614,12 +616,11 @@
         "sourceUnitStoppedAt": "2026-10-06T09:56:39.219348+00:00"
       },
       "lastVerification": {
-        "evidence": "build/evidence/R0.03/auth-save-fault-fixture-verification.json",
-        "verdict": "PASS_THIRTEEN_NATIVE_PUBLIC_CLI_SUBSET_OBSERVATIONS",
-        "acceptanceComplete": false,
+        "evidence": "build/evidence/R0.03/concurrent-auth-generation-effects-verification.json",
         "wholeATsPassed": [],
-        "observedAt": "2026-10-06T09:55:09.864Z",
-        "schemaDigest": "e1ecf4e021a4793b4e248883a13ced71e9cfb52bf2361f097a292525d7939efe"
+        "acceptanceComplete": false,
+        "addFirstDiagnosticChecksPassed": 8,
+        "cleanupComplete": true
       },
       "concurrentAuthUnit": {
         "startedAt": "2026-10-06T16:59:00Z",
@@ -651,6 +652,24 @@
         "neighborChecksPassed": 6,
         "verification": "build/evidence/R0.03/concurrent-auth-verification.json",
         "staticEvidence": "build/evidence/R0.03/concurrent-auth-package-check-final.txt"
+      },
+      "generationEffectsUnit": {
+        "state": "CLOSED_THREE_FAILURE_REPLAN",
+        "startedAt": "2026-10-06T18:08:00Z",
+        "targetStopAt": "2026-10-06T20:08:00Z",
+        "replan": "build/evidence/R0.03/concurrent-auth-generation-effects-replan.json",
+        "scope": "Existing external-provider seam and strict per-generation evidence; no new protocol/module/lock bypass",
+        "contract": "HermesAuthRefreshEffectV1",
+        "wholeATComplete": false,
+        "remaining": [
+          "Protected unfiltered manifest/controller/native roles",
+          "Held older successful response suppression",
+          "Atomic storage-boundary crash/restart"
+        ],
+        "stoppedAt": "2026-10-06T18:29:26.064345+00:00",
+        "actualDiagnosticAttempts": 3,
+        "verification": "build/evidence/R0.03/concurrent-auth-generation-effects-verification.json",
+        "verifiedAddFirstDiagnosticChecks": 8
       }
     },
     "R0.04": {
@@ -9847,7 +9866,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Commit/push bounded source-registration evidence; poll frozen root02 and consume only exact sanitized result. Continue minimum R0.03 external-provider/clock fixture repair from recorded replan; no whole AT claim or new infrastructure.",
+  "nextAction": "Commit and push bounded R003 evidence, then implement the smallest missing canonical cadence-slot owner identified by independent R007 discovery. Poll root02 and consume its exact result immediately when DONE. Keep trial unstarted until live prerequisites.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -20386,17 +20405,17 @@
   "latestStaticVerification": {
     "command": "npm run check",
     "exitCode": 0,
-    "completedAt": "2026-10-06T17:42:09.635322Z",
-    "output": "build/evidence/R0.03/concurrent-auth-package-check-final.txt",
-    "contracts": 278,
-    "contractArtifacts": 346,
+    "log": "build/evidence/R0.03/concurrent-auth-generation-effects-check-3-output.txt",
+    "artifacts": 348,
+    "contracts": 280,
     "features": 95,
     "commands": 55,
-    "ATIndexEntries": 1447,
-    "schemaDigest": "da7b3542f9797e49fce5bda46ebc71481024291610273492b1d15188a93a974d",
-    "swiftInvoked": false
+    "ATs": 1447,
+    "swiftInvoked": false,
+    "completedAt": "2026-10-06T18:26:14.980Z",
+    "schemaDigest": "07598a99449ba6c9bbd1061c2f34f729824ddbcb15c3707a1e708c0d1e938799"
   },
-  "sourceCheckpointCommit": "ca82a13",
+  "sourceCheckpointCommit": "8be2842",
   "sourceCheckpointPushed": true,
   "rootRequests": {
     "ROOT-R004-20261006-01": {
@@ -20422,15 +20441,15 @@
     }
   },
   "resourceAdmission": {
-    "measuredAt": "2026-10-06T17:57:46.719Z",
-    "availableBytes": "2958901248",
+    "measuredAt": "2026-10-06T18:26:48.521Z",
+    "availableBytes": "2194292736",
     "pressure": "normal",
     "strictlyFreeAdmission": false,
     "repairFloorApplied": false,
     "ownedWorldsRunning": 0,
-    "helpersRunning": 0,
-    "helperNeedBytes": "0",
-    "measurementSource": "build/evidence/R0.04/at85-registration-stack-up-retry.json",
+    "helpersRunning": 1,
+    "helperNeedBytes": "268435456",
+    "measurementSource": "build/evidence/R0.03/concurrent-auth-generation-effects-stack-up-3.json",
     "marginBytes": "536870912",
     "ownedStackId": null,
     "stackAndNativeChildrenNeedBytes": "0",
@@ -20440,5 +20459,7 @@
     "queuedRootReserveGate": false,
     "rule": "Normal OS pressure and available memory at least the current job declared need plus512MiB; no strictly-free, hypothetical reserve, swap or second physical-fit gate"
   },
-  "activeWorkers": []
+  "activeWorkers": [
+    "/root/r007_minimum_trial_journal"
+  ]
 }

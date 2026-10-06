@@ -74,6 +74,44 @@
           "type": "null"
         }
       ]
+    },
+    "refreshEffects": {
+      "maxItems": 16,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string",
+            "enum": [
+              "initial",
+              "rotated",
+              "added"
+            ]
+          },
+          "to": {
+            "type": "string",
+            "enum": [
+              "rotated",
+              "stale",
+              "added-rotated"
+            ]
+          },
+          "barrier": {
+            "type": "string",
+            "enum": [
+              "primary-released",
+              "not-used"
+            ]
+          }
+        },
+        "required": [
+          "from",
+          "to",
+          "barrier"
+        ],
+        "additionalProperties": false
+      }
     }
   },
   "required": [
@@ -84,7 +122,8 @@
     "staleRefreshTokenRejected",
     "staleRefreshResponse",
     "freshProcessUse",
-    "refreshGeneration"
+    "refreshGeneration",
+    "refreshEffects"
   ],
   "additionalProperties": false,
   "$id": "urn:toy:contracts:v1:HermesAuthConcurrencyObservationV1"

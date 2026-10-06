@@ -262,6 +262,7 @@ export type NativeReleaseEligibilityDecisionV1 = z.infer<typeof schemaInventory.
 export type InstalledHermesDependencyRecordV1 = z.infer<typeof schemaInventory.InstalledHermesDependencyRecordV1>;
 export type HermesPublicRuntimeCommandV1 = z.infer<typeof schemaInventory.HermesPublicRuntimeCommandV1>;
 export type HermesAuthConcurrencyObservationV1 = z.infer<typeof schemaInventory.HermesAuthConcurrencyObservationV1>;
+export type HermesAuthRefreshEffectV1 = z.infer<typeof schemaInventory.HermesAuthRefreshEffectV1>;
 export type HermesAuthFixtureResultV1 = z.infer<typeof schemaInventory.HermesAuthFixtureResultV1>;
 export type BackupCapacityInventoryV1 = z.infer<typeof schemaInventory.BackupCapacityInventoryV1>;
 export type BackupCapacityForecastV1 = z.infer<typeof schemaInventory.BackupCapacityForecastV1>;

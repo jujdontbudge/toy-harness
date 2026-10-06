@@ -5024,6 +5024,7 @@ class HermesAuthConcurrencyObservationV1(TypedDict):
     staleRefreshResponse: "HermesAuthConcurrencyObservationV1StaleRefreshTokenRejected"
     freshProcessUse: "HermesAuthConcurrencyObservationV1FreshProcessUse"
     refreshGeneration: Optional["HermesAuthConcurrencyObservationV1RefreshGenerationValue"]
+    refreshEffects: list["HermesAuthRefreshEffectV1"]
 
 HermesAuthConcurrencyObservationV1Order = Literal[
     "refresh-first",
@@ -5070,6 +5071,32 @@ HermesAuthConcurrencyObservationV1RefreshGenerationValue = Literal[
     "stale",
 ]
 
+HermesAuthRefreshEffectV1 = TypedDict(
+    "HermesAuthRefreshEffectV1",
+    {
+        "from": "HermesAuthRefreshEffectV1From",
+        "to": "HermesAuthRefreshEffectV1To",
+        "barrier": "HermesAuthRefreshEffectV1Barrier",
+    },
+)
+
+HermesAuthRefreshEffectV1From = Literal[
+    "initial",
+    "rotated",
+    "added",
+]
+
+HermesAuthRefreshEffectV1To = Literal[
+    "rotated",
+    "stale",
+    "added-rotated",
+]
+
+HermesAuthRefreshEffectV1Barrier = Literal[
+    "primary-released",
+    "not-used",
+]
+
 class HermesAuthFixtureResultV1(TypedDict):
     schema: "HermesAuthFixtureResultV1Schema"
     operation: "HermesAuthFixtureResultV1Operation"
@@ -5090,6 +5117,7 @@ HermesAuthFixtureResultV1Operation = Literal[
     "add",
     "list",
     "chat",
+    "priority",
 ]
 
 HermesAuthFixtureResultV1MarkersItem = Literal[
@@ -5100,6 +5128,8 @@ HermesAuthFixtureResultV1MarkersItem = Literal[
     "AUTH_LIST_READBACK_OK",
     "AUTH_LIST_EMPTY",
     "AUTH_LIST_NOT_CONFIRMED",
+    "AUTH_PRIORITY_OK",
+    "AUTH_PRIORITY_NOT_CONFIRMED",
     "CHAT_RESPONSE_OK",
     "CHAT_RESPONSE_NOT_CONFIRMED",
     "CHAT_GRANT_UNUSABLE",
@@ -5145,6 +5175,8 @@ HermesAuthFixtureResultV1ObservationsPhase = Literal[
     "chat-after-fault",
     "siwc-unbound",
     "concurrent-refresh-add",
+    "priority-added",
+    "priority-restored",
 ]
 
 HermesAuthFixtureResultV1ObservationsNetworkdenialsItem = Literal[

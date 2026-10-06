@@ -1,6 +1,6 @@
 --- /dev/null
 +++ b/tests/fixtures/toy_auth_httpx_fixture.py
-@@ -0,0 +1,659 @@
+@@ -0,0 +1,673 @@
 +from __future__ import annotations
 +
 +import base64
@@ -24,6 +24,7 @@
 +_STORAGE_FAULT_TRIGGERED = False
 +_TOKEN_RESPONSE_ISSUED = False
 +_CONCURRENCY_BARRIER_STATE = "not-used"
++_REFRESH_EFFECTS: list[dict[str, str]] = []
 +_ADD_PHASES = {"add", "add-enospc", "add-replace-fault"}
 +_DENIALS: list[str] = []
 +_COUNTS = {
@@ -139,7 +140,7 @@
 +    if order not in {"refresh-first", "add-first"} or actor not in {"auth-add", "expired-chat", "fresh-list-reload", "fresh-add-reload", "fresh-refresh-reload"}:
 +        return None
 +    fresh_use = "not-checked"
-+    if actor in {"fresh-add-reload", "fresh-refresh-reload"}:
++    if actor in {"fresh-add-reload", "fresh-refresh-reload"} and operation == "chat":
 +        fresh_use = "usable" if operation == "chat" and _ACCEPTED_ACCESS_GENERATION is not None else "unusable"
 +    return {
 +        "order": order,
@@ -150,6 +151,7 @@
 +        "staleRefreshResponse": "not-exercised",
 +        "freshProcessUse": fresh_use,
 +        "refreshGeneration": _ACCEPTED_ACCESS_GENERATION,
++        "refreshEffects": list(_REFRESH_EFFECTS),
 +    }
 +
 +
@@ -258,7 +260,7 @@
 +def _deny_request(reason: str = "unregistered-http") -> None:
 +    _COUNTS["denied_http_requests"] += 1
 +    _DENIALS.append(reason)
-+    raise RuntimeError("fixture denied an unregistered HTTPX request")
++    raise SystemExit(1)
 +
 +
 +def _route(request: httpx.Request, asynchronous: bool = False) -> httpx.Response:
@@ -347,16 +349,18 @@
 +            next_generation = {"initial": "rotated", "rotated": "stale", "added": "added-rotated"}.get(generation or "")
 +            if grant.get("grant_type") != ["refresh_token"]:
 +                return _deny_request("grant-mismatch")
-+            if next_generation is None:
++            if generation is None or next_generation is None:
 +                return _deny_request("grant-mismatch")
-+            if os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR") == "expired-chat":
++            primary_generation = "initial" if os.environ.get("TOY_AUTH_CONCURRENCY_ORDER") == "add-first" else "rotated"
++            primary_barrier = os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR") == "expired-chat" and generation == primary_generation
++            if primary_barrier:
 +                if not _signal_barrier("refresh-response-pending"):
 +                    return _deny_request("unregistered-http")
 +                _CONCURRENCY_BARRIER_STATE = "reached"
 +                if not _wait_barrier("release-refresh-token"):
 +                    return _deny_request("unregistered-http")
 +                _CONCURRENCY_BARRIER_STATE = "released"
-+            return _json_response(
++            response = _json_response(
 +                request,
 +                {
 +                    "access_token": _access_token(_GENERATION_EXPIRATIONS[next_generation], next_generation),
@@ -366,6 +370,8 @@
 +                },
 +                asynchronous,
 +            )
++            _REFRESH_EFFECTS.append({"from": generation, "to": next_generation, "barrier": "primary-released" if primary_barrier else "not-used"})
++            return response
 +        return _deny_request()
 +    if (
 +        _OPERATION == "chat"
@@ -449,6 +455,9 @@
 +        return [*prefix, "auth", "add", "openai-codex", "--type", "oauth", "--no-browser"]
 +    if operation == "list":
 +        return [*prefix, "auth", "list", "openai-codex"]
++    if operation == "priority":
++        target = "3" if _PHASE == "priority-added" and os.environ.get("TOY_AUTH_CONCURRENCY_ORDER") == "refresh-first" else "2"
++        return [*prefix, "auth", "priority", "openai-codex", target, "0"]
 +    provider = "siwc_responses" if _PHASE == "siwc-unbound" else "openai-codex"
 +    return [*prefix, "chat", "--provider", provider, "--model", _EXPECTED_MODEL, "--toolsets", "none", "-q", _PROMPT]
 +
@@ -546,6 +555,9 @@
 +        else:
 +            added = exit_code == 0 and "Added openai-codex OAuth credential #" in combined_output
 +            markers.append("AUTH_ADD_OK" if added else "AUTH_ADD_NOT_CONFIRMED")
++    elif operation == "priority":
++        moved = exit_code == 0 and "Set openai-codex credential" in stdout and "to priority 0 (#1" in stdout
++        markers.append("AUTH_PRIORITY_OK" if moved else "AUTH_PRIORITY_NOT_CONFIRMED")
 +    elif operation == "list":
 +        count = 0
 +        for line in stdout.splitlines():
@@ -606,7 +618,7 @@
 +
 +def main() -> int:
 +    global _OPERATION, _PHASE, _CONCURRENCY_BARRIER_STATE
-+    if len(sys.argv) != 2 or sys.argv[1] not in {"add", "list", "chat", "chat-expired", "chat-reloaded", "add-enospc", "add-replace-fault", "list-after-fault", "chat-after-fault", "siwc-unbound"}:
++    if len(sys.argv) != 2 or sys.argv[1] not in {"add", "list", "chat", "chat-expired", "chat-reloaded", "add-enospc", "add-replace-fault", "list-after-fault", "chat-after-fault", "siwc-unbound", "priority-added", "priority-restored"}:
 +        print(
 +            json.dumps(
 +                {
@@ -626,12 +638,14 @@
 +        "list-after-fault": "list",
 +        "chat-after-fault": "chat",
 +        "siwc-unbound": "chat",
++        "priority-added": "priority",
++        "priority-restored": "priority",
 +    }.get(_PHASE, "chat" if _PHASE.startswith("chat") else _PHASE)
 +    if _PHASE == "siwc-unbound":
 +        os.environ["OPENAI_API_KEY"] = _PAID_KEY
 +    if _PHASE == "chat-expired":
 +        time.time = lambda: 4102448400.0 if os.environ.get("TOY_AUTH_CONCURRENCY_ORDER") == "refresh-first" else 1893463200.0
-+    if os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR") == "fresh-add-reload":
++    if os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR") == "fresh-add-reload" and _PHASE == "chat-reloaded":
 +        time.time = lambda: 1893466800.0
 +    argv = _public_argv(_OPERATION)
 +    httpx.Client.send = _sync_send

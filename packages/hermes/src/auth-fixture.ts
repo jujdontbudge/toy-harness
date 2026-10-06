@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import { existsSync, lstatSync, mkdirSync, readFileSync, realpathSync, statSync, writeFileSync } from "node:fs";
 import { isAbsolute, join, relative, sep } from "node:path";
 import { checkViewSchema, hermesAuthFixtureResultSchema, hermesPublicRuntimeCommandSchema } from "@toy/contracts";
-import type { CheckViewV1, HermesAuthConcurrencyObservationV1, HermesAuthFixtureResultV1 } from "@toy/contracts";
+import type { CheckViewV1, HermesAuthConcurrencyObservationV1, HermesAuthFixtureResultV1, HermesAuthRefreshEffectV1 } from "@toy/contracts";
 import { trustedCheckoutRoot, trustedToolEnvironment } from "@toy/ops/public";
 
 const installedRoot = "/Users/johansardar/.hermes/hermes-agent";
@@ -19,10 +19,11 @@ const isWithin = (base: string, target: string): boolean => {
   return path === "" || (!isAbsolute(path) && path !== ".." && !path.startsWith(`..${sep}`));
 };
 
-const publicArgv = (operation: FixtureOperation): string[] => {
+const publicArgv = (operation: FixtureOperation, order?: HermesAuthConcurrencyObservationV1["order"]): string[] => {
   const prefix = ["hermes", "--profile", "toy"];
   if (operation.startsWith("add")) return [...prefix, "auth", "add", "openai-codex", "--type", "oauth", "--no-browser"];
   if (operation.startsWith("list")) return [...prefix, "auth", "list", "openai-codex"];
+  if (operation === "priority-added" || operation === "priority-restored") return [...prefix, "auth", "priority", "openai-codex", operation === "priority-added" && order === "refresh-first" ? "3" : "2", "0"];
   return [...prefix, "chat", "--provider", operation === "siwc-unbound" ? "siwc_responses" : "openai-codex", "--model", "gpt-6.1-sol", "--toolsets", "none", "-q", "Return the fixed fixture marker."];
 };
 
@@ -139,8 +140,9 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
   const evidence: Record<string, unknown> = { wholeATComplete: false, fixtureSubsetComplete: false };
   let artifacts: string[] = [];
   const operationChecks: CheckViewV1[] = [];
+  const concurrencyChecks: CheckViewV1[] = [];
   const concurrentChildren: ConcurrentChildHandle[] = [];
-  const fail = (state: CheckViewV1["state"], reason: string, extra: Record<string, unknown> = {}): CheckViewV1[] => [...operationChecks, check(state, reason, { ...evidence, ...extra, wholeATComplete: false }, artifacts)];
+  const fail = (state: CheckViewV1["state"], reason: string, extra: Record<string, unknown> = {}): CheckViewV1[] => [...operationChecks, ...concurrencyChecks, check(state, reason, { ...evidence, ...extra, wholeATComplete: false }, artifacts)];
 
   try {
     if (!["add", "add-enospc", "add-replace-fault", "siwc-unbound", "concurrent-refresh-add"].includes(firstOperation)) return fail("BLOCKED", "NATIVE_AUTH_FIXTURE_OPERATION_INVALID");
@@ -367,7 +369,6 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
       if (!operationPassed) return operationChecks;
     }
     if (concurrentRun) {
-      const concurrencyChecks: CheckViewV1[] = [];
       const launchFixture = (operation: FixtureOperation, order: HermesAuthConcurrencyObservationV1["order"], actor: HermesAuthConcurrencyObservationV1["actor"], barrierDirectory: string, crashCut: HermesAuthConcurrencyObservationV1["crashCut"], holdAfterResult: boolean): ConcurrentChildHandle | null => {
         const commandRequest = bounded(interpreter, ["-B", "-I", candidateStore, "--print-runtime-command", "--module", fixtureModule, "--", operation], maxChildBytes, 5000);
         if (commandRequest.timedOut || !commandRequest.result || commandRequest.result.error || commandRequest.result.status !== 0) return null;
@@ -400,21 +401,32 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
         const identity = result.processIdentity;
         const addOperation = operation === "add";
         const listOperation = operation === "list";
-        const expectedArgv = publicArgv(operation);
+        const priorityOperation = operation === "priority-added" || operation === "priority-restored";
+        const expectedArgv = publicArgv(operation, order);
         const identityMatches = outcome.pid !== null && identity.pid === outcome.pid && identity.parentPid === process.pid && typeof process.getuid === "function" && identity.uid === process.getuid() && typeof process.getgid === "function" && identity.gid === process.getgid();
         const commandSucceeded = result.exit_code === 0 && (outcome.status === 0 || outcome.signal === "SIGKILL");
         const markerMatches = listOperation
           ? result.markers.length === 1 && result.markers[0] === "AUTH_LIST_READBACK_OK"
-          : addOperation
-            ? result.markers.length === 1 && result.markers[0] === "AUTH_ADD_OK"
-            : result.markers.length === 1 && result.markers[0] === "CHAT_RESPONSE_OK";
+          : priorityOperation
+            ? result.markers.length === 1 && result.markers[0] === "AUTH_PRIORITY_OK"
+            : addOperation
+              ? result.markers.length === 1 && result.markers[0] === "AUTH_ADD_OK"
+              : result.markers.length === 1 && result.markers[0] === "CHAT_RESPONSE_OK";
         const noUnexpectedDenials = result.observations.network_denials.length === 0;
+        const expectedRefreshEffects: HermesAuthRefreshEffectV1[] = actor === "expired-chat"
+          ? order === "add-first"
+            ? [{ from: "initial", to: "rotated", barrier: "primary-released" }, { from: "added", to: "added-rotated", barrier: "not-used" }]
+            : [{ from: "rotated", to: "stale", barrier: "primary-released" }]
+          : actor === "fresh-add-reload" && operation === "chat-reloaded" && order === "refresh-first"
+            ? [{ from: "added", to: "added-rotated", barrier: "not-used" }]
+            : [];
+        const refreshEffectsMatch = concurrency !== undefined && JSON.stringify(concurrency.refreshEffects) === JSON.stringify(expectedRefreshEffects);
         const expectedLedger = addOperation
           ? result.http_ledger.device_code_requests === 1 && result.http_ledger.device_code_polls === 1 && result.http_ledger.token_exchanges === 1 && result.http_ledger.token_refreshes === 0 && result.http_ledger.model_catalog_requests === 0 && result.http_ledger.model_requests === 0 && result.http_ledger.denied_http_requests === 0 && result.http_ledger.blocked_socket_events === 0
-          : listOperation
+          : listOperation || priorityOperation
             ? result.http_ledger.device_code_requests === 0 && result.http_ledger.device_code_polls === 0 && result.http_ledger.token_exchanges === 0 && result.http_ledger.token_refreshes === 0 && result.http_ledger.model_catalog_requests === 0 && result.http_ledger.model_requests === 0 && result.http_ledger.denied_http_requests === 0 && result.http_ledger.blocked_socket_events === 0
-            : result.http_ledger.device_code_requests === 0 && result.http_ledger.device_code_polls === 0 && result.http_ledger.token_exchanges === 0 && result.http_ledger.token_refreshes === (actor === "expired-chat" || actor === "fresh-add-reload" ? 1 : 0) && result.http_ledger.model_catalog_requests === 1 && result.http_ledger.model_requests === 1 && result.http_ledger.denied_http_requests === 0 && result.http_ledger.blocked_socket_events === 0;
-        const expectedGeneration = actor === "expired-chat"
+            : result.http_ledger.device_code_requests === 0 && result.http_ledger.device_code_polls === 0 && result.http_ledger.token_exchanges === 0 && result.http_ledger.token_refreshes === expectedRefreshEffects.length && result.http_ledger.model_catalog_requests === 1 && result.http_ledger.model_requests === 1 && result.http_ledger.denied_http_requests === 0 && result.http_ledger.blocked_socket_events === 0;
+        const expectedGeneration = priorityOperation ? result.observations.access_generation === null : actor === "expired-chat"
           ? result.observations.access_generation === (order === "add-first" ? "rotated" : "stale")
           : actor === "fresh-add-reload"
             ? result.observations.access_generation === "added-rotated"
@@ -426,12 +438,12 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
           && concurrency.actor === actor
           && concurrency.crashCut === expectedCrashCut
           && concurrency.barrier === (actor === "auth-add" || actor === "expired-chat" ? "released" : "not-used")
-          && ((actor !== "fresh-add-reload" && actor !== "fresh-refresh-reload") || concurrency.freshProcessUse === "usable")
+          && (priorityOperation ? concurrency.freshProcessUse === "not-checked" : (actor !== "fresh-add-reload" && actor !== "fresh-refresh-reload") || concurrency.freshProcessUse === "usable")
           && concurrency.staleRefreshTokenRejected === "not-exercised"
           && concurrency.staleRefreshResponse === "not-exercised";
         const countMatches = expectedCount === undefined || result.observations.credential_count === expectedCount;
         const crashMatches = expectedCrashCut === "none" ? outcome.status === 0 && outcome.signal === null : outcome.status === null && outcome.signal === "SIGKILL";
-        const passed = result.operation === (listOperation ? "list" : addOperation ? "add" : "chat")
+        const passed = result.operation === (listOperation ? "list" : addOperation ? "add" : priorityOperation ? "priority" : "chat")
           && result.observations.phase === operation
           && result.observations.provider === "openai-codex"
           && result.observations.token_hygiene
@@ -446,6 +458,7 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
           && !outcome.oversized
           && commandSucceeded
           && markerMatches
+          && refreshEffectsMatch
           && expectedLedger
           && expectedGeneration
           && concurrencyMatches
@@ -492,7 +505,13 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
           release(barrierDirectory, "release-refresh-lock");
           if (!await waitForFixtureMarker(join(barrierDirectory, "refresh-response-pending"), Math.max(1, Math.min(remainingMs(), 45000)))) return fail("FAIL", "NATIVE_AUTH_CONCURRENCY_REFRESH_RESPONSE_BARRIER_FAILED", { order, wholeATComplete: false });
           release(barrierDirectory, "release-refresh-token");
-          if (!await waitForFixtureMarker(join(barrierDirectory, "refresh-catalog-observed"), Math.max(1, Math.min(remainingMs(), 45000)))) return fail("FAIL", "NATIVE_AUTH_CONCURRENCY_REFRESH_OBSERVATION_UNOBSERVED", { order, wholeATComplete: false });
+          const catalogObservation = await waitForFixtureMarkerOrCompletion(join(barrierDirectory, "refresh-catalog-observed"), chatChild, Math.max(1, Math.min(remainingMs(), 45000)));
+          if (catalogObservation !== "reached") {
+            if (chatChild.isRunning()) chatChild.kill();
+            const failedChat = await chatChild.result;
+            const failedObservation = parseConcurrentChild("chat-expired", order, "expired-chat", failedChat, "none");
+            return fail("FAIL", "NATIVE_AUTH_CONCURRENCY_REFRESH_OBSERVATION_UNOBSERVED", { order, catalogObservation, result: failedObservation.result, childExitCode: failedChat.status, childSignal: failedChat.signal, timedOut: failedChat.timedOut, oversized: failedChat.oversized, spawnError: failedChat.spawnError });
+          }
           release(barrierDirectory, "release-refresh-model");
           addOutcome = await addChild.result;
           chatOutcome = await chatChild.result;
@@ -507,7 +526,13 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
           if (addPending === "completed") return fail("FAIL", "NATIVE_AUTH_CONCURRENCY_ADD_CHILD_EXITED_EARLY", { order, wholeATComplete: false });
           bothPrePersistenceBarriersReached = addPending === "reached";
           release(barrierDirectory, "release-refresh-token");
-          if (!await waitForFixtureMarker(join(barrierDirectory, "refresh-catalog-observed"), Math.max(1, Math.min(remainingMs(), 45000)))) return fail("FAIL", "NATIVE_AUTH_CONCURRENCY_REFRESH_OBSERVATION_UNOBSERVED", { order, bothPrePersistenceBarriersReached, wholeATComplete: false });
+          const catalogObservation = await waitForFixtureMarkerOrCompletion(join(barrierDirectory, "refresh-catalog-observed"), chatChild, Math.max(1, Math.min(remainingMs(), 45000)));
+          if (catalogObservation !== "reached") {
+            if (chatChild.isRunning()) chatChild.kill();
+            const failedChat = await chatChild.result;
+            const failedObservation = parseConcurrentChild("chat-expired", order, "expired-chat", failedChat, primaryCrashCut);
+            return fail("FAIL", "NATIVE_AUTH_CONCURRENCY_REFRESH_OBSERVATION_UNOBSERVED", { order, bothPrePersistenceBarriersReached, catalogObservation, result: failedObservation.result, childExitCode: failedChat.status, childSignal: failedChat.signal, timedOut: failedChat.timedOut, oversized: failedChat.oversized, spawnError: failedChat.spawnError });
+          }
           if (!bothPrePersistenceBarriersReached && !await waitForFixtureMarker(join(barrierDirectory, "add-response-pending"), Math.max(1, Math.min(remainingMs(), 45000)))) return fail("FAIL", "NATIVE_AUTH_CONCURRENCY_ADD_RESPONSE_BARRIER_FAILED", { order, wholeATComplete: false });
           release(barrierDirectory, "release-add-token");
           if (!await waitForFixtureMarker(join(barrierDirectory, "add-command-returned"), Math.max(1, Math.min(remainingMs(), 45000)))) return fail("FAIL", "NATIVE_AUTH_CONCURRENCY_ADD_RESULT_UNOBSERVED", { order, wholeATComplete: false });
@@ -545,14 +570,31 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
         const freshRefreshResult = freshRefreshObserved.passed && freshRefreshGeneration && rootStoreUnchanged;
         concurrencyChecks.push(check(freshRefreshResult ? "PASS" : "FAIL", freshRefreshResult ? "NATIVE_AUTH_CONCURRENCY_FRESH_REFRESH_RELOAD_OBSERVED" : "NATIVE_AUTH_CONCURRENCY_FRESH_REFRESH_RELOAD_FAILED", { order, result: freshRefreshObserved.result, newestAcceptedRefreshGeneration: freshRefreshObserved.result?.observations.access_generation ?? null, refreshGrantUsable: freshRefreshGeneration, rootStoreUnchanged, wholeATComplete: false }, [...artifacts, ...(freshRefreshObserved.result ? [digest(JSON.stringify(freshRefreshObserved.result))] : [])]));
         if (!freshRefreshResult) return [...operationChecks, ...concurrencyChecks];
+        const priorityChild = launchFixture("priority-added", order, "fresh-add-reload", reloadDirectory, "none", false);
+        if (!priorityChild) return fail("BLOCKED", "NATIVE_AUTH_CONCURRENCY_PRIORITY_COMMAND_UNAVAILABLE", { order, wholeATComplete: false });
+        const priorityOutcome = await priorityChild.result;
+        const priorityObserved = parseConcurrentChild("priority-added", order, "fresh-add-reload", priorityOutcome, "none");
+        concurrencyChecks.push(check(priorityObserved.passed ? "PASS" : "FAIL", priorityObserved.passed ? "NATIVE_AUTH_CONCURRENCY_ADDED_PRIORITY_OBSERVED" : "NATIVE_AUTH_CONCURRENCY_ADDED_PRIORITY_FAILED", { order, result: priorityObserved.result, childExitCode: priorityOutcome.status, childSignal: priorityOutcome.signal, timedOut: priorityOutcome.timedOut, oversized: priorityOutcome.oversized, spawnError: priorityOutcome.spawnError, rootStoreUnchanged, wholeATComplete: false }, artifacts));
+        if (!priorityObserved.passed) return [...operationChecks, ...concurrencyChecks];
         const freshAddChild = launchFixture("chat-reloaded", order, "fresh-add-reload", reloadDirectory, "none", false);
         if (!freshAddChild) return fail("BLOCKED", "NATIVE_AUTH_CONCURRENCY_FRESH_ADD_RELOAD_COMMAND_UNAVAILABLE", { order, wholeATComplete: false });
         const freshAddOutcome = await freshAddChild.result;
         const freshAddObserved = parseConcurrentChild("chat-reloaded", order, "fresh-add-reload", freshAddOutcome, "none");
         const freshGeneration = freshAddObserved.result?.observations.access_generation === "added-rotated";
         const freshResult = freshAddObserved.passed && freshGeneration && rootStoreUnchanged;
-        concurrencyChecks.push(check(freshResult ? "PASS" : "FAIL", freshResult ? "NATIVE_AUTH_CONCURRENCY_FRESH_GRANT_RELOAD_OBSERVED" : "NATIVE_AUTH_CONCURRENCY_FRESH_GRANT_RELOAD_FAILED", { order, result: freshAddObserved.result, staleRefreshTokenRejected: freshAddObserved.result?.concurrency?.staleRefreshTokenRejected ?? "not-exercised", staleRefreshResponse: freshAddObserved.result?.concurrency?.staleRefreshResponse ?? "not-exercised", addedGrantUsable: freshGeneration, lostUpdateAbsent: listObserved.result?.observations.credential_count === expectedCount && freshRefreshGeneration && freshGeneration && chatObserved.result?.http_ledger.token_refreshes === 1, rootStoreUnchanged, wholeATComplete: false }, [...artifacts, ...(freshAddObserved.result ? [digest(JSON.stringify(freshAddObserved.result))] : [])]));
+        concurrencyChecks.push(check(freshResult ? "PASS" : "FAIL", freshResult ? "NATIVE_AUTH_CONCURRENCY_FRESH_GRANT_RELOAD_OBSERVED" : "NATIVE_AUTH_CONCURRENCY_FRESH_GRANT_RELOAD_FAILED", { order, result: freshAddObserved.result, childExitCode: freshAddOutcome.status, childSignal: freshAddOutcome.signal, timedOut: freshAddOutcome.timedOut, oversized: freshAddOutcome.oversized, spawnError: freshAddOutcome.spawnError, staleRefreshTokenRejected: freshAddObserved.result?.concurrency?.staleRefreshTokenRejected ?? "not-exercised", staleRefreshResponse: freshAddObserved.result?.concurrency?.staleRefreshResponse ?? "not-exercised", addedGrantUsable: freshGeneration, lostUpdateAbsent: listObserved.result?.observations.credential_count === expectedCount && freshRefreshGeneration && freshGeneration && chatObserved.passed, rootStoreUnchanged, wholeATComplete: false }, [...artifacts, ...(freshAddObserved.result ? [digest(JSON.stringify(freshAddObserved.result))] : [])]));
         if (!freshResult) return [...operationChecks, ...concurrencyChecks];
+        const restoreChild = launchFixture("priority-restored", order, "fresh-refresh-reload", reloadDirectory, "none", false);
+        if (!restoreChild) return fail("BLOCKED", "NATIVE_AUTH_CONCURRENCY_RESTORE_COMMAND_UNAVAILABLE", { order, wholeATComplete: false });
+        const restoreOutcome = await restoreChild.result;
+        const restoreObserved = parseConcurrentChild("priority-restored", order, "fresh-refresh-reload", restoreOutcome, "none");
+        concurrencyChecks.push(check(restoreObserved.passed ? "PASS" : "FAIL", restoreObserved.passed ? "NATIVE_AUTH_CONCURRENCY_PRIMARY_PRIORITY_RESTORED" : "NATIVE_AUTH_CONCURRENCY_PRIMARY_PRIORITY_RESTORE_FAILED", { order, result: restoreObserved.result, childExitCode: restoreOutcome.status, childSignal: restoreOutcome.signal, timedOut: restoreOutcome.timedOut, wholeATComplete: false }, artifacts));
+        if (!restoreObserved.passed) return [...operationChecks, ...concurrencyChecks];
+        const finalListChild = launchFixture("list", order, "fresh-list-reload", reloadDirectory, "none", false);
+        if (!finalListChild) return fail("BLOCKED", "NATIVE_AUTH_CONCURRENCY_FINAL_LIST_COMMAND_UNAVAILABLE", { order, wholeATComplete: false });
+        const finalListObserved = parseConcurrentChild("list", order, "fresh-list-reload", await finalListChild.result, "none", expectedCount);
+        concurrencyChecks.push(check(finalListObserved.passed ? "PASS" : "FAIL", finalListObserved.passed ? "NATIVE_AUTH_CONCURRENCY_FINAL_LIST_OBSERVED" : "NATIVE_AUTH_CONCURRENCY_FINAL_LIST_FAILED", { order, result: finalListObserved.result, credentialCountExpected: expectedCount, wholeATComplete: false }, artifacts));
+        if (!finalListObserved.passed) return [...operationChecks, ...concurrencyChecks];
       }
       return [...operationChecks, ...concurrencyChecks];
     }
