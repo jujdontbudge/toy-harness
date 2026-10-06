@@ -2104,5 +2104,218 @@
       }
     ],
     "simUnavailableReason": "The assigned acceptance rung requires a CLI stack, device/account evidence and a registered probe. This manifest exercises only fixed external test projections through the public CLI; it does not inspect actual membership, licence or device state."
+  },
+  {
+    "id": "AT-ops-62",
+    "rung": "CLI",
+    "sourceAssertionHash": "489ca2cac962b2320b4be540c8232020d65a5ed032eb0f0e879446bd70059bc4",
+    "commandId": "probe.run",
+    "scenarioId": "backup-capacity",
+    "owner": "ops",
+    "firstRelease": "R0",
+    "kind": "behavioral",
+    "mandatoryCases": [
+      {
+        "id": "missing-external-b2-free-cap-exceeded",
+        "publicOperation": "BackupCapacityProbe.run",
+        "phase": "missing-external-b2-free-cap-exceeded"
+      },
+      {
+        "id": "unproved-offsite-capacity",
+        "publicOperation": "BackupCapacityProbe.run",
+        "phase": "unproved-offsite-capacity"
+      },
+      {
+        "id": "outage-and-staging-floor-equality",
+        "publicOperation": "BackupCapacityProbe.run",
+        "phase": "outage-and-staging-floor-equality"
+      },
+      {
+        "id": "next-write-crosses-staging-floor",
+        "publicOperation": "BackupCapacityProbe.run",
+        "phase": "next-write-crosses-staging-floor"
+      },
+      {
+        "id": "growth-and-all-overhead-control",
+        "publicOperation": "BackupCapacityProbe.run",
+        "phase": "growth-and-all-overhead-control"
+      },
+      {
+        "id": "internal-snapshot-never-independent",
+        "publicOperation": "BackupCapacityProbe.run",
+        "phase": "internal-snapshot-never-independent"
+      },
+      {
+        "id": "unmeasured-growth-stays-incomplete",
+        "publicOperation": "BackupCapacityProbe.run",
+        "phase": "unmeasured-growth-stays-incomplete"
+      },
+      {
+        "id": "forecast-overflow-refuses",
+        "publicOperation": "BackupCapacityProbe.run",
+        "phase": "forecast-overflow-refuses"
+      }
+    ],
+    "trigger": "Evaluate all eight existing fixed no-spend storage/growth cells through the public Ops probe and persist their source-bound decisions. Actual accounts, restore and Sources effects remain pending.",
+    "faultControls": [],
+    "observations": [
+      {
+        "id": "decision-cells",
+        "independentReader": "Public BackupCapacity evaluation and persisted probe.show scenario/decision readback",
+        "caseIds": [
+          "missing-external-b2-free-cap-exceeded",
+          "unproved-offsite-capacity",
+          "outage-and-staging-floor-equality",
+          "next-write-crosses-staging-floor",
+          "growth-and-all-overhead-control",
+          "internal-snapshot-never-independent",
+          "unmeasured-growth-stays-incomplete",
+          "forecast-overflow-refuses"
+        ]
+      }
+    ],
+    "simUnavailableReason": "SIM cannot inspect this administrative pre-build capacity inventory. CLI exercises the public owner with fixed external storage/growth inputs; no real destination or restore is claimed."
+  },
+  {
+    "id": "AT-lifestore-63",
+    "rung": "CLI",
+    "sourceAssertionHash": "33af59a30239c658b2475fce5dc48de4ad95de524e63222f988e8b086260e61d",
+    "commandId": "probe.run",
+    "scenarioId": "backup-capacity",
+    "owner": "ops",
+    "firstRelease": "R0",
+    "kind": "behavioral",
+    "mandatoryCases": [
+      {
+        "id": "missing-external-b2-free-cap-exceeded",
+        "publicOperation": "BackupCapacityProbe.run",
+        "phase": "missing-external-b2-free-cap-exceeded"
+      },
+      {
+        "id": "unproved-offsite-capacity",
+        "publicOperation": "BackupCapacityProbe.run",
+        "phase": "unproved-offsite-capacity"
+      },
+      {
+        "id": "outage-and-staging-floor-equality",
+        "publicOperation": "BackupCapacityProbe.run",
+        "phase": "outage-and-staging-floor-equality"
+      },
+      {
+        "id": "next-write-crosses-staging-floor",
+        "publicOperation": "BackupCapacityProbe.run",
+        "phase": "next-write-crosses-staging-floor"
+      },
+      {
+        "id": "growth-and-all-overhead-control",
+        "publicOperation": "BackupCapacityProbe.run",
+        "phase": "growth-and-all-overhead-control"
+      },
+      {
+        "id": "internal-snapshot-never-independent",
+        "publicOperation": "BackupCapacityProbe.run",
+        "phase": "internal-snapshot-never-independent"
+      },
+      {
+        "id": "unmeasured-growth-stays-incomplete",
+        "publicOperation": "BackupCapacityProbe.run",
+        "phase": "unmeasured-growth-stays-incomplete"
+      },
+      {
+        "id": "forecast-overflow-refuses",
+        "publicOperation": "BackupCapacityProbe.run",
+        "phase": "forecast-overflow-refuses"
+      }
+    ],
+    "trigger": "Evaluate all eight existing fixed no-spend storage/growth cells through the public Ops probe and persist their source-bound decisions. Actual accounts, restore and Sources effects remain pending.",
+    "faultControls": [],
+    "observations": [
+      {
+        "id": "decision-cells",
+        "independentReader": "Public BackupCapacity evaluation and persisted probe.show scenario/decision readback",
+        "caseIds": [
+          "missing-external-b2-free-cap-exceeded",
+          "unproved-offsite-capacity",
+          "outage-and-staging-floor-equality",
+          "next-write-crosses-staging-floor",
+          "growth-and-all-overhead-control",
+          "internal-snapshot-never-independent",
+          "unmeasured-growth-stays-incomplete",
+          "forecast-overflow-refuses"
+        ]
+      }
+    ],
+    "simUnavailableReason": "SIM cannot inspect this administrative pre-build capacity inventory. CLI exercises the public owner with fixed external storage/growth inputs; no real destination or restore is claimed."
+  },
+  {
+    "id": "AT-sources-216",
+    "rung": "CLI",
+    "sourceAssertionHash": "2d8d97577f6e4eb0bfd5eadc41fa9d7b40e8664b426fac12a5ab2ed577d64abb",
+    "commandId": "probe.run",
+    "scenarioId": "backup-capacity",
+    "owner": "ops",
+    "firstRelease": "R0",
+    "kind": "behavioral",
+    "mandatoryCases": [
+      {
+        "id": "missing-external-b2-free-cap-exceeded",
+        "publicOperation": "BackupCapacityProbe.run",
+        "phase": "missing-external-b2-free-cap-exceeded"
+      },
+      {
+        "id": "unproved-offsite-capacity",
+        "publicOperation": "BackupCapacityProbe.run",
+        "phase": "unproved-offsite-capacity"
+      },
+      {
+        "id": "outage-and-staging-floor-equality",
+        "publicOperation": "BackupCapacityProbe.run",
+        "phase": "outage-and-staging-floor-equality"
+      },
+      {
+        "id": "next-write-crosses-staging-floor",
+        "publicOperation": "BackupCapacityProbe.run",
+        "phase": "next-write-crosses-staging-floor"
+      },
+      {
+        "id": "growth-and-all-overhead-control",
+        "publicOperation": "BackupCapacityProbe.run",
+        "phase": "growth-and-all-overhead-control"
+      },
+      {
+        "id": "internal-snapshot-never-independent",
+        "publicOperation": "BackupCapacityProbe.run",
+        "phase": "internal-snapshot-never-independent"
+      },
+      {
+        "id": "unmeasured-growth-stays-incomplete",
+        "publicOperation": "BackupCapacityProbe.run",
+        "phase": "unmeasured-growth-stays-incomplete"
+      },
+      {
+        "id": "forecast-overflow-refuses",
+        "publicOperation": "BackupCapacityProbe.run",
+        "phase": "forecast-overflow-refuses"
+      }
+    ],
+    "trigger": "Evaluate all eight existing fixed no-spend storage/growth cells through the public Ops probe and persist their source-bound decisions. Actual accounts, restore and Sources effects remain pending.",
+    "faultControls": [],
+    "observations": [
+      {
+        "id": "decision-cells",
+        "independentReader": "Public BackupCapacity evaluation and persisted probe.show scenario/decision readback",
+        "caseIds": [
+          "missing-external-b2-free-cap-exceeded",
+          "unproved-offsite-capacity",
+          "outage-and-staging-floor-equality",
+          "next-write-crosses-staging-floor",
+          "growth-and-all-overhead-control",
+          "internal-snapshot-never-independent",
+          "unmeasured-growth-stays-incomplete",
+          "forecast-overflow-refuses"
+        ]
+      }
+    ],
+    "simUnavailableReason": "SIM cannot inspect this administrative pre-build capacity inventory. CLI exercises the public owner with fixed external storage/growth inputs; no real destination or restore is claimed."
   }
 ]

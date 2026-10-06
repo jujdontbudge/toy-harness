@@ -318,7 +318,7 @@ export const FixtureProbe = {
       const nativeAuth = (["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-87"].includes(input.probeId) && input.caseId === undefined) || (input.caseId === "native-auth-cli" && ["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-87", "AT-hermes-config-78", "AT-ops-55"].includes(input.probeId));
       const roleDenials = (input.caseId === undefined || input.caseId === "control-filesystem-denial") && input.probeId === "AT-authority-35";
       const queueFaults = input.probeId === "AT-obligations-76" && (input.caseId === undefined || input.caseId === "queue-transaction-faults");
-      const backupCapacity = input.caseId === "backup-capacity" && ["AT-ops-62", "AT-lifestore-63", "AT-sources-216"].includes(input.probeId);
+      const backupCapacity = ["AT-ops-62", "AT-lifestore-63", "AT-sources-216"].includes(input.probeId) && (input.caseId === "backup-capacity" || (input.caseId === undefined && sourceRegistration?.owner === "ops" && sourceRegistration.scenarioId === "backup-capacity"));
       if (checks.length > 0 && !reference && !(modelPolicy || modelStream || profileConsumers || mcpHttp || accounting || componentComparison || capacityTrial || nativeEligibility || nativeAuth || backupCapacity || roleDenials || queueFaults)) refuse("INVALID_INPUT");
       if (profileConsumers && checks.some(check => check.id !== "profile.native-gateway" || check.owner !== "hermes")) refuse("INVALID_INPUT");
       if (mcpHttp && checks.some(check => check.id !== "profile.native-mcp-http" || check.owner !== "hermes")) refuse("INVALID_INPUT");

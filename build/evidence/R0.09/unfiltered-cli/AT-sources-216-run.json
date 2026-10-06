@@ -1,0 +1,267 @@
+{
+  "schemaVersion": "toy.cli.v1",
+  "commandId": "probe.run",
+  "invocationId": "b5c47310-0036-4e8d-8716-408972a732d6",
+  "generatedAt": "2026-10-06T23:12:08.319Z",
+  "cliVersion": "1.0.0",
+  "contractsVersion": "1.0.0",
+  "schemaDigest": "0b271593090f9fc0815b3154f2e74414cd7933005b5d974e398c2c4ad667b05c",
+  "environment": {
+    "kind": "test",
+    "instanceId": null,
+    "stackId": "a1acca5e-a9e3-4a80-889d-dd80f3095b19"
+  },
+  "meta": {
+    "exitCode": 0,
+    "releaseDigest": null,
+    "controlDigest": null,
+    "evaluatedAt": null,
+    "operationId": null,
+    "effectState": "confirmed",
+    "recordRefs": [],
+    "evidence": []
+  },
+  "ok": true,
+  "data": {
+    "operation": {
+      "operationId": "b522ec6f-a944-4598-b5ea-35e29b5528a4",
+      "state": "succeeded",
+      "acceptedAt": "2026-10-06T23:12:08.317Z"
+    },
+    "requestId": "930db620-66c5-48fa-a48d-f1e81c43909c",
+    "stackId": "a1acca5e-a9e3-4a80-889d-dd80f3095b19",
+    "result": {
+      "probeId": "AT-sources-216",
+      "caseManifestDigest": "0cb547c27e8fe77e330b6bd6001f7e24e4d52dc4af50cb319339aa2e05bef991",
+      "cases": [
+        {
+          "id": "backup.capacity",
+          "owner": "ops",
+          "state": "PASS",
+          "checkedAt": "2026-10-06T23:12:08.316Z",
+          "reasonCode": "NO_SPEND_CAPACITY_FIXTURE_PASS",
+          "prerequisite": "{\"fixture\":\"fixed-external-storage-and-growth\",\"scenario\":\"missing-external-b2-free-cap-exceeded\",\"primaryAvailableBytes\":\"40000000000\",\"stagingWriteBytes\":\"1000000000\",\"requirements\":{\"state\":\"measured\",\"retainedBytes\":\"2000000000\",\"dumpBytes\":\"1000000000\",\"versionBytes\":\"500000000\",\"stagingBytes\":\"1000000000\",\"pruneScratchBytes\":\"500000000\",\"restoreWorkspaceBytes\":\"2000000000\",\"shortGrowthBytesPerDay\":\"100000000\",\"longGrowthBytesPerDay\":\"200000000\",\"horizonDays\":\"30\"},\"destinations\":[{\"kind\":\"external\",\"state\":\"missing\",\"availableBytes\":null},{\"kind\":\"b2\",\"state\":\"ready\",\"availableBytes\":\"10000000000\"},{\"kind\":\"internal-snapshot\",\"state\":\"ready\",\"availableBytes\":\"100000000000\"}],\"decision\":{\"observedAt\":\"2026-10-06T00:00:00.000Z\",\"verdict\":\"FAIL\",\"requiredBytes\":\"13000000000\",\"growthBytesPerDay\":\"200000000\",\"destinations\":[{\"kind\":\"external\",\"state\":\"blocked\",\"reasons\":[\"DESTINATION_MISSING\",\"INVENTORY_UNPROVEN\"],\"remainingDays\":null},{\"kind\":\"b2\",\"state\":\"blocked\",\"reasons\":[\"CAPACITY_EXCEEDED\"],\"remainingDays\":\"15\"},{\"kind\":\"internal-snapshot\",\"state\":\"blocked\",\"reasons\":[\"INTERNAL_SNAPSHOT\"],\"remainingDays\":\"465\"}],\"independentDestinationCount\":0,\"disasterRpo\":\"unattainable\",\"staging\":\"eligible-for-testing\",\"pauseLowPriority\":true,\"gaps\":[\"OFFSITE_CAPACITY_UNAVAILABLE\"],\"sealedPartialSets\":\"reuse-before-new-staging\",\"deletePermittedData\":false,\"purchaseAssumed\":false,\"uploadPermitted\":false,\"deployedCoverageVerified\":false},\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "2d5307018e0e1e57709262b4ef38d73093e7d3f66cb90033cc06fda6d987c2c9",
+              "debeda916badaef8ba8391bfb08eef75e1f523726db81a12adff9c6d0fe360a6"
+            ]
+          }
+        },
+        {
+          "id": "backup.capacity",
+          "owner": "ops",
+          "state": "PASS",
+          "checkedAt": "2026-10-06T23:12:08.316Z",
+          "reasonCode": "NO_SPEND_CAPACITY_FIXTURE_PASS",
+          "prerequisite": "{\"fixture\":\"fixed-external-storage-and-growth\",\"scenario\":\"unproved-offsite-capacity\",\"primaryAvailableBytes\":\"40000000000\",\"stagingWriteBytes\":\"1000000000\",\"requirements\":{\"state\":\"measured\",\"retainedBytes\":\"2000000000\",\"dumpBytes\":\"1000000000\",\"versionBytes\":\"500000000\",\"stagingBytes\":\"1000000000\",\"pruneScratchBytes\":\"500000000\",\"restoreWorkspaceBytes\":\"2000000000\",\"shortGrowthBytesPerDay\":\"100000000\",\"longGrowthBytesPerDay\":\"200000000\",\"horizonDays\":\"30\"},\"destinations\":[{\"kind\":\"external\",\"state\":\"ready\",\"availableBytes\":\"60000000000\"},{\"kind\":\"b2\",\"state\":\"ready\",\"availableBytes\":\"50000000000\"},{\"kind\":\"internal-snapshot\",\"state\":\"ready\",\"availableBytes\":\"100000000000\"}],\"decision\":{\"observedAt\":\"2026-10-06T00:00:00.000Z\",\"verdict\":\"INCOMPLETE\",\"requiredBytes\":\"13000000000\",\"growthBytesPerDay\":\"200000000\",\"destinations\":[{\"kind\":\"external\",\"state\":\"eligible-for-testing\",\"reasons\":[],\"remainingDays\":\"265\"},{\"kind\":\"b2\",\"state\":\"unavailable\",\"reasons\":[\"INVENTORY_UNPROVEN\"],\"remainingDays\":\"215\"},{\"kind\":\"internal-snapshot\",\"state\":\"blocked\",\"reasons\":[\"INTERNAL_SNAPSHOT\"],\"remainingDays\":\"465\"}],\"independentDestinationCount\":1,\"disasterRpo\":\"unproven\",\"staging\":\"eligible-for-testing\",\"pauseLowPriority\":true,\"gaps\":[\"OFFSITE_CAPACITY_UNAVAILABLE\"],\"sealedPartialSets\":\"reuse-before-new-staging\",\"deletePermittedData\":false,\"purchaseAssumed\":false,\"uploadPermitted\":false,\"deployedCoverageVerified\":false},\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "2d5307018e0e1e57709262b4ef38d73093e7d3f66cb90033cc06fda6d987c2c9",
+              "debeda916badaef8ba8391bfb08eef75e1f523726db81a12adff9c6d0fe360a6"
+            ]
+          }
+        },
+        {
+          "id": "backup.capacity",
+          "owner": "ops",
+          "state": "PASS",
+          "checkedAt": "2026-10-06T23:12:08.316Z",
+          "reasonCode": "NO_SPEND_CAPACITY_FIXTURE_PASS",
+          "prerequisite": "{\"fixture\":\"fixed-external-storage-and-growth\",\"scenario\":\"outage-and-staging-floor-equality\",\"primaryAvailableBytes\":\"10000000000\",\"stagingWriteBytes\":\"1000000000\",\"requirements\":{\"state\":\"measured\",\"retainedBytes\":\"2000000000\",\"dumpBytes\":\"1000000000\",\"versionBytes\":\"500000000\",\"stagingBytes\":\"1000000000\",\"pruneScratchBytes\":\"500000000\",\"restoreWorkspaceBytes\":\"2000000000\",\"shortGrowthBytesPerDay\":\"100000000\",\"longGrowthBytesPerDay\":\"200000000\",\"horizonDays\":\"30\"},\"destinations\":[{\"kind\":\"external\",\"state\":\"ready\",\"availableBytes\":\"60000000000\"},{\"kind\":\"b2\",\"state\":\"outage\",\"availableBytes\":\"50000000000\"},{\"kind\":\"internal-snapshot\",\"state\":\"ready\",\"availableBytes\":\"100000000000\"}],\"decision\":{\"observedAt\":\"2026-10-06T00:00:00.000Z\",\"verdict\":\"FAIL\",\"requiredBytes\":\"13000000000\",\"growthBytesPerDay\":\"200000000\",\"destinations\":[{\"kind\":\"external\",\"state\":\"eligible-for-testing\",\"reasons\":[],\"remainingDays\":\"265\"},{\"kind\":\"b2\",\"state\":\"blocked\",\"reasons\":[\"DESTINATION_OUTAGE\"],\"remainingDays\":\"215\"},{\"kind\":\"internal-snapshot\",\"state\":\"blocked\",\"reasons\":[\"INTERNAL_SNAPSHOT\"],\"remainingDays\":\"465\"}],\"independentDestinationCount\":1,\"disasterRpo\":\"unattainable\",\"staging\":\"refused\",\"pauseLowPriority\":true,\"gaps\":[\"STAGING_FLOOR\",\"NONCRITICAL_DISK_FLOOR\",\"DESTINATION_OUTAGE\",\"OFFSITE_CAPACITY_UNAVAILABLE\"],\"sealedPartialSets\":\"reuse-before-new-staging\",\"deletePermittedData\":false,\"purchaseAssumed\":false,\"uploadPermitted\":false,\"deployedCoverageVerified\":false},\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "2d5307018e0e1e57709262b4ef38d73093e7d3f66cb90033cc06fda6d987c2c9",
+              "debeda916badaef8ba8391bfb08eef75e1f523726db81a12adff9c6d0fe360a6"
+            ]
+          }
+        },
+        {
+          "id": "backup.capacity",
+          "owner": "ops",
+          "state": "PASS",
+          "checkedAt": "2026-10-06T23:12:08.316Z",
+          "reasonCode": "NO_SPEND_CAPACITY_FIXTURE_PASS",
+          "prerequisite": "{\"fixture\":\"fixed-external-storage-and-growth\",\"scenario\":\"next-write-crosses-staging-floor\",\"primaryAvailableBytes\":\"10000001000\",\"stagingWriteBytes\":\"1001\",\"requirements\":{\"state\":\"measured\",\"retainedBytes\":\"2000000000\",\"dumpBytes\":\"1000000000\",\"versionBytes\":\"500000000\",\"stagingBytes\":\"1000000000\",\"pruneScratchBytes\":\"500000000\",\"restoreWorkspaceBytes\":\"2000000000\",\"shortGrowthBytesPerDay\":\"100000000\",\"longGrowthBytesPerDay\":\"200000000\",\"horizonDays\":\"30\"},\"destinations\":[{\"kind\":\"external\",\"state\":\"ready\",\"availableBytes\":\"60000000000\"},{\"kind\":\"b2\",\"state\":\"ready\",\"availableBytes\":\"50000000000\"},{\"kind\":\"internal-snapshot\",\"state\":\"ready\",\"availableBytes\":\"100000000000\"}],\"decision\":{\"observedAt\":\"2026-10-06T00:00:00.000Z\",\"verdict\":\"FAIL\",\"requiredBytes\":\"13000000000\",\"growthBytesPerDay\":\"200000000\",\"destinations\":[{\"kind\":\"external\",\"state\":\"eligible-for-testing\",\"reasons\":[],\"remainingDays\":\"265\"},{\"kind\":\"b2\",\"state\":\"eligible-for-testing\",\"reasons\":[],\"remainingDays\":\"215\"},{\"kind\":\"internal-snapshot\",\"state\":\"blocked\",\"reasons\":[\"INTERNAL_SNAPSHOT\"],\"remainingDays\":\"465\"}],\"independentDestinationCount\":2,\"disasterRpo\":\"eligible-for-testing\",\"staging\":\"refused\",\"pauseLowPriority\":true,\"gaps\":[\"STAGING_FLOOR\",\"NONCRITICAL_DISK_FLOOR\"],\"sealedPartialSets\":\"reuse-before-new-staging\",\"deletePermittedData\":false,\"purchaseAssumed\":false,\"uploadPermitted\":false,\"deployedCoverageVerified\":false},\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "2d5307018e0e1e57709262b4ef38d73093e7d3f66cb90033cc06fda6d987c2c9",
+              "debeda916badaef8ba8391bfb08eef75e1f523726db81a12adff9c6d0fe360a6"
+            ]
+          }
+        },
+        {
+          "id": "backup.capacity",
+          "owner": "ops",
+          "state": "PASS",
+          "checkedAt": "2026-10-06T23:12:08.316Z",
+          "reasonCode": "NO_SPEND_CAPACITY_FIXTURE_PASS",
+          "prerequisite": "{\"fixture\":\"fixed-external-storage-and-growth\",\"scenario\":\"growth-and-all-overhead-control\",\"primaryAvailableBytes\":\"40000000000\",\"stagingWriteBytes\":\"1000000000\",\"requirements\":{\"state\":\"measured\",\"retainedBytes\":\"2000000000\",\"dumpBytes\":\"1000000000\",\"versionBytes\":\"500000000\",\"stagingBytes\":\"1000000000\",\"pruneScratchBytes\":\"500000000\",\"restoreWorkspaceBytes\":\"2000000000\",\"shortGrowthBytesPerDay\":\"100000000\",\"longGrowthBytesPerDay\":\"200000000\",\"horizonDays\":\"30\"},\"destinations\":[{\"kind\":\"external\",\"state\":\"ready\",\"availableBytes\":\"60000000000\"},{\"kind\":\"b2\",\"state\":\"ready\",\"availableBytes\":\"50000000000\"},{\"kind\":\"internal-snapshot\",\"state\":\"ready\",\"availableBytes\":\"100000000000\"}],\"decision\":{\"observedAt\":\"2026-10-06T00:00:00.000Z\",\"verdict\":\"PASS\",\"requiredBytes\":\"13000000000\",\"growthBytesPerDay\":\"200000000\",\"destinations\":[{\"kind\":\"external\",\"state\":\"eligible-for-testing\",\"reasons\":[],\"remainingDays\":\"265\"},{\"kind\":\"b2\",\"state\":\"eligible-for-testing\",\"reasons\":[],\"remainingDays\":\"215\"},{\"kind\":\"internal-snapshot\",\"state\":\"blocked\",\"reasons\":[\"INTERNAL_SNAPSHOT\"],\"remainingDays\":\"465\"}],\"independentDestinationCount\":2,\"disasterRpo\":\"eligible-for-testing\",\"staging\":\"eligible-for-testing\",\"pauseLowPriority\":false,\"gaps\":[],\"sealedPartialSets\":\"reuse-before-new-staging\",\"deletePermittedData\":false,\"purchaseAssumed\":false,\"uploadPermitted\":false,\"deployedCoverageVerified\":false},\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "2d5307018e0e1e57709262b4ef38d73093e7d3f66cb90033cc06fda6d987c2c9",
+              "debeda916badaef8ba8391bfb08eef75e1f523726db81a12adff9c6d0fe360a6"
+            ]
+          }
+        },
+        {
+          "id": "backup.capacity",
+          "owner": "ops",
+          "state": "PASS",
+          "checkedAt": "2026-10-06T23:12:08.316Z",
+          "reasonCode": "NO_SPEND_CAPACITY_FIXTURE_PASS",
+          "prerequisite": "{\"fixture\":\"fixed-external-storage-and-growth\",\"scenario\":\"internal-snapshot-never-independent\",\"primaryAvailableBytes\":\"40000000000\",\"stagingWriteBytes\":\"1000000000\",\"requirements\":{\"state\":\"measured\",\"retainedBytes\":\"2000000000\",\"dumpBytes\":\"1000000000\",\"versionBytes\":\"500000000\",\"stagingBytes\":\"1000000000\",\"pruneScratchBytes\":\"500000000\",\"restoreWorkspaceBytes\":\"2000000000\",\"shortGrowthBytesPerDay\":\"100000000\",\"longGrowthBytesPerDay\":\"200000000\",\"horizonDays\":\"30\"},\"destinations\":[{\"kind\":\"external\",\"state\":\"ready\",\"availableBytes\":\"60000000000\"},{\"kind\":\"b2\",\"state\":\"ready\",\"availableBytes\":\"50000000000\"},{\"kind\":\"internal-snapshot\",\"state\":\"ready\",\"availableBytes\":\"100000000000\"}],\"decision\":{\"observedAt\":\"2026-10-06T00:00:00.000Z\",\"verdict\":\"PASS\",\"requiredBytes\":\"13000000000\",\"growthBytesPerDay\":\"200000000\",\"destinations\":[{\"kind\":\"external\",\"state\":\"eligible-for-testing\",\"reasons\":[],\"remainingDays\":\"265\"},{\"kind\":\"b2\",\"state\":\"eligible-for-testing\",\"reasons\":[],\"remainingDays\":\"215\"},{\"kind\":\"internal-snapshot\",\"state\":\"blocked\",\"reasons\":[\"INTERNAL_SNAPSHOT\"],\"remainingDays\":\"465\"}],\"independentDestinationCount\":2,\"disasterRpo\":\"eligible-for-testing\",\"staging\":\"eligible-for-testing\",\"pauseLowPriority\":false,\"gaps\":[],\"sealedPartialSets\":\"reuse-before-new-staging\",\"deletePermittedData\":false,\"purchaseAssumed\":false,\"uploadPermitted\":false,\"deployedCoverageVerified\":false},\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "2d5307018e0e1e57709262b4ef38d73093e7d3f66cb90033cc06fda6d987c2c9",
+              "debeda916badaef8ba8391bfb08eef75e1f523726db81a12adff9c6d0fe360a6"
+            ]
+          }
+        },
+        {
+          "id": "backup.capacity",
+          "owner": "ops",
+          "state": "PASS",
+          "checkedAt": "2026-10-06T23:12:08.316Z",
+          "reasonCode": "NO_SPEND_CAPACITY_FIXTURE_PASS",
+          "prerequisite": "{\"fixture\":\"fixed-external-storage-and-growth\",\"scenario\":\"unmeasured-growth-stays-incomplete\",\"primaryAvailableBytes\":\"40000000000\",\"stagingWriteBytes\":\"1000000000\",\"requirements\":{\"state\":\"unmeasured\",\"retainedBytes\":\"2000000000\",\"dumpBytes\":\"1000000000\",\"versionBytes\":\"500000000\",\"stagingBytes\":\"1000000000\",\"pruneScratchBytes\":\"500000000\",\"restoreWorkspaceBytes\":\"2000000000\",\"shortGrowthBytesPerDay\":\"100000000\",\"longGrowthBytesPerDay\":\"200000000\",\"horizonDays\":\"30\"},\"destinations\":[{\"kind\":\"external\",\"state\":\"ready\",\"availableBytes\":\"60000000000\"},{\"kind\":\"b2\",\"state\":\"ready\",\"availableBytes\":\"50000000000\"},{\"kind\":\"internal-snapshot\",\"state\":\"ready\",\"availableBytes\":\"100000000000\"}],\"decision\":{\"observedAt\":\"2026-10-06T00:00:00.000Z\",\"verdict\":\"INCOMPLETE\",\"requiredBytes\":null,\"growthBytesPerDay\":null,\"destinations\":[{\"kind\":\"external\",\"state\":\"unavailable\",\"reasons\":[\"FORECAST_UNPROVEN\"],\"remainingDays\":null},{\"kind\":\"b2\",\"state\":\"unavailable\",\"reasons\":[\"FORECAST_UNPROVEN\"],\"remainingDays\":null},{\"kind\":\"internal-snapshot\",\"state\":\"blocked\",\"reasons\":[\"INTERNAL_SNAPSHOT\",\"FORECAST_UNPROVEN\"],\"remainingDays\":null}],\"independentDestinationCount\":0,\"disasterRpo\":\"unproven\",\"staging\":\"eligible-for-testing\",\"pauseLowPriority\":true,\"gaps\":[\"FORECAST_UNPROVEN\",\"OFFSITE_CAPACITY_UNAVAILABLE\"],\"sealedPartialSets\":\"reuse-before-new-staging\",\"deletePermittedData\":false,\"purchaseAssumed\":false,\"uploadPermitted\":false,\"deployedCoverageVerified\":false},\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "2d5307018e0e1e57709262b4ef38d73093e7d3f66cb90033cc06fda6d987c2c9",
+              "debeda916badaef8ba8391bfb08eef75e1f523726db81a12adff9c6d0fe360a6"
+            ]
+          }
+        },
+        {
+          "id": "backup.capacity",
+          "owner": "ops",
+          "state": "PASS",
+          "checkedAt": "2026-10-06T23:12:08.317Z",
+          "reasonCode": "NO_SPEND_CAPACITY_FIXTURE_PASS",
+          "prerequisite": "{\"fixture\":\"fixed-external-storage-and-growth\",\"scenario\":\"forecast-overflow-refuses\",\"primaryAvailableBytes\":\"40000000000\",\"stagingWriteBytes\":\"1000000000\",\"requirements\":{\"state\":\"measured\",\"retainedBytes\":\"18446744073709551615\",\"dumpBytes\":\"1000000000\",\"versionBytes\":\"500000000\",\"stagingBytes\":\"1000000000\",\"pruneScratchBytes\":\"500000000\",\"restoreWorkspaceBytes\":\"2000000000\",\"shortGrowthBytesPerDay\":\"100000000\",\"longGrowthBytesPerDay\":\"200000000\",\"horizonDays\":\"30\"},\"destinations\":[{\"kind\":\"external\",\"state\":\"ready\",\"availableBytes\":\"60000000000\"},{\"kind\":\"b2\",\"state\":\"ready\",\"availableBytes\":\"50000000000\"},{\"kind\":\"internal-snapshot\",\"state\":\"ready\",\"availableBytes\":\"100000000000\"}],\"decision\":{\"observedAt\":\"2026-10-06T00:00:00.000Z\",\"verdict\":\"FAIL\",\"requiredBytes\":null,\"growthBytesPerDay\":\"200000000\",\"destinations\":[{\"kind\":\"external\",\"state\":\"blocked\",\"reasons\":[\"FORECAST_OVERFLOW\"],\"remainingDays\":null},{\"kind\":\"b2\",\"state\":\"blocked\",\"reasons\":[\"FORECAST_OVERFLOW\"],\"remainingDays\":null},{\"kind\":\"internal-snapshot\",\"state\":\"blocked\",\"reasons\":[\"INTERNAL_SNAPSHOT\",\"FORECAST_OVERFLOW\"],\"remainingDays\":null}],\"independentDestinationCount\":0,\"disasterRpo\":\"unattainable\",\"staging\":\"eligible-for-testing\",\"pauseLowPriority\":true,\"gaps\":[\"FORECAST_OVERFLOW\",\"OFFSITE_CAPACITY_UNAVAILABLE\"],\"sealedPartialSets\":\"reuse-before-new-staging\",\"deletePermittedData\":false,\"purchaseAssumed\":false,\"uploadPermitted\":false,\"deployedCoverageVerified\":false},\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "2d5307018e0e1e57709262b4ef38d73093e7d3f66cb90033cc06fda6d987c2c9",
+              "debeda916badaef8ba8391bfb08eef75e1f523726db81a12adff9c6d0fe360a6"
+            ]
+          }
+        }
+      ],
+      "state": "NOT_IMPLEMENTED",
+      "complete": false,
+      "links": {
+        "recordRefs": [],
+        "observations": [],
+        "artifactDigests": []
+      },
+      "sourceRegistration": {
+        "id": "AT-sources-216",
+        "rung": "CLI",
+        "sourceAssertionHash": "2d8d97577f6e4eb0bfd5eadc41fa9d7b40e8664b426fac12a5ab2ed577d64abb",
+        "commandId": "probe.run",
+        "scenarioId": "backup-capacity",
+        "owner": "ops",
+        "firstRelease": "R0",
+        "kind": "behavioral",
+        "mandatoryCases": [
+          {
+            "id": "missing-external-b2-free-cap-exceeded",
+            "publicOperation": "BackupCapacityProbe.run",
+            "phase": "missing-external-b2-free-cap-exceeded"
+          },
+          {
+            "id": "unproved-offsite-capacity",
+            "publicOperation": "BackupCapacityProbe.run",
+            "phase": "unproved-offsite-capacity"
+          },
+          {
+            "id": "outage-and-staging-floor-equality",
+            "publicOperation": "BackupCapacityProbe.run",
+            "phase": "outage-and-staging-floor-equality"
+          },
+          {
+            "id": "next-write-crosses-staging-floor",
+            "publicOperation": "BackupCapacityProbe.run",
+            "phase": "next-write-crosses-staging-floor"
+          },
+          {
+            "id": "growth-and-all-overhead-control",
+            "publicOperation": "BackupCapacityProbe.run",
+            "phase": "growth-and-all-overhead-control"
+          },
+          {
+            "id": "internal-snapshot-never-independent",
+            "publicOperation": "BackupCapacityProbe.run",
+            "phase": "internal-snapshot-never-independent"
+          },
+          {
+            "id": "unmeasured-growth-stays-incomplete",
+            "publicOperation": "BackupCapacityProbe.run",
+            "phase": "unmeasured-growth-stays-incomplete"
+          },
+          {
+            "id": "forecast-overflow-refuses",
+            "publicOperation": "BackupCapacityProbe.run",
+            "phase": "forecast-overflow-refuses"
+          }
+        ],
+        "trigger": "Evaluate all eight existing fixed no-spend storage/growth cells through the public Ops probe and persist their source-bound decisions. Actual accounts, restore and Sources effects remain pending.",
+        "faultControls": [],
+        "observations": [
+          {
+            "id": "decision-cells",
+            "independentReader": "Public BackupCapacity evaluation and persisted probe.show scenario/decision readback",
+            "caseIds": [
+              "missing-external-b2-free-cap-exceeded",
+              "unproved-offsite-capacity",
+              "outage-and-staging-floor-equality",
+              "next-write-crosses-staging-floor",
+              "growth-and-all-overhead-control",
+              "internal-snapshot-never-independent",
+              "unmeasured-growth-stays-incomplete",
+              "forecast-overflow-refuses"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot inspect this administrative pre-build capacity inventory. CLI exercises the public owner with fixed external storage/growth inputs; no real destination or restore is claimed."
+      }
+    },
+    "links": {
+      "recordRefs": [],
+      "observations": [],
+      "artifactDigests": []
+    },
+    "probeId": "AT-sources-216",
+    "binding": {
+      "releaseDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+      "controlDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+      "schemaDigest": "0b271593090f9fc0815b3154f2e74414cd7933005b5d974e398c2c4ad667b05c",
+      "fixtureDigest": "b6edc7799acfe024132ada96857c49b22263db56dc4e5416b29669fb64967944"
+    },
+    "caseManifestDigest": "0cb547c27e8fe77e330b6bd6001f7e24e4d52dc4af50cb319339aa2e05bef991"
+  }
+}

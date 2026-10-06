@@ -2,9 +2,9 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-06T23:07:14.875816+00:00",
+  "updatedAt": "2026-10-06T23:13:52.246825+00:00",
   "phase": "R0_FEASIBILITY",
-  "activeCard": "R0.10",
+  "activeCard": "R0.09",
   "cardCount": 87,
   "acceptanceCount": 1447,
   "cards": {
@@ -1439,7 +1439,12 @@
       "evidence": [
         "build/evidence/R0.09/storage-preparation.json",
         "build/evidence/R0.09/capacity-fixture-verification.json",
-        "build/evidence/R0.09/remote-capacity-browser-inventory.json"
+        "build/evidence/R0.09/remote-capacity-browser-inventory.json",
+        "build/evidence/R0.09/next-unfiltered-minimum-plan.json",
+        "build/evidence/R0.09/unfiltered-baseline.json",
+        "build/evidence/R0.09/unfiltered-verification.json",
+        "build/evidence/R0.09/unfiltered-check-result.json",
+        "build/evidence/R0.09/unfiltered-root-pins-final.json"
       ],
       "requiredATs": [
         "AT-lifestore-63",
@@ -1484,6 +1489,45 @@
         "wholeATsPassed": [],
         "stoppedAt": "2026-10-06T10:38:55.221804+00:00",
         "evidence": "build/evidence/R0.09/capacity-fixture-verification.json"
+      },
+      "unfilteredManifestUnit": {
+        "status": "STOPPED_AFTER_ASSIGNED_UNFILTERED_DIAGNOSTIC_PASS",
+        "startedAt": "2026-10-06T23:09:08.773Z",
+        "stoppedAt": "2026-10-06T23:13:52.246825+00:00",
+        "timeboxSeconds": 7200,
+        "plan": "build/evidence/R0.09/next-unfiltered-minimum-plan.json",
+        "baseline": "build/evidence/R0.09/unfiltered-baseline.json",
+        "evidence": "build/evidence/R0.09/unfiltered-verification.json",
+        "passedDiagnostics": 24,
+        "sourceRegistrationVerified": true,
+        "mandatoryCellBindingExact": true,
+        "runShowExact": true,
+        "ownedWorldDown": true,
+        "newContracts": false,
+        "existingPolicyChanged": false,
+        "remoteOrAccountEvidenceVerified": false,
+        "restoreVerified": false,
+        "actualSourcesEffectsVerified": false,
+        "wholeATsPassed": [],
+        "acceptanceComplete": false,
+        "strictCheck": {
+          "recordedAt": "2026-10-06T23:13:52.246825+00:00",
+          "command": "npm run check",
+          "exitCode": 0,
+          "artifacts": 382,
+          "contracts": 314,
+          "cliManifests": 28,
+          "features": 99,
+          "commands": 55,
+          "indexedATs": 1447,
+          "schemaDigest": "0b271593090f9fc0815b3154f2e74414cd7933005b5d974e398c2c4ad667b05c",
+          "evidence": "build/evidence/R0.09/unfiltered-check-output.txt",
+          "languages": [
+            "TypeScript",
+            "Python"
+          ],
+          "SwiftDeferredTo": "R3"
+        }
       }
     },
     "R0.10": {
@@ -10564,7 +10608,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Commit and push the verified R0.10 MCP HTTP and independent R0.08 unfiltered manifest units; poll ROOT-REQUESTS and prioritize R0.01 on exact root02 DONE, otherwise continue the smallest independent R0 unit. No whole acceptance promotion.",
+  "nextAction": "Commit/push the verified R0.09 manifest unit; poll ROOT-REQUESTS and immediately prioritize R0.01 on exact root02 DONE, otherwise review the independent R0.10 TS/Python DTO minimum plan. Swift remains deferred to R3; no whole acceptance promotion.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -21143,24 +21187,24 @@
     "queuedRootReserveAdmissionGate": false
   },
   "latestStaticVerification": {
-    "recordedAt": "2026-10-06T23:07:14.875816+00:00",
+    "recordedAt": "2026-10-06T23:13:52.246825+00:00",
     "command": "npm run check",
     "exitCode": 0,
     "artifacts": 382,
     "contracts": 314,
-    "cliManifests": 25,
+    "cliManifests": 28,
     "features": 99,
     "commands": 55,
     "indexedATs": 1447,
     "schemaDigest": "0b271593090f9fc0815b3154f2e74414cd7933005b5d974e398c2c4ad667b05c",
-    "evidence": "build/evidence/R0.10/mcp81-check-output.txt",
+    "evidence": "build/evidence/R0.09/unfiltered-check-output.txt",
     "languages": [
       "TypeScript",
       "Python"
     ],
     "SwiftDeferredTo": "R3"
   },
-  "sourceCheckpointCommit": "5f56a3b",
+  "sourceCheckpointCommit": "f086417",
   "sourceCheckpointPushed": true,
   "rootRequests": {
     "ROOT-R004-20261006-01": {
@@ -21200,15 +21244,15 @@
     }
   },
   "resourceAdmission": {
-    "measuredAt": "2026-10-06T23:05:18.193Z",
-    "availableBytes": "2276753408",
+    "measuredAt": "2026-10-06T23:09:08.773Z",
+    "availableBytes": "2309029888",
     "pressure": "normal",
     "strictlyFreeAdmission": false,
     "repairFloorApplied": false,
     "ownedWorldsRunning": 0,
     "helpersRunning": 1,
     "helperNeedBytes": "268435456",
-    "measurementSource": "build/evidence/R0.10/mcp81-current-doctor.json",
+    "measurementSource": "build/evidence/R0.09/unfiltered-baseline-cli/up.json",
     "marginBytes": "536870912",
     "ownedStackId": null,
     "stackAndNativeChildrenNeedBytes": "0",
@@ -21220,15 +21264,15 @@
   },
   "activeWorkers": [
     {
-      "task": "r005_control_probe_review",
-      "card": "R0.09",
+      "task": "r010_pin_revalidation",
+      "card": "R0.10",
       "model": "gpt-6-luna",
       "reasoning": "max",
       "state": "running_read_only",
-      "scope": "build/evidence/R0.09/next-unfiltered-minimum-plan.json only",
-      "deadlineUtc": "2026-10-06T23:35:18Z",
-      "admissionObservedAt": "2026-10-06T23:05:18.193Z",
-      "availableBytes": "2276753408",
+      "scope": "build/evidence/R0.10/dto-roundtrip-next-minimum-plan.json only",
+      "deadlineUtc": "2026-10-06T23:39:08Z",
+      "admissionObservedAt": "2026-10-06T23:09:08.773Z",
+      "availableBytes": "2309029888",
       "pressure": "normal",
       "ownNeedBytes": "268435456",
       "marginBytes": "536870912"

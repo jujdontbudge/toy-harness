@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
-import { backupCapacityInputSchema, checkViewSchema, opsErrorMessages, registeredProbeInputSchema } from "@toy/contracts";
+import { backupCapacityInputSchema, checkViewSchema, opsErrorMessages, registeredCliAcceptanceManifestInventory, registeredCliProbeInventory, registeredProbeInputSchema } from "@toy/contracts";
 import type {
   BackupCapacityDecisionV1, BackupCapacityDestinationV1, BackupCapacityInputV1, CheckViewV1, OpsControlContextV1,
   RegisteredProbeInputV1, RegisteredProbeOperationV1, Result
@@ -9,6 +9,19 @@ import { BackupCapacity } from "./backup-capacity.js";
 import { FixtureProbe, fixtureStackInspect } from "./fixture-stack.js";
 
 const checkedAt = "2026-10-06T00:00:00.000Z";
+const probeIds = ["AT-ops-62", "AT-lifestore-63", "AT-sources-216"];
+const cases = ["missing-external-b2-free-cap-exceeded", "unproved-offsite-capacity", "outage-and-staging-floor-equality", "next-write-crosses-staging-floor", "growth-and-all-overhead-control", "internal-snapshot-never-independent", "unmeasured-growth-stays-incomplete", "forecast-overflow-refuses"] as const;
+const manifestMatches = (probeId: RegisteredProbeInputV1["probeId"]): boolean => {
+  const manifest = registeredCliAcceptanceManifestInventory.find(entry => entry.id === probeId);
+  const acceptance = registeredCliProbeInventory.find(entry => entry.id === probeId);
+  return manifest !== undefined && acceptance !== undefined && manifest.sourceAssertionHash === acceptance.sourceAssertionHash
+    && manifest.owner === "ops" && manifest.scenarioId === "backup-capacity" && manifest.firstRelease === "R0"
+    && manifest.kind === "behavioral" && manifest.faultControls.length === 0
+    && manifest.mandatoryCases.length === cases.length
+    && manifest.mandatoryCases.every((entry, index) => entry.id === cases[index] && entry.phase === cases[index] && entry.publicOperation === "BackupCapacityProbe.run")
+    && manifest.observations.length === 1 && manifest.observations[0]?.id === "decision-cells"
+    && JSON.stringify(manifest.observations[0].caseIds) === JSON.stringify(cases);
+};
 const artifacts = (): string[] => ["./backup-capacity.js", "./backup-capacity-probe.js"].map(path => createHash("sha256").update(readFileSync(new URL(path, import.meta.url))).digest("hex"));
 const inventory = (): BackupCapacityInputV1 => {
   const destination = (kind: BackupCapacityDestinationV1["kind"], availableBytes: string): BackupCapacityDestinationV1 => ({
@@ -50,7 +63,7 @@ const fixtureCheck = (scenario: string, input: BackupCapacityInputV1, expected: 
 export const BackupCapacityProbe = {
   run(input: RegisteredProbeInputV1, context: OpsControlContextV1): Result<RegisteredProbeOperationV1> {
     const invalid: Result<RegisteredProbeOperationV1> = { ok: false, error: { module: "ops", code: "INVALID_INPUT", message: opsErrorMessages.INVALID_INPUT, retryable: false } };
-    if (!registeredProbeInputSchema.safeParse(input).success || input.caseId !== "backup-capacity" || !["AT-ops-62", "AT-lifestore-63", "AT-sources-216"].includes(input.probeId)) return invalid;
+    if (!registeredProbeInputSchema.safeParse(input).success || !probeIds.includes(input.probeId) || (input.caseId !== "backup-capacity" && !(input.caseId === undefined && manifestMatches(input.probeId)))) return invalid;
     const owned = fixtureStackInspect(context);
     if (!owned.ok) return owned;
     const snapshot = owned.data.result;
@@ -64,14 +77,14 @@ export const BackupCapacityProbe = {
       const unknownForecast = { ...ready, forecast: { ...ready.forecast, state: "unmeasured" } } satisfies BackupCapacityInputV1;
       const overflow = { ...ready, forecast: { ...ready.forecast, retainedBytes: "18446744073709551615" } };
       const checks = [
-        fixtureCheck("missing-external-b2-free-cap-exceeded", missing, decision => decision.verdict === "FAIL" && decision.disasterRpo === "unattainable" && decision.independentDestinationCount === 0 && decision.destinations.some(destination => destination.kind === "b2" && destination.reasons.includes("CAPACITY_EXCEEDED"))),
-        fixtureCheck("unproved-offsite-capacity", unproved, decision => decision.verdict === "INCOMPLETE" && decision.independentDestinationCount === 1 && decision.pauseLowPriority && decision.gaps.includes("OFFSITE_CAPACITY_UNAVAILABLE")),
-        fixtureCheck("outage-and-staging-floor-equality", outage, decision => decision.verdict === "FAIL" && decision.staging === "refused" && decision.pauseLowPriority && decision.gaps.includes("STAGING_FLOOR") && decision.gaps.includes("DESTINATION_OUTAGE")),
-        fixtureCheck("next-write-crosses-staging-floor", crossing, decision => decision.staging === "refused" && decision.pauseLowPriority && decision.gaps.includes("STAGING_FLOOR")),
-        fixtureCheck("growth-and-all-overhead-control", ready, decision => decision.verdict === "PASS" && decision.requiredBytes === "13000000000" && decision.growthBytesPerDay === "200000000" && decision.independentDestinationCount === 2 && decision.destinations.find(destination => destination.kind === "external")?.remainingDays === "265" && decision.destinations.find(destination => destination.kind === "b2")?.remainingDays === "215" && !decision.pauseLowPriority),
-        fixtureCheck("internal-snapshot-never-independent", ready, decision => decision.independentDestinationCount === 2 && decision.destinations.some(destination => destination.kind === "internal-snapshot" && destination.state === "blocked" && destination.reasons.includes("INTERNAL_SNAPSHOT"))),
-        fixtureCheck("unmeasured-growth-stays-incomplete", unknownForecast, decision => decision.verdict === "INCOMPLETE" && decision.requiredBytes === null && decision.pauseLowPriority && decision.gaps.includes("FORECAST_UNPROVEN")),
-        fixtureCheck("forecast-overflow-refuses", overflow, decision => decision.verdict === "FAIL" && decision.requiredBytes === null && decision.pauseLowPriority && decision.gaps.includes("FORECAST_OVERFLOW"))
+        fixtureCheck(cases[0], missing, decision => decision.verdict === "FAIL" && decision.disasterRpo === "unattainable" && decision.independentDestinationCount === 0 && decision.destinations.some(destination => destination.kind === "b2" && destination.reasons.includes("CAPACITY_EXCEEDED"))),
+        fixtureCheck(cases[1], unproved, decision => decision.verdict === "INCOMPLETE" && decision.independentDestinationCount === 1 && decision.pauseLowPriority && decision.gaps.includes("OFFSITE_CAPACITY_UNAVAILABLE")),
+        fixtureCheck(cases[2], outage, decision => decision.verdict === "FAIL" && decision.staging === "refused" && decision.pauseLowPriority && decision.gaps.includes("STAGING_FLOOR") && decision.gaps.includes("DESTINATION_OUTAGE")),
+        fixtureCheck(cases[3], crossing, decision => decision.staging === "refused" && decision.pauseLowPriority && decision.gaps.includes("STAGING_FLOOR")),
+        fixtureCheck(cases[4], ready, decision => decision.verdict === "PASS" && decision.requiredBytes === "13000000000" && decision.growthBytesPerDay === "200000000" && decision.independentDestinationCount === 2 && decision.destinations.find(destination => destination.kind === "external")?.remainingDays === "265" && decision.destinations.find(destination => destination.kind === "b2")?.remainingDays === "215" && !decision.pauseLowPriority),
+        fixtureCheck(cases[5], ready, decision => decision.independentDestinationCount === 2 && decision.destinations.some(destination => destination.kind === "internal-snapshot" && destination.state === "blocked" && destination.reasons.includes("INTERNAL_SNAPSHOT"))),
+        fixtureCheck(cases[6], unknownForecast, decision => decision.verdict === "INCOMPLETE" && decision.requiredBytes === null && decision.pauseLowPriority && decision.gaps.includes("FORECAST_UNPROVEN")),
+        fixtureCheck(cases[7], overflow, decision => decision.verdict === "FAIL" && decision.requiredBytes === null && decision.pauseLowPriority && decision.gaps.includes("FORECAST_OVERFLOW"))
       ];
       return FixtureProbe.run(input, context, checks);
     } catch { return { ok: false, error: { module: "ops", code: "ATTESTATION_INVALID", message: opsErrorMessages.ATTESTATION_INVALID, retryable: false } }; }

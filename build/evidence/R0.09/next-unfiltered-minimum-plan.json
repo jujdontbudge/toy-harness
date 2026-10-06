@@ -1,0 +1,155 @@
+{
+  "schema": "toy.r0.09-unfiltered-capacity-minimum-plan.v1",
+  "card": "R0.09",
+  "decision": {
+    "unfilteredSourceBoundCoveragePossible": true,
+    "currentSourceReachability": false,
+    "basis": "The existing Ops BackupCapacityProbe.run already emits eight fixed decision cells for each assigned AT through FixtureProbe.run. Current CLI dispatch and both owner/fixture guards admit only the explicit backup-capacity case, and tests/registry.yaml has no acceptance manifests for these ATs. Add exact manifests and narrowly admit unfiltered invocations for these three IDs. This gives source-bound diagnostic receipts only; it does not complete any whole AT."
+  },
+  "admission": {
+    "observedAt": "2026-10-06T23:05:18.193Z",
+    "nativePressure": "normal",
+    "availableBytes": 2276753408,
+    "ownHelperNeedBytes": 268435456,
+    "declaredMarginBytes": 536870912,
+    "admitted": true,
+    "aggregateOrRootReserveUsed": false
+  },
+  "readOnlyBoundary": {
+    "sourceOrStateFilesChanged": false,
+    "runtimeOrStackInvoked": false,
+    "rootPayloadsChanged": false,
+    "externalResearchOrAccountAccess": false
+  },
+  "sourceHashes": {
+    "tests/acceptance-index.json": "c9b645eab7f55b2ebf35d7db769a534a4837de23ad3dc3d913f3189e781d44fa",
+    "tests/registry.yaml": "75ed4cbc4fa41531785211a6d0bbca39449f62510f02b94d42d9da2cb531c881",
+    "cli/src/main.ts": "7d310ea150790ba9fbb80e9363e063f49fa7b2a3847df3f5594c05fc030fe0c5",
+    "packages/ops/src/backup-capacity-probe.ts": "82e3d9ae29ac6b1d80b3c815cb45aafae69dae3ebc6776104b8f3e0bbae36506",
+    "packages/ops/src/backup-capacity.ts": "0b57f10b25a130cae105d1f3ba0b1426e99b36a7a22e0360b205b6864b452d14",
+    "packages/ops/src/fixture-stack.ts": "449a27f5ea86cc9a1211bc8424d8fc20f970b266f1553e4a142e1aaff4231def",
+    "packages/contracts/src/ops-registry.ts": "8e98e2eec08fcc1cf79d8065f01e494ae5cfc4372273e044e41f6b65eb923d6d",
+    "packages/contracts/src/generated-probe-registry.ts": "97553d86dfc3855e0be95867b6bc046fd501b5e599ad4639ef03ee8255d29cf3",
+    "docs/adr/0029-backup-capacity-admission.md": "ff48b15ae875102f46aa9b3f34a0bdc99583b1cd08e338b9162ca1c1dc83012a",
+    "skills/toy-control/FEATURE-MAP.md": "07a0e1371924cd5feafe130587b10b3607ab4ac259d7427149c7e75ad976ff70"
+  },
+  "assignedATs": [
+    {
+      "id": "AT-ops-62",
+      "source": "specs/ops.md:1983",
+      "sourceAssertionHash": "489ca2cac962b2320b4be540c8232020d65a5ed032eb0f0e879446bd70059bc4",
+      "sourceDigest": "f07aab65088c82e4ff21e4d63edb2f279e2324e6d7e2bbb801e0fd7494104b0b",
+      "rung": "CLI",
+      "requiredEvidence": "stack, device/account, probe:AT-ops-62"
+    },
+    {
+      "id": "AT-lifestore-63",
+      "source": "specs/lifestore.md:2430",
+      "sourceAssertionHash": "33af59a30239c658b2475fce5dc48de4ad95de524e63222f988e8b086260e61d",
+      "sourceDigest": "044e33ba76d512c0fcae478f8d4923d2f33c028b8dae94bbdb69d6d4111c1117",
+      "rung": "CLI",
+      "requiredEvidence": "stack, device/account, probe:AT-lifestore-63"
+    },
+    {
+      "id": "AT-sources-216",
+      "source": "specs/sources.md:4209",
+      "sourceAssertionHash": "2d8d97577f6e4eb0bfd5eadc41fa9d7b40e8664b426fac12a5ab2ed577d64abb",
+      "sourceDigest": "7caa4347326c27ed528e96106b729fd9f5d0ae3da69518302b519c98b0fa6645",
+      "rung": "CLI",
+      "requiredEvidence": "stack, probe:AT-sources-216"
+    }
+  ],
+  "currentOwnerAndCells": {
+    "publicOwner": "packages/ops/src/public.ts exports BackupCapacityProbe",
+    "operation": "BackupCapacityProbe.run(input, context)",
+    "persistedOwner": "FixtureProbe.run(input, context, checks)",
+    "currentCLIPath": "cli/src/main.ts dispatches to BackupCapacityProbe only when caseId === backup-capacity; with no --case this branch is skipped",
+    "currentProbeGuard": "packages/ops/src/backup-capacity-probe.ts rejects an absent caseId",
+    "currentFixtureGuard": "packages/ops/src/fixture-stack.ts permits backupCapacity checks only with caseId === backup-capacity",
+    "existingFixedCellScenarios": [
+      "missing-external-b2-free-cap-exceeded",
+      "unproved-offsite-capacity",
+      "outage-and-staging-floor-equality",
+      "next-write-crosses-staging-floor",
+      "growth-and-all-overhead-control",
+      "internal-snapshot-never-independent",
+      "unmeasured-growth-stays-incomplete",
+      "forecast-overflow-refuses"
+    ],
+    "cellBindingCaveat": "Each current CheckView uses id backup.capacity; its distinct fixed scenario name is nested in prerequisite JSON. Source-manifest phases must be compared with those eight exact scenario names, not inferred from eight repeated check IDs."
+  },
+  "currentProofAndGap": {
+    "cardState": "implementation IN_PROGRESS; acceptance PENDING; acceptanceComplete false; wholeATsPassed empty",
+    "localSubsetReceipt": {
+      "path": "build/evidence/R0.09/capacity-fixture-verification.json",
+      "sha256": "28ac4f9e91b093a3410623b30df80d4ef7859df0b8f99af726a5c3bef986ffdd",
+      "verdict": "PASS_CAPACITY_POLICY_CLI_SUBSETS_LOCAL_READ_AND_CLEANUP",
+      "sourceBoundChecks": 24,
+      "fullATComplete": false,
+      "wholeATsPassed": []
+    },
+    "savedProbeReceipt": {
+      "path": "build/evidence/R0.09-capacity-ops-probe.json",
+      "sha256": "d8c7f36375078a3c0b9d904984b168d62ec40bd447cb775de57ae7c49ef9c1ef",
+      "sourceRegistration": null,
+      "resultState": "NOT_IMPLEMENTED",
+      "complete": false,
+      "note": "This historical receipt has no source registration and does not prove the current source path; current source dispatch requires the explicit case."
+    },
+    "manifestInventory": "The three IDs are in generated probe inventory, but absent from tests/registry.yaml acceptance manifests; the saved receipt therefore has sourceRegistration null.",
+    "existingFeatureMap": "skills/toy-control/FEATURE-MAP.md already has ops.backup-capacity and lists these three exact AT IDs and assertion hashes; no new feature, command, or AT is introduced."
+  },
+  "minimumChangeSet": [
+    {
+      "path": "tests/registry.yaml",
+      "change": "Add exactly three CLI acceptance manifests, each keyed to its current sourceAssertionHash, commandId probe.run, scenarioId backup-capacity, owner ops, firstRelease R0, and the same ordered eight mandatory cases. Each case id and phase must equal one existing scenario name and publicOperation must be BackupCapacityProbe.run. Bind observations to all eight names and state that SIM cannot exercise this fixed CLI owner. Do not claim external destination or restore proof in these manifests."
+    },
+    {
+      "path": "cli/src/main.ts",
+      "change": "Add a narrow unfiltered dispatch for only these three AT IDs when their generated manifest has owner ops and scenarioId backup-capacity; preserve the existing explicit backup-capacity route."
+    },
+    {
+      "path": "packages/ops/src/backup-capacity-probe.ts",
+      "change": "For only these three IDs, accept caseId absent or backup-capacity; on the unfiltered path verify the registered manifest source hash/owner/scenario and exact ordered eight-case binding before returning the existing fixed checks. Keep absent/mismatched registration invalid."
+    },
+    {
+      "path": "packages/ops/src/fixture-stack.ts",
+      "change": "Permit the existing backup.capacity checks when the case is absent only for these three exact IDs with a matching generated Ops backup-capacity manifest; retain check owner/id validation and bind the persisted receipt to sourceRegistration."
+    },
+    {
+      "path": "packages/contracts/src/generated-probe-registry.ts",
+      "change": "Regenerate from tests/registry.yaml using the existing canonical generator; do not hand-edit generated output. Existing acceptance manifest and probe schemas support the fields, so no DTO/schema change is indicated."
+    },
+    {
+      "path": "docs/adr/0029-backup-capacity-admission.md",
+      "change": "Update the sentence that currently says the adapter admits the fixed case only, to document additive unfiltered source-bound diagnostic manifests while retaining whole-AT, external-account, and restore limits."
+    }
+  ],
+  "verificationForThatUnitOnly": {
+    "rung": "CLI, matching all three assigned ATs",
+    "commandsWithoutCaseFilter": [
+      "toy probe run AT-ops-62 --env test --stack <owned-stack-uuid> --request-id <fresh-uuid> --json",
+      "toy probe run AT-lifestore-63 --env test --stack <owned-stack-uuid> --request-id <fresh-uuid> --json",
+      "toy probe run AT-sources-216 --env test --stack <owned-stack-uuid> --request-id <fresh-uuid> --json",
+      "toy probe show <operation-uuid> --env test --stack <owned-stack-uuid> --json",
+      "toy stack down --env test --stack <owned-stack-uuid> --request-id <fresh-uuid> --json"
+    ],
+    "readbacks": [
+      "Each run receipt sourceRegistration exactly identifies its own AT/sourceAssertionHash and the backup-capacity scenario.",
+      "Each result exposes the exact eight ordered mandatory scenario names via the check prerequisites, and caseManifestDigest includes the registered source manifest.",
+      "Each show returns the persisted same operation and complete owned fixture teardown is recorded."
+    ],
+    "resultLimit": "These are fixed local decision cells. Preserve result.state NOT_IMPLEMENTED and complete false for whole-result acceptance; per-cell PASS is not any assigned AT PASS."
+  },
+  "acceptanceStillPending": [
+    "AT-ops-62 actual absence/blocked destination and verified free-allowance forecast; no purchase or upload.",
+    "AT-lifestore-63 measured independent-storage inventory and actual destination headroom/no-spend forecast.",
+    "AT-sources-216 actual Sources pause/gap behavior, Ops staging-floor refusal, sealed partial-set reuse, retention of permitted life data, and unproved off-site capacity reporting.",
+    "Harmless independent restore, real backup account/storage evidence, protected-role checks, and all R0.09 whole acceptance gates."
+  ],
+  "rootAndExternalBoundary": {
+    "rootRequestChanges": false,
+    "frozenRootPayloads": "Untouched",
+    "externalAccountOrStorageOps": "Not performed or claimed"
+  }
+}
