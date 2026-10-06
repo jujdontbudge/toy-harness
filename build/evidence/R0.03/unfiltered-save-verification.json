@@ -1,0 +1,413 @@
+{
+  "recordedAt": "2026-10-06T21:18:30.257575+00:00",
+  "card": "R0.03",
+  "rung": "CLI",
+  "unfiltered": true,
+  "baseline": "build/evidence/R0.03/unfiltered-save-baseline.json",
+  "stackId": "668fc8f9-8692-4e0f-bc1d-1ca7f84cf200",
+  "records": [
+    {
+      "AT": "AT-hermes-config-84",
+      "operationId": "7a85704c-b4e2-4351-a54d-5f7f0987b518",
+      "runExit": 0,
+      "showExit": 0,
+      "runShowExact": true,
+      "maximumPrerequisiteLength": 1733,
+      "sourceRegistration": {
+        "id": "AT-hermes-config-84",
+        "rung": "CLI",
+        "sourceAssertionHash": "c3002739bea88d5199c702493f348084adb65b3042fc8f9b679925ffc0d13726",
+        "commandId": "probe.run",
+        "scenarioId": "auth.save-fault",
+        "owner": "hermes",
+        "firstRelease": "R0",
+        "kind": "behavioral",
+        "mandatoryCases": [
+          {
+            "id": "add-enospc",
+            "publicOperation": "hermes --profile toy auth add openai-codex --type oauth --no-browser",
+            "phase": "add-enospc"
+          },
+          {
+            "id": "add-replace-fault",
+            "publicOperation": "hermes --profile toy auth add openai-codex --type oauth --no-browser",
+            "phase": "add-replace-fault"
+          }
+        ],
+        "trigger": "Invoke real public auth-add with registered OS ENOSPC/EIO save faults in disposable profiles; reload each profile in fresh list/chat subprocesses.",
+        "faultControls": [
+          {
+            "id": "profile-store-enospc",
+            "seam": "os",
+            "affectedPhases": [
+              "add-enospc"
+            ]
+          },
+          {
+            "id": "profile-auth-atomic-replace-eio",
+            "seam": "os",
+            "affectedPhases": [
+              "add-replace-fault"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "save-denial",
+            "independentReader": "HermesAuthProbe.run: nonzero add, AUTH_SAVE_DENIED, triggered OS fault, clean streams and no success claim",
+            "caseIds": [
+              "add-enospc",
+              "add-replace-fault"
+            ]
+          },
+          {
+            "id": "unsaved-grant-denial",
+            "independentReader": "HermesAuthProbe.run: fresh public list is empty and fresh chat cannot send with an unsaved grant",
+            "caseIds": [
+              "add-enospc",
+              "add-replace-fault"
+            ]
+          },
+          {
+            "id": "root-provider-isolation",
+            "independentReader": "HermesAuthProbe.run: unchanged root store and strict fake-provider/socket ledgers",
+            "caseIds": [
+              "add-enospc",
+              "add-replace-fault"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot invoke administrative auth-add or select OS profile-store faults. CLI drives real public native operations with external fake providers and fresh subprocess readbacks."
+      },
+      "caseManifestDigest": "12beb90a9eff995f423866e46ef30d721e8489cb0319a3b7e6e4b61cf3706a48",
+      "runtimeBinding": {
+        "releaseDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "controlDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "schemaDigest": "4126c6b859e9d44b5b1a3544dc3d89d13a3590b76de52e10ede0db8934229065",
+        "fixtureDigest": "4bea0edd2538ff3af3fe02248aa2d443b72654020d125da0134ad71840ce3e20"
+      },
+      "wholeState": "NOT_IMPLEMENTED"
+    },
+    {
+      "AT": "AT-hermes-config-85",
+      "operationId": "8d6ae2b9-cbae-4765-a8b3-a3813c78df16",
+      "runExit": 0,
+      "showExit": 0,
+      "runShowExact": true,
+      "maximumPrerequisiteLength": 1761,
+      "sourceRegistration": {
+        "id": "AT-hermes-config-85",
+        "rung": "CLI",
+        "sourceAssertionHash": "1945ba7e3df83056f7a11ddb1cc4f6f74b3c2e91744c47f77a85e3f34e21ff67",
+        "commandId": "probe.run",
+        "scenarioId": "auth.fresh-process",
+        "owner": "hermes",
+        "firstRelease": "R0",
+        "kind": "behavioral",
+        "mandatoryCases": [
+          {
+            "id": "add",
+            "publicOperation": "hermes --profile toy auth add openai-codex --type oauth --no-browser",
+            "phase": "add"
+          },
+          {
+            "id": "list",
+            "publicOperation": "hermes --profile toy auth list openai-codex",
+            "phase": "list"
+          },
+          {
+            "id": "chat",
+            "publicOperation": "hermes --profile toy chat --provider openai-codex --model gpt-6.1-sol --toolsets none -q \"Return the fixed fixture marker.\"",
+            "phase": "chat"
+          },
+          {
+            "id": "chat-expired",
+            "publicOperation": "hermes --profile toy chat --provider openai-codex --model gpt-6.1-sol --toolsets none -q \"Return the fixed fixture marker.\"",
+            "phase": "chat-expired"
+          },
+          {
+            "id": "chat-reloaded",
+            "publicOperation": "hermes --profile toy chat --provider openai-codex --model gpt-6.1-sol --toolsets none -q \"Return the fixed fixture marker.\"",
+            "phase": "chat-reloaded"
+          }
+        ],
+        "trigger": "Save a fresh synthetic Codex profile grant with real auth-add, terminate that process, use it in a fresh chat process, expire the fake access token, then refresh and use the newest grant in another fresh process.",
+        "faultControls": [
+          {
+            "id": "access-token-expiry",
+            "seam": "clock",
+            "affectedPhases": [
+              "chat-expired"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "process-identity-exit",
+            "independentReader": "HermesAuthProbe.run: result.processIdentity, exit_code and child/fresh-child/parent/UID/GID matches",
+            "caseIds": [
+              "add",
+              "list",
+              "chat",
+              "chat-expired",
+              "chat-reloaded"
+            ]
+          },
+          {
+            "id": "public-argv",
+            "independentReader": "HermesAuthProbe.run: result.public_argv",
+            "caseIds": [
+              "add",
+              "list",
+              "chat",
+              "chat-expired",
+              "chat-reloaded"
+            ]
+          },
+          {
+            "id": "fake-provider-ledger",
+            "independentReader": "HermesAuthProbe.run: result.http_ledger and observations.network_denials",
+            "caseIds": [
+              "add",
+              "list",
+              "chat",
+              "chat-expired",
+              "chat-reloaded"
+            ]
+          },
+          {
+            "id": "root-profile-store-readback",
+            "independentReader": "HermesAuthProbe.run: rootStoreUnchanged, profileAuthAfterAdd, profileAuthCurrent and root/profile digests",
+            "caseIds": [
+              "add",
+              "list",
+              "chat",
+              "chat-expired",
+              "chat-reloaded"
+            ]
+          },
+          {
+            "id": "token-hygiene",
+            "independentReader": "HermesAuthProbe.run: result.observations.token_hygiene",
+            "caseIds": [
+              "add",
+              "list",
+              "chat",
+              "chat-expired",
+              "chat-reloaded"
+            ]
+          },
+          {
+            "id": "fresh-process-usability",
+            "independentReader": "HermesAuthProbe.run: fresh chat CHAT_RESPONSE_OK and observations.access_generation",
+            "caseIds": [
+              "chat",
+              "chat-expired",
+              "chat-reloaded"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM ingress cannot start Hermes's administrative auth-add flow or select independent native subprocess exit/restart boundaries. The CLI drives those public commands in a seeded disposable profile and reads independent provider/store evidence."
+      },
+      "caseManifestDigest": "14f143bfc7060ff3ef85131dab171382e6efec83b5382c20cc1e93495acdef4d",
+      "runtimeBinding": {
+        "releaseDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "controlDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "schemaDigest": "4126c6b859e9d44b5b1a3544dc3d89d13a3590b76de52e10ede0db8934229065",
+        "fixtureDigest": "4bea0edd2538ff3af3fe02248aa2d443b72654020d125da0134ad71840ce3e20"
+      },
+      "wholeState": "NOT_IMPLEMENTED"
+    }
+  ],
+  "saveFaultPhases": [
+    {
+      "phase": "add-enospc",
+      "exitCode": 1,
+      "markers": [
+        "AUTH_SAVE_DENIED",
+        "CLI_EXCEPTION"
+      ],
+      "processIdentity": {
+        "pid": 87555,
+        "parentPid": 87511,
+        "uid": 501,
+        "gid": 20
+      },
+      "freshReadback": true,
+      "identityVerified": true,
+      "storageFaultTriggered": true,
+      "successClaimAbsent": true,
+      "tokenHygiene": true,
+      "rootStoreUnchanged": true,
+      "credentialCount": null,
+      "modelRequests": 0,
+      "networkDenials": [],
+      "wholeATComplete": false
+    },
+    {
+      "phase": "list-after-fault",
+      "exitCode": 0,
+      "markers": [
+        "AUTH_LIST_EMPTY"
+      ],
+      "processIdentity": {
+        "pid": 87566,
+        "parentPid": 87511,
+        "uid": 501,
+        "gid": 20
+      },
+      "freshReadback": true,
+      "identityVerified": true,
+      "storageFaultTriggered": false,
+      "successClaimAbsent": true,
+      "tokenHygiene": true,
+      "rootStoreUnchanged": true,
+      "credentialCount": 0,
+      "modelRequests": 0,
+      "networkDenials": [],
+      "wholeATComplete": false
+    },
+    {
+      "phase": "chat-after-fault",
+      "exitCode": 1,
+      "markers": [
+        "CHAT_GRANT_UNUSABLE",
+        "CLI_EXIT_NONZERO"
+      ],
+      "processIdentity": {
+        "pid": 87568,
+        "parentPid": 87511,
+        "uid": 501,
+        "gid": 20
+      },
+      "freshReadback": true,
+      "identityVerified": true,
+      "storageFaultTriggered": false,
+      "successClaimAbsent": true,
+      "tokenHygiene": true,
+      "rootStoreUnchanged": true,
+      "credentialCount": null,
+      "modelRequests": 0,
+      "networkDenials": [],
+      "wholeATComplete": false
+    },
+    {
+      "phase": "add-replace-fault",
+      "exitCode": 1,
+      "markers": [
+        "AUTH_SAVE_DENIED",
+        "CLI_EXCEPTION"
+      ],
+      "processIdentity": {
+        "pid": 87600,
+        "parentPid": 87511,
+        "uid": 501,
+        "gid": 20
+      },
+      "freshReadback": true,
+      "identityVerified": true,
+      "storageFaultTriggered": true,
+      "successClaimAbsent": true,
+      "tokenHygiene": true,
+      "rootStoreUnchanged": true,
+      "credentialCount": null,
+      "modelRequests": 0,
+      "networkDenials": [],
+      "wholeATComplete": false
+    },
+    {
+      "phase": "list-after-fault",
+      "exitCode": 0,
+      "markers": [
+        "AUTH_LIST_EMPTY"
+      ],
+      "processIdentity": {
+        "pid": 87602,
+        "parentPid": 87511,
+        "uid": 501,
+        "gid": 20
+      },
+      "freshReadback": true,
+      "identityVerified": true,
+      "storageFaultTriggered": false,
+      "successClaimAbsent": true,
+      "tokenHygiene": true,
+      "rootStoreUnchanged": true,
+      "credentialCount": 0,
+      "modelRequests": 0,
+      "networkDenials": [],
+      "wholeATComplete": false
+    },
+    {
+      "phase": "chat-after-fault",
+      "exitCode": 1,
+      "markers": [
+        "CHAT_GRANT_UNUSABLE",
+        "CLI_EXIT_NONZERO"
+      ],
+      "processIdentity": {
+        "pid": 87604,
+        "parentPid": 87511,
+        "uid": 501,
+        "gid": 20
+      },
+      "freshReadback": true,
+      "identityVerified": true,
+      "storageFaultTriggered": false,
+      "successClaimAbsent": true,
+      "tokenHygiene": true,
+      "rootStoreUnchanged": true,
+      "credentialCount": null,
+      "modelRequests": 0,
+      "networkDenials": [],
+      "wholeATComplete": false
+    }
+  ],
+  "teardownComplete": true,
+  "unresolvedResources": 0,
+  "acceptanceComplete": false,
+  "wholeATsPassed": [],
+  "liveProviderSends": 0,
+  "strictCheck": {
+    "exitCode": 0,
+    "evidence": "build/evidence/R0.03/unfiltered-save-check-result.json",
+    "artifacts": 361,
+    "contracts": 293,
+    "cliManifests": 15,
+    "features": 97,
+    "commands": 55,
+    "indexedATs": 1447,
+    "schemaDigest": "4126c6b859e9d44b5b1a3544dc3d89d13a3590b76de52e10ede0db8934229065",
+    "languages": [
+      "TypeScript",
+      "Python"
+    ],
+    "SwiftDeferredTo": "R3"
+  },
+  "rootPinsVerified": true,
+  "installedHermesPreserved": true,
+  "sourceUnit": {
+    "startedUtc": "2026-10-06T21:15:00Z",
+    "completedUtc": "2026-10-06T21:18:30.257575+00:00",
+    "limitSeconds": 7200,
+    "stoppedAfterPass": true,
+    "fixtureAndPatchesUnchanged": true,
+    "newDto": false,
+    "nativeRoleVerified": false,
+    "protectedControllerVerified": false,
+    "remaining": [
+      "actual installed-identity ACL/read-only OS-denial cells",
+      "protected controller/source completion",
+      "other assigned auth matrices and live supported grant attestation"
+    ]
+  },
+  "sourceHashes": {
+    "cli/src/main.ts": "cb1c0d07f0f940d278c5720f859d3ef9d005dafd518aef44bdb746de905ab42a",
+    "packages/contracts/src/ops-registry.ts": "f3f945e53c0e1c9525ace21c3e42b3a3e20a954e7a5504a11fc352e9bc483b96",
+    "packages/hermes/src/auth-probe.ts": "200447c5904ea435fec0026d23c5c5385452ef143b4e770fd29ea8bd1ef02666",
+    "packages/ops/src/fixture-stack.ts": "6754fb3987b3b9fb335c0efc5eb81528ca6912772c2131ef3df6f7b6197a2d5e",
+    "tests/registry.yaml": "2e9bdeb2260eea705b1a81722a4fc6d8421491604afe188003bfb7e94232c85a",
+    "packages/hermes/src/auth-fixture.ts": "22f6ca68c6efb2316488bcb5ed051492735c0e51efdb06d3e7f636a23c762df1",
+    "patches/hermes-auth-fixture.patch": "3451e9c644f71614925648bda6083915ff77af3d2883c78cfd541dffcd43c2b5"
+  }
+}

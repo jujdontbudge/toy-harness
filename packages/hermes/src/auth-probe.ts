@@ -16,12 +16,19 @@ export const HermesAuthProbe = {
   async run(input: RegisteredProbeInputV1, context: OpsControlContextV1): Promise<Result<RegisteredProbeOperationV1>> {
     const started = process.hrtime.bigint();
     const invalid: Result<RegisteredProbeOperationV1> = { ok: false, error: { module: "ops", code: "INVALID_INPUT", message: opsErrorMessages.INVALID_INPUT, retryable: false } };
-    const unfilteredAuth = ["AT-hermes-config-85", "AT-hermes-config-87"].includes(input.probeId) && input.caseId === undefined;
+    const unfilteredAuth = ["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-87"].includes(input.probeId) && input.caseId === undefined;
     if (!registeredProbeInputSchema.safeParse(input).success || (!unfilteredAuth && input.caseId !== "native-auth-cli") || !["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-87", "AT-hermes-config-78", "AT-ops-55"].includes(input.probeId)) return Promise.resolve(invalid);
     if (input.probeId === "AT-hermes-config-87") {
       const manifest = registeredCliAcceptanceManifestInventory.find(entry => entry.id === input.probeId);
       const mandatoryCases = ["add-first", "refresh-first", "before-replace", "after-replace"].map(id => ({ id, publicOperation: "HermesAuthProbe.run", phase: id }));
       if (!manifest || manifest.scenarioId !== "auth.concurrent-persistence" || JSON.stringify(manifest.mandatoryCases) !== JSON.stringify(mandatoryCases)) return Promise.resolve({ ok: false, error: { module: "ops", code: "ATTESTATION_INVALID", message: opsErrorMessages.ATTESTATION_INVALID, retryable: false } });
+    }
+    if (input.probeId === "AT-hermes-config-84") {
+      const manifest = registeredCliAcceptanceManifestInventory.find(entry => entry.id === input.probeId);
+      const phases = ["add-enospc", "add-replace-fault"];
+      const mandatoryCases = phases.map(id => ({ id, publicOperation: "hermes --profile toy auth add openai-codex --type oauth --no-browser", phase: id }));
+      const faults = [{ id: "profile-store-enospc", seam: "os", affectedPhases: ["add-enospc"] }, { id: "profile-auth-atomic-replace-eio", seam: "os", affectedPhases: ["add-replace-fault"] }];
+      if (!manifest || manifest.scenarioId !== "auth.save-fault" || JSON.stringify(manifest.mandatoryCases) !== JSON.stringify(mandatoryCases) || JSON.stringify(manifest.faultControls) !== JSON.stringify(faults)) return Promise.resolve({ ok: false, error: { module: "ops", code: "ATTESTATION_INVALID", message: opsErrorMessages.ATTESTATION_INVALID, retryable: false } });
     }
     const owned = OpsTestStack.inspect(context);
     if (!owned.ok) return Promise.resolve(owned);

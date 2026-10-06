@@ -2,9 +2,9 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-06T21:13:58.131751+00:00",
+  "updatedAt": "2026-10-06T21:18:30.257575+00:00",
   "phase": "Both source units pushed; next existing Sources research decision gaps recorded; two root requests pending without blockage",
-  "activeCard": "R0.03",
+  "activeCard": "R0.10",
   "cardCount": 87,
   "acceptanceCount": 1447,
   "cards": {
@@ -529,7 +529,9 @@
         "build/evidence/R0.03/storage-crash-minimum-plan.json",
         "build/evidence/R0.03/storage-crash-verification.json",
         "build/evidence/R0.03/unfiltered-auth-verification.json",
-        "build/evidence/R0.03/unfiltered-refresh-verification.json"
+        "build/evidence/R0.03/unfiltered-refresh-verification.json",
+        "build/evidence/R0.03/unfiltered-save-fault-minimum-plan.json",
+        "build/evidence/R0.03/unfiltered-save-verification.json"
       ],
       "requiredATs": [
         "AT-hermes-config-34",
@@ -624,6 +626,16 @@
           "verification": "build/evidence/R0.03/unfiltered-refresh-verification.json",
           "affectedAT87Checks": 26,
           "wholeATComplete": false
+        },
+        "saveFaultUnfilteredUnit": {
+          "state": "SOURCE_BOUND_CLI_DIAGNOSTICS_PASS_WHOLE_PENDING",
+          "selectedAT": "AT-hermes-config-84",
+          "verification": "build/evidence/R0.03/unfiltered-save-verification.json",
+          "diagnostics": 7,
+          "nativeFaultSubprocesses": 6,
+          "maximumPrerequisiteLength": 1733,
+          "wholeATComplete": false,
+          "sourceUnitStopped": true
         }
       },
       "timebox": {
@@ -10200,7 +10212,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Execute the bounded R0.03 AT-hermes-config-84 unfiltered auth save-fault manifest/dispatch unit using the existing OS ENOSPC/EIO fixture. Poll both root requests and prioritize R0.01 native grant-owner load immediately on verified root02 DONE.",
+  "nextAction": "Assess the exact AT-obligations-75 protected delegation receipt interface gap as a bounded implementation in its existing owner. No ModelRoute.select-only substitute. Root02/rootR005 remain pending; on verified root02 DONE immediately prepare R0.01 native grant-owner load through the frozen owner/runtime.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -20761,10 +20773,10 @@
   "latestStaticVerification": {
     "command": "npm run check",
     "exitCode": 0,
-    "evidence": "build/evidence/R0.12/sources-full-check-result.json",
+    "evidence": "build/evidence/R0.03/unfiltered-save-check-result.json",
     "artifacts": 361,
     "contracts": 293,
-    "cliManifests": 14,
+    "cliManifests": 15,
     "features": 97,
     "commands": 55,
     "indexedATs": 1447,
@@ -20775,7 +20787,7 @@
     ],
     "SwiftDeferredTo": "R3"
   },
-  "sourceCheckpointCommit": "c861f40",
+  "sourceCheckpointCommit": "690be90",
   "sourceCheckpointPushed": true,
   "rootRequests": {
     "ROOT-R004-20261006-01": {
@@ -20833,7 +20845,5 @@
     "queuedRootReserveGate": false,
     "rule": "Normal OS pressure and available memory at least the current job declared need plus512MiB; no strictly-free, hypothetical reserve, swap or second physical-fit gate"
   },
-  "activeWorkers": [
-    "/root/r010_pin_revalidation"
-  ]
+  "activeWorkers": []
 }

@@ -1,0 +1,95 @@
+{
+  "schemaVersion": "toy.r010-contracts-inventory-minimum-plan.v1",
+  "observedAt": "2026-10-06T21:16:36Z",
+  "auditCheckoutHead": "bed13285798e2d0418d36117375dec5cfa663956",
+  "parentCurrentHead": "690be90",
+  "sourceHashSnapshotNote": "The hashes below matched the shared worktree at observedAt. Parent R0.03 dispatch/registry/map edits occurred during this read-only audit, so auditCheckoutHead is the initial checkout and the recorded hashes are a dated mixed-worktree snapshot, not a claim that all files remained stable at parentCurrentHead.",
+  "card": "R0.10",
+  "result": "AT75_SOURCE_UNIT_INCOMPLETE",
+  "assignedAssertion": {
+    "id": "AT-obligations-75",
+    "rung": "CLI",
+    "commandId": "probe.run",
+    "requiredEvidence": "stack, probe:AT-obligations-75",
+    "sourceAssertionHash": "a24197c805faf3897e4c115c9fac9b877d63134ee4cdfe5b15a0312c63541840",
+    "sourceDigest": "5379f943578b4248dc21379a029acead930047c091316deb796fae0d49f4eb0f",
+    "assertion": "Given an Obligations research request and ordinary implementation delegation When the protected delegation adapter emits each receipt Then research records Sol/medium/Fast and the resolved mattpocock research skill version/hash, rejects a missing/wrong route, and preserves the separate ordinary Luna route without a module-local model override."
+  },
+  "currentRoute": {
+    "registry": "The generated CLI inventory contains AT-obligations-75 and its indexed assertion hash, but tests/registry.yaml has no authored AT-obligations-75 acceptance-manifest entry. No dedicated AT75 source-unit or CLI evidence was found in build/evidence/R0.10.",
+    "cliDispatch": "cli/src/main.ts sends ModelRouteProbe only explicit model-route-policy/model-route-stream case IDs. AT-obligations-75 with case omitted falls through ReplayEnvironment; its research component routes cover AT74, AT-self-improvement-54 and AT-sources-188, not AT75. The registered ID therefore reaches the generic TestProbeControl fallback without route observations.",
+    "nearestOwner": "Hermes ModelRouteProbe and ModelRoute are the existing CLI-facing owner path for fake-provider model-route receipts. ModelRoute selects the research role as gpt-6.1-sol/medium/priority and the child role as gpt-6-luna/max/priority. Its existing probes cover other explicit case IDs; they do not capture a protected delegation-adapter receipt or the resolved mattpocock research skill version/hash. A direct ModelRoute.select assertion cannot satisfy AT75's adapter-receipt predicates.",
+    "sourceUnitProof": "INCOMPLETE; only generated ID inventory and unrelated model-route/component-comparison diagnostics are present."
+  },
+  "minimumExistingOwnerPlan": {
+    "prerequisite": "The missing public delegation receipt surface is an implementation gap, not an external blocker. Define a written, typed receipt interface at the appropriate existing owner boundary, then use that owner interface to expose the actual protected adapter receipt, selected route and resolved skill version/hash. ModelRoute.select alone cannot prove this behavior; do not inspect private implementation or create a second protocol.",
+    "actionsAfterPrerequisite": [
+      {
+        "path": "tests/registry.yaml",
+        "action": "Add AT-obligations-75's authored CLI acceptance manifest bound to the exact assertion hash. Use mandatory cases for research delegation receipt, missing/wrong-route rejection, and ordinary implementation delegation. Bind observations to the adapter receipts and persisted probe.show readback; the manifest must distinguish the research Sol/medium/Fast plus resolved skill version/hash from the separate ordinary Luna route."
+      },
+      {
+        "path": "packages/hermes/src/model-route-probe.ts",
+        "action": "Extend the existing Hermes public probe for exact unfiltered AT-obligations-75 (caseId omitted). Drive all manifest cases through the approved protected adapter receipt path and the existing fixed external-provider seam; validate exact route/skill receipt values and missing/wrong-route refusal. Preserve existing explicit model-route cases."
+      },
+      {
+        "path": "cli/src/main.ts",
+        "action": "Dispatch exact unfiltered AT-obligations-75 to Hermes ModelRouteProbe while leaving probe.run/probe.show as the public commands; do not require --case or add a CLI command."
+      },
+      {
+        "path": "packages/ops/src/fixture-stack.ts",
+        "action": "Allow only the exact AT-obligations-75 unfiltered manifest observation IDs under the existing hermes owner check; retain all unrelated case and owner guards."
+      },
+      {
+        "path": "packages/contracts/src/generated-probe-registry.ts",
+        "action": "Regenerate from the authored registry with scripts/generate-contracts.mjs; do not hand-edit generated inventory. Existing CLI and acceptance-manifest schemas need no DTO change if they accept the planned entry."
+      },
+      {
+        "path": "tests/cli/model-route.cli.test.ts",
+        "action": "Add assigned-rung CLI coverage for the unfiltered AT75 run and probe.show persistence/readback, using only the approved external fake-provider seam."
+      },
+      {
+        "path": "skills/toy-control/FEATURE-MAP.md",
+        "action": "Update the existing obligations feature row from future owner route to the Hermes public probe and registered CLI route, keeping AT75 acceptance evidence assignment explicit."
+      }
+    ],
+    "boundedScope": "Keep the implementation in the existing Hermes public owner and probe.run route, with a written owner interface only if needed to carry the required receipt. No new CLI command, service, second protocol, provider, private-logic test, or model override."
+  },
+  "assignedCliProofAfterPrerequisites": {
+    "precondition": "A test stack admitted by the active controller gates and the assigned fixed fake-provider fixture; no live provider use.",
+    "run": "toy --env test --stack <stack-id> probe run AT-obligations-75 --request-id <uuid> --json",
+    "unfiltered": "Omit --case so the complete authored acceptance manifest runs.",
+    "show": "toy --env test --stack <stack-id> probe show <returned-operation-id> --json",
+    "down": "toy --env test --stack <stack-id> stack down --request-id <uuid> --json",
+    "requiredPredicates": [
+      "All three authored manifest cases pass through the protected adapter's public receipt path.",
+      "Research receipt records the exact assigned Sol/medium/Fast route and loaded mattpocock research skill version/hash.",
+      "Missing and wrong route are rejected at the adapter boundary; the ordinary implementation receipt remains Luna without module-local override.",
+      "probe.show returns the exact persisted unfiltered operation, and stack.down confirms complete teardown."
+    ]
+  },
+  "remainingGates": {
+    "wholeR010Acceptance": "PENDING; no R0.10 whole AT has been promoted by this plan.",
+    "controller": "At observation time build/state.json reported R0.02 and R0.05 acceptance PENDING and R0.10 dependent on both. Recheck these gates before stack proof.",
+    "nativeAndRuntime": "No AT75 unfiltered stack run/show/down or protected receipt evidence was performed in this read-only audit. The actual assigned CLI proof and exact teardown remain required after prerequisites; unrelated R0.10 native queue diagnostics do not prove AT75.",
+    "protectedBoundary": "The current owner has no public delegation receipt surface. Implement the smallest written interface at the existing owner boundary, then prove actual adapter receipts; do not bypass the boundary or report source routing as accepted without receipt evidence."
+  },
+  "sourceHashes": [
+    { "path": "tests/acceptance-index.json", "sha256": "87d21b7f24f9f900bb202e1e813ba46bbc51282b96e14cb2739d5fd67b32d9e6" },
+    { "path": "tests/registry.yaml", "sha256": "2e9bdeb2260eea705b1a81722a4fc6d8421491604afe188003bfb7e94232c85a" },
+    { "path": "packages/contracts/src/generated-probe-registry.ts", "sha256": "63b04702ebb57166f9c0cfbedeffe04044215c2b984da282e10bd8fcb59a5145" },
+    { "path": "packages/contracts/src/test-control.ts", "sha256": "0af0d0e4349cae05bfdc06a77592e32c5171f0dc5d0e5964f2ef87faeaa4111c" },
+    { "path": "packages/contracts/src/ops-registry.ts", "sha256": "f3f945e53c0e1c9525ace21c3e42b3a3e20a954e7a5504a11fc352e9bc483b96" },
+    { "path": "packages/contracts/src/model-route.ts", "sha256": "caff7c2441d61358d3bce04217b068ae1c5563cb5e2a8888957e4978eb6742ac" },
+    { "path": "packages/hermes/src/model-route-probe.ts", "sha256": "cde1ee09c40d750ab70cbc3087f3e833ceda4f95702a6f656a99a77d9c012c50" },
+    { "path": "packages/hermes/src/model-route.ts", "sha256": "6f2cbfbcd41f158f27fb438f0777e14a41317f37fc230da40abf9f08e9d750d1" },
+    { "path": "packages/hermes/src/public.ts", "sha256": "e298c3c27873fd7d97847e01625e91ea006fb4722075bde67d5f70e33d7ef675" },
+    { "path": "cli/src/main.ts", "sha256": "cb1c0d07f0f940d278c5720f859d3ef9d005dafd518aef44bdb746de905ab42a" },
+    { "path": "packages/self-improvement/src/public.ts", "sha256": "763430f13a0597d560de6d9140dab0f55e33fcc9f1a327f66364e3d87a7fc32f" },
+    { "path": "packages/self-improvement/src/engineering-control.ts", "sha256": "8ce4d3593f56fab291c55e5f20c499096c475bbb8b95dc99ebbef9d3d977b542" },
+    { "path": "packages/ops/src/fixture-stack.ts", "sha256": "6754fb3987b3b9fb335c0efc5eb81528ca6912772c2131ef3df6f7b6197a2d5e" },
+    { "path": "tests/cli/model-route.cli.test.ts", "sha256": "a4c7161722b8451086024cf304621f0b0fdc3fe0f012755b7d6b687ee1438102" },
+    { "path": "scripts/generate-contracts.mjs", "sha256": "4af296522897059f2d54d63077535da25a9fdbce7eeaad3ceba818962ffdc371" },
+    { "path": "skills/toy-control/FEATURE-MAP.md", "sha256": "e0073953b45a08a5a246a0a8904158ef35722e634f7fd9f88b6ed4e6c6ee9676" }
+  ]
+}

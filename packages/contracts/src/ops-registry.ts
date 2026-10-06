@@ -104,6 +104,60 @@ const hermesAuthObservationBindings = [
     ]
   }
 ] as const;
+const hermesSaveFaultMandatoryCases = [
+  {
+    "id": "add-enospc",
+    "publicOperation": "hermes --profile toy auth add openai-codex --type oauth --no-browser",
+    "phase": "add-enospc"
+  },
+  {
+    "id": "add-replace-fault",
+    "publicOperation": "hermes --profile toy auth add openai-codex --type oauth --no-browser",
+    "phase": "add-replace-fault"
+  }
+] as const;
+const hermesSaveFaultControls = [
+  {
+    "id": "profile-store-enospc",
+    "seam": "os",
+    "affectedPhases": [
+      "add-enospc"
+    ]
+  },
+  {
+    "id": "profile-auth-atomic-replace-eio",
+    "seam": "os",
+    "affectedPhases": [
+      "add-replace-fault"
+    ]
+  }
+] as const;
+const hermesSaveFaultObservations = [
+  {
+    "id": "save-denial",
+    "independentReader": "HermesAuthProbe.run: nonzero add, AUTH_SAVE_DENIED, triggered OS fault, clean streams and no success claim",
+    "caseIds": [
+      "add-enospc",
+      "add-replace-fault"
+    ]
+  },
+  {
+    "id": "unsaved-grant-denial",
+    "independentReader": "HermesAuthProbe.run: fresh public list is empty and fresh chat cannot send with an unsaved grant",
+    "caseIds": [
+      "add-enospc",
+      "add-replace-fault"
+    ]
+  },
+  {
+    "id": "root-provider-isolation",
+    "independentReader": "HermesAuthProbe.run: unchanged root store and strict fake-provider/socket ledgers",
+    "caseIds": [
+      "add-enospc",
+      "add-replace-fault"
+    ]
+  }
+] as const;
 export const registeredCliAcceptanceManifestSchema = z.strictObject({
   id: z.string().min(1).max(120).regex(/^AT-[A-Za-z0-9-]+(?![\s\S])/), rung: z.literal("CLI"), sourceAssertionHash: digestSchema,
   commandId: z.literal("probe.run"), scenarioId: z.string().min(1).max(120).regex(/^[a-z][a-z0-9.-]*(?![\s\S])/), owner: moduleIdSchema,
@@ -135,7 +189,13 @@ export const registeredCliAcceptanceManifestSchema = z.strictObject({
     && JSON.stringify(manifest.faultControls) === JSON.stringify([{ id: "access-token-expiry", seam: "clock", affectedPhases: ["chat-expired"] }])
     && JSON.stringify(manifest.observations) === JSON.stringify(hermesAuthObservationBindings)
   );
-  return hermesAuthBindingsMatch && unique(caseIds) && unique(phases) && unique(faultIds) && unique(observationIds)
+  const hermesSaveFaultBindingsMatch = manifest.id !== "AT-hermes-config-84" || (
+    manifest.owner === "hermes" && manifest.scenarioId === "auth.save-fault" && manifest.firstRelease === "R0" && manifest.kind === "behavioral"
+    && JSON.stringify(manifest.mandatoryCases) === JSON.stringify(hermesSaveFaultMandatoryCases)
+    && JSON.stringify(manifest.faultControls) === JSON.stringify(hermesSaveFaultControls)
+    && JSON.stringify(manifest.observations) === JSON.stringify(hermesSaveFaultObservations)
+  );
+  return hermesSaveFaultBindingsMatch && hermesAuthBindingsMatch && unique(caseIds) && unique(phases) && unique(faultIds) && unique(observationIds)
     && manifest.faultControls.every(fault => unique(fault.affectedPhases) && fault.affectedPhases.every(phase => knownPhases.has(phase)))
     && manifest.observations.every(observation => unique(observation.caseIds) && observation.caseIds.every(id => knownCases.has(id)))
     && caseIds.every(id => observedCases.has(id));

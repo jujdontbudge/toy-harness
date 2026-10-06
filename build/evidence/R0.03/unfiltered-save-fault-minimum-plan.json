@@ -1,0 +1,158 @@
+{
+  "schema": "toy.r0.03.unfiltered-save-fault-minimum-plan.v1",
+  "recordedAt": "2026-10-06T21:09:09Z",
+  "scope": "Read-only plan to expose the existing AT-84 save-fault fixture through its assigned unfiltered CLI route. No source edits, build, test, stack, process, credential, or installed-Hermes operations were performed.",
+  "acceptance": {
+    "source": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/hermes-config.md",
+    "line": 3048,
+    "assertion": "AT-hermes-config-84 [R0]: Given temporary profile homes, fake OAuth responses and registered OS/storage save faults, When real auth-add subprocesses fail to persist through the test-only CLI probe, Then process exit is nonzero, sanitized stdout lacks Added/success, neither stream exposes a token and a fresh subprocess cannot use an unsaved grant.",
+    "sha256": "d3548fde13180bc750660f306caa0041101832e398ccdabd6cfdac0b3de8f4af",
+    "index": "tests/acceptance-index.json",
+    "indexLine": 789,
+    "assertionHash": "c3002739bea88d5199c702493f348084adb65b3042fc8f9b679925ffc0d13726",
+    "indexSha256": "87d21b7f24f9f900bb202e1e813ba46bbc51282b96e14cb2739d5fd67b32d9e6",
+    "assignedRung": "CLI",
+    "requiredEvidence": "stack, probe:AT-hermes-config-84"
+  },
+  "currentProof": {
+    "savedEvidence": "build/evidence/R0.03/auth-save-fault-fixture-verification.json",
+    "sha256": "4577ba741f53034685270733dda1dd0d4df1546009e467deae9b4dd96a7fbd46",
+    "recordedAt": "2026-10-06T09:56:39.219348+00:00",
+    "assignedRung": "CLI",
+    "sourceBoundCheckCount": 13,
+    "readbacksExactlyMatch": true,
+    "fullReportsComplete": false,
+    "acceptanceComplete": false,
+    "wholeATsPassed": [],
+    "pending": [
+      "Protected exact per-AT manifest/controller identity and unfiltered assigned routes",
+      "Installed-identity ACL/read-only save-fault cells",
+      "Commit-boundary kill/lost-response and remaining auth/concurrency/dashboard/lineage matrices",
+      "Independent supported live SIWC grant, refresh/restart and actual zero-credit attestation"
+    ]
+  },
+  "existingFixtureCases": [
+    {"manifestCaseId": "add-enospc", "fixturePhase": "add-enospc", "fault": "OS rename audit for disposable HERMES_HOME/auth.json raises ENOSPC after fake token response"},
+    {"manifestCaseId": "add-replace-fault", "fixturePhase": "add-replace-fault", "fault": "OS rename audit for disposable HERMES_HOME/auth.json raises EIO after fake token response"}
+  ],
+  "nestedPublicReadbacksPerCase": [
+    "real public auth add returns nonzero with AUTH_SAVE_DENIED, no success claim, and token-clean streams",
+    "fresh public auth list observes zero persisted credentials",
+    "fresh public chat cannot use the unsaved grant and sends no provider/model request",
+    "root store remains unchanged and provider/socket denial assertions remain strict"
+  ],
+  "sourceAssertions": [
+    {
+      "file": "cli/src/main.ts",
+      "sha256": "d1c9b63d9d5b4d5335846817388e43f613c79edbe7c5f294feed0b69eef114b4",
+      "lines": "235-243",
+      "evidence": "The current probe.run route dispatches unfiltered AT-85/87 to HermesAuthProbe; unfiltered AT-84 falls through to ReplayEnvironment. Explicit case=native-auth-cli already selects HermesAuthProbe."
+    },
+    {
+      "file": "packages/hermes/src/auth-probe.ts",
+      "sha256": "e1b4353e52c37fb98d77332340b1a644dadd2f90f3a44d790e4665ba87f2b163",
+      "lines": "19-20, 75-82",
+      "evidence": "The guard permits unfiltered AT-85/87 only; AT-84 requires native-auth-cli. Once admitted, the existing AT-84 branch already runs add-enospc and add-replace-fault in separate disposable homes."
+    },
+    {
+      "file": "packages/hermes/src/auth-fixture.ts",
+      "sha256": "22f6ca68c6efb2316488bcb5ed051492735c0e51efdb06d3e7f636a23c762df1",
+      "lines": "148-155",
+      "evidence": "Each save-fault fixture already executes the faulted add followed by list-after-fault and chat-after-fault public subprocesses. No new auth fixture phase or protocol is needed."
+    },
+    {
+      "file": "patches/hermes-auth-fixture.patch",
+      "sha256": "3451e9c644f71614925648bda6083915ff77af3d2883c78cfd541dffcd43c2b5",
+      "lines": "464-476",
+      "evidence": "The existing external OS seam scopes injected ENOSPC/EIO to the candidate profile auth.json rename after the fake token response."
+    },
+    {
+      "file": "packages/ops/src/fixture-stack.ts",
+      "sha256": "545f7d36ded02cc5c34e7a143d688bb4929d815fa0f3cf656e90d210b3be2b15",
+      "lines": "306, 316, 320-326, 339-343",
+      "evidence": "The native-auth case filter permits unfiltered AT-85/87 but not AT-84. Accepted results bind any registered sourceRegistration into caseManifestDigest."
+    },
+    {
+      "file": "tests/registry.yaml",
+      "sha256": "8ab4aa582462e16db604382e33842f7f65bfc139fb1c143c07410e942a9d3e86",
+      "lines": "3-; 174-; no AT-84 entry",
+      "evidence": "No AT-84 source-bound behavioral manifest currently registers mandatory cases or OS fault controls."
+    },
+    {
+      "file": "packages/contracts/src/ops-registry.ts",
+      "sha256": "5917c9e4365fa07cdecf8c82402d24878c67dfb20f188b8e7d48e57d187ad93a",
+      "lines": "107-142",
+      "evidence": "The canonical manifest schema supports OS fault controls and exact per-AT binding refinement; current exact Hermes binding is for AT-85 only."
+    },
+    {
+      "file": "packages/contracts/src/test-control.ts",
+      "sha256": "0af0d0e4349cae05bfdc06a77592e32c5171f0dc5d0e5964f2ef87faeaa4111c",
+      "lines": "64-65",
+      "evidence": "The public probe input already allows caseId to be omitted; no input contract change is needed."
+    }
+  ],
+  "minimumChange": {
+    "files": [
+      "tests/registry.yaml",
+      "packages/contracts/src/ops-registry.ts",
+      "cli/src/main.ts",
+      "packages/hermes/src/auth-probe.ts",
+      "packages/ops/src/fixture-stack.ts",
+      "packages/contracts/src/generated-probe-registry.ts (regenerated)"
+    ],
+    "manifest": {
+      "id": "AT-hermes-config-84",
+      "rung": "CLI",
+      "sourceAssertionHash": "c3002739bea88d5199c702493f348084adb65b3042fc8f9b679925ffc0d13726",
+      "commandId": "probe.run",
+      "scenarioId": "auth.save-fault",
+      "owner": "hermes",
+      "firstRelease": "R0",
+      "kind": "behavioral",
+      "trigger": "Run the real public auth-add operation in a disposable profile for each registered OS save fault; then read the active profile with fresh public list and chat processes.",
+      "mandatoryCases": [
+        {"id": "add-enospc", "publicOperation": "HermesAuthProbe.run", "phase": "add-enospc"},
+        {"id": "add-replace-fault", "publicOperation": "HermesAuthProbe.run", "phase": "add-replace-fault"}
+      ],
+      "faultControls": [
+        {"id": "profile-store-enospc", "seam": "os", "affectedPhases": ["add-enospc"]},
+        {"id": "profile-auth-atomic-replace-eio", "seam": "os", "affectedPhases": ["add-replace-fault"]}
+      ],
+      "observations": [
+        {"id": "save-denial", "independentReader": "HermesAuthProbe.run: nonzero add result, AUTH_SAVE_DENIED, storage_fault_triggered, token hygiene and no success claim", "caseIds": ["add-enospc", "add-replace-fault"]},
+        {"id": "unsaved-grant-denial", "independentReader": "HermesAuthProbe.run: fresh public list count zero and fresh chat unusable with no provider/model send", "caseIds": ["add-enospc", "add-replace-fault"]},
+        {"id": "root-provider-isolation", "independentReader": "HermesAuthProbe.run: unchanged root digest and strict fake-provider/socket ledgers", "caseIds": ["add-enospc", "add-replace-fault"]}
+      ],
+      "simUnavailableReason": "SIM cannot invoke administrative auth-add or select OS-level profile-store faults. The CLI drives public native auth entry points in isolated profiles and reads fresh-process/provider evidence."
+    },
+    "guards": [
+      "Add an AT-84-specific exact manifest refinement in ops-registry.ts, mirroring the fail-closed source/case/fault binding used by AT-85.",
+      "Route unfiltered AT-84 in cli/src/main.ts to HermesAuthProbe alongside existing unfiltered AT-85/87 routes.",
+      "Permit unfiltered AT-84 in HermesAuthProbe only when its registered auth.save-fault manifest exactly matches the two phases and OS faults; keep explicit native-auth-cli compatibility.",
+      "Add only AT-84 unfiltered acceptance to fixture-stack.ts nativeAuth validation; retain the existing owner/check allowlist."
+    ],
+    "regeneration": "After the source manifest/refinement change, regenerate the checked-in probe registry with node scripts/generate-contracts.mjs --registry-only.",
+    "noChangeNeeded": ["auth-fixture.ts", "hermes-auth-fixture.patch", "registeredProbeInputSchema", "new service/protocol/infrastructure"]
+  },
+  "largestVerification": {
+    "commands": [
+      "toy --env test --stack <stackId> probe run AT-hermes-config-84 --request-id <freshRequestId> --json",
+      "toy --env test --stack <stackId> probe show <returnedOperationId> --json",
+      "toy --env test --stack <stackId> stack down --json"
+    ],
+    "proof": "Require sourceRegistration bound to the AT-84 assertion and both mandatory OS fault cases; show both faulted add phases plus their fresh list/chat readbacks, clean provider ledgers, unchanged root, exact run/show linkage, and complete owned-world teardown."
+  },
+  "wholeControllerAndNativeGatesStillOpen": [
+    "Whole AT-84 remains incomplete; the existing verification has acceptanceComplete=false and no wholeATsPassed.",
+    "Protected exact controller/native-service identity and assigned unfiltered route evidence remain open until fresh run/show evidence and protected gates pass. Do not interpret UID 501 as a service identity.",
+    "Installed-identity ACL/read-only denial cells and real protected OS denial remain unproven; this plan reaches only disposable injected ENOSPC/EIO cases.",
+    "Commit-boundary kill/lost-response reconciliation and other auth/concurrency/dashboard/lineage matrices remain separate requirements.",
+    "Independent live supported SIWC grant, refresh/restart, and zero-credit attestation remain open."
+  ],
+  "sourceHashes": {
+    "tests/acceptance-index.json": "87d21b7f24f9f900bb202e1e813ba46bbc51282b96e14cb2739d5fd67b32d9e6",
+    "packages/contracts/src/generated-probe-registry.ts": "da64c85c34575a99fb6425a459586f5f28c2f796e6504e2a4aeb5cb4c5d3da1a",
+    "scripts/generate-contracts.mjs": "4af296522897059f2d54d63077535da25a9fdbce7eeaad3ceba818962ffdc371",
+    "build/evidence/R0.03/auth-save-fault-fixture-verification.json": "4577ba741f53034685270733dda1dd0d4df1546009e467deae9b4dd96a7fbd46"
+  }
+}

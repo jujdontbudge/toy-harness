@@ -3389,6 +3389,72 @@ export const registeredCliAcceptanceManifestInventory = [
     "simUnavailableReason": "SIM cannot drive pre-build actual OS service-identity denials. The CLI invokes only the fixed root-owned owner with real OS results and independent canary readbacks."
   },
   {
+    "id": "AT-hermes-config-84",
+    "rung": "CLI",
+    "sourceAssertionHash": "c3002739bea88d5199c702493f348084adb65b3042fc8f9b679925ffc0d13726",
+    "commandId": "probe.run",
+    "scenarioId": "auth.save-fault",
+    "owner": "hermes",
+    "firstRelease": "R0",
+    "kind": "behavioral",
+    "mandatoryCases": [
+      {
+        "id": "add-enospc",
+        "publicOperation": "hermes --profile toy auth add openai-codex --type oauth --no-browser",
+        "phase": "add-enospc"
+      },
+      {
+        "id": "add-replace-fault",
+        "publicOperation": "hermes --profile toy auth add openai-codex --type oauth --no-browser",
+        "phase": "add-replace-fault"
+      }
+    ],
+    "trigger": "Invoke real public auth-add with registered OS ENOSPC/EIO save faults in disposable profiles; reload each profile in fresh list/chat subprocesses.",
+    "faultControls": [
+      {
+        "id": "profile-store-enospc",
+        "seam": "os",
+        "affectedPhases": [
+          "add-enospc"
+        ]
+      },
+      {
+        "id": "profile-auth-atomic-replace-eio",
+        "seam": "os",
+        "affectedPhases": [
+          "add-replace-fault"
+        ]
+      }
+    ],
+    "observations": [
+      {
+        "id": "save-denial",
+        "independentReader": "HermesAuthProbe.run: nonzero add, AUTH_SAVE_DENIED, triggered OS fault, clean streams and no success claim",
+        "caseIds": [
+          "add-enospc",
+          "add-replace-fault"
+        ]
+      },
+      {
+        "id": "unsaved-grant-denial",
+        "independentReader": "HermesAuthProbe.run: fresh public list is empty and fresh chat cannot send with an unsaved grant",
+        "caseIds": [
+          "add-enospc",
+          "add-replace-fault"
+        ]
+      },
+      {
+        "id": "root-provider-isolation",
+        "independentReader": "HermesAuthProbe.run: unchanged root store and strict fake-provider/socket ledgers",
+        "caseIds": [
+          "add-enospc",
+          "add-replace-fault"
+        ]
+      }
+    ],
+    "simUnavailableReason": "SIM cannot invoke administrative auth-add or select OS profile-store faults. CLI drives real public native operations with external fake providers and fresh subprocess readbacks."
+  },
+  {
     "id": "AT-hermes-config-85",
     "rung": "CLI",
     "sourceAssertionHash": "1945ba7e3df83056f7a11ddb1cc4f6f74b3c2e91744c47f77a85e3f34e21ff67",
