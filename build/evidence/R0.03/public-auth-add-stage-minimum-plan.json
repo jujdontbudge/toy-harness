@@ -1,0 +1,171 @@
+{
+  "schema": "toy.r0.03.public-auth-add-stage-minimum-plan.v1",
+  "kind": "read-only-minimum-plan",
+  "recordedAt": "2026-10-06T23:25:36Z",
+  "card": "R0.03",
+  "decision": "Existing signals support one bounded public observation: after the real auth-add child reaches the fake OAuth token-response barrier, release that successful add response while keeping the expired-chat refresh response held, then wait for public auth-add command completion and, if it completes, confirm persistence with a fresh public auth list. This distinguishes response-pending from command-returned/committed. No current public signal identifies an intermediate auth-add stage if the command stays pending.",
+  "assignment": {
+    "at": "AT-hermes-config-87",
+    "rung": "CLI",
+    "source": "../personal-assistant-harness/specs/hermes-config.md:3051",
+    "sourceAssertion": "Given concurrent real subprocess refresh/add with fake-provider barriers and OS/storage crash cuts, When both orders persist and fresh processes reload, Then the newest accepted refresh generation and added grant survive without a lost update.",
+    "sourceAssertionSha256": "b8ba9587534e2983742157a3ab9ae8911da4928e48e3ab0894944914bb91e6bb",
+    "specSha256": "d3548fde13180bc750660f306caa0041101832e398ccdabd6cfdac0b3de8f4af",
+    "acceptanceIndexSha256": "c9b645eab7f55b2ebf35d7db769a534a4837de23ad3dc3d913f3189e781d44fa",
+    "registrySha256": "596b4b923b2bb1387d5413760bb80761f522eca56869ecd9b2f3e9add94f235a",
+    "mandatoryCases": [
+      "add-first",
+      "refresh-first",
+      "before-replace",
+      "after-replace"
+    ]
+  },
+  "restorationAndRetainedEvidence": {
+    "restoredBaseline": "a7b39c8",
+    "currentAuthFixtureSha256": "22f6ca68c6efb2316488bcb5ed051492735c0e51efdb06d3e7f636a23c762df1",
+    "baselineAuthFixtureSha256": "22f6ca68c6efb2316488bcb5ed051492735c0e51efdb06d3e7f636a23c762df1",
+    "currentPatchSha256": "3451e9c644f71614925648bda6083915ff77af3d2883c78fd541dffcd43c2b5",
+    "baselinePatchSha256": "3451e9c644f71614925648bda6083915ff77af3d2883c78fd541dffcd43c2b5",
+    "threeAttemptUnit": "Stopped after three failures; its lock-observer source changes were not retained. Do not attempt another lock-observer repair.",
+    "evidence": [
+      {
+        "path": "build/evidence/R0.03/held-response-first-verification.json",
+        "sha256": "f073c47713e62196dbeaefe1309ad8198ff6749a1ba6720181a9f55696475288",
+        "runShowExact": true,
+        "passedChecks": 11,
+        "totalChecks": 12,
+        "wholeState": "NOT_IMPLEMENTED"
+      },
+      {
+        "path": "build/evidence/R0.03/held-response-second-verification.json",
+        "sha256": "4cf9b4f21fe0c4e86780e9013780ef4e4ab5161211bb54e808a9e19c0afb3dce",
+        "runShowExact": true,
+        "passedChecks": 11,
+        "totalChecks": 12,
+        "wholeState": "NOT_IMPLEMENTED",
+        "refreshFirstAuthAddObserver": {
+          "responseHeldAtContention": true,
+          "realLockContentionObserved": false,
+          "addAcquiredBeforeRelease": false,
+          "addCompletedBeforeRelease": false,
+          "nativeLockSerializedAdd": false,
+          "staleSuccessfulResponseRejected": false
+        }
+      },
+      {
+        "path": "build/evidence/R0.03/held-response-diagnostic.json",
+        "sha256": "376cad4378a295c27a9f4345390a5f764e890fb33864928f7b4fe098ce6bfc42",
+        "diagnosticOnly": true,
+        "failure": "NATIVE_AUTH_HELD_RESPONSE_LOCK_CONTENTION_FAILED",
+        "observationWaitMs": 15001,
+        "observerReady": true,
+        "exclusiveLockCallObserved": false,
+        "anyNativeLockContentionObserved": false,
+        "fixedProfileLockContentionObserved": false,
+        "realLockContentionObserved": false,
+        "responseHeldAtContention": true,
+        "wholeATComplete": false
+      },
+      {
+        "path": "build/evidence/R0.03/held-response-replan.json",
+        "sha256": "d5d6c5ddca6b0fe4580d800fc0d2e13574fd710afab0a7504ad4f91e555d5b4d",
+        "sourceChangesRetained": false,
+        "allOwnedWorldsDown": true,
+        "allTeardownsComplete": true,
+        "wholeATsPassed": [],
+        "staleSuccessfulResponseRejected": false,
+        "rootRequestsRemainPending": true
+      },
+      {
+        "path": "build/evidence/R0.03/held-response-unpassed-source.diff",
+        "sha256": "94e56fb6223dce1b13995f0016acdd7edd8647ac91e38bcd924467a16502879c",
+        "meaning": "Retained record of the reverted lock-observer proposal; not an implementation source."
+      }
+    ]
+  },
+  "existingPublicAndProviderSignals": [
+    {
+      "path": "packages/hermes/src/auth-fixture.ts",
+      "sha256": "22f6ca68c6efb2316488bcb5ed051492735c0e51efdb06d3e7f636a23c762df1",
+      "lines": "86-104",
+      "signal": "waitForFixtureMarkerOrCompletion has a finite timeout and distinguishes marker reached, public child completed, and child still pending."
+    },
+    {
+      "path": "packages/hermes/src/auth-fixture.ts",
+      "sha256": "22f6ca68c6efb2316488bcb5ed051492735c0e51efdb06d3e7f636a23c762df1",
+      "lines": "535-559",
+      "signal": "Refresh-first starts the real expired-chat child and waits for refresh-response-pending, then launches the real auth-add child and waits for add-response-pending. Current flow releases the held refresh response at line 545 before it waits for add-command-returned at lines 555-558."
+    },
+    {
+      "path": "patches/hermes-auth-fixture.patch",
+      "sha256": "3451e9c644f71614925648bda6083915ff77af3d2883c78fd541dffcd43c2b5",
+      "lines": "94, 323-345",
+      "signal": "The existing fake OAuth endpoint exposes add-response-pending; release-add-token returns the successful add response."
+    },
+    {
+      "path": "patches/hermes-auth-fixture.patch",
+      "sha256": "3451e9c644f71614925648bda6083915ff77af3d2883c78fd541dffcd43c2b5",
+      "lines": "363-382",
+      "signal": "The fake refresh endpoint exposes refresh-response-pending and holds the successful refresh response on release-refresh-token."
+    },
+    {
+      "path": "patches/hermes-auth-fixture.patch",
+      "sha256": "3451e9c644f71614925648bda6083915ff77af3d2883c78fd541dffcd43c2b5",
+      "lines": "702-718",
+      "signal": "The wrapper calls the real public auth-add CLI; only after it returns does it expose add-command-returned, wait for release-add-result, and emit the sanitized command result. This is a completion signal, not an intermediate persistence-stage signal."
+    },
+    {
+      "path": "patches/hermes-auth-fixture.patch",
+      "sha256": "3451e9c644f71614925648bda6083915ff77af3d2883c78fd541dffcd43c2b5",
+      "lines": "94",
+      "signal": "The fixed barrier allowlist contains provider request/response, command-returned/result, and storage-fault boundaries, but no public auth-add progress marker between successful token response and CLI return."
+    },
+    {
+      "path": "cli/src/main.ts",
+      "sha256": "4862cfd0540890e2551049589c49f1917f40427b65f84196691cb3c4a49b29dc",
+      "lines": "241",
+      "signal": "Unfiltered AT-hermes-config-87 dispatch is already routed through HermesAuthProbe.run."
+    },
+    {
+      "path": "packages/hermes/src/auth-probe.ts",
+      "sha256": "200447c5904ea435fec0026d23c5c5385452ef143b4e770fd29ea8bd1ef02666",
+      "lines": "19-24, 80",
+      "signal": "The registered unfiltered AT-87 guard already reaches the current concurrent-refresh-add fixture."
+    }
+  ],
+  "minimumFiniteObservation": {
+    "goal": "Observe the second real public auth-add command at the existing public boundaries while the first expired-chat child's successful refresh response stays held.",
+    "steps": [
+      "Run the existing unfiltered AT-hermes-config-87 CLI probe in an owned disposable test stack; retain its exact source/manifest binding and full teardown receipt.",
+      "In refresh-first, wait for the expired-chat refresh-response-pending marker, launch the real auth-add child, and wait for its add-response-pending marker.",
+      "Keep release-refresh-token closed. Release the separate auth-add OAuth response with release-add-token, then use the existing finite marker-or-completion wait for add-command-returned with a 15-second observation window; the fixture already uses this bounded wait scale for marker checks, while its current post-release add-result wait can run up to 45 seconds.",
+      "If add-command-returned arrives, release-add-result, parse the real public command's sanitized exit/marker, and run a fresh public auth list while the refresh response is still held to establish whether the independent added row is committed. Record only those public outcomes.",
+      "If the child remains pending at the deadline, record post-provider-response auth-add as pending with the refresh response still held. Release the refresh response for bounded completion/teardown; do not label the pending stage as a lock wait or infer a kernel cause."
+    ],
+    "interpretation": "The existing seam can distinguish provider-response-pending, provider-response-released, public-command-returned, and public-list-visible. It cannot locate an intermediate internal auth-add stage when the child is still running.",
+    "mustNotClaim": [
+      "A completed independent add is not a newer rotation of the original grant.",
+      "No same-grant stale-successful-response rejection is established by these stage observations.",
+      "The failed flock observer proves no observed lock event; it does not identify why that observer saw none."
+    ]
+  },
+  "exactMissingPublicBehaviorIfIntermediateStageIsRequired": "A sanitized, process-correlated public readiness receipt from the auth owner between successful OAuth token response and public auth-add command return, identifying a stable stage such as response accepted, persistence entered, or persistence completed. No such receipt exists in the inspected public command/fixture interface. This task does not authorize adding it; if endpoint observation leaves the child pending, stop without another observer or source repair.",
+  "wholeAcceptanceLimits": {
+    "wholeATState": "NOT_IMPLEMENTED",
+    "wholeATsPassed": [],
+    "staleSuccessfulResponseRejected": false,
+    "protectedNativeServiceVerified": false,
+    "rootDependency": "Root requests remain pending; Root02 remains frozen/PENDING and untouched.",
+    "callerIdentity": "Do not reinterpret fixture process UID as service identity.",
+    "noPromotion": "This plan and any endpoint observation remain partial CLI evidence, not AT-hermes-config-87 or R0.03 completion."
+  },
+  "sourceChanges": "None. Do not change source, contracts, registry, feature map, generated files, stacks, native services, or root-request state.",
+  "parentReview": {
+    "recordedAt": "2026-10-06T23:36:36.293131+00:00",
+    "decision": "DEFER_EXTRA_ENDPOINT_OBSERVATION",
+    "reason": "The plan identifies finite endpoint signals but no observable intermediate owner stage. It does not add assigned assertion behavior beyond the already retained unfiltered generation/add readbacks and cannot prove a same-grant stale successful response or native role enforcement. The speed instruction requires stopping after the passed diagnostic slice; no fourth observer repair, extra public protocol or research is authorized by a failing required check here.",
+    "next": "Preserve the passed AT87 diagnostics and its separate whole/native gates; if a required future check actually fails without an owner-stage receipt, re-plan that exact public behavior then.",
+    "wholeATComplete": false,
+    "sourceImplementationStarted": false
+  }
+}
