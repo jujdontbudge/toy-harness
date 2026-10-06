@@ -107,7 +107,8 @@
             "add-replace-fault",
             "list-after-fault",
             "chat-after-fault",
-            "siwc-unbound"
+            "siwc-unbound",
+            "concurrent-refresh-add"
           ]
         },
         "credential_count": {
@@ -121,7 +122,10 @@
               "type": "string",
               "enum": [
                 "initial",
-                "rotated"
+                "rotated",
+                "added",
+                "added-rotated",
+                "stale"
               ]
             },
             {
@@ -186,6 +190,95 @@
         "fallback_attempted",
         "network_denials",
         "socket_origin"
+      ],
+      "additionalProperties": false
+    },
+    "concurrency": {
+      "type": "object",
+      "properties": {
+        "order": {
+          "type": "string",
+          "enum": [
+            "refresh-first",
+            "add-first"
+          ]
+        },
+        "actor": {
+          "type": "string",
+          "enum": [
+            "auth-add",
+            "expired-chat",
+            "fresh-list-reload",
+            "fresh-add-reload",
+            "fresh-refresh-reload"
+          ]
+        },
+        "barrier": {
+          "type": "string",
+          "enum": [
+            "not-used",
+            "reached",
+            "released",
+            "persisted"
+          ]
+        },
+        "crashCut": {
+          "type": "string",
+          "enum": [
+            "none",
+            "after-add-public-command-before-wrapper-exit",
+            "after-refresh-public-command-before-wrapper-exit"
+          ]
+        },
+        "staleRefreshTokenRejected": {
+          "type": "string",
+          "enum": [
+            "not-exercised",
+            "rejected"
+          ]
+        },
+        "staleRefreshResponse": {
+          "type": "string",
+          "enum": [
+            "not-exercised",
+            "rejected"
+          ]
+        },
+        "freshProcessUse": {
+          "type": "string",
+          "enum": [
+            "not-checked",
+            "usable",
+            "unusable"
+          ]
+        },
+        "refreshGeneration": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "initial",
+                "rotated",
+                "added",
+                "added-rotated",
+                "stale"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "order",
+        "actor",
+        "barrier",
+        "crashCut",
+        "staleRefreshTokenRejected",
+        "staleRefreshResponse",
+        "freshProcessUse",
+        "refreshGeneration"
       ],
       "additionalProperties": false
     },

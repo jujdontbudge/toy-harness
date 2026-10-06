@@ -310,7 +310,7 @@ export const FixtureProbe = {
       const modelStream = input.caseId === "model-route-stream" && ["AT-hermes-config-40", "AT-self-improvement-58"].includes(input.probeId);
       const accounting = input.caseId === "model-admission" && ["AT-ops-49", "AT-ops-51", "AT-ops-52"].includes(input.probeId);
       const nativeEligibility = input.caseId === "native-release-eligibility" && ["AT-ops-81", "AT-client-apps-49", "AT-activity-focus-64"].includes(input.probeId);
-      const nativeAuth = input.caseId === "native-auth-cli" && ["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-78", "AT-ops-55"].includes(input.probeId);
+      const nativeAuth = input.caseId === "native-auth-cli" && ["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-87", "AT-hermes-config-78", "AT-ops-55"].includes(input.probeId);
       const roleDenials = input.caseId === "control-filesystem-denial" && input.probeId === "AT-authority-35";
       const queueFaults = input.caseId === "queue-transaction-faults" && input.probeId === "AT-obligations-76";
       const backupCapacity = input.caseId === "backup-capacity" && ["AT-ops-62", "AT-lifestore-63", "AT-sources-216"].includes(input.probeId);

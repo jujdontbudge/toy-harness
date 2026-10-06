@@ -2,8 +2,8 @@ import { createHash, randomUUID } from "node:crypto";
 import { spawnSync } from "node:child_process";
 import { existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, realpathSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
-import { acceptanceIndexSchema, checkoutPathSchema, cliDeclarations, featureFactsSchema, featureMapCheckSchema, featureMapUpdateSchema, generatorInputSchema, generatorPlanSchema, gardenerInputSchema, gardenerReportSchema, kitchenGateSummarySchema, mapCheckInputSchema, mapUpdateInputSchema, opsControlContextSchema, opsErrorMessages, referenceAdmissionEvidenceSchema, researchRegisterInspectionSchema } from "@toy/contracts";
-import type { CheckViewV1, FeatureFactsV1, FilePatchV1, GeneratorInputV1, GeneratorPlanV1, FeatureMapCheckV1, FeatureMapUpdateV1, MapCheckInputV1, MapUpdateInputV1, GardenerInputV1, GardenerReportV1, OpsControlContextV1, ResearchInspectionFindingV1, ResearchRegisterInspectionV1, Result } from "@toy/contracts";
+import { acceptanceIndexSchema, checkoutPathSchema, cliDeclarations, featureFactsSchema, featureMapCheckSchema, featureMapUpdateSchema, generatorInputSchema, generatorPlanSchema, gardenerInputSchema, gardenerReportSchema, kitchenGateSummarySchema, mapCheckInputSchema, mapUpdateInputSchema, opsControlContextSchema, opsErrorMessages, referenceAdmissionEvidenceSchema, researchCatalogCoverageSchema, researchRegisterInspectionSchema } from "@toy/contracts";
+import type { CheckViewV1, FeatureFactsV1, FilePatchV1, GeneratorInputV1, GeneratorPlanV1, FeatureMapCheckV1, FeatureMapUpdateV1, MapCheckInputV1, MapUpdateInputV1, GardenerInputV1, GardenerReportV1, OpsControlContextV1, ResearchCatalogCoverageFindingV1, ResearchCatalogMemberV1, ResearchCatalogSectionV1, ResearchInspectionFindingV1, ResearchRegisterInspectionV1, Result } from "@toy/contracts";
 import { trustedCheckoutRoot, trustedToolEnvironment } from "@toy/ops/public";
 import { modelAdmissionMigration } from "./model-admission-migration.js";
 
@@ -224,6 +224,209 @@ const inspectResearchSpecs = (components: ResearchRegisterInspectionV1["componen
     return { path, digest: hash(raw), componentReferences, requirementMappingRows };
   });
 };
+type CatalogRouteState = ResearchCatalogMemberV1["routeState"];
+type CatalogCrosswalkEntry = { memberName: string; componentId: string; registerTerm: string; routeState: CatalogRouteState };
+type CatalogSectionSource = ResearchCatalogSectionV1 & { bodyLines: { text: string; lineNumber: number }[] };
+const crosswalkEntry = (memberName: string, componentId: string, registerTerm: string, routeState: CatalogRouteState): CatalogCrosswalkEntry => ({ memberName, componentId, registerTerm, routeState });
+const catalogMemberCrosswalk: ReadonlyMap<string, ReadonlyMap<string, readonly CatalogCrosswalkEntry[]>> = new Map([
+  ["9.26", new Map([
+    ["raindrop.io", [crosswalkEntry("Raindrop.io", "D26", "Raindrop", "optional_pending")]],
+    ["obsidian/local markdown", [crosswalkEntry("Obsidian/local Markdown", "D27", "Obsidian", "pending")]],
+    ["google docs writing", [crosswalkEntry("Google Docs", "D05", "Docs", "pending")]],
+    ["notion writing", [crosswalkEntry("Notion", "D44", "Notion", "pending")]],
+    ["anki", [crosswalkEntry("Anki", "D28", "Anki", "optional_pending")]],
+    ["pocket/instapaper/other read-later services", [crosswalkEntry("Pocket", "D29", "Pocket", "unselected"), crosswalkEntry("Instapaper", "D29", "Instapaper", "unselected"), crosswalkEntry("Other read-later services", "D29", "read-later", "unselected")]]
+  ])],
+  ["9.46", new Map([
+    ["quickbooks online", [crosswalkEntry("QuickBooks Online", "D49", "QuickBooks", "optional_pending")]],
+    ["xero", [crosswalkEntry("Xero", "D50", "Xero", "optional_pending")]],
+    ["vercel", [crosswalkEntry("Vercel", "D51", "Vercel", "optional_pending")]],
+    ["cloudflare/registrar", [crosswalkEntry("Cloudflare", "D52", "Cloudflare", "optional_pending"), crosswalkEntry("Registrar", "D53", "Registrar", "unselected")]],
+    ["crm: hubspot/attio/etc.", [crosswalkEntry("HubSpot", "D54", "HubSpot", "optional_pending"), crosswalkEntry("Attio", "D55", "Attio", "optional_pending"), crosswalkEntry("Other CRM via etc.", "D56", "Other CRM", "unselected")]],
+    ["figma", [crosswalkEntry("Figma", "D57", "Figma", "optional_pending")]],
+    ["dropbox/box", [crosswalkEntry("Dropbox", "D58", "Dropbox", "optional_pending"), crosswalkEntry("Box", "D59", "Box", "optional_pending")]]
+  ])],
+  ["9.47", new Map([
+    ["onedrive/sharepoint at uiuc", [crosswalkEntry("OneDrive", "D60", "OneDrive", "blocked"), crosswalkEntry("SharePoint", "D60", "SharePoint", "blocked")]],
+    ["google tasks", [crosswalkEntry("Google Tasks", "D60", "Google Tasks", "pending")]],
+    ["todoist/other task apps", [crosswalkEntry("Todoist", "D60", "Todoist", "optional_pending"), crosswalkEntry("Other task apps", "D60", "Other task apps", "unselected")]],
+    ["gradescope, prairielearn, piazza, course sites", [crosswalkEntry("Gradescope", "D61", "Gradescope", "partial"), crosswalkEntry("PrairieLearn", "D61", "PrairieLearn", "partial"), crosswalkEntry("Piazza", "D61", "Piazza", "partial"), crosswalkEntry("Course sites", "D61", "course sites", "partial")]],
+    ["public uiuc academic calendars", [crosswalkEntry("Public UIUC academic calendars", "D62", "academic calendars", "pending")]],
+    ["travel, shipping, subscriptions, receipts", [crosswalkEntry("Travel", "D63", "Travel", "partial"), crosswalkEntry("Shipping", "D63", "shipping", "partial"), crosswalkEntry("Subscriptions", "D63", "subscriptions", "partial"), crosswalkEntry("Receipts", "D63", "receipts", "partial")]],
+    ["photos", [crosswalkEntry("PhotoKit", "D64", "PhotoKit", "optional_pending"), crosswalkEntry("Google Photos", "D64", "Google Photos", "optional_pending")]],
+    ["meetings/transcripts", [crosswalkEntry("Meetings/transcripts", "D65", "transcripts", "partial")]],
+    ["apple app privacy report", [crosswalkEntry("Apple App Privacy Report", "D65", "App Privacy Report", "optional_pending")]],
+    ["personal local documents", [crosswalkEntry("Personal local documents", "D65", "personal documents", "pending")]]
+  ])]
+]);
+const sourceSections = (raw: string, findings: ResearchCatalogCoverageFindingV1[]): Map<string, CatalogSectionSource> => {
+  const lines = raw.split(/\r?\n/);
+  const headers: { index: number; number: number; title: string }[] = [];
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index];
+    if (!line) continue;
+    const match = /^### 9\.([0-9]{1,2})\s+(.+?)\s*$/.exec(line);
+    const number = Number(match?.[1]);
+    if (match && number >= 1 && number <= 48) headers.push({ index, number, title: match[2] ?? "" });
+  }
+  const sections = new Map<string, CatalogSectionSource>();
+  for (let headerIndex = 0; headerIndex < headers.length; headerIndex += 1) {
+    const header = headers[headerIndex];
+    if (!header) continue;
+    const section = "9." + header.number;
+    if (sections.has(section)) {
+      findings.push({ code: "SECTION_DUPLICATE", section, memberName: null, sourceLine: header.index + 1, componentId: null, registerSourceLine: null, detail: "Sources catalog section number occurs more than once" });
+      continue;
+    }
+    const nextSourceSection = headers[headerIndex + 1]?.index ?? lines.length;
+    let end = nextSourceSection;
+    for (let index = header.index + 1; index < nextSourceSection; index += 1) {
+      const line = lines[index] ?? "";
+      if (/^## (?:10|[1-9][0-9])\./.test(line)) { end = index; break; }
+    }
+    const sectionLines = lines.slice(header.index, end);
+    sections.set(section, {
+      section,
+      sourceLine: header.index + 1,
+      title: header.title,
+      sectionDigest: hash(sectionLines.join("\n")),
+      componentIds: [],
+      bodyLines: sectionLines.map((text, offset) => ({ text, lineNumber: header.index + offset + 1 }))
+    });
+  }
+  return sections;
+};
+const sectionReferences = (consumingSpecs: string): string[] => [...consumingSpecs.matchAll(/\bS\s+§9\.([0-9]{1,2})\b/g)].map((match) => "9." + (match[1] ?? ""));
+const cleanMarkdownCell = (value: string): string => value.replaceAll("**", "").replaceAll("__", "").replaceAll("`", "").replaceAll("*", "").trim();
+const tableMemberRows = (section: CatalogSectionSource): { label: string; sourceText: string; sourceLine: number }[] => {
+  const result: { label: string; sourceText: string; sourceLine: number }[] = [];
+  for (let index = 0; index + 1 < section.bodyLines.length; index += 1) {
+    const header = section.bodyLines[index];
+    const separator = section.bodyLines[index + 1];
+    if (!header || !separator) continue;
+    const headerCells = markdownTableCells(header.text);
+    const separatorCells = markdownTableCells(separator.text);
+    const firstHeader = headerCells?.[0];
+    if (!headerCells || !separatorCells || headerCells.length !== separatorCells.length || !isMarkdownTableSeparator(separatorCells) || !firstHeader || !["Connector", "Source"].includes(cleanMarkdownCell(firstHeader))) continue;
+    for (let rowIndex = index + 2; rowIndex < section.bodyLines.length; rowIndex += 1) {
+      const row = section.bodyLines[rowIndex];
+      if (!row) continue;
+      const cells = markdownTableCells(row.text);
+      if (!cells || isMarkdownTableSeparator(cells)) break;
+      const label = cleanMarkdownCell(cells[0] ?? "");
+      if (label) result.push({ label, sourceText: row.text, sourceLine: row.lineNumber });
+    }
+  }
+  return result;
+};
+const componentRouteState = (componentId: string): CatalogRouteState => {
+  if (componentId === "D66") return "superseded";
+  if (["D02", "D03", "D13"].includes(componentId)) return "blocked";
+  if (["D06", "D08", "D61", "D63", "D65"].includes(componentId)) return "partial";
+  if (["D29", "D53", "D56"].includes(componentId)) return "unselected";
+  if (["D22", "D23", "D25", "D26", "D28", "D31", "D33", "D34", "D35", "D36", "D38", "D39", "D41", "D49", "D50", "D51", "D52", "D54", "D55", "D57", "D58", "D59", "D64"].includes(componentId)) return "optional_pending";
+  return "pending";
+};
+const registerDisplayName = (component: ResearchRegisterInspectionV1["components"][number]): string => component.componentAndPin.replace(/^\*\*D[0-9]{2}\s*/, "").split("**")[0]?.trim() ?? component.id;
+const normalizedWords = (value: string): string => value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim().replace(/\s+/g, " ");
+const inspectSourcesCatalog = (components: ResearchRegisterInspectionV1["components"]): ResearchRegisterInspectionV1["sourcesCatalogCoverage"] => {
+  const catalogPath = "specs/sources.md";
+  const contractPath = "specs/CONTRACTS.md";
+  const catalogRaw = readResearchFile(catalogPath);
+  const contractRaw = readResearchFile(contractPath);
+  const registerComponents = new Map(components.filter((component) => /^D[0-9]{2}$/.test(component.id)).map((component) => [component.id, component]));
+  const coverageFindings: ResearchCatalogCoverageFindingV1[] = [];
+  const addFinding = (findingValue: ResearchCatalogCoverageFindingV1): void => { coverageFindings.push(findingValue); };
+  const sections = sourceSections(catalogRaw, coverageFindings);
+  const sectionsByComponent = new Map<string, string[]>();
+  for (const expectedNumber of Array.from({ length: 66 }, (_, index) => index + 1)) {
+    const expectedId = "D" + String(expectedNumber).padStart(2, "0");
+    if (!registerComponents.has(expectedId)) addFinding({ code: "REGISTER_COMPONENT_MISSING", section: null, memberName: expectedId, sourceLine: null, componentId: expectedId, registerSourceLine: null, detail: "Required Sources component row is absent from D01–D66 inventory" });
+  }
+  for (const component of registerComponents.values()) {
+    const componentNumber = Number(component.id.slice(1));
+    if (componentNumber < 1 || componentNumber > 66) addFinding({ code: "REGISTER_COMPONENT_OUT_OF_RANGE", section: null, memberName: registerDisplayName(component), sourceLine: null, componentId: component.id, registerSourceLine: component.sourceLine, detail: "Sources inventory component falls outside the D01–D66 catalog range" });
+    const references = sectionReferences(component.consumingSpecs);
+    if (references.length === 0) addFinding({ code: "REGISTER_SECTION_MISSING", section: null, memberName: registerDisplayName(component), sourceLine: null, componentId: component.id, registerSourceLine: component.sourceLine, detail: "Canonical Sources component has no exact S §9.N consuming-spec reference" });
+    for (const section of references) {
+      const linked = sectionsByComponent.get(component.id) ?? [];
+      if (!linked.includes(section)) linked.push(section);
+      sectionsByComponent.set(component.id, linked);
+    }
+  }
+  for (const expectedNumber of Array.from({ length: 48 }, (_, index) => index + 1)) {
+    const section = "9." + expectedNumber;
+    if (!sections.has(section)) addFinding({ code: "SECTION_MISSING", section, memberName: null, sourceLine: null, componentId: null, registerSourceLine: null, detail: "Sources catalog section is absent" });
+  }
+  for (const sourceSection of sections.values()) {
+    const componentIds = [...registerComponents.values()].filter((component) => sectionReferences(component.consumingSpecs).includes(sourceSection.section)).map((component) => component.id).sort((left, right) => Number(left.slice(1)) - Number(right.slice(1)));
+    sourceSection.componentIds = componentIds;
+    if (componentIds.length === 0) addFinding({ code: "SECTION_UNMAPPED", section: sourceSection.section, memberName: null, sourceLine: sourceSection.sourceLine, componentId: null, registerSourceLine: null, detail: "No canonical D01–D66 consuming-spec row points to this Sources section" });
+  }
+  const contractLines = contractRaw.split(/\r?\n/);
+  const supersessionIndex = contractLines.findIndex((line) => line.includes("Composio") && line.includes("Dropped") && line.includes("toy new connector"));
+  const supersessionText = contractLines[supersessionIndex] ?? null;
+  const supersessionLine = supersessionIndex < 0 ? null : supersessionIndex + 1;
+  const supersessionDigest = supersessionText === null ? null : hash(supersessionText);
+  if (supersessionLine === null || supersessionDigest === null) addFinding({ code: "SUPERSESSION_DECISION_MISSING", section: null, memberName: "Composio", sourceLine: null, componentId: "D66", registerSourceLine: registerComponents.get("D66")?.sourceLine ?? null, detail: "Authoritative CONTRACTS.md local-connectors amendment was not found" });
+  const members: ResearchCatalogMemberV1[] = [];
+  for (const component of registerComponents.values()) {
+    const references = sectionsByComponent.get(component.id) ?? [];
+    for (const sectionId of references) {
+      const sourceSection = sections.get(sectionId);
+      if (!sourceSection) continue;
+      const sourceText = sourceSection.bodyLines[0]?.text ?? "";
+      members.push({ section: sectionId, memberKind: "canonical_component", memberName: registerDisplayName(component), sourceLine: sourceSection.sourceLine, sourceText, sourceDigest: hash(sourceText), componentId: component.id, registerSourceLine: component.sourceLine, registerRowDigest: component.rowDigest, relationship: "canonical_consuming_spec", routeState: componentRouteState(component.id), routeEvidence: component.id === "D66" ? supersessionText ?? "Authoritative supersession evidence missing" : component.releaseGate, activationVerified: false });
+    }
+  }
+  let longTailRowsMapped = true;
+  for (const sectionId of ["9.26", "9.46", "9.47"]) {
+    const section = sections.get(sectionId);
+    if (!section) { longTailRowsMapped = false; continue; }
+    const aliases = catalogMemberCrosswalk.get(sectionId);
+    const actualRows = tableMemberRows(section);
+    const actualLabels = new Set(actualRows.map((row) => row.label.toLowerCase()));
+    for (const expectedLabel of aliases?.keys() ?? []) {
+      if (actualLabels.has(expectedLabel)) continue;
+      longTailRowsMapped = false;
+      addFinding({ code: "LONG_TAIL_MEMBER_UNMAPPED", section: sectionId, memberName: expectedLabel, sourceLine: section.sourceLine, componentId: null, registerSourceLine: null, detail: "Canonical audit crosswalk label no longer matches a catalog table row" });
+    }
+    for (const row of actualRows) {
+      const entries = aliases?.get(row.label.toLowerCase());
+      if (!entries) {
+        longTailRowsMapped = false;
+        members.push({ section: sectionId, memberKind: "named_provider", memberName: row.label, sourceLine: row.sourceLine, sourceText: row.sourceText, sourceDigest: hash(row.sourceText), componentId: null, registerSourceLine: null, registerRowDigest: null, relationship: "unmapped", routeState: "unselected", routeEvidence: "No canonical component crosswalk covers this catalog table member", activationVerified: false });
+        addFinding({ code: "LONG_TAIL_MEMBER_UNMAPPED", section: sectionId, memberName: row.label, sourceLine: row.sourceLine, componentId: null, registerSourceLine: null, detail: "Named Sources catalog table member has no D01–D66 crosswalk" });
+        continue;
+      }
+      for (const entry of entries) {
+        const component = registerComponents.get(entry.componentId);
+        const matched = component !== undefined && normalizedWords(component.componentAndPin).includes(normalizedWords(entry.registerTerm));
+        if (!component) {
+          longTailRowsMapped = false;
+          addFinding({ code: "LONG_TAIL_MEMBER_UNMAPPED", section: sectionId, memberName: entry.memberName, sourceLine: row.sourceLine, componentId: entry.componentId, registerSourceLine: null, detail: "Crosswalk component does not exist in canonical register" });
+        } else if (!matched) {
+          addFinding({ code: "CATALOG_MEMBER_DETAIL_OPEN", section: sectionId, memberName: entry.memberName, sourceLine: row.sourceLine, componentId: component.id, registerSourceLine: component.sourceLine, detail: "Catalog category is mapped to its section component, but that register description does not name the member independently" });
+        }
+        members.push({ section: sectionId, memberKind: "named_provider", memberName: entry.memberName, sourceLine: row.sourceLine, sourceText: row.sourceText, sourceDigest: hash(row.sourceText), componentId: component?.id ?? null, registerSourceLine: component?.sourceLine ?? null, registerRowDigest: component?.rowDigest ?? null, relationship: sectionId === "9.26" && ["D05", "D44"].includes(entry.componentId) ? "canonical_cross_reference" : "explicit_catalog_crosswalk", routeState: entry.routeState, routeEvidence: component?.releaseGate ?? "No canonical register release gate", activationVerified: false });
+      }
+    }
+  }
+  const composioMentions = sections.get("9.46")?.bodyLines.filter((line) => /\bComposio\b/.test(line.text)) ?? [];
+  const composioComponent = registerComponents.get("D66");
+  for (const mention of composioMentions) members.push({ section: "9.46", memberKind: "named_provider", memberName: "Composio legacy-adapter mention", sourceLine: mention.lineNumber, sourceText: mention.text, sourceDigest: hash(mention.text), componentId: composioComponent?.id ?? "D66", registerSourceLine: composioComponent?.sourceLine ?? null, registerRowDigest: composioComponent?.rowDigest ?? null, relationship: "superseded_catalog_reference", routeState: "superseded", routeEvidence: supersessionText ?? "Authoritative supersession evidence missing", activationVerified: false });
+  if (composioMentions.length === 0) addFinding({ code: "SUPERSESSION_DECISION_MISSING", section: "9.46", memberName: "Composio", sourceLine: sections.get("9.46")?.sourceLine ?? null, componentId: "D66", registerSourceLine: composioComponent?.sourceLine ?? null, detail: "Expected legacy Composio cross-reference was not found in §9.46" });
+  if (supersessionLine !== null && composioComponent && /conditional/i.test(composioComponent.releaseGate)) addFinding({ code: "SUPERSESSION_REGISTER_CONFLICT", section: "9.48", memberName: "Composio", sourceLine: sections.get("9.48")?.sourceLine ?? null, componentId: "D66", registerSourceLine: composioComponent.sourceLine, detail: "CONTRACTS.md line " + supersessionLine + " supersedes the D66 conditional release text; coverage reports D66 as superseded" });
+  const sectionSetComplete = sections.size === 48 && Array.from({ length: 48 }, (_, index) => index + 1).every((number) => sections.has("9." + number));
+  const everyRegisterSourceMaps = [...registerComponents.keys()].every((componentId) => (sectionsByComponent.get(componentId) ?? []).some((section) => sections.has(section)));
+  const sectionMappingComplete = sectionSetComplete && everyRegisterSourceMaps && [...sections.values()].every((section) => section.componentIds.length > 0) && !coverageFindings.some((item) => ["SECTION_MISSING", "SECTION_DUPLICATE", "SECTION_UNMAPPED", "REGISTER_SECTION_MISSING"].includes(item.code));
+  const expectedComponentsComplete = Array.from({ length: 66 }, (_, index) => "D" + String(index + 1).padStart(2, "0")).every((componentId) => registerComponents.has(componentId));
+  const representedComponents = new Set(members.filter((member) => member.memberKind === "canonical_component").map((member) => member.componentId));
+  const everyComponentHasCatalogMember = [...registerComponents.keys()].every((componentId) => representedComponents.has(componentId));
+  const memberMappingComplete = expectedComponentsComplete && registerComponents.size === 66 && everyComponentHasCatalogMember && longTailRowsMapped && !coverageFindings.some((item) => ["LONG_TAIL_MEMBER_UNMAPPED", "REGISTER_COMPONENT_OUT_OF_RANGE"].includes(item.code));
+  const registerRouteConsistent = !coverageFindings.some((item) => ["SUPERSESSION_REGISTER_CONFLICT", "SUPERSESSION_DECISION_MISSING"].includes(item.code));
+  return researchCatalogCoverageSchema.parse({ catalogPath, catalogDigest: hash(catalogRaw), contractPath, contractDigest: hash(contractRaw), supersessionLine, supersessionText, supersessionDigest, sections: [...sections.values()].map(section => ({ section: section.section, sourceLine: section.sourceLine, title: section.title, sectionDigest: section.sectionDigest, componentIds: section.componentIds })).sort((left, right) => Number(left.section.slice(2)) - Number(right.section.slice(2))), members, findings: coverageFindings, sectionMappingComplete, memberMappingComplete, registerRouteConsistent, activationVerified: false });
+};
 const inspectResearch = (input: MapCheckInputV1): ResearchRegisterInspectionV1 => {
   const registerPath = "specs/RESEARCH-REGISTER.md";
   const raw = readResearchFile(registerPath);
@@ -278,7 +481,8 @@ const inspectResearch = (input: MapCheckInputV1): ResearchRegisterInspectionV1 =
   }
   for (const code of ["GATE_EVIDENCE_UNVERIFIED", "RESEARCH_ATTESTATION_UNVERIFIED", "DEPENDENCY_CLOSURE_UNVERIFIED"] as const) findings.push({ componentId: null, code, sourceLine: null });
   const specReferences = inspectResearchSpecs(components, findings);
-  return researchRegisterInspectionSchema.parse({ requestedRelease: input.release, registerPath, registerDigest: hash(raw), components, reports, specReferences, dependencyClosureVerified: false, findings, scope: "register_inventory", admission: "BLOCKED", acceptanceComplete: false });
+  const sourcesCatalogCoverage = inspectSourcesCatalog(components);
+  return researchRegisterInspectionSchema.parse({ requestedRelease: input.release, registerPath, registerDigest: hash(raw), components, reports, specReferences, sourcesCatalogCoverage, dependencyClosureVerified: false, findings, wholeATsPassed: [], scope: "register_inventory", admission: "BLOCKED", acceptanceComplete: false });
 };
 
 export const EngineeringControl = {

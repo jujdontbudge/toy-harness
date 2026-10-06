@@ -1,0 +1,62 @@
+{
+  "card": "R0.02",
+  "assignedAT": "AT-RESEARCH-REGISTER-4",
+  "rung": "CLI",
+  "verifiedAt": "2026-10-06T17:41:31.454429Z",
+  "state": "BOUNDED_CATALOG_CLI_REGRESSION_PASS",
+  "command": "node --test tests/cli/research.cli.test.ts",
+  "exitCode": 0,
+  "cliCommand": "toy research check --release R0 --json",
+  "cliExitCode": 5,
+  "expectedMissingAdmission": true,
+  "evidence": "build/evidence/R0.02/catalog-coverage-cli-test.json",
+  "catalogDigest": "7caa4347326c27ed528e96106b729fd9f5d0ae3da69518302b519c98b0fa6645",
+  "contractDigest": "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d",
+  "registerDigest": "8ebbcfb9e2e63041fd004dd55787a02473d36d9bcaa733eb4d322722b1ae4942",
+  "sections": 48,
+  "canonicalComponents": 66,
+  "namedMembers": 39,
+  "memberCount": 105,
+  "sectionMappingComplete": true,
+  "memberMappingComplete": true,
+  "registerRouteConsistent": false,
+  "supersessionEvidenceConsistent": true,
+  "findings": [
+    {
+      "code": "CATALOG_MEMBER_DETAIL_OPEN",
+      "section": "9.47",
+      "memberName": "Other task apps",
+      "sourceLine": 3785,
+      "componentId": "D60",
+      "registerSourceLine": 263,
+      "detail": "Catalog category is mapped to its section component, but that register description does not name the member independently"
+    },
+    {
+      "code": "SUPERSESSION_REGISTER_CONFLICT",
+      "section": "9.48",
+      "memberName": "Composio",
+      "sourceLine": 3801,
+      "componentId": "D66",
+      "registerSourceLine": 269,
+      "detail": "CONTRACTS.md line 311 supersedes the D66 conditional release text; coverage reports D66 as superseded"
+    }
+  ],
+  "reviewDisposition": "build/evidence/R0.02/catalog-review-disposition.json",
+  "activationVerified": false,
+  "dependencyClosureVerified": false,
+  "acceptanceComplete": false,
+  "wholeATsPassed": [],
+  "staticVerification": {
+    "command": "npm run check",
+    "exitCode": 0,
+    "completedAt": "2026-10-06T17:42:09.635322Z",
+    "output": "build/evidence/R0.03/concurrent-auth-package-check-final.txt",
+    "contracts": 278,
+    "contractArtifacts": 346,
+    "features": 95,
+    "commands": 55,
+    "ATIndexEntries": 1447,
+    "schemaDigest": "da7b3542f9797e49fce5bda46ebc71481024291610273492b1d15188a93a974d",
+    "swiftInvoked": false
+  }
+}

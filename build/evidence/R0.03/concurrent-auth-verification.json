@@ -1,0 +1,132 @@
+{
+  "card": "R0.03",
+  "assignedAT": "AT-hermes-config-87",
+  "rung": "CLI",
+  "observedAt": "2026-10-06T17:41:31.454429Z",
+  "state": "THREE_FAILED_ATTEMPTS_REPLANNED",
+  "attempts": [
+    {
+      "attempt": 1,
+      "operationId": "c8037d4a-63c6-4e03-8b61-8445e37c95cf",
+      "exitCode": 1,
+      "evidence": "build/evidence/R0.03/concurrent-auth-probe-1.json",
+      "readback": "build/evidence/R0.03/concurrent-auth-probe-1-show.json",
+      "exactReadback": true,
+      "cases": [
+        {
+          "state": "PASS",
+          "reasonCode": "NATIVE_PUBLIC_CLI_READY_AUTH_PENDING"
+        },
+        {
+          "state": "FAIL",
+          "reasonCode": "NATIVE_AUTH_FIXTURE_RESULT_INVALID"
+        }
+      ],
+      "wholeATComplete": false
+    },
+    {
+      "attempt": 2,
+      "operationId": "82a464a0-063c-45c6-9edf-e56fbff8dc2b",
+      "exitCode": 1,
+      "evidence": "build/evidence/R0.03/concurrent-auth-probe-2.json",
+      "readback": "build/evidence/R0.03/concurrent-auth-probe-2-show.json",
+      "exactReadback": true,
+      "cases": [
+        {
+          "state": "PASS",
+          "reasonCode": "NATIVE_PUBLIC_CLI_READY_AUTH_PENDING"
+        },
+        {
+          "state": "PASS",
+          "reasonCode": "NATIVE_AUTH_FIXTURE_ADD_OBSERVED"
+        },
+        {
+          "state": "PASS",
+          "reasonCode": "NATIVE_AUTH_FIXTURE_LIST_OBSERVED"
+        },
+        {
+          "state": "FAIL",
+          "reasonCode": "NATIVE_AUTH_CONCURRENCY_ADD_CRASH_CUT_FAILED"
+        },
+        {
+          "state": "PASS",
+          "reasonCode": "NATIVE_AUTH_CONCURRENCY_CHAT_CRASH_CUT_OBSERVED"
+        }
+      ],
+      "wholeATComplete": false
+    },
+    {
+      "attempt": 3,
+      "operationId": "55d85966-3e16-45aa-b868-b9bfd5106932",
+      "exitCode": 1,
+      "evidence": "build/evidence/R0.03/concurrent-auth-probe-3.json",
+      "readback": "build/evidence/R0.03/concurrent-auth-probe-3-show.json",
+      "exactReadback": true,
+      "cases": [
+        {
+          "state": "PASS",
+          "reasonCode": "NATIVE_PUBLIC_CLI_READY_AUTH_PENDING"
+        },
+        {
+          "state": "PASS",
+          "reasonCode": "NATIVE_AUTH_FIXTURE_ADD_OBSERVED"
+        },
+        {
+          "state": "PASS",
+          "reasonCode": "NATIVE_AUTH_FIXTURE_LIST_OBSERVED"
+        },
+        {
+          "state": "PASS",
+          "reasonCode": "NATIVE_AUTH_CONCURRENCY_ADD_CRASH_CUT_OBSERVED"
+        },
+        {
+          "state": "FAIL",
+          "reasonCode": "NATIVE_AUTH_CONCURRENCY_CHAT_CRASH_CUT_FAILED"
+        }
+      ],
+      "wholeATComplete": false
+    }
+  ],
+  "replan": "build/evidence/R0.03/concurrent-auth-replan.json",
+  "neighborRegression": {
+    "assignedAT": "AT-hermes-config-85",
+    "case": "native-auth-cli",
+    "operationId": "7ef8f1b8-a45f-413f-849a-e703298fe1c6",
+    "exitCode": 0,
+    "checksPassed": 6,
+    "exactReadback": true,
+    "run": "build/evidence/R0.03/concurrent-auth-neighbor-85.json",
+    "show": "build/evidence/R0.03/concurrent-auth-neighbor-85-show.json",
+    "wholeATComplete": false
+  },
+  "teardown": {
+    "stackId": "98629856-a227-4cb5-9aad-5051e50d3d3f",
+    "complete": true,
+    "unresolvedResources": 0,
+    "evidence": "build/evidence/R0.03/concurrent-auth-stack-down.json"
+  },
+  "currentSourceDigests": {
+    "packages/hermes/src/auth-fixture.ts": "0612d01315ed5f26489f7adfd60cf0a173aa18293bd0df336de2741d3442be2d",
+    "packages/hermes/src/auth-probe.ts": "a9d42f36620ddecb6c5dd801184d425e4be15cf2735254c66360f8f0d5a775fb",
+    "patches/hermes-auth-fixture.patch": "50ff14fc0273c4dfc5758c058b872dbadfc4a5483719787cb5528de8072dd5dc"
+  },
+  "lastBehaviorMutation": "Crash-order observations tightened after attempt3; late changes only reject unexpected child failures and remove unverified order claims",
+  "installedHermesChanged": false,
+  "realCredentialStoresRead": false,
+  "liveProviderSends": 0,
+  "wholeATsPassed": [],
+  "acceptanceComplete": false,
+  "staticVerification": {
+    "command": "npm run check",
+    "exitCode": 0,
+    "completedAt": "2026-10-06T17:42:09.635322Z",
+    "output": "build/evidence/R0.03/concurrent-auth-package-check-final.txt",
+    "contracts": 278,
+    "contractArtifacts": 346,
+    "features": 95,
+    "commands": 55,
+    "ATIndexEntries": 1447,
+    "schemaDigest": "da7b3542f9797e49fce5bda46ebc71481024291610273492b1d15188a93a974d",
+    "swiftInvoked": false
+  }
+}

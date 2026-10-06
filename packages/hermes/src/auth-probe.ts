@@ -13,10 +13,10 @@ const launcher = join(installedRoot, ".hermes/bin/hermes");
 const digest = (bytes: string | Buffer): string => createHash("sha256").update(bytes).digest("hex");
 
 export const HermesAuthProbe = {
-  run(input: RegisteredProbeInputV1, context: OpsControlContextV1): Promise<Result<RegisteredProbeOperationV1>> {
+  async run(input: RegisteredProbeInputV1, context: OpsControlContextV1): Promise<Result<RegisteredProbeOperationV1>> {
     const started = process.hrtime.bigint();
     const invalid: Result<RegisteredProbeOperationV1> = { ok: false, error: { module: "ops", code: "INVALID_INPUT", message: opsErrorMessages.INVALID_INPUT, retryable: false } };
-    if (!registeredProbeInputSchema.safeParse(input).success || input.caseId !== "native-auth-cli" || !["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-78", "AT-ops-55"].includes(input.probeId)) return Promise.resolve(invalid);
+    if (!registeredProbeInputSchema.safeParse(input).success || input.caseId !== "native-auth-cli" || !["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-87", "AT-hermes-config-78", "AT-ops-55"].includes(input.probeId)) return Promise.resolve(invalid);
     const owned = OpsTestStack.inspect(context);
     if (!owned.ok) return Promise.resolve(owned);
     const snapshot = owned.data.result;
@@ -63,15 +63,16 @@ export const HermesAuthProbe = {
       });
       const fixtureBudgetMs = context.timeoutMs - Number((process.hrtime.bigint() - started) / 1000000n);
       const checks = [check];
-      if (publicHelpObserved && fixtureBudgetMs > 0 && input.probeId === "AT-hermes-config-85") checks.push(...runHermesAuthFixture(interpreter, home, hermesHome, fixtureBudgetMs));
-      if (publicHelpObserved && fixtureBudgetMs > 0 && ["AT-hermes-config-78", "AT-ops-55"].includes(input.probeId)) checks.push(...runHermesAuthFixture(interpreter, home, hermesHome, fixtureBudgetMs, "siwc-unbound"));
+      if (publicHelpObserved && fixtureBudgetMs > 0 && input.probeId === "AT-hermes-config-85") checks.push(...await runHermesAuthFixture(interpreter, home, hermesHome, fixtureBudgetMs));
+      if (publicHelpObserved && fixtureBudgetMs > 0 && input.probeId === "AT-hermes-config-87") checks.push(...await runHermesAuthFixture(interpreter, home, hermesHome, fixtureBudgetMs, "concurrent-refresh-add"));
+      if (publicHelpObserved && fixtureBudgetMs > 0 && ["AT-hermes-config-78", "AT-ops-55"].includes(input.probeId)) checks.push(...await runHermesAuthFixture(interpreter, home, hermesHome, fixtureBudgetMs, "siwc-unbound"));
       if (publicHelpObserved && input.probeId === "AT-hermes-config-84") {
         for (const phase of ["add-enospc", "add-replace-fault"] as const) {
           const storageHome = mkdtempSync(join(home, "storage-fault-"));
           const storageHermesHome = join(storageHome, "hermes");
           mkdirSync(storageHermesHome, { mode: 0o700 });
           const storageBudgetMs = context.timeoutMs - Number((process.hrtime.bigint() - started) / 1000000n);
-          checks.push(...runHermesAuthFixture(interpreter, storageHome, storageHermesHome, storageBudgetMs, phase));
+          checks.push(...await runHermesAuthFixture(interpreter, storageHome, storageHermesHome, storageBudgetMs, phase));
         }
       }
       return Promise.resolve(TestProbeControl.run(input, context, checks));

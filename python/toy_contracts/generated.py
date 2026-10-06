@@ -339,8 +339,10 @@ class ResearchRegisterInspectionV1(TypedDict):
     components: list["ResearchComponentInspectionV1"]
     reports: list["ResearchRegisterInspectionV1ReportsItem"]
     specReferences: list["ResearchSpecReferencesV1"]
+    sourcesCatalogCoverage: "ResearchCatalogCoverageV1"
     dependencyClosureVerified: "RoleBootstrapReportV1IdentityGateVerified"
     findings: list["ResearchInspectionFindingV1"]
+    wholeATsPassed: list[str]
     scope: "ResearchRegisterInspectionV1Scope"
     admission: "ResearchRegisterInspectionV1Admission"
     acceptanceComplete: "RoleBootstrapReportV1IdentityGateVerified"
@@ -382,6 +384,88 @@ class ResearchSpecReferencesV1RequirementMappingRowsItem(TypedDict):
     sourceLine: int
     rowDigest: "Digest"
     requirementCell: str
+
+class ResearchCatalogCoverageV1(TypedDict):
+    catalogPath: str
+    catalogDigest: "Digest"
+    contractPath: str
+    contractDigest: "Digest"
+    supersessionLine: Optional[int]
+    supersessionText: Optional[str]
+    supersessionDigest: Optional["Digest"]
+    sections: list["ResearchCatalogSectionV1"]
+    members: list["ResearchCatalogMemberV1"]
+    findings: list["ResearchCatalogCoverageFindingV1"]
+    sectionMappingComplete: bool
+    memberMappingComplete: bool
+    registerRouteConsistent: bool
+    activationVerified: "RoleBootstrapReportV1IdentityGateVerified"
+
+class ResearchCatalogSectionV1(TypedDict):
+    section: str
+    sourceLine: int
+    title: str
+    sectionDigest: "Digest"
+    componentIds: list[str]
+
+class ResearchCatalogMemberV1(TypedDict):
+    section: str
+    memberKind: "ResearchCatalogMemberV1MemberKind"
+    memberName: str
+    sourceLine: int
+    sourceText: str
+    sourceDigest: "Digest"
+    componentId: Optional[str]
+    registerSourceLine: Optional[int]
+    registerRowDigest: Optional["Digest"]
+    relationship: "ResearchCatalogMemberV1Relationship"
+    routeState: "ResearchCatalogMemberV1RouteState"
+    routeEvidence: str
+    activationVerified: "RoleBootstrapReportV1IdentityGateVerified"
+
+ResearchCatalogMemberV1MemberKind = Literal[
+    "canonical_component",
+    "named_provider",
+]
+
+ResearchCatalogMemberV1Relationship = Literal[
+    "canonical_consuming_spec",
+    "explicit_catalog_crosswalk",
+    "canonical_cross_reference",
+    "superseded_catalog_reference",
+    "unmapped",
+]
+
+ResearchCatalogMemberV1RouteState = Literal[
+    "pending",
+    "optional_pending",
+    "blocked",
+    "unselected",
+    "partial",
+    "superseded",
+]
+
+class ResearchCatalogCoverageFindingV1(TypedDict):
+    code: "ResearchCatalogCoverageFindingV1Code"
+    section: Optional[str]
+    memberName: Optional[str]
+    sourceLine: Optional[int]
+    componentId: Optional[str]
+    registerSourceLine: Optional[int]
+    detail: str
+
+ResearchCatalogCoverageFindingV1Code = Literal[
+    "SECTION_MISSING",
+    "SECTION_DUPLICATE",
+    "SECTION_UNMAPPED",
+    "REGISTER_SECTION_MISSING",
+    "REGISTER_COMPONENT_MISSING",
+    "REGISTER_COMPONENT_OUT_OF_RANGE",
+    "LONG_TAIL_MEMBER_UNMAPPED",
+    "CATALOG_MEMBER_DETAIL_OPEN",
+    "SUPERSESSION_REGISTER_CONFLICT",
+    "SUPERSESSION_DECISION_MISSING",
+]
 
 class ResearchInspectionFindingV1(TypedDict):
     componentId: Optional[str]
@@ -4883,6 +4967,61 @@ class InstalledHermesDependencyRecordV1PackagesVenv(TypedDict):
 
 HermesPublicRuntimeCommandV1 = list[str]
 
+class HermesAuthConcurrencyObservationV1(TypedDict):
+    order: "HermesAuthConcurrencyObservationV1Order"
+    actor: "HermesAuthConcurrencyObservationV1Actor"
+    barrier: "HermesAuthConcurrencyObservationV1Barrier"
+    crashCut: "HermesAuthConcurrencyObservationV1CrashCut"
+    staleRefreshTokenRejected: "HermesAuthConcurrencyObservationV1StaleRefreshTokenRejected"
+    staleRefreshResponse: "HermesAuthConcurrencyObservationV1StaleRefreshTokenRejected"
+    freshProcessUse: "HermesAuthConcurrencyObservationV1FreshProcessUse"
+    refreshGeneration: Optional["HermesAuthConcurrencyObservationV1RefreshGenerationValue"]
+
+HermesAuthConcurrencyObservationV1Order = Literal[
+    "refresh-first",
+    "add-first",
+]
+
+HermesAuthConcurrencyObservationV1Actor = Literal[
+    "auth-add",
+    "expired-chat",
+    "fresh-list-reload",
+    "fresh-add-reload",
+    "fresh-refresh-reload",
+]
+
+HermesAuthConcurrencyObservationV1Barrier = Literal[
+    "not-used",
+    "reached",
+    "released",
+    "persisted",
+]
+
+HermesAuthConcurrencyObservationV1CrashCut = Literal[
+    "none",
+    "after-add-public-command-before-wrapper-exit",
+    "after-refresh-public-command-before-wrapper-exit",
+]
+
+HermesAuthConcurrencyObservationV1StaleRefreshTokenRejected = Literal[
+    "not-exercised",
+    "rejected",
+]
+
+HermesAuthConcurrencyObservationV1FreshProcessUse = Literal[
+    "not-checked",
+    "usable",
+    "unusable",
+]
+
+HermesAuthConcurrencyObservationV1RefreshGenerationValue = Literal[
+    "initial",
+    "rotated",
+    "added",
+    "added-rotated",
+    "stale",
+]
+
 class HermesAuthFixtureResultV1(TypedDict):
     schema: "HermesAuthFixtureResultV1Schema"
     operation: "HermesAuthFixtureResultV1Operation"
@@ -4891,6 +5030,7 @@ class HermesAuthFixtureResultV1(TypedDict):
     markers: list["HermesAuthFixtureResultV1MarkersItem"]
     processIdentity: "HermesAuthFixtureResultV1ProcessIdentity"
     observations: "HermesAuthFixtureResultV1Observations"
+    concurrency: NotRequired["HermesAuthConcurrencyObservationV1"]
     http_ledger: "HermesAuthFixtureResultV1Httpledger"
     network_audit: "HermesAuthFixtureResultV1Networkaudit"
 
@@ -4932,7 +5072,7 @@ class HermesAuthFixtureResultV1Observations(TypedDict):
     provider: "HermesAuthFixtureResultV1ObservationsProvider"
     phase: "HermesAuthFixtureResultV1ObservationsPhase"
     credential_count: NotRequired[int]
-    access_generation: Optional["HermesAuthFixtureResultV1ObservationsAccessgenerationValue"]
+    access_generation: Optional["HermesAuthConcurrencyObservationV1RefreshGenerationValue"]
     storage_fault_triggered: bool
     token_hygiene: bool
     success_claim_absent: bool
@@ -4956,11 +5096,7 @@ HermesAuthFixtureResultV1ObservationsPhase = Literal[
     "list-after-fault",
     "chat-after-fault",
     "siwc-unbound",
-]
-
-HermesAuthFixtureResultV1ObservationsAccessgenerationValue = Literal[
-    "initial",
-    "rotated",
+    "concurrent-refresh-add",
 ]
 
 HermesAuthFixtureResultV1ObservationsNetworkdenialsItem = Literal[

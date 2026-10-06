@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "code": {
+      "type": "string",
+      "enum": [
+        "SECTION_MISSING",
+        "SECTION_DUPLICATE",
+        "SECTION_UNMAPPED",
+        "REGISTER_SECTION_MISSING",
+        "REGISTER_COMPONENT_MISSING",
+        "REGISTER_COMPONENT_OUT_OF_RANGE",
+        "LONG_TAIL_MEMBER_UNMAPPED",
+        "CATALOG_MEMBER_DETAIL_OPEN",
+        "SUPERSESSION_REGISTER_CONFLICT",
+        "SUPERSESSION_DECISION_MISSING"
+      ]
+    },
+    "section": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "memberName": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "sourceLine": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "componentId": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^D[0-9]{2}(?![\\s\\S])"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "registerSourceLine": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "detail": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000
+    }
+  },
+  "required": [
+    "code",
+    "section",
+    "memberName",
+    "sourceLine",
+    "componentId",
+    "registerSourceLine",
+    "detail"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:ResearchCatalogCoverageFindingV1"
+}

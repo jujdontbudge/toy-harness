@@ -1,0 +1,70 @@
+{
+  "generatedAt": "2026-10-06T17:22:00Z",
+  "card": "R0.03",
+  "status": "CONCURRENT_AUTH_SOURCE_PREPARED_UNVERIFIED",
+  "assignedAT": "AT-hermes-config-87",
+  "rung": "CLI",
+  "entry": "runHermesAuthFixture(..., 'concurrent-refresh-add')",
+  "sourceFiles": [
+    "packages/contracts/src/hermes-runtime.ts",
+    "packages/hermes/src/auth-fixture.ts",
+    "patches/hermes-auth-fixture.patch"
+  ],
+  "sourcePreparation": {
+    "primaryChildren": [
+      "real pinned public hermes --profile toy auth add openai-codex --type oauth --no-browser",
+      "real pinned public hermes --profile toy chat with the expired synthetic grant"
+    ],
+    "orders": [
+      {
+        "order": "add-first",
+        "heldBeforeFirstRelease": [
+          "auth-add OAuth token response",
+          "expired-chat refresh response"
+        ],
+        "releaseOrder": [
+          "auth-add token response",
+          "wait for public auth-add command success",
+          "refresh token response"
+        ]
+      },
+      {
+        "order": "refresh-first",
+        "heldBeforeFirstRelease": [
+          "expired-chat refresh response",
+          "auth-add OAuth token response"
+        ],
+        "releaseOrder": [
+          "refresh token response",
+          "wait for refreshed-generation model-catalog observation",
+          "auth-add token response",
+          "wait for public auth-add command success"
+        ]
+      }
+    ],
+    "childrenStartedBeforeFirstRelease": true,
+    "lockContingency": "If the second child stays live but has not reached its fake-provider barrier, the first operation is released and the second must reach its barrier before its response is released. No lock ownership is inferred.",
+    "plannedPostOperationChecks": [
+      "fresh public auth list must show the retained credential count",
+      "fresh public chat must use the original grant's newest accepted refresh generation",
+      "fresh public chat must expire and use the independently added grant"
+    ],
+    "plannedRootStoreCheck": "Compare root auth and environment file existence/digests around child operations and reloads.",
+    "plannedTerminationCuts": [
+      "SIGKILL after successful public auth-add command and safe fixture result emission, before fixture wrapper exit",
+      "SIGKILL after successful public chat command and safe fixture result emission, before fixture wrapper exit"
+    ],
+    "privateOutput": "Only generated Hermes runtime schemas, fixed states, counts, process identity, and safe digests are retained; provider token values and raw child streams are not emitted."
+  },
+  "notImplementedOrUnverified": [
+    "The add-first order delays the original grant's successful refresh response until after independent auth-add, but a stale successful response competing with a newer accepted rotation, and public-process rejection or suppression of that stale response, are not exercised. staleRefreshResponse and staleRefreshTokenRejected remain not-exercised; whole AT remains false.",
+    "No OS/storage atomic-replace crash cut is implemented. The prepared SIGKILL boundaries occur after public command completion and do not establish atomic commit recovery.",
+    "No compiler, fixture syntax check, patch applicability check, or registered CLI acceptance run was performed by this source-preparation unit; parent verification remains required."
+  ],
+  "wholeATComplete": false,
+  "acceptanceComplete": false,
+  "liveCredentialsAccessed": false,
+  "installedHermesModified": false,
+  "installedProfileModified": false,
+  "registeredProbeInvoked": false
+}

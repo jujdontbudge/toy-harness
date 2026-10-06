@@ -1,10 +1,11 @@
 --- /dev/null
 +++ b/tests/fixtures/toy_auth_httpx_fixture.py
-@@ -0,0 +1,489 @@
+@@ -0,0 +1,659 @@
 +from __future__ import annotations
 +
 +import base64
 +import errno
++import fcntl
 +import io
 +import json
 +import os
@@ -22,6 +23,7 @@
 +_SOCKET_ORIGIN: str | None = None
 +_STORAGE_FAULT_TRIGGERED = False
 +_TOKEN_RESPONSE_ISSUED = False
++_CONCURRENCY_BARRIER_STATE = "not-used"
 +_ADD_PHASES = {"add", "add-enospc", "add-replace-fault"}
 +_DENIALS: list[str] = []
 +_COUNTS = {
@@ -38,6 +40,8 @@
 +_EXPECTED_MODEL = "gpt-6.1-sol"
 +_PROMPT = "Return the fixed fixture marker."
 +_PAID_KEY = "toy-fixture-paid-key"
++_GENERATION_EXPIRATIONS = {"initial": 1893456000, "rotated": 4102444800, "added": 1893456000, "added-rotated": 4102531200, "stale": 4102531200}
++_GENERATION_REFRESH_TOKENS = {"initial": "toy-fixture-refresh-initial", "rotated": "toy-fixture-refresh-rotated", "added": "toy-fixture-refresh-added", "added-rotated": "toy-fixture-refresh-added-rotated", "stale": "toy-fixture-refresh-stale"}
 +
 +
 +class _FixtureAsyncStream(httpx.AsyncByteStream):
@@ -51,17 +55,102 @@
 +        return None
 +
 +
-+def _access_token(expiration: int) -> str:
++def _access_token(expiration: int, generation: str = "initial") -> str:
 +    header = base64.urlsafe_b64encode(b'{"alg":"none","typ":"JWT"}').rstrip(b"=").decode()
 +    claims = {
 +        "exp": expiration,
-+        "sub": "toy-fixture-subject",
-+        "https://api.openai.com/auth": {"chatgpt_account_id": "toy-fixture-account"},
++        "sub": f"toy-fixture-{generation}",
++        "https://api.openai.com/auth": {"chatgpt_account_id": f"toy-fixture-account-{generation}"},
 +    }
 +    payload = base64.urlsafe_b64encode(
 +        json.dumps(claims, separators=(",", ":")).encode()
 +    ).rstrip(b"=").decode()
 +    return f"{header}.{payload}.fixture"
++
++
++def _expected_access_generations() -> tuple[str, ...]:
++    actor = os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR", "")
++    if actor == "fresh-add-reload":
++        return ("added-rotated",)
++    if actor == "fresh-refresh-reload":
++        return ("rotated",) if os.environ.get("TOY_AUTH_CONCURRENCY_ORDER") == "add-first" else ("stale",)
++    if _PHASE == "chat-expired" and actor == "expired-chat":
++        order = os.environ.get("TOY_AUTH_CONCURRENCY_ORDER")
++        if order == "add-first":
++            return ("rotated",)
++        if order == "refresh-first":
++            return ("stale",)
++        return ("rotated", "added-rotated")
++    if _PHASE == "chat":
++        return ("initial",)
++    if _PHASE in {"chat-expired", "chat-reloaded"}:
++        return ("rotated", "stale", "added-rotated")
++    return ()
++
++
++def _barrier_path(name: str) -> Path | None:
++    if name not in {"add-response-pending", "release-add-token", "add-command-returned", "release-add-result", "refresh-lock-pending", "release-refresh-lock", "refresh-response-pending", "release-refresh-token", "refresh-catalog-observed", "release-refresh-model", "result-emitted", "release-result"}:
++        return None
++    directory = os.environ.get("TOY_AUTH_CONCURRENCY_BARRIER_DIR")
++    if not directory:
++        return None
++    try:
++        root = Path(directory)
++        if root.is_symlink() or not root.is_dir():
++            return None
++        resolved = root.resolve(strict=True)
++        if not resolved.is_dir():
++            return None
++        marker = resolved / name
++        if marker.is_symlink() or marker.exists() and not marker.is_file():
++            return None
++        return marker
++    except OSError:
++        return None
++
++
++def _signal_barrier(name: str) -> bool:
++    marker = _barrier_path(name)
++    if marker is None:
++        return False
++    try:
++        with marker.open("x", encoding="ascii") as handle:
++            handle.write("reached")
++        return True
++    except OSError:
++        return False
++
++
++def _wait_barrier(name: str, timeout_seconds: float = 45.0) -> bool:
++    marker = _barrier_path(name)
++    if marker is None:
++        return False
++    deadline = time.monotonic() + timeout_seconds
++    while time.monotonic() < deadline:
++        if marker.exists() and marker.is_file() and not marker.is_symlink():
++            return True
++        time.sleep(0.01)
++    return marker.exists() and marker.is_file() and not marker.is_symlink()
++
++
++def _concurrency_result(operation: str) -> dict[str, object] | None:
++    order = os.environ.get("TOY_AUTH_CONCURRENCY_ORDER", "")
++    actor = os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR", "")
++    if order not in {"refresh-first", "add-first"} or actor not in {"auth-add", "expired-chat", "fresh-list-reload", "fresh-add-reload", "fresh-refresh-reload"}:
++        return None
++    fresh_use = "not-checked"
++    if actor in {"fresh-add-reload", "fresh-refresh-reload"}:
++        fresh_use = "usable" if operation == "chat" and _ACCEPTED_ACCESS_GENERATION is not None else "unusable"
++    return {
++        "order": order,
++        "actor": actor,
++        "barrier": _CONCURRENCY_BARRIER_STATE,
++        "crashCut": os.environ.get("TOY_AUTH_CONCURRENCY_CRASH_CUT", "none"),
++        "staleRefreshTokenRejected": "not-exercised",
++        "staleRefreshResponse": "not-exercised",
++        "freshProcessUse": fresh_use,
++        "refreshGeneration": _ACCEPTED_ACCESS_GENERATION,
++    }
 +
 +
 +def _response(
@@ -128,9 +217,17 @@
 +        payload = {}
 +    if not isinstance(payload, dict) or payload.get("model") != _EXPECTED_MODEL:
 +        return _deny_request("model-mismatch")
-+    expected_generation = "initial" if _PHASE == "chat" else "rotated"
-+    expected_expiration = 1893456000 if expected_generation == "initial" else 4102444800
-+    if request.headers.get("authorization") != "Bearer " + _access_token(expected_expiration):
++    expected_generations = _expected_access_generations()
++    expected_generation = next(
++        (
++            generation
++            for generation in expected_generations
++            if request.headers.get("authorization")
++            == "Bearer " + _access_token(_GENERATION_EXPIRATIONS[generation], generation)
++        ),
++        None,
++    )
++    if expected_generation is None:
 +        return _deny_request("authorization-mismatch")
 +    _ACCEPTED_ACCESS_GENERATION = expected_generation
 +    if payload.get("stream") is not False:
@@ -165,6 +262,7 @@
 +
 +
 +def _route(request: httpx.Request, asynchronous: bool = False) -> httpx.Response:
++    global _CONCURRENCY_BARRIER_STATE, _TOKEN_RESPONSE_ISSUED
 +    if request.url.scheme != "https":
 +        return _deny_request()
 +    host = request.url.host.lower()
@@ -212,14 +310,21 @@
 +            asynchronous,
 +        )
 +    if host == "auth.openai.com" and method == "POST" and path == "/oauth/token":
-+        global _TOKEN_RESPONSE_ISSUED
 +        if _PHASE in _ADD_PHASES:
 +            _COUNTS["token_exchanges"] += 1
++            generation = "added" if os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR") == "auth-add" else "initial"
++            if os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR") == "auth-add":
++                if not _signal_barrier("add-response-pending"):
++                    return _deny_request("unregistered-http")
++                _CONCURRENCY_BARRIER_STATE = "reached"
++                if not _wait_barrier("release-add-token"):
++                    return _deny_request("unregistered-http")
++                _CONCURRENCY_BARRIER_STATE = "released"
 +            response = _json_response(
 +                request,
 +                {
-+                    "access_token": _access_token(1893456000),
-+                    "refresh_token": "toy-fixture-refresh-initial",
++                    "access_token": _access_token(_GENERATION_EXPIRATIONS[generation], generation),
++                    "refresh_token": _GENERATION_REFRESH_TOKENS[generation],
 +                    "expires_in": 3600,
 +                    "token_type": "Bearer",
 +                },
@@ -229,18 +334,33 @@
 +            return response
 +        if _PHASE.startswith("chat"):
 +            _COUNTS["token_refreshes"] += 1
-+        if _PHASE == "chat-expired":
++        if _PHASE == "chat-expired" or (
++            _PHASE == "chat-reloaded"
++            and os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR") == "fresh-add-reload"
++        ):
 +            try:
 +                grant = parse_qs(request.read().decode(), strict_parsing=True)
 +            except Exception:
 +                grant = {}
-+            if grant.get("grant_type") != ["refresh_token"] or grant.get("refresh_token") != ["toy-fixture-refresh-initial"]:
++            refresh_value = (grant.get("refresh_token") or [""])[0]
++            generation = next((name for name, token in _GENERATION_REFRESH_TOKENS.items() if token == refresh_value), None)
++            next_generation = {"initial": "rotated", "rotated": "stale", "added": "added-rotated"}.get(generation or "")
++            if grant.get("grant_type") != ["refresh_token"]:
 +                return _deny_request("grant-mismatch")
++            if next_generation is None:
++                return _deny_request("grant-mismatch")
++            if os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR") == "expired-chat":
++                if not _signal_barrier("refresh-response-pending"):
++                    return _deny_request("unregistered-http")
++                _CONCURRENCY_BARRIER_STATE = "reached"
++                if not _wait_barrier("release-refresh-token"):
++                    return _deny_request("unregistered-http")
++                _CONCURRENCY_BARRIER_STATE = "released"
 +            return _json_response(
 +                request,
 +                {
-+                    "access_token": _access_token(4102444800),
-+                    "refresh_token": "toy-fixture-refresh-rotated",
++                    "access_token": _access_token(_GENERATION_EXPIRATIONS[next_generation], next_generation),
++                    "refresh_token": _GENERATION_REFRESH_TOKENS[next_generation],
 +                    "expires_in": 3600,
 +                    "token_type": "Bearer",
 +                },
@@ -261,9 +381,26 @@
 +        _COUNTS["model_catalog_requests"] += 1
 +        if _PHASE not in {"chat", "chat-expired", "chat-reloaded"}:
 +            return _deny_request("model-catalog-outside-chat")
-+        expiration = 1893456000 if _PHASE == "chat" else 4102444800
-+        if request.headers.get("authorization") != "Bearer " + _access_token(expiration):
++        generation = next(
++            (
++                name
++                for name in _expected_access_generations()
++                if request.headers.get("authorization")
++                == "Bearer " + _access_token(_GENERATION_EXPIRATIONS[name], name)
++            ),
++            None,
++        )
++        if generation is None:
 +            return _deny_request("authorization-mismatch")
++        if os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR") == "expired-chat":
++            if not _signal_barrier("refresh-catalog-observed"):
++                _CONCURRENCY_BARRIER_STATE = "not-used"
++                return _deny_request("unregistered-http")
++            _CONCURRENCY_BARRIER_STATE = "reached"
++            if not _wait_barrier("release-refresh-model"):
++                _CONCURRENCY_BARRIER_STATE = "reached"
++                return _deny_request("unregistered-http")
++            _CONCURRENCY_BARRIER_STATE = "released"
 +        return _json_response(request, {"models": [{"slug": _EXPECTED_MODEL, "visibility": "list", "priority": 0}]}, asynchronous)
 +    if host == "api.openai.com" and path == "/v1/models":
 +        return _deny_request("openai-model-discovery")
@@ -344,6 +481,23 @@
 +    return result, captured_stdout.getvalue(), captured_stderr.getvalue(), failure
 +
 +
++def _hold_refresh_lock() -> None:
++    if os.environ.get("TOY_AUTH_CONCURRENCY_ORDER") != "add-first" or os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR") != "expired-chat":
++        return
++    original_flock = fcntl.flock
++    held = False
++
++    def flock(fd: int, operation: int) -> None:
++        nonlocal held
++        if not held and operation & fcntl.LOCK_EX:
++            held = True
++            if not _signal_barrier("refresh-lock-pending") or not _wait_barrier("release-refresh-lock"):
++                raise TimeoutError("Fixture OS lock barrier was not released.")
++        original_flock(fd, operation)
++
++    fcntl.flock = flock
++
++
 +def _safe_result(
 +    operation: str,
 +    argv: list[str],
@@ -354,13 +508,10 @@
 +) -> dict[str, object]:
 +    markers: list[str] = []
 +    combined_output = stdout + "\n" + stderr
-+    tokens = (
-+        _access_token(1893456000),
-+        _access_token(4102444800),
-+        "toy-fixture-refresh-initial",
-+        "toy-fixture-refresh-rotated",
-+        _PAID_KEY,
-+    )
++    tokens = tuple(
++        _access_token(expiration, generation)
++        for generation, expiration in _GENERATION_EXPIRATIONS.items()
++    ) + tuple(_GENERATION_REFRESH_TOKENS.values()) + (_PAID_KEY,)
 +    token_hygiene = not any(token in combined_output for token in tokens)
 +    lower_output = combined_output.casefold()
 +    fallback_attempted = any(
@@ -436,7 +587,7 @@
 +            markers.append("CHAT_RESPONSE_OK" if replied else "CHAT_RESPONSE_NOT_CONFIRMED")
 +    if failure:
 +        markers.append(failure)
-+    return {
++    result: dict[str, object] = {
 +        "schema": "toy.hermes-httpx-auth-fixture.v1",
 +        "operation": operation,
 +        "public_argv": argv,
@@ -447,10 +598,14 @@
 +        "http_ledger": dict(_COUNTS),
 +        "network_audit": "socket-audit-hook-installed",
 +    }
++    concurrency = _concurrency_result(operation)
++    if concurrency is not None:
++        result["concurrency"] = concurrency
++    return result
 +
 +
 +def main() -> int:
-+    global _OPERATION, _PHASE
++    global _OPERATION, _PHASE, _CONCURRENCY_BARRIER_STATE
 +    if len(sys.argv) != 2 or sys.argv[1] not in {"add", "list", "chat", "chat-expired", "chat-reloaded", "add-enospc", "add-replace-fault", "list-after-fault", "chat-after-fault", "siwc-unbound"}:
 +        print(
 +            json.dumps(
@@ -475,14 +630,29 @@
 +    if _PHASE == "siwc-unbound":
 +        os.environ["OPENAI_API_KEY"] = _PAID_KEY
 +    if _PHASE == "chat-expired":
-+        time.time = lambda: 1893463200.0
++        time.time = lambda: 4102448400.0 if os.environ.get("TOY_AUTH_CONCURRENCY_ORDER") == "refresh-first" else 1893463200.0
++    if os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR") == "fresh-add-reload":
++        time.time = lambda: 1893466800.0
 +    argv = _public_argv(_OPERATION)
 +    httpx.Client.send = _sync_send
 +    httpx.AsyncClient.send = _async_send
 +    sys.addaudithook(_deny_socket)
++    _hold_refresh_lock()
 +    exit_code, stdout, stderr, failure = _run_cli(argv)
++    if os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR") == "auth-add":
++        if _signal_barrier("add-command-returned"):
++            _CONCURRENCY_BARRIER_STATE = "reached"
++            if _wait_barrier("release-add-result"):
++                _CONCURRENCY_BARRIER_STATE = "released"
++            else:
++                exit_code = 1
++                failure = "CLI_EXIT_NONZERO"
 +    result = _safe_result(_OPERATION, argv, exit_code, stdout, stderr, failure)
-+    print(json.dumps(result, sort_keys=True))
++    print(json.dumps(result, sort_keys=True), flush=True)
++    actor = os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR", "")
++    if actor in {"auth-add", "expired-chat"} and os.environ.get("TOY_AUTH_CONCURRENCY_HOLD_AFTER_RESULT") == "1":
++        if _signal_barrier("result-emitted"):
++            _wait_barrier("release-result")
 +    return exit_code
 +
 +

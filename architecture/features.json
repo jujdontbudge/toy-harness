@@ -3242,7 +3242,7 @@
     },
     {
       "id": "control.research.check",
-      "description": "Read the research-register inventory and every flat spec digest, explicit component reference and requirement-mapping row; report unmapped references and absent certification while dependency closure and build admission remain unverified",
+      "description": "Read the research-register inventory and every flat spec digest, explicit component reference and requirement-mapping row; crosswalk every Sources catalog section and named provider to D01\u2013D66 with explicit route and supersession states while certification and build admission remain unverified",
       "implementation": "built",
       "requirementIds": [
         "0.17"
@@ -3253,7 +3253,8 @@
       "paths": [
         "packages/self-improvement/src/engineering-control.ts",
         "packages/contracts/src/engineering-control.ts",
-        "docs/adr/0022-research-register-inspection.md"
+        "docs/adr/0022-research-register-inspection.md",
+        "tests/cli/research.cli.test.ts"
       ],
       "firstRelease": "R0",
       "commands": [
@@ -3537,7 +3538,7 @@
     },
     {
       "id": "hermes.native-auth-probe",
-      "description": "Run fixed native public CLI auth and unbound SIWC no-fallback observations in owned fake worlds with isolated homes, synthetic external providers and sanitized readbacks; actual runtime availability remains distinct from full assigned acceptance",
+      "description": "Run fixed native public CLI auth and unbound SIWC no-fallback observations in owned fake worlds with isolated homes, synthetic external providers and sanitized readbacks; prepare concurrent refresh/add ordering and crash readbacks while retaining pending whole acceptance",
       "implementation": "built",
       "requirementIds": [
         "spec:hermes-config"
@@ -3566,6 +3567,7 @@
       "atIds": [
         "AT-hermes-config-85",
         "AT-hermes-config-84",
+        "AT-hermes-config-87",
         "AT-hermes-config-78",
         "AT-ops-55"
       ]
@@ -3689,7 +3691,10 @@
     {
       "id": "ops.native-queue-faults",
       "description": "Fixed CLI probe uses real PostgreSQL17 and native pg-boss transactions to falsify rollback/lost-claim fencing, reads schema44/drift and recurrence storage, checks monthly/DST previews and all five generated schemas; whole AT certification remains pending.",
-      "requirementIds": ["spec:obligations", "spec:ops"],
+      "requirementIds": [
+        "spec:obligations",
+        "spec:ops"
+      ],
       "firstRelease": "R0",
       "implementation": "built",
       "entry": "cli/src/main.ts",
@@ -3706,13 +3711,21 @@
         "packages/contracts/src/ops-registry.ts",
         "docs/adr/0033-r0-native-pg-boss-fault-probe.md"
       ],
-      "commands": ["probe.run", "probe.show"],
-      "atIds": ["AT-obligations-76"]
+      "commands": [
+        "probe.run",
+        "probe.show"
+      ],
+      "atIds": [
+        "AT-obligations-76"
+      ]
     },
     {
       "id": "ops.siwc-control-runtime-probe",
       "description": "Exact root-request diagnostic backs up fixed parent metadata, runs the frozen Secrets import and native Keychain read as measured control UID, discards credential bytes and restores original permissions; no service or inference activation.",
-      "requirementIds": ["spec:ops", "spec:hermes-config"],
+      "requirementIds": [
+        "spec:ops",
+        "spec:hermes-config"
+      ],
       "firstRelease": "R0",
       "implementation": "built",
       "entry": "scripts/probe-siwc-control-runtime.mts",
@@ -3724,8 +3737,14 @@
         "packages/contracts/src/siwc-control-stage.ts",
         "docs/adr/0034-siwc-control-runtime-probe.md"
       ],
-      "commands": ["doctor", "bootstrap.identities"],
-      "atIds": ["AT-authority-34", "AT-ops-30"]
+      "commands": [
+        "doctor",
+        "bootstrap.identities"
+      ],
+      "atIds": [
+        "AT-authority-34",
+        "AT-ops-30"
+      ]
     }
   ],
   "requirements": [

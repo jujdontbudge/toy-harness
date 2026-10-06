@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "toy.engineering-evidence.v1",
+  "card": "R0.03",
+  "assignedAT": "AT-hermes-config-87",
+  "rung": "CLI",
+  "state": "REPLAN_AFTER_THREE_FAILED_ATTEMPTS",
+  "acceptanceComplete": false,
+  "wholeATsPassed": [],
+  "attempts": [
+    {
+      "number": 1,
+      "evidence": "build/evidence/R0.03/concurrent-auth-probe-1.json",
+      "operationId": "c8037d4a-63c6-4e03-8b61-8445e37c95cf",
+      "failure": "NATIVE_AUTH_FIXTURE_RESULT_INVALID",
+      "cause": "Single-file patch declared592addedlines for640bodylines; patch tools accepted a truncated fixture",
+      "correction": "Exact hunk/body count plus post-apply content digest guard; flushed safe receipt"
+    },
+    {
+      "number": 2,
+      "evidence": "build/evidence/R0.03/concurrent-auth-probe-2.json",
+      "operationId": "82a464a0-063c-45c6-9edf-e56fbff8dc2b",
+      "failure": "NATIVE_AUTH_CONCURRENCY_ADD_CRASH_CUT_FAILED",
+      "safeObservation": "Auth-add exit1/CLI_EXCEPTION while fake refresh response held; chat subsequently succeeds",
+      "diagnosis": "Fixture ordering cycle: pinned refresh holds auth-store lock across provider response; fixture waits for add persistence before releasing response",
+      "classification": "harness concurrency",
+      "correction": "For add-first, hold expired-chat before exclusive OS flock acquisition; invoke real flock after release; rename add marker to returned, without success implication"
+    },
+    {
+      "number": 3,
+      "evidence": "build/evidence/R0.03/concurrent-auth-probe-3.json",
+      "operationId": "55d85966-3e16-45aa-b868-b9bfd5106932",
+      "failure": "NATIVE_AUTH_CONCURRENCY_CHAT_CRASH_CUT_FAILED",
+      "safeObservation": "Add exit0/AUTH_ADD_OK with intentional after-command SIGKILL; chat exit0/CHAT_RESPONSE_OK and rotated generation, but ledger contains2refreshes and1unregistered-http denial",
+      "classification": "fake provider fixture accounts for only one refresh",
+      "fullPairPassed": false
+    }
+  ],
+  "nextBoundedRepair": {
+    "prerequisite": "Close current unit and continue independent R0 work before another AT87 attempt",
+    "scope": "Registered fake provider must account independently for every expired fixture credential, applying each primary barrier once and recording per-generation effects without raw tokens",
+    "proof": "Both persistence orders, exact public run/show, independent fresh list/use for both grants, unchanged root digests; no weakened denial or ledger assertion",
+    "forbidden": "No auth-helper mocks, private persistence tests, live account/model sends, lock bypass, serialized wrapper-only overlap or whole-AT case-filter claim"
+  },
+  "remainingCells": [
+    "Both persistence orders and fresh reload are unverified after current fake-provider failure",
+    "Held older successful refresh response suppression",
+    "Atomic storage-boundary crash/restart cuts",
+    "Protected per-AT manifest/controller identity and unfiltered assigned acceptance route"
+  ],
+  "installedHermesChanged": false,
+  "realCredentialStoresRead": false,
+  "liveProviderSends": 0,
+  "rootWorkPendingBlocksGoal": false
+}

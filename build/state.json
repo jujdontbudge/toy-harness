@@ -2,9 +2,9 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-06T16:54:35.211789Z",
-  "phase": "R0.01 critical; Claude actual-control root read pending; R0.02 explicit-reference CLI audit verified",
-  "activeCard": "R0.01",
+  "updatedAt": "2026-10-06T17:42:09.635322Z",
+  "phase": "R0.02 catalog CLI verified; R0.03 three-attempt replan saved; R0.01 root02 pending; minimum protected AT85 registration planning",
+  "activeCard": "R0.04",
   "cardCount": 87,
   "acceptanceCount": 1447,
   "cards": {
@@ -425,7 +425,8 @@
       "dependsOn": "R0.01 started",
       "evidence": [
         "build/evidence/R0.02/research-inspection-preparation.json",
-        "build/evidence/R0.02/spec-reference-verification.json"
+        "build/evidence/R0.02/spec-reference-verification.json",
+        "build/evidence/R0.02/catalog-coverage-verification.json"
       ],
       "requiredATs": [
         "AT-RESEARCH-REGISTER-1",
@@ -476,6 +477,30 @@
         "wholeATsPassed": [],
         "evidence": "build/evidence/R0.02/spec-reference-verification.json",
         "stoppedAt": "2026-10-06T16:49:18.375630Z"
+      },
+      "catalogCoverageUnit": {
+        "startedAt": "2026-10-06T17:04:00Z",
+        "targetStopAt": "2026-10-06T19:04:00Z",
+        "sourceTargetStopAt": "2026-10-06T17:34:00Z",
+        "state": "VERIFIED_BOUNDED_CLI_COVERAGE_UNIT_CLOSED",
+        "assignedAT": "AT-RESEARCH-REGISTER-4",
+        "scope": "Every catalog section and named long-tail provider, canonical D01\u2013D66 mapping with explicit optional/blocked/superseded routes",
+        "wholeATComplete": false,
+        "evidence": "build/evidence/R0.02/catalog-coverage-source-preparation.json",
+        "parentRegression": "tests/cli/research.cli.test.ts",
+        "parentRegressionState": "PASS",
+        "observedSections": 48,
+        "observedCanonicalComponents": 66,
+        "observedNamedMembers": 39,
+        "observedMembers": 105,
+        "sectionMappingComplete": true,
+        "memberMappingComplete": true,
+        "registerRouteConsistent": false,
+        "cliEvidence": "build/evidence/R0.02/catalog-coverage-cli-test.json",
+        "staticEvidence": "build/evidence/R0.03/concurrent-auth-package-check-final.txt",
+        "stoppedAt": "2026-10-06T17:42:09.635322Z",
+        "reviewFindingCorrected": true,
+        "verification": "build/evidence/R0.02/catalog-coverage-verification.json"
       }
     },
     "R0.03": {
@@ -492,7 +517,8 @@
         "build/evidence/R0.03/native-runtime-fixture-verification.json",
         "build/evidence/R0.03/httpx-fixture-source-preparation.json",
         "build/evidence/R0.03/auth-fresh-process-fixture-verification.json",
-        "build/evidence/R0.03/auth-save-fault-fixture-verification.json"
+        "build/evidence/R0.03/auth-save-fault-fixture-verification.json",
+        "build/evidence/R0.03/concurrent-auth-verification.json"
       ],
       "requiredATs": [
         "AT-hermes-config-34",
@@ -594,6 +620,37 @@
         "wholeATsPassed": [],
         "observedAt": "2026-10-06T09:55:09.864Z",
         "schemaDigest": "e1ecf4e021a4793b4e248883a13ced71e9cfb52bf2361f097a292525d7939efe"
+      },
+      "concurrentAuthUnit": {
+        "startedAt": "2026-10-06T16:59:00Z",
+        "targetStopAt": "2026-10-06T18:59:00Z",
+        "sourceTargetStopAt": "2026-10-06T17:44:00Z",
+        "state": "THREE_ATTEMPT_UNIT_STOPPED_REPLANNED",
+        "assignedAT": "AT-hermes-config-87",
+        "scope": "Actual concurrent refresh/add public subprocesses in both orders, stale response and OS crash/restart cells; independent fresh grant use/readback",
+        "wholeATComplete": false,
+        "evidence": "build/evidence/R0.03/concurrent-auth-source-preparation.json",
+        "sourcePreparedAt": "2026-10-06T17:22:00Z",
+        "currentStackId": null,
+        "firstRunEvidence": "build/evidence/R0.03/concurrent-auth-probe-1.json",
+        "firstRunReason": "NATIVE_AUTH_FIXTURE_RESULT_INVALID",
+        "firstFailedOperation": "add",
+        "correction": "Sealed single-file patch line count and exact post-apply byte readback enforced; patch count fixed; sanitized result flushed before wrapper termination",
+        "missingCells": [
+          "Held older successful rotation response suppression relative to a newer accepted rotation",
+          "Atomic-storage-boundary crash/restart cut",
+          "Protected per-AT manifest/controller and unfiltered assigned route"
+        ],
+        "attemptCount": 3,
+        "replanEvidence": "build/evidence/R0.03/concurrent-auth-replan.json",
+        "latestRunEvidence": "build/evidence/R0.03/concurrent-auth-probe-3.json",
+        "latestReason": "NATIVE_AUTH_CONCURRENCY_CHAT_CRASH_CUT_FAILED",
+        "nextRepairDeferred": true,
+        "stoppedAt": "2026-10-06T17:42:09.635322Z",
+        "teardownComplete": true,
+        "neighborChecksPassed": 6,
+        "verification": "build/evidence/R0.03/concurrent-auth-verification.json",
+        "staticEvidence": "build/evidence/R0.03/concurrent-auth-package-check-final.txt"
       }
     },
     "R0.04": {
@@ -691,7 +748,13 @@
         "targetStopAt": "2026-10-06T17:02:44.142623+00:00",
         "scope": "Review externally supplied3macOS bootstrap fixes; CLI-only externalOS regressions, actual identity readbacks, commit and minimum required runtime protection.",
         "bootstrapFixesVerifiedAt": "2026-10-06T15:06:33.297547+00:00",
-        "nextRootRequest": "Poll ROOT-R004-20261006-02; consume sanitized Claude result when DONE or FAILED, never block goal for pending root"
+        "nextRootRequest": "Poll queued root02 and consume sanitized public result; no source expansion or deadline reset",
+        "state": "SOURCE_TIMEBOX_CLOSED_PHYSICAL_ROOT_RESULT_PENDING",
+        "stoppedAt": "2026-10-06T17:02:55.856916Z",
+        "deferred": [
+          "Actual UID310 native module/Keychain read awaits Claude ROOT-R004-20261006-02",
+          "Full protected identity/role/socket/credential and maintenance/recovery admission remains pending"
+        ]
       },
       "lastVerification": {
         "evidence": "build/evidence/R0.04/existing-installation-verification.json",
@@ -852,7 +915,9 @@
         ],
         "databaseInitializationAttempted": true,
         "databaseInitializationAttempts": 3,
-        "databaseInitializationBlocked": null
+        "databaseInitializationBlocked": null,
+        "currentInterfaceEvidence": "docs/adr/0027-model-admission-accounting.md",
+        "interfaceHistoricalBlockerCorrected": true
       },
       "timebox": {
         "startedAt": "2026-10-06T06:30:23.364Z",
@@ -9748,8 +9813,8 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Poll ROOT-R004-20261006-02 and consume sanitized Claude result; keep queued script and child digests frozen while pending. On DONE, prepare only the existing public owner-load proof; on FAILED diagnose the actual native failure. Root waiting does not block the active goal. Verified R0.02 and R0.10 source units remain stopped.",
-  "previousTurnClassification": "NO_PROGRESS",
+  "nextAction": "Commit/push verified catalog coverage and honest concurrent-auth replan; inspect bounded Luna minimum AT85 protected-registration plan, then implement only required registration/identity source within existing interfaces. Poll root02; do not alter queued scripts or retry AT87 without revised per-generation fake-provider plan.",
+  "previousTurnClassification": "PROGRESS",
   "failures": [
     {
       "id": "K1.integration-public-entry-fixture",
@@ -9870,22 +9935,22 @@
     "contractsSwiftSDK": "/Library/Developer/CommandLineTools/SDKs/MacOSX26.5.sdk"
   },
   "admission": {
-    "concurrentChildren": 0,
-    "maximumChildren": 1,
+    "concurrentChildren": 2,
+    "maximumChildren": 2,
     "semanticStackAdmitted": false,
     "testStackMemoryAdmitted": true,
-    "observedAt": "2026-10-06T16:48:29.870Z",
+    "observedAt": "2026-10-06T17:03:51.008Z",
     "availableBytesVerified": true,
     "measurementEvidence": "build/evidence/R0.01/keychain-owner-plan-admission.json",
-    "measurementMeaning": "Normal OS pressure admits helper256MiB + parent512MiB + pending root512MiB +512MiB margin; no owned test stack.",
-    "availableBytes": 2935013376,
+    "measurementMeaning": "Two independent source helpers at256MiB each, parent512MiB, queued root512MiB and512MiB margin fit actual normal-pressure available memory; no test stack.",
+    "availableBytes": 2447638528,
     "testStackNeedBytes": "1073741824",
     "helperNeedBytes": "536870912",
     "marginBytes": "536870912",
     "pressure": "normal",
     "headroomSatisfied": true,
     "resourcePermitIssued": false,
-    "childAdmission": "R001_PUBLIC_OWNER_LOAD_SOURCE_PLAN_LUNA_MAX",
+    "childAdmission": "R003_AUTH_AND_R002_CATALOG_DISJOINT_SOURCE_LUNA_MAX",
     "testStackHeadroomSatisfied": true,
     "normalPressureObserved": true,
     "physicalAdmissionDependency": null,
@@ -9897,7 +9962,7 @@
     },
     "admissionScope": "Confined R0 fake stack and current helper; fresh headroom measurement per new physical work",
     "userReportedPressure": "normal",
-    "currentEvidence": "build/evidence/R0.01/keychain-owner-plan-admission.json",
+    "currentEvidence": "build/evidence/R0.02/catalog-coverage-admission.json",
     "pressureSource": "os",
     "testStackRuntimeWasAdmitted": true,
     "testStackCurrentlyRunning": false,
@@ -20238,25 +20303,17 @@
   },
   "pullRequest": "https://github.com/JohanSardar/toy-harness/pull/1",
   "lastWorker": {
-    "card": "R0.01",
+    "card": "R0.03",
     "task": "r002_minimum_inventory_plan",
     "model": "gpt-6-luna",
     "reasoning": "max",
-    "state": "completed",
-    "ownedScope": "Read-only minimal frozen public owner-load source plan; parent owns all source/compiler/runtime/root queue",
-    "evidence": "build/evidence/R0.01/native-owner-load-minimum-plan.json"
+    "state": "completed_source_only",
+    "ownedScope": "Native public auth concurrency fixture/contract source; parent owns thin routing, map, compilation and CLI verification"
   },
   "continuationAssessment": {
-    "generatedAt": "2026-10-06T16:54:35.211789Z",
-    "classification": "progress",
-    "reason": "Bounded reference audit is committed and pushed; future native owner-load plan complete with no host effects. Pending root02 is a queued dependency, not a goal blockage.",
-    "consecutiveGoalTurnsAtSameImpasse": 0,
-    "goalStatus": "active",
-    "evidence": [
-      "build/evidence/R0.02/spec-reference-verification.json",
-      "build/evidence/R0.04/control-runtime-probe-preparation.json"
-    ],
-    "blockedStatusThresholdReached": false
+    "observedAt": "2026-10-06T17:42:09.635322Z",
+    "reason": "Catalog CLI coverage and source-policy contradiction corrected with red/green public regression. Auth three failures saved and re-planned, neighboring6checks pass, all run/show data match and stack teardown completes. Pending root02 never blocks goal. Independent minimum protected per-AT registration plan in progress.",
+    "goalStatus": "active"
   },
   "executionPolicy": {
     "authority": "Johan direct current-session instruction; CONTRACTS.md Memory admission (Johan, 2026-10-05)",
@@ -20292,16 +20349,15 @@
   "latestStaticVerification": {
     "command": "npm run check",
     "exitCode": 0,
-    "artifacts": 341,
-    "contracts": 273,
+    "completedAt": "2026-10-06T17:42:09.635322Z",
+    "output": "build/evidence/R0.03/concurrent-auth-package-check-final.txt",
+    "contracts": 278,
+    "contractArtifacts": 346,
     "features": 95,
     "commands": 55,
-    "indexedATs": 1447,
-    "schemaDigest": "24460f3fa4fe03f4d0b3d12f65b960cba8e706e6ea904786d15e835ea61d762f",
-    "log": "build/evidence/R0.02/spec-reference-check.txt",
-    "swiftInvoked": false,
-    "generatedAt": "2026-10-06T16:47:58.195Z",
-    "wholeATComplete": false
+    "ATIndexEntries": 1447,
+    "schemaDigest": "da7b3542f9797e49fce5bda46ebc71481024291610273492b1d15188a93a974d",
+    "swiftInvoked": false
   },
   "sourceCheckpointCommit": "c93296d",
   "sourceCheckpointPushed": true,
@@ -20329,14 +20385,25 @@
     }
   },
   "resourceAdmission": {
-    "measuredAt": "2026-10-06T16:48:29.870Z",
-    "availableBytes": "2935013376",
+    "measuredAt": "2026-10-06T17:38:27.280Z",
+    "availableBytes": "2501836800",
     "pressure": "normal",
     "strictlyFreeAdmission": false,
     "repairFloorApplied": false,
     "ownedWorldsRunning": 0,
-    "helpersRunning": 0,
+    "helpersRunning": 1,
     "helperNeedBytes": "268435456",
-    "measurementSource": "build/evidence/R0.01/keychain-owner-plan-admission.json"
-  }
+    "measurementSource": "build/evidence/R0.02/catalog-review-admission.json",
+    "sourceHelpersNeedBytes": "268435456",
+    "parentNeedBytes": "536870912",
+    "queuedRootReserveBytes": "536870912",
+    "marginBytes": "536870912",
+    "combinedRequiredBytes": "2415919104",
+    "ownedStackId": null,
+    "stackAndNativeChildrenNeedBytes": "0",
+    "compileNeedBytes": "536870912"
+  },
+  "activeWorkers": [
+    "/root/r004_minimum_acceptance_registration"
+  ]
 }
