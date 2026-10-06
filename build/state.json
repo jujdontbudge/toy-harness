@@ -2,9 +2,9 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-06T20:35:38.614526+00:00",
-  "phase": "R0.05 denial source unit closed; two exact root requests pending without goal blockage",
-  "activeCard": "R0.05",
+  "updatedAt": "2026-10-06T20:39:01.267231+00:00",
+  "phase": "R0.06 swapped-duration quota unit verified; pending root operations do not block goal",
+  "activeCard": "R0.06",
   "cardCount": 87,
   "acceptanceCount": 1447,
   "cards": {
@@ -1012,7 +1012,8 @@
         "build/evidence/R0.06/migration-artifact-readback.json",
         "build/evidence/R0.06/accounting-runtime-blocker.json",
         "build/evidence/R0.06/accounting-runtime-verification.json",
-        "build/evidence/R0.06/unfiltered-accounting-verification.json"
+        "build/evidence/R0.06/unfiltered-accounting-verification.json",
+        "build/evidence/R0.06/swapped-quota-verification.json"
       ],
       "requiredATs": [
         "AT-hermes-config-59",
@@ -1121,6 +1122,18 @@
         "stoppedAt": "2026-10-06T20:24:02.837764+00:00",
         "diagnosticPasses": 9,
         "verificationEvidence": "build/evidence/R0.06/unfiltered-accounting-verification.json"
+      },
+      "swappedQuotaUnit": {
+        "startedAt": "2026-10-06T20:37:09.400779+00:00",
+        "targetStopAt": "2026-10-06T22:37:09.400779+00:00",
+        "state": "VERIFIED_UNIT_CLOSED",
+        "plan": "build/evidence/R0.06/remaining-accounting-minimum-plan.json",
+        "scope": "Two swapped-duration/ID vectors inside existing AT-ops-52 fresh-known-veto-1 phase only",
+        "wholeATComplete": false,
+        "stoppedAt": "2026-10-06T20:39:01.267231+00:00",
+        "diagnosticPasses": 4,
+        "requiredSwappedObservations": 2,
+        "verificationEvidence": "build/evidence/R0.06/swapped-quota-verification.json"
       }
     },
     "R0.07": {
@@ -10132,7 +10145,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Run the minimum assigned AT-ops-52 swapped-duration metadata vectors on the existing accounting owner; poll root02 and rootR005. Proceed to R0.01 immediately on verified root02 DONE.",
+  "nextAction": "Consume independent R0.12 minimum assigned-AT plan; continue smallest reachable work while polling root02/rootR005. Proceed to R0.01 immediately on verified root02 DONE.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -20678,14 +20691,14 @@
     "indexedATs": 1447,
     "cliManifests": 12,
     "schemaDigest": "1a768d76525382bf74bf62c4b5e645d26daebde2c55b079402d85a48d79c990e",
-    "evidence": "build/evidence/R0.05/unfiltered-control-check-result.json",
+    "evidence": "build/evidence/R0.06/swapped-quota-check-result.json",
     "languages": [
       "TypeScript",
       "Python"
     ],
     "SwiftDeferredTo": "R3"
   },
-  "sourceCheckpointCommit": "cb1e094",
+  "sourceCheckpointCommit": "14885f2",
   "sourceCheckpointPushed": true,
   "rootRequests": {
     "ROOT-R004-20261006-01": {
@@ -20743,5 +20756,17 @@
     "queuedRootReserveGate": false,
     "rule": "Normal OS pressure and available memory at least the current job declared need plus512MiB; no strictly-free, hypothetical reserve, swap or second physical-fit gate"
   },
-  "activeWorkers": []
+  "activeWorkers": [
+    {
+      "task": "r007_minimum_trial_journal",
+      "card": "R0.12",
+      "model": "gpt-6-luna",
+      "reasoning": "max",
+      "scope": "read-only minimum assigned AT plan",
+      "targetStopAt": "2026-10-06T20:39:00Z",
+      "ownNeedBytes": "268435456",
+      "marginBytes": "536870912",
+      "admission": "build/evidence/R0.05/unfiltered-control-final-doctor.json"
+    }
+  ]
 }

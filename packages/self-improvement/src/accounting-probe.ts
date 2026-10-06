@@ -98,7 +98,16 @@ export const accountingProbe = async (input: RegisteredProbeInputV1, context: Op
           observe(owner,accountRef,key,values,index===3);
           const result = take(owner.reserve(request(accountRef,key+":background",{class:"event"})));
           const expected = index===2?"FIVE_HOUR_THRESHOLD":"WEEKLY_THRESHOLD";
-          checks.push(check("fresh-known-veto-"+index,!result.decision.eligible&&result.decision.reason===expected,{windows:values,status:index===3?"unavailable":"available",decision:result.decision}));
+          const swappedMetadata = index === 1 ? [windows(20,70), windows(60,20)].map((normal, swappedIndex) => {
+            const swapped = normal.map(window => ({ ...window, bucketId: window.bucketId === "primary" ? "secondary" : "primary" }));
+            const swappedAccount = accountRef + ":swapped:" + swappedIndex;
+            const swappedKey = key + ":swapped:" + swappedIndex;
+            observe(owner,swappedAccount,swappedKey,swapped);
+            const record = take(owner.reserve(request(swappedAccount,swappedKey+":background",{class:"event"})));
+            return { windows: swapped, eligible: record.decision.eligible, reason: record.decision.reason };
+          }) : [];
+          const swappedPassed = swappedMetadata.every((observation, swappedIndex) => !observation.eligible && observation.reason === (swappedIndex === 0 ? "WEEKLY_THRESHOLD" : "FIVE_HOUR_THRESHOLD"));
+          checks.push(check("fresh-known-veto-"+index,!result.decision.eligible&&result.decision.reason===expected&&swappedPassed,{windows:values,status:index===3?"unavailable":"available",decision:result.decision,...(index===1?{swappedMetadata}:{})}));
         }
       }),diagnostic);
       if (!run.ok) return reportFailure(run.error);
