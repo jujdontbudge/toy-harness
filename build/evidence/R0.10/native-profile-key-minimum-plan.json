@@ -1,0 +1,150 @@
+{
+  "schemaVersion": "toy.r0.10.native-profile-key-minimum-plan.v1",
+  "createdAt": "2026-10-06T21:50:17Z",
+  "status": "PUBLIC_PROFILE_OWNER_GAP_IDENTIFIED",
+  "acceptance": {
+    "id": "AT-hermes-config-75",
+    "assertion": "Given the generated profile and locked source, when configuration consumers load it, every native key is consumed by its intended subsystem and unsupported or ignored keys fail validation.",
+    "source": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/hermes-config.md:644",
+    "sourceAssertionHash": "901516dd5ec64a9d7e28c9fcfec9f7877b8e539031fcfda5fe347e06919316cd",
+    "testPlanRung": "CLI with static source validation"
+  },
+  "admissionBasis": {
+    "source": "Parent-provided last CLI baseline",
+    "pressure": "normal",
+    "state": "admitted",
+    "helperNeedBytes": "268435456",
+    "marginBytes": "536870912",
+    "refreshedByThisTask": false
+  },
+  "sourceDigests": [
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/hermes-config.md",
+      "sha256": "d3548fde13180bc750660f306caa0041101832e398ccdabd6cfdac0b3de8f4af"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/TEST-PLAN.md",
+      "sha256": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2"
+    },
+    {
+      "path": "tests/acceptance-index.json",
+      "sha256": "c9b645eab7f55b2ebf35d7db769a534a4837de23ad3dc3d913f3189e781d44fa"
+    },
+    {
+      "path": "tests/registry.yaml",
+      "sha256": "500311309bf1d71db12d70a18069569de24cf8366fae9f3c335940519bf7820f"
+    },
+    {
+      "path": "behavior/models.yaml",
+      "sha256": "8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67"
+    },
+    {
+      "path": "packages/contracts/src/model-route.ts",
+      "sha256": "e95a854b188b67d37aa4b518626428e4de7eb28e1fcb35edc74bdc8a4235dd0d"
+    },
+    {
+      "path": "packages/contracts/src/hermes-runtime.ts",
+      "sha256": "cced12dcc924d769227a8f84ea37e559d73d56c6a6f27e06426883ec7f72180d"
+    },
+    {
+      "path": "packages/hermes/src/model-route.ts",
+      "sha256": "75bad754c537c53a920762b259d30ee6f89149a8d60d40678214cf5e2dec3962"
+    },
+    {
+      "path": "packages/hermes/src/model-route-probe.ts",
+      "sha256": "ba37e7728d124bcbf3cace803dacbcc45d90f35ef9dcdc96b6edbfe266a2065b"
+    },
+    {
+      "path": "packages/hermes/src/public.ts",
+      "sha256": "e298c3c27873fd7d97847e01625e91ea006fb4722075bde67d5f70e33d7ef675"
+    },
+    {
+      "path": "packages/hermes/src/auth-fixture.ts",
+      "sha256": "22f6ca68c6efb2316488bcb5ed051492735c0e51efdb06d3e7f636a23c762df1"
+    },
+    {
+      "path": "packages/hermes/src/auth-probe.ts",
+      "sha256": "200447c5904ea435fec0026d23c5c5385452ef143b4e770fd29ea8bd1ef02666"
+    },
+    {
+      "path": "packages/ops/src/fixture-stack.ts",
+      "sha256": "c1eebace98edb5ec7059f38339b6af2e589aa5733eb80536831f086d52e2c577"
+    },
+    {
+      "path": "packages/contracts/src/generated-probe-registry.ts",
+      "sha256": "2a9979fd234c28d4f1f1191750210be01453d77a4e4b4fea5e4d7ac9031c4e33"
+    },
+    {
+      "path": "scripts/generate-contracts.mjs",
+      "sha256": "4af296522897059f2d54d63077535da25a9fdbce7eeaad3ceba818962ffdc371"
+    },
+    {
+      "path": "tests/cli/model-route.cli.test.ts",
+      "sha256": "a4c7161722b8451086024cf304621f0b0fdc3fe0f012755b7d6b687ee1438102"
+    },
+    {
+      "path": "skills/toy-control/FEATURE-MAP.md",
+      "sha256": "50f006a8e8b28930cea88fd9fb77c89f3862a702066f3d8e4b5a25a9c0fbed5f"
+    },
+    {
+      "path": "build/evidence/R0.K4/managed-profile.json",
+      "sha256": "f94ef57b508744f15683cdffaf2eb2c65cd4c17919bea8f740336ca5f2b87ddd"
+    },
+    {
+      "path": "docs/adr/0021-supported-model-route.md",
+      "sha256": "9ea48d7656e9458ebd3ecbeac7b2645ff6d6533bff4bf560cbad5863d26bca23"
+    }
+  ],
+  "existingBehavior": {
+    "onlyToyOwnedConfigSource": "behavior/models.yaml is a strict JSON-shaped model-policy source; packages/contracts/src/model-route.ts uses strict objects for it and packages/hermes/src/model-route.ts reads it in ModelRoute.select(). Unknown fields in this model-policy source are rejected.",
+    "publicInterface": "packages/hermes/src/public.ts exports ModelRoute and ModelRouteProbe. The public route selects role/arm settings and normalizes external provider receipts. The registered model-policy probe covers role/arm selection and stream outcomes for AT-hermes-config-1/40/76/77, not a full native Hermes profile.",
+    "profileCliUse": "The auth fixture invokes public Hermes config get/set for isolated auth cases, but there is no Toy-owned profile renderer or full-profile validator connected to those commands.",
+    "documentOnlyTarget": "The complete Toy target config and claimed locked Hermes baseline are described in specs/hermes-config.md section 3. No in-repository source generates that complete YAML, no typed inventory maps all native keys to their intended consumers, and no assigned probe invokes the full configuration consumers against it.",
+    "oldEvidenceLimit": "build/evidence/R0.K4/managed-profile.json is an old doctor snapshot with profile delivery pending; it is not a generated profile or proof of key consumption.",
+    "registrationGap": "AT-hermes-config-75 is indexed, but tests/registry.yaml has no authored CLI acceptance manifest for it, ModelRouteProbe does not accept the ID, and fixture-stack has no route for it. Generated CLI inventory output must come from the authored registry, never a direct generated-file edit."
+  },
+  "smallestImplementation": {
+    "gapType": "Missing Toy-owned behavior, not an external approval blocker.",
+    "publicSurface": "Add one `HermesProfile` generate/validate operation to the existing packages/hermes owner and export it through packages/hermes/src/public.ts. Keep it within the existing package and reuse the existing Toy CLI probe command; add no service, protocol, dependency, or CLI command.",
+    "sourceAndValidation": "Compose the documented canonical behavior/models.yaml, behavior/attention.yaml, behavior/budgets.yaml and existing protected/module fragments into a generated target profile. Give the generated target a strict schema and an explicit native-key-to-consumer inventory derived from the already locked Hermes revision. Refuse any extra, ignored, or unowned key before profile load; do not treat raw key round-trip as proof of consumer use.",
+    "codeOwnerFiles": [
+      "packages/hermes/src/model-route.ts",
+      "packages/hermes/src/public.ts",
+      "packages/hermes/src/model-route-probe.ts",
+      "tests/registry.yaml"
+    ],
+    "contractAndGeneratedFiles": "If a new public result is required, author its schema in packages/contracts, add it to schemaInventory, then regenerate contracts. Regenerate the CLI manifest from tests/registry.yaml with scripts/generate-contracts.mjs; do not hand-edit generated files.",
+    "staticChecks": "Check that each rendered key has exactly one documented consumer entry and the profile source digest/locked revision match the generated result.",
+    "honestScope": "The model-route strict schema already enforces its own source keys but cannot be relabeled as full native-profile support. AT-hermes-config-75 remains incomplete until the complete profile source and consumer inventory are implemented and exercised."
+  },
+  "assignedCliProof": {
+    "unfilteredRun": "On a fresh owned fake R0 stack, run `toy --env test --stack <stack-id> probe run AT-hermes-config-75 --request-id <uuid> --json` without a case filter. Through the existing Herm\u00e8s public CLI/config-consumer path in an isolated disposable profile, load the full generated profile and test one representative valid key per intended subsystem; submit unsupported and documented-but-ignored key variants and require pre-load validation refusal.",
+    "readback": "Use the public probe show operation to inspect every mandatory cell, generated profile digest, locked revision, key-to-consumer inventory, and refusal reason. The receipt must state live profile, account, secret, and provider state were untouched.",
+    "teardown": "Use public stack down and retain the teardown receipt. Run the static source-map check required by the TEST-PLAN row; do not count profile generation or expected negative-cell handling as whole-AT completion."
+  },
+  "deferredPrerequisites": {
+    "lockedSourceCompatibility": "The planning record names baseline Hermes revision 8d5e3e412138342e8bf30443e72bd4e6a9abd057, but this task did not inspect upstream/installed source. The implementation proof must use the already locked local source and record which actual native consumer handles each key; a prose pin alone is not compatibility evidence.",
+    "productionPublication": "No actual user profile inventory, backup/diff, protected publication, account, credentials, or service change is authorized or implied by this static/fixture plan.",
+    "otherAssertions": "AT-hermes-config-76 through 83 and live authentication/inference, profile publication, gateway and protected-executor gates remain independent. No R0 release or whole acceptance promotion is implied."
+  },
+  "workPerformed": "Read-only inspection of the assigned acceptance, Toy sources/contracts, tests, feature map, and recorded evidence. No upstream/external/kernel/ABI research, source or planning edit, contract generation, build, test, stack, root, runtime, secret, or actual-user-config action was performed.",
+  "parentReview": {
+    "recordedAt": "2026-10-06T21:53:44.696195+00:00",
+    "baseline": "build/evidence/R0.10/profile-baseline.json",
+    "actualMissingCodeNotApprovalBlocker": true,
+    "minimumDispatchFiles": [
+      "cli/src/main.ts",
+      "packages/hermes/src/public.ts",
+      "packages/ops/src/fixture-stack.ts",
+      "tests/registry.yaml",
+      "architecture/features.json"
+    ],
+    "missingConfigSourceFacts": [
+      "behavior/attention.yaml is not present",
+      "behavior/budgets.yaml is not present",
+      "Protected/module fragments are not implemented by this source unit"
+    ],
+    "scope": "Read only the exact documented native keys and necessary already-locked local consumers after the failed assigned baseline; do not implement other owners or invent ignored keys. Write the existing-module interface and strict canonical result first. No research beyond the failing check, no service/publication/credentials or paid sends.",
+    "sourceValidationRequirement": "Raw get/set or round-trip is insufficient. Bind each key to the actual locked consumer and preserve full native/protected gates until exercised."
+  }
+}
