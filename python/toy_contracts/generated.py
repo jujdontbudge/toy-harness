@@ -4895,6 +4895,139 @@ class SiwcKeychainLauncherV1(TypedDict):
     pythonDigest: "Digest"
     helperDigest: "Digest"
 
+ResearchSkillResourcePathV1 = Literal[
+    "SKILL.md",
+    "LICENSE",
+    "agents/openai.yaml",
+]
+
+class ResearchSkillPinV1(TypedDict):
+    schemaVersion: "ResearchSkillPinV1SchemaVersion"
+    repository: "ResearchSkillPinV1Repository"
+    sourcePath: "ResearchSkillPinV1SourcePath"
+    sourceCommit: str
+    contentDigest: "Digest"
+    semanticVersion: Optional[str]
+    resources: list["ResearchSkillPinV1ResourcesItem"]
+
+ResearchSkillPinV1SchemaVersion = Literal[
+    "toy.research-skill-pin.v1",
+]
+
+ResearchSkillPinV1Repository = Literal[
+    "https://github.com/mattpocock/skills",
+]
+
+ResearchSkillPinV1SourcePath = Literal[
+    "skills/engineering/research/SKILL.md",
+]
+
+class ResearchSkillPinV1ResourcesItem(TypedDict):
+    path: "ResearchSkillPinV1ResourcesItemPath"
+    digest: "Digest"
+
+ResearchSkillPinV1ResourcesItemPath = Literal[
+    "LICENSE",
+    "agents/openai.yaml",
+]
+
+class LoadedResearchSkillV1(TypedDict):
+    repository: "ResearchSkillPinV1Repository"
+    sourcePath: "ResearchSkillPinV1SourcePath"
+    sourceCommit: str
+    contentDigest: "Digest"
+    loadedDigest: "Digest"
+    semanticVersion: Optional[str]
+    resources: list["ResearchSkillPinV1ResourcesItem"]
+
+class ModelRouteDelegationInputV1(TypedDict):
+    requestId: str
+    purpose: "ModelRouteDelegationInputV1Purpose"
+    objective: str
+
+ModelRouteDelegationInputV1Purpose = Literal[
+    "research",
+    "implementation",
+]
+
+class CodexDelegationRequestV1(TypedDict):
+    requestId: str
+    purpose: "ModelRouteDelegationInputV1Purpose"
+    executionBackend: "CodexDelegationRequestV1ExecutionBackend"
+    workspace: str
+    arguments: list[str]
+    requested: "ModelRouteSelectionV1"
+    taskDigest: "Digest"
+    skill: Optional["LoadedResearchSkillV1"]
+
+CodexDelegationRequestV1ExecutionBackend = Literal[
+    "codex_exec",
+]
+
+CodexDelegationEventV1 = Union[
+    "CodexDelegationEventV1Variant0",
+    "ModelRouteProviderEventV1Variant1",
+    "ModelRouteProviderEventV1Variant2",
+    "ModelRouteProviderEventV1Variant3",
+    "ModelRouteProviderEventV1Variant4",
+    "ModelRouteProviderEventV1Variant5",
+    "ModelRouteProviderEventV1Variant6",
+]
+
+class CodexDelegationEventV1Variant0(TypedDict):
+    type: "ModelRouteProviderEventV1Variant0Type"
+    model: "ModelRouteSettingsV1Model"
+    effort: "ModelRouteSettingsV1Effort"
+    serviceTier: "CodexDelegationEventV1Variant0ServiceTier"
+
+CodexDelegationEventV1Variant0ServiceTier = Literal[
+    "fast",
+    "default",
+]
+
+class ModelRouteDelegationReceiptV1(TypedDict):
+    requestId: str
+    purpose: "ModelRouteDelegationInputV1Purpose"
+    executionBackend: "CodexDelegationRequestV1ExecutionBackend"
+    state: "ModelRouteDelegationReceiptV1State"
+    reasonCode: "ModelRouteDelegationReceiptV1ReasonCode"
+    skill: Optional["LoadedResearchSkillV1"]
+    invocation: Optional["ModelRouteReceiptV1"]
+    taskDigest: Optional["Digest"]
+    requestDigest: Optional["Digest"]
+    nativeExecutionVerified: "RoleBootstrapReportV1IdentityGateVerified"
+    acceptanceComplete: "RoleBootstrapReportV1IdentityGateVerified"
+
+ModelRouteDelegationReceiptV1State = Literal[
+    "observed",
+    "refused",
+]
+
+ModelRouteDelegationReceiptV1ReasonCode = Literal[
+    "DELEGATION_ROUTE_OBSERVED",
+    "DELEGATION_ROUTE_REFUSED",
+    "RESEARCH_SKILL_UNAVAILABLE",
+    "RESEARCH_SKILL_MISMATCH",
+]
+
+class CodexDelegationTaskV1(TypedDict):
+    requestId: str
+    objective: str
+    role: "CodexDelegationTaskV1Role"
+    route: "ModelRouteSettingsV1"
+    skill: Optional["LoadedResearchSkillV1"]
+    scope: "CodexDelegationTaskV1Scope"
+    depth: "GardenerFindingV1CorrectionRungVariant0"
+
+CodexDelegationTaskV1Role = Literal[
+    "research",
+    "child",
+]
+
+CodexDelegationTaskV1Scope = Literal[
+    "r0-feasibility",
+]
+
 class RoleBootstrapInputV1(TypedDict):
     plan: bool
     verify: NotRequired[bool]

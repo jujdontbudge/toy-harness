@@ -1,0 +1,800 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "requestId": {
+      "type": "string",
+      "format": "uuid",
+      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    },
+    "purpose": {
+      "type": "string",
+      "enum": [
+        "research",
+        "implementation"
+      ]
+    },
+    "executionBackend": {
+      "type": "string",
+      "const": "codex_exec"
+    },
+    "workspace": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 4096
+    },
+    "arguments": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "maxLength": 4096
+      }
+    },
+    "requested": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "role": {
+              "type": "string",
+              "const": "foreground"
+            },
+            "arm": {
+              "type": "string",
+              "const": "original"
+            },
+            "provider": {
+              "type": "string",
+              "const": "siwc_responses"
+            },
+            "settings": {
+              "type": "object",
+              "properties": {
+                "model": {
+                  "type": "string",
+                  "const": "gpt-6.1-sol"
+                },
+                "effort": {
+                  "type": "string",
+                  "const": "max"
+                },
+                "serviceTier": {
+                  "type": "string",
+                  "const": "priority"
+                }
+              },
+              "required": [
+                "model",
+                "effort",
+                "serviceTier"
+              ],
+              "additionalProperties": false
+            },
+            "policyDigest": {
+              "type": "string",
+              "minLength": 64,
+              "maxLength": 64,
+              "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+            },
+            "localOutputReservationTokens": {
+              "type": "number",
+              "const": 4096
+            },
+            "outputLimitKind": {
+              "type": "string",
+              "const": "estimate"
+            },
+            "providerOutputCap": {
+              "type": "null"
+            },
+            "paidFallbackPermitted": {
+              "type": "boolean",
+              "const": false
+            }
+          },
+          "required": [
+            "role",
+            "arm",
+            "provider",
+            "settings",
+            "policyDigest",
+            "localOutputReservationTokens",
+            "outputLimitKind",
+            "providerOutputCap",
+            "paidFallbackPermitted"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "role": {
+              "type": "string",
+              "const": "background"
+            },
+            "arm": {
+              "type": "string",
+              "const": "original"
+            },
+            "provider": {
+              "type": "string",
+              "const": "siwc_responses"
+            },
+            "settings": {
+              "type": "object",
+              "properties": {
+                "model": {
+                  "type": "string",
+                  "const": "gpt-6.1-sol"
+                },
+                "effort": {
+                  "type": "string",
+                  "const": "max"
+                },
+                "serviceTier": {
+                  "type": "string",
+                  "const": "priority"
+                }
+              },
+              "required": [
+                "model",
+                "effort",
+                "serviceTier"
+              ],
+              "additionalProperties": false
+            },
+            "policyDigest": {
+              "type": "string",
+              "minLength": 64,
+              "maxLength": 64,
+              "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+            },
+            "localOutputReservationTokens": {
+              "type": "number",
+              "const": 4096
+            },
+            "outputLimitKind": {
+              "type": "string",
+              "const": "estimate"
+            },
+            "providerOutputCap": {
+              "type": "null"
+            },
+            "paidFallbackPermitted": {
+              "type": "boolean",
+              "const": false
+            }
+          },
+          "required": [
+            "role",
+            "arm",
+            "provider",
+            "settings",
+            "policyDigest",
+            "localOutputReservationTokens",
+            "outputLimitKind",
+            "providerOutputCap",
+            "paidFallbackPermitted"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "role": {
+              "type": "string",
+              "const": "cron"
+            },
+            "arm": {
+              "type": "string",
+              "const": "original"
+            },
+            "provider": {
+              "type": "string",
+              "const": "siwc_responses"
+            },
+            "settings": {
+              "type": "object",
+              "properties": {
+                "model": {
+                  "type": "string",
+                  "const": "gpt-6.1-sol"
+                },
+                "effort": {
+                  "type": "string",
+                  "const": "max"
+                },
+                "serviceTier": {
+                  "type": "string",
+                  "const": "priority"
+                }
+              },
+              "required": [
+                "model",
+                "effort",
+                "serviceTier"
+              ],
+              "additionalProperties": false
+            },
+            "policyDigest": {
+              "type": "string",
+              "minLength": 64,
+              "maxLength": 64,
+              "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+            },
+            "localOutputReservationTokens": {
+              "type": "number",
+              "const": 4096
+            },
+            "outputLimitKind": {
+              "type": "string",
+              "const": "estimate"
+            },
+            "providerOutputCap": {
+              "type": "null"
+            },
+            "paidFallbackPermitted": {
+              "type": "boolean",
+              "const": false
+            }
+          },
+          "required": [
+            "role",
+            "arm",
+            "provider",
+            "settings",
+            "policyDigest",
+            "localOutputReservationTokens",
+            "outputLimitKind",
+            "providerOutputCap",
+            "paidFallbackPermitted"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "role": {
+              "type": "string",
+              "const": "auxiliary"
+            },
+            "arm": {
+              "type": "string",
+              "const": "original"
+            },
+            "provider": {
+              "type": "string",
+              "const": "siwc_responses"
+            },
+            "settings": {
+              "type": "object",
+              "properties": {
+                "model": {
+                  "type": "string",
+                  "const": "gpt-6.1-sol"
+                },
+                "effort": {
+                  "type": "string",
+                  "const": "max"
+                },
+                "serviceTier": {
+                  "type": "string",
+                  "const": "priority"
+                }
+              },
+              "required": [
+                "model",
+                "effort",
+                "serviceTier"
+              ],
+              "additionalProperties": false
+            },
+            "policyDigest": {
+              "type": "string",
+              "minLength": 64,
+              "maxLength": 64,
+              "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+            },
+            "localOutputReservationTokens": {
+              "type": "number",
+              "const": 4096
+            },
+            "outputLimitKind": {
+              "type": "string",
+              "const": "estimate"
+            },
+            "providerOutputCap": {
+              "type": "null"
+            },
+            "paidFallbackPermitted": {
+              "type": "boolean",
+              "const": false
+            }
+          },
+          "required": [
+            "role",
+            "arm",
+            "provider",
+            "settings",
+            "policyDigest",
+            "localOutputReservationTokens",
+            "outputLimitKind",
+            "providerOutputCap",
+            "paidFallbackPermitted"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "role": {
+              "type": "string",
+              "const": "continuation"
+            },
+            "arm": {
+              "type": "string",
+              "const": "original"
+            },
+            "provider": {
+              "type": "string",
+              "const": "siwc_responses"
+            },
+            "settings": {
+              "type": "object",
+              "properties": {
+                "model": {
+                  "type": "string",
+                  "const": "gpt-6.1-sol"
+                },
+                "effort": {
+                  "type": "string",
+                  "const": "max"
+                },
+                "serviceTier": {
+                  "type": "string",
+                  "const": "priority"
+                }
+              },
+              "required": [
+                "model",
+                "effort",
+                "serviceTier"
+              ],
+              "additionalProperties": false
+            },
+            "policyDigest": {
+              "type": "string",
+              "minLength": 64,
+              "maxLength": 64,
+              "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+            },
+            "localOutputReservationTokens": {
+              "type": "number",
+              "const": 4096
+            },
+            "outputLimitKind": {
+              "type": "string",
+              "const": "estimate"
+            },
+            "providerOutputCap": {
+              "type": "null"
+            },
+            "paidFallbackPermitted": {
+              "type": "boolean",
+              "const": false
+            }
+          },
+          "required": [
+            "role",
+            "arm",
+            "provider",
+            "settings",
+            "policyDigest",
+            "localOutputReservationTokens",
+            "outputLimitKind",
+            "providerOutputCap",
+            "paidFallbackPermitted"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "role": {
+              "type": "string",
+              "const": "research"
+            },
+            "arm": {
+              "type": "string",
+              "const": "original"
+            },
+            "provider": {
+              "type": "string",
+              "const": "siwc_responses"
+            },
+            "settings": {
+              "type": "object",
+              "properties": {
+                "model": {
+                  "type": "string",
+                  "const": "gpt-6.1-sol"
+                },
+                "effort": {
+                  "type": "string",
+                  "const": "medium"
+                },
+                "serviceTier": {
+                  "type": "string",
+                  "const": "priority"
+                }
+              },
+              "required": [
+                "model",
+                "effort",
+                "serviceTier"
+              ],
+              "additionalProperties": false
+            },
+            "policyDigest": {
+              "type": "string",
+              "minLength": 64,
+              "maxLength": 64,
+              "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+            },
+            "localOutputReservationTokens": {
+              "type": "number",
+              "const": 4096
+            },
+            "outputLimitKind": {
+              "type": "string",
+              "const": "estimate"
+            },
+            "providerOutputCap": {
+              "type": "null"
+            },
+            "paidFallbackPermitted": {
+              "type": "boolean",
+              "const": false
+            }
+          },
+          "required": [
+            "role",
+            "arm",
+            "provider",
+            "settings",
+            "policyDigest",
+            "localOutputReservationTokens",
+            "outputLimitKind",
+            "providerOutputCap",
+            "paidFallbackPermitted"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "role": {
+              "type": "string",
+              "const": "child"
+            },
+            "arm": {
+              "type": "string",
+              "const": "original"
+            },
+            "provider": {
+              "type": "string",
+              "const": "siwc_responses"
+            },
+            "settings": {
+              "type": "object",
+              "properties": {
+                "model": {
+                  "type": "string",
+                  "const": "gpt-6-luna"
+                },
+                "effort": {
+                  "type": "string",
+                  "const": "max"
+                },
+                "serviceTier": {
+                  "type": "string",
+                  "const": "priority"
+                }
+              },
+              "required": [
+                "model",
+                "effort",
+                "serviceTier"
+              ],
+              "additionalProperties": false
+            },
+            "policyDigest": {
+              "type": "string",
+              "minLength": 64,
+              "maxLength": 64,
+              "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+            },
+            "localOutputReservationTokens": {
+              "type": "number",
+              "const": 4096
+            },
+            "outputLimitKind": {
+              "type": "string",
+              "const": "estimate"
+            },
+            "providerOutputCap": {
+              "type": "null"
+            },
+            "paidFallbackPermitted": {
+              "type": "boolean",
+              "const": false
+            }
+          },
+          "required": [
+            "role",
+            "arm",
+            "provider",
+            "settings",
+            "policyDigest",
+            "localOutputReservationTokens",
+            "outputLimitKind",
+            "providerOutputCap",
+            "paidFallbackPermitted"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "role": {
+              "type": "string",
+              "const": "background"
+            },
+            "arm": {
+              "type": "string",
+              "const": "experimental-background-high-standard"
+            },
+            "provider": {
+              "type": "string",
+              "const": "siwc_responses"
+            },
+            "settings": {
+              "type": "object",
+              "properties": {
+                "model": {
+                  "type": "string",
+                  "const": "gpt-6.1-sol"
+                },
+                "effort": {
+                  "type": "string",
+                  "const": "high"
+                },
+                "serviceTier": {
+                  "type": "string",
+                  "const": "default"
+                }
+              },
+              "required": [
+                "model",
+                "effort",
+                "serviceTier"
+              ],
+              "additionalProperties": false
+            },
+            "policyDigest": {
+              "type": "string",
+              "minLength": 64,
+              "maxLength": 64,
+              "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+            },
+            "localOutputReservationTokens": {
+              "type": "number",
+              "const": 4096
+            },
+            "outputLimitKind": {
+              "type": "string",
+              "const": "estimate"
+            },
+            "providerOutputCap": {
+              "type": "null"
+            },
+            "paidFallbackPermitted": {
+              "type": "boolean",
+              "const": false
+            }
+          },
+          "required": [
+            "role",
+            "arm",
+            "provider",
+            "settings",
+            "policyDigest",
+            "localOutputReservationTokens",
+            "outputLimitKind",
+            "providerOutputCap",
+            "paidFallbackPermitted"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "role": {
+              "type": "string",
+              "const": "cron"
+            },
+            "arm": {
+              "type": "string",
+              "const": "experimental-background-high-standard"
+            },
+            "provider": {
+              "type": "string",
+              "const": "siwc_responses"
+            },
+            "settings": {
+              "type": "object",
+              "properties": {
+                "model": {
+                  "type": "string",
+                  "const": "gpt-6.1-sol"
+                },
+                "effort": {
+                  "type": "string",
+                  "const": "high"
+                },
+                "serviceTier": {
+                  "type": "string",
+                  "const": "default"
+                }
+              },
+              "required": [
+                "model",
+                "effort",
+                "serviceTier"
+              ],
+              "additionalProperties": false
+            },
+            "policyDigest": {
+              "type": "string",
+              "minLength": 64,
+              "maxLength": 64,
+              "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+            },
+            "localOutputReservationTokens": {
+              "type": "number",
+              "const": 4096
+            },
+            "outputLimitKind": {
+              "type": "string",
+              "const": "estimate"
+            },
+            "providerOutputCap": {
+              "type": "null"
+            },
+            "paidFallbackPermitted": {
+              "type": "boolean",
+              "const": false
+            }
+          },
+          "required": [
+            "role",
+            "arm",
+            "provider",
+            "settings",
+            "policyDigest",
+            "localOutputReservationTokens",
+            "outputLimitKind",
+            "providerOutputCap",
+            "paidFallbackPermitted"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "taskDigest": {
+      "type": "string",
+      "minLength": 64,
+      "maxLength": 64,
+      "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+    },
+    "skill": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "repository": {
+              "type": "string",
+              "const": "https://github.com/mattpocock/skills"
+            },
+            "sourcePath": {
+              "type": "string",
+              "const": "skills/engineering/research/SKILL.md"
+            },
+            "sourceCommit": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{40}(?![\\s\\S])"
+            },
+            "contentDigest": {
+              "type": "string",
+              "minLength": 64,
+              "maxLength": 64,
+              "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+            },
+            "loadedDigest": {
+              "type": "string",
+              "minLength": 64,
+              "maxLength": 64,
+              "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+            },
+            "semanticVersion": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "resources": {
+              "minItems": 2,
+              "maxItems": 2,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "enum": [
+                      "LICENSE",
+                      "agents/openai.yaml"
+                    ]
+                  },
+                  "digest": {
+                    "type": "string",
+                    "minLength": 64,
+                    "maxLength": 64,
+                    "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+                  }
+                },
+                "required": [
+                  "path",
+                  "digest"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "repository",
+            "sourcePath",
+            "sourceCommit",
+            "contentDigest",
+            "loadedDigest",
+            "semanticVersion",
+            "resources"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "requestId",
+    "purpose",
+    "executionBackend",
+    "workspace",
+    "arguments",
+    "requested",
+    "taskDigest",
+    "skill"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:CodexDelegationRequestV1"
+}

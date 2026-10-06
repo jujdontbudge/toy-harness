@@ -2,9 +2,9 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-06T21:23:47.456865+00:00",
-  "phase": "Both source units pushed; next existing Sources research decision gaps recorded; two root requests pending without blockage",
-  "activeCard": "R0.10",
+  "updatedAt": "2026-10-06T21:38:37.001473+00:00",
+  "phase": "R0_FEASIBILITY",
+  "activeCard": "R0.12",
   "cardCount": 87,
   "acceptanceCount": 1447,
   "cards": {
@@ -426,7 +426,8 @@
       "evidence": [
         "build/evidence/R0.02/research-inspection-preparation.json",
         "build/evidence/R0.02/spec-reference-verification.json",
-        "build/evidence/R0.02/catalog-coverage-verification.json"
+        "build/evidence/R0.02/catalog-coverage-verification.json",
+        "build/evidence/R0.02/research-skill-pin.json"
       ],
       "requiredATs": [
         "AT-RESEARCH-REGISTER-1",
@@ -501,6 +502,17 @@
         "stoppedAt": "2026-10-06T17:42:09.635322Z",
         "reviewFindingCorrected": true,
         "verification": "build/evidence/R0.02/catalog-coverage-verification.json"
+      },
+      "researchSkillPinUnit": {
+        "state": "UPSTREAM_PIN_AND_LICENSE_ARCHIVED",
+        "evidence": "build/evidence/R0.02/research-skill-pin.json",
+        "runtimeManifest": "behavior/research-skill.json",
+        "sourceCommit": "6fd947921b935b7e1e69293a200400f0fdd5c15f",
+        "contentDigest": "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4",
+        "semanticVersion": null,
+        "registerUpdated": false,
+        "wholeATsPassed": [],
+        "acceptanceComplete": false
       }
     },
     "R0.03": {
@@ -1390,7 +1402,8 @@
         "build/evidence/R0.10/unfiltered-queue-verification.json",
         "build/evidence/R0.10/contracts-inventory-minimum-plan.json",
         "build/evidence/R0.10/delegation-baseline.json",
-        "build/evidence/R0.10/delegation-owner-gap-assessment.json"
+        "build/evidence/R0.10/delegation-owner-gap-assessment.json",
+        "build/evidence/R0.10/delegation-verification.json"
       ],
       "requiredATs": [
         "AT-activity-focus-86",
@@ -1525,6 +1538,29 @@
         "unfiltered": true,
         "runShowExact": true,
         "cleanupComplete": true
+      },
+      "delegationReceiptUnit": {
+        "state": "STOPPED_UNFILTERED_CLI_DIAGNOSTICS_VERIFIED_NATIVE_PENDING",
+        "interface": "ModelRoute.delegationReceipt",
+        "startedAt": "2026-10-06T21:30:00Z",
+        "stoppedAt": "2026-10-06T21:38:37.001473+00:00",
+        "evidence": "build/evidence/R0.10/delegation-verification.json",
+        "assignedAT": "AT-obligations-75",
+        "diagnostics": 9,
+        "regressionDiagnostics": 15,
+        "wholeATsPassed": [],
+        "nativeExecutionVerified": false,
+        "acceptanceComplete": false,
+        "upstreamCommit": "6fd947921b935b7e1e69293a200400f0fdd5c15f",
+        "upstreamContentDigest": "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4",
+        "executionBackend": "codex_exec",
+        "externalCli": "fake",
+        "deferrals": [
+          "Protected native Codex execution, credential isolation and global admission",
+          "R1 candidate-write output-schema/import",
+          "Authenticated actual research and complete R0.10 AT assertions",
+          "Factual A06 research register update after separate R0.02 review"
+        ]
       }
     },
     "R0.11": {
@@ -10226,7 +10262,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Implement the bounded AT-obligations-75 delegation receipt at the existing ModelRoute owner from its fresh NOT_IMPLEMENTED baseline: resolve only the exact missing mattpocock skill pin, write the canonical typed interface, bind actual invoke receipts/loaded skill and preserve ordinary Luna. Then use that same canonical receipt for Sources190 with strict V2, both existing dispatch guards and source-bound CLI proof. Both root requests remain pending; verified root02 DONE immediately takes priority for R0.01 native grant-owner load.",
+  "nextAction": "Consume the independent R0.02 factual A06 pin update plan without disturbing planning edits, then implement the existing-owner Sources190 source unit using the canonical delegation receipt, strict V2 and both unfiltered dispatch guards. ROOT-R004-20261006-02 and ROOT-R005-20261006-01 remain pending and never block the goal; verified root02 DONE immediately takes priority for R0.01 native grant-owner load. No passed kitchen/auth/delegation unit is reopened.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -20787,14 +20823,14 @@
   "latestStaticVerification": {
     "command": "npm run check",
     "exitCode": 0,
-    "evidence": "build/evidence/R0.03/unfiltered-save-check-result.json",
-    "artifacts": 361,
-    "contracts": 293,
-    "cliManifests": 15,
+    "artifacts": 369,
+    "contracts": 301,
+    "cliManifests": 16,
     "features": 97,
     "commands": 55,
     "indexedATs": 1447,
-    "schemaDigest": "4126c6b859e9d44b5b1a3544dc3d89d13a3590b76de52e10ede0db8934229065",
+    "schemaDigest": "b0d1c5d9fdeee5369d32deb5f82a4cc876962aad43e74087c38da4ec502b3ff5",
+    "evidence": "build/evidence/R0.10/delegation-check-result.json",
     "languages": [
       "TypeScript",
       "Python"
@@ -20841,15 +20877,15 @@
     }
   },
   "resourceAdmission": {
-    "measuredAt": "2026-10-06T18:46:25.065Z",
-    "availableBytes": "2756608000",
+    "measuredAt": "2026-10-06T21:38:00.218Z",
+    "availableBytes": "2435809280",
     "pressure": "normal",
     "strictlyFreeAdmission": false,
     "repairFloorApplied": false,
     "ownedWorldsRunning": 0,
     "helpersRunning": 0,
     "helperNeedBytes": "0",
-    "measurementSource": "build/evidence/R0.07/journal-stack-up-3.json",
+    "measurementSource": "build/evidence/R0.10/delegation-cli/up.json",
     "marginBytes": "536870912",
     "ownedStackId": null,
     "stackAndNativeChildrenNeedBytes": "0",

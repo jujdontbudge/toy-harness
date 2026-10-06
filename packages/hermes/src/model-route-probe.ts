@@ -1,10 +1,13 @@
-import { createHash } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { readFileSync } from "node:fs";
-import { checkViewSchema, modelRoleSchema, modelRouteSelectionSchema, opsErrorMessages, registeredProbeInputSchema } from "@toy/contracts";
-import type { CheckViewV1, ModelRouteConversationV1, ModelRouteHttpTransport, ModelRouteReceiptV1, ModelRouteSettingsV1, OpsControlContextV1, RegisteredProbeInputV1, RegisteredProbeOperationV1, Result } from "@toy/contracts";
-import { OpsTestStack, TestProbeControl } from "@toy/ops/public";
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
+import { checkViewSchema, modelRoleSchema, modelRouteSelectionSchema, opsErrorMessages, registeredProbeInputSchema, registeredCliAcceptanceManifestInventory, researchSkillPinSchema, codexDelegationTaskSchema } from "@toy/contracts";
+import type { CheckViewV1, ModelRouteConversationV1, ModelRouteHttpTransport, ModelRouteReceiptV1, ModelRouteSettingsV1, OpsControlContextV1, RegisteredProbeInputV1, RegisteredProbeOperationV1, CodexDelegationExecutor, ModelRouteDelegationInputV1, ResearchSkillResourceReader, Result } from "@toy/contracts";
+import { OpsTestStack, TestProbeControl, trustedCheckoutRoot } from "@toy/ops/public";
 import { ModelRoute } from "./model-route.js";
 
+const digest = (bytes: string | Uint8Array): string => createHash("sha256").update(bytes).digest("hex");
 type FixtureOutcome = "completed" | "interrupted" | "failed" | "disconnected" | "cancelled" | "route-mismatch" | "route-unobserved";
 const conversation: ModelRouteConversationV1 = {
   input: [
@@ -65,6 +68,7 @@ const refusedBeforeSend = async (selection: unknown): Promise<boolean> => {
 export const ModelRouteProbe = {
   async run(input: RegisteredProbeInputV1, context: OpsControlContextV1): Promise<Result<RegisteredProbeOperationV1>> {
     if (!registeredProbeInputSchema.safeParse(input).success) return { ok: false, error: { module: "ops", code: "INVALID_INPUT", message: opsErrorMessages.INVALID_INPUT, retryable: false } };
+    if (input.probeId === "AT-obligations-75" && input.caseId === undefined) return delegationProbe(input, context);
     const policy = input.caseId === "model-route-policy" && ["AT-hermes-config-1", "AT-hermes-config-76", "AT-hermes-config-77"].includes(input.probeId);
     const stream = input.caseId === "model-route-stream" && ["AT-hermes-config-40", "AT-self-improvement-58"].includes(input.probeId);
     if (!policy && !stream) return { ok: false, error: { module: "ops", code: "INVALID_INPUT", message: opsErrorMessages.INVALID_INPUT, retryable: false } };
@@ -114,4 +118,56 @@ export const ModelRouteProbe = {
       return TestProbeControl.run(input, context, checks);
     } catch { return { ok: false, error: { module: "ops", code: "ATTESTATION_INVALID", message: opsErrorMessages.ATTESTATION_INVALID, retryable: false } }; }
   }
+};
+
+const delegationProbe = async (input: RegisteredProbeInputV1, context: OpsControlContextV1): Promise<Result<RegisteredProbeOperationV1>> => {
+  const cases = ["research-route-observed", "research-route-missing", "research-route-luna", "research-route-wrong-effort", "research-route-wrong-tier", "research-skill-missing", "research-skill-wrong-bytes", "ordinary-implementation-luna", "module-local-override-refused"];
+  const manifest = registeredCliAcceptanceManifestInventory.find(entry => entry.id === input.probeId);
+  if (!manifest || manifest.scenarioId !== "delegation.route-skill" || JSON.stringify(manifest.mandatoryCases.map(entry => entry.id)) !== JSON.stringify(cases)) return { ok: false, error: { module: "ops", code: "ATTESTATION_INVALID", message: opsErrorMessages.ATTESTATION_INVALID, retryable: false } };
+  const pin = researchSkillPinSchema.parse(JSON.parse(readFileSync(join(trustedCheckoutRoot(), "behavior/research-skill.json"), "utf8")));
+  const checks: CheckViewV1[] = [];
+  for (const caseId of cases) {
+    const purpose = caseId === "ordinary-implementation-luna" ? "implementation" : "research";
+    let sends = 0;
+    let exportReadback = false;
+    let nativeArgumentsMatched = false;
+    const externalCli: CodexDelegationExecutor = async function* (request) {
+      sends++;
+      const expectedModel = purpose === "research" ? "gpt-6.1-sol" : "gpt-6-luna";
+      const expectedEffort = purpose === "research" ? "medium" : "max";
+      const taskBytes = await readFile(join(request.workspace, "task.json"));
+      const task = codexDelegationTaskSchema.parse(JSON.parse(taskBytes.toString("utf8")));
+      const instructions = readFileSync(join(request.workspace, "AGENTS.md"), "utf8");
+      exportReadback = digest(taskBytes) === request.taskDigest && task.role === (purpose === "research" ? "research" : "child") && task.route.model === expectedModel && task.route.effort === expectedEffort && task.route.serviceTier === "priority" && task.depth === 1 && instructions.includes("Do not spawn children");
+      if (purpose === "research") exportReadback = exportReadback && task.skill?.sourceCommit === pin.sourceCommit && request.skill?.loadedDigest === pin.contentDigest && digest(readFileSync(join(request.workspace, "evidence/skills/mattpocock-research/SKILL.md"))) === pin.contentDigest && pin.resources.every(resource => digest(readFileSync(join(request.workspace, "evidence/skills/mattpocock-research", resource.path))) === resource.digest);
+      else exportReadback = exportReadback && task.skill === null && request.skill === null;
+      const argv = request.arguments;
+      nativeArgumentsMatched = request.executionBackend === "codex_exec" && argv[0] === "exec" && argv.includes("--ignore-user-config") && argv.includes("--ignore-rules") && argv.includes("--json") && argv[argv.indexOf("--model") + 1] === expectedModel && argv[argv.indexOf("--sandbox") + 1] === "workspace-write" && argv[argv.indexOf("--cd") + 1] === request.workspace && argv.includes("model_reasoning_effort=\"" + expectedEffort + "\"") && argv.includes("service_tier=\"fast\"") && argv.includes("features.fast_mode=true") && argv.includes("approval_policy=\"never\"") && argv.includes("model_provider=\"openai\"") && !argv.some(value => value.startsWith("--dangerously-") || value === "--add-dir" || value === "--approve-for-me");
+      if (!exportReadback || !nativeArgumentsMatched) throw new Error("EXTERNAL_CLI_REQUEST_MISMATCH");
+      if (caseId !== "research-route-missing") yield { type: "route", model: caseId === "research-route-luna" ? "gpt-6-luna" : expectedModel, effort: caseId === "research-route-wrong-effort" ? "max" : expectedEffort, serviceTier: caseId === "research-route-wrong-tier" ? "default" : "fast" };
+      yield { type: "output", text: "Fixed external CLI result" };
+      yield { type: "usage", usage: { inputTokens: 17, outputTokens: 8, reasoningTokens: 3 } };
+      yield { type: "completed" };
+    };
+    const resourceReader: ResearchSkillResourceReader = path => path === "SKILL.md" && caseId === "research-skill-missing" ? null : path === "SKILL.md" && caseId === "research-skill-wrong-bytes" ? new TextEncoder().encode("Fixed corrupted upstream bytes") : readFileSync(join(trustedCheckoutRoot(), "evidence/skills/mattpocock-research", path));
+    const request: ModelRouteDelegationInputV1 = { requestId: randomUUID(), purpose, objective: "Investigate only the seeded fixture against primary sources; preserve the separate ordinary implementation route." };
+    const overridden = { ...request, settings: { model: "gpt-6-luna", effort: "max", serviceTier: "priority" } };
+    const result = await ModelRoute.delegationReceipt(caseId === "module-local-override-refused" ? overridden : request, context, externalCli, resourceReader);
+    const successful = caseId === "research-route-observed" || caseId === "ordinary-implementation-luna";
+    const missingSkill = caseId === "research-skill-missing";
+    const wrongSkill = caseId === "research-skill-wrong-bytes";
+    let passed = false;
+    if (caseId === "module-local-override-refused") passed = !result.ok && result.error.code === "INVALID_INPUT" && sends === 0;
+    else if (result.ok) {
+      const receipt = result.data;
+      const observed = receipt.invocation?.observed;
+      passed = !receipt.nativeExecutionVerified && !receipt.acceptanceComplete && (successful
+        ? receipt.state === "observed" && sends === 1 && exportReadback && nativeArgumentsMatched && observed?.model === (purpose === "research" ? "gpt-6.1-sol" : "gpt-6-luna") && observed.effort === (purpose === "research" ? "medium" : "max") && observed.serviceTier === "priority" && (purpose === "research" ? receipt.skill?.sourceCommit === pin.sourceCommit && receipt.skill.loadedDigest === pin.contentDigest : receipt.skill === null)
+        : missingSkill || wrongSkill ? receipt.state === "refused" && sends === 0 && receipt.reasonCode === (missingSkill ? "RESEARCH_SKILL_UNAVAILABLE" : "RESEARCH_SKILL_MISMATCH") && receipt.invocation === null
+          : receipt.state === "refused" && sends === 1 && receipt.invocation?.completion === "pending" && receipt.invocation.outputStarted === false && receipt.invocation.reasonCode === (caseId === "research-route-missing" ? "route_unobserved" : "route_mismatch"));
+    }
+    const receipt = result.ok ? result.data : null;
+    checks.push(checkViewSchema.parse({ id: "read.model-route-policy", owner: "hermes", state: passed ? "PASS" : "FAIL", checkedAt: new Date().toISOString(), reasonCode: passed ? "DELEGATION_ROUTE_SKILL_DIAGNOSTIC_PASS" : "DELEGATION_ROUTE_SKILL_DIAGNOSTIC_FAIL", nextCommandId: "probe.show", prerequisite: JSON.stringify({ caseId, actualUid: process.getuid?.() ?? null, externalCliSends: sends, exportReadback, nativeArgumentsMatched, receipt, errorCode: result.ok ? null : result.error.code, fakeExternalCli: true, liveProviderSends: 0, wholeATComplete: false }), links: { recordRefs: [], observations: [], artifactDigests: [pin.contentDigest, digest(readFileSync(new URL("./model-route.js", import.meta.url))), digest(readFileSync(new URL("./model-route-probe.js", import.meta.url)))] } }));
+  }
+  return TestProbeControl.run(input, context, checks);
 };

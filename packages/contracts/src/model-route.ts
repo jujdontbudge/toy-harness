@@ -133,6 +133,53 @@ export type SiwcCredentialOwner = {
 };
 export type SiwcAuthorizationHttp = (operation: "exchange" | "jwks", form: URLSearchParams | null, signal: AbortSignal) => Promise<Response>;
 export type SiwcBrowserOpener = (authorizationUrl: string) => Promise<void>;
+export const researchSkillResourcePathSchema = z.enum(["SKILL.md", "LICENSE", "agents/openai.yaml"]);
+export const researchSkillPinSchema = z.strictObject({
+  schemaVersion: z.literal("toy.research-skill-pin.v1"), repository: z.literal("https://github.com/mattpocock/skills"),
+  sourcePath: z.literal("skills/engineering/research/SKILL.md"), sourceCommit: z.string().regex(/^[a-f0-9]{40}(?![\s\S])/),
+  contentDigest: digestSchema, semanticVersion: z.string().min(1).max(100).nullable(),
+  resources: z.array(z.strictObject({ path: z.enum(["LICENSE", "agents/openai.yaml"]), digest: digestSchema })).length(2)
+}).refine(pin => new Set(pin.resources.map(resource => resource.path)).size === 2);
+export const loadedResearchSkillSchema = z.strictObject({
+  repository: researchSkillPinSchema.shape.repository, sourcePath: researchSkillPinSchema.shape.sourcePath,
+  sourceCommit: researchSkillPinSchema.shape.sourceCommit, contentDigest: digestSchema, loadedDigest: digestSchema,
+  semanticVersion: researchSkillPinSchema.shape.semanticVersion, resources: researchSkillPinSchema.shape.resources
+}).refine(skill => skill.contentDigest === skill.loadedDigest);
+export const modelRouteDelegationInputSchema = z.strictObject({
+  requestId: z.uuid(), purpose: z.enum(["research", "implementation"]), objective: z.string().min(1).max(8192)
+});
+export const codexDelegationTaskSchema = z.strictObject({
+  requestId: z.uuid(), objective: modelRouteDelegationInputSchema.shape.objective, role: z.enum(["research", "child"]),
+  route: modelRouteSettingsSchema, skill: loadedResearchSkillSchema.nullable(), scope: z.literal("r0-feasibility"), depth: z.literal(1)
+}).refine(task => task.role === "research" ? task.skill !== null : task.skill === null);
+export const codexDelegationRequestSchema = z.strictObject({
+  requestId: z.uuid(), purpose: modelRouteDelegationInputSchema.shape.purpose, executionBackend: z.literal("codex_exec"),
+  workspace: z.string().min(2).max(4096), arguments: z.array(z.string().max(4096)).min(1),
+  requested: modelRouteSelectionSchema, taskDigest: digestSchema, skill: loadedResearchSkillSchema.nullable()
+}).refine(request => request.requested.arm === "original" && request.requested.role === (request.purpose === "research" ? "research" : "child") && (request.purpose === "research" ? request.skill !== null : request.skill === null));
+export const codexDelegationEventSchema = z.union([
+  z.strictObject({ type: z.literal("route"), model: modelRouteSettingsSchema.shape.model, effort: modelRouteSettingsSchema.shape.effort, serviceTier: z.enum(["fast", "default"]) }),
+  modelRouteProviderEventSchema.options[1], modelRouteProviderEventSchema.options[2],
+  modelRouteProviderEventSchema.options[3], modelRouteProviderEventSchema.options[4],
+  modelRouteProviderEventSchema.options[5], modelRouteProviderEventSchema.options[6]
+]);
+export const modelRouteDelegationReceiptSchema = z.strictObject({
+  requestId: z.uuid(), purpose: modelRouteDelegationInputSchema.shape.purpose, executionBackend: z.literal("codex_exec"),
+  state: z.enum(["observed", "refused"]), reasonCode: z.enum(["DELEGATION_ROUTE_OBSERVED", "DELEGATION_ROUTE_REFUSED", "RESEARCH_SKILL_UNAVAILABLE", "RESEARCH_SKILL_MISMATCH"]),
+  skill: loadedResearchSkillSchema.nullable(), invocation: modelRouteReceiptSchema.nullable(),
+  taskDigest: digestSchema.nullable(), requestDigest: digestSchema.nullable(), nativeExecutionVerified: z.literal(false), acceptanceComplete: z.literal(false)
+}).refine(receipt => receipt.state !== "observed" || receipt.invocation?.completion === "complete" && receipt.invocation.requested.role === (receipt.purpose === "research" ? "research" : "child") && (receipt.purpose === "research" ? receipt.skill !== null : receipt.skill === null));
+export type ResearchSkillResourcePathV1 = z.infer<typeof researchSkillResourcePathSchema>;
+export type ResearchSkillPinV1 = z.infer<typeof researchSkillPinSchema>;
+export type LoadedResearchSkillV1 = z.infer<typeof loadedResearchSkillSchema>;
+export type ModelRouteDelegationInputV1 = z.infer<typeof modelRouteDelegationInputSchema>;
+export type CodexDelegationTaskV1 = z.infer<typeof codexDelegationTaskSchema>;
+export type CodexDelegationRequestV1 = z.infer<typeof codexDelegationRequestSchema>;
+export type CodexDelegationEventV1 = z.infer<typeof codexDelegationEventSchema>;
+export type ModelRouteDelegationReceiptV1 = z.infer<typeof modelRouteDelegationReceiptSchema>;
+export type CodexDelegationExecutor = (request: CodexDelegationRequestV1, signal: AbortSignal) => AsyncIterable<CodexDelegationEventV1>;
+export type ResearchSkillResourceReader = (path: ResearchSkillResourcePathV1) => Uint8Array | null;
+
 export const modelRouteSchemaInventory = {
   InstalledCodexRuntimeV1: installedCodexRuntimeSchema, CodexProtocolInspectionV1: codexProtocolInspectionSchema,
   ModelRoleV1: modelRoleSchema, ModelArmV1: modelArmSchema, ModelRouteSettingsV1: modelRouteSettingsSchema,
@@ -144,5 +191,9 @@ export const modelRouteSchemaInventory = {
   SiwcAuthorizationStatusV1: siwcAuthorizationStatusSchema, SiwcTokenResponse: siwcTokenResponseSchema,
   SiwcJwtHeaderV1: siwcJwtHeaderSchema, SiwcIdentityClaimsV1: siwcIdentityClaimsSchema,
   SiwcJwksV1: siwcJwksSchema, SiwcRsaKeyV1: siwcRsaKeySchema,
-  SiwcRegistration: siwcRegistrationSchema, SiwcStoredGrant: siwcStoredGrantSchema, SiwcGrantVaultV1: siwcGrantVaultSchema, SiwcKeychainLauncherV1: siwcKeychainLauncherSchema
+  SiwcRegistration: siwcRegistrationSchema, SiwcStoredGrant: siwcStoredGrantSchema, SiwcGrantVaultV1: siwcGrantVaultSchema, SiwcKeychainLauncherV1: siwcKeychainLauncherSchema,
+  ResearchSkillResourcePathV1: researchSkillResourcePathSchema, ResearchSkillPinV1: researchSkillPinSchema,
+  LoadedResearchSkillV1: loadedResearchSkillSchema, ModelRouteDelegationInputV1: modelRouteDelegationInputSchema,
+  CodexDelegationRequestV1: codexDelegationRequestSchema, CodexDelegationEventV1: codexDelegationEventSchema,
+  ModelRouteDelegationReceiptV1: modelRouteDelegationReceiptSchema, CodexDelegationTaskV1: codexDelegationTaskSchema
 };

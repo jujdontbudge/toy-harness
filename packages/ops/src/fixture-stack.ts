@@ -307,7 +307,7 @@ export const FixtureProbe = {
       const lifecycle = (input.probeId === "AT-cli-4" || input.probeId === "AT-hermes-config-100") && (input.caseId === undefined || input.caseId === "stack-lifecycle");
       const checks = observations.map(check => checkViewSchema.parse(check));
       const reference = input.probeId === "AT-hermes-config-101" && ["k4a-connector", "k4a-tool", "k4a-skill"].includes(input.caseId ?? "");
-      const modelPolicy = input.caseId === "model-route-policy" && ["AT-hermes-config-1", "AT-hermes-config-76", "AT-hermes-config-77"].includes(input.probeId);
+      const modelPolicy = (input.caseId === "model-route-policy" && ["AT-hermes-config-1", "AT-hermes-config-76", "AT-hermes-config-77"].includes(input.probeId)) || (input.probeId === "AT-obligations-75" && input.caseId === undefined);
       const modelStream = input.caseId === "model-route-stream" && ["AT-hermes-config-40", "AT-self-improvement-58"].includes(input.probeId);
       const accounting = (input.caseId === undefined || input.caseId === "model-admission") && ["AT-ops-49", "AT-ops-51", "AT-ops-52"].includes(input.probeId);
       const componentComparison = ["AT-obligations-74", "AT-self-improvement-54", "AT-sources-188"].includes(input.probeId) && input.caseId === undefined;

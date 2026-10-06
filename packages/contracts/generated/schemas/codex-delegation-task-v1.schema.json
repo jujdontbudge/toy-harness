@@ -1,0 +1,161 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "requestId": {
+      "type": "string",
+      "format": "uuid",
+      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    },
+    "objective": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 8192
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "research",
+        "child"
+      ]
+    },
+    "route": {
+      "type": "object",
+      "properties": {
+        "model": {
+          "type": "string",
+          "enum": [
+            "gpt-6.1-sol",
+            "gpt-6-luna"
+          ]
+        },
+        "effort": {
+          "type": "string",
+          "enum": [
+            "max",
+            "medium",
+            "high"
+          ]
+        },
+        "serviceTier": {
+          "type": "string",
+          "enum": [
+            "priority",
+            "default"
+          ]
+        }
+      },
+      "required": [
+        "model",
+        "effort",
+        "serviceTier"
+      ],
+      "additionalProperties": false
+    },
+    "skill": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "repository": {
+              "type": "string",
+              "const": "https://github.com/mattpocock/skills"
+            },
+            "sourcePath": {
+              "type": "string",
+              "const": "skills/engineering/research/SKILL.md"
+            },
+            "sourceCommit": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{40}(?![\\s\\S])"
+            },
+            "contentDigest": {
+              "type": "string",
+              "minLength": 64,
+              "maxLength": 64,
+              "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+            },
+            "loadedDigest": {
+              "type": "string",
+              "minLength": 64,
+              "maxLength": 64,
+              "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+            },
+            "semanticVersion": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "resources": {
+              "minItems": 2,
+              "maxItems": 2,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "enum": [
+                      "LICENSE",
+                      "agents/openai.yaml"
+                    ]
+                  },
+                  "digest": {
+                    "type": "string",
+                    "minLength": 64,
+                    "maxLength": 64,
+                    "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+                  }
+                },
+                "required": [
+                  "path",
+                  "digest"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "repository",
+            "sourcePath",
+            "sourceCommit",
+            "contentDigest",
+            "loadedDigest",
+            "semanticVersion",
+            "resources"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "scope": {
+      "type": "string",
+      "const": "r0-feasibility"
+    },
+    "depth": {
+      "type": "number",
+      "const": 1
+    }
+  },
+  "required": [
+    "requestId",
+    "objective",
+    "role",
+    "route",
+    "skill",
+    "scope",
+    "depth"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:CodexDelegationTaskV1"
+}
