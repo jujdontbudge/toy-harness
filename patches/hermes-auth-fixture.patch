@@ -1,6 +1,6 @@
 --- /dev/null
 +++ b/tests/fixtures/toy_auth_httpx_fixture.py
-@@ -0,0 +1,685 @@
+@@ -0,0 +1,688 @@
 +from __future__ import annotations
 +
 +import base64
@@ -81,7 +81,7 @@
 +        if order == "add-first":
 +            return ("rotated",)
 +        if order == "refresh-first":
-+            return ("added-rotated",)
++            return ("stale",)
 +        return ("rotated", "added-rotated")
 +    if _PHASE == "chat":
 +        return ("initial",)
@@ -406,7 +406,7 @@
 +            None,
 +        )
 +        _CATALOG_ACCESS_GENERATION = generation
-+        catalog_generations = ("stale",) if _PHASE == "chat-reloaded" and os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR") == "fresh-add-reload" and os.environ.get("TOY_AUTH_CONCURRENCY_ORDER") == "refresh-first" else _expected_access_generations()
++        catalog_generations = _expected_access_generations()
 +        if generation is None or generation not in catalog_generations:
 +            return _deny_request("authorization-mismatch")
 +        if os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR") == "expired-chat":
@@ -463,11 +463,12 @@
 +def _public_argv(operation: str) -> list[str]:
 +    prefix = ["hermes", "--profile", "toy"]
 +    if operation == "add":
-+        return [*prefix, "auth", "add", "openai-codex", "--type", "oauth", "--no-browser"]
++        label = ["--label", "toy-fixture-added-" + os.environ.get("TOY_AUTH_CONCURRENCY_ORDER", "")] if os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR") == "auth-add" else []
++        return [*prefix, "auth", "add", "openai-codex", "--type", "oauth", "--no-browser", *label]
 +    if operation == "list":
 +        return [*prefix, "auth", "list", "openai-codex"]
 +    if operation == "priority":
-+        target = "3" if _PHASE == "priority-added" and os.environ.get("TOY_AUTH_CONCURRENCY_ORDER") == "refresh-first" else "2"
++        target = "toy-fixture-added-" + os.environ.get("TOY_AUTH_CONCURRENCY_ORDER", "") if _PHASE == "priority-added" else "2"
 +        return [*prefix, "auth", "priority", "openai-codex", target, "0"]
 +    provider = "siwc_responses" if _PHASE == "siwc-unbound" else "openai-codex"
 +    return [*prefix, "chat", "--provider", provider, "--model", _EXPECTED_MODEL, "--toolsets", "none", "-q", _PROMPT]
@@ -568,7 +569,9 @@
 +            added = exit_code == 0 and "Added openai-codex OAuth credential #" in combined_output
 +            markers.append("AUTH_ADD_OK" if added else "AUTH_ADD_NOT_CONFIRMED")
 +    elif operation == "priority":
-+        moved = exit_code == 0 and "Set openai-codex credential" in stdout and "to priority 0 (#1" in stdout
++        expected_label = "toy-fixture-added-" + os.environ.get("TOY_AUTH_CONCURRENCY_ORDER", "")
++        label_matches = _PHASE != "priority-added" or f'Set openai-codex credential "{expected_label}" to priority 0 (#1' in stdout
++        moved = exit_code == 0 and label_matches and "Set openai-codex credential" in stdout and "to priority 0 (#1" in stdout
 +        markers.append("AUTH_PRIORITY_OK" if moved else "AUTH_PRIORITY_NOT_CONFIRMED")
 +    elif operation == "list":
 +        count = 0

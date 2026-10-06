@@ -2,9 +2,9 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-06T19:38:05.394551+00:00",
+  "updatedAt": "2026-10-06T19:49:14.170386+00:00",
   "phase": "R0.07 fixture journal12checksverified/receiptboundrepairplanned; root02pending; R003catalogobservationnext",
-  "activeCard": "R0.03",
+  "activeCard": "R0.10",
   "cardCount": 87,
   "acceptanceCount": 1447,
   "cards": {
@@ -524,7 +524,8 @@
         "build/evidence/R0.03/catalog-observation-verification.json",
         "build/evidence/R0.03/catalog-observation-replan.json",
         "build/evidence/R0.03/model-observation-verification.json",
-        "build/evidence/R0.03/model-observation-replan.json"
+        "build/evidence/R0.03/model-observation-replan.json",
+        "build/evidence/R0.03/client-selection-verification.json"
       ],
       "requiredATs": [
         "AT-hermes-config-34",
@@ -620,15 +621,13 @@
         "sourceUnitStoppedAt": "2026-10-06T09:56:39.219348+00:00"
       },
       "lastVerification": {
-        "evidence": "build/evidence/R0.03/model-observation-verification.json",
+        "evidence": "build/evidence/R0.03/client-selection-verification.json",
+        "verdict": "PASS_SIXTEEN_EXACT_GENERATION_CONCURRENCY_DIAGNOSTICS",
+        "concurrencyChecks": 16,
+        "totalChecks": 19,
+        "runShowExact": true,
         "wholeATsPassed": [],
-        "acceptanceComplete": false,
-        "passedConcurrencyChecks": 13,
-        "addFirstDiagnosticChecksPassed": 8,
-        "refreshFirstDiagnosticChecksPassed": 5,
-        "newestRotatedFreshProcessVerified": true,
-        "freshAddedGrantUsable": false,
-        "cleanupComplete": true
+        "acceptanceComplete": false
       },
       "concurrentAuthUnit": {
         "startedAt": "2026-10-06T16:59:00Z",
@@ -735,6 +734,24 @@
         "evidence": "build/evidence/R0.03/client-selection-minimum-plan.json",
         "sha256": "2bb9de0ca9834ff722fb42565ab2ff2e9e5e20e827b6dd4642ba19d7c702445b",
         "wholeATComplete": false
+      },
+      "clientSelectionUnit": {
+        "startedAt": "2026-10-06T19:40:50.346342+00:00",
+        "targetStopAt": "2026-10-06T21:40:50.346342+00:00",
+        "state": "CLOSED_SIXTEEN_CONCURRENCY_DIAGNOSTICS_VERIFIED",
+        "scope": "Defer provisional selection until pending refresh; public added-grant label identity; stricter catalog/model equality",
+        "AT": "AT-hermes-config-87",
+        "wholeATComplete": false,
+        "maxFailedDiagnostics": 3,
+        "sourcePlan": "build/evidence/R0.03/client-selection-minimum-plan.json",
+        "stoppedAt": "2026-10-06T19:49:14.170386+00:00",
+        "failedDiagnostics": 2,
+        "attempts": 3,
+        "concurrencyPasses": 16,
+        "totalDiagnosticPasses": 19,
+        "runShowExact": true,
+        "ownedWorldsDown": true,
+        "installedHermesModified": false
       }
     },
     "R0.04": {
@@ -1248,7 +1265,8 @@
         "build/evidence/R0.10/native-recurrence-verification.json",
         "build/evidence/R0.10/next-reachable-unit.json",
         "build/evidence/R0.10/decision-baseline-verification.json",
-        "build/evidence/R0.10/component-comparison-verification.json"
+        "build/evidence/R0.10/component-comparison-verification.json",
+        "build/evidence/R0.10/component-comparison-review.json"
       ],
       "requiredATs": [
         "AT-activity-focus-86",
@@ -1335,6 +1353,12 @@
         "runShowExact": true,
         "cleanupComplete": true,
         "archiveBinding": "Canonical ResearchComponentComparisonV1 JSON payloads within existing indexed Markdown reports"
+      },
+      "componentDecisionReview": {
+        "state": "ACCEPTANCE_SCOPE_AND_MARKDOWN_BOUNDARY_FINDINGS_OPEN",
+        "evidence": "build/evidence/R0.10/component-comparison-review.json",
+        "scope": "Four predicate diagnostics do not yet exercise positive indexed archive binding; enforce Markdown report path as written",
+        "wholeATComplete": false
       }
     },
     "R0.11": {
@@ -9994,7 +10018,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Apply the bounded pinned pool selector repair and bind the added credential by its public label, preserving exact added-rotated model/catalog checks; poll pending ROOT-R004-20261006-02. No whole AT or deployment promotion.",
+  "nextAction": "Close the R0.10 indexed archive-binding diagnostic gap using the bounded Luna plan; enforce existing Markdown input scope. Poll root02 and continue R0.01 immediately on a verified DONE receipt. Root pending never blocks the goal.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -20539,7 +20563,7 @@
     "commands": 55,
     "indexedATs": 1447,
     "schemaDigest": "b9b777782eabc898610e0219c7d09f2b9f28e6b9ae3be2e902bcbd71d6fb7090",
-    "evidence": "build/evidence/R0.10/component-comparison-check-final-result.json",
+    "evidence": "build/evidence/R0.03/client-selection-check-final-result.json",
     "languages": [
       "TypeScript",
       "Python"
@@ -20590,5 +20614,17 @@
     "queuedRootReserveGate": false,
     "rule": "Normal OS pressure and available memory at least the current job declared need plus512MiB; no strictly-free, hypothetical reserve, swap or second physical-fit gate"
   },
-  "activeWorkers": []
+  "activeWorkers": [
+    {
+      "task": "r010_pin_revalidation",
+      "card": "R0.10",
+      "model": "gpt-6-luna",
+      "reasoning": "max",
+      "scope": "read-only minimum archive-binding plan",
+      "targetStopAt": "2026-10-06T19:51:00Z",
+      "ownNeedBytes": "268435456",
+      "marginBytes": "536870912",
+      "admission": "build/evidence/R0.10/archive-plan-admission.json"
+    }
+  ]
 }

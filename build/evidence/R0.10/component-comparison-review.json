@@ -1,0 +1,82 @@
+{
+  "card": "R0.10",
+  "reviewedHead": "79e844a",
+  "reviewScope": [
+    "docs/adr/0037-component-comparison-gate.md",
+    "packages/contracts/src/engineering-control.ts",
+    "packages/contracts/src/ops-registry.ts",
+    "packages/self-improvement/src/engineering-control.ts",
+    "packages/self-improvement/src/component-comparison-probe.ts",
+    "packages/self-improvement/src/public.ts",
+    "packages/ops/src/fixture-stack.ts",
+    "tests/registry.yaml",
+    "build/evidence/R0.10/component-comparison-verification.json"
+  ],
+  "findings": [
+    {
+      "id": "R010-AT74-ARCHIVE-PATH-NOT-EXERCISED",
+      "severity": "acceptance-scope-gap",
+      "evidence": [
+        "packages/self-improvement/src/component-comparison-probe.ts:9-24,31-47",
+        "packages/self-improvement/src/engineering-control.ts:459-479",
+        "tests/registry.yaml:117-171",
+        "build/evidence/R0.10/component-comparison-verification.json:15-26,56-56"
+      ],
+      "detail": "The AT74 probe creates completeReport() in memory using synthetic primary.example.test URLs, mutates that DTO for three negative cases, and calls checkComponentComparison directly. It does not load the authored report paths, digest the Markdown archive, bind a report key to a register row/component, or call checkResearch. The real research inspection path does implement safe path traversal checks, report digest verification, fenced-JSON parsing, and report-key/component-ID binding; it also reports A08/A09/M02 as missing normalized records in the current archive. The manifest describes archived external-report variants, so the four CLI diagnostic passes do not yet verify that archive path or the pre-build register checker against those records.",
+      "closure": "Keep the shared comparison predicate. Route the fixed AT74 variants through the actual indexed-report inspection boundary (or its existing external-document seam), retain the report digest/key/component binding, and record the archived report readback. Until that is done, treat the four passes as owner-predicate diagnostics only."
+    },
+    {
+      "id": "R010-AT74-ARCHIVE-FORMAT-TOO-WIDE",
+      "severity": "input-scope-gap",
+      "evidence": [
+        "docs/adr/0037-component-comparison-gate.md:13",
+        "packages/self-improvement/src/engineering-control.ts:160-169,491-499"
+      ],
+      "detail": "The ADR limits the binding to a fenced payload in an already indexed Markdown report. The register-link parser accepts any path matching research/[a-zA-Z0-9._/-]+, and readResearchFile accepts any non-symlink file under research/ without requiring a .md suffix. Thus a non-Markdown file can satisfy the current path boundary if it contains the expected fence.",
+      "closure": "Require the existing indexed research report path to end in .md while preserving the safe planning-root, no-symlink, digest, report-key, and component-ID checks."
+    }
+  ],
+  "fourCaseReview": {
+    "manifestCases": [
+      "missing-primary-evidence",
+      "unsupported-choice",
+      "missing-acceptance-link",
+      "complete-outside-comparison"
+    ],
+    "structuralCoverage": "The first case removes the selected pg-boss primary evidence; the second selects a nonexistent option; the third removes all acceptance IDs; the positive case contains the three named options, a viable proven outside option, source-support references, tradeoffs, selected proven pg-boss, and a nonempty validation plan. Each uses the same compareComponent predicate as indexed-report inspection.",
+    "limits": "Cases use a hard-coded typed object, so they prove the comparison predicate's branch behavior, not Markdown decoding, archive binding, or full register admission. The comparison DTO correctly keeps researchAttestationVerified=false and acceptanceComplete=false."
+  },
+  "provisionalResultHonesty": {
+    "verdict": "HONESTLY_INCOMPLETE",
+    "evidence": {
+      "diagnosticPasses": 4,
+      "runShowExact": true,
+      "wholeResultState": "NOT_IMPLEMENTED",
+      "wholeResultComplete": false,
+      "wholeATsPassed": [],
+      "acceptanceComplete": false,
+      "teardownComplete": true,
+      "root02Status": "PENDING",
+      "staticCheckExitCode": 0
+    },
+    "interpretation": "The evidence distinguishes four component-predicate diagnostic passes and a clean source check from a whole AT result. It preserves NOT_IMPLEMENTED/incomplete and does not promote AT-obligations-74 or R0.10."
+  },
+  "remainingFullGates": [
+    "R0.02 is explicitly PENDING in the reviewed verification evidence; protected controller/identity prerequisites remain unmet.",
+    "The ADR and result DTO keep research-route attestation, dependency closure, and whole-register/release admission unverified and blocked.",
+    "Current indexed A08/A09/M02 report prose lacks normalized comparison records, so the real inspection path remains unresolved for those components.",
+    "A full protected CLI AT74 result and the rest of R0.10 assigned ATs remain pending. R0.05 status was not re-read in this bounded file-only review."
+  ],
+  "sourceSha256": {
+    "docs/adr/0037-component-comparison-gate.md": "531275d07fa24d81f415b4a77f6941b7e7d9e7a4c04dac97f318fa047e779ab1",
+    "packages/contracts/src/engineering-control.ts": "c9b8f81179cdd4a34550c68e94252c51298c2397bdae458ea26603202db0afbd",
+    "packages/contracts/src/ops-registry.ts": "5917c9e4365fa07cdecf8c82402d24878c67dfb20f188b8e7d48e57d187ad93a",
+    "packages/self-improvement/src/engineering-control.ts": "b4d9a69b35fd9dfc30fc9370fe838f3d6552446eab82923af50c6a0f092ea1bf",
+    "packages/self-improvement/src/component-comparison-probe.ts": "a48c15182a64b927cb4750810b6b487ea94f091be67a4311dbe3f602cbf29ac3",
+    "packages/self-improvement/src/public.ts": "a64c91103ac6e2da09c6a9f8169be7cca7969bd19afc4899e6342a3ade43ce84",
+    "packages/ops/src/fixture-stack.ts": "a7808b6503880ca13f4cad9b2de16788e6f0ba0dbe60ff41eaf59980589fee51",
+    "tests/registry.yaml": "4a00bbe0643863b3debe1d44049cf30bb9c050455b8d323da44cbbda66ed8e7d",
+    "build/evidence/R0.10/component-comparison-verification.json": "a5b55a4d01d4396a28af6b22869f2bbf0c4710e98523bc9c2e61f689012ba6d8"
+  },
+  "scopeStatement": "Read-only review. No source, shared state, tests, builds, stacks, processes, or external archive files were changed or run."
+}

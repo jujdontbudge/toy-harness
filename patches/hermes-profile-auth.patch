@@ -56,6 +56,47 @@
  
  
  def persist_pool_entries(
+@@ -2000,19 +2049,17 @@
+     # ---- selection ---------------------------------------------------------
+ 
+     def select(self, *, model: Optional[str] = None) -> Optional[PooledCredential]:
+-        entry, pending_refresh = self._select_under_lock(model=model)
++        entry, pending_refresh = self._select_under_lock(model=model, defer_refresh=True)
+         if pending_refresh:
+             self._refresh_pending_entries(pending_refresh)
+-            # Re-select now that the refreshed entries are back in the pool.
+-            if entry is None:
+-                entry, _ = self._select_under_lock(model=model)
++            entry, _ = self._select_under_lock(model=model)
+         if entry is not None:
+             self._unmatched_rotation_streak = 0
+         return entry
+ 
+-    def _select_under_lock(self, *, model: Optional[str] = None) -> Tuple[Optional[PooledCredential], List[PooledCredential]]:
++    def _select_under_lock(self, *, model: Optional[str] = None, defer_refresh: bool = False) -> Tuple[Optional[PooledCredential], List[PooledCredential]]:
+         with self._lock:
+-            return self._select_unlocked(model=model)
++            return self._select_unlocked(model=model, defer_refresh=defer_refresh)
+ 
+     def _refresh_pending_entries(self, pending: List[PooledCredential]) -> None:
+         """Refresh deferred single-use-token entries OUTSIDE the pool lock.
+@@ -2166,6 +2213,7 @@
+ 
+     def _select_unlocked(
+         self, *, refresh: bool = True, count: bool = True, model: Optional[str] = None,
++        defer_refresh: bool = False,
+     ) -> Tuple[Optional[PooledCredential], List[PooledCredential]]:
+         """Select the best available entry; returns ``(entry, pending_refresh)``.
+ 
+@@ -2173,6 +2221,8 @@
+         not going to serve a request (a forced-refresh target lookup).
+         """
+         available, pending_refresh = self._available_entries(clear_expired=True, refresh=refresh, model=model)
++        if pending_refresh and defer_refresh:
++            return None, pending_refresh
+         if not available:
+             self._current_id = None
+             self._log_no_available_entries()
 --- a/agent/credential_pool_admin.py
 +++ b/agent/credential_pool_admin.py
 @@ -108,26 +108,78 @@

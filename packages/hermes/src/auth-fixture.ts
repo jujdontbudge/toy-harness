@@ -21,9 +21,9 @@ const isWithin = (base: string, target: string): boolean => {
 
 const publicArgv = (operation: FixtureOperation, order?: HermesAuthConcurrencyObservationV1["order"]): string[] => {
   const prefix = ["hermes", "--profile", "toy"];
-  if (operation.startsWith("add")) return [...prefix, "auth", "add", "openai-codex", "--type", "oauth", "--no-browser"];
+  if (operation.startsWith("add")) return [...prefix, "auth", "add", "openai-codex", "--type", "oauth", "--no-browser", ...(order === undefined ? [] : ["--label", `toy-fixture-added-${order}`])];
   if (operation.startsWith("list")) return [...prefix, "auth", "list", "openai-codex"];
-  if (operation === "priority-added" || operation === "priority-restored") return [...prefix, "auth", "priority", "openai-codex", operation === "priority-added" && order === "refresh-first" ? "3" : "2", "0"];
+  if (operation === "priority-added" || operation === "priority-restored") return [...prefix, "auth", "priority", "openai-codex", operation === "priority-added" ? `toy-fixture-added-${order}` : "2", "0"];
   return [...prefix, "chat", "--provider", operation === "siwc-unbound" ? "siwc_responses" : "openai-codex", "--model", "gpt-6.1-sol", "--toolsets", "none", "-q", "Return the fixed fixture marker."];
 };
 
@@ -427,7 +427,7 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
             ? result.http_ledger.device_code_requests === 0 && result.http_ledger.device_code_polls === 0 && result.http_ledger.token_exchanges === 0 && result.http_ledger.token_refreshes === 0 && result.http_ledger.model_catalog_requests === 0 && result.http_ledger.model_requests === 0 && result.http_ledger.denied_http_requests === 0 && result.http_ledger.blocked_socket_events === 0
             : result.http_ledger.device_code_requests === 0 && result.http_ledger.device_code_polls === 0 && result.http_ledger.token_exchanges === 0 && result.http_ledger.token_refreshes === expectedRefreshEffects.length && result.http_ledger.model_catalog_requests === 1 && result.http_ledger.model_requests === 1 && result.http_ledger.denied_http_requests === 0 && result.http_ledger.blocked_socket_events === 0;
         const expectedGeneration = priorityOperation ? result.observations.access_generation === null : actor === "expired-chat"
-          ? result.observations.access_generation === (order === "add-first" ? "rotated" : "added-rotated")
+          ? result.observations.access_generation === (order === "add-first" ? "rotated" : "stale")
           : actor === "fresh-add-reload"
             ? result.observations.access_generation === "added-rotated"
             : actor === "fresh-refresh-reload"
@@ -435,7 +435,7 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
               : result.observations.access_generation === null;
         const catalogGenerationMatches = addOperation || listOperation || priorityOperation
           ? result.observations.catalog_access_generation === null
-          : result.observations.catalog_access_generation === (actor === "fresh-add-reload" && order === "refresh-first" ? "stale" : result.observations.access_generation);
+          : result.observations.catalog_access_generation === result.observations.access_generation;
         const concurrencyMatches = concurrency !== undefined
           && concurrency.order === order
           && concurrency.actor === actor
