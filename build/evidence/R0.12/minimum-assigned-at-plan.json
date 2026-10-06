@@ -1,0 +1,285 @@
+{
+  "artifact": "R0.12 minimum assigned-AT source plan",
+  "observedAtUtc": "2026-10-06T20:41:30Z",
+  "card": {
+    "id": "R0.12",
+    "name": "F10 gate closure",
+    "purpose": "Close remaining module-specific pre-build research/compatibility decisions and leave unresolved components blocked rather than substitute unsupported routes.",
+    "dependencies": [
+      "R0.08",
+      "R0.09",
+      "R0.10"
+    ],
+    "state": "PENDING; no R0.12 gate-closure evidence was present in the scoped evidence listing.",
+    "wholeATComplete": false,
+    "rootQueueWorkflow": "Retain; this plan does not alter queue state or root ownership."
+  },
+  "assignedATs": [
+    {
+      "id": "AT-attention-66",
+      "requiredEvidence": [
+        "static",
+        "probe"
+      ]
+    },
+    {
+      "id": "AT-lifestore-45",
+      "requiredEvidence": [
+        "static",
+        "probe"
+      ]
+    },
+    {
+      "id": "AT-lifestore-47",
+      "requiredEvidence": [
+        "stack",
+        "device/account",
+        "probe"
+      ]
+    },
+    {
+      "id": "AT-lifestore-70",
+      "requiredEvidence": [
+        "static",
+        "probe"
+      ]
+    },
+    {
+      "id": "AT-sources-188",
+      "requiredEvidence": [
+        "static",
+        "probe"
+      ]
+    },
+    {
+      "id": "AT-sources-190",
+      "requiredEvidence": [
+        "stack",
+        "probe"
+      ]
+    },
+    {
+      "id": "AT-sources-208",
+      "requiredEvidence": [
+        "stack",
+        "device/account",
+        "probe"
+      ]
+    },
+    {
+      "id": "AT-adhd-features-66",
+      "requiredEvidence": [
+        "static",
+        "probe"
+      ]
+    },
+    {
+      "id": "AT-adhd-features-67",
+      "requiredEvidence": [
+        "stack",
+        "device/account",
+        "probe"
+      ]
+    },
+    {
+      "id": "AT-adhd-features-106",
+      "requiredEvidence": [
+        "static",
+        "probe"
+      ]
+    },
+    {
+      "id": "AT-self-improvement-54",
+      "requiredEvidence": [
+        "static",
+        "probe"
+      ]
+    },
+    {
+      "id": "AT-self-improvement-56",
+      "requiredEvidence": [
+        "stack",
+        "device/account",
+        "probe"
+      ]
+    }
+  ],
+  "chosenUnit": {
+    "id": "AT-self-improvement-54",
+    "sourceAssertionHash": "b4141538d262d66d789eb55ef7608df4effefb5dd4c7c6fc801f1c54e41e4c23",
+    "assertion": "AT-self-improvement-54 requires a required component decision record to fail when absent, unsupported, or incomplete, and to identify the missing requirement/source/validation IDs. A complete record must include compared options, primary evidence, tradeoffs, a selected proven option outside the initially named tools, release gate, and test IDs, then pass.",
+    "selectionReason": "Smallest candidate remains the existing Self-Improvement research decision owner, but its current fixed M02 comparison check does not cover the full AT. Refine the existing owner contract and one registered probe rather than add a module or command.",
+    "currentProof": {
+      "ownerMethod": "EngineeringControl.checkResearch(MapCheckInputV1, OpsControlContextV1, testDocuments?)",
+      "ownerFile": "packages/self-improvement/src/engineering-control.ts",
+      "publicExport": "packages/self-improvement/src/public.ts exports EngineeringControl.",
+      "currentCLI": "toy research check --json invokes EngineeringControl.checkResearch on the repository register.",
+      "currentLimit": "checkResearch returns register_inventory only, with admission=BLOCKED, wholeATsPassed=[], and acceptanceComplete=false. The current ResearchComponentComparisonCheckV1 exposes generic finding codes and selectedTool, but not missing requirement/source/validation IDs or selectedOptionId. The input schema has mappedRequirements and primaryEvidenceIds but no validationIds or testIds field; acceptanceIds is checked against specs/obligations.md. The check consumes the register row releaseGate separately from the comparison record.",
+      "assignedRouteGap": "TEST-PLAN assigns probe:AT-self-improvement-54, but ReplayEnvironment has no AT-self-improvement-54 dispatch and tests/registry.yaml has no source-bound manifest row. Existing public checkResearch can inspect a bound TS report overlay, but its current public DTOs cannot return the missing identifier lists or validation/test identifier coverage required by the assertion.",
+      "existingProbeLimit": "componentComparisonProbe is fixed to AT-obligations-74, component M02, and indexed report TS. Its four cases only fail for missing primary evidence, unsupported selected choice, and missing acceptance link; the complete case selects pg-boss. The report contains an outside option, but does not select it. It therefore proves neither the AT-SI54 missing requirement/source/validation IDs nor a PASS with an outside option selected. Reusing M02/TS can provide one required-component witness, but cannot prove the generic required-component rule: the validator hard-codes scope obligations-scheduling, requirements 0.1/0.2/0.10, named SQLite/pg-boss/Hermes options, and only requires comparisons for A08/A09/M02."
+    },
+    "minimalSourceUnit": {
+      "owner": "Existing Self-Improvement EngineeringControl and ReplayEnvironment public package boundary.",
+      "files": [
+        "packages/contracts/src/engineering-control.ts: extend the existing ResearchComponentComparisonV1 and ResearchComponentComparisonCheckV1 fields only as needed to represent validationIds/testIds and report missing requirement/source/validation IDs plus selectedOptionId; do not add a new DTO.",
+        "packages/self-improvement/src/engineering-control.ts: validate the supplied IDs and selected proven outside option, and return the exact missing ID lists in the existing comparison check. Keep register_inventory admission blocked and wholeATsPassed empty.",
+        "packages/self-improvement/src/public.ts: route AT-self-improvement-54 through the existing checkResearch overlay and TestProbeControl boundary.",
+        "tests/registry.yaml: bind AT-self-improvement-54 to the existing owner and enumerate the cases; regenerate derived registry artifacts through the repository path."
+      ],
+      "writtenInterface": "Reuse EngineeringControl.checkResearch(MapCheckInputV1, OpsControlContextV1, ResearchDocumentOverlayV1[]), ResearchRegisterInspectionV1, ReplayEnvironment.runRegisteredProbe, and TestProbeControl.run. Amend only the existing comparison input/check schemas if the owner must expose IDs; no new module, CLI command, protocol, or DTO.",
+      "smallestSourceRequiredCases": [
+        {
+          "id": "required-component-absent",
+          "expected": "The required component has no decision record; fail and identify that component plus the absent decision identifiers."
+        },
+        {
+          "id": "required-component-unsupported",
+          "expected": "Selected option is unsupported or unproven; fail and identify the selected option and source/validation identifiers preventing acceptance."
+        },
+        {
+          "id": "required-component-incomplete-ids",
+          "expected": "One bound decision omits a required requirement ID, primary source ID, and validation ID; fail with each exact missing ID, not only generic finding codes."
+        },
+        {
+          "id": "required-component-complete-outside-selected",
+          "expected": "A bound decision has compared options, primary evidence, tradeoffs, a selected proven option whose ID is outside the initially named option set, release gate, and test IDs; pass and report the selected option ID."
+        }
+      ],
+      "m02WitnessAssessment": "M02 is a current required component and TS is its indexed report, so it may serve as the single concrete required-component witness for this AT. It is not proof of a generic validator: current logic is scoped to obligations-scheduling, hard-codes requirement IDs and three named tool examples, and the current probe selects pg-boss. The AT-SI54 probe must directly assert exact missing-ID arrays and selectedOptionId for an outside proven option; the existing AT-obligations-74 four checks do not do so.",
+      "CLICommands": [
+        "Current read-only inventory only: toy research check --json",
+        "Existing comparison probe (not AT-SI54 evidence): toy --env test --stack <UUID> probe run AT-obligations-74 --request-id <UUID> --json",
+        "Assigned unfiltered probe after implementation: toy --env test --stack <UUID> probe run AT-self-improvement-54 --request-id <UUID> --json"
+      ],
+      "gateDistinctions": "The direct CLI inventory remains register_inventory/ BLOCKED. A future local SI54 probe may report its individual diagnostic checks, but it cannot set ResearchRegisterInspectionV1.wholeATsPassed, admission, or acceptanceComplete. AT static source binding, its assigned unfiltered CLI probe evidence, and whole R0.12 closure are separate gates; R0.12 remains pending behind R0.08/R0.09/R0.10 and the other assigned ATs."
+    },
+    "exactIndexedAssertion": "- **AT-self-improvement-54 [R0]** Given a required component with an absent, unsupported, or incomplete decision record in `specs/RESEARCH-REGISTER.md`, When its build gate runs, Then it fails with the missing requirement/source/validation IDs; a record with compared options, primary evidence, tradeoffs, selected option, release gate and test IDs passes, including a proven option outside the initially named tools. (Requirements 0.1, 0.10; G11.)"
+  },
+  "prerequisitesAndPendingGates": [
+    {
+      "ownerPrerequisite": "R0.08 signing/licence inventory",
+      "evidence": "build/evidence/R0.08/live-prerequisite-inventory.json records Apple Developer membership and Cold Turkey Pro as PENDING; membership, entitlements and licence eligibility remain unverified.",
+      "effect": "R0.12 card dependency remains open; no purchase or account action is implied."
+    },
+    {
+      "ownerPrerequisite": "R0.09 storage capacity/restore evidence",
+      "evidence": "build/evidence/R0.09/storage-preparation.json status is READ_ONLY_PREPARATION_ONLY, acceptanceComplete=false; remote/B2 capacity, escrow, eligibility, growth and restore evidence remain unverified.",
+      "effect": "R0.12 card dependency remains open."
+    },
+    {
+      "ownerPrerequisite": "R0.10 pins/contracts/pg-boss schema-44 compatibility",
+      "evidence": "build/evidence/R0.10/queue-runtime-admission.json reports NOT_IMPLEMENTED and complete=false.",
+      "effect": "R0.12 card dependency remains open."
+    },
+    {
+      "ownerPrerequisite": "Remaining R0.12 assigned ATs",
+      "evidence": "All 11 ATs other than the selected independent AT-self-improvement-54 unit remain assigned; device/account and stack-tagged assertions require their own assigned-rung evidence.",
+      "effect": "Whole R0.12 remains incomplete even if the selected unit is later verified."
+    }
+  ],
+  "resourceAdmission": {
+    "doctorEvidence": "build/evidence/R0.12/minimum-plan-refinement-admission.json",
+    "observedAtUtc": "2026-10-06T20:40:55Z",
+    "pressure": "normal",
+    "availableBytes": "2204237824",
+    "declaredNeedBytes": "268435456",
+    "marginBytes": "536870912",
+    "requiredBytes": "805306368",
+    "admitted": true
+  },
+  "sourceHashes": [
+    {
+      "path": "../personal-assistant-harness/specs/BUILD-PLAN.md",
+      "sha256": "aa84eb600e53bc65e6c6b1ed4fce45870ead861e0d18bf00d81613ff2595f49a"
+    },
+    {
+      "path": "../personal-assistant-harness/specs/TEST-PLAN.md",
+      "sha256": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2"
+    },
+    {
+      "path": "../personal-assistant-harness/specs/self-improvement.md",
+      "sha256": "23e69b258189148328f029acd3ec7c4c125544bf49d670757eee2bf071ab7014"
+    },
+    {
+      "path": "../personal-assistant-harness/specs/RESEARCH-REGISTER.md",
+      "sha256": "8ebbcfb9e2e63041fd004dd55787a02473d36d9bcaa733eb4d322722b1ae4942"
+    },
+    {
+      "path": "../personal-assistant-harness/specs/attention.md",
+      "sha256": "1dbded4e107c5c9276ff6f9e1141b5b9c230502ceee4c66b4465a4df6ee0217a"
+    },
+    {
+      "path": "../personal-assistant-harness/specs/lifestore.md",
+      "sha256": "044e33ba76d512c0fcae478f8d4923d2f33c028b8dae94bbdb69d6d4111c1117"
+    },
+    {
+      "path": "../personal-assistant-harness/specs/sources.md",
+      "sha256": "7caa4347326c27ed528e96106b729fd9f5d0ae3da69518302b519c98b0fa6645"
+    },
+    {
+      "path": "../personal-assistant-harness/specs/adhd-features.md",
+      "sha256": "5e85be6346da1a9e8dd4795232c30205a9b9556b00b3cde52ee9788d6b5697ad"
+    },
+    {
+      "path": "packages/self-improvement/src/engineering-control.ts",
+      "sha256": "0802cd3f827a891fa5d61660f828d24465ef0c385fc3de88e3d2660c9a2d6d78"
+    },
+    {
+      "path": "packages/self-improvement/src/public.ts",
+      "sha256": "2d9d2897ab26c2d896a02d87fa957858dc0f54a3c38636f1ea42aed2c21066b6"
+    },
+    {
+      "path": "packages/contracts/src/cli-declarations.ts",
+      "sha256": "b7623e62057d5a1c607db7867a019940478dcefa4c6043498b3af596bca90ee6"
+    },
+    {
+      "path": "packages/contracts/src/test-control.ts",
+      "sha256": "0af0d0e4349cae05bfdc06a77592e32c5171f0dc5d0e5964f2ef87faeaa4111c"
+    },
+    {
+      "path": "packages/contracts/src/generated-probe-registry.ts",
+      "sha256": "a753828ac7e54a19036a2d5af88f693b05cf38d20c7678cca7a6fb9307207e08"
+    },
+    {
+      "path": "cli/src/main.ts",
+      "sha256": "450fcde7162f8892808b0d52c0341fdb52726957eaf8a4580b74cff4217f55e4"
+    },
+    {
+      "path": "tests/registry.yaml",
+      "sha256": "f781db940ac86f6c3004193c626a89dcba2c8a0b4756f0d48b403e34615f6a3f"
+    },
+    {
+      "path": "tests/acceptance-index.json",
+      "sha256": "87d21b7f24f9f900bb202e1e813ba46bbc51282b96e14cb2739d5fd67b32d9e6"
+    },
+    {
+      "path": "build/evidence/R0.08/live-prerequisite-inventory.json",
+      "sha256": "02e24527900611d6e612f34bcd9c2526ba1bff9370b9e7cd70e15837824af77f"
+    },
+    {
+      "path": "build/evidence/R0.09/storage-preparation.json",
+      "sha256": "821fa9ff384b6cc2a35e0b033be16f9d65649632a0c0295b844405fa514f8215"
+    },
+    {
+      "path": "build/evidence/R0.10/queue-runtime-admission.json",
+      "sha256": "01eeb80b4c825e4007f9b5e5f29af0f38e3ee41083a0dd88269bdd0b0037bee9"
+    },
+    {
+      "path": "packages/self-improvement/src/component-comparison-probe.ts",
+      "sha256": "36362320cc7b05c82308cb8514a315181ded1b63bb8e7520c4de8a081602e954"
+    },
+    {
+      "path": "packages/contracts/src/engineering-control.ts",
+      "sha256": "abf77c42e884cd16a445954f6de57292021812ef8710e0fa35626fcdc6491ce5"
+    }
+  ],
+  "parentReview": {
+    "recordedAt": "2026-10-06T20:43:38.454564+00:00",
+    "status": "SOURCE_REQUIRED_GAPS_CONFIRMED_PLAN_ONLY",
+    "genericGateRequired": true,
+    "currentM02FourCasesAreNotFullAT54": true,
+    "contractVersionDecision": "Use the existing contract versioning rules if missing-ID or selected-option fields change a strict wire shape; the helper no-new-DTO suggestion does not override canonical versioning. Keep the field set minimal and generated.",
+    "nextBoundedUnit": "Write the existing research owner generic decision interface, bind exact requirement/source/validation IDs, then use assigned unfiltered CLI missing/unsupported/incomplete and selected-outside cases. No general Run/Review, service, protocol, Swift or real external research tangent.",
+    "wholeATComplete": false
+  }
+}
