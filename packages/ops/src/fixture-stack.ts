@@ -10,7 +10,7 @@ import { fileURLToPath } from "node:url";
 import {
   bootstrapUpRequestSchema, fixtureStackRecordSchema, fixtureWorkerStateSchema, opsErrorMessages,
   schemaBundleDigest, testClockReceiptSchema, testClockStateSchema, testStackOperationSchema,
-  registeredProbeOperationSchema, registeredCliProbeInventory, clockAdvanceOperationSchema, checkViewSchema
+  registeredProbeOperationSchema, registeredCliProbeInventory, clockAdvanceOperationSchema, checkViewSchema, roleBootstrapRoot
 } from "@toy/contracts";
 import type {
   FixtureStackRecordV1, OpsControlContextV1, OpsErrorCode, Result, TestStackOperationV1, TestStackUpInputV1,
@@ -29,7 +29,19 @@ const digest = (value: string | Buffer): string => createHash("sha256").update(v
 const workerPath = join(import.meta.dirname, "fixture-worker.js");
 const links = { recordRefs: [], observations: [], artifactDigests: [] };
 const home = userInfo();
-const fixtureRoot = (): string => join(trustedCheckoutRoot(), "build/.toy-r0-fixtures");
+const fixtureRoot = (create = false): string => {
+  if (home.uid !== 0) return join(trustedCheckoutRoot(), "build/.toy-r0-fixtures");
+  const control = roleBootstrapRoot + "/control";
+  const rootStat = lstatSync(roleBootstrapRoot);
+  if (!rootStat.isDirectory() || rootStat.isSymbolicLink() || rootStat.uid !== 0 || rootStat.gid !== 0 || (rootStat.mode & 0o022) !== 0) return refuse("ATTESTATION_INVALID");
+  const stat = lstatSync(control);
+  if (!stat.isDirectory() || stat.isSymbolicLink() || stat.uid !== 0 || stat.gid !== 0 || (stat.mode & 0o7777) !== 0o700) return refuse("ATTESTATION_INVALID");
+  const tests = join(control, "protected-tests");
+  if (!existsSync(tests)) {
+    if (create) mkdirSync(tests, { mode: 0o700 });
+  } else owned(tests, true);
+  return join(tests, "r0-fixtures");
+};
 const owned = (path: string, directory = false): void => {
   const stat = lstatSync(path);
   if (stat.uid !== home.uid || (stat.mode & 0o077) !== 0 || (directory ? !stat.isDirectory() : !stat.isFile() || stat.nlink !== 1)) refuse("ATTESTATION_INVALID");
@@ -47,7 +59,7 @@ const decode = (value: unknown): unknown => {
   try { const parsed: unknown = JSON.parse(value); return parsed; } catch { return refuse("ATTESTATION_INVALID"); }
 };
 const index = (create = false): DatabaseSync => {
-  const root = fixtureRoot();
+  const root = fixtureRoot(create);
   if (create) privateDirectory(root); else owned(root, true);
   const path = join(root, "control.db");
   const fresh = !existsSync(path);
@@ -121,7 +133,7 @@ const current = (value: FixtureStackRecordV1): void => {
 };
 
 export const fixtureStackUp = async (input: TestStackUpInputV1, context: OpsControlContextV1): Promise<Result<TestStackOperationV1>> => {
-  const prior = findBlockedBootstrapUp(input, context.timeoutMs);
+  const prior = home.uid === 0 ? null : findBlockedBootstrapUp(input, context.timeoutMs);
   if (prior) return prior;
   let db: DatabaseSync | undefined;
   let target: DatabaseSync | undefined;
@@ -297,12 +309,14 @@ export const FixtureProbe = {
       const accounting = input.caseId === "model-admission" && ["AT-ops-49", "AT-ops-51", "AT-ops-52"].includes(input.probeId);
       const nativeEligibility = input.caseId === "native-release-eligibility" && ["AT-ops-81", "AT-client-apps-49", "AT-activity-focus-64"].includes(input.probeId);
       const nativeAuth = input.caseId === "native-auth-cli" && ["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-78", "AT-ops-55"].includes(input.probeId);
+      const roleDenials = input.caseId === "control-filesystem-denial" && input.probeId === "AT-authority-35";
       const backupCapacity = input.caseId === "backup-capacity" && ["AT-ops-62", "AT-lifestore-63", "AT-sources-216"].includes(input.probeId);
-      if (checks.length > 0 && !reference && !(modelPolicy || modelStream || accounting || nativeEligibility || nativeAuth || backupCapacity)) refuse("INVALID_INPUT");
+      if (checks.length > 0 && !reference && !(modelPolicy || modelStream || accounting || nativeEligibility || nativeAuth || backupCapacity || roleDenials)) refuse("INVALID_INPUT");
       if ((modelPolicy || modelStream) && checks.some(check => check.id !== "read.model-route-policy" || check.owner !== "hermes")) refuse("INVALID_INPUT");
       if (accounting && checks.some(check => check.id !== "accounting.model-admission" || check.owner !== "self-improvement")) refuse("INVALID_INPUT");
       if (nativeEligibility && checks.some(check => check.id !== "release.native-eligibility" || check.owner !== "ops")) refuse("INVALID_INPUT");
       if (nativeAuth && checks.some(check => !["auth.native-runtime", "auth.native-fixture"].includes(check.id) || check.owner !== "hermes")) refuse("INVALID_INPUT");
+      if (roleDenials && checks.some(check => check.id !== "bootstrap.role-control-denials" || check.owner !== "ops")) refuse("INVALID_INPUT");
       if (backupCapacity && checks.some(check => check.id !== "backup.capacity" || check.owner !== "ops")) refuse("INVALID_INPUT");
       if (input.probeId === "AT-hermes-config-101" && input.caseId === "k4a-migration") {
         const sql = readFileSync(join(dirname(import.meta.dirname), "migrations/0001-k4a-reference.sql"));

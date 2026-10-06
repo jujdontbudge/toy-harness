@@ -148,3 +148,5 @@ export { NativeReleaseEligibilityPolicy } from "./native-release-eligibility.js"
 export { NativeReleaseEligibilityProbe } from "./native-release-eligibility-probe.js";
 export { BackupCapacity } from "./backup-capacity.js";
 export { BackupCapacityProbe } from "./backup-capacity-probe.js";
+
+export { RoleControlProbe } from "./role-control-probe.js";

@@ -1,0 +1,208 @@
+{
+  "schemaVersion": "toy.r0.05.minimal-actual-denial-plan.v1",
+  "preparedOn": "2026-10-06",
+  "status": "plan_only",
+  "scope": {
+    "card": "R0.05 actual-identity denial matrix",
+    "boundedRows": ["AT-authority-35", "AT-authority-36"],
+    "claimBoundary": "This is implementation preparation only. No denial operation or acceptance probe was run, and this artifact does not pass either AT or the whole R0.05 card.",
+    "authorizedMutation": "Only this nonsecret plan artifact was written."
+  },
+  "sourceAssertions": [
+    {
+      "id": "AT-authority-35",
+      "source": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/authority.md:2110",
+      "sourceAssertionHash": "934a98cc59306705d350903d2a8f21a05b987a09458c148e657f65b8485c1d2c",
+      "rung": "CLI",
+      "requiredEvidence": "stack, device/account, probe:AT-authority-35",
+      "assertion": "Given _toy_agent, the OS denies write, unlink, rename, symlink replacement, chmod, and parent-directory replacement in control."
+    },
+    {
+      "id": "AT-authority-36",
+      "source": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/authority.md:2112",
+      "sourceAssertionHash": "6608acc53403c4d48fccdaf75ea67eee801c07536709e0e0ff721eddce12799b",
+      "rung": "CLI",
+      "requiredEvidence": "stack, device/account, probe:AT-authority-36",
+      "assertion": "Given Johan has passwordless sudo, _toy_agent gains no privilege through sudo, su, privileged SSH, launchctl system mutation, or Johan's SSH agent; Johan's original access remains functional."
+    }
+  ],
+  "readbackBaseline": {
+    "evidence": "build/evidence/R0.04-existing-installation-verify.json",
+    "state": "verified",
+    "mode": "verify",
+    "reasonCode": "ROLE_IDENTITIES_VERIFIED",
+    "callerUid": 0,
+    "accountsVerified": 8,
+    "roleUidGid": {
+      "_toy_agent": [309, 309],
+      "_toy_control": [310, 310],
+      "_toy_review": [311, 311],
+      "_toy_repair": [312, 312],
+      "_toy_evaluator": [313, 313],
+      "_toy_pg": [314, 314],
+      "_toy_app": [315, 315],
+      "_toy_ops": [316, 316]
+    },
+    "directoryCount": 13,
+    "controlDirectory": {
+      "path": "/Library/Application Support/Toy/control",
+      "owner": "root",
+      "mode": "0700"
+    },
+    "bootstrapReceiptDigest": "980a7bbd94f61e8a5e4d0bec1860555091e7aa303b7981df4392a6f5ee49fe65",
+    "effectState": "none",
+    "identityGateVerified": false,
+    "maintenanceIdentityVerified": false,
+    "servicesActivated": false,
+    "limit": "This proves the R0.04 account/directory readback only; it does not prove any attempted OS denial or Johan-access preservation."
+  },
+  "repoFindings": {
+    "existingCli": "Reuse the typed toy probe.run/probe.show route. It already requires a registered AT ID, request UUID, test stack, and JSON output; no new CLI command or free-form execution option is needed.",
+    "missingCaseIds": "packages/contracts/src/test-control.ts RegisteredTestCaseV1 has no AT-authority-35/36 case IDs.",
+    "currentProbeLimit": "packages/ops/src/fixture-stack.ts FixtureProbe only dispatches existing fixed cases and persists NOT_IMPLEMENTED/complete:false when an assertion handler is absent. The current generic fixture or bootstrap.identities --verify is not actual-UID denial evidence.",
+    "registry": "tests/registry.yaml is currently an empty list. TEST-PLAN requires a CLI row for each assertion plus a protected fixed executable case inventory bound to the source assertion hash.",
+    "featureMap": "skills/toy-control/FEATURE-MAP.md currently maps AT-authority-35/36 to control.bootstrap.identities; that feature proves identity/directory readback, not either denial matrix. Update the route/owner links when the cases are implemented.",
+    "rootToolsGap": "The R0.04 receipt declares 13 directories and does not include /Library/Application Support/Toy/tools. Any canonical root-owned Node/case-manifest directory must receive its own fixed owner/mode/path readback and artifact digest before use."
+  },
+  "minimalImplementation": {
+    "publicRoute": {
+      "reuse": "toy --env test --stack <owned-stack-id> probe run <AT-id> --case <fixed-case-id> --request-id <UUID> --json; inspect with probe show --json.",
+      "caseIds": {
+        "AT-authority-35": "control-filesystem-denial",
+        "AT-authority-36": "control-privilege-denial"
+      },
+      "restrictions": "The CLI accepts only the existing registered probe ID, a fixed case enum, request ID, and owned stack context. It accepts no UID, GID, path, executable, shell, argv, environment, expected outcome, or caller-authored case manifest. It never invokes sudo or elevates its caller."
+    },
+    "ownerInterface": {
+      "owner": "ops",
+      "module": "IdentityDenialProbe.run(RegisteredProbeInputV1, OpsControlContextV1)",
+      "dispatch": "Route only the two exact AT/case pairs from the existing registered-probe owner path; mismatched IDs/cases, production context, stale stack, missing identity readback, or absent protected manifest return blocked before staging or OS calls.",
+      "cliChanges": "Keep probe.run/show in cli/src/main.ts as the thin adapter. Add only fixed contract case IDs and owner dispatch; do not add a second CLI or system-poking script."
+    },
+    "ownedSourcePaths": [
+      "packages/contracts/src/test-control.ts",
+      "packages/contracts/src/control-denial.ts",
+      "packages/contracts/src/public.ts",
+      "packages/ops/src/control-denial-probe.ts",
+      "packages/ops/src/public.ts",
+      "packages/self-improvement/src/public.ts",
+      "control/bootstrap/denial-probe.ts",
+      "control/bootstrap/denial-cases.json",
+      "tests/registry.yaml",
+      "skills/toy-control/FEATURE-MAP.md"
+    ],
+    "generatedPaths": [
+      "packages/contracts/generated/types.ts",
+      "packages/contracts/generated/schemas/registered-probe-input-v1.schema.json",
+      "packages/contracts/src/generated-probe-registry.ts"
+    ],
+    "privatePipeContract": {
+      "request": "A generated @toy/contracts type carrying protocol version, requestId, exact AT ID, exact fixed case ID, and fixed case-manifest digest only.",
+      "response": "A generated @toy/contracts type carrying child process identity, bounded per-operation outcome codes, canary pre/post metadata digests, child exit/signal, and artifact digests. Do not echo file contents, secret values, arbitrary stderr, or environment values.",
+      "child": "One compiled TypeScript denial entry under the verified immutable tools closure, using Node built-ins and the private inherited pipe; it imports no protected Toy modules and runs no caller-selected code."
+    },
+    "rootOwnedRuntimePaths": {
+      "toolsRoot": "/Library/Application Support/Toy/tools",
+      "nodeBinary": "/Library/Application Support/Toy/tools/node",
+      "fixedChild": "/Library/Application Support/Toy/tools/denial-probe/main.js",
+      "caseManifest": "/Library/Application Support/Toy/tools/denial-probe/cases.json",
+      "controlCanaryTemplate": "/Library/Application Support/Toy/control/.r005-denial-<requestId>/",
+      "result": "The owner validates and stores a sanitized result through the existing registered probe operation; the CLI exposes it through run/show and saves the nonsecret acceptance receipt under build/evidence/R0.05/."
+    },
+    "actualIdentityExecution": {
+      "parent": "Require an already-root evaluator/owner process before staging root-only canaries. Resolve _toy_agent UID/GID from a fresh successful fixed identity readback, never CLI arguments. Verify the fixed child entry bytes/source digest against the immutable root-owned manifest before launch. Start only that absolute, sealed Node entry as root with fixed argv, private stdin/stdout pipes, a small byte cap, fixed environment, and bounded timeout. The CLI itself performs no privilege transition.",
+      "childIdentity": "The sealed fixed child starts as root, calls process.initgroups('_toy_agent', measuredGid), then setgid(measuredGid), then setuid(measuredUid), before any denial attempt. It attests process.getuid/geteuid/getgid/getegid/getgroups against the verified dedicated role identity and exact expected group set; any mismatch exits blocked before attempts. Do not use Node spawn uid/gid options because they retain the parent's supplementary groups.",
+      "environment": "Pass only fixed PATH, LANG, LC_ALL, and per-run scratch HOME/TMPDIR. Do not inherit, inspect, log, or forward Johan's environment, SSH_AUTH_SOCK, home, key files, agent responses, tokens, or provider credentials.",
+      "callerBoundary": "Only the fixed compiled child, fixed case manifest, and verified numeric identity cross the protected root-to-child boundary. There is no arbitrary interpreter input or custom command."
+    }
+  },
+  "protectedCaseRegistration": [
+    {
+      "id": "AT-authority-35",
+      "rung": "CLI",
+      "sourceAssertionHash": "934a98cc59306705d350903d2a8f21a05b987a09458c148e657f65b8485c1d2c",
+      "commandId": "probe.run",
+      "scenarioId": "acceptance/AT-authority-35",
+      "owner": "ops",
+      "firstRelease": "R0",
+      "kind": "behavioral",
+      "mandatoryCases": [
+        "actual-child-identity",
+        "control-parent-preflight",
+        "control-write-denied",
+        "control-unlink-denied",
+        "control-rename-denied",
+        "control-symlink-replacement-denied",
+        "control-chmod-denied",
+        "control-parent-directory-replacement-denied",
+        "control-canary-readback",
+        "root-fixture-cleanup-readback"
+      ],
+      "trigger": "Only after fresh R0.04 identity receipt, exact root/control parent metadata, fixed immutable case-manifest digest, and unique disposable canaries are verified, run the six operations as actual _toy_agent.",
+      "faultControls": [
+        "Real macOS process identity and filesystem permissions only; no simulated UID or fake OS adapter.",
+        "All six paths resolve inside a unique root-owned disposable canary directory under control; no production control file is enumerated or opened by the child."
+      ],
+      "observations": [
+        "Each operation fails specifically with EACCES or EPERM; ENOENT, EEXIST, timeout, missing target, or generic child failure is not a denial pass.",
+        "Root independently verifies every canary's expected device/inode/owner/mode/content digest before and after, and verifies the canonical control directory metadata is unchanged.",
+        "The bounded child report, executable/case-manifest digests, actual child identity, CLI operation receipt, and exact cleanup readback are saved as nonsecret evidence."
+      ],
+      "simUnavailableReason": "SIM cannot attest the installed macOS service UID, real protected-directory metadata, or OS denial result; this assertion requires actual host/account evidence."
+    },
+    {
+      "id": "AT-authority-36",
+      "rung": "CLI",
+      "sourceAssertionHash": "6608acc53403c4d48fccdaf75ea67eee801c07536709e0e0ff721eddce12799b",
+      "commandId": "probe.run",
+      "scenarioId": "acceptance/AT-authority-36",
+      "owner": "ops",
+      "firstRelease": "R0",
+      "kind": "behavioral",
+      "mandatoryCases": [
+        "actual-child-identity",
+        "sudo-noop-denied",
+        "su-noop-denied",
+        "privileged-ssh-no-credential-denied",
+        "launchctl-system-mutation-denied",
+        "johan-ssh-agent-unreachable",
+        "johan-original-access-preserved"
+      ],
+      "trigger": "Run only fixed noninteractive no-op privilege attempts under actual _toy_agent after checking the child identity; do not run any command that changes account, service, SSH, or launchd state.",
+      "faultControls": [
+        "Each attempted command is fixed in the protected manifest, bounded, noninteractive, and has no caller-provided target or command text.",
+        "A launchctl case remains blocked until a non-destructive, collision-checked target and independent cleanup/readback are specified; do not bootstrap, unload, enable, disable, or mutate a real system job for this preparation."
+      ],
+      "observations": [
+        "Every listed escalation route has a direct expected denial and no privileged effect receipt; a missing route is incomplete, not PASS.",
+        "Johan's original sudo and SSH access must have independent before/after functional evidence. The R0.04 identity readback is not this evidence.",
+        "No actual SSH_AUTH_SOCK, Johan home/environment, SSH agent response, private key, or secret is read or recorded. Sanitized child environment alone does not prove the real Johan SSH agent predicate."
+      ],
+      "simUnavailableReason": "SIM cannot prove actual macOS account separation, system privilege denial, or preservation of Johan's existing account access."
+    }
+  ],
+  "at35OperationDesign": {
+    "preflight": "The root parent lstat-checks /, /Library, /Library/Application Support, the canonical Toy root, and control against the fresh verified receipt; rejects symlinks, ownership/mode drift, writable ancestors, or any mismatch before creating a canary or attempting a denial.",
+    "canaries": "Create a UUID-named root-owned 0700 fixture directory under control with fixed harmless files, one fixed symlink, and one empty disposable directory. The child receives no arbitrary paths; it derives only these fixed names from the schema-validated request UUID.",
+    "sixAttempts": [
+      "Write/truncate an existing harmless canary file.",
+      "Unlink an existing harmless canary file.",
+      "Rename an existing canary file to a fixed sibling destination.",
+      "Replace a pre-existing canary symlink by renaming a child-created harmless symlink from private scratch over it.",
+      "Chmod an existing harmless canary file.",
+      "Replace only a dedicated empty disposable parent-directory canary with a child-created empty directory; never rename/replace the canonical control directory or any directory containing real state."
+    ],
+    "attribution": "The root parent proves each target existed and was readable to root before the child runs, then checks the OS error code plus unchanged root-owned post-state. Missing-target or collision errors cannot count as permission denial."
+  },
+  "cleanup": {
+    "success": "After the child exits and root verifies the expected fixture inode/device/owner and case result, remove only the exact UUID-named canary entries with nonrecursive unlink/rmdir operations; then reread the canonical control parent metadata and confirm the fixture path is absent.",
+    "unexpectedMutation": "If any denial operation succeeds, any inode/content differs unexpectedly, a path is a symlink, or the parent identity changes, stop the matrix, retain sanitized failure evidence, and do not recursively delete or repair an unverified path. Preserve the fixture for owner review.",
+    "immutableRuntime": "Keep the digest-bound root-owned Node/case-manifest bundle as part of the installed immutable tools closure; do not delete shared runtime files as probe cleanup."
+  },
+  "acceptanceLimitations": [
+    "AT-authority-35 cannot PASS from the R0.04 verify receipt alone, from stack bootstrap.fs-denial, from a simulated UID, or from a generic NOT_IMPLEMENTED fixture result.",
+    "AT-authority-36 is a whole-assertion acceptance row. Under the current no-SSH-environment-read boundary, the Johan SSH-agent and original-access predicates lack a qualifying safe evidence route; preserve them as BLOCKED until a nonsecret independently verifiable route exists. A sudo/su subset cannot be represented as AT-authority-36 PASS.",
+    "The protected assertion manifest/controller must bind both exact source hashes, all mandatory case IDs, child artifact digest, case-manifest digest, fixture identity, actual child identity, and independent pre/post readbacks. A --case selector is a diagnostic subset and cannot waive omitted mandatory cases.",
+    "Only these two bounded acceptance rows are prepared. Remaining R0.05 shell/MCP/GUI/CDP/Cua/bot-token/database-group/approval-signer assertions and AT-authority-37/69/73 remain outside this artifact."
+  ]
+}

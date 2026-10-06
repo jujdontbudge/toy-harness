@@ -1,0 +1,124 @@
+{
+  "schemaVersion": "toy.actual-control-denial-verification.v1",
+  "generatedAt": "2026-10-06T15:42:32.306621+00:00",
+  "card": "R0.05",
+  "relatedCards": [
+    "R0.04"
+  ],
+  "probeId": "AT-authority-35",
+  "caseId": "control-filesystem-denial",
+  "rung": "CLI",
+  "sourceAssertionHash": "934a98cc59306705d350903d2a8f21a05b987a09458c148e657f65b8485c1d2c",
+  "schemaDigest": "aafcebda73cb1618d171d7102d32be8af64ae9cebab40f527db5814b0c27575b",
+  "stackId": "79e2868b-c3c5-4704-adf0-fb2d592df31a",
+  "operationId": "624c1376-e0ab-43eb-848c-ad5514e29bb4",
+  "controllerUid": 0,
+  "actualIdentity": {
+    "requestId": "a56924fc-e235-4f44-b162-5e7516f8f62c",
+    "pid": 38775,
+    "uid": 309,
+    "euid": 309,
+    "gid": 309,
+    "egid": 309,
+    "groups": [
+      309
+    ],
+    "permittedScratchWrite": true,
+    "attempts": [
+      {
+        "operation": "write",
+        "denied": true,
+        "errno": "EACCES"
+      },
+      {
+        "operation": "unlink",
+        "denied": true,
+        "errno": "EACCES"
+      },
+      {
+        "operation": "rename",
+        "denied": true,
+        "errno": "EACCES"
+      },
+      {
+        "operation": "symlink-replacement",
+        "denied": true,
+        "errno": "EACCES"
+      },
+      {
+        "operation": "chmod",
+        "denied": true,
+        "errno": "EACCES"
+      },
+      {
+        "operation": "parent-replacement",
+        "denied": true,
+        "errno": "EACCES"
+      }
+    ]
+  },
+  "independentReadbacks": {
+    "permittedScratchReadback": true,
+    "canariesUnchanged": true,
+    "protectedParentsUnchanged": true,
+    "originalControlReceiptUnchanged": true,
+    "cleanupComplete": true
+  },
+  "exactRunShowRetry": true,
+  "teardownComplete": true,
+  "unresolvedResources": [],
+  "originalBootstrapReceiptDigest": "980a7bbd94f61e8a5e4d0bec1860555091e7aa303b7981df4392a6f5ee49fe65",
+  "sourceHashes": {
+    "control/bootstrap/denial-probe.ts": "d47caee10470e21a28e5815283f95d92870dd6dcc705850c0a93c8d40e9ade64",
+    "control/dist/bootstrap/denial-probe.js": "7fda1824ec7bc308cac97d07c7c92cadd5527e87e89d79b410d33d95d1b30672",
+    "packages/ops/src/role-control-probe.ts": "541e4d17ff38f4e3bcc174afb1c60e4933ff9a32409676251c31cec9c5045244",
+    "packages/ops/dist/role-control-probe.js": "c0f6f28a6d46866f9a4c714c727b003568984764f25d8d349be5ef0df34da1af",
+    "packages/ops/src/fixture-stack.ts": "008f39ade1bd1d9992f70c2d347791bb6bcaa9b9f6fabda0b256c59db86bc1d9",
+    "cli/src/main.ts": "1074dbe6283b6b0a6e941a2b1a4098da4d603f1f56137d04c2039858f87c3e66",
+    "packages/contracts/src/identity-bootstrap.ts": "61735b32635352b317cfaed1e03890b1680d3b124299c96a40d61b858118880c",
+    "docs/adr/0030-actual-control-denials.md": "f45b80412fb98a21a745349d33ea46883f62a89ba1a0b873ce3dddd8d6573f13"
+  },
+  "commands": [
+    "toy --env test stack up --release R0 --clock fake --model fake --request-id UUID --json",
+    "toy --env test --stack UUID probe run AT-authority-35 --case control-filesystem-denial --request-id UUID --json",
+    "toy --env test --stack UUID probe show UUID --json",
+    "toy --env test --stack UUID stack down --request-id UUID --json",
+    "toy bootstrap identities --verify --request-id UUID --json",
+    "toy doctor --deep --json"
+  ],
+  "guards": {
+    "ordinary": "UNAUTHORIZED",
+    "pair": "INVALID_INPUT",
+    "prod": "TEST_ONLY"
+  },
+  "staticCheck": {
+    "command": "npm run check",
+    "exitCode": 0,
+    "log": "build/evidence/R0.05-control-denial-check-current.txt",
+    "artifacts": 329,
+    "contracts": 261,
+    "features": 91,
+    "commands": 55,
+    "indexedATs": 1447,
+    "swiftInvoked": false
+  },
+  "evidenceFiles": [
+    "build/evidence/R0.05-control-denial-stack-up-retry.json",
+    "build/evidence/R0.05-control-denial-actual-run.json",
+    "build/evidence/R0.05-control-denial-actual-show.json",
+    "build/evidence/R0.05-control-denial-actual-retry.json",
+    "build/evidence/R0.05-control-denial-stack-down.json",
+    "build/evidence/R0.05-control-denial-identities-after.json",
+    "build/evidence/R0.05-control-denial-doctor-after.json"
+  ],
+  "wholeATsPassed": [],
+  "acceptanceComplete": false,
+  "servicesActivated": false,
+  "liveProviderSends": 0,
+  "deferred": [
+    "Complete protected controller/launcher and installed-service/credential manifest; unfiltered whole AT registration",
+    "AT-authority-36 full privilege and Johan-access preservation matrix",
+    "MCP/GUI/IPC/raw CDP/Cua/database/secret/approval input denial matrices",
+    "Immutable SIWC control runtime, native Keychain and protected provider send binding"
+  ]
+}

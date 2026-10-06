@@ -3603,6 +3603,36 @@
         "AT-lifestore-63",
         "AT-sources-216"
       ]
+    },
+    {
+      "id": "ops.actual-control-denials",
+      "description": "Fixed root-controller diagnostic runs actual agent UID/GID/groups through six OS filesystem denials, permitted scratch and protected canary readbacks; full assigned certification remains pending.",
+      "requirementIds": [
+        "spec:authority",
+        "spec:ops"
+      ],
+      "firstRelease": "R0",
+      "implementation": "built",
+      "entry": "cli/src/main.ts",
+      "owner": "ops",
+      "publicInterface": "RoleControlProbe.run",
+      "paths": [
+        "packages/ops/src/public.ts",
+        "packages/ops/src/role-control-probe.ts",
+        "packages/ops/src/fixture-stack.ts",
+        "control/bootstrap/denial-probe.ts",
+        "packages/contracts/src/identity-bootstrap.ts",
+        "packages/contracts/src/test-control.ts",
+        "packages/contracts/src/ops-registry.ts",
+        "docs/adr/0030-actual-control-denials.md"
+      ],
+      "commands": [
+        "probe.run",
+        "probe.show"
+      ],
+      "atIds": [
+        "AT-authority-35"
+      ]
     }
   ],
   "requirements": [
@@ -4075,6 +4105,11 @@
       "id": "HermesAuthProbe.run",
       "owner": "hermes",
       "path": "packages/hermes/src/public.ts"
+    },
+    {
+      "id": "RoleControlProbe.run",
+      "owner": "ops",
+      "path": "docs/adr/0030-actual-control-denials.md"
     },
     {
       "id": "BackupCapacity.inspect/evaluate; BackupCapacityProbe.run",

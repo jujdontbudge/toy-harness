@@ -29,7 +29,7 @@ export const testStackCheckInventory = [
   declaration("bootstrap.reference.connector", "sources", "probe.run"), declaration("bootstrap.reference.tool", "self-improvement", "probe.run"),
   declaration("bootstrap.reference.skill", "self-improvement", "probe.run"), declaration("bootstrap.reference.migration", "ops", "probe.run"),
   declaration("bootstrap.fixture-runtime", "ops", "stack.up"), declaration("bootstrap.fixture-identities", "ops", "doctor"),
-  declaration("bootstrap.role-identities", "ops", "doctor"),
+  declaration("bootstrap.role-identities", "ops", "doctor"), declaration("bootstrap.role-control-denials", "ops", "probe.run"),
   declaration("bootstrap.journal", "ops", "stack.up"),
   declaration("bootstrap.signature", "ops", "stack.up"), declaration("bootstrap.native-entry", "ops", "stack.up"),
   declaration("bootstrap.inherited-child", "ops", "stack.up"), declaration("bootstrap.fs-denial", "ops", "stack.up"),

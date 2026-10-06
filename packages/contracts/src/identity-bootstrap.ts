@@ -32,7 +32,21 @@ export type RoleBootstrapInputV1 = z.infer<typeof roleBootstrapInputSchema>;
 export type RoleBootstrapRoleV1 = z.infer<typeof roleBootstrapRoleSchema>;
 export type RoleBootstrapDirectoryV1 = z.infer<typeof roleBootstrapDirectorySchema>;
 export type RoleBootstrapReportV1 = z.infer<typeof roleBootstrapReportSchema>;
+
+
+export const roleControlDenialOperationSchema = z.enum(["write", "unlink", "rename", "symlink-replacement", "chmod", "parent-replacement"]);
+export const roleControlDenialReceiptSchema = z.strictObject({
+  requestId: uuidSchema, pid: z.int().positive(), uid: z.int().nonnegative(), euid: z.int().nonnegative(),
+  gid: z.int().nonnegative(), egid: z.int().nonnegative(), groups: z.array(z.int().nonnegative()).max(128),
+  permittedScratchWrite: z.boolean(), attempts: z.array(z.strictObject({
+    operation: roleControlDenialOperationSchema, denied: z.boolean(), errno: z.enum(["EACCES", "EPERM", "OTHER"]).nullable()
+  })).length(6)
+}).refine(value => new Set(value.attempts.map(attempt => attempt.operation)).size === 6, "Every fixed operation appears once");
+export type RoleControlDenialOperationV1 = z.infer<typeof roleControlDenialOperationSchema>;
+export type RoleControlDenialReceiptV1 = z.infer<typeof roleControlDenialReceiptSchema>;
+
 export const identityBootstrapSchemaInventory = {
   RoleBootstrapInputV1: roleBootstrapInputSchema, RoleBootstrapRoleV1: roleBootstrapRoleSchema,
-  RoleBootstrapDirectoryV1: roleBootstrapDirectorySchema, RoleBootstrapReportV1: roleBootstrapReportSchema
+  RoleBootstrapDirectoryV1: roleBootstrapDirectorySchema, RoleBootstrapReportV1: roleBootstrapReportSchema,
+  RoleControlDenialOperationV1: roleControlDenialOperationSchema, RoleControlDenialReceiptV1: roleControlDenialReceiptSchema
 };

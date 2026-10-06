@@ -7,7 +7,7 @@ import {
   digestSchema, instantSchema, opsErrorExitCodes, opsTestStackResultSchema, schemaBundleDigest, uint64Schema, uuidSchema
 } from "@toy/contracts";
 import type { CliArgument, CliCommandId, CliDeclaration, CliEnvironment, CliFailure, CliResult, OpsError, OpsTestStackResultV1, RegisteredProbeOperationV1, Result } from "@toy/contracts";
-import { BackupCapacityProbe, NativeReleaseEligibilityProbe, OpsControlRead, OpsTestStack, RoleIdentityBootstrap, TestClockControl } from "@toy/ops/public";
+import { BackupCapacityProbe, NativeReleaseEligibilityProbe, RoleControlProbe, OpsControlRead, OpsTestStack, RoleIdentityBootstrap, TestClockControl } from "@toy/ops/public";
 import { EngineeringControl, ReplayEnvironment } from "@toy/self-improvement/public";
 import { HermesAuthProbe, ModelRoute, ModelRouteProbe } from "@toy/hermes/public";
 
@@ -235,7 +235,8 @@ const run = async (): Promise<CliResult> => {
     if (commandId === "probe.run" || commandId === "probe.show") {
       const probeInput = commandId === "probe.run" ? cliCommandSchemas["probe.run"].input.parse({ probeId: operands[0], requestId, caseId: values.get("case") }) : null;
       let result: Result<RegisteredProbeOperationV1>;
-      if (probeInput?.caseId === "backup-capacity") result = BackupCapacityProbe.run(probeInput, context);
+      if (probeInput?.caseId === "control-filesystem-denial") result = RoleControlProbe.run(probeInput, context);
+      else if (probeInput?.caseId === "backup-capacity") result = BackupCapacityProbe.run(probeInput, context);
       else if (probeInput?.caseId === "native-release-eligibility") result = NativeReleaseEligibilityProbe.run(probeInput, context);
       else if (probeInput?.caseId === "native-auth-cli") result = await HermesAuthProbe.run(probeInput, context);
       else if (probeInput?.caseId === "model-route-policy" || probeInput?.caseId === "model-route-stream") result = await ModelRouteProbe.run(probeInput, context);

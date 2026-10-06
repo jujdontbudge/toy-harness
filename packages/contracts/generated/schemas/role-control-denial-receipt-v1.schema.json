@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "requestId": {
+      "type": "string",
+      "minLength": 36,
+      "maxLength": 36,
+      "format": "uuid",
+      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    },
+    "pid": {
+      "type": "integer",
+      "exclusiveMinimum": 0,
+      "maximum": 9007199254740991
+    },
+    "uid": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "euid": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "gid": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "egid": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "groups": {
+      "maxItems": 128,
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 9007199254740991
+      }
+    },
+    "permittedScratchWrite": {
+      "type": "boolean"
+    },
+    "attempts": {
+      "minItems": 6,
+      "maxItems": 6,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "operation": {
+            "type": "string",
+            "enum": [
+              "write",
+              "unlink",
+              "rename",
+              "symlink-replacement",
+              "chmod",
+              "parent-replacement"
+            ]
+          },
+          "denied": {
+            "type": "boolean"
+          },
+          "errno": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "EACCES",
+                  "EPERM",
+                  "OTHER"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "operation",
+          "denied",
+          "errno"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "requestId",
+    "pid",
+    "uid",
+    "euid",
+    "gid",
+    "egid",
+    "groups",
+    "permittedScratchWrite",
+    "attempts"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:RoleControlDenialReceiptV1"
+}

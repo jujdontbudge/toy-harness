@@ -1,0 +1,51 @@
+
+> toy-harness@1.0.0 check
+> npm run typecheck && node scripts/typecheck-tests.mjs && npm run boundaries && npm run python:check && npm run lint && npm run contracts:check && node cli/dist/main.js feature-map check --json
+
+
+> toy-harness@1.0.0 typecheck
+> tsc -b --pretty false && tsc -p scripts/tsconfig.json --pretty false
+
+
+> toy-harness@1.0.0 boundaries
+> depcruise --config .dependency-cruiser.cjs packages cli tests control
+
+
+✔ no dependency violations found (220 modules, 710 dependencies cruised)
+
+
+> toy-harness@1.0.0 python:check
+> pyright && .venv/bin/ruff check python && PYTHONPATH=python .venv/bin/lint-imports
+
+0 errors, 0 warnings, 0 informations
+All checks passed!
+[1m=============[0m
+[1mImport Linter[0m
+[1m=============[0m
+[22m[0m
+[1m---------[0m
+[1mContracts[0m
+[1m---------[0m
+[22m[0m
+[1mAnalyzed 13 files, 9 dependencies.[0m
+[1m----------------------------------[0m
+[22m[0m
+[22mHermes adapter cannot import protected controls [0m[32m[22mKEPT[0m[33m[22m[0m[22m[0m
+[22mProtected controls cannot depend on agent implementation [0m[32m[22mKEPT[0m[33m[22m[0m[22m[0m
+[22m[0m
+[22mContracts: 2 kept, 0 broken.[0m
+
+> toy-harness@1.0.0 lint
+> node scripts/run-eslint.mjs && node scripts/check-source-policy.mjs && .venv/bin/python scripts/check-python-policy.py && node scripts/check-contract-ownership.mjs && node scripts/check-contract-pin.mjs && node scripts/check-int-registry.mjs
+
+94 source files passed comment and debt policy
+8 Python source files passed comment and type policy
+67 TypeScript source files passed schema-inventory ownership policy for 261 contracts
+The sole Zod runtime pin is @toy/contracts 4.6.5.
+0 registry-only INT entries match 0 internal test files; 4 total test files declare a rung
+
+> toy-harness@1.0.0 contracts:check
+> tsc -b packages/contracts --pretty false && node scripts/generate-contracts.mjs --check && tsc --noEmit --strict --noUncheckedIndexedAccess --target ES2024 --module NodeNext --moduleResolution NodeNext packages/contracts/generated/types.ts
+
+Verified 329 contract artifacts
+{"schemaVersion":"toy.cli.v1","commandId":"feature-map.check","invocationId":"65847a57-87ae-4385-b8c9-bed6d6f5f6a7","generatedAt":"2026-10-06T15:39:41.989Z","cliVersion":"1.0.0","contractsVersion":"1.0.0","schemaDigest":"aafcebda73cb1618d171d7102d32be8af64ae9cebab40f527db5814b0c27575b","environment":{"kind":"prod","instanceId":null,"stackId":null},"meta":{"exitCode":1,"releaseDigest":null,"controlDigest":null,"evaluatedAt":null,"operationId":null,"effectState":"none","recordRefs":[],"evidence":[]},"ok":true,"data":{"sourceDigest":"a613027af6e54457671e2b096869afd2da7fca1217b76482da4a89a3f9def56b","actualMapDigest":"dd3f86693343b5de133d7af31a09b981c9e2e0da7d365e1abfc66e3fc45be5b1","expectedMapDigest":"0a41529633707112f2059ce8832fa5e058f3b60c2fc19d75d08d3b4c7689ea1d","featureCount":"91","commandCount":"55","atCount":"1447","findings":[{"id":"engineering.map","owner":"self-improvement","state":"FAIL","checkedAt":"2026-10-06T15:39:41.978Z","reasonCode":"INTERFACE_DANGLING","prerequisite":"ops.actual-control-denials:RoleControlProbe.run","nextCommandId":"feature-map.check","links":{"recordRefs":[],"observations":[],"artifactDigests":["a4ed7d67f34abd9d345c4b1cb4c58e30fe59c9d28a52879ce217baca265d6353"]}},{"id":"engineering.map","owner":"self-improvement","state":"FAIL","checkedAt":"2026-10-06T15:39:41.988Z","reasonCode":"MAP_FEATURE_MISSING","prerequisite":"ops.actual-control-denials","nextCommandId":"feature-map.check","links":{"recordRefs":[],"observations":[],"artifactDigests":["76e49fb20515027edd1bff8f6b435bda63e4f56602c2abc2ab5b642a382f19b1"]}},{"id":"engineering.map","owner":"self-improvement","state":"FAIL","checkedAt":"2026-10-06T15:39:41.988Z","reasonCode":"MAP_DIGEST_STALE","prerequisite":"skills/toy-control/FEATURE-MAP.md","nextCommandId":"feature-map.check","links":{"recordRefs":[],"observations":[],"artifactDigests":["3aaf5154ec0e80d198d2180046de7d2d3799ebdff45afa2c4d25a3a531206928"]}}],"state":"FAIL"}}

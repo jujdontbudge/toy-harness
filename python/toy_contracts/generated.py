@@ -663,6 +663,7 @@ RegisteredCheckIdV1 = Literal[
     "bootstrap.fixture-runtime",
     "bootstrap.fixture-identities",
     "bootstrap.role-identities",
+    "bootstrap.role-control-denials",
     "bootstrap.journal",
     "bootstrap.signature",
     "bootstrap.native-entry",
@@ -3023,6 +3024,7 @@ RegisteredTestCaseV1 = Literal[
     "native-release-eligibility",
     "native-auth-cli",
     "backup-capacity",
+    "control-filesystem-denial",
 ]
 
 ElapsedDurationV1 = NewType("ElapsedDurationV1", str)
@@ -4517,6 +4519,37 @@ class RoleBootstrapInputV1(TypedDict):
     verify: NotRequired[bool]
     requestId: "UUID"
     expectedSnapshotDigest: Optional["Digest"]
+
+RoleControlDenialOperationV1 = Literal[
+    "write",
+    "unlink",
+    "rename",
+    "symlink-replacement",
+    "chmod",
+    "parent-replacement",
+]
+
+class RoleControlDenialReceiptV1(TypedDict):
+    requestId: "UUID"
+    pid: int
+    uid: int
+    euid: int
+    gid: int
+    egid: int
+    groups: list[int]
+    permittedScratchWrite: bool
+    attempts: list["RoleControlDenialReceiptV1AttemptsItem"]
+
+class RoleControlDenialReceiptV1AttemptsItem(TypedDict):
+    operation: "RoleControlDenialOperationV1"
+    denied: bool
+    errno: Optional["RoleControlDenialReceiptV1AttemptsItemErrnoValue"]
+
+RoleControlDenialReceiptV1AttemptsItemErrnoValue = Literal[
+    "EACCES",
+    "EPERM",
+    "OTHER",
+]
 
 class ModelQuotaWindowV1(TypedDict):
     bucketId: str
