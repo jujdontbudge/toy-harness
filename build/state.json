@@ -2,9 +2,9 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-06T22:20:21.875723+00:00",
+  "updatedAt": "2026-10-06T22:34:54.964331+00:00",
   "phase": "R0_FEASIBILITY",
-  "activeCard": "R0.10",
+  "activeCard": "R0.12",
   "cardCount": 87,
   "acceptanceCount": 1447,
   "cards": {
@@ -568,7 +568,11 @@
         "build/evidence/R0.03/unfiltered-auth-verification.json",
         "build/evidence/R0.03/unfiltered-refresh-verification.json",
         "build/evidence/R0.03/unfiltered-save-fault-minimum-plan.json",
-        "build/evidence/R0.03/unfiltered-save-verification.json"
+        "build/evidence/R0.03/unfiltered-save-verification.json",
+        "build/evidence/R0.03/held-response-replan.json",
+        "build/evidence/R0.03/held-response-baseline.json",
+        "build/evidence/R0.03/held-response-diagnostic.json",
+        "build/evidence/R0.03/held-response-restored-check-result.json"
       ],
       "requiredATs": [
         "AT-hermes-config-34",
@@ -851,9 +855,30 @@
       },
       "staleResponsePlan": {
         "evidence": "build/evidence/R0.03/stale-response-next-minimum-plan.json",
-        "state": "PARENT_REVIEW_REQUIRED_BEFORE_IMPLEMENTATION",
+        "state": "HELPER_REORDER_REJECTED_NATIVE_BARRIER_CAUSE_UNATTRIBUTED",
         "wholeATComplete": false,
-        "concern": "Adding a separate credential does not establish a newer rotation of the existing credential; serial lock ordering may prevent the proposed held-response-before-add choreography. Do not report rejected from marker timing alone."
+        "concern": "Adding a separate credential does not establish a newer rotation of the existing credential; serial lock ordering may prevent the proposed held-response-before-add choreography. Do not report rejected from marker timing alone.",
+        "reviewEvidence": "build/evidence/R0.03/held-response-replan.json"
+      },
+      "heldResponseSerializationUnit": {
+        "startedAt": "2026-10-06T22:22:19.863090+00:00",
+        "targetStopAt": "2026-10-07T00:22:19.866608+00:00",
+        "state": "THREE_ATTEMPT_UNIT_STOPPED_REPLANNED_SOURCE_RESTORED",
+        "scope": "Observe real second-process auth-store lock wait while successful refresh response is held; preserve newest-generation and added-grant readbacks without claiming stale-response rejection",
+        "sourcePlan": "build/evidence/R0.03/held-response-serialization-plan.json",
+        "wholeATComplete": false,
+        "baselineEvidence": "build/evidence/R0.03/held-response-baseline.json",
+        "sourcePreparation": "build/evidence/R0.03/held-response-preparation.json",
+        "preflightEffectState": "none",
+        "implementationDiagnosticAttempts": 3,
+        "stoppedAt": "2026-10-06T22:34:54.964331+00:00",
+        "replan": "build/evidence/R0.03/held-response-replan.json",
+        "baselineRetainedAfterExactRestore": "build/evidence/R0.03/held-response-baseline.json",
+        "unpassedSourceRestored": true,
+        "allOwnedWorldsDown": true,
+        "allStoredReadbacksExact": true,
+        "allTeardownsComplete": true,
+        "staleSuccessfulResponseRejected": false
       }
     },
     "R0.04": {
@@ -1204,6 +1229,12 @@
         "diagnosticPasses": 4,
         "requiredSwappedObservations": 2,
         "verificationEvidence": "build/evidence/R0.06/swapped-quota-verification.json"
+      },
+      "nativePgPreparationPlan": {
+        "evidence": "build/evidence/R0.06/postgres-root-next-minimum-plan.json",
+        "state": "NO_R0_NATIVE_PG_INIT_REQUIRED_R1_SOURCE_PREREQUISITE_TRACKED",
+        "newRootRequestPrepared": false,
+        "wholeATComplete": false
       }
     },
     "R0.07": {
@@ -1273,6 +1304,13 @@
         "diagnosticPassesPerCommand": 14,
         "liveTrialStarted": false,
         "verificationEvidence": "build/evidence/R0.07/unfiltered-trial-verification.json"
+      },
+      "nextJournalBehavior": {
+        "state": "CANONICAL_RUN_REVIEW_IMPLEMENTATION_REQUIRED",
+        "evidence": "build/evidence/R0.07/journal-next-minimum-plan.json",
+        "wholeATComplete": false,
+        "liveTrialStarted": false,
+        "scope": "No competing journal writer; missing canonical Run/TurnReview implementation is source work, not external approval"
       }
     },
     "R0.08": {
@@ -1730,6 +1768,11 @@
       "sources208Plan": {
         "evidence": "build/evidence/R0.12/sources208-next-minimum-plan.json",
         "state": "PARENT_REVIEWED_AFTER_FROZEN_ROOT_REQUEST_ONLY",
+        "wholeATComplete": false
+      },
+      "attention66Plan": {
+        "evidence": "build/evidence/R0.12/attention66-next-minimum-plan.json",
+        "state": "PARENT_REVIEWED_VERSION_BOUNDARY_AND_ROUTING_CORRECTIONS_BASELINE_NEXT",
         "wholeATComplete": false
       }
     },
@@ -10353,7 +10396,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Close and push the verified AT75 gateway fragment. Review the R0.03 held-successful-refresh-response plan against the actual existing native transaction lock and generation semantics before any mutation; separate-grant persistence is not stale-response rejection. Use a fresh unfiltered assigned CLI baseline and bounded scope if reachable. Poll ROOT-REQUESTS.md; exact root02 DONE takes immediate R0.01 native grant-owner-load priority. Pending root never blocks the active goal.",
+  "nextAction": "Start exact unfiltered AT-attention-66 baseline, then minimum versioned four-decision central research interface. Preserve V1/V2 contracts and Hermes\u2192self-improvement import direction, use public owner-produced canonical receipts and all three dispatch layers. No actual research/native/whole claim from fake inputs. R0.03 three-attempt unit stopped with source restored; readiness cause needs attribution before any future repair. Poll ROOT-REQUESTS; exact root02 DONE immediately prioritizes R0.01. Pending root never blocks goal.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -20873,8 +20916,8 @@
     "deadlineUtc": "2026-10-06T21:05:00Z"
   },
   "continuationAssessment": {
-    "observedAt": "2026-10-06T22:20:21.875723+00:00",
-    "reason": "Seven-key native gateway fragment verified with 8 assigned unfiltered diagnostics plus 9 route regressions, exact readbacks and complete teardown. Full profile and protected acceptance remain pending. Two exact root requests remain pending without blocking goal. Next auth helper plan requires parent correction before source changes.",
+    "observedAt": "2026-10-06T22:34:54.964331+00:00",
+    "reason": "Native gateway fragment a7b39c8 is verified/committed/pushed. Three-attempt held-response observer unit failed at new OS check, retained exact readbacks/complete teardowns, restored all unpassed source exactly and passed strict checks. Move to independent Attention decision gate with corrected version/import plan. Both root requests remain queued; goal active and no whole acceptance/trial/deployment promoted.",
     "goalStatus": "active"
   },
   "executionPolicy": {
@@ -20912,7 +20955,7 @@
     "queuedRootReserveAdmissionGate": false
   },
   "latestStaticVerification": {
-    "recordedAt": "2026-10-06T22:20:21.875723+00:00",
+    "recordedAt": "2026-10-06T22:34:54.964331+00:00",
     "command": "npm run check",
     "exitCode": 0,
     "artifacts": 374,
@@ -20922,14 +20965,15 @@
     "commands": 55,
     "indexedATs": 1447,
     "schemaDigest": "7798d085965af38a039922143b282be466d42ca88ffaa75d3923b1a3b3392dcc",
-    "evidence": "build/evidence/R0.10/profile-check.txt",
+    "evidence": "build/evidence/R0.03/held-response-restored-check.txt",
     "languages": [
       "TypeScript",
       "Python"
     ],
-    "SwiftDeferredTo": "R3"
+    "SwiftDeferredTo": "R3",
+    "unpassedSourceRestoredExactly": true
   },
-  "sourceCheckpointCommit": "65eeeb7",
+  "sourceCheckpointCommit": "a7b39c8",
   "sourceCheckpointPushed": true,
   "rootRequests": {
     "ROOT-R004-20261006-01": {
@@ -20969,15 +21013,15 @@
     }
   },
   "resourceAdmission": {
-    "measuredAt": "2026-10-06T22:19:26.520Z",
-    "availableBytes": "2516434944",
-    "pressure": "warning",
+    "measuredAt": "2026-10-06T22:26:09.425Z",
+    "availableBytes": "2528755712",
+    "pressure": "normal",
     "strictlyFreeAdmission": false,
     "repairFloorApplied": false,
     "ownedWorldsRunning": 0,
     "helpersRunning": 0,
     "helperNeedBytes": "0",
-    "measurementSource": "build/evidence/R0.10/profile-doctor-final.json",
+    "measurementSource": "build/evidence/R0.03/held-response-current-cli/up.json",
     "marginBytes": "536870912",
     "ownedStackId": null,
     "stackAndNativeChildrenNeedBytes": "0",

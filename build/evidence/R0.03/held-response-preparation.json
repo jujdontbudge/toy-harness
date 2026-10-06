@@ -1,0 +1,145 @@
+{
+  "recordedAt": "2026-10-06T22:26:31.301055+00:00",
+  "state": "MINIMUM_SOURCE_AND_STRICT_CHECKS_VERIFIED_ASSIGNED_RUN_PENDING",
+  "baselineEvidence": "build/evidence/R0.03/held-response-baseline.json",
+  "plan": "build/evidence/R0.03/held-response-serialization-plan.json",
+  "sourceRegistration": {
+    "id": "AT-hermes-config-87",
+    "rung": "CLI",
+    "sourceAssertionHash": "b8ba9587534e2983742157a3ab9ae8911da4928e48e3ab0894944914bb91e6bb",
+    "commandId": "probe.run",
+    "scenarioId": "auth.concurrent-persistence",
+    "owner": "hermes",
+    "firstRelease": "R0",
+    "kind": "behavioral",
+    "mandatoryCases": [
+      {
+        "id": "add-first",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "add-first"
+      },
+      {
+        "id": "refresh-first",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "refresh-first"
+      },
+      {
+        "id": "before-replace",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "before-replace"
+      },
+      {
+        "id": "after-replace",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "after-replace"
+      }
+    ],
+    "trigger": "Run real public expired-grant chat and independent auth-add in both persistence orders; observe native auth-lock contention/acquisition around held refresh response; kill disposable add before/after atomic replace and inspect fresh public list, priority and chat.",
+    "faultControls": [
+      {
+        "id": "persistence-order",
+        "seam": "provider",
+        "affectedPhases": [
+          "add-first",
+          "refresh-first"
+        ]
+      },
+      {
+        "id": "expired-access",
+        "seam": "clock",
+        "affectedPhases": [
+          "add-first",
+          "refresh-first"
+        ]
+      },
+      {
+        "id": "native-process-crash",
+        "seam": "os",
+        "affectedPhases": [
+          "before-replace",
+          "after-replace"
+        ]
+      }
+    ],
+    "observations": [
+      {
+        "id": "fresh-process-and-public-command",
+        "independentReader": "HermesAuthProbe.run: processIdentity/public_argv/exit and SIGKILL boundary identity",
+        "caseIds": [
+          "add-first",
+          "refresh-first",
+          "before-replace",
+          "after-replace"
+        ]
+      },
+      {
+        "id": "provider-generation-and-effects",
+        "independentReader": "HermesAuthProbe.run: exact refreshEffects, catalog/model generations and HTTP ledger",
+        "caseIds": [
+          "add-first",
+          "refresh-first",
+          "before-replace",
+          "after-replace"
+        ]
+      },
+      {
+        "id": "native-auth-lock-serialization",
+        "independentReader": "Real OS flock contention/acquisition markers on the same disposable profile lock around provider response release",
+        "caseIds": [
+          "refresh-first"
+        ]
+      },
+      {
+        "id": "independent-persistence-readback",
+        "independentReader": "HermesAuthProbe.run: fresh public list/count/label, priority, chat and unchanged root stores",
+        "caseIds": [
+          "add-first",
+          "refresh-first",
+          "before-replace",
+          "after-replace"
+        ]
+      },
+      {
+        "id": "stored-readback-and-teardown",
+        "independentReader": "toy probe.show and stack.down: exact persisted result and complete owned-world teardown",
+        "caseIds": [
+          "add-first",
+          "refresh-first",
+          "before-replace",
+          "after-replace"
+        ]
+      }
+    ],
+    "simUnavailableReason": "SIM ingress cannot run administrative auth add or select native subprocess storage crash boundaries. The CLI drives real public commands in a seeded disposable profile with external provider, clock and OS controls."
+  },
+  "compiledOwnerSha256": "960717b865bb0d6e02e9d6d17e6c0d55e84bbd7e402fb44fcaa4030f83c5416d",
+  "externalOsPatchSha256": "ee18116eee773251cc3e1e7b350e4f5c9d3b0d53bdc84998e6ca3f3baea49454",
+  "installedHermes": {
+    "commit": "8d5e3e412138342e8bf30443e72bd4e6a9abd057",
+    "clean": true,
+    "modifiedByUnit": false
+  },
+  "rootRequests": {
+    "ROOT-R004-20261006-02": "PENDING",
+    "ROOT-R005-20261006-01": "PENDING",
+    "sixFrozenPinsMatch": true
+  },
+  "admission": {
+    "observedAt": "2026-10-06T22:26:09.425Z",
+    "monotonicNanoseconds": "194861252823541",
+    "physicalBytes": "8589934592",
+    "pageSizeBytes": "16384",
+    "freeBytes": "671465472",
+    "inactiveBytes": "1457520640",
+    "purgeableBytes": "19120128",
+    "speculativeBytes": "380649472",
+    "availableBytes": "2528755712",
+    "pressure": "normal",
+    "pressureSource": "os",
+    "pressureQueryOutput": "1\n"
+  },
+  "upRefusalEvidence": "build/evidence/R0.03/held-response-cli/up.json",
+  "goalStatus": "active",
+  "staleSuccessfulResponseRejected": false,
+  "wholeATComplete": false
+}

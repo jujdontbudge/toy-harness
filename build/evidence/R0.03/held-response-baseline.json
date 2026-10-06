@@ -1,0 +1,123 @@
+{
+  "recordedAt": "2026-10-06T22:22:20.021932+00:00",
+  "AT": "AT-hermes-config-87",
+  "unfiltered": true,
+  "wholeATComplete": false,
+  "upExit": 0,
+  "stackId": "ebe80ead-abed-4cfc-87c4-f23ef3638da6",
+  "runExit": 0,
+  "operationId": "fb835791-01b6-4752-a60d-de37f8d7a6eb",
+  "showExit": 0,
+  "runShowExact": true,
+  "checks": 26,
+  "allChecksPass": true,
+  "wholeState": "NOT_IMPLEMENTED",
+  "acceptanceComplete": false,
+  "sourceRegistration": {
+    "id": "AT-hermes-config-87",
+    "rung": "CLI",
+    "sourceAssertionHash": "b8ba9587534e2983742157a3ab9ae8911da4928e48e3ab0894944914bb91e6bb",
+    "commandId": "probe.run",
+    "scenarioId": "auth.concurrent-persistence",
+    "owner": "hermes",
+    "firstRelease": "R0",
+    "kind": "behavioral",
+    "mandatoryCases": [
+      {
+        "id": "add-first",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "add-first"
+      },
+      {
+        "id": "refresh-first",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "refresh-first"
+      },
+      {
+        "id": "before-replace",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "before-replace"
+      },
+      {
+        "id": "after-replace",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "after-replace"
+      }
+    ],
+    "trigger": "Run real public expired-grant chat and independent auth-add subprocesses in both persistence orders, then kill disposable auth-add immediately before and after atomic replace and inspect fresh public list, priority and chat.",
+    "faultControls": [
+      {
+        "id": "persistence-order",
+        "seam": "provider",
+        "affectedPhases": [
+          "add-first",
+          "refresh-first"
+        ]
+      },
+      {
+        "id": "expired-access",
+        "seam": "clock",
+        "affectedPhases": [
+          "add-first",
+          "refresh-first"
+        ]
+      },
+      {
+        "id": "native-process-crash",
+        "seam": "os",
+        "affectedPhases": [
+          "before-replace",
+          "after-replace"
+        ]
+      }
+    ],
+    "observations": [
+      {
+        "id": "fresh-process-and-public-command",
+        "independentReader": "HermesAuthProbe.run: processIdentity/public_argv/exit and SIGKILL boundary identity",
+        "caseIds": [
+          "add-first",
+          "refresh-first",
+          "before-replace",
+          "after-replace"
+        ]
+      },
+      {
+        "id": "provider-generation-and-effects",
+        "independentReader": "HermesAuthProbe.run: exact refreshEffects, catalog/model generations and HTTP ledger",
+        "caseIds": [
+          "add-first",
+          "refresh-first",
+          "before-replace",
+          "after-replace"
+        ]
+      },
+      {
+        "id": "independent-persistence-readback",
+        "independentReader": "HermesAuthProbe.run: fresh public list/count/label, priority, chat and unchanged root stores",
+        "caseIds": [
+          "add-first",
+          "refresh-first",
+          "before-replace",
+          "after-replace"
+        ]
+      },
+      {
+        "id": "stored-readback-and-teardown",
+        "independentReader": "toy probe.show and stack.down: exact persisted result and complete owned-world teardown",
+        "caseIds": [
+          "add-first",
+          "refresh-first",
+          "before-replace",
+          "after-replace"
+        ]
+      }
+    ],
+    "simUnavailableReason": "SIM ingress cannot run administrative auth add or select native subprocess storage crash boundaries. The CLI drives real public commands in a seeded disposable profile with external provider, clock and OS controls."
+  },
+  "caseManifestDigest": "3c3eb716eab44913f761b51ea53162d93724687b306905b70e8518480145c271",
+  "refreshFirstLockProofMissing": true,
+  "downExit": 0,
+  "teardownComplete": true,
+  "unresolvedResourceRefs": 0
+}

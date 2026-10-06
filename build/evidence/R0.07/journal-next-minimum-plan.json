@@ -1,0 +1,176 @@
+{
+  "artifact": "R0.07 journal next minimum source plan",
+  "scope": "Read-only source review. This plan does not start a test stack, probe, provider request, account validation, or live trial. Root requests remain PENDING and frozen.",
+  "card": {
+    "id": "R0.07",
+    "buildPlan": "Start the original full Sol/max/Fast review every 180 seconds for 168 continuous UTC hours; each included reduced arm receives its own independent seven-day report.",
+    "dependencies": [
+      "R0.03",
+      "R0.05",
+      "R0.06"
+    ],
+    "assignedATs": [
+      {
+        "id": "AT-ops-47",
+        "source": "specs/ops.md:1968",
+        "sourceAssertionHash": "a5197df8ac45e7cc1e660210288ad85e534204870ede21d629ca12fa19e4e799",
+        "rung": "CLI",
+        "requiredEvidence": [
+          "stack",
+          "elapsed",
+          "device/account",
+          "probe:AT-ops-47"
+        ]
+      },
+      {
+        "id": "AT-self-improvement-59",
+        "source": "specs/self-improvement.md:1778",
+        "sourceAssertionHash": "e976ade51b0316f155936944aedb1c6f59d095df0f227607c9a6b9c5c4599b7d",
+        "rung": "CLI",
+        "requiredEvidence": [
+          "stack",
+          "elapsed",
+          "device/account",
+          "probe:AT-self-improvement-59"
+        ]
+      },
+      {
+        "id": "AT-self-improvement-60",
+        "source": "specs/self-improvement.md:1779",
+        "sourceAssertionHash": "19f87129019d0e1c4e42d224ab40dca80e3b25a03949a56e205598f93bf05917",
+        "rung": "CLI",
+        "requiredEvidence": [
+          "stack",
+          "elapsed",
+          "device/account",
+          "probe:AT-self-improvement-60"
+        ]
+      },
+      {
+        "id": "AT-RESEARCH-REGISTER-6",
+        "source": "specs/RESEARCH-REGISTER.md:460",
+        "sourceAssertionHash": "22a0f9e2fc9184ec5954426c4cb34e6f43cc553eff2772456b5f36ec8d9d91d1",
+        "rung": "CLI",
+        "requiredEvidence": [
+          "stack",
+          "elapsed",
+          "device/account",
+          "probe:AT-RESEARCH-REGISTER-6"
+        ]
+      }
+    ]
+  },
+  "currentPublicOwner": {
+    "interface": "CapacityTrialJournal.withTest(context, run, diagnostic?) supplies CapacityTrialJournalApi: startArm, deferSlot, reconcileArm, reportArm, slot.",
+    "files": [
+      "packages/contracts/src/capacity-trial.ts",
+      "packages/self-improvement/src/capacity-trial.ts",
+      "packages/self-improvement/src/capacity-trial-migration.ts",
+      "packages/self-improvement/migrations/capacity-trial.sql"
+    ],
+    "reachableBehavior": "With a fake-clock/model owned test stack, the existing owner persists two separately bound arms and 3,360 anchored 180-second slots, deferrals, missed-slot reconciliation and readbacks. The existing public probe has a capacity-trial mandatory diagnostic phase and deliberately reports fake-week outcomes as fullCadenceVerdict=NOT_EVALUATED and liveTrialStarted=false.",
+    "hardBoundary": "CapacityTrialArmV1 accepts only clock=fake_model; CapacityTrialJournal is test-only. Trial-bound rows are constrained to have null run_id/review_id/started_at/inference_done_at/reviewed_at and only scheduled/deferred/failed/missed states. The journal API has no operation for an in-slot scan, terminal accepted review, or sweep receipt."
+  },
+  "smallestRemainingSourceBehavior": {
+    "decision": "No independent journal source behavior is safe to add yet; stop at the existing owner prerequisite.",
+    "nextBehavior": "Connect each original-arm slot to the canonical Run and TurnReview owners so an actual full scan is bound to the anchored slot and only its accepted terminal review can persist reviewed state before the next-slot boundary. Preserve sweep/run/review/usage evidence through those owners. This is necessary source behavior for AT-self-improvement-60 and the positive coverage claim in the other three ATs.",
+    "exactPrerequisite": "The repository currently has only R1 CLI declarations for RunControlRead.slots/runs/trace/evidence and TurnReview.get/review; this scoped source search found no implementing RunControlRead or TurnReview public owner. The trial migration also forbids these fields on arm-bound rows. Implement/identify the canonical Run/Review transaction owner first; then its supported public operation can be integrated with the existing CapacityTrialJournal. Do not add a competing journal writer or mark reviewed from this module.",
+    "whyThisStopsHere": "The existing diagnostic is already source behavior, not just routing, but it cannot prove accepted AI review coverage. A new local success writer would bypass canonical review acceptance and violate the trial-row constraints. Settings, latency, allowance freshness, RAM/swap and shared-send accounting also have no source in this journal report, so extending report fields alone would fabricate evidence."
+  },
+  "unfilteredCliProofPathAfterOwnerAndPrerequisites": {
+    "testFixtureOnly": [
+      "toy --env test stack up --release R0 --request-id <UUID> --json",
+      "toy --env test --stack <stack-id> probe run AT-ops-47 --request-id <UUID> --json",
+      "toy --env test --stack <stack-id> probe run AT-self-improvement-59 --request-id <UUID> --json",
+      "toy --env test --stack <stack-id> probe run AT-self-improvement-60 --request-id <UUID> --json",
+      "toy --env test --stack <stack-id> probe run AT-RESEARCH-REGISTER-6 --request-id <UUID> --json",
+      "toy --env test --stack <stack-id> probe show <operation-id> --json",
+      "toy --env test --stack <stack-id> stack down --request-id <UUID> --json"
+    ],
+    "scope": "Run each assigned AT without --case; retain run envelopes and matching probe.show result, then completely tear down the owned stack. These current fake-clock fixture probes are diagnostic source proof only and cannot satisfy elapsed/device/account evidence or start the actual trial.",
+    "actualAssignedRung": "After the canonical owner and R0.03/R0.05/R0.06 prerequisites are admitted, each assigned AT still needs its own unfiltered CLI evidence plus 168 continuous hours, actual supported no-spend route/account and representative foreground/shared-account activity. Reduced arms remain separate. No live-trial command is currently exposed by CapacityTrialJournal."
+  },
+  "remainingWholeGates": {
+    "wholeR007": "NOT PASSED; no live trial started or completed in this task. Each arm requires 3,360 anchored opportunities over 168 hours, accepted review before each next-slot boundary, and honest counts/reasons for swept/deferred/missed/unfinished slots.",
+    "coverageAndSafety": [
+      "requested/observed Sol/max/Fast settings",
+      "accepted reviews and full scans started in-slot",
+      "latency",
+      "fresh allowance evidence",
+      "RAM and swap",
+      "shared Ops admission for scan/judge/continuation/delegation/compression/event sends",
+      "foreground priority",
+      "no paid usage",
+      "per-arm original-versus-reduced verdicts"
+    ],
+    "prerequisiteStatus": "R0.03/R0.05/R0.06 remain required by BUILD-PLAN; parent reports R0.03 source unit c861f40 committed/pushed. R0.05 and R0.06 evidence was not re-evaluated in this bounded read-only review. Preserve them as pending until their current owner evidence confirms closure.",
+    "laterCards": "R0.11 checkpoint and R0.14 release gate remain downstream; reduced-arm PASS or fixture results cannot authorize adoption."
+  },
+  "admissionEvidence": {
+    "path": "build/evidence/R0.03/stale-plan-admission-current.json",
+    "observedAtUtc": "2026-10-06T22:21:22Z",
+    "pressure": "normal",
+    "availableBytes": "2082078720",
+    "declaredNeedBytes": "268435456",
+    "marginBytes": "536870912",
+    "admitted": true
+  },
+  "sourceHashes": [
+    {
+      "path": "../personal-assistant-harness/specs/BUILD-PLAN.md",
+      "sha256": "aa84eb600e53bc65e6c6b1ed4fce45870ead861e0d18bf00d81613ff2595f49a"
+    },
+    {
+      "path": "../personal-assistant-harness/specs/TEST-PLAN.md",
+      "sha256": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2"
+    },
+    {
+      "path": "../personal-assistant-harness/specs/ops.md",
+      "sha256": "f07aab65088c82e4ff21e4d63edb2f279e2324e6d7e2bbb801e0fd7494104b0b"
+    },
+    {
+      "path": "../personal-assistant-harness/specs/self-improvement.md",
+      "sha256": "23e69b258189148328f029acd3ec7c4c125544bf49d670757eee2bf071ab7014"
+    },
+    {
+      "path": "../personal-assistant-harness/specs/RESEARCH-REGISTER.md",
+      "sha256": "e89b3336e0c2458ac204fb0927da30f4541abfab48a9d55735c4655719a3f10d"
+    },
+    {
+      "path": "packages/contracts/src/capacity-trial.ts",
+      "sha256": "116d8248e229ee0bcc0727b53ec826d6baa5a9aa694311d8caba630ecdfc5bd6"
+    },
+    {
+      "path": "packages/contracts/src/cli-declarations.ts",
+      "sha256": "b7623e62057d5a1c607db7867a019940478dcefa4c6043498b3af596bca90ee6"
+    },
+    {
+      "path": "packages/self-improvement/src/capacity-trial.ts",
+      "sha256": "dab2b52588bd6f905690551101aeb916bcca6db7afd0afe7068520575171f82b"
+    },
+    {
+      "path": "packages/self-improvement/src/capacity-trial-probe.ts",
+      "sha256": "2e920837f062e9235e290c28ae12aed411c91881ec2176c9d946bafd7bd9071c"
+    },
+    {
+      "path": "packages/self-improvement/src/capacity-trial-migration.ts",
+      "sha256": "6673e1acab2f5853df7d208ce1e377a2f9e23fe56416d6164e2c3000f2f01bbe"
+    },
+    {
+      "path": "packages/self-improvement/migrations/capacity-trial.sql",
+      "sha256": "c4ee9357ea602ed4c3848362082ee3d6b2a13069b8b892e64e94e410bbe5e41e"
+    },
+    {
+      "path": "packages/self-improvement/src/public.ts",
+      "sha256": "f06a33fbdd6587b5f82ca575528148e1a6965c6ff15dbe39ef2d86dad61c84ff"
+    },
+    {
+      "path": "tests/registry.yaml",
+      "sha256": "9c8b984d411a294c4841badf72291a242064755b613aaaf927d3764bc3deb039"
+    },
+    {
+      "path": "cli/src/main.ts",
+      "sha256": "909d39d2c65540d2d7718ef237caa6093c74b1242e2a4102ead6e01879def46b"
+    }
+  ]
+}

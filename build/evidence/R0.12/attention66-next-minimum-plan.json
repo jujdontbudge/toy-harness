@@ -1,0 +1,154 @@
+{
+  "schemaVersion": "toy.r0.12.attention66-next-minimum-plan.v1",
+  "createdAt": "2026-10-06T22:31:31Z",
+  "status": "CANONICAL_RESEARCH_OWNER_INTEGRATION_REQUIRED",
+  "admissionBasis": {
+    "source": "Parent-provided CLI doctor build/evidence/R0.12/attention66-helper-doctor.json at 2026-10-06T22:27:16Z",
+    "pressure": "normal",
+    "availableBytes": "2040725504",
+    "helperNeedBytes": "268435456",
+    "marginBytes": "536870912",
+    "state": "admitted",
+    "refreshedByThisTask": false
+  },
+  "acceptance": {
+    "id": "AT-attention-66",
+    "source": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/attention.md:2867",
+    "sourceAssertion": "- **AT-attention-66 [R0]** Given the Attention research register entry and an alternative outside the initially named products, When the pre-build gate checks options, primary evidence, reliability/resource tradeoffs and research receipts, Then every Attention decision has a justified selection and acceptance IDs, and each research receipt proves Sol/medium/Fast plus the mattpocock skill version; missing evidence or a wrong observed route fails the gate. (Requirements: 0.1, 0.10; G5, G11.)",
+    "sourceAssertionHash": "19bd2c265bd8baa95cbb780ca34b0ad5f53ba75f1bde7891147eb2838d4842f9",
+    "sourceDigest": "1dbded4e107c5c9276ff6f9e1141b5b9c230502ceee4c66b4465a4df6ee0217a",
+    "testPlan": {
+      "source": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/TEST-PLAN.md:381",
+      "rung": "CLI",
+      "requiredEvidence": [
+        "static",
+        "probe:AT-attention-66"
+      ]
+    },
+    "attentionResearchContract": {
+      "source": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/attention.md:115",
+      "requiredChoices": [
+        "gateway-coupled sends versus independent protected Discord REST",
+        "web push versus gated native Expo",
+        "passive local notifications versus AlarmKit",
+        "pg-boss transactions versus per-reminder agent cron"
+      ],
+      "route": "observed Sol / medium / Fast plus loaded mattpocock research skill version"
+    }
+  },
+  "currentBehavior": {
+    "canonicalRegister": "The existing central RESEARCH-REGISTER contains one combined M02 Obligations / Attention component row. Attention section 1.5 separately requires the four decision choices above.",
+    "engineeringControl": "EngineeringControl.checkResearch reads the shared register and report archives. Component decisions are keyed by componentId and a duplicate component decision is rejected. Each decision has one selectedOptionId. Generic ResearchComponentComparisonV2 has no delegation receipt; receipt parsing and route/skill validation run only for Sources-specific scope sources-research-component.",
+    "existingReceipt": "The canonical ModelRoute.delegationReceipt operation and modelRouteDelegationReceiptSchema already capture the observed model, effort, tier, loaded skill commit/version/digests/resources and deliberately keep nativeExecutionVerified and acceptanceComplete false. EngineeringControl already checks this receipt and the pinned research skill for Sources-research-component.",
+    "fixtureLimit": "The Sources190 probe uses fixedResearchReceipt() to construct observed-looking fields, then tests central validation. That fixture is useful for field validation only; it does not authenticate actual research. AT-attention-66 has no authored tests/registry.yaml manifest or unfiltered CLI route. The behavior.attention feature row already indexes the AT but still names only written requirements and a future owner route."
+  },
+  "minimumBehavior": {
+    "gap": "The shared EngineeringControl owner cannot require four independent Attention decisions under M02 or validate a canonical research receipt for each generic decision. Adding only a probe ID/route would leave the central gate unable to enforce the requested behavior.",
+    "integration": "Extend the existing EngineeringControl V2 decision record to carry a stable decisionId plus the existing modelRouteDelegationReceiptSchema receipt, and let one M02 report contain exactly the four named Attention decision records. The central inspector must bind each to the existing register/report digest, validate options, an outside alternative, primary evidence, reliability/maintenance/resources, acceptance IDs and release gate, then apply the existing pinned route/skill checks to every receipt. Generalize the shared owner check; do not add an Attention-only receipt protocol or fork Sources190 validation.",
+    "receiptSource": "The CLI fixture should obtain test receipts by invoking the existing public ModelRoute.delegationReceipt owner with the fixed external Codex CLI adapter and pinned skill reader, then pass those receipts through EngineeringControl. It must not call fixedResearchReceipt() or embed a hand-constructed `state: observed` receipt. This proves Toy's receipt path against an external fake; it does not prove that the cited research was actually performed.",
+    "boundedFiles": [
+      "packages/contracts/src/engineering-control.ts \u2014 add decision identity and the existing canonical receipt field to the shared V2 decision representation and generated inventory.",
+      "packages/self-improvement/src/engineering-control.ts \u2014 validate one complete, unique required Attention decision set and receipt per decision through the existing central register owner.",
+      "packages/self-improvement/src/component-comparison-probe.ts \u2014 implement the AT-attention-66 unfiltered fault matrix and positive four-decision case, using ModelRoute.delegationReceipt rather than the fixed receipt constructor.",
+      "packages/self-improvement/src/public.ts \u2014 route AT-attention-66 through the existing component-comparison owner.",
+      "packages/ops/src/fixture-stack.ts \u2014 admit the existing component-comparison operation for AT-attention-66 on the owned fake stack.",
+      "tests/registry.yaml \u2014 author the AT-attention-66 CLI manifest; regenerate registered CLI metadata and schemas using scripts/generate-contracts.mjs.",
+      "skills/toy-control/FEATURE-MAP.md \u2014 update the existing behavior.attention owner/interface/command links from future route to the central EngineeringControl operation."
+    ],
+    "unchangedInterfaces": "Use the already exported ModelRoute.delegationReceipt and modelRouteDelegationReceiptSchema. No change to packages/hermes, no new public command/module/service/protocol, no actual provider login, and no edit to the Attention or shared planning register during this bounded implementation."
+  },
+  "assignedUnfilteredProof": {
+    "command": "node cli/dist/main.js --env test --stack <fresh-owned-r0-stack-id> probe run AT-attention-66 --request-id <fresh-uuid> --json",
+    "filter": "No --case option; run the complete manifest matrix.",
+    "expectedMandatoryCoverage": [
+      "all four distinct Attention decisions are required; an omitted or duplicate decision is rejected",
+      "missing or unsupported outside option, missing primary evidence, empty reliability/resource tradeoff, and missing acceptance link fail the central owner",
+      "missing receipt, wrong observed model/effort/tier, and wrong/missing pinned skill version/digest fail the central owner",
+      "the complete four-decision report passes only with receipt objects returned by the public ModelRoute owner and exact source/report bindings"
+    ],
+    "readback": "Run public probe show for the operation and compare all mandatory checks, decision IDs, source/report digests, observed receipt fields, pinned skill metadata and wholeATComplete=false. Then run public stack down and retain its receipt."
+  },
+  "gates": {
+    "wholeAcceptance": "AT-attention-66 and the whole R0 gate remain incomplete. The central inspection contract itself keeps admission BLOCKED, acceptanceComplete=false and wholeATsPassed empty.",
+    "authentication": "No live provider/account authentication or actual research job was exercised. The CLI fake observes Toy's route boundary only; seeded reports or fake receipts do not authenticate research claims.",
+    "native": "ModelRoute receipts deliberately set nativeExecutionVerified=false. Parent-owned R0.03 held-response native verification remains separate and untouched.",
+    "root": "No root action or protected write was performed. Parent-confirmed root02 and rootR005 stay PENDING.",
+    "externalEvidence": "Actual primary-evidence research, archival provenance and the four adopted decision contents still need genuine source-bound records before a release decision; the fixture proves validator behavior, not factual truth."
+  },
+  "sourceDigests": [
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/attention.md",
+      "sha256": "1dbded4e107c5c9276ff6f9e1141b5b9c230502ceee4c66b4465a4df6ee0217a"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/TEST-PLAN.md",
+      "sha256": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/RESEARCH-REGISTER.md",
+      "sha256": "e89b3336e0c2458ac204fb0927da30f4541abfab48a9d55735c4655719a3f10d"
+    },
+    {
+      "path": "tests/acceptance-index.json",
+      "sha256": "c9b645eab7f55b2ebf35d7db769a534a4837de23ad3dc3d913f3189e781d44fa"
+    },
+    {
+      "path": "tests/registry.yaml",
+      "sha256": "2b3467b6b22b4c5349dac442bd45e68adb11b460ae294163eadd80a199795b46"
+    },
+    {
+      "path": "packages/contracts/src/engineering-control.ts",
+      "sha256": "79c5c11333975cb94cb88dcbab664a64a05f4caac501c6c47c2e1aceab8657b3"
+    },
+    {
+      "path": "packages/self-improvement/src/engineering-control.ts",
+      "sha256": "c23dc016b991f8b30e9e34473b5a0c3ba2b496804582807368e468d1343bf06e"
+    },
+    {
+      "path": "packages/self-improvement/src/component-comparison-probe.ts",
+      "sha256": "f9d5b8ba69f44b07b58a9a203d92c83d4028a47d22496daf87c36aa9e1ddc713"
+    },
+    {
+      "path": "packages/self-improvement/src/public.ts",
+      "sha256": "f06a33fbdd6587b5f82ca575528148e1a6965c6ff15dbe39ef2d86dad61c84ff"
+    },
+    {
+      "path": "packages/contracts/src/model-route.ts",
+      "sha256": "e95a854b188b67d37aa4b518626428e4de7eb28e1fcb35edc74bdc8a4235dd0d"
+    },
+    {
+      "path": "packages/hermes/src/model-route.ts",
+      "sha256": "75bad754c537c53a920762b259d30ee6f89149a8d60d40678214cf5e2dec3962"
+    },
+    {
+      "path": "packages/hermes/src/model-route-probe.ts",
+      "sha256": "ba37e7728d124bcbf3cace803dacbcc45d90f35ef9dcdc96b6edbfe266a2065b"
+    },
+    {
+      "path": "packages/ops/src/fixture-stack.ts",
+      "sha256": "41fb6bd904dc3ad487e36c2010c73f09e3ee5152facd260ee3cd4e3757545bf9"
+    },
+    {
+      "path": "scripts/generate-contracts.mjs",
+      "sha256": "4af296522897059f2d54d63077535da25a9fdbce7eeaad3ceba818962ffdc371"
+    },
+    {
+      "path": "skills/toy-control/FEATURE-MAP.md",
+      "sha256": "f8539762e6392f5064cc007b434838d0d4016fd8bedd83c18153ea8000bf8235"
+    }
+  ],
+  "workPerformed": "Read-only inspection of the exact Attention acceptance/rung, shared M02 research row, existing EngineeringControl V2 report/receipt checks, ModelRoute receipt interface and saved source digests. Authored only this minimum plan. No R0.03/R0.10 work, source/planning/contracts/runtime/stack/provider/root operation, native verification or external research was performed.",
+  "parentReview": {
+    "recordedAt": "2026-10-06T22:34:19.874346+00:00",
+    "state": "BOUNDED_BEHAVIOR_PLAN_ACCEPTED_WITH_VERSION_BOUNDARY_AND_ROUTING_CORRECTIONS",
+    "corrections": [
+      "Preserve all existing V1/V2 report and input/output contracts. A changed shared decision shape must be a new strict version; do not extend an existing version in place.",
+      "The enforced module graph allows Hermes to call self-improvement, but self-improvement cannot import Hermes. Preserve that direction. Obtain actual public ModelRoute receipts from a bounded probe in the existing Hermes owner, then supply canonical input through the central EngineeringControl public interface; do not add a reverse dependency or bypass the central checker.",
+      "Include cli/src/main.ts and architecture/features.json in the reviewed routing/map scope. Generate the feature map from facts, never manually rewrite it. All CLI/public-owner/FixtureProbe dispatch layers must reach the exact authored manifest.",
+      "Keep the four distinct decision identities and route/skill predicates in the existing indexed central research owner, using the canonical receipt and its existing validation logic. No separate Attention receipt protocol or local model-policy copy.",
+      "Use the existing registered probe and owned fake stack only. Public owner-produced fake external receipts prove pipeline/predicate behavior, not authenticated research, real decision adoption or native/service execution."
+    ],
+    "moduleGraphSha256": "570e921735ed76778864746ef954875cbac9431bf3862f70d38bf69533190b93",
+    "nextStep": "After restoring/stopping the three-attempt R0.03 unit and completing strict checks, get a fresh unfiltered AT-attention-66 baseline, then write the minimum versioned central interface before source changes. Two-hour stop applies to that new bounded unit; exact root02 DONE retains immediate R0.01 priority."
+  }
+}

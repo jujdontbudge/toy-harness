@@ -1,0 +1,65 @@
+{
+  "recordedAt": "2026-10-06T22:24:57.043507+00:00",
+  "card": "R0.03",
+  "assignedAT": "AT-hermes-config-87",
+  "rung": "CLI",
+  "sourceAssertionHash": "b8ba9587534e2983742157a3ab9ae8911da4928e48e3ab0894944914bb91e6bb",
+  "scope": "Observe actual native auth-store lock serialization while the successful refresh response is held; retain existing two subprocesses, both orders, crash cuts and fresh public usability proof",
+  "interface": "HermesAuthProbe.run unchanged; written interface docs/adr/0024-profile-auth-persistence.md",
+  "baseline": "build/evidence/R0.03/held-response-baseline.json",
+  "originalHelperPlan": "build/evidence/R0.03/stale-response-next-minimum-plan.json",
+  "parentReview": {
+    "recordedAt": "2026-10-06T22:22:19.863090+00:00",
+    "state": "REORDER_PLAN_REJECTED_LOCK_AND_GENERATION_SEMANTICS",
+    "scope": "The original refresh-first ordering and separate stale successful-response rejection remain unchanged until actual public proof.",
+    "evidence": [
+      {
+        "path": "/Users/johansardar/.hermes/hermes-agent/agent/credential_pool.py",
+        "sha256": "111d8e0d990630341a42dc2fa4a740f16746d5963e8d6900cfd25c54d109da66",
+        "lines": "1547-1552",
+        "fact": "The real auth-store lock wraps re-sync, HTTP refresh, and writeback for openai-codex."
+      },
+      {
+        "path": "/Users/johansardar/.hermes/hermes-agent/hermes_cli/auth.py",
+        "sha256": "99d04d861b6437927aee2e6976d02be2c0e4875a8fc8c4dcc51485c909eb7b0e",
+        "lines": "1007-1042,1099-1139",
+        "fact": "Disk token bases preserve a newer generation during stale pool writes, and persistence uses the same auth-store lock."
+      }
+    ],
+    "correction": "Waiting for auth-add persistence while holding the primary refresh response waits on that same lock. Also, an independent added grant is not a newer rotation of the original grant; timing alone cannot establish a rejected stale successful response. Keep staleRefreshResponse=not-exercised.",
+    "nextMinimum": "Use the existing external OS audit seam to observe the second real public subprocess waiting for the same auth-store lock while the successful provider response is held, then observe lock acquisition/add persistence after response release, exact newest-generation and added-grant fresh public readbacks. This establishes native serialization/no lost update, not rejected response or complete AT87."
+  },
+  "minimumChanges": [
+    "Fixed external OS wrapper calls real fcntl.flock unchanged; device/inode binds target descriptor to disposable profile auth.lock; one native contention marker and one subsequent acquisition marker",
+    "Existing refresh-first controller observes contention/no acquire/no completed add while provider response is held; requires acquire/successful public add after release",
+    "Exact authored AT87 manifest adds same-lock OS observation; feature map documents it; no new mandatory phase, DTO, command, provider or service"
+  ],
+  "oracle": [
+    "Actual BlockingIOError from native nonblocking lock before response release",
+    "No acquired/completed add marker and both children still running before release",
+    "Same-lock acquisition after release and successful public add receipt",
+    "All original exact provider effects and fresh generation/added-grant/catalog/model/root preservation/crash readbacks unchanged",
+    "Unfiltered AT87 and affected AT85 run/show exact, full teardown with no unresolved resources"
+  ],
+  "wholeGates": [
+    "staleRefreshResponse remains not-exercised; independent add is not a newer original-grant rotation",
+    "actual service UID/containment/protected controller",
+    "full AT87 and R0.03 acceptance",
+    "root02 remains PENDING and six queued hashes unchanged"
+  ],
+  "sourceHashes": {
+    "packages/hermes/src/auth-fixture.ts": "4280e82d56c68399784a89c06a437507356a3b3ac6e891547e21341fcb0d510a",
+    "patches/hermes-auth-fixture.patch": "ee18116eee773251cc3e1e7b350e4f5c9d3b0d53bdc84998e6ca3f3baea49454",
+    "tests/registry.yaml": "2b3467b6b22b4c5349dac442bd45e68adb11b460ae294163eadd80a199795b46",
+    "docs/adr/0024-profile-auth-persistence.md": "bcca2e384c152efd42eb534b1f1a7c74e711188ea547c8c8e121745d5ed18c72"
+  },
+  "firstRuntimeFailure": {
+    "evidence": "build/evidence/R0.03/held-response-first-verification.json",
+    "assignedRunShowExact": true,
+    "completedTeardown": true,
+    "existingChecksPassed": 11,
+    "newFailure": "Native contention marker absent at the reused optional 2-second overlap wait; acquisition/add result also absent and successful response still held.",
+    "correction": "Required native-lock observation uses the existing bounded 15-second readiness pattern and exposes actual monotonic elapsed time. All lock/path/generation/usability assertions unchanged.",
+    "attributionPending": true
+  }
+}

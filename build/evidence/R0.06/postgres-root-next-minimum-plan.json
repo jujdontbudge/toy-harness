@@ -1,0 +1,163 @@
+{
+  "schemaVersion": "toy.builder-root-preparation-plan.v1",
+  "card": "R0.06",
+  "status": "STOPPED_NO_REVIEWABLE_PRODUCTION_PG_INIT",
+  "admission": {
+    "readback": "build/evidence/R0.06/postgres-root-helper-doctor.json",
+    "measuredAt": "2026-10-06T22:29:22.812Z",
+    "pressure": "normal",
+    "availableBytes": 2126217216,
+    "helperNeedBytes": 268435456,
+    "marginBytes": 536870912,
+    "requiredBytes": 805306368,
+    "admitted": true,
+    "scope": "This permits the bounded planning helper only; the doctor measured a separate 1 GiB job need plus 512 MiB margin."
+  },
+  "decision": {
+    "rootOnlyPostgresInitUnderToyPgRequiredForR006": false,
+    "reason": "R0.06 accounting diagnostics use the existing owned disposable PostgreSQL fixture and public ModelAdmission CLI owner. The production/native PostgreSQL cluster is explicitly an R1 provisioning item. Current service.postgres has no installed-service manifest or authenticated public owner transport, so no fixed production init executable/target/operation is reviewable yet.",
+    "rootRequestPrepared": false,
+    "rootRequestScope": "None until the protected PostgreSQL service manifest and authenticated owner transport exist. Do not init, migrate, chown, start, or attach to a production cluster."
+  },
+  "currentStateAndEvidence": {
+    "r006": {
+      "implementation": "IN_PROGRESS",
+      "acceptance": "PENDING",
+      "dependsOn": "R0.01, R0.03, R0.05",
+      "requiredATs": [
+        "AT-hermes-config-59",
+        "AT-ops-9",
+        "AT-ops-10",
+        "AT-ops-11",
+        "AT-ops-12",
+        "AT-ops-13",
+        "AT-ops-49",
+        "AT-ops-50",
+        "AT-ops-51",
+        "AT-ops-52",
+        "AT-ops-55"
+      ],
+      "wholeATsPromoted": []
+    },
+    "priorAccountingEvidence": {
+      "path": "build/evidence/R0.06/accounting-runtime-verification.json",
+      "verdict": "PASS_REAL_POSTGRESQL_ACCOUNTING_CLI_SUBSETS",
+      "coveredProbeIds": [
+        "AT-ops-49",
+        "AT-ops-51",
+        "AT-ops-52"
+      ],
+      "postgresqlRestartVerified": true,
+      "cleanupComplete": true,
+      "liveProviderSends": 0,
+      "wholeATsPassed": [],
+      "acceptanceComplete": false
+    },
+    "latestRoleObservation": {
+      "path": "build/evidence/R0.06/postgres-root-helper-doctor.json",
+      "role": "_toy_pg",
+      "uid": 314,
+      "gid": 314,
+      "state": "observed",
+      "adminGroupObserved": false,
+      "allExpectedIdentitiesObserved": true,
+      "identityGateVerified": false,
+      "maintenanceIdentityVerified": false,
+      "meaning": "Observed UID/GID is inventory only; it is not an authorization or service-boundary pass."
+    }
+  },
+  "ownerSurfaces": {
+    "disposableR006Owner": {
+      "source": "packages/self-improvement/src/accounting-postgres.ts",
+      "interface": "accountingProbe -> ModelAdmission.withTest -> withAccountingFixture",
+      "installedTestBinaryRoot": "/opt/homebrew/opt/postgresql@17/bin",
+      "knownExecutables": [
+        "/opt/homebrew/opt/postgresql@17/bin/initdb",
+        "/opt/homebrew/opt/postgresql@17/bin/postgres",
+        "/opt/homebrew/opt/postgresql@17/bin/psql"
+      ],
+      "recordedInstalledVersion": "17.11 (Homebrew), from build/evidence/R0.06/accounting-policy-preparation.json",
+      "sourceVersionGuard": "The fixture checks PG_VERSION equals 17\\n (major version); psql content is digest-bound by its connection. It does not pin initdb/postgres digests or define a production service path.",
+      "dataTarget": "build/.toy-r0-fixtures/<owned-stack-uuid>/postgres-data, created and checked as current CLI user with mode 0700",
+      "socketTarget": "/private/tmp/toy-pg-<owned-stack-uuid>, owned by current CLI user with mode 0700; PostgreSQL uses an AF_UNIX socket and listen_addresses is empty",
+      "classification": "Real PostgreSQL for an owned disposable test world; not the native _toy_pg cluster."
+    },
+    "productionServiceOwner": {
+      "registeredReadId": "service.postgres",
+      "source": "packages/ops/src/public.ts:46-53 and packages/contracts/src/ops-registry.ts:206-212",
+      "currentState": "NOT_IMPLEMENTED / OWNER_TRANSPORT_NOT_IMPLEMENTED",
+      "exactPrerequisite": "Verified installed-service manifest and authenticated public owner transport are required.",
+      "nativeProvisioningPlan": "The binding Ops roadmap places a separate native PostgreSQL cluster, owner-scoped roles, socket permissions and launchd supervision at R1, not R0.06 (specs/ops.md:2025).",
+      "missingForAnyRootInit": [
+        "verified protected PostgreSQL service manifest binding the exact executable and version/digests",
+        "manifest-owned absolute cluster data path and explicit empty/initialized-state policy",
+        "_toy_pg UID/GID enforcement evidence and fixed socket ownership/permissions",
+        "authenticated public service owner/readback for status, schema and restart"
+      ],
+      "stopCondition": "Do not prepare a root init request until the manifest and owner transport are implemented and return verified fixed values. The current status placeholder cannot attest a target."
+    },
+    "registeredFixtureCheck": {
+      "id": "bootstrap.postgres-unix",
+      "owner": "ops",
+      "nextCommand": "stack.up",
+      "source": "packages/contracts/src/ops-registry.ts:234",
+      "scope": "Declared disposable test-stack bootstrap check only; it does not implement service.postgres or authorize a production _toy_pg target."
+    }
+  },
+  "safeRegisteredPreparation": {
+    "command": "/Users/johansardar/.local/share/node/node-v24.21.0-darwin-arm64/bin/node /Users/johansardar/Documents/Codex/toy-harness/cli/dist/main.js doctor --deep --json",
+    "commandId": "doctor",
+    "effect": "Read-only prerequisite inspection; no PG init, migration, service activation or root request is created.",
+    "currentExpectedPublicReadbacks": [
+      "service.postgres: NOT_IMPLEMENTED / OWNER_TRANSPORT_NOT_IMPLEMENTED",
+      "bootstrap.role-identities: BLOCKED / IDENTITIES_OBSERVED_ENFORCEMENT_PENDING",
+      "bootstrap.resource-admission: PASS only if a fresh normal-pressure sample still meets its measured need plus 512 MiB margin"
+    ],
+    "disposableR006VerificationWhenAuthorized": [
+      "toy --env test stack up --release R0 --clock fake --model fake --request-id <fresh-uuid> --json",
+      "toy --env test --stack <stack-id> probe run AT-ops-49 --request-id <fresh-uuid> --json",
+      "toy --env test --stack <stack-id> probe show <operation-id> --json",
+      "toy --env test --stack <stack-id> stack down --request-id <fresh-uuid> --json"
+    ],
+    "interpretation": "Use the registered CLI fixture for R0.06 accounting evidence; its pass cannot be represented as native service init, grants, protected provider binding, or whole AT completion."
+  },
+  "pendingRootPayloadsPreserved": [
+    {
+      "requestId": "049154d9-4ed1-4db0-97e5-69b5a79190d9",
+      "entry": "ROOT-R004-20261006-02",
+      "state": "PENDING",
+      "purpose": "R0.04 SIWC read-only control runtime probe"
+    },
+    {
+      "requestId": "bd041f4e-8176-46a7-9108-b9c4a89b965e",
+      "entry": "ROOT-R005-20261006-01",
+      "state": "PENDING",
+      "purpose": "R0.05 _toy_agent denial diagnostic"
+    }
+  ],
+  "deferrals": [
+    "No new ROOT-REQUESTS entry is safe: no registered fixed service init script or manifest-bound production target exists.",
+    "R0.06 remains acceptance PENDING; the existing local PostgreSQL CLI evidence covers only three diagnostic subsets and no whole AT.",
+    "Actual native PostgreSQL cluster provisioning belongs to R1 after protected manifest, identity enforcement, owner transport, path and role/socket constraints are verified.",
+    "The two existing pending root payloads remain unchanged; queued root work does not block the goal."
+  ],
+  "sourceHashes": {
+    "build/state.json": "4a066ce972dc2cbe2ab09cf3f6957a97739d529397ee4cb55ad024220ab1f3ce",
+    "build/ROOT-REQUESTS.md": "6bdca8b36154b5ec87875c5a1fe0e5d5f9a8a0b6d172c26c7d99ad9f2dd6307e",
+    "build/evidence/R0.06/postgres-root-helper-doctor.json": "df3a3a789576f2cf06188960f9c270d583c73f1287ecdd922e57ee4e244b474a",
+    "build/evidence/R0.06/accounting-runtime-verification.json": "d13d5967afe038159fdb94284397f5a957406914731ea07faf5f9cf1de225272",
+    "build/evidence/R0.06/accounting-policy-preparation.json": "b85f336df0480bb368fa6631e7aaaaa8553592ee5e0b9c993fceb2a8781d1eb4",
+    "packages/self-improvement/src/accounting-postgres.ts": "b9b2b721acec01d490a247b9fd415b6bd3e8ecc6d55fc4adab4b1b7bb91557f0",
+    "packages/ops/src/public.ts": "9646f70f89434cf774e66a602eed45f751c353f200b2f3e1a2cf41968e079284",
+    "packages/contracts/src/ops-registry.ts": "40b4f46f0cfcdafe8c6ec5870d0ddc478b41a95395e6ad156d58e470f33ce6ea",
+    "docs/adr/0025-role-identity-inventory.md": "81fe435376febd431166cc3be0f4f33db42b48cecba2ea1706ea0f4f5e96fe18",
+    "docs/adr/0027-model-admission-accounting.md": "1f8c4fced778c40f05466a7a60eb71bf4c85e9033458ae20e1c29e1e059a6640",
+    "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/ops.md": "f07aab65088c82e4ff21e4d63edb2f279e2324e6d7e2bbb801e0fd7494104b0b",
+    "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/CONTRACTS.md": "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d"
+  },
+  "parentReview": {
+    "recordedAt": "2026-10-06T22:34:19.875088+00:00",
+    "state": "R0_ACCOUNTING_CONTINUES_NO_NEW_NATIVE_INIT_REQUEST",
+    "interpretation": "No R0.06 root PG init is required by the reviewed current scope. Native PostgreSQL provisioning is tracked R1 source work. Missing service manifest/owner transport are implementation prerequisites, not user approval or goal blockers. When that card needs root, prepare its exact registered operation/script and append ROOT-REQUESTS; preserve both current pending payloads."
+  }
+}

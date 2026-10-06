@@ -181,5 +181,26 @@
     "The proof has zero live provider sends and proves behavior only against the registered fake external endpoints.",
     "protectedControllerVerified=false and nativeServiceIdentityVerified=false; caller subprocess UID evidence does not establish service identity.",
     "The separate frozen Root02 dependency is still PENDING and must remain untouched."
-  ]
+  ],
+  "parentReview": {
+    "recordedAt": "2026-10-06T22:22:19.863090+00:00",
+    "state": "REORDER_PLAN_REJECTED_LOCK_AND_GENERATION_SEMANTICS",
+    "scope": "The original refresh-first ordering and separate stale successful-response rejection remain unchanged until actual public proof.",
+    "evidence": [
+      {
+        "path": "/Users/johansardar/.hermes/hermes-agent/agent/credential_pool.py",
+        "sha256": "111d8e0d990630341a42dc2fa4a740f16746d5963e8d6900cfd25c54d109da66",
+        "lines": "1547-1552",
+        "fact": "The real auth-store lock wraps re-sync, HTTP refresh, and writeback for openai-codex."
+      },
+      {
+        "path": "/Users/johansardar/.hermes/hermes-agent/hermes_cli/auth.py",
+        "sha256": "99d04d861b6437927aee2e6976d02be2c0e4875a8fc8c4dcc51485c909eb7b0e",
+        "lines": "1007-1042,1099-1139",
+        "fact": "Disk token bases preserve a newer generation during stale pool writes, and persistence uses the same auth-store lock."
+      }
+    ],
+    "correction": "Waiting for auth-add persistence while holding the primary refresh response waits on that same lock. Also, an independent added grant is not a newer rotation of the original grant; timing alone cannot establish a rejected stale successful response. Keep staleRefreshResponse=not-exercised.",
+    "nextMinimum": "Use the existing external OS audit seam to observe the second real public subprocess waiting for the same auth-store lock while the successful provider response is held, then observe lock acquisition/add persistence after response release, exact newest-generation and added-grant fresh public readbacks. This establishes native serialization/no lost update, not rejected response or complete AT87."
+  }
 }

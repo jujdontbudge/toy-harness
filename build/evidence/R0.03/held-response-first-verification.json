@@ -1,0 +1,906 @@
+{
+  "recordedAt": "2026-10-06T22:26:44.529284+00:00",
+  "card": "R0.03",
+  "rung": "CLI",
+  "records": [
+    {
+      "AT": "AT-hermes-config-87",
+      "unfiltered": true,
+      "operationId": "f6f73b0d-e2a8-40b4-9f1c-09ca6ce5d3e7",
+      "runExit": 1,
+      "showExit": 1,
+      "runShowExact": true,
+      "checks": 12,
+      "allChecksPass": false,
+      "maximumPrerequisiteLength": 1589,
+      "wholeState": "NOT_IMPLEMENTED",
+      "acceptanceComplete": false,
+      "runtimeBinding": {
+        "releaseDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "controlDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "schemaDigest": "7798d085965af38a039922143b282be466d42ca88ffaa75d3923b1a3b3392dcc",
+        "fixtureDigest": "9c29627e3346697e7c493be5a007a0cc3e761512eec7b61adf20a4674183f38f"
+      },
+      "caseManifestDigest": "61cd002e5fa3519117e4b4add146ab142a0d7eb0186d11ce3dcc30e77ac3b707",
+      "sourceRegistration": {
+        "id": "AT-hermes-config-87",
+        "rung": "CLI",
+        "sourceAssertionHash": "b8ba9587534e2983742157a3ab9ae8911da4928e48e3ab0894944914bb91e6bb",
+        "commandId": "probe.run",
+        "scenarioId": "auth.concurrent-persistence",
+        "owner": "hermes",
+        "firstRelease": "R0",
+        "kind": "behavioral",
+        "mandatoryCases": [
+          {
+            "id": "add-first",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "add-first"
+          },
+          {
+            "id": "refresh-first",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "refresh-first"
+          },
+          {
+            "id": "before-replace",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "before-replace"
+          },
+          {
+            "id": "after-replace",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "after-replace"
+          }
+        ],
+        "trigger": "Run real public expired-grant chat and independent auth-add in both persistence orders; observe native auth-lock contention/acquisition around held refresh response; kill disposable add before/after atomic replace and inspect fresh public list, priority and chat.",
+        "faultControls": [
+          {
+            "id": "persistence-order",
+            "seam": "provider",
+            "affectedPhases": [
+              "add-first",
+              "refresh-first"
+            ]
+          },
+          {
+            "id": "expired-access",
+            "seam": "clock",
+            "affectedPhases": [
+              "add-first",
+              "refresh-first"
+            ]
+          },
+          {
+            "id": "native-process-crash",
+            "seam": "os",
+            "affectedPhases": [
+              "before-replace",
+              "after-replace"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "fresh-process-and-public-command",
+            "independentReader": "HermesAuthProbe.run: processIdentity/public_argv/exit and SIGKILL boundary identity",
+            "caseIds": [
+              "add-first",
+              "refresh-first",
+              "before-replace",
+              "after-replace"
+            ]
+          },
+          {
+            "id": "provider-generation-and-effects",
+            "independentReader": "HermesAuthProbe.run: exact refreshEffects, catalog/model generations and HTTP ledger",
+            "caseIds": [
+              "add-first",
+              "refresh-first",
+              "before-replace",
+              "after-replace"
+            ]
+          },
+          {
+            "id": "native-auth-lock-serialization",
+            "independentReader": "Real OS flock contention/acquisition markers on the same disposable profile lock around provider response release",
+            "caseIds": [
+              "refresh-first"
+            ]
+          },
+          {
+            "id": "independent-persistence-readback",
+            "independentReader": "HermesAuthProbe.run: fresh public list/count/label, priority, chat and unchanged root stores",
+            "caseIds": [
+              "add-first",
+              "refresh-first",
+              "before-replace",
+              "after-replace"
+            ]
+          },
+          {
+            "id": "stored-readback-and-teardown",
+            "independentReader": "toy probe.show and stack.down: exact persisted result and complete owned-world teardown",
+            "caseIds": [
+              "add-first",
+              "refresh-first",
+              "before-replace",
+              "after-replace"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM ingress cannot run administrative auth add or select native subprocess storage crash boundaries. The CLI drives real public commands in a seeded disposable profile with external provider, clock and OS controls."
+      },
+      "proofs": [
+        {
+          "interface": "hermes --help",
+          "installedCommit": "8d5e3e412138342e8bf30443e72bd4e6a9abd057",
+          "launcherDigest": "307ef6a7792a42083f6e4f71e9500543efd9c707e211068f80b138db76975397",
+          "interpreterSource": "existing-committed-venv",
+          "interpreterDigest": "e046691799a36090b5946d8910084f982bf819ed4dfaf27a4bfa5bdf9c8360ee",
+          "publicRuntimeCommandDigest": "e99338b03dfdad1b660705657d5e8c4273cc8e1b53f2fe6cf995d9cb36e05403",
+          "bytecodeWritesDisabled": true,
+          "isolatedHome": true,
+          "inheritedProviderEnvironment": false,
+          "publicHelpObserved": true,
+          "childExitCode": 0,
+          "childSignal": null,
+          "outputDigest": "1b74616851009c28894dd94adf51fc3064e3d353021e1b37b716a4904b3881e3",
+          "errorOutputDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "dependencyEnvironmentUnavailable": false,
+          "missingModule": false,
+          "repairSuggested": false,
+          "sourceUpdateIncomplete": false,
+          "authExecuted": false,
+          "credentialInspected": false,
+          "wholeATComplete": false
+        },
+        {
+          "result": {
+            "schema": "toy.hermes-httpx-auth-fixture.v1",
+            "operation": "add",
+            "public_argv": [
+              "hermes",
+              "--profile",
+              "toy",
+              "auth",
+              "add",
+              "openai-codex",
+              "--type",
+              "oauth",
+              "--no-browser"
+            ],
+            "exit_code": 0,
+            "markers": [
+              "AUTH_ADD_OK"
+            ],
+            "processIdentity": {
+              "pid": 98371,
+              "parentPid": 98352,
+              "uid": 501,
+              "gid": 20
+            },
+            "observations": {
+              "provider": "openai-codex",
+              "phase": "add",
+              "access_generation": null,
+              "catalog_access_generation": null,
+              "storage_fault_triggered": false,
+              "token_hygiene": true,
+              "success_claim_absent": false,
+              "fallback_attempted": false,
+              "network_denials": [],
+              "socket_origin": null
+            },
+            "http_ledger": {
+              "device_code_requests": 1,
+              "device_code_polls": 1,
+              "token_exchanges": 1,
+              "token_refreshes": 0,
+              "model_catalog_requests": 0,
+              "model_requests": 0,
+              "denied_http_requests": 0,
+              "blocked_socket_events": 0
+            },
+            "network_audit": "socket-audit-hook-installed"
+          },
+          "childPidMatches": true,
+          "freshChildPid": true,
+          "parentPidMatches": true,
+          "uidMatches": true,
+          "gidMatches": true,
+          "childStdoutDigest": "cb2632ab1022168e4fcf4a21752559f7bb71b1fad384258202ea6bb2407bba75",
+          "childStderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "rootAuthBefore": {
+            "exists": false,
+            "digest": null
+          },
+          "rootEnvBefore": {
+            "exists": false,
+            "digest": null
+          },
+          "rootStoreUnchanged": true,
+          "profileAuthBefore": {
+            "exists": false,
+            "digest": null
+          },
+          "profileAuthAfterCreate": {
+            "exists": false,
+            "digest": null
+          },
+          "profileAuthAfterAdd": {
+            "exists": true,
+            "digest": "75c92d9271bf5b2175afb7024aed490d79e86d32e38ef48a9ff9aeff70328d49"
+          },
+          "wholeATComplete": false
+        },
+        {
+          "result": {
+            "schema": "toy.hermes-httpx-auth-fixture.v1",
+            "operation": "list",
+            "public_argv": [
+              "hermes",
+              "--profile",
+              "toy",
+              "auth",
+              "list",
+              "openai-codex"
+            ],
+            "exit_code": 0,
+            "markers": [
+              "AUTH_LIST_READBACK_OK"
+            ],
+            "processIdentity": {
+              "pid": 98373,
+              "parentPid": 98352,
+              "uid": 501,
+              "gid": 20
+            },
+            "observations": {
+              "provider": "openai-codex",
+              "phase": "list",
+              "credential_count": 1,
+              "access_generation": null,
+              "catalog_access_generation": null,
+              "storage_fault_triggered": false,
+              "token_hygiene": true,
+              "success_claim_absent": true,
+              "fallback_attempted": false,
+              "network_denials": [],
+              "socket_origin": null
+            },
+            "http_ledger": {
+              "device_code_requests": 0,
+              "device_code_polls": 0,
+              "token_exchanges": 0,
+              "token_refreshes": 0,
+              "model_catalog_requests": 0,
+              "model_requests": 0,
+              "denied_http_requests": 0,
+              "blocked_socket_events": 0
+            },
+            "network_audit": "socket-audit-hook-installed"
+          },
+          "childPidMatches": true,
+          "freshChildPid": true,
+          "parentPidMatches": true,
+          "uidMatches": true,
+          "gidMatches": true,
+          "childStdoutDigest": "16fae0932039cf08b793ae2c57454096ac4fd556b83935a8134cbaee2c6658f7",
+          "childStderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "rootStoreUnchanged": true,
+          "wholeATComplete": false
+        },
+        {
+          "order": "add-first",
+          "result": {
+            "schema": "toy.hermes-httpx-auth-fixture.v1",
+            "operation": "add",
+            "public_argv": [
+              "hermes",
+              "--profile",
+              "toy",
+              "auth",
+              "add",
+              "openai-codex",
+              "--type",
+              "oauth",
+              "--no-browser",
+              "--label",
+              "toy-fixture-added-add-first"
+            ],
+            "exit_code": 0,
+            "markers": [
+              "AUTH_ADD_OK"
+            ],
+            "processIdentity": {
+              "pid": 98375,
+              "parentPid": 98352,
+              "uid": 501,
+              "gid": 20
+            },
+            "observations": {
+              "provider": "openai-codex",
+              "phase": "add",
+              "access_generation": null,
+              "catalog_access_generation": null,
+              "storage_fault_triggered": false,
+              "token_hygiene": true,
+              "success_claim_absent": false,
+              "fallback_attempted": false,
+              "network_denials": [],
+              "socket_origin": null
+            },
+            "concurrency": {
+              "order": "add-first",
+              "actor": "auth-add",
+              "barrier": "released",
+              "crashCut": "after-add-public-command-before-wrapper-exit",
+              "staleRefreshTokenRejected": "not-exercised",
+              "staleRefreshResponse": "not-exercised",
+              "freshProcessUse": "not-checked",
+              "refreshGeneration": null,
+              "refreshEffects": []
+            },
+            "http_ledger": {
+              "device_code_requests": 1,
+              "device_code_polls": 1,
+              "token_exchanges": 1,
+              "token_refreshes": 0,
+              "model_catalog_requests": 0,
+              "model_requests": 0,
+              "denied_http_requests": 0,
+              "blocked_socket_events": 0
+            },
+            "network_audit": "socket-audit-hook-installed"
+          },
+          "childSignal": "SIGKILL",
+          "primaryChildCount": 2,
+          "childProcessesStartedBeforeFirstRelease": true,
+          "bothPrePersistenceBarriersReached": true,
+          "refreshBarrierKind": "os-lock-acquisition",
+          "commandOrderObserved": true,
+          "crashCut": "after-add-public-command-before-wrapper-exit",
+          "wholeATComplete": false
+        },
+        {
+          "order": "add-first",
+          "result": {
+            "schema": "toy.hermes-httpx-auth-fixture.v1",
+            "operation": "chat",
+            "public_argv": [
+              "hermes",
+              "--profile",
+              "toy",
+              "chat",
+              "--provider",
+              "openai-codex",
+              "--model",
+              "gpt-6.1-sol",
+              "--toolsets",
+              "none",
+              "-q",
+              "Return the fixed fixture marker."
+            ],
+            "exit_code": 0,
+            "markers": [
+              "CHAT_RESPONSE_OK"
+            ],
+            "processIdentity": {
+              "pid": 98400,
+              "parentPid": 98352,
+              "uid": 501,
+              "gid": 20
+            },
+            "observations": {
+              "provider": "openai-codex",
+              "phase": "chat-expired",
+              "access_generation": "rotated",
+              "catalog_access_generation": "rotated",
+              "storage_fault_triggered": false,
+              "token_hygiene": true,
+              "success_claim_absent": true,
+              "fallback_attempted": false,
+              "network_denials": [],
+              "socket_origin": null
+            },
+            "concurrency": {
+              "order": "add-first",
+              "actor": "expired-chat",
+              "barrier": "released",
+              "crashCut": "none",
+              "staleRefreshTokenRejected": "not-exercised",
+              "staleRefreshResponse": "not-exercised",
+              "freshProcessUse": "not-checked",
+              "refreshGeneration": "rotated",
+              "refreshEffects": [
+                {
+                  "from": "initial",
+                  "to": "rotated",
+                  "barrier": "primary-released"
+                },
+                {
+                  "from": "added",
+                  "to": "added-rotated",
+                  "barrier": "not-used"
+                }
+              ]
+            },
+            "http_ledger": {
+              "device_code_requests": 0,
+              "device_code_polls": 0,
+              "token_exchanges": 0,
+              "token_refreshes": 2,
+              "model_catalog_requests": 1,
+              "model_requests": 1,
+              "denied_http_requests": 0,
+              "blocked_socket_events": 0
+            },
+            "network_audit": "socket-audit-hook-installed"
+          },
+          "childSignal": null,
+          "primaryChildCount": 2,
+          "childProcessesStartedBeforeFirstRelease": true,
+          "bothPrePersistenceBarriersReached": true,
+          "refreshBarrierKind": "os-lock-acquisition",
+          "commandOrderObserved": true,
+          "crashCut": "after-add-public-command-before-wrapper-exit",
+          "wholeATComplete": false
+        },
+        {
+          "order": "add-first",
+          "result": {
+            "schema": "toy.hermes-httpx-auth-fixture.v1",
+            "operation": "list",
+            "public_argv": [
+              "hermes",
+              "--profile",
+              "toy",
+              "auth",
+              "list",
+              "openai-codex"
+            ],
+            "exit_code": 0,
+            "markers": [
+              "AUTH_LIST_READBACK_OK"
+            ],
+            "processIdentity": {
+              "pid": 98407,
+              "parentPid": 98352,
+              "uid": 501,
+              "gid": 20
+            },
+            "observations": {
+              "provider": "openai-codex",
+              "phase": "list",
+              "credential_count": 2,
+              "access_generation": null,
+              "catalog_access_generation": null,
+              "storage_fault_triggered": false,
+              "token_hygiene": true,
+              "success_claim_absent": true,
+              "fallback_attempted": false,
+              "network_denials": [],
+              "socket_origin": null
+            },
+            "concurrency": {
+              "order": "add-first",
+              "actor": "fresh-list-reload",
+              "barrier": "not-used",
+              "crashCut": "none",
+              "staleRefreshTokenRejected": "not-exercised",
+              "staleRefreshResponse": "not-exercised",
+              "freshProcessUse": "not-checked",
+              "refreshGeneration": null,
+              "refreshEffects": []
+            },
+            "http_ledger": {
+              "device_code_requests": 0,
+              "device_code_polls": 0,
+              "token_exchanges": 0,
+              "token_refreshes": 0,
+              "model_catalog_requests": 0,
+              "model_requests": 0,
+              "denied_http_requests": 0,
+              "blocked_socket_events": 0
+            },
+            "network_audit": "socket-audit-hook-installed"
+          },
+          "credentialCountExpected": 2,
+          "rootStoreUnchanged": true,
+          "profileStoreExists": true,
+          "primaryChildCount": 2,
+          "freshReloadVerified": false,
+          "wholeATComplete": false
+        },
+        {
+          "order": "add-first",
+          "result": {
+            "schema": "toy.hermes-httpx-auth-fixture.v1",
+            "operation": "chat",
+            "public_argv": [
+              "hermes",
+              "--profile",
+              "toy",
+              "chat",
+              "--provider",
+              "openai-codex",
+              "--model",
+              "gpt-6.1-sol",
+              "--toolsets",
+              "none",
+              "-q",
+              "Return the fixed fixture marker."
+            ],
+            "exit_code": 0,
+            "markers": [
+              "CHAT_RESPONSE_OK"
+            ],
+            "processIdentity": {
+              "pid": 98409,
+              "parentPid": 98352,
+              "uid": 501,
+              "gid": 20
+            },
+            "observations": {
+              "provider": "openai-codex",
+              "phase": "chat-reloaded",
+              "access_generation": "rotated",
+              "catalog_access_generation": "rotated",
+              "storage_fault_triggered": false,
+              "token_hygiene": true,
+              "success_claim_absent": true,
+              "fallback_attempted": false,
+              "network_denials": [],
+              "socket_origin": null
+            },
+            "concurrency": {
+              "order": "add-first",
+              "actor": "fresh-refresh-reload",
+              "barrier": "not-used",
+              "crashCut": "none",
+              "staleRefreshTokenRejected": "not-exercised",
+              "staleRefreshResponse": "not-exercised",
+              "freshProcessUse": "usable",
+              "refreshGeneration": "rotated",
+              "refreshEffects": []
+            },
+            "http_ledger": {
+              "device_code_requests": 0,
+              "device_code_polls": 0,
+              "token_exchanges": 0,
+              "token_refreshes": 0,
+              "model_catalog_requests": 1,
+              "model_requests": 1,
+              "denied_http_requests": 0,
+              "blocked_socket_events": 0
+            },
+            "network_audit": "socket-audit-hook-installed"
+          },
+          "newestAcceptedRefreshGeneration": "rotated",
+          "refreshGrantUsable": true,
+          "rootStoreUnchanged": true,
+          "wholeATComplete": false
+        },
+        {
+          "order": "add-first",
+          "result": {
+            "schema": "toy.hermes-httpx-auth-fixture.v1",
+            "operation": "priority",
+            "public_argv": [
+              "hermes",
+              "--profile",
+              "toy",
+              "auth",
+              "priority",
+              "openai-codex",
+              "toy-fixture-added-add-first",
+              "0"
+            ],
+            "exit_code": 0,
+            "markers": [
+              "AUTH_PRIORITY_OK"
+            ],
+            "processIdentity": {
+              "pid": 98434,
+              "parentPid": 98352,
+              "uid": 501,
+              "gid": 20
+            },
+            "observations": {
+              "provider": "openai-codex",
+              "phase": "priority-added",
+              "access_generation": null,
+              "catalog_access_generation": null,
+              "storage_fault_triggered": false,
+              "token_hygiene": true,
+              "success_claim_absent": true,
+              "fallback_attempted": false,
+              "network_denials": [],
+              "socket_origin": null
+            },
+            "concurrency": {
+              "order": "add-first",
+              "actor": "fresh-add-reload",
+              "barrier": "not-used",
+              "crashCut": "none",
+              "staleRefreshTokenRejected": "not-exercised",
+              "staleRefreshResponse": "not-exercised",
+              "freshProcessUse": "not-checked",
+              "refreshGeneration": null,
+              "refreshEffects": []
+            },
+            "http_ledger": {
+              "device_code_requests": 0,
+              "device_code_polls": 0,
+              "token_exchanges": 0,
+              "token_refreshes": 0,
+              "model_catalog_requests": 0,
+              "model_requests": 0,
+              "denied_http_requests": 0,
+              "blocked_socket_events": 0
+            },
+            "network_audit": "socket-audit-hook-installed"
+          },
+          "childExitCode": 0,
+          "childSignal": null,
+          "timedOut": false,
+          "oversized": false,
+          "spawnError": false,
+          "rootStoreUnchanged": true,
+          "wholeATComplete": false
+        },
+        {
+          "order": "add-first",
+          "result": {
+            "schema": "toy.hermes-httpx-auth-fixture.v1",
+            "operation": "chat",
+            "public_argv": [
+              "hermes",
+              "--profile",
+              "toy",
+              "chat",
+              "--provider",
+              "openai-codex",
+              "--model",
+              "gpt-6.1-sol",
+              "--toolsets",
+              "none",
+              "-q",
+              "Return the fixed fixture marker."
+            ],
+            "exit_code": 0,
+            "markers": [
+              "CHAT_RESPONSE_OK"
+            ],
+            "processIdentity": {
+              "pid": 98437,
+              "parentPid": 98352,
+              "uid": 501,
+              "gid": 20
+            },
+            "observations": {
+              "provider": "openai-codex",
+              "phase": "chat-reloaded",
+              "access_generation": "added-rotated",
+              "catalog_access_generation": "added-rotated",
+              "storage_fault_triggered": false,
+              "token_hygiene": true,
+              "success_claim_absent": true,
+              "fallback_attempted": false,
+              "network_denials": [],
+              "socket_origin": null
+            },
+            "concurrency": {
+              "order": "add-first",
+              "actor": "fresh-add-reload",
+              "barrier": "not-used",
+              "crashCut": "none",
+              "staleRefreshTokenRejected": "not-exercised",
+              "staleRefreshResponse": "not-exercised",
+              "freshProcessUse": "usable",
+              "refreshGeneration": "added-rotated",
+              "refreshEffects": []
+            },
+            "http_ledger": {
+              "device_code_requests": 0,
+              "device_code_polls": 0,
+              "token_exchanges": 0,
+              "token_refreshes": 0,
+              "model_catalog_requests": 1,
+              "model_requests": 1,
+              "denied_http_requests": 0,
+              "blocked_socket_events": 0
+            },
+            "network_audit": "socket-audit-hook-installed"
+          },
+          "modelRequestGenerations": [
+            "added-rotated"
+          ],
+          "modelUnknownGeneration": false,
+          "modelAuthorizationDenied": false,
+          "modelPayloadDenied": false,
+          "childExitCode": 0,
+          "childSignal": null,
+          "timedOut": false,
+          "oversized": false,
+          "spawnError": false,
+          "staleRefreshTokenRejected": "not-exercised",
+          "staleRefreshResponse": "not-exercised",
+          "addedGrantUsable": true,
+          "lostUpdateAbsent": true,
+          "rootStoreUnchanged": true,
+          "wholeATComplete": false
+        },
+        {
+          "order": "add-first",
+          "result": {
+            "schema": "toy.hermes-httpx-auth-fixture.v1",
+            "operation": "priority",
+            "public_argv": [
+              "hermes",
+              "--profile",
+              "toy",
+              "auth",
+              "priority",
+              "openai-codex",
+              "2",
+              "0"
+            ],
+            "exit_code": 0,
+            "markers": [
+              "AUTH_PRIORITY_OK"
+            ],
+            "processIdentity": {
+              "pid": 98496,
+              "parentPid": 98352,
+              "uid": 501,
+              "gid": 20
+            },
+            "observations": {
+              "provider": "openai-codex",
+              "phase": "priority-restored",
+              "access_generation": null,
+              "catalog_access_generation": null,
+              "storage_fault_triggered": false,
+              "token_hygiene": true,
+              "success_claim_absent": true,
+              "fallback_attempted": false,
+              "network_denials": [],
+              "socket_origin": null
+            },
+            "concurrency": {
+              "order": "add-first",
+              "actor": "fresh-refresh-reload",
+              "barrier": "not-used",
+              "crashCut": "none",
+              "staleRefreshTokenRejected": "not-exercised",
+              "staleRefreshResponse": "not-exercised",
+              "freshProcessUse": "not-checked",
+              "refreshGeneration": null,
+              "refreshEffects": []
+            },
+            "http_ledger": {
+              "device_code_requests": 0,
+              "device_code_polls": 0,
+              "token_exchanges": 0,
+              "token_refreshes": 0,
+              "model_catalog_requests": 0,
+              "model_requests": 0,
+              "denied_http_requests": 0,
+              "blocked_socket_events": 0
+            },
+            "network_audit": "socket-audit-hook-installed"
+          },
+          "childExitCode": 0,
+          "childSignal": null,
+          "timedOut": false,
+          "wholeATComplete": false
+        },
+        {
+          "order": "add-first",
+          "result": {
+            "schema": "toy.hermes-httpx-auth-fixture.v1",
+            "operation": "list",
+            "public_argv": [
+              "hermes",
+              "--profile",
+              "toy",
+              "auth",
+              "list",
+              "openai-codex"
+            ],
+            "exit_code": 0,
+            "markers": [
+              "AUTH_LIST_READBACK_OK"
+            ],
+            "processIdentity": {
+              "pid": 98498,
+              "parentPid": 98352,
+              "uid": 501,
+              "gid": 20
+            },
+            "observations": {
+              "provider": "openai-codex",
+              "phase": "list",
+              "credential_count": 2,
+              "access_generation": null,
+              "catalog_access_generation": null,
+              "storage_fault_triggered": false,
+              "token_hygiene": true,
+              "success_claim_absent": true,
+              "fallback_attempted": false,
+              "network_denials": [],
+              "socket_origin": null
+            },
+            "concurrency": {
+              "order": "add-first",
+              "actor": "fresh-list-reload",
+              "barrier": "not-used",
+              "crashCut": "none",
+              "staleRefreshTokenRejected": "not-exercised",
+              "staleRefreshResponse": "not-exercised",
+              "freshProcessUse": "not-checked",
+              "refreshGeneration": null,
+              "refreshEffects": []
+            },
+            "http_ledger": {
+              "device_code_requests": 0,
+              "device_code_polls": 0,
+              "token_exchanges": 0,
+              "token_refreshes": 0,
+              "model_catalog_requests": 0,
+              "model_requests": 0,
+              "denied_http_requests": 0,
+              "blocked_socket_events": 0
+            },
+            "network_audit": "socket-audit-hook-installed"
+          },
+          "credentialCountExpected": 2,
+          "wholeATComplete": false
+        },
+        {
+          "order": "refresh-first",
+          "actor": "auth-add",
+          "actualChildPid": 98558,
+          "realLockContentionObserved": false,
+          "lockDescriptorBoundToProfile": false,
+          "addAcquiredBeforeRelease": false,
+          "addCompletedBeforeRelease": false,
+          "responseHeldAtContention": true,
+          "nativeLockSerializedAdd": false,
+          "lockBehaviorChanged": false,
+          "staleSuccessfulResponseRejected": false,
+          "wholeATComplete": false
+        }
+      ]
+    }
+  ],
+  "wholeAcceptanceComplete": false,
+  "liveProviderSends": 0,
+  "upExit": 0,
+  "stackId": "490081ee-e126-45fb-b611-42eb1aa3c569",
+  "failure": "ASSIGNED_DIAGNOSTIC_FAILED_held-response",
+  "downExit": 0,
+  "teardown": {
+    "stackId": "490081ee-e126-45fb-b611-42eb1aa3c569",
+    "checkpointRefs": [],
+    "fenceRefs": [],
+    "stoppedResourceRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "490081ee-e126-45fb-b611-42eb1aa3c569"
+      }
+    ],
+    "retainedArtifactRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "490081ee-e126-45fb-b611-42eb1aa3c569"
+      }
+    ],
+    "unresolvedResourceRefs": [],
+    "complete": true
+  }
+}
