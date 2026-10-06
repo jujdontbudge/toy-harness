@@ -142,7 +142,6 @@ const modelFor = (schema, hint, forceName = null) => {
     model.fields = Object.entries(schema.properties).map(([field, child]) => {
       if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(field)) throw new Error("Unsupported DTO property identifier at " + hint);
       const type = modelFor(child, (name ?? hint) + field[0].toUpperCase() + field.slice(1));
-      if (!required.has(field) && type.kind === "nullable") throw new Error("Optional nullable fields require presence-preserving projection");
       return { field, type, required: required.has(field) };
     });
   } else if (kind === "record") model.item = modelFor(schema.additionalProperties, hint + "Value");

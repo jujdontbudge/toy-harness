@@ -3633,6 +3633,57 @@
       "atIds": [
         "AT-authority-35"
       ]
+    },
+    {
+      "id": "ops.siwc-control-stage",
+      "description": "Frozen pinned SIWC control runtime is prepared locally and staged/read back by the exact root-request script; no pointer, service, credential or inference activation.",
+      "requirementIds": [
+        "spec:ops",
+        "spec:hermes-config"
+      ],
+      "firstRelease": "R0",
+      "implementation": "built",
+      "entry": "scripts/stage-siwc-control-runtime.mts",
+      "owner": "ops",
+      "publicInterface": "SiwcControlStage.run",
+      "paths": [
+        "scripts/stage-siwc-control-runtime.mts",
+        "packages/contracts/src/siwc-control-stage.ts",
+        "docs/adr/0031-siwc-control-runtime-staging.md"
+      ],
+      "commands": [
+        "doctor",
+        "bootstrap.identities"
+      ],
+      "atIds": [
+        "AT-authority-34",
+        "AT-ops-30"
+      ]
+    },
+    {
+      "id": "contracts.obligation-tool-schemas",
+      "description": "Five normative Obligations parameter schemas and generated Draft2020-12/TypeScript/Python artifacts; transactional queue and whole AT76 validation remain pending.",
+      "requirementIds": [
+        "spec:obligations"
+      ],
+      "firstRelease": "R0",
+      "implementation": "built",
+      "entry": "packages/contracts/src/public.ts",
+      "owner": "contracts",
+      "publicInterface": "obligationToolParameters",
+      "paths": [
+        "packages/contracts/src/obligations/v1/tool-schemas.mts",
+        "packages/contracts/src/public.ts",
+        "docs/adr/0032-r0-obligation-tool-schemas.md",
+        "scripts/generate-contracts.mjs"
+      ],
+      "commands": [
+        "probe.run",
+        "probe.show"
+      ],
+      "atIds": [
+        "AT-obligations-76"
+      ]
     }
   ],
   "requirements": [
@@ -4115,6 +4166,16 @@
       "id": "BackupCapacity.inspect/evaluate; BackupCapacityProbe.run",
       "owner": "ops",
       "path": "docs/adr/0029-backup-capacity-admission.md"
+    },
+    {
+      "id": "SiwcControlStage.run",
+      "owner": "ops",
+      "path": "docs/adr/0031-siwc-control-runtime-staging.md"
+    },
+    {
+      "id": "obligationToolParameters",
+      "owner": "contracts",
+      "path": "docs/adr/0032-r0-obligation-tool-schemas.md"
     }
   ],
   "commands": [

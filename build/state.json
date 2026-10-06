@@ -2,7 +2,7 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-06T15:42:32.306621+00:00",
+  "updatedAt": "2026-10-06T15:56:56.470725+00:00",
   "phase": "R0.01 critical;8actual identities observed;3macOS bootstrap fixes and12CLI regression invocations verified, source checkpoint commit pending",
   "activeCard": "R0.01",
   "cardCount": 87,
@@ -593,7 +593,8 @@
         "build/evidence/R0.04/identity-bootstrap-preparation.json",
         "build/evidence/R0.04-post-bootstrap-doctor.json",
         "build/evidence/R0.04/macos-bootstrap-verification.json",
-        "build/evidence/R0.04/existing-installation-verification.json"
+        "build/evidence/R0.04/existing-installation-verification.json",
+        "build/evidence/R0.04/siwc-control-stage-preparation.json"
       ],
       "requiredATs": [
         "AT-authority-34",
@@ -609,7 +610,7 @@
         "AT-ops-70"
       ],
       "preparation": {
-        "status": "ACTUAL_ROLE_IDENTITIES_OBSERVED_MACOS_REGRESSION_AND_FULL_ENFORCEMENT_PENDING",
+        "status": "ACTUAL_IDENTITIES_VERIFIED_IMMUTABLE_CONTROL_ARTIFACT_PREPARED_ROOT_STAGE_PENDING",
         "interface": "docs/adr/0025-role-identity-inventory.md",
         "evidence": "build/evidence/R0.04/role-inventory-preparation.json",
         "acceptanceComplete": false,
@@ -641,13 +642,26 @@
           "verificationEvidence": "build/evidence/R0.04/existing-installation-verification.json",
           "readbackState": "verified",
           "readbackMode": "verify"
+        },
+        "siwcRuntimeStage": {
+          "rootRequest": "ROOT-R004-20261006-01",
+          "artifactDigest": "927562c37b764041c752a6a8d71168aedef088599d1a077ecac0b2228d7e2f71",
+          "files": 2613,
+          "bytes": "201748037",
+          "localRelocationVerified": true,
+          "rootStageVerified": false,
+          "traversalInstalled": false,
+          "keychainVerified": false,
+          "serviceActivated": false,
+          "acceptanceComplete": false
         }
       },
       "actualRuntimeUnit": {
         "startedAt": "2026-10-06T15:02:44.142623+00:00",
         "targetStopAt": "2026-10-06T17:02:44.142623+00:00",
         "scope": "Review externally supplied3macOS bootstrap fixes; CLI-only externalOS regressions, actual identity readbacks, commit and minimum required runtime protection.",
-        "bootstrapFixesVerifiedAt": "2026-10-06T15:06:33.297547+00:00"
+        "bootstrapFixesVerifiedAt": "2026-10-06T15:06:33.297547+00:00",
+        "nextRootRequest": "ROOT-R004-20261006-01"
       },
       "lastVerification": {
         "evidence": "build/evidence/R0.04/existing-installation-verification.json",
@@ -985,7 +999,9 @@
         "build/evidence/R0.10/local-gate-audit.json",
         "build/evidence/R0.10/local-audit-admission.json",
         "build/evidence/R0.10/package-access-restored.json",
-        "build/evidence/R0.10/exact-pin-alignment.json"
+        "build/evidence/R0.10/exact-pin-alignment.json",
+        "build/evidence/R0.10/pg-boss-fault-spike-plan.json",
+        "build/evidence/R0.10/tool-schema-preparation.json"
       ],
       "requiredATs": [
         "AT-activity-focus-86",
@@ -1019,7 +1035,10 @@
           "dependencyPinsChanged": false
         },
         "pinAlignmentEvidence": "build/evidence/R0.10/exact-pin-alignment.json",
-        "jointCheck": "build/evidence/R0.04-verify-joint-check.txt"
+        "jointCheck": "build/evidence/R0.04-verify-joint-check.txt",
+        "toolSchemasGenerated": true,
+        "toolSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
+        "nativeQueueFaultSpikeVerified": false
       }
     },
     "R0.11": {
@@ -9798,13 +9817,13 @@
     "maximumChildren": 1,
     "semanticStackAdmitted": false,
     "testStackMemoryAdmitted": true,
-    "observedAt": "2026-10-06T15:41:39.504Z",
+    "observedAt": "2026-10-06T15:50:55.672Z",
     "availableBytesVerified": true,
-    "measurementEvidence": "build/evidence/R0.05-control-denial-doctor-after.json",
-    "measurementMeaning": "Normal pressure and available four-category memory admit bounded read-only helper; actual root fake world is down.",
-    "availableBytes": 2213937152,
+    "measurementEvidence": "build/evidence/R0.04-siwc-stage-admission.json",
+    "measurementMeaning": "Normal observed pressure admits helper512MiB and parent bounded source/read512MiB plus512MiB margin. No live test stack.",
+    "availableBytes": 2620866560,
     "testStackNeedBytes": "1073741824",
-    "helperNeedBytes": "268435456",
+    "helperNeedBytes": "536870912",
     "marginBytes": "536870912",
     "pressure": "normal",
     "headroomSatisfied": true,
@@ -9821,7 +9840,7 @@
     },
     "admissionScope": "Confined R0 fake stack and current helper; fresh headroom measurement per new physical work",
     "userReportedPressure": "normal",
-    "currentEvidence": "build/evidence/R0.05-control-denial-doctor-after.json",
+    "currentEvidence": "build/evidence/R0.04-siwc-stage-admission.json",
     "pressureSource": "os",
     "testStackRuntimeWasAdmitted": true,
     "testStackCurrentlyRunning": false,
@@ -20167,19 +20186,20 @@
     "model": "gpt-6-luna",
     "reasoning": "max",
     "state": "running",
-    "ownedScope": "Read-only next canonical pg-boss fault-spike plan"
+    "ownedScope": "Ops fixed native queue faults and generated-schema CLI preparation; parent owns integration"
   },
   "continuationAssessment": {
-    "generatedAt": "2026-10-06T15:42:32.306621+00:00",
+    "generatedAt": "2026-10-06T15:56:56.470725+00:00",
     "classification": "progress",
-    "reason": "Actual UID309 six OS denials and positive scratch/readbacks pass with root-world exact retries and complete teardown.",
+    "reason": "Frozen202MB SIWC runtime relocated locally and rootrequest prepared; independent native queue/schema work continues whileClaude executes pending root step.",
     "consecutiveGoalTurnsAtSameImpasse": 0,
     "goalStatus": "active",
     "evidence": [
       "build/evidence/R0.04/existing-installation-verification.json",
       "build/evidence/R0.06/accounting-runtime-verification.json",
       "build/evidence/R0.10/exact-pin-alignment.json",
-      "build/evidence/R0.05/actual-control-denial-verification.json"
+      "build/evidence/R0.05/actual-control-denial-verification.json",
+      "build/evidence/R0.04/siwc-control-stage-preparation.json"
     ],
     "blockedStatusThresholdReached": false
   },
@@ -20203,22 +20223,42 @@
     "pressureRequired": "normal",
     "strictlyFreeAdmission": false,
     "repairWorkerFloorScope": "R5 repair worker only",
-    "updatedAt": "2026-10-06T10:38:55.221804+00:00"
+    "updatedAt": "2026-10-06T10:38:55.221804+00:00",
+    "rootWorkflow": {
+      "authority": "Johan direct 2026-10-06 instruction",
+      "file": "build/ROOT-REQUESTS.md",
+      "executor": "Claude already-root caller",
+      "builderRootExecution": false,
+      "pendingRootDoesNotBlockGoal": true,
+      "pollWhileIndependentWork": true,
+      "exactRegisteredCommandOrRepoScriptRequired": true
+    }
   },
   "latestStaticVerification": {
     "command": "npm run check",
     "exitCode": 0,
-    "log": "build/evidence/R0.05-control-denial-check-current.txt",
-    "artifacts": 329,
-    "contracts": 261,
-    "features": 91,
+    "log": "build/evidence/R0.04-siwc-stage-check.txt",
+    "artifacts": 337,
+    "contracts": 269,
+    "features": 93,
     "commands": 55,
     "indexedATs": 1447,
     "swiftInvoked": false,
-    "schemaDigest": "aafcebda73cb1618d171d7102d32be8af64ae9cebab40f527db5814b0c27575b",
-    "generatedAt": "2026-10-06T15:42:32.306621+00:00",
+    "schemaDigest": "da77276c105bb5adde726bf442d63262e221745e71fd9ec887b2bd2cd2d75ce9",
+    "generatedAt": "2026-10-06T15:56:56.470725+00:00",
     "wholeATComplete": false
   },
-  "sourceCheckpointCommit": "c239a39",
-  "sourceCheckpointPushed": true
+  "sourceCheckpointCommit": "d469066",
+  "sourceCheckpointPushed": true,
+  "rootRequests": {
+    "ROOT-R004-20261006-01": {
+      "requestId": "ae742735-1693-4322-81f9-8767c0074179",
+      "card": "R0.04",
+      "state": "PENDING",
+      "artifactDigest": "927562c37b764041c752a6a8d71168aedef088599d1a077ecac0b2228d7e2f71",
+      "file": "build/ROOT-REQUESTS.md",
+      "preparedEvidence": "build/evidence/R0.04/siwc-control-stage-preparation.json",
+      "rootExecuted": false
+    }
+  }
 }

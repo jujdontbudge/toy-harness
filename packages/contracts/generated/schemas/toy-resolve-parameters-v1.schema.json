@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "toy.obligations.v1"
+    },
+    "request_key": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "commitment_id": {
+      "type": "string",
+      "minLength": 36,
+      "maxLength": 36,
+      "format": "uuid",
+      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    },
+    "expected_revision": {
+      "type": "string",
+      "maxLength": 19,
+      "pattern": "^(0|[1-9][0-9]*)(?![\\s\\S])"
+    },
+    "outcome": {
+      "type": "string",
+      "enum": [
+        "done",
+        "dropped"
+      ]
+    },
+    "scope": {
+      "type": "string",
+      "enum": [
+        "item",
+        "series"
+      ]
+    },
+    "evidence": {
+      "minItems": 1,
+      "maxItems": 20,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "observationRef": {
+            "type": "string",
+            "minLength": 55,
+            "maxLength": 55,
+            "pattern": "^life:\\/\\/observation\\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "documentId": {
+            "type": "string",
+            "minLength": 36,
+            "maxLength": 36,
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "byteFrom": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)(?![\\s\\S])"
+          },
+          "byteTo": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]*)(?![\\s\\S])"
+          },
+          "quote": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "observationRef"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "completion_receipt_refs": {
+      "maxItems": 20,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "module": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "kind": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "id": {
+            "type": "string",
+            "minLength": 36,
+            "maxLength": 36,
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          }
+        },
+        "required": [
+          "module",
+          "kind",
+          "id"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000
+    }
+  },
+  "required": [
+    "schema_version",
+    "request_key",
+    "commitment_id",
+    "expected_revision",
+    "outcome",
+    "scope",
+    "evidence",
+    "completion_receipt_refs",
+    "reason"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:ToyResolveParametersV1"
+}

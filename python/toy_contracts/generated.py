@@ -5174,3 +5174,378 @@ BackupCapacityDecisionV1GapsItem = Literal[
 BackupCapacityDecisionV1SealedPartialSets = Literal[
     "reuse-before-new-staging",
 ]
+
+class SiwcControlStageEntryV1(TypedDict):
+    path: str
+    kind: "SiwcControlStageEntryV1Kind"
+    mode: "SiwcControlStageEntryV1Mode"
+    bytes: "UInt64String"
+    digest: Optional["Digest"]
+    target: Optional[str]
+
+SiwcControlStageEntryV1Kind = Literal[
+    "directory",
+    "file",
+    "link",
+]
+
+SiwcControlStageEntryV1Mode = Literal[
+    "0440",
+    "0550",
+]
+
+class SiwcControlStageManifestV1(TypedDict):
+    schemaVersion: "SiwcControlStageManifestV1SchemaVersion"
+    schemaDigest: "Digest"
+    nodeVersion: "CliHelpV1CompatibilityNodeVersion"
+    pythonVersion: "SiwcControlStageManifestV1PythonVersion"
+    zodVersion: "SiwcControlStageManifestV1ZodVersion"
+    sourceLockDigest: "Digest"
+    entries: list["SiwcControlStageEntryV1"]
+
+SiwcControlStageManifestV1SchemaVersion = Literal[
+    "toy.siwc-control-stage-manifest.v1",
+]
+
+SiwcControlStageManifestV1PythonVersion = Literal[
+    "3.14.7",
+]
+
+SiwcControlStageManifestV1ZodVersion = Literal[
+    "4.6.5",
+]
+
+class SiwcControlStageReportV1(TypedDict):
+    schemaVersion: "SiwcControlStageReportV1SchemaVersion"
+    requestId: "UUID"
+    observedAt: "Instant"
+    operation: "SiwcControlStageReportV1Operation"
+    state: "SiwcControlStageReportV1State"
+    reason: "SiwcControlStageReportV1Reason"
+    artifactDigest: Optional["Digest"]
+    fileCount: int
+    bytes: "UInt64String"
+    callerUid: int
+    controlUid: Optional[int]
+    controlGid: Optional[int]
+    finalPath: Optional[str]
+    bootstrapReceiptDigest: Optional["Digest"]
+    relocationVerified: bool
+    ownershipVerified: bool
+    preservedPartialStage: bool
+    currentPointerChanged: "RoleBootstrapReportV1IdentityGateVerified"
+    servicesActivated: "RoleBootstrapReportV1IdentityGateVerified"
+    keychainCalled: "RoleBootstrapReportV1IdentityGateVerified"
+    liveProviderSends: "ModelRouteReceiptV1ReservationTokensVariant0"
+    acceptanceComplete: "RoleBootstrapReportV1IdentityGateVerified"
+
+SiwcControlStageReportV1SchemaVersion = Literal[
+    "toy.siwc-control-stage-report.v1",
+]
+
+SiwcControlStageReportV1Operation = Literal[
+    "prepare",
+    "stage",
+    "verify",
+]
+
+SiwcControlStageReportV1State = Literal[
+    "prepared",
+    "staged",
+    "verified",
+    "blocked",
+]
+
+SiwcControlStageReportV1Reason = Literal[
+    "ARTIFACT_PREPARED",
+    "ROOT_ARTIFACT_STAGED",
+    "ROOT_ARTIFACT_VERIFIED",
+    "ROOT_CALLER_REQUIRED",
+    "ARTIFACT_UNAVAILABLE",
+]
+
+ToyCaptureParametersV1 = Union[
+    "ToyCaptureParametersV1Variant0",
+    "ToyCaptureParametersV1Variant1",
+    "ToyCaptureParametersV1Variant2",
+]
+
+class ToyCaptureParametersV1Variant0(TypedDict):
+    schema_version: "ToyCaptureParametersV1Variant0Schemaversion"
+    request_key: str
+    mode: "ToyCaptureParametersV1Variant0Mode"
+    claim_key: str
+    evidence: list["ObservationEvidenceRef"]
+    intent: "ToyCaptureParametersV1Variant0Intent"
+
+ToyCaptureParametersV1Variant0Schemaversion = Literal[
+    "toy.obligations.v1",
+]
+
+ToyCaptureParametersV1Variant0Mode = Literal[
+    "create",
+]
+
+class ToyCaptureParametersV1Variant0Intent(TypedDict):
+    title: str
+    kind: "ToyCaptureParametersV1Variant0IntentKind"
+    owner: "ToyCaptureParametersV1Variant0IntentOwner"
+    next_action: Optional[str]
+    priority: int
+    phase: "ToyCaptureParametersV1Variant0IntentPhase"
+    next_action_at: Optional["ToyCaptureParametersV1Variant0IntentNextactionatValue"]
+    deadline: Optional["ToyCaptureParametersV1Variant0IntentDeadlineValue"]
+    dependencies: Optional["ToyCaptureParametersV1Variant0IntentDependenciesValue"]
+    recurrence: Optional["ToyCaptureParametersV1Variant0IntentRecurrenceValue"]
+    calendar: "ToyCaptureParametersV1Variant0IntentCalendar"
+    interpretation_note: Optional[str]
+
+ToyCaptureParametersV1Variant0IntentKind = Literal[
+    "task",
+    "wait",
+    "deadline",
+    "event_prompt",
+    "routine",
+]
+
+ToyCaptureParametersV1Variant0IntentOwner = Literal[
+    "johan",
+    "toy",
+]
+
+ToyCaptureParametersV1Variant0IntentPhase = Literal[
+    "actionable",
+    "waiting",
+    "deferred",
+    "paused",
+    "needs_clarification",
+]
+
+ToyCaptureParametersV1Variant0IntentNextactionatValue = Union[
+    "ToyCaptureParametersV1Variant0IntentNextactionatValueVariant0",
+    "ToyCaptureParametersV1Variant0IntentNextactionatValueVariant1",
+    "ToyCaptureParametersV1Variant0IntentNextactionatValueVariant2",
+]
+
+class ToyCaptureParametersV1Variant0IntentNextactionatValueVariant0(TypedDict):
+    kind: "ToyCaptureParametersV1Variant0IntentNextactionatValueVariant0Kind"
+    at: "Instant"
+
+ToyCaptureParametersV1Variant0IntentNextactionatValueVariant0Kind = Literal[
+    "instant",
+]
+
+class ToyCaptureParametersV1Variant0IntentNextactionatValueVariant1(TypedDict):
+    kind: "ToyCaptureParametersV1Variant0IntentNextactionatValueVariant1Kind"
+    date: str
+    time: str
+    timezone: str
+    disambiguation: "ToyCaptureParametersV1Variant0IntentNextactionatValueVariant1Disambiguation"
+
+ToyCaptureParametersV1Variant0IntentNextactionatValueVariant1Kind = Literal[
+    "local",
+]
+
+ToyCaptureParametersV1Variant0IntentNextactionatValueVariant1Disambiguation = Literal[
+    "earlier",
+    "later",
+    "reject",
+]
+
+class ToyCaptureParametersV1Variant0IntentNextactionatValueVariant2(TypedDict):
+    kind: "ToyCaptureParametersV1Variant0IntentNextactionatValueVariant2Kind"
+    anchor_observation_id: "UUID"
+    amount: int
+    unit: "ToyCaptureParametersV1Variant0IntentNextactionatValueVariant2Unit"
+    timezone: str
+    business_calendar: Optional[str]
+
+ToyCaptureParametersV1Variant0IntentNextactionatValueVariant2Kind = Literal[
+    "relative",
+]
+
+ToyCaptureParametersV1Variant0IntentNextactionatValueVariant2Unit = Literal[
+    "seconds",
+    "minutes",
+    "hours",
+    "calendar_days",
+    "business_days",
+]
+
+ToyCaptureParametersV1Variant0IntentDeadlineValue = Union[
+    "ToyCaptureParametersV1Variant0IntentDeadlineValueVariant0",
+    "ToyCaptureParametersV1Variant0IntentDeadlineValueVariant1",
+]
+
+class ToyCaptureParametersV1Variant0IntentDeadlineValueVariant0(TypedDict):
+    kind: "ToyCaptureParametersV1Variant0IntentNextactionatValueVariant0Kind"
+    at: "Instant"
+    hardness: "ToyCaptureParametersV1Variant0IntentDeadlineValueVariant0Hardness"
+
+ToyCaptureParametersV1Variant0IntentDeadlineValueVariant0Hardness = Literal[
+    "hard",
+    "soft",
+]
+
+class ToyCaptureParametersV1Variant0IntentDeadlineValueVariant1(TypedDict):
+    kind: "ToyCaptureParametersV1Variant0IntentDeadlineValueVariant1Kind"
+    date: str
+    timezone: str
+    hardness: "ToyCaptureParametersV1Variant0IntentDeadlineValueVariant0Hardness"
+
+ToyCaptureParametersV1Variant0IntentDeadlineValueVariant1Kind = Literal[
+    "date",
+]
+
+class ToyCaptureParametersV1Variant0IntentDependenciesValue(TypedDict):
+    mode: "ToyCaptureParametersV1Variant0IntentDependenciesValueMode"
+    ids: list["UUID"]
+
+ToyCaptureParametersV1Variant0IntentDependenciesValueMode = Literal[
+    "all",
+    "any",
+]
+
+class ToyCaptureParametersV1Variant0IntentRecurrenceValue(TypedDict):
+    dtstart_local: str
+    timezone: str
+    rrule: str
+    rdates_local: list[str]
+    exdates_local: list[str]
+    deadline_offset_seconds: Optional[int]
+
+ToyCaptureParametersV1Variant0IntentCalendar = Literal[
+    "default",
+    "off",
+]
+
+class ToyCaptureParametersV1Variant1(TypedDict):
+    schema_version: "ToyCaptureParametersV1Variant0Schemaversion"
+    request_key: str
+    commitment_id: "UUID"
+    expected_revision: str
+    mode: "ToyCaptureParametersV1Variant1Mode"
+    evidence: list["ObservationEvidenceRef"]
+    patch: "ToyCaptureParametersV1Variant1Patch"
+
+ToyCaptureParametersV1Variant1Mode = Literal[
+    "amend",
+]
+
+class ToyCaptureParametersV1Variant1Patch(TypedDict):
+    title: NotRequired[str]
+    kind: NotRequired["ToyCaptureParametersV1Variant0IntentKind"]
+    owner: NotRequired["ToyCaptureParametersV1Variant0IntentOwner"]
+    next_action: NotRequired[Optional[str]]
+    priority: NotRequired[int]
+    phase: NotRequired["ToyCaptureParametersV1Variant0IntentPhase"]
+    next_action_at: NotRequired[Optional["ToyCaptureParametersV1Variant0IntentNextactionatValue"]]
+    deadline: NotRequired[Optional["ToyCaptureParametersV1Variant0IntentDeadlineValue"]]
+    dependencies: NotRequired[Optional["ToyCaptureParametersV1Variant0IntentDependenciesValue"]]
+    recurrence: NotRequired[Optional["ToyCaptureParametersV1Variant0IntentRecurrenceValue"]]
+    calendar: NotRequired["ToyCaptureParametersV1Variant0IntentCalendar"]
+    interpretation_note: NotRequired[Optional[str]]
+
+class ToyCaptureParametersV1Variant2(TypedDict):
+    schema_version: "ToyCaptureParametersV1Variant0Schemaversion"
+    request_key: str
+    commitment_id: "UUID"
+    expected_revision: str
+    mode: "ToyCaptureParametersV1Variant2Mode"
+    claim_key: str
+    evidence: list["ObservationEvidenceRef"]
+
+ToyCaptureParametersV1Variant2Mode = Literal[
+    "attach",
+]
+
+class ToyDueParametersV1(TypedDict):
+    schema_version: "ToyCaptureParametersV1Variant0Schemaversion"
+    now: NotRequired[Optional["Instant"]]
+    view: "ToyDueParametersV1View"
+    ids: NotRequired[list["UUID"]]
+    owner: NotRequired["ToyDueParametersV1Owner"]
+    through: NotRequired[Optional["Instant"]]
+    limit: NotRequired[int]
+    cursor: NotRequired[Optional[str]]
+
+ToyDueParametersV1View = Literal[
+    "due",
+    "open",
+    "waiting",
+    "upcoming",
+    "by_id",
+    "resolved",
+]
+
+ToyDueParametersV1Owner = Literal[
+    "johan",
+    "toy",
+    "all",
+]
+
+class ToyResolveParametersV1(TypedDict):
+    schema_version: "ToyCaptureParametersV1Variant0Schemaversion"
+    request_key: str
+    commitment_id: "UUID"
+    expected_revision: str
+    outcome: "ToyResolveParametersV1Outcome"
+    scope: "ToyResolveParametersV1Scope"
+    evidence: list["ObservationEvidenceRef"]
+    completion_receipt_refs: list["RecordRef"]
+    reason: str
+
+ToyResolveParametersV1Outcome = Literal[
+    "done",
+    "dropped",
+]
+
+ToyResolveParametersV1Scope = Literal[
+    "item",
+    "series",
+]
+
+ToyDeferParametersV1 = Union[
+    "ToyDeferParametersV1Variant0",
+    "ToyDeferParametersV1Variant1",
+]
+
+class ToyDeferParametersV1Variant0(TypedDict):
+    schema_version: "ToyCaptureParametersV1Variant0Schemaversion"
+    request_key: str
+    commitment_id: "UUID"
+    expected_revision: str
+    scope: "ToyResolveParametersV1Scope"
+    reason: str
+    evidence: list["ObservationEvidenceRef"]
+    restart_action: Optional[str]
+    mode: "ToyDeferParametersV1Variant0Mode"
+    until: "ToyCaptureParametersV1Variant0IntentNextactionatValue"
+
+ToyDeferParametersV1Variant0Mode = Literal[
+    "until",
+]
+
+class ToyDeferParametersV1Variant1(TypedDict):
+    schema_version: "ToyCaptureParametersV1Variant0Schemaversion"
+    request_key: str
+    commitment_id: "UUID"
+    expected_revision: str
+    scope: "ToyResolveParametersV1Scope"
+    reason: str
+    evidence: list["ObservationEvidenceRef"]
+    restart_action: Optional[str]
+    mode: "ToyDeferParametersV1Variant1Mode"
+    dependencies: "ToyCaptureParametersV1Variant0IntentDependenciesValue"
+    fallback_at: "ToyCaptureParametersV1Variant0IntentNextactionatValue"
+
+ToyDeferParametersV1Variant1Mode = Literal[
+    "dependency",
+]
+
+class ToySatisfyParametersV1(TypedDict):
+    schema_version: "ToyCaptureParametersV1Variant0Schemaversion"
+    request_key: str
+    dependency_id: "UUID"
+    expected_dependency_revision: str
+    evidence: list["ObservationEvidenceRef"]

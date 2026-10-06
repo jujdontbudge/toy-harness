@@ -1,0 +1,86 @@
+{
+  "schemaVersion": "toy.r0.10-pg-boss-fault-spike-plan.v1",
+  "gate": "R0.10",
+  "status": "READ_ONLY_PLAN_ONLY",
+  "acceptance": {
+    "id": "AT-obligations-76",
+    "rung": "CLI; static, stack, probe",
+    "source": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/obligations.md:2677",
+    "assertion": "Given the pinned shared queue and generated @toy/contracts artifacts, when both checked-out application transactions and native pg-boss worker transactions run the fault spike, job/domain rollback and lost-claim fencing pass through executeSql, the five schemas validate with their declared dialect, and no homemade polling queue or second schema owner is needed.",
+    "completionState": "PENDING; this artifact is not AT evidence"
+  },
+  "localEvidence": {
+    "pins": "build/evidence/R0.10/exact-pin-alignment.json records installed pg 8.23.1, pg-boss 12.36.0/schema 44, Ajv 8.17.1, Zod 4.6.5, and whole R0.10 acceptance pending.",
+    "postgresFixture": "packages/self-improvement/src/accounting-postgres.ts:49-100 is the existing disposable PostgreSQL 17 lifecycle used by accounting-probe.ts through ModelAdmission.withTest; it checks PG_VERSION=17 and tears the child server down in finally.",
+    "probeRoute": "toy probe run already dispatches registered probe IDs through ReplayEnvironment; packages/ops/src/public.ts exports TestProbeControl, backed by FixtureProbe in packages/ops/src/fixture-stack.ts. Existing real-PG accounting probe is packages/self-improvement/src/accounting-probe.ts and currently handles AT-ops-49/51/52 only.",
+    "runtimeExecution": "No stack, database, service, CLI probe, or acceptance case was run for this plan."
+  },
+  "installedPgBossPublicApi": {
+    "package": "node_modules/pg-boss/dist/index.d.ts",
+    "applicationTransaction": "PgBoss.send(name, data, options) accepts SendOptions; SendOptions extends ConnectionOptions and ConnectionOptions.db is IDatabase. node_modules/pg-boss/dist/types.d.ts defines IDatabase.executeSql(text: string, values?: unknown[]): Promise<{ rows: any[] }>. A checked-out pg PoolClient adapter can forward executeSql to that same client after BEGIN; call boss.send(queue, data, { db: adapter }), then COMMIT or ROLLBACK on the application connection.",
+    "nativeWorkerTransaction": "PgBoss.work(name, { transactional: true, batchSize: 1 }, async (jobs, tx) => ...) is the public overload. TransactionalWorkHandler receives Job[] and tx: IDatabase; tx.executeSql writes share the pg-boss worker transaction and its completion. The built-in pooled Db supplies beginTransaction(), as documented by IDatabase in node_modules/pg-boss/dist/types.d.ts:31-36.",
+    "nativeLostClaimFence": "node_modules/pg-boss/dist/manager.js:786-808 checks that completion still affected the claimed jobs; if an operator cancelled or failed a claim during handler work, pg-boss throws and rolls back the handler transaction before its ordinary failure path. Public cancel(name, id) is declared in dist/index.d.ts and its installed plan updates any job state before completed, including active.",
+    "ownership": "Construct/start one PgBoss instance and let its native migration own schema pgboss (schema 44). Do not issue SQL against pg-boss tables, duplicate its migration, add a worker loop, or add a queue service. Use pg-boss public send/work/cancel/readback APIs and stop it in finally."
+  },
+  "schemas": {
+    "normativeSource": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/obligations.md:678-934",
+    "toolNames": ["toy_capture", "toy_due", "toy_resolve", "toy_defer", "toy_satisfy"],
+    "expectedContractsSource": "packages/contracts/src/obligations/v1/tool-schemas.mts",
+    "currentGeneratedLocation": "packages/contracts/generated/schemas/",
+    "currentFinding": "No generated obligation schema files for these five tool names exist in the current checkout; packages/obligations/src/public.ts only reexports ModuleId. The current generated directory contains 173 schema files, but they do not discharge this five-schema clause.",
+    "declaredDialect": "https://json-schema.org/draft/2020-12/schema",
+    "validator": "Ajv 8.17.1 Ajv2020; set coerceTypes=false, removeAdditional=false, useDefaults=false; resolve shared $defs references. Python validation must support the same declared dialect.",
+    "fixedSchemaFalsifiers": [
+      "Compile each generated tool schema using its own $schema dialect and validate one fixed valid fixture for that tool.",
+      "For each schema, add one undeclared property and require rejection; the normative object builder sets additionalProperties=false.",
+      "Reject a Draft-07-only validator path or an artifact whose declared $schema is missing or differs from Draft 2020-12."
+    ],
+    "dependency": "The schema clause remains blocked until the parent-owned contracts source/generation produces these five artifacts; do not substitute the existing CLI probe schemas or hand-maintained DTOs."
+  },
+  "smallestFaultCases": [
+    {
+      "id": "application-transaction-rollback",
+      "setup": "In the isolated PostgreSQL fixture, create one disposable domain marker table. Check out one pg connection, BEGIN, write a domain marker, then call native boss.send with an IDatabase adapter whose executeSql forwards to that same checked-out connection.",
+      "fault": "Throw after send returns and ROLLBACK the checked-out application transaction.",
+      "falsifier": "Fail if either the marker or job is visible through readback after rollback; also keep one commit control proving the adapter can commit both together."
+    },
+    {
+      "id": "native-worker-transaction-rollback",
+      "setup": "Send a job, register native work(..., { transactional: true }, handler), and write the domain marker only through the handler's tx.executeSql.",
+      "fault": "Throw a fixed handler error after the marker write; configure zero retries for this probe queue so settlement is terminal and deterministic.",
+      "falsifier": "Fail if the domain marker commits or the job is reported completed."
+    },
+    {
+      "id": "native-worker-lost-claim-fence",
+      "setup": "Hold a transactional worker handler at a promise barrier after tx.executeSql writes a marker. From a separate pg-boss pooled connection, call public cancel(queue, jobId) while the job is active, then release the handler.",
+      "fault": "The native completion sees that the active claim was lost.",
+      "falsifier": "Fail if the handler's domain marker survives; read back the cancelled job and absent marker after the worker transaction settles. Use barriers and bounded readback only; pg-boss remains the sole queue/worker implementation."
+    }
+  ],
+  "minimalImplementationScope": {
+    "opsOwner": [
+      "packages/ops/src/pg-boss-fault-probe.ts: own the actual PgBoss/pg adapter exercise because Ops owns pg-boss; expose the narrow operation through packages/ops/src/public.ts.",
+      "packages/ops/src/fixture-stack.ts: allow the new registered case/check through TestProbeControl and persist the report."
+    ],
+    "cliProbeOrchestration": [
+      "Add a small R0.10 probe adapter under packages/self-improvement that reuses accounting-postgres.ts withAccountingFixture/accountingTestConnection, calls the Ops public probe, and supplies CheckViews to TestProbeControl; route its case from packages/self-improvement/src/public.ts.",
+      "No new CLI command or standalone script: use existing toy probe run/show. Parent owns the case/schema/registry/generated/CLI/feature-map surfaces."
+    ],
+    "stopRule": "Keep the actual queue behavior in Ops, reuse the existing isolated PostgreSQL lifecycle, and stop after this AT's whole static/stack/probe evidence; sibling R0.10 ATs remain separate obligations."
+  },
+  "relatedR010Acceptance": [
+    {"id": "AT-hermes-config-50", "rung": "CLI static/stack", "scope": "Exact large-bigint, principal UUID, UTF-8 evidence quote and TypeScript/Python/Swift DTO round trips."},
+    {"id": "AT-hermes-config-69", "rung": "CLI static/stack", "scope": "Single Durable admission/Turn Review owner for cadence_slot/run/review; canonical states including swept; duplicate owners fail."},
+    {"id": "AT-hermes-config-75", "rung": "CLI static", "scope": "Native profile keys are consumed by their intended subsystem; ignored/unsupported keys fail."},
+    {"id": "AT-hermes-config-81", "rung": "CLI stack", "scope": "Life Store HTTP and pinned MCP loader connect with normal HTTP transport."},
+    {"id": "AT-authority-60", "rung": "CLI static", "scope": "Compared proven options, primary evidence, reliability decision, validation IDs, and Sol/medium/Fast research receipt with skill hash."},
+    {"id": "AT-authority-61", "rung": "CLI static", "scope": "Shared pins/schema 44, one plugin/toolset, typed adapters, maintained crypto/auth and canonicalization vectors."},
+    {"id": "AT-activity-focus-86", "rung": "CLI static", "scope": "Only Durable admission/Turn Review writes cadence rows; Obligations projections are read-only and swept differs from accepted AI-reviewed coverage."}
+  ],
+  "references": [
+    "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/BUILD-PLAN.md:58",
+    "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/TEST-PLAN.md:449",
+    "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/obligations.md:135, 147-166, 678-934, 2677, 2729-2741",
+    "build/evidence/R0.10/exact-pin-alignment.json"
+  ]
+}

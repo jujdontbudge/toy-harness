@@ -1,0 +1,76 @@
+{
+  "schemaVersion": "toy.r0.10.tool-schema-preparation.v1",
+  "state": "prepared",
+  "acceptanceTarget": "AT-obligations-76",
+  "acceptanceRung": "CLI",
+  "acceptanceEvidence": ["static", "stack", "probe:AT-obligations-76"],
+  "acceptanceSource": "specs/obligations.md:2677",
+  "acceptanceSourceAssertionHash": "b2af7cd7997b6fb3db4123e05f46ddc89c9e1ca597f98a7b4d5e2073cd8b539e",
+  "acceptanceSourceDigest": "5379f943578b4248dc21379a029acead930047c091316deb796fae0d49f4eb0f",
+  "sourceAssertion": "Given the pinned shared queue and generated @toy/contracts artifacts, when both checked-out application transactions and native pg-boss worker transactions run the fault spike, then job/domain rollback and lost-claim fencing pass through executeSql, the five schemas validate with their declared dialect, and no homemade polling queue or second schema owner is needed.",
+  "preparedClause": "The five normative parameter schemas and their declared Draft 2020-12 dialect only.",
+  "remainingAtRung": "The checked-out and native-worker rollback/fencing probes, whole AT CLI evidence, and confirmation that only one schema owner/generator is used remain parent-owned.",
+  "claim": "R0 schema preparation only; no AT pass is claimed",
+  "source": "packages/contracts/src/obligations/v1/tool-schemas.mts",
+  "interfaceDecision": "docs/adr/0032-r0-obligation-tool-schemas.md",
+  "sourceSha256": {
+    "packages/contracts/src/obligations/v1/tool-schemas.mts": "41d29d0201c668cd4b784c04505a11ef7371d371083e0108d2c1034e8e0b9861",
+    "docs/adr/0032-r0-obligation-tool-schemas.md": "6a77adcb7cd76fb52a41bbf01a9f260ff36d1eaa81d91d55e9914ca8140dc2c5"
+  },
+  "exports": {
+    "mapping": "obligationToolParameters",
+    "inventory": "obligationToolSchemaInventory",
+    "schemas": {
+      "toy_capture": {
+        "export": "toyCaptureParametersSchema",
+        "inventoryName": "ToyCaptureParametersV1",
+        "artifact": "packages/contracts/generated/schemas/toy-capture-parameters-v1.schema.json"
+      },
+      "toy_due": {
+        "export": "toyDueParametersSchema",
+        "inventoryName": "ToyDueParametersV1",
+        "artifact": "packages/contracts/generated/schemas/toy-due-parameters-v1.schema.json"
+      },
+      "toy_resolve": {
+        "export": "toyResolveParametersSchema",
+        "inventoryName": "ToyResolveParametersV1",
+        "artifact": "packages/contracts/generated/schemas/toy-resolve-parameters-v1.schema.json"
+      },
+      "toy_defer": {
+        "export": "toyDeferParametersSchema",
+        "inventoryName": "ToyDeferParametersV1",
+        "artifact": "packages/contracts/generated/schemas/toy-defer-parameters-v1.schema.json"
+      },
+      "toy_satisfy": {
+        "export": "toySatisfyParametersSchema",
+        "inventoryName": "ToySatisfyParametersV1",
+        "artifact": "packages/contracts/generated/schemas/toy-satisfy-parameters-v1.schema.json"
+      }
+    }
+  },
+  "dialect": "https://json-schema.org/draft/2020-12/schema",
+  "projectionDecisions": [
+    "Compose canonical evidence, record reference, UUID, instant, and revision schemas; revision input is narrowed to 19 characters.",
+    "Inline nested schemas and use regular Zod unions, which project to anyOf; capture and defer branches have distinct mode literals.",
+    "Carry uniqueItems and minProperties into JSON Schema metadata while source refinements enforce the same constraints in Zod.",
+    "Keep all toy_due fields except schema_version and view optional; service defaults are applied after validation."
+  ],
+  "falsificationCasesForParentCli": [
+    "For each of the five generated artifacts, accept one normative payload and reject an unknown root property under Ajv2020.",
+    "toy_capture accepts create, amend, and attach with their matching required fields; reject an unknown mode and an amend payload with an empty patch.",
+    "toy_due accepts only schema_version plus view; omitted optional fields remain absent and duplicate ids are rejected.",
+    "toy_defer accepts until and dependency modes; reject dependency mode without fallback_at and reject unknown fields.",
+    "Reject duplicate dependency ids and duplicate recurrence rdates_local or exdates_local; accept boundary sizes allowed by the normative schema.",
+    "Reject missing required resolve/satisfy fields and arrays beyond their declared maxima."
+  ],
+  "parentIntegration": [
+    "Import and export obligationToolParameters and obligationToolSchemaInventory from the central contracts public module.",
+    "Merge all five inventory entries into the existing central schemaInventory and generated artifact manifest through the sole generator.",
+    "Ensure the contracts TypeScript build includes the .mts source and emits tool-schemas.mjs."
+  ],
+  "verification": {
+    "performed": ["Static review against obligations.md section 5 and generator projection limits", "SHA-256 fingerprints recorded"],
+    "notPerformed": ["TypeScript build", "contracts generation", "Ajv fault spike", "AT-obligations-76"],
+    "reason": "Those checks integrate parent-owned public exports, generator, CLI, and generated artifacts."
+  }
+}
