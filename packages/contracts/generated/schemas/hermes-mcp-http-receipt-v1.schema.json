@@ -1,0 +1,174 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "scope": {
+      "type": "string",
+      "const": "disposable-mcp-http"
+    },
+    "sourceCommit": {
+      "type": "string",
+      "const": "8d5e3e412138342e8bf30443e72bd4e6a9abd057"
+    },
+    "sourceInventoryDigest": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "native": {
+      "type": "object",
+      "properties": {
+        "pid": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "parentPid": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "uid": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "gid": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "sdkVersion": {
+          "type": "string",
+          "const": "2.0.0"
+        },
+        "configurationKeys": {
+          "minItems": 1,
+          "maxItems": 1,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "const": "url"
+          }
+        },
+        "transport": {
+          "type": "string",
+          "enum": [
+            "http",
+            "unobserved"
+          ]
+        },
+        "connected": {
+          "type": "boolean"
+        },
+        "tools": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5
+        },
+        "registeredTools": {
+          "maxItems": 5,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "mcp__life_store__fixture_ping",
+              "mcp__life_store__list_resources",
+              "mcp__life_store__read_resource",
+              "mcp__life_store__list_prompts",
+              "mcp__life_store__get_prompt"
+            ]
+          }
+        },
+        "connectedAfterShutdown": {
+          "type": "boolean"
+        },
+        "serverReady": {
+          "type": "boolean"
+        },
+        "serverStopped": {
+          "type": "boolean"
+        },
+        "loopbackConnections": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "deniedNetworkAttempts": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "blockedSocketBinds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "deniedSubprocessAttempts": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "failureStage": {
+          "type": "string",
+          "enum": [
+            "none",
+            "import",
+            "server-start",
+            "native-registration",
+            "native-shutdown",
+            "server-stop"
+          ]
+        }
+      },
+      "required": [
+        "pid",
+        "parentPid",
+        "uid",
+        "gid",
+        "sdkVersion",
+        "configurationKeys",
+        "transport",
+        "connected",
+        "tools",
+        "registeredTools",
+        "connectedAfterShutdown",
+        "serverReady",
+        "serverStopped",
+        "loopbackConnections",
+        "deniedNetworkAttempts",
+        "blockedSocketBinds",
+        "deniedSubprocessAttempts",
+        "failureStage"
+      ],
+      "additionalProperties": false
+    },
+    "transportOverrideUsed": {
+      "type": "boolean",
+      "const": false
+    },
+    "profilePublicationPerformed": {
+      "type": "boolean",
+      "const": false
+    },
+    "liveProviderSends": {
+      "type": "number",
+      "const": 0
+    },
+    "acceptanceComplete": {
+      "type": "boolean",
+      "const": false
+    }
+  },
+  "required": [
+    "scope",
+    "sourceCommit",
+    "sourceInventoryDigest",
+    "native",
+    "transportOverrideUsed",
+    "profilePublicationPerformed",
+    "liveProviderSends",
+    "acceptanceComplete"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:HermesMcpHttpReceiptV1"
+}

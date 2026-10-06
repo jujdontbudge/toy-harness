@@ -14,6 +14,20 @@ export const HermesProfileProbe = {
     const invalid: Result<RegisteredProbeOperationV1> = { ok: false, error: { module: "ops", code: "INVALID_INPUT", message: opsErrorMessages.INVALID_INPUT, retryable: false } };
     if (!registeredProbeInputSchema.safeParse(input).success || input.caseId !== undefined) return invalid;
     const manifest = registeredCliAcceptanceManifestInventory.find(entry => entry.id === input.probeId);
+    if (manifest?.owner === "hermes" && manifest.scenarioId === "profile.mcp-http") {
+      if (JSON.stringify(manifest.mandatoryCases.map(entry => entry.id)) !== JSON.stringify(["default-http-consumed"]) || manifest.observations.length !== 1 || JSON.stringify(manifest.observations[0]?.caseIds) !== JSON.stringify(["default-http-consumed"])) return invalid;
+      const result = await HermesProfile.consumeMcpHttp(context);
+      const receipt = result.ok ? result.data : null;
+      const native = receipt?.native;
+      const passed = native?.failureStage === "none" && native.transport === "http" && native.connected && native.tools === native.registeredTools.length && native.registeredTools.includes("mcp__life_store__fixture_ping") && native.serverReady && native.serverStopped && !native.connectedAfterShutdown && native.loopbackConnections > 0 && native.deniedNetworkAttempts === 0;
+      const check = checkViewSchema.parse({
+        id: "profile.native-mcp-http", owner: "hermes", state: passed ? "PASS" : "FAIL", checkedAt: new Date().toISOString(),
+        reasonCode: passed ? "NATIVE_MCP_HTTP_DIAGNOSTIC_PASS" : "NATIVE_MCP_HTTP_DIAGNOSTIC_FAIL", nextCommandId: "probe.show",
+        prerequisite: JSON.stringify({ caseId: "default-http-consumed", receipt, errorCode: result.ok ? null : result.error.code, actualLifeStoreValidated: false, wholeATComplete: false }),
+        links: { recordRefs: [], observations: [], artifactDigests: [digest(readFileSync(new URL("./profile.js", import.meta.url))), digest(readFileSync(new URL("./profile-probe.js", import.meta.url)))] }
+      });
+      return TestProbeControl.run(input, context, [check]);
+    }
     if (!manifest || manifest.owner !== "hermes" || manifest.scenarioId !== "profile.gateway-consumers") return invalid;
     if (JSON.stringify(manifest.mandatoryCases.map(entry => entry.id)) !== JSON.stringify(cases)) return { ok: false, error: { module: "ops", code: "ATTESTATION_INVALID", message: opsErrorMessages.ATTESTATION_INVALID, retryable: false } };
     const owned = OpsTestStack.inspect(context);

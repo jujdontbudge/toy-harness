@@ -1,0 +1,199 @@
+{
+  "schemaVersion": "toy.r0.08.next-assigned-minimum-plan.v1",
+  "createdAt": "2026-10-06T22:52:38Z",
+  "status": "MINIMUM_UNFILTERED_CLI_MANIFEST_UNIT_IDENTIFIED",
+  "admissionBasis": {
+    "source": "Parent-provided fresh Toy doctor at 2026-10-06T22:45:33Z",
+    "pressure": "normal operator observation",
+    "availableBytes": "2237464576",
+    "helperNeedBytes": "268435456",
+    "marginBytes": "536870912",
+    "state": "admitted",
+    "refreshedByThisTask": false
+  },
+  "card": {
+    "id": "R0.08",
+    "source": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/BUILD-PLAN.md:56",
+    "sourceRowHash": "8e4302876ac266ff5aa5c5c6b8f179664e69d87453a01fc79be3e25e1c45f979",
+    "sourceRow": "Signing/licence inventory: OS/hardware, existing Apple membership, exact app/extension entitlements, Cold Turkey Pro, Porcupine licence/model. Record available/deferred branch without buying.",
+    "requiredATs": [
+      "AT-activity-focus-61",
+      "AT-activity-focus-62",
+      "AT-activity-focus-63",
+      "AT-activity-focus-64",
+      "AT-client-apps-45",
+      "AT-client-apps-46",
+      "AT-client-apps-49",
+      "AT-ops-81"
+    ],
+    "scopeRule": "No decision is needed for the zero-spend default. Any later membership or licence purchase requires its own scoped decision; absent approval stays deferred."
+  },
+  "assignedAssertions": [
+    {
+      "id": "AT-ops-81",
+      "source": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/ops.md:2002",
+      "sourceDigest": "f07aab65088c82e4ff21e4d63edb2f279e2324e6d7e2bbb801e0fd7494104b0b",
+      "sourceAssertionHash": "88d84164c5ee83c25b0ed94eed080de98cff8ed2c7ce27ad1f5982e8f9c99311",
+      "rung": "CLI",
+      "assertion": "Absent Apple Developer membership or Cold Turkey Pro selects web/PWA plus Discord, defers native-only features and gates R4 app blocking, without paid purchase or dependable weekly free re-signing."
+    },
+    {
+      "id": "AT-client-apps-49",
+      "source": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/client-apps.md:2201",
+      "sourceDigest": "5dfcfd5700314b2fbf3c0ac7c4ae9ebfe963ae9acaa214b59fbb2b3587b8f385",
+      "sourceAssertionHash": "f4caef7202502076f80e1ebc139f0f25d5f81cc2964c5ac722bf29ba4fce7fb2",
+      "rung": "CLI",
+      "assertion": "Unknown Apple membership/licence/entitlements require written feasibility before native implementation or activation; absent membership defers native app/push/share/alarm; web PWA plus Discord remains zero-spend with no weekly provisioning or assumed purchase."
+    },
+    {
+      "id": "AT-activity-focus-64",
+      "source": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/activity-focus.md:2225",
+      "sourceDigest": "95419ee43fbc5c4367e2109efc17eb0c08527b1355fea71fd170650adf4afa81",
+      "sourceAssertionHash": "d4c9ae3095b081a03ffeb72a648568018cd883116e15eac02182c579918c317b",
+      "rung": "CLI",
+      "assertion": "Unknown OS/hardware, Apple membership, signing, Family Controls permission, Cold Turkey Pro and Porcupine eligibility are inventoried without purchase or change; dependent capabilities stay deferred unless separately supported by evidence; trials and weekly re-signing are not dependable production coverage."
+    }
+  ],
+  "currentOwnerBehavior": {
+    "publicOwner": "NativeReleaseEligibilityPolicy.evaluate is exported by packages/ops/src/public.ts and reached by the registered native-release-eligibility probe through the existing toy probe.run/show commands.",
+    "policy": "The policy parses the generated V1 input, accepts a prerequisite only when its state is verified, at least one evidence link is present and checkedAt is not later than observedAt, and independently computes each capability's missing prerequisites. Native app/share/push/alarm/Family Controls require OS/hardware, Apple membership, signing, their entitlements and Cold Turkey Pro; Family Controls also requires its permission. App blocking requires OS/hardware and Cold Turkey Pro. Wake word requires OS/hardware and Porcupine licence/model. The default output is web-pwa-plus-discord; purchaseAssumed, weeklyFreeProvisioningCounted and liveActivationAdmitted are always false.",
+    "evidenceBoundary": "The policy consumes evidence links; it does not authenticate those links or query accounts. The CLI probe labels every input as a fixed external prerequisite fixture. Its synthetic verified fixture is not live eligibility evidence, membership/licence proof or activation authority. A future evidence-owning source must validate provenance before supplying real inventory; no such provider is present in this assigned code path.",
+    "versionedInterface": "NativeReleaseEligibilityInputV1 and NativeReleaseEligibilityDecisionV1 already exist in generated contracts, with the written boundary in docs/adr/0028-native-release-eligibility.md. No interface amendment is needed for the no-spend policy subset."
+  },
+  "manifestCoverageGap": {
+    "finding": "tests/registry.yaml contains no CLI acceptance manifest for AT-ops-81, AT-client-apps-49 or AT-activity-focus-64. The three saved run/show pairs contain all eight fixture checks, but result.sourceRegistration is absent and the existing caseManifestDigest therefore binds the literal fixed --case plus a null registration, not an acceptance-manifest case list.",
+    "existingSupport": "registeredCliAcceptanceManifestSchema already supports unique mandatoryCases and observations; RegisteredProbeInputV1.caseId is optional; FixtureProbe.run already includes a discovered sourceRegistration in the persisted result and caseManifestDigest. The native route currently requires caseId=native-release-eligibility in cli/src/main.ts, NativeReleaseEligibilityProbe.run and FixtureProbe's nativeEligibility gate.",
+    "meaning": "The fixed fixture proves policy projection, but the registered CLI acceptance contract does not yet declare or bind its eight scenario cells. This is a source-bound test coverage gap separate from actual membership/licence/signing evidence."
+  },
+  "existingAssignedCliEvidence": {
+    "coverage": "Each of the three assigned probes contains all eight fixed scenarios: unknown inventory, absent membership, absent licences, membership without entitlements, verified label without evidence, future signing evidence, unknown Family Controls permission and synthetic verified fixture. No individual scenario filter is applied within the probe.",
+    "receipts": [
+      {
+        "id": "AT-ops-81",
+        "run": "build/evidence/R0.08/at-ops-81-verified.json",
+        "runSha256": "961facd2a24dd7b0a8cdc21c7946f797827893398a120fd04b9f18487371c20f",
+        "show": "build/evidence/R0.08/at-ops-81-verified-show.json",
+        "showSha256": "c0c387c53f68e27ebf66e7e59770e4826e8808eaf9d5fb952affb6350b281d19",
+        "requestId": "b57d2854-612b-4e18-b81c-d87c5a09cc6f",
+        "operationId": "8aa4d107-33a6-4559-abde-0d32ac874855",
+        "caseManifestDigest": "97fdb5d0e6f87375a527f8ebbce19640474640d8b1cff9b8a505c65db1a527e7"
+      },
+      {
+        "id": "AT-client-apps-49",
+        "run": "build/evidence/R0.08/at-client-apps-49-verified.json",
+        "runSha256": "dc5e6039177a5ea2a4511e6509d02270ec7a05ad80177d602512b28c49c8d828",
+        "show": "build/evidence/R0.08/at-client-apps-49-verified-show.json",
+        "showSha256": "8615a70f5732928a40c12749e8eb09e36549fc5c3e2070ffa1c7bd5aa8e6f3a0",
+        "requestId": "9af2ab86-85a7-49e1-902e-8d7e339074aa",
+        "operationId": "9688137b-c04c-42b3-a270-8b1dfcf13830",
+        "caseManifestDigest": "e42b9d7e4400bae897503cc0276a1686b109187bb8446ad5df23a74e3e1e4073"
+      },
+      {
+        "id": "AT-activity-focus-64",
+        "run": "build/evidence/R0.08/at-activity-focus-64-verified.json",
+        "runSha256": "a74553c551a82ad27a1b7331e909e6060ed9b74de1a916dfc9cf6ad3d181d984",
+        "show": "build/evidence/R0.08/at-activity-focus-64-verified-show.json",
+        "showSha256": "650d5e5ece7ca7ed10bf1f925f3c014bedefb692c532c83c3c1955b1d4cc1bf0",
+        "requestId": "2b2aa0c9-bb11-495f-9b4f-704c0e9e92fd",
+        "operationId": "d071c9d0-2124-468e-9c61-3a8a84dc5c76",
+        "caseManifestDigest": "968da85d99dd76fc577ca3204217f6043e7f910cfce6d5036a20fc496d0ff57c"
+      }
+    ],
+    "independentReadback": "Each saved show result exactly matches the corresponding persisted run result. All 8 of 8 checks pass for each probe; every case keeps purchaseAssumed=false, weeklyFreeProvisioningCounted=false and liveActivationAdmitted=false. Each full operation remains state NOT_IMPLEMENTED and complete=false.",
+    "proofLimit": "These receipts establish only the fixed external-fixture policy projection. They do not establish actual account, device, membership, signing, entitlement, permission, licence or OS/hardware inventory and do not complete any whole AT."
+  },
+  "minimumNextSourceUnit": {
+    "decision": "Add the registered manifest route for the existing eight-cell fixture; do not change the eligibility policy or claim live inventory.",
+    "rationale": "The policy's assigned branch behavior already exists and all eight fixed scenarios pass, but those scenario cells are not declared as mandatory registered CLI cases and the saved operation carries no sourceRegistration. Binding all eight cells to each assigned AT is the smallest Toy-owned source unit that improves proof without additional research, account access, purchase, native code or a new service.",
+    "manifestDesign": {
+      "source": "tests/registry.yaml",
+      "entries": ["AT-ops-81", "AT-client-apps-49", "AT-activity-focus-64"],
+      "scenarioId": "native-release-eligibility",
+      "owner": "ops",
+      "kind": "static_gate",
+      "mandatoryCases": [
+        "unknown-inventory",
+        "absent-membership",
+        "absent-licences",
+        "membership-does-not-prove-entitlements",
+        "verified-label-without-evidence",
+        "future-signing-evidence",
+        "family-controls-permission-required",
+        "verified-fixture-only"
+      ],
+      "observation": "One independent reader binds each mandatory case to the matching prerequisite.scenario and decision in the persisted probe.show result, requiring exactly one row for all eight cases and preserving the explicit fixed-external-prerequisite-inventory label."
+    },
+    "minimalImplementation": [
+      {
+        "path": "tests/registry.yaml",
+        "change": "Add one manifest per assigned AT with its exact sourceAssertionHash, scenario native-release-eligibility, and the eight existing scenario IDs as mandatory cases and observation references."
+      },
+      {
+        "path": "packages/ops/src/native-release-eligibility-probe.ts",
+        "change": "Allow an omitted caseId only when the registered manifest for that probe has the exact native-release-eligibility scenario; verify that the emitted prerequisite.scenario set is a one-to-one match for all eight mandatory case IDs. Keep the fixture origin and no-spend assertions explicit."
+      },
+      {
+        "path": "packages/ops/src/fixture-stack.ts",
+        "change": "Recognize the no-case native route only when the assigned probe's registered Ops manifest has scenarioId native-release-eligibility, so the persisted result carries sourceRegistration and its caseManifestDigest binds that registration."
+      },
+      {
+        "path": "cli/src/main.ts",
+        "change": "Dispatch probe.run without --case to NativeReleaseEligibilityProbe only for one of the three assigned IDs with the registered Ops scenario native-release-eligibility."
+      },
+      {
+        "path": "packages/contracts/src/generated-probe-registry.ts",
+        "change": "Regenerate from tests/registry.yaml using scripts/generate-contracts.mjs; do not hand-edit generated output. Existing manifest schemas and optional caseId need no schema change."
+      }
+    ],
+    "unchangedInterfaces": "Keep NativeReleaseEligibilityInputV1 and NativeReleaseEligibilityDecisionV1 unchanged. registeredCliAcceptanceManifestSchema and probe.run already provide the required versioned manifest and optional caseId boundary; no new DTO, module, dependency, protocol or CLI command is required.",
+    "featureMap": "The existing ops.native-release-eligibility row already maps the three ATs to the public Ops owner and probe.run/probe.show; retain it. Regenerate architecture/features.json only if the normal feature-map generator changes the generated projection.",
+    "assignedCliProofIfSourceChangesLater": "On a fresh owned fake R0 stack, run node cli/dist/main.js --env test --stack <stack-id> probe run AT-ops-81 --request-id <fresh-uuid> --json, then repeat for AT-client-apps-49 and AT-activity-focus-64 with distinct IDs and no --case. Each run must contain sourceRegistration for its own AT and exactly the eight mandatory scenario IDs, all 8 checks PASS, no-spend fields false, fixture origin explicit and overall NOT_IMPLEMENTED/complete=false. Run probe.show for each operation and compare its complete data.result exactly to the run receipt, including sourceRegistration and caseManifestDigest, then public stack.down. This is an unfiltered registered fixture proof only; it does not complete a whole AT. No CLI probe or stack operation was run by this planning task."
+  },
+  "currentPrerequisitesAndDeferrals": {
+    "zeroSpendBranch": "The written default remains web/PWA plus Discord; no purchase, weekly-free provisioning or live activation is assumed. Pending membership/licence facts do not block that default or the overall work goal.",
+    "liveAppleMembership": "PENDING. The saved inventory did not inspect Developer Program membership, team, agreement, signing identity, entitlements or provisioning. A later Chrome attempt to open the official account surface was explicitly denied; no retry, login, credential or account action was made.",
+    "coldTurkeyPro": "PENDING. No existing authorized product surface exposed licence status. Missing app/UI visibility is not evidence of absence or ownership. No licence key, account, credential or Keychain data was inspected.",
+    "otherActivityFocusPrerequisites": "Current OS/hardware, signing, Family Controls permission, per-extension entitlements and Porcupine licence/model are not established by the fixed fixture. Unknown remains pending; no capability is promoted.",
+    "humanStepQueue": "build/HUMAN-STEPS.md states no human action is requested for R0.08; it records real Apple, device, licence and entitlement inventory as pending. Do not add a new queue entry in this task.",
+    "remainingAssignedResearchATs": "AT-activity-focus-61/62/63 and AT-client-apps-45/46 remain PENDING in the saved toolchain preparation: full comparisons, supported compatibility probes and the specified research route/receipt are not present. They are separate assigned research gates and are outside this no-extra-research task; no R0.10 work is included.",
+    "wholeCard": "R0.08 and all three assigned policy ATs remain incomplete overall. No native Swift build, R3/R4 activation, live status, signing, permission or whole-AT completion is claimed."
+  },
+  "sourceDigests": [
+    { "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/BUILD-PLAN.md", "sha256": "aa84eb600e53bc65e6c6b1ed4fce45870ead861e0d18bf00d81613ff2595f49a" },
+    { "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/activity-focus.md", "sha256": "95419ee43fbc5c4367e2109efc17eb0c08527b1355fea71fd170650adf4afa81" },
+    { "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/client-apps.md", "sha256": "5dfcfd5700314b2fbf3c0ac7c4ae9ebfe963ae9acaa214b59fbb2b3587b8f385" },
+    { "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/ops.md", "sha256": "f07aab65088c82e4ff21e4d63edb2f279e2324e6d7e2bbb801e0fd7494104b0b" },
+    { "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/TEST-PLAN.md", "sha256": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2" },
+    { "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/CONTRACTS.md", "sha256": "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d" },
+    { "path": "tests/acceptance-index.json", "sha256": "c9b645eab7f55b2ebf35d7db769a534a4837de23ad3dc3d913f3189e781d44fa" },
+    { "path": "tests/registry.yaml", "sha256": "f17a3c81b3115d8e67a3546bb620e8ad2329c0744835d86cc339ae5611d0825e" },
+    { "path": "packages/contracts/src/native-release-eligibility.ts", "sha256": "d9737f1bb1f525af95448f97a68bd92cbe171998551874fd8204cfdc0d92ca9e" },
+    { "path": "packages/contracts/src/control-evidence.ts", "sha256": "5708640e11fd64752b5f6d3a662566618684c66d3d981fb0eaf8da952b9bc32c" },
+    { "path": "packages/contracts/src/ops-registry.ts", "sha256": "40b4f46f0cfcdafe8c6ec5870d0ddc478b41a95395e6ad156d58e470f33ce6ea" },
+    { "path": "packages/contracts/src/test-control.ts", "sha256": "0af0d0e4349cae05bfdc06a77592e32c5171f0dc5d0e5964f2ef87faeaa4111c" },
+    { "path": "packages/contracts/src/generated-probe-registry.ts", "sha256": "7175bbbf50aa9afcc8113dcc7916f4cd50153a408027f142ef747ce7c46ada5d" },
+    { "path": "packages/ops/src/native-release-eligibility.ts", "sha256": "a3fb90d136a65aa6d35557d0c3badf305a2dec6fd304450b044246d3727dd992" },
+    { "path": "packages/ops/src/native-release-eligibility-probe.ts", "sha256": "86161ccddf96e19c4c8c616ee6a40992cbd7a024bc6089fc0dd7ddbe6ce2781e" },
+    { "path": "packages/ops/src/public.ts", "sha256": "9646f70f89434cf774e66a602eed45f751c353f200b2f3e1a2cf41968e079284" },
+    { "path": "cli/src/main.ts", "sha256": "22d477dd5259bf02930460a5f713715ac2305952ab8bb2f97ad83d2ec7cb6c97" },
+    { "path": "packages/ops/src/fixture-stack.ts", "sha256": "cef5af63d74ea899606b13afbdcd72224b6a1112c9597e77c91855b97e4410ff" },
+    { "path": "scripts/generate-contracts.mjs", "sha256": "4af296522897059f2d54d63077535da25a9fdbce7eeaad3ceba818962ffdc371" },
+    { "path": "docs/adr/0028-native-release-eligibility.md", "sha256": "6a5c830e91b6de3756a436cc5bb62f5edc7b5b810e7162a6ee57ad9724606084" },
+    { "path": "skills/toy-control/FEATURE-MAP.md", "sha256": "7d72b91afb387b553b805b261ed19e422e9804556946640016d5edffd07fe769" },
+    { "path": "architecture/features.json", "sha256": "031559ab2133c007b63e34c97db2d2f88623d1e802329af3d3547caeb959a13a" },
+    { "path": "build/cards.json", "sha256": "be3cba6507d6a4849add84e48141ecb092094bd75cfcaf22ad755f54f086629b" },
+    { "path": "build/state.json", "sha256": "c5e8b2e694281f4a26a372f021aceae6e9e2097a307567dc7ff0b7207dba9f03" },
+    { "path": "build/HUMAN-STEPS.md", "sha256": "ee4e46c636b64b6411cb24cc7daa040f7879a74275adeee662aef4a9a0f02869" },
+    { "path": "build/evidence/R0.08/toolchain-preparation.json", "sha256": "459b172e3db873c3b1a7b0a24d3feecb67732f0a32a5ff8aaa565a624d0d34b8" },
+    { "path": "build/evidence/R0.08/live-prerequisite-inventory.json", "sha256": "02e24527900611d6e612f34bcd9c2526ba1bff9370b9e7cd70e15837824af77f" },
+    { "path": "build/evidence/R0.08/live-membership-chrome-inventory.json", "sha256": "b39481f2cfad37b2e860f98c5038cd1b3191f8ec992bdbdbe294d894361dad68" },
+    { "path": "build/evidence/R0.08/runtime-fixture-verification.json", "sha256": "3205eda568470d3db788cc0ef9ae112a6483c9ecba7c608d52bad9bc5b335a32" },
+    { "path": "build/evidence/R0.08/at-ops-81-verified.json", "sha256": "961facd2a24dd7b0a8cdc21c7946f797827893398a120fd04b9f18487371c20f" },
+    { "path": "build/evidence/R0.08/at-ops-81-verified-show.json", "sha256": "c0c387c53f68e27ebf66e7e59770e4826e8808eaf9d5fb952affb6350b281d19" },
+    { "path": "build/evidence/R0.08/at-client-apps-49-verified.json", "sha256": "dc5e6039177a5ea2a4511e6509d02270ec7a05ad80177d602512b28c49c8d828" },
+    { "path": "build/evidence/R0.08/at-client-apps-49-verified-show.json", "sha256": "8615a70f5732928a40c12749e8eb09e36549fc5c3e2070ffa1c7bd5aa8e6f3a0" },
+    { "path": "build/evidence/R0.08/at-activity-focus-64-verified.json", "sha256": "a74553c551a82ad27a1b7331e909e6060ed9b74de1a916dfc9cf6ad3d181d984" },
+    { "path": "build/evidence/R0.08/at-activity-focus-64-verified-show.json", "sha256": "650d5e5ece7ca7ed10bf1f925f3c014bedefb692c532c83c3c1955b1d4cc1bf0" }
+  ],
+  "workPerformed": "Read-only comparison of the exact R0.08 row and assigned AT assertions, current policy/probe/interface, saved run/show receipts, CLI acceptance manifest registry and human-step queue. Confirmed all eight fixture checks PASS and exact show readback, then identified missing sourceRegistration and absent registry manifests. Authored only this minimum-plan artifact; no source, contract, CLI, feature map, queue, runtime, stack or probe was changed or run."
+}

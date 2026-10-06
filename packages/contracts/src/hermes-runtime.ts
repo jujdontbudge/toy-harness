@@ -33,6 +33,25 @@ export type HermesGatewayConsumerInventoryV1 = z.infer<typeof hermesGatewayConsu
 export type HermesGatewayNativeObservationV1 = z.infer<typeof hermesGatewayNativeObservationSchema>;
 export type HermesGatewayProfileReceiptV1 = z.infer<typeof hermesGatewayProfileReceiptSchema>;
 
+export const hermesMcpHttpNativeObservationSchema = z.strictObject({
+  pid: z.int().positive(), parentPid: z.int().positive(), uid: z.int().nonnegative(), gid: z.int().nonnegative(),
+  sdkVersion: z.literal("2.0.0"), configurationKeys: z.array(z.literal("url")).length(1),
+  transport: z.enum(["http", "unobserved"]), connected: z.boolean(), tools: z.int().min(0).max(5),
+  registeredTools: z.array(z.enum(["mcp__life_store__fixture_ping", "mcp__life_store__list_resources", "mcp__life_store__read_resource", "mcp__life_store__list_prompts", "mcp__life_store__get_prompt"])).max(5),
+  connectedAfterShutdown: z.boolean(), serverReady: z.boolean(), serverStopped: z.boolean(),
+  loopbackConnections: z.int().nonnegative(), deniedNetworkAttempts: z.int().nonnegative(),
+  blockedSocketBinds: z.int().nonnegative(), deniedSubprocessAttempts: z.int().nonnegative(),
+  failureStage: z.enum(["none", "import", "server-start", "native-registration", "native-shutdown", "server-stop"])
+});
+export const hermesMcpHttpReceiptSchema = z.strictObject({
+  scope: z.literal("disposable-mcp-http"), sourceCommit: z.literal("8d5e3e412138342e8bf30443e72bd4e6a9abd057"),
+  sourceInventoryDigest: z.string().regex(/^[a-f0-9]{64}$/), native: hermesMcpHttpNativeObservationSchema,
+  transportOverrideUsed: z.literal(false), profilePublicationPerformed: z.literal(false),
+  liveProviderSends: z.literal(0), acceptanceComplete: z.literal(false)
+});
+export type HermesMcpHttpNativeObservationV1 = z.infer<typeof hermesMcpHttpNativeObservationSchema>;
+export type HermesMcpHttpReceiptV1 = z.infer<typeof hermesMcpHttpReceiptSchema>;
+
 export const installedHermesDependencyRecordSchema = z.object({
   packages: z.object({ venv: z.object({ environment: z.string().min(1).max(4096) }) })
 });
@@ -75,6 +94,8 @@ export const hermesRuntimeSchemaInventory = {
   HermesGatewayConsumerInventoryV1: hermesGatewayConsumerInventorySchema,
   HermesGatewayNativeObservationV1: hermesGatewayNativeObservationSchema,
   HermesGatewayProfileReceiptV1: hermesGatewayProfileReceiptSchema,
+  HermesMcpHttpNativeObservationV1: hermesMcpHttpNativeObservationSchema,
+  HermesMcpHttpReceiptV1: hermesMcpHttpReceiptSchema,
   InstalledHermesDependencyRecordV1: installedHermesDependencyRecordSchema,
   HermesPublicRuntimeCommandV1: hermesPublicRuntimeCommandSchema,
   HermesAuthConcurrencyObservationV1: hermesAuthConcurrencyObservationSchema,

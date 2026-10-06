@@ -1,0 +1,106 @@
+{
+  "schemaVersion": "toy.cli.v1",
+  "commandId": "probe.show",
+  "invocationId": "d08b7338-7371-4b59-9f44-ddd5b22475e4",
+  "generatedAt": "2026-10-06T23:05:32.733Z",
+  "cliVersion": "1.0.0",
+  "contractsVersion": "1.0.0",
+  "schemaDigest": "0b271593090f9fc0815b3154f2e74414cd7933005b5d974e398c2c4ad667b05c",
+  "environment": {
+    "kind": "test",
+    "instanceId": null,
+    "stackId": "2cf9f6ff-6871-425e-a7f8-f53b6fdb0834"
+  },
+  "meta": {
+    "exitCode": 0,
+    "releaseDigest": null,
+    "controlDigest": null,
+    "evaluatedAt": null,
+    "operationId": null,
+    "effectState": "none",
+    "recordRefs": [],
+    "evidence": []
+  },
+  "ok": true,
+  "data": {
+    "operation": {
+      "operationId": "00e46953-86f5-402f-b566-7daa953535e5",
+      "state": "succeeded",
+      "acceptedAt": "2026-10-06T23:05:32.582Z"
+    },
+    "requestId": "a84cdc7b-4a9e-45d3-81cb-255d72b47515",
+    "stackId": "2cf9f6ff-6871-425e-a7f8-f53b6fdb0834",
+    "result": {
+      "probeId": "AT-hermes-config-81",
+      "caseManifestDigest": "7dbab44e728508160839188327b789150e5bfc87e9f23705702e4a57547d8a70",
+      "cases": [
+        {
+          "id": "profile.native-mcp-http",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-06T23:05:32.581Z",
+          "reasonCode": "NATIVE_MCP_HTTP_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"default-http-consumed\",\"receipt\":{\"scope\":\"disposable-mcp-http\",\"sourceCommit\":\"8d5e3e412138342e8bf30443e72bd4e6a9abd057\",\"sourceInventoryDigest\":\"cbb22a250e15f06f42f27c5c845a5c1d9a4d4e077abf84e54507e97a9e789b5c\",\"native\":{\"pid\":4529,\"parentPid\":4520,\"uid\":501,\"gid\":20,\"sdkVersion\":\"2.0.0\",\"configurationKeys\":[\"url\"],\"transport\":\"http\",\"connected\":true,\"tools\":5,\"registeredTools\":[\"mcp__life_store__fixture_ping\",\"mcp__life_store__get_prompt\",\"mcp__life_store__list_prompts\",\"mcp__life_store__list_resources\",\"mcp__life_store__read_resource\"],\"connectedAfterShutdown\":false,\"serverReady\":true,\"serverStopped\":true,\"loopbackConnections\":6,\"deniedNetworkAttempts\":0,\"blockedSocketBinds\":0,\"deniedSubprocessAttempts\":1,\"failureStage\":\"none\"},\"transportOverrideUsed\":false,\"profilePublicationPerformed\":false,\"liveProviderSends\":0,\"acceptanceComplete\":false},\"errorCode\":null,\"actualLifeStoreValidated\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "492c4a20fb8a2ef1ed99e00cece416d34e65636c2c211c14dab34372a29a95c3",
+              "13d22e01ebcf63a027c30799239761b17bbcae5c08be85408b535f03d61968e9"
+            ]
+          }
+        }
+      ],
+      "state": "NOT_IMPLEMENTED",
+      "complete": false,
+      "links": {
+        "recordRefs": [],
+        "observations": [],
+        "artifactDigests": []
+      },
+      "sourceRegistration": {
+        "id": "AT-hermes-config-81",
+        "rung": "CLI",
+        "sourceAssertionHash": "3004088c3bb45e0ae8544fcefdcd53c79808d796adb2ab22e2b0c43f2d7937fc",
+        "commandId": "probe.run",
+        "scenarioId": "profile.mcp-http",
+        "owner": "hermes",
+        "firstRelease": "R0",
+        "kind": "behavioral",
+        "mandatoryCases": [
+          {
+            "id": "default-http-consumed",
+            "publicOperation": "HermesProfile.consumeMcpHttp",
+            "phase": "default-http-consumed"
+          }
+        ],
+        "trigger": "Use the pinned public Hermes MCP loader to connect to one disposable SDK endpoint with a URL-only life_store entry; observe actual default HTTP connection, discovered tool and bounded cleanup. Live Life Store remains pending.",
+        "faultControls": [],
+        "observations": [
+          {
+            "id": "native-http-discovery-and-cleanup",
+            "independentReader": "Public native registration/status/shutdown, SDK readiness, thread join and external OS counters",
+            "caseIds": [
+              "default-http-consumed"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot inspect the administrative pre-build native MCP transport. CLI exercises the real pinned loader with one external loopback SDK endpoint and OS isolation."
+      }
+    },
+    "links": {
+      "recordRefs": [],
+      "observations": [],
+      "artifactDigests": []
+    },
+    "probeId": "AT-hermes-config-81",
+    "binding": {
+      "releaseDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+      "controlDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+      "schemaDigest": "0b271593090f9fc0815b3154f2e74414cd7933005b5d974e398c2c4ad667b05c",
+      "fixtureDigest": "719e0f862ff757da53d67cb817bdd3875ad34c0ad632f806b8b8ae371f1eca7c"
+    },
+    "caseManifestDigest": "7dbab44e728508160839188327b789150e5bfc87e9f23705702e4a57547d8a70"
+  }
+}

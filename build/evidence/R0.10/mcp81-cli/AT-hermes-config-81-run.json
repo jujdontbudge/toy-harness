@@ -1,0 +1,106 @@
+{
+  "schemaVersion": "toy.cli.v1",
+  "commandId": "probe.run",
+  "invocationId": "5b40555b-f2d9-4cbe-b3a9-85b4ab46117b",
+  "generatedAt": "2026-10-06T23:02:48.135Z",
+  "cliVersion": "1.0.0",
+  "contractsVersion": "1.0.0",
+  "schemaDigest": "524d33ca83b6fbf63c619e9583c074324bcfc3b3bd7ecab8a3a689421196af6f",
+  "environment": {
+    "kind": "test",
+    "instanceId": null,
+    "stackId": "c01d4195-4221-48df-aa55-bbf7cdfeebb1"
+  },
+  "meta": {
+    "exitCode": 1,
+    "releaseDigest": null,
+    "controlDigest": null,
+    "evaluatedAt": null,
+    "operationId": null,
+    "effectState": "confirmed",
+    "recordRefs": [],
+    "evidence": []
+  },
+  "ok": true,
+  "data": {
+    "operation": {
+      "operationId": "8c1caeb4-aa00-4a99-a87b-3cfce50e992e",
+      "state": "succeeded",
+      "acceptedAt": "2026-10-06T23:02:48.134Z"
+    },
+    "requestId": "9cbb0b53-14a3-48f7-bef1-8e80683e6285",
+    "stackId": "c01d4195-4221-48df-aa55-bbf7cdfeebb1",
+    "result": {
+      "probeId": "AT-hermes-config-81",
+      "caseManifestDigest": "8c9b11f28c1c3c40c4aa6f9fb203946f1e583d569ec48313bf7fe347a744c5ae",
+      "cases": [
+        {
+          "id": "profile.native-mcp-http",
+          "owner": "hermes",
+          "state": "FAIL",
+          "checkedAt": "2026-10-06T23:02:48.132Z",
+          "reasonCode": "NATIVE_MCP_HTTP_DIAGNOSTIC_FAIL",
+          "prerequisite": "{\"caseId\":\"default-http-consumed\",\"receipt\":null,\"errorCode\":\"ATTESTATION_INVALID\",\"actualLifeStoreValidated\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "11342384f30b3844dbb8ffd4e85b114fe84d9059654b0bd599b26f6251372dfd",
+              "70b08e2038b79a49c443fecef8c6de25197249d5562660b6e21b690843f0ddef"
+            ]
+          }
+        }
+      ],
+      "state": "NOT_IMPLEMENTED",
+      "complete": false,
+      "links": {
+        "recordRefs": [],
+        "observations": [],
+        "artifactDigests": []
+      },
+      "sourceRegistration": {
+        "id": "AT-hermes-config-81",
+        "rung": "CLI",
+        "sourceAssertionHash": "3004088c3bb45e0ae8544fcefdcd53c79808d796adb2ab22e2b0c43f2d7937fc",
+        "commandId": "probe.run",
+        "scenarioId": "profile.mcp-http",
+        "owner": "hermes",
+        "firstRelease": "R0",
+        "kind": "behavioral",
+        "mandatoryCases": [
+          {
+            "id": "default-http-consumed",
+            "publicOperation": "HermesProfile.consumeMcpHttp",
+            "phase": "default-http-consumed"
+          }
+        ],
+        "trigger": "Use the pinned public Hermes MCP loader to connect to one disposable SDK endpoint with a URL-only life_store entry; observe actual default HTTP connection, discovered tool and bounded cleanup. Live Life Store remains pending.",
+        "faultControls": [],
+        "observations": [
+          {
+            "id": "native-http-discovery-and-cleanup",
+            "independentReader": "Public native registration/status/shutdown, SDK readiness, thread join and external OS counters",
+            "caseIds": [
+              "default-http-consumed"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot inspect the administrative pre-build native MCP transport. CLI exercises the real pinned loader with one external loopback SDK endpoint and OS isolation."
+      }
+    },
+    "links": {
+      "recordRefs": [],
+      "observations": [],
+      "artifactDigests": []
+    },
+    "probeId": "AT-hermes-config-81",
+    "binding": {
+      "releaseDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+      "controlDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+      "schemaDigest": "524d33ca83b6fbf63c619e9583c074324bcfc3b3bd7ecab8a3a689421196af6f",
+      "fixtureDigest": "d4acd2b8fdb2c921a119284bb51d0403ab261e6b629eaab39b05e3a7acf7213e"
+    },
+    "caseManifestDigest": "8c9b11f28c1c3c40c4aa6f9fb203946f1e583d569ec48313bf7fe347a744c5ae"
+  }
+}

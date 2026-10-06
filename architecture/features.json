@@ -3544,7 +3544,7 @@
     },
     {
       "id": "ops.native-release-eligibility",
-      "description": "Evaluate separate prerequisite evidence for native testing and defer unsupported membership, signing, entitlements, permissions and licences; fixed CLI fixtures issue no activation or purchase permission",
+      "description": "Evaluate separate prerequisite evidence and defer unsupported native scope; three source-bound unfiltered CLI manifests bind all eight fixed policy cells without live activation or purchase permission",
       "implementation": "built",
       "requirementIds": [
         "spec:ops",
@@ -3562,7 +3562,8 @@
         "packages/contracts/src/test-control.ts",
         "packages/contracts/src/ops-registry.ts",
         "packages/ops/src/fixture-stack.ts",
-        "docs/adr/0028-native-release-eligibility.md"
+        "docs/adr/0028-native-release-eligibility.md",
+        "tests/registry.yaml"
       ],
       "firstRelease": "R0",
       "commands": [
@@ -3876,6 +3877,36 @@
       ],
       "atIds": [
         "AT-hermes-config-75"
+      ]
+    },
+    {
+      "id": "hermes.native-mcp-http",
+      "description": "Connect the pinned public native MCP loader to one disposable maintained-SDK HTTP endpoint using a URL-only life_store entry; observe discovery and cleanup without a transport override; live Life Store remains pending",
+      "implementation": "built",
+      "requirementIds": [
+        "spec:hermes-config",
+        "0.17"
+      ],
+      "entry": "cli/src/main.ts",
+      "owner": "hermes",
+      "publicInterface": "HermesProfile.consumeMcpHttp; HermesProfileProbe.run",
+      "paths": [
+        "packages/hermes/src/public.ts",
+        "packages/hermes/src/profile.ts",
+        "packages/hermes/src/profile-probe.ts",
+        "packages/contracts/src/hermes-runtime.ts",
+        "packages/contracts/src/ops-registry.ts",
+        "packages/ops/src/fixture-stack.ts",
+        "tests/registry.yaml",
+        "docs/adr/0040-native-mcp-http.md"
+      ],
+      "firstRelease": "R0",
+      "commands": [
+        "probe.run",
+        "probe.show"
+      ],
+      "atIds": [
+        "AT-hermes-config-81"
       ]
     }
   ],
@@ -4404,6 +4435,11 @@
     },
     {
       "id": "HermesProfile.generateGateway/consumeGateway; HermesProfileProbe.run",
+      "owner": "hermes",
+      "path": "packages/hermes/src/public.ts"
+    },
+    {
+      "id": "HermesProfile.consumeMcpHttp; HermesProfileProbe.run",
       "owner": "hermes",
       "path": "packages/hermes/src/public.ts"
     }

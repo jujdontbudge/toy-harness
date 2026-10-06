@@ -2,7 +2,7 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-06T22:55:00.433075+00:00",
+  "updatedAt": "2026-10-06T23:07:14.875816+00:00",
   "phase": "R0_FEASIBILITY",
   "activeCard": "R0.10",
   "cardCount": 87,
@@ -1324,7 +1324,10 @@
         "build/evidence/R0.08-eligibility-stack-up.json",
         "build/evidence/R0.08-eligibility-check-final.txt",
         "build/evidence/R0.08/live-prerequisite-inventory.json",
-        "build/evidence/R0.08/live-membership-chrome-inventory.json"
+        "build/evidence/R0.08/live-membership-chrome-inventory.json",
+        "build/evidence/R0.08/next-assigned-minimum-plan.json",
+        "build/evidence/R0.08/unfiltered-manifest-additions.json",
+        "build/evidence/R0.08/unfiltered-verification.json"
       ],
       "requiredATs": [
         "AT-activity-focus-61",
@@ -1388,6 +1391,44 @@
         "targetStopAt": "2026-10-06T10:24:00.000Z",
         "scope": "Minimum canonical no-spend eligibility and its assigned CLI fake-world cases",
         "stopReason": "Policy fixture unit verified; defer actual account/device prerequisites and stop source expansion"
+      },
+      "unfilteredManifestUnit": {
+        "status": "STOPPED_AFTER_SOURCE_BOUND_UNFILTERED_FIXTURE_PROOF",
+        "evidence": "build/evidence/R0.08/unfiltered-verification.json",
+        "plan": "build/evidence/R0.08/next-assigned-minimum-plan.json",
+        "helperArtifact": "build/evidence/R0.08/unfiltered-manifest-additions.json",
+        "assignedATs": [
+          "AT-ops-81",
+          "AT-client-apps-49",
+          "AT-activity-focus-64"
+        ],
+        "cellsPerAT": 8,
+        "passedDiagnostics": 24,
+        "sourceRegistrationVerified": true,
+        "runShowExact": true,
+        "ownedWorldDown": true,
+        "policyChanged": false,
+        "realAccountDeviceLicenceProof": false,
+        "wholeATsPassed": [],
+        "acceptanceComplete": false,
+        "strictCheck": {
+          "recordedAt": "2026-10-06T23:07:14.875816+00:00",
+          "command": "npm run check",
+          "exitCode": 0,
+          "artifacts": 382,
+          "contracts": 314,
+          "cliManifests": 25,
+          "features": 99,
+          "commands": 55,
+          "indexedATs": 1447,
+          "schemaDigest": "0b271593090f9fc0815b3154f2e74414cd7933005b5d974e398c2c4ad667b05c",
+          "evidence": "build/evidence/R0.10/mcp81-check-output.txt",
+          "languages": [
+            "TypeScript",
+            "Python"
+          ],
+          "SwiftDeferredTo": "R3"
+        }
       }
     },
     "R0.09": {
@@ -1482,7 +1523,11 @@
         "build/evidence/R0.10/authority60-verification.json",
         "build/evidence/R0.10/authority60-check-result.json",
         "build/evidence/R0.10/mcp81-baseline.json",
-        "build/evidence/R0.10/mcp81-next-minimum-plan.json"
+        "build/evidence/R0.10/mcp81-next-minimum-plan.json",
+        "build/evidence/R0.10/mcp81-final-verification.json",
+        "build/evidence/R0.10/mcp81-preparation.json",
+        "build/evidence/R0.10/mcp81-check-result.json",
+        "build/evidence/R0.10/mcp81-root-pins-final.json"
       ],
       "requiredATs": [
         "AT-activity-focus-86",
@@ -1705,6 +1750,50 @@
         "plan": "build/evidence/R0.10/mcp81-next-minimum-plan.json",
         "sourceImplementationStarted": false,
         "wholeATComplete": false
+      },
+      "mcpHttpUnit": {
+        "status": "STOPPED_AFTER_ASSIGNED_UNFILTERED_NATIVE_HTTP_DIAGNOSTIC_PASS",
+        "startedAt": "2026-10-06T22:57:22.949Z",
+        "stoppedAt": "2026-10-06T23:07:14.875816+00:00",
+        "timeboxSeconds": 7200,
+        "evidence": "build/evidence/R0.10/mcp81-final-verification.json",
+        "interface": "docs/adr/0040-native-mcp-http.md",
+        "assignedAT": "AT-hermes-config-81",
+        "passedDiagnostics": 1,
+        "nativeHTTPConnected": true,
+        "nativeSdkVersion": "2.0.0",
+        "nativeUid": 501,
+        "nativeGid": 20,
+        "transportOverrideUsed": false,
+        "nativeDiscoveryCount": 5,
+        "outsideNetworkAttempts": 0,
+        "blockedSubprocessAttempts": 1,
+        "nativeShutdownReadback": true,
+        "endpointThreadStopped": true,
+        "runShowExact": true,
+        "ownedWorldDown": true,
+        "failedAttempts": 2,
+        "wholeATsPassed": [],
+        "actualLifeStoreValidated": false,
+        "acceptanceComplete": false,
+        "strictCheck": {
+          "recordedAt": "2026-10-06T23:07:14.875816+00:00",
+          "command": "npm run check",
+          "exitCode": 0,
+          "artifacts": 382,
+          "contracts": 314,
+          "cliManifests": 25,
+          "features": 99,
+          "commands": 55,
+          "indexedATs": 1447,
+          "schemaDigest": "0b271593090f9fc0815b3154f2e74414cd7933005b5d974e398c2c4ad667b05c",
+          "evidence": "build/evidence/R0.10/mcp81-check-output.txt",
+          "languages": [
+            "TypeScript",
+            "Python"
+          ],
+          "SwiftDeferredTo": "R3"
+        }
       }
     },
     "R0.11": {
@@ -10475,7 +10564,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Poll ROOT-REQUESTS; exact root02 DONE immediately prioritizes R0.01 native grant-owner load after validated actual UID310 read/restoration. Otherwise implement the source-bound MCP81 minimum plan from the fresh unfiltered NOT_IMPLEMENTED baseline: write strict canonical observation/receipt and the existing HermesProfile public interface first, use installed SDK MCPServer and pinned Hermes public registration/status/shutdown with an isolated URL-only default HTTP fake endpoint, no hand-built protocol or live Life Store. Admit only on fresh normal native pressure and own declared need+512MiB. Source timebox begins at actual implementation; 2h stop or three-failure factual replan. Attention and Authority units are verified/stopped/pushed. R0.08 Luna/max remains independently read-only with deadline23:15:33 UTC. Preserve all frozen root hashes and prior contracts, TS/Python-only until R3, no whole-AT/account/native-service claim.",
+  "nextAction": "Commit and push the verified R0.10 MCP HTTP and independent R0.08 unfiltered manifest units; poll ROOT-REQUESTS and prioritize R0.01 on exact root02 DONE, otherwise continue the smallest independent R0 unit. No whole acceptance promotion.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -21054,24 +21143,24 @@
     "queuedRootReserveAdmissionGate": false
   },
   "latestStaticVerification": {
-    "recordedAt": "2026-10-06T22:50:02.152825+00:00",
+    "recordedAt": "2026-10-06T23:07:14.875816+00:00",
     "command": "npm run check",
     "exitCode": 0,
-    "artifacts": 380,
-    "contracts": 312,
-    "cliManifests": 21,
-    "features": 98,
+    "artifacts": 382,
+    "contracts": 314,
+    "cliManifests": 25,
+    "features": 99,
     "commands": 55,
     "indexedATs": 1447,
-    "schemaDigest": "2f2627a77cfbdb9c7d0cd97f49742fea8f336d5db7f05a834584252fff7dee61",
-    "evidence": "build/evidence/R0.10/authority60-check.txt",
+    "schemaDigest": "0b271593090f9fc0815b3154f2e74414cd7933005b5d974e398c2c4ad667b05c",
+    "evidence": "build/evidence/R0.10/mcp81-check-output.txt",
     "languages": [
       "TypeScript",
       "Python"
     ],
     "SwiftDeferredTo": "R3"
   },
-  "sourceCheckpointCommit": "1f50c26",
+  "sourceCheckpointCommit": "5f56a3b",
   "sourceCheckpointPushed": true,
   "rootRequests": {
     "ROOT-R004-20261006-01": {
@@ -21111,15 +21200,15 @@
     }
   },
   "resourceAdmission": {
-    "measuredAt": "2026-10-06T22:26:09.425Z",
-    "availableBytes": "2528755712",
+    "measuredAt": "2026-10-06T23:05:18.193Z",
+    "availableBytes": "2276753408",
     "pressure": "normal",
     "strictlyFreeAdmission": false,
     "repairFloorApplied": false,
     "ownedWorldsRunning": 0,
-    "helpersRunning": 0,
-    "helperNeedBytes": "0",
-    "measurementSource": "build/evidence/R0.03/held-response-current-cli/up.json",
+    "helpersRunning": 1,
+    "helperNeedBytes": "268435456",
+    "measurementSource": "build/evidence/R0.10/mcp81-current-doctor.json",
     "marginBytes": "536870912",
     "ownedStackId": null,
     "stackAndNativeChildrenNeedBytes": "0",
@@ -21131,15 +21220,15 @@
   },
   "activeWorkers": [
     {
-      "task": "r008_eligibility",
-      "card": "R0.08",
+      "task": "r005_control_probe_review",
+      "card": "R0.09",
       "model": "gpt-6-luna",
       "reasoning": "max",
-      "scope": "build/evidence/R0.08/next-assigned-minimum-plan.json only; no source/runtime changes",
       "state": "running_read_only",
-      "deadlineUtc": "2026-10-06T23:15:33Z",
-      "admissionObservedAt": "2026-10-06T22:45:33.183Z",
-      "availableBytes": "2237464576",
+      "scope": "build/evidence/R0.09/next-unfiltered-minimum-plan.json only",
+      "deadlineUtc": "2026-10-06T23:35:18Z",
+      "admissionObservedAt": "2026-10-06T23:05:18.193Z",
+      "availableBytes": "2276753408",
       "pressure": "normal",
       "ownNeedBytes": "268435456",
       "marginBytes": "536870912"

@@ -1,11 +1,22 @@
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
-import { checkViewSchema, nativeReleaseEligibilityInputSchema, nativeReleasePrerequisiteIdSchema, opsErrorMessages, registeredProbeInputSchema } from "@toy/contracts";
+import { checkViewSchema, nativeReleaseEligibilityInputSchema, nativeReleasePrerequisiteIdSchema, opsErrorMessages, registeredCliAcceptanceManifestInventory, registeredCliProbeInventory, registeredProbeInputSchema } from "@toy/contracts";
 import type { CheckViewV1, NativeReleaseEligibilityDecisionV1, NativeReleaseEligibilityInputV1, NativeReleasePrerequisiteV1, OpsControlContextV1, RegisteredProbeInputV1, RegisteredProbeOperationV1, Result } from "@toy/contracts";
 import { FixtureProbe, fixtureStackInspect } from "./fixture-stack.js";
 import { NativeReleaseEligibilityPolicy } from "./native-release-eligibility.js";
 
 const checkedAt = "2026-10-06T00:00:00.000Z";
+const nativeEligibilityProbeIds: readonly string[] = ["AT-ops-81", "AT-client-apps-49", "AT-activity-focus-64"];
+const nativeEligibilityScenarios: readonly string[] = [
+  "unknown-inventory",
+  "absent-membership",
+  "absent-licences",
+  "membership-does-not-prove-entitlements",
+  "verified-label-without-evidence",
+  "future-signing-evidence",
+  "family-controls-permission-required",
+  "verified-fixture-only"
+];
 const artifactDigest = (): string => createHash("sha256").update(readFileSync(new URL("./native-release-eligibility-probe.js", import.meta.url))).digest("hex");
 const inventory = (state: NativeReleasePrerequisiteV1["state"], withEvidence: boolean): NativeReleaseEligibilityInputV1 => {
   const assessment: NativeReleasePrerequisiteV1 = { state, checkedAt, links: { recordRefs: [], observations: [], artifactDigests: withEvidence ? [artifactDigest()] : [] } };
@@ -21,6 +32,31 @@ const nativeDeferred = (decision: NativeReleaseEligibilityDecisionV1): boolean =
   decision.capabilities.alarmKit, decision.capabilities.familyControls
 ].every(capability => capability.state === "deferred");
 const allDeferred = (decision: NativeReleaseEligibilityDecisionV1): boolean => Object.values(decision.capabilities).every(capability => capability.state === "deferred");
+const hasExactScenarios = (actual: readonly string[]): boolean => actual.length === nativeEligibilityScenarios.length
+  && new Set(actual).size === nativeEligibilityScenarios.length
+  && nativeEligibilityScenarios.every(scenario => actual.includes(scenario));
+const registeredForUnfilteredProbe = (probeId: RegisteredProbeInputV1["probeId"], scenarios: readonly string[]): boolean => {
+  const manifest = registeredCliAcceptanceManifestInventory.find(entry => entry.id === probeId);
+  const acceptance = registeredCliProbeInventory.find(entry => entry.id === probeId);
+  const observation = manifest?.observations.length === 1 ? manifest.observations[0] : undefined;
+  return nativeEligibilityProbeIds.includes(probeId)
+    && manifest !== undefined
+    && acceptance !== undefined
+    && manifest.sourceAssertionHash === acceptance.sourceAssertionHash
+    && manifest.owner === "ops"
+    && manifest.firstRelease === "R0"
+    && manifest.kind === "static_gate"
+    && manifest.scenarioId === "native-release-eligibility"
+    && manifest.faultControls.length === 0
+    && manifest.mandatoryCases.length === nativeEligibilityScenarios.length
+    && manifest.mandatoryCases.every((testCase, index) => testCase.id === nativeEligibilityScenarios[index]
+      && testCase.phase === nativeEligibilityScenarios[index]
+      && testCase.publicOperation === "NativeReleaseEligibilityProbe.run")
+    && observation !== undefined
+    && observation.id === "decision-cells"
+    && hasExactScenarios(observation.caseIds)
+    && hasExactScenarios(scenarios);
+};
 const fixtureCheck = (scenario: string, input: NativeReleaseEligibilityInputV1, expected: (decision: NativeReleaseEligibilityDecisionV1) => boolean): CheckViewV1 => {
   const decision = NativeReleaseEligibilityPolicy.evaluate(input);
   const noSpend = decision.purchaseAssumed === false && decision.weeklyFreeProvisioningCounted === false && decision.liveActivationAdmitted === false;
@@ -39,11 +75,12 @@ const fixtureCheck = (scenario: string, input: NativeReleaseEligibilityInputV1, 
 export const NativeReleaseEligibilityProbe = {
   run(input: RegisteredProbeInputV1, context: OpsControlContextV1): Result<RegisteredProbeOperationV1> {
     const invalid: Result<RegisteredProbeOperationV1> = { ok: false, error: { module: "ops", code: "INVALID_INPUT", message: opsErrorMessages.INVALID_INPUT, retryable: false } };
-    if (!registeredProbeInputSchema.safeParse(input).success || input.caseId !== "native-release-eligibility" || !["AT-ops-81", "AT-client-apps-49", "AT-activity-focus-64"].includes(input.probeId)) return invalid;
+    if (!registeredProbeInputSchema.safeParse(input).success || !nativeEligibilityProbeIds.includes(input.probeId)
+      || (input.caseId !== "native-release-eligibility" && !(input.caseId === undefined && registeredForUnfilteredProbe(input.probeId, nativeEligibilityScenarios)))) return invalid;
     const owned = fixtureStackInspect(context);
     if (!owned.ok) return owned;
     const snapshot = owned.data.result;
-    if (!snapshot?.ready || snapshot.clock !== "fake" || snapshot.model !== "fake") return invalid;
+    if (!snapshot?.ready || snapshot.release !== "R0" || snapshot.clock !== "fake" || snapshot.model !== "fake") return invalid;
     try {
       const verified = inventory("verified", true);
       const membershipAbsent = { ...verified, prerequisites: { ...verified.prerequisites, appleMembership: { ...verified.prerequisites.appleMembership, state: "absent" } } } satisfies NativeReleaseEligibilityInputV1;
@@ -52,17 +89,18 @@ export const NativeReleaseEligibilityProbe = {
       const membershipOnly = { ...unknown, prerequisites: { ...unknown.prerequisites, appleMembership: verified.prerequisites.appleMembership } };
       const futureSigning = { ...verified, prerequisites: { ...verified.prerequisites, distributionSigning: { ...verified.prerequisites.distributionSigning, checkedAt: "2026-10-07T00:00:00.000Z" } } };
       const permissionUnknown = { ...verified, prerequisites: { ...verified.prerequisites, familyControlsPermission: unknown.prerequisites.familyControlsPermission } };
-      const checks = [
-        fixtureCheck("unknown-inventory", unknown, decision => allDeferred(decision) && decision.deliveryBranch === "web-pwa-plus-discord"),
-        fixtureCheck("absent-membership", membershipAbsent, decision => nativeDeferred(decision) && decision.deliveryBranch === "web-pwa-plus-discord"),
-        fixtureCheck("absent-licences", licencesAbsent, decision => nativeDeferred(decision) && decision.deliveryBranch === "web-pwa-plus-discord" && decision.capabilities.appBlocking.state === "deferred" && decision.capabilities.wakeWord.state === "deferred"),
-        fixtureCheck("membership-does-not-prove-entitlements", membershipOnly, allDeferred),
-        fixtureCheck("verified-label-without-evidence", inventory("verified", false), allDeferred),
-        fixtureCheck("future-signing-evidence", futureSigning, nativeDeferred),
-        fixtureCheck("family-controls-permission-required", permissionUnknown, decision => decision.capabilities.familyControls.state === "deferred" && decision.capabilities.familyControls.missingPrerequisites.includes("familyControlsPermission")),
-        fixtureCheck("verified-fixture-only", verified, decision => Object.values(decision.capabilities).every(capability => capability.state === "eligible-for-testing") && decision.deliveryBranch === "native-candidate-plus-web-and-discord")
+      const cells = [
+        { scenario: "unknown-inventory", check: fixtureCheck("unknown-inventory", unknown, decision => allDeferred(decision) && decision.deliveryBranch === "web-pwa-plus-discord") },
+        { scenario: "absent-membership", check: fixtureCheck("absent-membership", membershipAbsent, decision => nativeDeferred(decision) && decision.deliveryBranch === "web-pwa-plus-discord") },
+        { scenario: "absent-licences", check: fixtureCheck("absent-licences", licencesAbsent, decision => nativeDeferred(decision) && decision.deliveryBranch === "web-pwa-plus-discord" && decision.capabilities.appBlocking.state === "deferred" && decision.capabilities.wakeWord.state === "deferred") },
+        { scenario: "membership-does-not-prove-entitlements", check: fixtureCheck("membership-does-not-prove-entitlements", membershipOnly, allDeferred) },
+        { scenario: "verified-label-without-evidence", check: fixtureCheck("verified-label-without-evidence", inventory("verified", false), allDeferred) },
+        { scenario: "future-signing-evidence", check: fixtureCheck("future-signing-evidence", futureSigning, nativeDeferred) },
+        { scenario: "family-controls-permission-required", check: fixtureCheck("family-controls-permission-required", permissionUnknown, decision => decision.capabilities.familyControls.state === "deferred" && decision.capabilities.familyControls.missingPrerequisites.includes("familyControlsPermission")) },
+        { scenario: "verified-fixture-only", check: fixtureCheck("verified-fixture-only", verified, decision => Object.values(decision.capabilities).every(capability => capability.state === "eligible-for-testing") && decision.deliveryBranch === "native-candidate-plus-web-and-discord") }
       ];
-      return FixtureProbe.run(input, context, checks);
+      if (input.caseId === undefined && !registeredForUnfilteredProbe(input.probeId, cells.map(cell => cell.scenario))) return invalid;
+      return FixtureProbe.run(input, context, cells.map(cell => cell.check));
     } catch { return { ok: false, error: { module: "ops", code: "ATTESTATION_INVALID", message: opsErrorMessages.ATTESTATION_INVALID, retryable: false } }; }
   }
 };

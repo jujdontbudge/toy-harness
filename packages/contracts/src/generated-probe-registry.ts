@@ -3338,6 +3338,77 @@ export const registeredCliProbeInventory = [
 ] as const;
 export const registeredCliAcceptanceManifestInventory = [
   {
+    "id": "AT-activity-focus-64",
+    "rung": "CLI",
+    "sourceAssertionHash": "d4c9ae3095b081a03ffeb72a648568018cd883116e15eac02182c579918c317b",
+    "commandId": "probe.run",
+    "scenarioId": "native-release-eligibility",
+    "owner": "ops",
+    "firstRelease": "R0",
+    "kind": "static_gate",
+    "mandatoryCases": [
+      {
+        "id": "unknown-inventory",
+        "publicOperation": "NativeReleaseEligibilityProbe.run",
+        "phase": "unknown-inventory"
+      },
+      {
+        "id": "absent-membership",
+        "publicOperation": "NativeReleaseEligibilityProbe.run",
+        "phase": "absent-membership"
+      },
+      {
+        "id": "absent-licences",
+        "publicOperation": "NativeReleaseEligibilityProbe.run",
+        "phase": "absent-licences"
+      },
+      {
+        "id": "membership-does-not-prove-entitlements",
+        "publicOperation": "NativeReleaseEligibilityProbe.run",
+        "phase": "membership-does-not-prove-entitlements"
+      },
+      {
+        "id": "verified-label-without-evidence",
+        "publicOperation": "NativeReleaseEligibilityProbe.run",
+        "phase": "verified-label-without-evidence"
+      },
+      {
+        "id": "future-signing-evidence",
+        "publicOperation": "NativeReleaseEligibilityProbe.run",
+        "phase": "future-signing-evidence"
+      },
+      {
+        "id": "family-controls-permission-required",
+        "publicOperation": "NativeReleaseEligibilityProbe.run",
+        "phase": "family-controls-permission-required"
+      },
+      {
+        "id": "verified-fixture-only",
+        "publicOperation": "NativeReleaseEligibilityProbe.run",
+        "phase": "verified-fixture-only"
+      }
+    ],
+    "trigger": "Evaluate the complete fixed no-spend release-eligibility fixture set through the public Ops probe and persist all eight scenario results; this is synthetic policy coverage only.",
+    "faultControls": [],
+    "observations": [
+      {
+        "id": "decision-cells",
+        "independentReader": "NativeReleaseEligibilityProbe.run and persisted probe.show scenario/decision readback",
+        "caseIds": [
+          "unknown-inventory",
+          "absent-membership",
+          "absent-licences",
+          "membership-does-not-prove-entitlements",
+          "verified-label-without-evidence",
+          "future-signing-evidence",
+          "family-controls-permission-required",
+          "verified-fixture-only"
+        ]
+      }
+    ],
+    "simUnavailableReason": "The assigned acceptance rung requires a CLI stack, device/account evidence and a registered probe. This manifest exercises only fixed external test projections through the public CLI; it does not inspect actual membership, licence or device state."
+  },
+  {
     "id": "AT-attention-66",
     "rung": "CLI",
     "sourceAssertionHash": "19bd2c265bd8baa95cbb780ca34b0ad5f53ba75f1bde7891147eb2838d4842f9",
@@ -3795,6 +3866,77 @@ export const registeredCliAcceptanceManifestInventory = [
     "simUnavailableReason": "SIM cannot inspect administrative pre-build decisions and research metadata. CLI invokes public owners with fixed external document, Codex CLI and OS artifact fakes."
   },
   {
+    "id": "AT-client-apps-49",
+    "rung": "CLI",
+    "sourceAssertionHash": "f4caef7202502076f80e1ebc139f0f25d5f81cc2964c5ac722bf29ba4fce7fb2",
+    "commandId": "probe.run",
+    "scenarioId": "native-release-eligibility",
+    "owner": "ops",
+    "firstRelease": "R0",
+    "kind": "static_gate",
+    "mandatoryCases": [
+      {
+        "id": "unknown-inventory",
+        "publicOperation": "NativeReleaseEligibilityProbe.run",
+        "phase": "unknown-inventory"
+      },
+      {
+        "id": "absent-membership",
+        "publicOperation": "NativeReleaseEligibilityProbe.run",
+        "phase": "absent-membership"
+      },
+      {
+        "id": "absent-licences",
+        "publicOperation": "NativeReleaseEligibilityProbe.run",
+        "phase": "absent-licences"
+      },
+      {
+        "id": "membership-does-not-prove-entitlements",
+        "publicOperation": "NativeReleaseEligibilityProbe.run",
+        "phase": "membership-does-not-prove-entitlements"
+      },
+      {
+        "id": "verified-label-without-evidence",
+        "publicOperation": "NativeReleaseEligibilityProbe.run",
+        "phase": "verified-label-without-evidence"
+      },
+      {
+        "id": "future-signing-evidence",
+        "publicOperation": "NativeReleaseEligibilityProbe.run",
+        "phase": "future-signing-evidence"
+      },
+      {
+        "id": "family-controls-permission-required",
+        "publicOperation": "NativeReleaseEligibilityProbe.run",
+        "phase": "family-controls-permission-required"
+      },
+      {
+        "id": "verified-fixture-only",
+        "publicOperation": "NativeReleaseEligibilityProbe.run",
+        "phase": "verified-fixture-only"
+      }
+    ],
+    "trigger": "Evaluate the complete fixed no-spend release-eligibility fixture set through the public Ops probe and persist all eight scenario results; this is synthetic policy coverage only.",
+    "faultControls": [],
+    "observations": [
+      {
+        "id": "decision-cells",
+        "independentReader": "NativeReleaseEligibilityProbe.run and persisted probe.show scenario/decision readback",
+        "caseIds": [
+          "unknown-inventory",
+          "absent-membership",
+          "absent-licences",
+          "membership-does-not-prove-entitlements",
+          "verified-label-without-evidence",
+          "future-signing-evidence",
+          "family-controls-permission-required",
+          "verified-fixture-only"
+        ]
+      }
+    ],
+    "simUnavailableReason": "The assigned acceptance rung requires a CLI stack, device/account evidence and a registered probe. This manifest exercises only fixed external test projections through the public CLI; it does not inspect actual membership, licence or device state."
+  },
+  {
     "id": "AT-hermes-config-75",
     "rung": "CLI",
     "sourceAssertionHash": "901516dd5ec64a9d7e28c9fcfec9f7877b8e539031fcfda5fe347e06919316cd",
@@ -3870,6 +4012,35 @@ export const registeredCliAcceptanceManifestInventory = [
       }
     ],
     "simUnavailableReason": "SIM cannot generate administrative native configuration or inspect the locked parser and isolated OS loader. The public Toy CLI drives the real owner and native consumers without loading a live profile."
+  },
+  {
+    "id": "AT-hermes-config-81",
+    "rung": "CLI",
+    "sourceAssertionHash": "3004088c3bb45e0ae8544fcefdcd53c79808d796adb2ab22e2b0c43f2d7937fc",
+    "commandId": "probe.run",
+    "scenarioId": "profile.mcp-http",
+    "owner": "hermes",
+    "firstRelease": "R0",
+    "kind": "behavioral",
+    "mandatoryCases": [
+      {
+        "id": "default-http-consumed",
+        "publicOperation": "HermesProfile.consumeMcpHttp",
+        "phase": "default-http-consumed"
+      }
+    ],
+    "trigger": "Use the pinned public Hermes MCP loader to connect to one disposable SDK endpoint with a URL-only life_store entry; observe actual default HTTP connection, discovered tool and bounded cleanup. Live Life Store remains pending.",
+    "faultControls": [],
+    "observations": [
+      {
+        "id": "native-http-discovery-and-cleanup",
+        "independentReader": "Public native registration/status/shutdown, SDK readiness, thread join and external OS counters",
+        "caseIds": [
+          "default-http-consumed"
+        ]
+      }
+    ],
+    "simUnavailableReason": "SIM cannot inspect the administrative pre-build native MCP transport. CLI exercises the real pinned loader with one external loopback SDK endpoint and OS isolation."
   },
   {
     "id": "AT-hermes-config-84",
@@ -4642,6 +4813,77 @@ export const registeredCliAcceptanceManifestInventory = [
       }
     ],
     "simUnavailableReason": "SIM cannot inspect pre-build admission counters or drive the native PostgreSQL restart boundary. The CLI exercises the real accounting owner with fixed external quota and clock observations."
+  },
+  {
+    "id": "AT-ops-81",
+    "rung": "CLI",
+    "sourceAssertionHash": "88d84164c5ee83c25b0ed94eed080de98cff8ed2c7ce27ad1f5982e8f9c99311",
+    "commandId": "probe.run",
+    "scenarioId": "native-release-eligibility",
+    "owner": "ops",
+    "firstRelease": "R0",
+    "kind": "static_gate",
+    "mandatoryCases": [
+      {
+        "id": "unknown-inventory",
+        "publicOperation": "NativeReleaseEligibilityProbe.run",
+        "phase": "unknown-inventory"
+      },
+      {
+        "id": "absent-membership",
+        "publicOperation": "NativeReleaseEligibilityProbe.run",
+        "phase": "absent-membership"
+      },
+      {
+        "id": "absent-licences",
+        "publicOperation": "NativeReleaseEligibilityProbe.run",
+        "phase": "absent-licences"
+      },
+      {
+        "id": "membership-does-not-prove-entitlements",
+        "publicOperation": "NativeReleaseEligibilityProbe.run",
+        "phase": "membership-does-not-prove-entitlements"
+      },
+      {
+        "id": "verified-label-without-evidence",
+        "publicOperation": "NativeReleaseEligibilityProbe.run",
+        "phase": "verified-label-without-evidence"
+      },
+      {
+        "id": "future-signing-evidence",
+        "publicOperation": "NativeReleaseEligibilityProbe.run",
+        "phase": "future-signing-evidence"
+      },
+      {
+        "id": "family-controls-permission-required",
+        "publicOperation": "NativeReleaseEligibilityProbe.run",
+        "phase": "family-controls-permission-required"
+      },
+      {
+        "id": "verified-fixture-only",
+        "publicOperation": "NativeReleaseEligibilityProbe.run",
+        "phase": "verified-fixture-only"
+      }
+    ],
+    "trigger": "Evaluate the complete fixed no-spend release-eligibility fixture set through the public Ops probe and persist all eight scenario results; this is synthetic policy coverage only.",
+    "faultControls": [],
+    "observations": [
+      {
+        "id": "decision-cells",
+        "independentReader": "NativeReleaseEligibilityProbe.run and persisted probe.show scenario/decision readback",
+        "caseIds": [
+          "unknown-inventory",
+          "absent-membership",
+          "absent-licences",
+          "membership-does-not-prove-entitlements",
+          "verified-label-without-evidence",
+          "future-signing-evidence",
+          "family-controls-permission-required",
+          "verified-fixture-only"
+        ]
+      }
+    ],
+    "simUnavailableReason": "The assigned acceptance rung requires a CLI stack, device/account evidence and a registered probe. This manifest exercises only fixed external test projections through the public CLI; it does not inspect actual membership, licence or device state."
   },
   {
     "id": "AT-RESEARCH-REGISTER-3",

@@ -812,6 +812,7 @@ RegisteredCheckIdV1 = Literal[
     "auth.native-runtime",
     "auth.native-fixture",
     "profile.native-gateway",
+    "profile.native-mcp-http",
     "bootstrap.reference.connector",
     "bootstrap.reference.tool",
     "bootstrap.reference.skill",
@@ -5558,6 +5559,70 @@ class HermesGatewayProfileReceiptV1(TypedDict):
 
 HermesGatewayProfileReceiptV1Scope = Literal[
     "gateway-fragment",
+]
+
+class HermesMcpHttpNativeObservationV1(TypedDict):
+    pid: int
+    parentPid: int
+    uid: int
+    gid: int
+    sdkVersion: "HermesMcpHttpNativeObservationV1SdkVersion"
+    configurationKeys: list["HermesMcpHttpNativeObservationV1ConfigurationKeysItem"]
+    transport: "HermesMcpHttpNativeObservationV1Transport"
+    connected: bool
+    tools: int
+    registeredTools: list["HermesMcpHttpNativeObservationV1RegisteredToolsItem"]
+    connectedAfterShutdown: bool
+    serverReady: bool
+    serverStopped: bool
+    loopbackConnections: int
+    deniedNetworkAttempts: int
+    blockedSocketBinds: int
+    deniedSubprocessAttempts: int
+    failureStage: "HermesMcpHttpNativeObservationV1FailureStage"
+
+HermesMcpHttpNativeObservationV1SdkVersion = Literal[
+    "2.0.0",
+]
+
+HermesMcpHttpNativeObservationV1ConfigurationKeysItem = Literal[
+    "url",
+]
+
+HermesMcpHttpNativeObservationV1Transport = Literal[
+    "http",
+    "unobserved",
+]
+
+HermesMcpHttpNativeObservationV1RegisteredToolsItem = Literal[
+    "mcp__life_store__fixture_ping",
+    "mcp__life_store__list_resources",
+    "mcp__life_store__read_resource",
+    "mcp__life_store__list_prompts",
+    "mcp__life_store__get_prompt",
+]
+
+HermesMcpHttpNativeObservationV1FailureStage = Literal[
+    "none",
+    "import",
+    "server-start",
+    "native-registration",
+    "native-shutdown",
+    "server-stop",
+]
+
+class HermesMcpHttpReceiptV1(TypedDict):
+    scope: "HermesMcpHttpReceiptV1Scope"
+    sourceCommit: "HermesGatewayConsumerInventoryV1SourceCommit"
+    sourceInventoryDigest: str
+    native: "HermesMcpHttpNativeObservationV1"
+    transportOverrideUsed: "RoleBootstrapReportV1IdentityGateVerified"
+    profilePublicationPerformed: "RoleBootstrapReportV1IdentityGateVerified"
+    liveProviderSends: "ModelRouteReceiptV1ReservationTokensVariant0"
+    acceptanceComplete: "RoleBootstrapReportV1IdentityGateVerified"
+
+HermesMcpHttpReceiptV1Scope = Literal[
+    "disposable-mcp-http",
 ]
 
 class InstalledHermesDependencyRecordV1(TypedDict):
