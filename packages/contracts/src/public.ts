@@ -38,6 +38,7 @@ export * from "./hermes-runtime.js";
 export * from "./backup-capacity.js";
 export * from "./siwc-control-stage.js";
 export * from "./obligations/v1/tool-schemas.mjs";
+export * from "./obligations/v1/tool-validation.mjs";
 
 type SchemaInventory = typeof primitiveSchemaInventory & typeof cliSchemaInventory & typeof controlEvidenceSchemaInventory
   & typeof sourceSchemaInventory & typeof opsRegistrySchemaInventory & typeof opsSchemaInventory & typeof backupCapacitySchemaInventory & typeof siwcControlStageSchemaInventory & typeof obligationToolSchemaInventory

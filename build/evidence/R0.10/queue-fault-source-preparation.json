@@ -1,0 +1,95 @@
+{
+  "schemaVersion": "toy.r0.10-queue-fault-source-preparation.v1",
+  "status": "SOURCE_PREPARED_NOT_EXECUTED",
+  "acceptance": {
+    "id": "AT-obligations-76",
+    "rung": "CLI; static, stack, probe",
+    "assertion": "Given the pinned shared queue and generated @toy/contracts artifacts, when both checked-out application transactions and native pg-boss worker transactions run the fault spike, job/domain rollback and lost-claim fencing pass through executeSql, the five schemas validate with their declared dialect, and no homemade polling queue or second schema owner is needed.",
+    "wholeAcceptanceState": "PENDING"
+  },
+  "ownedFiles": [
+    "packages/ops/src/queue-fault-probe.ts",
+    "docs/adr/0033-r0-native-pg-boss-fault-probe.md",
+    "build/evidence/R0.10/queue-fault-source-preparation.json"
+  ],
+  "installedPins": {
+    "postgresql": "17; existing withAccountingFixture lifecycle at packages/self-improvement/src/accounting-postgres.ts:49-100",
+    "pg": "8.23.1; node_modules/pg/package.json",
+    "pg-boss": "12.36.0; node_modules/pg-boss/package.json",
+    "ajv": "8.17.1; packages/contracts/node_modules/ajv/package.json, owned by contracts",
+    "zod": "4.6.5; @toy/contracts source boundary"
+  },
+  "nativePublicApiEvidence": [
+    {
+      "source": "node_modules/pg-boss/dist/index.d.ts:20-27,112-115",
+      "api": "PgBoss constructor accepts ConstructorOptions; getDb(): types.IDatabase"
+    },
+    {
+      "source": "node_modules/pg-boss/dist/types.d.ts:18-36,70-84",
+      "api": "IDatabase.executeSql(text: string, values?: unknown[]): Promise<{ rows: any[] }>; optional beginTransaction(): Promise<TransactionHandle>; TransactionHandle exposes db, commit(), rollback()"
+    },
+    {
+      "source": "node_modules/pg-boss/dist/types.d.ts:606-608,683",
+      "api": "ConnectionOptions.db?: IDatabase; SendOptions = JobOptions & QueueOptions & ConnectionOptions"
+    },
+    {
+      "source": "node_modules/pg-boss/dist/index.d.ts:25-27,43-50,58,65-72",
+      "api": "send(name, data, options); work(name, options, handler); offWork(name, { wait }); cancel(name, id); getJobById(name, id); deleteAllJobs(name); deleteQueue(name); stop(options)"
+    },
+    {
+      "source": "node_modules/pg-boss/dist/types.d.ts:986-1000,1036-1058",
+      "api": "WorkOptions.transactional?: boolean; work(name, { transactional: true }, handler) supplies TransactionalWorkHandler(jobs, tx: IDatabase)"
+    },
+    {
+      "source": "node_modules/pg-boss/dist/manager.js:619-681,805-808",
+      "api": "Native worker opens a transaction, runs handler and completion in it, and throws when the completion no longer owns the claim; catch rolls the handler transaction back"
+    },
+    {
+      "source": "node_modules/pg-boss/dist/manager.js:2048-2060 and node_modules/pg-boss/dist/plans.js:2506 onward",
+      "api": "Public cancel delegates to the native cancellation plan; active cancellation can remove the claim used by the worker completion fence"
+    }
+  ],
+  "implementationShape": {
+    "callerLifecycle": "Parent integration calls QueueFaultProbe.exercise inside the existing packages/self-improvement/src/accounting-postgres.ts withAccountingFixture lifecycle and passes that lifecycle's ModelAdmissionConnectionV1.",
+    "connectionFence": "Require test context, inspect the owned ready R0 fake-clock/fake-model stack, socketDirectory /private/tmp/toy-pg-${stackId}, database toy, peerRole userInfo().username, and connect to port 5432.",
+    "applicationTransaction": "PgBoss.getDb().beginTransaction() checks out a native transaction handle. Write the fixed domain marker through tx.db.executeSql, call boss.send(queue, payload, { db: tx.db }), and test rollback versus commit with native job and domain readbacks.",
+    "workerTransactions": "Use the pinned native boss.work(queue, { transactional: true }) handler; write only through the supplied tx.executeSql. Throw after the write for rollback, then use an entered/release promise barrier and public boss.cancel for lost-claim fencing.",
+    "workerWaits": "The only queue consumer is pg-boss's native worker poller. Probe synchronization uses promise barriers, native offWork({wait:true}), bounded waits, and getJobById readbacks; there is no custom queue polling loop.",
+    "domainState": "One fixed disposable public.toy_ops_queue_spike relation; all marker SQL is parameterized and scoped by owned stack ID plus probe request ID. No SQL references pg-boss tables.",
+    "resourceLimits": "PgBoss pool max 2, fixture PostgreSQL max_connections 4, UNIX socket only, fixed statement/lock timeouts, native scheduling/supervision disabled, and handler/client cleanup in finally.",
+    "schemaOwner": "Ops uses obligationToolParameters Zod schemas and the contracts-owned validateObligationToolParameters / obligationToolSchemaDialect functions plus schemaBundleArtifacts. Ops does not import Ajv or read schema files directly."
+  },
+  "fixedFalsificationCases": {
+    "applicationRollback": "Marker insert and native send share one checked-out pg-boss transaction; after rollback, getJobById is null and marker readback is absent.",
+    "applicationCommitControl": "Same checked-out transaction commits both marker and job; public readback sees both, then public cancel/readback proves the job can be cleaned before workers start.",
+    "nativeWorkerThrow": "Native transactional handler writes marker with tx.executeSql then throws a fixed error; after offWork wait the job is failed and marker is absent.",
+    "nativeLostClaim": "Native transactional handler writes marker then blocks; public cancel makes readback cancelled before release; after worker settlement marker is absent and job remains cancelled.",
+    "schemas": {
+      "toy_capture": "Valid create, amend with explicit patch null, and attach; reject unknown property and empty amend patch.",
+      "toy_due": "Accept minimal payload with now/through/cursor omitted and a second payload with those keys explicitly null; reject unknown property and duplicate UUID ids.",
+      "toy_resolve": "Accept fixed resolve payload; reject unknown property.",
+      "toy_defer": "Accept until and dependency variants; reject unknown property and duplicate dependency UUIDs.",
+      "toy_satisfy": "Accept fixed satisfy payload; reject unknown property.",
+      "dialect": "For all five tools, require the declared URI https://json-schema.org/draft/2020-12/schema and require both source Zod and generated Ajv validation results to match the fixed expectations. Contracts validator options are coerceTypes=false, removeAdditional=false, useDefaults=false."
+    }
+  },
+  "parentIntegrationObserved": [
+    "Central case/check registries now contain queue-transaction-faults and queue.obligation-faults with owner ops.",
+    "@toy/contracts now exposes the five tool schemas and the contracts-owned Ajv2020 validation/dialect helpers.",
+    "Ops public export and TestProbeControl whitelist are present; Self-Improvement dispatches the registered case through withAccountingFixture and supplies accountingTestConnection(stackId)."
+  ],
+  "verificationRemaining": [
+    "Parent-owned compile/typecheck and public CLI probe run on the admitted real PostgreSQL fixture.",
+    "Confirm generated artifact hashes and declared dialects through the contracts helper, then retain static, stack, and probe evidence; whole AT remains pending until all assigned evidence gates are complete."
+  ],
+  "sourceHashes": {
+    "packages/ops/src/queue-fault-probe.ts": "16d306590644780f0f1a38eefe45fd2a0a9009523a2d1978ae8f96e6b12cccb1",
+    "docs/adr/0033-r0-native-pg-boss-fault-probe.md": "65ecfe5cfa2f6f7db8a508d368b4bb06b24a115362c056a09af9d7fa3821ff1f"
+  },
+  "notPerformed": [
+    "TypeScript build or compile",
+    "Contracts generation or direct Ajv execution",
+    "PostgreSQL stack execution, pg-boss start, or database mutation",
+    "CLI probe run, stack lifecycle, or whole AT-obligations-76 verification"
+  ]
+}

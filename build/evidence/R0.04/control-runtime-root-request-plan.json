@@ -1,0 +1,95 @@
+{
+  "schemaVersion": "toy.r0.04-control-runtime-root-request-plan.v1",
+  "scope": "preparation-only",
+  "card": "R0.04",
+  "purpose": "Prepare the smallest root-only diagnostic of the staged control runtime, exact public Secrets import, and read-only SIWC Keychain access under the actual _toy_control identity.",
+  "preparedArtifact": {
+    "digest": "927562c37b764041c752a6a8d71168aedef088599d1a077ecac0b2228d7e2f71",
+    "fileCount": 2613,
+    "bytes": "201748037",
+    "finalPath": "/Library/Application Support/Toy/control/releases/927562c37b764041c752a6a8d71168aedef088599d1a077ecac0b2228d7e2f71",
+    "nodeVersion": "24.21.0",
+    "pythonVersion": "3.14.7",
+    "zodVersion": "4.6.5",
+    "expectedControlUid": 310,
+    "expectedControlGid": 310,
+    "bootstrapReceiptSha256": "980a7bbd94f61e8a5e4d0bec1860555091e7aa303b7981df4392a6f5ee49fe65"
+  },
+  "basis": [
+    "AGENTS.md requires a registered repository command for root operations, sanitized public JSON, preserved services/profiles/accounts, and evidence without secrets.",
+    "ROOT-R004-20261006-01 records the immutable staged artifact, UID/GID 310, read-only modes, unchanged current pointer/services, and original bootstrap receipt digest.",
+    "docs/adr/0031-siwc-control-runtime-staging.md explicitly leaves the root-only control parent inaccessible until a separately backed-up traversal step; staging does not claim Keychain access or any whole acceptance test.",
+    "specs/BUILD-PLAN.md R0.04 asks for measured identities and protected parents while preserving Johan's existing access. Current ops.md §§4–5 require a separate _toy_control identity, immutable protected code, and measured rather than guessed numeric assignments.",
+    "control/secrets/public.ts exports createMacOsSiwcKeychain. control/secrets/keychain.ts exposes read and compareAndWrite; read uses the fixed helper and pipes helper stdout into the Node process. python/toy_control/siwc_keychain.py enforces _toy_control UID/effective UID and queries only the fixed generic-password service/account with authentication UI disabled."
+  ],
+  "proposedRepositoryOperation": {
+    "integrationPoint": "A fixed probe operation in scripts/stage-siwc-control-runtime.mts, reusing its staged-manifest and protected-parent validation helpers.",
+    "arguments": ["probe", "<new-request-uuid>", "927562c37b764041c752a6a8d71168aedef088599d1a077ecac0b2228d7e2f71"],
+    "argumentRules": "Accept only the operation, UUID, and pinned artifact digest. No paths, executable, UID/GID, source text, shell command, environment, or caller-selected Keychain item are accepted.",
+    "preconditions": [
+      "Require actual root real/effective UID; resolve _toy_control independently and require the receipt's numeric UID/GID to remain exactly 310/310 with no admin-group membership.",
+      "Before changing metadata, lstat the full ancestor chain and both target parents; reject symlinks, unexpected ownership, unexpected current mode, or any ancestor that does not already permit UID 310 path traversal. Change no ancestor other than the two fixed target parents.",
+      "Verify the staged artifact digest, manifest, every entry's path/kind/owner/GID/mode/content digest, single-link regular files, in-payload symlink targets, absence of extra entries, and pinned Node/Python relocation. Require the staged release and payload to remain root:310 mode 0550.",
+      "Read and hash the original bootstrap receipt before the first chmod; require SHA256 980a7bbd94f61e8a5e4d0bec1860555091e7aa303b7981df4392a6f5ee49fe65. Save each target parent's numeric UID, GID, and full permission/special-mode bits in a new root-only, create-exclusive request journal before changing either parent."
+    ]
+  },
+  "minimalPermissionWindow": {
+    "parents": [
+      {
+        "path": "/Library/Application Support/Toy/control",
+        "requiredBefore": {"uid": 0, "gid": 0, "mode": "0700"},
+        "temporaryMode": "0710",
+        "restoration": "Restore the exact saved mode in finally; do not chown or change setgid/sticky bits."
+      },
+      {
+        "path": "/Library/Application Support/Toy/control/releases",
+        "requiredBefore": {"uid": 0, "gid": 0, "mode": "0700"},
+        "temporaryMode": "0710",
+        "restoration": "Restore the exact saved mode in finally; do not chown or change setgid/sticky bits."
+      }
+    ],
+    "workingDirectory": "Create /Library/Application Support/Toy/control/requests as a new root:310 mode 0550 directory if absent; if it already exists, require exact owner/mode and reject links. Create one new request-UUID child root:310 mode 0550, empty and create-exclusive, as the child cwd. Neither directory contains executable or mutable request input; reject an existing request path.",
+    "childIdentityTransition": "Use the staged Python 3.14.7 executable with -I -S -B and a fixed wrapper that clears supplementary groups, sets GID 310, then UID 310, verifies real/effective UID and GID plus empty supplementary groups, and execs the staged Node 24.21.0 executable. The Node process checks the identity before its first dynamic import. Its environment is fixed to PATH, LANG, and LC_ALL; it receives no inherited secrets or stdin payload.",
+    "restoreAndReadback": "In finally, attempt restoration of both parents even if one restore fails, restore releases before control, then independently lstat both and re-hash the bootstrap receipt. Report restoration/readback separately from probe success; a failed restoration is a hard failure and must not be represented as a successful diagnostic."
+  },
+  "childProbe": {
+    "onlyImport": "Dynamically import the exact staged control/dist/secrets/public.js file URL after identity checks; no caller-selected import, plugin discovery, or import from the checkout. Treat the two factory exports as unknown and check typeof only: createMacOsSiwcKeychain and createSiwcAuthorization. Do not invoke either factory. Its compiled transitive @toy/contracts/Zod closure is already part of the immutable staged artifact.",
+    "onlyKeychainCall": "Spawn the exact staged runtime/python/bin/python3 with fixed argv [-I, -S, -B, <staged python/toy_control/siwc_keychain.py>, read], cwd set to the staged payload, fixed PATH/LANG/LC_ALL, a 10-second timeout, and stdio [ignore, ignore, ignore]. Never call the TypeScript compareAndWrite API, invoke authorization/browser/model/provider APIs, send network traffic, or select a Keychain item from input.",
+    "secretHandling": "The staged TypeScript public entry is import-checked only. For the capability read, spawn the exact staged Python helper directly with fixed argv [read] and stdin/stdout/stderr all ignored. The helper's raw bytes are discarded by the OS and never enter Node, the root parent, evidence, or model context. Report only the constrained keychainState enum derived from exit code: 0=present, 3=absent, 5=unavailable; timeout, signal, spawn error, or any other exit maps to unavailable. Never emit value, length, digest, prefix, exception text, or other Keychain metadata.",
+    "boundedRead": "The helper's fixed service/account query and authentication-UI-fail setting are retained. No unrestricted Keychain search, UI prompt, credential write, grant parsing, or secret receipt is allowed.",
+    "timeBound": "One read attempt with the existing 10-second adapter timeout; keep the complete root operation within the 15-minute request window."
+  },
+  "publicOutput": {
+    "format": "One strict JSON object on root-request stdout with boolean operation/restore fields and one constrained keychainState enum; no exception strings or other credential-derived metadata.",
+    "booleanFields": [
+      "artifactVerified",
+      "roleIdentityVerified",
+      "parentsOpened",
+      "childStarted",
+      "uidVerified",
+      "gidVerified",
+      "supplementaryGroupsCleared",
+      "publicModuleImported",
+      "keychainFactoryExported",
+      "authorizationFactoryExported",
+      "parentsRestored",
+      "parentReadbackVerified",
+      "bootstrapReceiptPreserved",
+      "keychainWriteAttempted",
+      "currentPointerChanged",
+      "servicesActivated",
+      "liveProviderSendAttempted",
+      "liveProfileChanged",
+      "acceptanceComplete"
+    ],
+    "keychainStateValues": ["absent", "present", "unavailable"],
+    "exitMeaning": "Exit 0 only when the requested capability probe completes and both parent modes plus receipt are independently restored/read back. A probe failure after successful restoration is nonzero with the restoration booleans true. Any restoration/readback failure is a distinct nonzero result and requires stopping further R0.04 work until repaired.",
+    "alwaysFalseFields": ["keychainWriteAttempted", "currentPointerChanged", "servicesActivated", "liveProviderSendAttempted", "liveProfileChanged", "acceptanceComplete"]
+  },
+  "limitations": [
+    "This diagnostic can establish only the staged runtime/import path and one fixed read-only Keychain capability under UID/GID 310. It does not pass R0.04 or any AT, establish the maintenance/recovery identity, verify sockets or the full role/credential manifest, start a service, obtain SIWC consent, attest provider/account support, or authorize a send.",
+    "The existing SiwcControlStageReportV1 schema fixes keychainCalled to false and has no probe operation. Do not reuse it or falsify that field. A future runnable implementation needs an appropriate generated report contract before it can satisfy AGENTS.md's generated-contract rule; this preparation intentionally makes no contract/source/generated/map/root-request edits."
+  ],
+  "preparedBy": "read-only R0.04 request preparation",
+  "executionStatus": "not-executed"
+}

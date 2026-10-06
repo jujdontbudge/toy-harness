@@ -3662,7 +3662,7 @@
     },
     {
       "id": "contracts.obligation-tool-schemas",
-      "description": "Five normative Obligations parameter schemas and generated Draft2020-12/TypeScript/Python artifacts; transactional queue and whole AT76 validation remain pending.",
+      "description": "Five normative Obligations parameter schemas and digest-checked Draft2020-12 validation through the contracts-owned Ajv2020 boundary; whole AT76 certification remains pending.",
       "requirementIds": [
         "spec:obligations"
       ],
@@ -3670,9 +3670,10 @@
       "implementation": "built",
       "entry": "packages/contracts/src/public.ts",
       "owner": "contracts",
-      "publicInterface": "obligationToolParameters",
+      "publicInterface": "obligationToolParameters; validateObligationToolParameters; obligationToolSchemaDialect",
       "paths": [
         "packages/contracts/src/obligations/v1/tool-schemas.mts",
+        "packages/contracts/src/obligations/v1/tool-validation.mts",
         "packages/contracts/src/public.ts",
         "docs/adr/0032-r0-obligation-tool-schemas.md",
         "scripts/generate-contracts.mjs"
@@ -3684,6 +3685,29 @@
       "atIds": [
         "AT-obligations-76"
       ]
+    },
+    {
+      "id": "ops.native-queue-faults",
+      "description": "Fixed CLI probe uses real PostgreSQL17 and native pg-boss application/worker transactions to falsify rollback and lost-claim fencing, with all five generated tool schemas; whole AT certification remains pending.",
+      "requirementIds": ["spec:obligations", "spec:ops"],
+      "firstRelease": "R0",
+      "implementation": "built",
+      "entry": "cli/src/main.ts",
+      "owner": "ops",
+      "publicInterface": "QueueFaultProbe.exercise",
+      "paths": [
+        "packages/ops/src/public.ts",
+        "packages/ops/src/queue-fault-probe.ts",
+        "packages/ops/src/pg-boss-published-types.d.ts",
+        "packages/ops/src/fixture-stack.ts",
+        "packages/self-improvement/src/public.ts",
+        "packages/self-improvement/src/accounting-postgres.ts",
+        "packages/contracts/src/test-control.ts",
+        "packages/contracts/src/ops-registry.ts",
+        "docs/adr/0033-r0-native-pg-boss-fault-probe.md"
+      ],
+      "commands": ["probe.run", "probe.show"],
+      "atIds": ["AT-obligations-76"]
     }
   ],
   "requirements": [
@@ -4173,9 +4197,14 @@
       "path": "docs/adr/0031-siwc-control-runtime-staging.md"
     },
     {
-      "id": "obligationToolParameters",
+      "id": "obligationToolParameters; validateObligationToolParameters; obligationToolSchemaDialect",
       "owner": "contracts",
       "path": "docs/adr/0032-r0-obligation-tool-schemas.md"
+    },
+    {
+      "id": "QueueFaultProbe.exercise",
+      "owner": "ops",
+      "path": "docs/adr/0033-r0-native-pg-boss-fault-probe.md"
     }
   ],
   "commands": [

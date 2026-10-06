@@ -2,8 +2,8 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-06T15:56:56.470725+00:00",
-  "phase": "R0.01 critical;8actual identities observed;3macOS bootstrap fixes and12CLI regression invocations verified, source checkpoint commit pending",
+  "updatedAt": "2026-10-06T16:13:26.912Z",
+  "phase": "R0.01 critical; actual identities and immutable control stage verified; native queue/schema CLI spike verified",
   "activeCard": "R0.01",
   "cardCount": 87,
   "acceptanceCount": 1447,
@@ -18,7 +18,7 @@
       ],
       "pendingATs": [],
       "pendingConditions": [
-        "Independent OS filesystem protection at R0.04\u201305"
+        "Independent OS filesystem protection at R0.04–05"
       ],
       "requiredATs": [
         "AT-hermes-config-101"
@@ -48,7 +48,7 @@
       "pendingATs": [],
       "pendingConditions": [
         "Runtime generated-schema agreement at R0.10/R1",
-        "Independent actual-identity and native-launcher protection at R0.04\u201305"
+        "Independent actual-identity and native-launcher protection at R0.04–05"
       ],
       "lastVerification": {
         "evidence": "build/evidence/R0.K2/bootstrap.json",
@@ -594,7 +594,8 @@
         "build/evidence/R0.04-post-bootstrap-doctor.json",
         "build/evidence/R0.04/macos-bootstrap-verification.json",
         "build/evidence/R0.04/existing-installation-verification.json",
-        "build/evidence/R0.04/siwc-control-stage-preparation.json"
+        "build/evidence/R0.04/siwc-control-stage-preparation.json",
+        "build/evidence/R0.04/root-stage-result.json"
       ],
       "requiredATs": [
         "AT-authority-34",
@@ -610,7 +611,7 @@
         "AT-ops-70"
       ],
       "preparation": {
-        "status": "ACTUAL_IDENTITIES_VERIFIED_IMMUTABLE_CONTROL_ARTIFACT_PREPARED_ROOT_STAGE_PENDING",
+        "status": "ACTUAL_IDENTITIES_AND_IMMUTABLE_CONTROL_STAGE_VERIFIED_RUNTIME_IDENTITY_PROBE_NEXT",
         "interface": "docs/adr/0025-role-identity-inventory.md",
         "evidence": "build/evidence/R0.04/role-inventory-preparation.json",
         "acceptanceComplete": false,
@@ -649,7 +650,7 @@
           "files": 2613,
           "bytes": "201748037",
           "localRelocationVerified": true,
-          "rootStageVerified": false,
+          "rootStageVerified": true,
           "traversalInstalled": false,
           "keychainVerified": false,
           "serviceActivated": false,
@@ -661,7 +662,7 @@
         "targetStopAt": "2026-10-06T17:02:44.142623+00:00",
         "scope": "Review externally supplied3macOS bootstrap fixes; CLI-only externalOS regressions, actual identity readbacks, commit and minimum required runtime protection.",
         "bootstrapFixesVerifiedAt": "2026-10-06T15:06:33.297547+00:00",
-        "nextRootRequest": "ROOT-R004-20261006-01"
+        "nextRootRequest": "Prepare ROOT-R004-20261006-02"
       },
       "lastVerification": {
         "evidence": "build/evidence/R0.04/existing-installation-verification.json",
@@ -1001,7 +1002,8 @@
         "build/evidence/R0.10/package-access-restored.json",
         "build/evidence/R0.10/exact-pin-alignment.json",
         "build/evidence/R0.10/pg-boss-fault-spike-plan.json",
-        "build/evidence/R0.10/tool-schema-preparation.json"
+        "build/evidence/R0.10/tool-schema-preparation.json",
+        "build/evidence/R0.10/native-queue-verification.json"
       ],
       "requiredATs": [
         "AT-activity-focus-86",
@@ -1016,7 +1018,7 @@
         "AT-obligations-76"
       ],
       "preparation": {
-        "status": "EXACT_PINS_DECLARED_LOCKED_INSTALLED_JOINT_STATIC_PASS_RUNTIME_ATS_PENDING",
+        "status": "EXACT_PINS_FIVE_GENERATED_SCHEMAS_AND_NATIVE_PG_BOSS_CLI_FAULTS_VERIFIED_WHOLE_ACCEPTANCE_PENDING",
         "zodSelectionRecorded": true,
         "runtimeValidatorInstalled": true,
         "typescriptSourcePinReconciled": true,
@@ -1035,10 +1037,18 @@
           "dependencyPinsChanged": false
         },
         "pinAlignmentEvidence": "build/evidence/R0.10/exact-pin-alignment.json",
-        "jointCheck": "build/evidence/R0.04-verify-joint-check.txt",
+        "jointCheck": "build/evidence/R0.10/queue-check-complete.txt",
         "toolSchemasGenerated": true,
         "toolSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
-        "nativeQueueFaultSpikeVerified": false
+        "nativeQueueFaultSpikeVerified": true
+      },
+      "lastVerification": {
+        "evidence": "build/evidence/R0.10/native-queue-verification.json",
+        "verdict": "PASS_SIX_CLI_DIAGNOSTIC_CHECKS_AND_COMPLETE_TEARDOWNS",
+        "acceptanceComplete": false,
+        "wholeATsPassed": [],
+        "readbackExact": true,
+        "checkCount": 6
       }
     },
     "R0.11": {
@@ -1095,7 +1105,7 @@
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
       "sourceRowHash": "d77a05745e5e9fe403fd751ff619ff18ce583a01f3587c473aee7ca3e349a9f8",
-      "dependsOn": "R0.07\u201313 complete",
+      "dependsOn": "R0.07–13 complete",
       "evidence": [],
       "requiredATs": [
         "AT-RESEARCH-REGISTER-1",
@@ -1231,7 +1241,7 @@
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
       "sourceRowHash": "76da6f965780fec0113f7d4373e220259d9e26c3eb658b1a4ab129701392f2dc",
-      "dependsOn": "Preparation: R0.14, R0.K4, canonical skill registry additions; completion: R1.16\u201318, CLI-07b/08",
+      "dependsOn": "Preparation: R0.14, R0.K4, canonical skill registry additions; completion: R1.16–18, CLI-07b/08",
       "evidence": [],
       "requiredATs": [
         "AT-hermes-config-102",
@@ -1612,7 +1622,7 @@
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
       "sourceRowHash": "a7e630123387cb1268683ac050cd09d835f4e9db495409c183d6bd168709a742",
-      "dependsOn": "R1.16\u201317; R1.05/09\u201315 interfaces available",
+      "dependsOn": "R1.16–17; R1.05/09–15 interfaces available",
       "evidence": [],
       "requiredATs": [
         "AT-hermes-config-12",
@@ -1713,7 +1723,7 @@
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
       "sourceRowHash": "aa24bfddba2b656e71d62ddcb7ed3c95d43ce6f61d2a0fae27c541ea40880fac",
-      "dependsOn": "R1.07, R1.12, R1.16, R1.19\u201321",
+      "dependsOn": "R1.07, R1.12, R1.16, R1.19–21",
       "evidence": [],
       "requiredATs": [
         "AT-RESEARCH-REGISTER-18",
@@ -1838,7 +1848,7 @@
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
       "sourceRowHash": "7b00dca41ae63a4b1572fe2bc14b67e6744f14d054afeb3f08024a418e6ffd8c",
-      "dependsOn": "R1.15\u201325",
+      "dependsOn": "R1.15–25",
       "evidence": [],
       "requiredATs": [
         "AT-adhd-features-89",
@@ -1935,7 +1945,7 @@
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
       "sourceRowHash": "00e89c6ed0a6e6ba2403e859afdc55d94f6caaac3f3a4e683e021df7aa4fb9bb",
-      "dependsOn": "R1.27\u201329",
+      "dependsOn": "R1.27–29",
       "evidence": [],
       "requiredATs": [
         "AT-authority-45",
@@ -1975,7 +1985,7 @@
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
       "sourceRowHash": "7b1a2ff19c6a63340fd01a01b81763cf4377451551bbc011390c60f2b5c7b7f1",
-      "dependsOn": "R1.27\u201331",
+      "dependsOn": "R1.27–31",
       "evidence": [],
       "requiredATs": [
         "AT-attention-88",
@@ -2008,7 +2018,7 @@
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
       "sourceRowHash": "386729eb45edc1e27d9ef15cc447df371ac5adf04ccc3cc4fc09ba1ea9dc8b7b",
-      "dependsOn": "R1.32\u201333; full duration",
+      "dependsOn": "R1.32–33; full duration",
       "evidence": [],
       "requiredATs": [
         "AT-RESEARCH-REGISTER-1",
@@ -2798,7 +2808,7 @@
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
       "sourceRowHash": "6f86d7615617bb34ebd1e9f24c02a45dd44692159d013ceeff71c748eda3af36",
-      "dependsOn": "R1.34\u201336; each account's policy gate",
+      "dependsOn": "R1.34–36; each account's policy gate",
       "evidence": [],
       "requiredATs": [
         "AT-authority-15",
@@ -2827,7 +2837,7 @@
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
       "sourceRowHash": "51ba971f320806726268f326c4031705b76df3c0483040965a7641f150885f7b",
-      "dependsOn": "R1.34\u201337",
+      "dependsOn": "R1.34–37",
       "evidence": [],
       "requiredATs": [
         "AT-RESEARCH-REGISTER-1",
@@ -3815,7 +3825,7 @@
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
       "sourceRowHash": "a5fe0797389be7e49354f71791a2e87653cf4344f236b72c4927d4b65e1757a9",
-      "dependsOn": "R2.02\u201305",
+      "dependsOn": "R2.02–05",
       "evidence": [],
       "requiredATs": [
         "AT-adhd-features-100",
@@ -3884,7 +3894,7 @@
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
       "sourceRowHash": "81095f8c67f6d0b1793e666de26ba0c92760fbc4f9e311a333d6335e7db57d27",
-      "dependsOn": "R2.01\u201307 and R2.SI1\u2013SI4 acceptance",
+      "dependsOn": "R2.01–07 and R2.SI1–SI4 acceptance",
       "evidence": [],
       "requiredATs": [
         "AT-RESEARCH-REGISTER-1",
@@ -5129,7 +5139,7 @@
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
       "sourceRowHash": "6c0e7b935c4155f0afd3c3cb7b5d34f7fc916a27d4b15899bdc4f161b4cb010f",
-      "dependsOn": "R3.02; R3.03\u201304 if enabled",
+      "dependsOn": "R3.02; R3.03–04 if enabled",
       "evidence": [],
       "requiredATs": [
         "AT-RESEARCH-REGISTER-1",
@@ -6600,7 +6610,7 @@
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
       "sourceRowHash": "e22908d652f35c592cf18d45621d7eac2194b243c11020e43dbbc20a8b60c935",
-      "dependsOn": "R4.01\u201306, applicable branch",
+      "dependsOn": "R4.01–06, applicable branch",
       "evidence": [],
       "requiredATs": [
         "AT-RESEARCH-REGISTER-1",
@@ -8074,7 +8084,7 @@
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
       "sourceRowHash": "c6b84b002613f4088513a8c3b2d6f35cd93d55934ff38304b8960867ec207b0e",
-      "dependsOn": "R5.01\u201303; separate pilot admission",
+      "dependsOn": "R5.01–03; separate pilot admission",
       "evidence": [],
       "requiredATs": [
         "AT-lifestore-31",
@@ -8087,7 +8097,7 @@
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
       "sourceRowHash": "d1107aab1f55fe0e84b9e669f597f1236594fe13e6f86c117a701f9dbbee15e1",
-      "dependsOn": "R5.01\u201303; R5.04 if enabled",
+      "dependsOn": "R5.01–03; R5.04 if enabled",
       "evidence": [],
       "requiredATs": [
         "AT-RESEARCH-REGISTER-1",
@@ -9558,7 +9568,7 @@
       "acceptance": "PENDING",
       "evidence": [],
       "sourceRowHash": "10b24b8efc20ac114d73205b10b39a22c827f9ecbcd6df43764d30f5e8c98711",
-      "dependsOn": "R2.SI1 implementation; R0.04\u201305 actual identities; R1.29 control foundations; R2.03 and R2.05 read broker interfaces",
+      "dependsOn": "R2.SI1 implementation; R0.04–05 actual identities; R1.29 control foundations; R2.03 and R2.05 read broker interfaces",
       "requiredATs": [
         "AT-cli-39",
         "AT-ops-86",
@@ -9691,7 +9701,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "R0.04 minimum actual protection/runtime manifest for R0.01; independent Luna aligns exact R0.10 pins. No test stack live.",
+  "nextAction": "Prepare the next exact R0.04 root request for actual control UID runtime and native Keychain-read capability; Claude executes root; continue independent cards while pending.",
   "previousTurnClassification": "NO_PROGRESS",
   "failures": [
     {
@@ -20181,25 +20191,22 @@
   },
   "pullRequest": "https://github.com/JohanSardar/toy-harness/pull/1",
   "lastWorker": {
-    "card": "R0.10",
-    "task": "r010_pg_boss_fault_plan",
+    "card": "R0.04",
+    "task": "r004_control_runtime_request",
     "model": "gpt-6-luna",
     "reasoning": "max",
-    "state": "running",
-    "ownedScope": "Ops fixed native queue faults and generated-schema CLI preparation; parent owns integration"
+    "state": "completed",
+    "ownedScope": "Read-only fixed next-root-operation plan; parent owns implementation"
   },
   "continuationAssessment": {
-    "generatedAt": "2026-10-06T15:56:56.470725+00:00",
+    "generatedAt": "2026-10-06T16:13:26.912Z",
     "classification": "progress",
-    "reason": "Frozen202MB SIWC runtime relocated locally and rootrequest prepared; independent native queue/schema work continues whileClaude executes pending root step.",
+    "reason": "Claude staged and independently verified immutable control bundle; six native PostgreSQL/queue/schema CLI checks and exact persisted readback pass; all owned worlds down.",
     "consecutiveGoalTurnsAtSameImpasse": 0,
     "goalStatus": "active",
     "evidence": [
-      "build/evidence/R0.04/existing-installation-verification.json",
-      "build/evidence/R0.06/accounting-runtime-verification.json",
-      "build/evidence/R0.10/exact-pin-alignment.json",
-      "build/evidence/R0.05/actual-control-denial-verification.json",
-      "build/evidence/R0.04/siwc-control-stage-preparation.json"
+      "build/evidence/R0.04/root-stage-result.json",
+      "build/evidence/R0.10/native-queue-verification.json"
     ],
     "blockedStatusThresholdReached": false
   },
@@ -20237,28 +20244,44 @@
   "latestStaticVerification": {
     "command": "npm run check",
     "exitCode": 0,
-    "log": "build/evidence/R0.04-siwc-stage-check.txt",
+    "log": "build/evidence/R0.10/queue-check-complete.txt",
     "artifacts": 337,
     "contracts": 269,
-    "features": 93,
+    "features": 94,
     "commands": 55,
     "indexedATs": 1447,
     "swiftInvoked": false,
-    "schemaDigest": "da77276c105bb5adde726bf442d63262e221745e71fd9ec887b2bd2cd2d75ce9",
-    "generatedAt": "2026-10-06T15:56:56.470725+00:00",
+    "schemaDigest": "e49e3ae00b779e2dfc075d7de46f3957e033b76f4c24d347f62891fec12a6ddc",
+    "generatedAt": "2026-10-06T16:13:26.912Z",
     "wholeATComplete": false
   },
-  "sourceCheckpointCommit": "d469066",
+  "sourceCheckpointCommit": "f317b59",
   "sourceCheckpointPushed": true,
   "rootRequests": {
     "ROOT-R004-20261006-01": {
       "requestId": "ae742735-1693-4322-81f9-8767c0074179",
       "card": "R0.04",
-      "state": "PENDING",
+      "state": "DONE",
       "artifactDigest": "927562c37b764041c752a6a8d71168aedef088599d1a077ecac0b2228d7e2f71",
       "file": "build/ROOT-REQUESTS.md",
       "preparedEvidence": "build/evidence/R0.04/siwc-control-stage-preparation.json",
-      "rootExecuted": false
+      "rootExecuted": true,
+      "rootExecutor": "Claude",
+      "verificationEvidence": "build/evidence/R0.04/root-stage-result.json"
     }
+  },
+  "resourceAdmission": {
+    "observedAt": "2026-10-06T16:07:24.453Z",
+    "minimumAvailableBytes": "2666594304",
+    "pressure": "normal",
+    "pressureSource": "os",
+    "ownJobNeedBytes": "1073741824",
+    "childNeedBytes": "0",
+    "marginBytes": "536870912",
+    "strictlyFreeAdmission": false,
+    "admitted": true,
+    "concurrentChildren": 0,
+    "ownedStacksRunning": 0,
+    "teardownComplete": true
   }
 }

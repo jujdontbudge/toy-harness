@@ -3,9 +3,10 @@ export { EngineeringControl } from "./engineering-control.js";
 export { ModelAdmission } from "./model-admission.js";
 import { opsErrorMessages, registeredProbeInputSchema } from "@toy/contracts";
 import type { OpsControlContextV1, RegisteredProbeInputV1, RegisteredProbeOperationV1, RegisteredProbeShowInputV1, Result } from "@toy/contracts";
-import { OpsTestStack, TestProbeControl } from "@toy/ops/public";
+import { OpsTestStack, QueueFaultProbe, TestProbeControl } from "@toy/ops/public";
 import { referenceCheck } from "./reference-check.js";
 import { accountingProbe } from "./accounting-probe.js";
+import { accountingTestConnection, withAccountingFixture } from "./accounting-postgres.js";
 
 export const ReplayEnvironment = {
   async runRegisteredProbe(input: RegisteredProbeInputV1, context: OpsControlContextV1): Promise<Result<RegisteredProbeOperationV1>> {
@@ -13,7 +14,13 @@ export const ReplayEnvironment = {
     if (!owned.ok) return owned;
     if (!registeredProbeInputSchema.safeParse(input).success) return { ok: false, error: { module: "ops", code: "INVALID_INPUT", message: opsErrorMessages.INVALID_INPUT, retryable: false } };
     if (input.caseId === "model-admission") return accountingProbe(input, context);
+    if (input.caseId === "queue-transaction-faults" && input.probeId !== "AT-obligations-76") return { ok: false, error: { module: "ops", code: "INVALID_INPUT", message: opsErrorMessages.INVALID_INPUT, retryable: false } };
     try {
+      if (input.caseId === "queue-transaction-faults" && context.environment.stackId !== null) {
+        const stackId = context.environment.stackId;
+        const checks = await withAccountingFixture(stackId, context.timeoutMs, () => QueueFaultProbe.exercise(input, context, accountingTestConnection(stackId)));
+        return TestProbeControl.run(input, context, checks);
+      }
       if (input.probeId === "AT-hermes-config-101" && input.caseId && ["k4a-connector", "k4a-tool", "k4a-skill"].includes(input.caseId)) {
         return TestProbeControl.run(input, context, [await referenceCheck(input.caseId, context)]);
       }

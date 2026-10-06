@@ -213,14 +213,16 @@ export const fixtureStackDown = async (input: TestStackDownInputV1, context: Ops
     const key = "stack.down:" + input.requestId; const hash = digest(JSON.stringify({ stackId: value.stackId, requestId: input.requestId }));
     const existing = target.prepare("SELECT digest,receipt FROM request WHERE id=?").get(key);
     if (existing) { if (existing.digest !== hash) refuse("CONFLICT"); return { ok: true, data: testStackOperationSchema.parse(decode(existing.receipt)) }; }
-    const observed = worker(target, value) ?? refuse("ATTESTATION_INVALID");
-    if (value.pid !== null && value.pid !== observed.pid) refuse("ATTESTATION_INVALID");
+    const observed = worker(target, value);
+    if (observed === null && (value.state !== "failed" || value.pid !== null && alive(value.pid))) refuse("ATTESTATION_INVALID");
+    if (observed !== null && value.pid !== null && value.pid !== observed.pid) refuse("ATTESTATION_INVALID");
+    const pid = observed?.pid ?? value.pid;
     target.exec("UPDATE control SET stop=1 WHERE singleton=1");
     const deadline = process.hrtime.bigint() + BigInt(Math.min(context.timeoutMs, 5000)) * 1000000n;
-    while (alive(observed.pid) && process.hrtime.bigint() < deadline) await delay(25);
-    if (alive(observed.pid)) {
+    while (pid !== null && alive(pid) && process.hrtime.bigint() < deadline) await delay(25);
+    if (pid !== null && alive(pid)) {
       const incomplete = view(value);
-      const stopObservation = JSON.stringify({ processPresent: alive(observed.pid), worker: worker(target, value) });
+      const stopObservation = JSON.stringify({ processPresent: alive(pid), worker: worker(target, value) });
       return { ok: true, data: testStackOperationSchema.parse({ ...incomplete, requestId: input.requestId,
         operation: { ...incomplete.operation, state: "blocked" }, result: { ...incomplete.result, ready: false,
           components: incomplete.result?.components.map(check => check.id === "bootstrap.fixture-runtime" ? { ...check, state: "BLOCKED", reasonCode: "FIXTURE_STOP_NOT_CONFIRMED", prerequisite: stopObservation } : check) } }) };
@@ -310,13 +312,15 @@ export const FixtureProbe = {
       const nativeEligibility = input.caseId === "native-release-eligibility" && ["AT-ops-81", "AT-client-apps-49", "AT-activity-focus-64"].includes(input.probeId);
       const nativeAuth = input.caseId === "native-auth-cli" && ["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-78", "AT-ops-55"].includes(input.probeId);
       const roleDenials = input.caseId === "control-filesystem-denial" && input.probeId === "AT-authority-35";
+      const queueFaults = input.caseId === "queue-transaction-faults" && input.probeId === "AT-obligations-76";
       const backupCapacity = input.caseId === "backup-capacity" && ["AT-ops-62", "AT-lifestore-63", "AT-sources-216"].includes(input.probeId);
-      if (checks.length > 0 && !reference && !(modelPolicy || modelStream || accounting || nativeEligibility || nativeAuth || backupCapacity || roleDenials)) refuse("INVALID_INPUT");
+      if (checks.length > 0 && !reference && !(modelPolicy || modelStream || accounting || nativeEligibility || nativeAuth || backupCapacity || roleDenials || queueFaults)) refuse("INVALID_INPUT");
       if ((modelPolicy || modelStream) && checks.some(check => check.id !== "read.model-route-policy" || check.owner !== "hermes")) refuse("INVALID_INPUT");
       if (accounting && checks.some(check => check.id !== "accounting.model-admission" || check.owner !== "self-improvement")) refuse("INVALID_INPUT");
       if (nativeEligibility && checks.some(check => check.id !== "release.native-eligibility" || check.owner !== "ops")) refuse("INVALID_INPUT");
       if (nativeAuth && checks.some(check => !["auth.native-runtime", "auth.native-fixture"].includes(check.id) || check.owner !== "hermes")) refuse("INVALID_INPUT");
       if (roleDenials && checks.some(check => check.id !== "bootstrap.role-control-denials" || check.owner !== "ops")) refuse("INVALID_INPUT");
+      if (queueFaults && checks.some(check => check.id !== "queue.obligation-faults" || check.owner !== "ops")) refuse("INVALID_INPUT");
       if (backupCapacity && checks.some(check => check.id !== "backup.capacity" || check.owner !== "ops")) refuse("INVALID_INPUT");
       if (input.probeId === "AT-hermes-config-101" && input.caseId === "k4a-migration") {
         const sql = readFileSync(join(dirname(import.meta.dirname), "migrations/0001-k4a-reference.sql"));

@@ -1,0 +1,192 @@
+{
+  "schemaVersion": "toy.r010-native-queue-verification.v1",
+  "observedAt": "2026-10-06T16:12:42.046Z",
+  "rung": "CLI",
+  "probeId": "AT-obligations-76",
+  "caseId": "queue-transaction-faults",
+  "stackId": "ee95104c-d538-46c4-bb01-477c260afa98",
+  "operationId": "25ace09a-857c-4f0a-bc6a-3f75525ece6c",
+  "checkCount": 6,
+  "allChecksPass": true,
+  "schemaCells": [
+    {
+      "tool": "toy_capture",
+      "artifactPath": "packages/contracts/generated/schemas/toy-capture-parameters-v1.schema.json",
+      "artifactDigest": "7de1efc003a042efadb162a4770f12c1875d48874cff7a6444d272ee69601972",
+      "declaredDialect": "https://json-schema.org/draft/2020-12/schema",
+      "validCount": 3,
+      "invalidCount": 2,
+      "validAccepted": true,
+      "invalidRejected": true,
+      "passed": true
+    },
+    {
+      "tool": "toy_due",
+      "artifactPath": "packages/contracts/generated/schemas/toy-due-parameters-v1.schema.json",
+      "artifactDigest": "f29c194401a886d957c3b6f9bc538f26f76d05b37a4bed8a8763f3e84531b6a0",
+      "declaredDialect": "https://json-schema.org/draft/2020-12/schema",
+      "validCount": 2,
+      "invalidCount": 2,
+      "validAccepted": true,
+      "invalidRejected": true,
+      "absentNullFieldsRemainAbsent": true,
+      "explicitNullFieldsRemainPresent": true,
+      "passed": true
+    },
+    {
+      "tool": "toy_resolve",
+      "artifactPath": "packages/contracts/generated/schemas/toy-resolve-parameters-v1.schema.json",
+      "artifactDigest": "877e62f176cbcb4acf34ff548446410fef79abaa77558c0539377b2c377c44c5",
+      "declaredDialect": "https://json-schema.org/draft/2020-12/schema",
+      "validCount": 1,
+      "invalidCount": 1,
+      "validAccepted": true,
+      "invalidRejected": true,
+      "passed": true
+    },
+    {
+      "tool": "toy_defer",
+      "artifactPath": "packages/contracts/generated/schemas/toy-defer-parameters-v1.schema.json",
+      "artifactDigest": "e62544c9f1f7fae8e46e154a0abbf8cf1fd23a40c37fd34b0564ede7184c25da",
+      "declaredDialect": "https://json-schema.org/draft/2020-12/schema",
+      "validCount": 2,
+      "invalidCount": 2,
+      "validAccepted": true,
+      "invalidRejected": true,
+      "passed": true
+    },
+    {
+      "tool": "toy_satisfy",
+      "artifactPath": "packages/contracts/generated/schemas/toy-satisfy-parameters-v1.schema.json",
+      "artifactDigest": "88430c16bffc015fbcf2891561dbbe81fd36d6567cfe5f4ac7ed1e638ceb7080",
+      "declaredDialect": "https://json-schema.org/draft/2020-12/schema",
+      "validCount": 1,
+      "invalidCount": 1,
+      "validAccepted": true,
+      "invalidRejected": true,
+      "passed": true
+    }
+  ],
+  "nativeTransactionCell": {
+    "wholeAcceptance": "PENDING",
+    "stackId": "ee95104c-d538-46c4-bb01-477c260afa98",
+    "requestId": "b7275d7d-070d-45d3-8b3a-09359c0b48ec",
+    "queueName": "toy.r010.obligation.ee95104c-d538-46c4-bb01-477c260afa98.b7275d7d-070d-45d3-8b3a-09359c0b48ec",
+    "schemasPassed": true,
+    "scenarios": {
+      "applicationRollback": true,
+      "applicationCommitControl": true,
+      "nativeWorkerThrowRollback": true,
+      "nativeLostClaimFence": true
+    },
+    "operations": {
+      "applicationRollback": true,
+      "applicationCommitControl": true,
+      "nativeWorkerThrowRollback": true,
+      "nativeLostClaimFence": true,
+      "backgroundErrors": 0
+    },
+    "cleanupPassed": true,
+    "failureStage": null
+  },
+  "readbackExact": true,
+  "readyWorldTeardown": {
+    "stackId": "ee95104c-d538-46c4-bb01-477c260afa98",
+    "checkpointRefs": [],
+    "fenceRefs": [],
+    "stoppedResourceRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "ee95104c-d538-46c4-bb01-477c260afa98"
+      }
+    ],
+    "retainedArtifactRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "ee95104c-d538-46c4-bb01-477c260afa98"
+      }
+    ],
+    "unresolvedResourceRefs": [],
+    "complete": true
+  },
+  "failedStartupWorldTeardown": {
+    "stackId": "10372b9c-4056-4b52-a830-7463d8423d2c",
+    "checkpointRefs": [],
+    "fenceRefs": [],
+    "stoppedResourceRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "10372b9c-4056-4b52-a830-7463d8423d2c"
+      }
+    ],
+    "retainedArtifactRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "10372b9c-4056-4b52-a830-7463d8423d2c"
+      }
+    ],
+    "unresolvedResourceRefs": [],
+    "complete": true
+  },
+  "guards": {
+    "pair": "INVALID_INPUT",
+    "production": "TEST_ONLY",
+    "effectsNone": true
+  },
+  "pins": {
+    "postgresMajor": 17,
+    "pg": "8.23.1",
+    "pgBoss": "12.36.0",
+    "pgBossSchema": 44,
+    "ajv": "8.17.1",
+    "ajvOwner": "contracts",
+    "typesPg": "8.23.1"
+  },
+  "runtimeSourcePatched": false,
+  "skipLibCheck": false,
+  "corrections": [
+    "Restore missing upstream type declaration without runtime package patch",
+    "Use exact conditional transactional handler options type",
+    "Lazy contracts Ajv import preserves confined worker permissions",
+    "One bounded CheckView per schema avoids 2000-character report overflow",
+    "Failed-start teardown requires confirmed PID absence; never signals a present unattested PID"
+  ],
+  "reports": [
+    {
+      "path": "build/evidence/R0.10/queue-fault-run-final.json",
+      "sha256": "d4bedc92d41a24a0e52ee02ad83a91f477053398414d1c6e59b3964703ac9b28"
+    },
+    {
+      "path": "build/evidence/R0.10/queue-fault-show.json",
+      "sha256": "cd92d2df7d3f6eee7b431333ebfb69b211917ecf1a920f6a987ab4934bb326ea"
+    },
+    {
+      "path": "build/evidence/R0.10/queue-stack-down.json",
+      "sha256": "9a42b4382aa9b342087c2ea5777db9e416d917f3e4e45baaa3b318ee60cbb052"
+    },
+    {
+      "path": "build/evidence/R0.10/queue-failed-start-down-final.json",
+      "sha256": "b576e6ac914bb69c5f7027ddc243df8836a2deb985ddb5d87acd8c539eb84ce3"
+    },
+    {
+      "path": "build/evidence/R0.10/queue-pair-guard.json",
+      "sha256": "9f09595ca5057e706d55ce2489c89a26b64f30d41628b4717167525cb960e01b"
+    },
+    {
+      "path": "build/evidence/R0.10/queue-prod-guard.json",
+      "sha256": "680c90a83c0a07e643e4315a3df543278d4474d1bf96bc5ca54b275cbc9cf921"
+    }
+  ],
+  "wholeATs": [],
+  "acceptance": false,
+  "liveProviderSends": 0,
+  "deferred": [
+    "Protected whole-AT certification and unfiltered suite integration",
+    "Other nine R0.10 assertions",
+    "Swift compilation and generation untilR3"
+  ]
+}

@@ -150,3 +150,4 @@ export { BackupCapacity } from "./backup-capacity.js";
 export { BackupCapacityProbe } from "./backup-capacity-probe.js";
 
 export { RoleControlProbe } from "./role-control-probe.js";
+export { QueueFaultProbe } from "./queue-fault-probe.js";

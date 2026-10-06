@@ -651,6 +651,7 @@ RegisteredCheckIdV1 = Literal[
     "engineering.map",
     "engineering.static",
     "accounting.model-admission",
+    "queue.obligation-faults",
     "release.native-eligibility",
     "backup.local-inventory",
     "backup.capacity",
@@ -3025,6 +3026,7 @@ RegisteredTestCaseV1 = Literal[
     "native-auth-cli",
     "backup-capacity",
     "control-filesystem-denial",
+    "queue-transaction-faults",
 ]
 
 ElapsedDurationV1 = NewType("ElapsedDurationV1", str)
