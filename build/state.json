@@ -2,25 +2,22 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-05T18:30:31.128Z",
-  "phase": "R0 kitchen",
-  "activeCard": "R0.K4a",
-  "cardCount": 83,
-  "acceptanceCount": 1425,
+  "updatedAt": "2026-10-06T15:06:33.297547+00:00",
+  "phase": "R0.01 critical;8actual identities observed;3macOS bootstrap fixes and12CLI regression invocations verified, source checkpoint commit pending",
+  "activeCard": "R0.01",
+  "cardCount": 87,
+  "acceptanceCount": 1447,
   "cards": {
     "R0.K1": {
       "implementation": "AVAILABLE",
-      "acceptance": "PENDING_K4",
+      "acceptance": "ASSIGNED_STATIC_AT_COMPLETE_PROTECTED_FS_PENDING",
       "sourceRowHash": "7e0d597b2f2e4391364d3d06ca7da4b99861d594ac1a7815fe0590db00680fa0",
       "dependsOn": "None; first local work",
       "evidence": [
         "build/evidence/R0.K1/foundations.json"
       ],
-      "pendingATs": [
-        "AT-hermes-config-101"
-      ],
+      "pendingATs": [],
       "pendingConditions": [
-        "Complete K4 CLI/generator/map static assertion",
         "Independent OS filesystem protection at R0.04\u201305"
       ],
       "requiredATs": [
@@ -37,7 +34,7 @@
     },
     "R0.K2": {
       "implementation": "AVAILABLE",
-      "acceptance": "PENDING_K4",
+      "acceptance": "ASSIGNED_STATIC_AT_COMPLETE_PROTECTED_FS_PENDING",
       "sourceRowHash": "2d1d892604dfc951d155102e58f97c5657a873a125a0c288b5af28ee01ad6f95",
       "dependsOn": "R0.K1 implementation available",
       "evidence": [
@@ -48,11 +45,8 @@
       "requiredATs": [
         "AT-hermes-config-101"
       ],
-      "pendingATs": [
-        "AT-hermes-config-101"
-      ],
+      "pendingATs": [],
       "pendingConditions": [
-        "Complete K4 CLI/compiler/lint/codegen/map assertion",
         "Runtime generated-schema agreement at R0.10/R1",
         "Independent actual-identity and native-launcher protection at R0.04\u201305"
       ],
@@ -136,9 +130,9 @@
           "reviewCorrections": "COMPILED_RUNTIME_PROOF_PENDING"
         },
         "resourcePreflight": {
-          "status": "CLI_VERIFIED_MEMORY_ADMITTED",
+          "status": "CLI_VERIFIED_OBSERVED_PRESSURE_FAKE_STACK_ADMISSION_AND_TEARDOWN",
           "publicInterface": "OpsControlRead.doctor",
-          "evidence": "build/evidence/R0.K3/memory-admission-v2.json",
+          "evidence": "build/evidence/R0.01/runtime-fixture-verification.json",
           "runtimePermitAvailable": false,
           "acceptanceComplete": false,
           "memoryAdmissionAvailable": true
@@ -191,38 +185,48 @@
       }
     },
     "R0.K4a": {
-      "implementation": "IN_PROGRESS",
-      "acceptance": "PENDING",
+      "implementation": "AVAILABLE",
+      "acceptance": "REFERENCE_COMPLETE",
       "sourceRowHash": "7c9218a2e67148310afa4449e589bfb1158716f384ee2c962239d17f016c0dd9",
       "dependsOn": "R0.K3 implementation available; frozen owner interfaces",
       "evidence": [
         "build/evidence/R0.K4a/preparation.json",
         "build/evidence/R0.K4a/skill-preparation.json",
-        "build/evidence/R0.K4a/reference-implementation.json"
+        "build/evidence/R0.K4a/reference-implementation.json",
+        "build/evidence/R0.K4a/reference-verification.json"
       ],
       "requiredATs": [],
       "preparation": {
-        "status": "REFERENCE_SOURCES_COMPILED_PUBLIC_CLI_RECEIPTS_PENDING",
+        "status": "FOUR_COMPILED_PUBLIC_CLI_REFERENCES_VERIFIED",
         "paths": [
           "docs/adr/0004-bootstrap-reference-contracts.md",
           "build/evidence/R0.K4a/preparation.json",
           "skills/toy-control/SKILL.md",
           "build/evidence/R0.K4a/skill-preparation.json"
         ],
-        "referencesVerified": false
+        "referencesVerified": true
       },
       "timebox": {
         "startedAt": "2026-10-05T17:52:00.000Z",
         "targetStopAt": "2026-10-05T19:52:00.000Z",
-        "scope": "Four minimal references only; one admitted Luna helper"
+        "scope": "Four minimal references only; one admitted Luna helper",
+        "completedAt": "2026-10-05T18:37:13.820Z"
+      },
+      "lastVerification": {
+        "evidence": "build/evidence/R0.K4a/reference-verification.json",
+        "verdict": "PASS_FOUR_REFERENCES_STATIC_AND_PUBLIC_CLI",
+        "referenceInvocations": 13,
+        "wholeATVerdicts": []
       }
     },
     "R0.K4": {
-      "implementation": "NOT_IMPLEMENTED",
-      "acceptance": "PENDING",
+      "implementation": "AVAILABLE",
+      "acceptance": "R0_STATIC_COMPLETE_R1_RUNTIME_PENDING",
       "sourceRowHash": "8c48d7c0e66b7891b0b18516afd5f223cab20bf475cb2cee82607a6d7d59fb6d",
       "dependsOn": "R0.K4a references verified",
-      "evidence": [],
+      "evidence": [
+        "build/evidence/R0.K4/static-verification.json"
+      ],
       "requiredATs": [
         "AT-cli-25",
         "AT-cli-26",
@@ -230,14 +234,57 @@
         "AT-cli-7",
         "AT-cli-8",
         "AT-hermes-config-101"
+      ],
+      "timebox": {
+        "startedAt": "2026-10-05T18:37:13.820Z",
+        "targetStopAt": "2026-10-05T20:37:13.828Z",
+        "scope": "Four derived generators, feature map and assigned static CLI checks only",
+        "interruption": "Inactive context/profile gap between 2026-10-05T18:37Z and 2026-10-06T00:56Z; remaining active engineering is bounded, without reclassifying elapsed time as active work.",
+        "implementationAvailableAt": "2026-10-06T03:38:30.654Z",
+        "activeContinuationStartedAt": "2026-10-06T03:17:03.000Z",
+        "activeContinuationFinishedAt": "2026-10-06T03:38:30.654Z"
+      },
+      "lastVerification": {
+        "evidence": "build/evidence/R0.K4/static-verification.json",
+        "verdict": "PASS_R0_ASSIGNED_STATIC_CLI_ASSERTIONS",
+        "cliInvocations": 42,
+        "staticChecks": 43,
+        "swiftInvoked": false
+      },
+      "pendingATs": [
+        "AT-cli-25",
+        "AT-cli-26",
+        "AT-cli-27",
+        "Actual protected identities and installed-service/runtime gates at their assigned cards"
+      ],
+      "pendingConditions": [
+        "Full AT-cli-25/26/27 remains assigned to R1 runtime integration"
       ]
     },
     "R0.01": {
-      "implementation": "NOT_IMPLEMENTED",
+      "implementation": "IN_PROGRESS",
       "acceptance": "PENDING",
       "sourceRowHash": "9f9625af4f182b80aaaf19e537ebf88545ad45ee1ab273f77e3bb30a87118cec",
       "dependsOn": "R0.K4; first inference task",
-      "evidence": [],
+      "evidence": [
+        "build/evidence/R0.01/supported-route-docs.json",
+        "build/evidence/R0.01/installed-provider-version.json",
+        "build/evidence/R0.01/pinned-protocol-inspection.json",
+        "build/evidence/R0.01/implementation-verification.json",
+        "build/evidence/R0.01/direct-responses-preparation.json",
+        "build/evidence/R0.01/hermes-patch-preparation.json",
+        "build/evidence/R0.01/hermes-boundary-verification.json",
+        "build/evidence/R0.01/siwc-authorization-preparation.json",
+        "build/evidence/R0.01/keychain-owner-preparation.json",
+        "build/evidence/R0.01/pressure-query-resource-preflight.json",
+        "build/evidence/R0.01/selection-integrity-preparation.json",
+        "build/evidence/R0.01/runtime-fixture-verification.json",
+        "build/evidence/R0.01/native-refusal-fixture-verification.json",
+        "build/evidence/R0.01/current-reachability-audit.json",
+        "build/evidence/R0.01/impasse-audit-2.json",
+        "build/evidence/R0.01/impasse-audit-3.json",
+        "build/evidence/R0.01/goal-blocked-status.json"
+      ],
       "requiredATs": [
         "AT-hermes-config-1",
         "AT-hermes-config-39",
@@ -249,14 +296,135 @@
         "AT-ops-55",
         "AT-self-improvement-57",
         "AT-self-improvement-58"
-      ]
+      ],
+      "preparation": {
+        "status": "MODEL_ROUTE_AND_NATIVE_UNBOUND_SIWC_NO_FALLBACK_CLI_SUBSETS_VERIFIED_PROTECTED_ACCOUNT_BINDING_PENDING",
+        "interface": "docs/adr/0021-supported-model-route.md",
+        "evidence": "build/evidence/R0.01/keychain-owner-preparation.json",
+        "accountSpecificCompatibility": "PENDING",
+        "independentToyAuthorization": "PENDING",
+        "installedVersion": "0.160.0",
+        "installedVersionEvidence": "build/evidence/R0.01/installed-provider-version.json",
+        "currentStatic": {
+          "command": "npm run check",
+          "exitCode": 0,
+          "log": "build/evidence/R0.01-native-refusal-check.txt",
+          "generatedAt": "2026-10-06T10:13:51.895Z",
+          "artifacts": 320,
+          "contracts": 252,
+          "features": 89,
+          "commands": 55,
+          "indexedATs": 1447,
+          "swiftInvoked": false,
+          "schemaDigest": "638af754ddd8b6bbbd07261a70ad576eca9e1a97d5a0216d66dcc15bd46b2a60",
+          "output": "build/evidence/R0.01-native-refusal-check.txt",
+          "featureCount": 89,
+          "commandCount": 55,
+          "ATCount": 1447
+        },
+        "policyCliInvocations": 3,
+        "registeredCases": [
+          "model-route-policy",
+          "model-route-stream"
+        ],
+        "streamFixturesExecuted": true,
+        "protocolEvidence": "build/evidence/R0.01/pinned-protocol-inspection.json",
+        "primaryProvider": "siwc_responses",
+        "codexRole": "delegation only",
+        "httpFixturesPrepared": true,
+        "hermesPatch": "patches/hermes-siwc.patch",
+        "hermesInstalledCommit": "8d5e3e412138342e8bf30443e72bd4e6a9abd057",
+        "hermesPatchApplied": false,
+        "grantReaderBound": false,
+        "canonicalModelRouteAdmissionAndReceiptsWired": false,
+        "featureCount": 89,
+        "authorizationSource": "control/secrets/authorization.ts",
+        "authorizationRuntimeVerified": false,
+        "authorizationOwner": "protected Secrets control host",
+        "credentialOwnerSource": "control/secrets/siwc-owner.ts",
+        "nativeKeychainSource": "python/toy_control/siwc_keychain.py",
+        "protectedFactorySource": "control/secrets/public.ts",
+        "keychainRuntimeVerified": false,
+        "keychainApiExecuted": false,
+        "publicCliGuardChecks": 45,
+        "guardEvidence": "build/evidence/R0.01/keychain-guards-verified.json",
+        "wholeATsPassed": [],
+        "requires": [
+          "Approved native runtime interpreter/helper digests",
+          "Protected control host identity and OS permissions plus child admission",
+          "Browser adapter and largest-interface auth probes",
+          "Live Keychain atomicity/restart/refresh compatibility",
+          "Native Hermes ModelRoute/Ops provider-send integration and zero-credit account readback"
+        ],
+        "selectionIntegrity": {
+          "evidence": "build/evidence/R0.01/selection-integrity-preparation.json",
+          "variants": 9,
+          "refusalCasesPrepared": 5,
+          "refusalCasesExecuted": true,
+          "invokeGuardRuntimeVerified": true,
+          "policyCliInvocations": 3,
+          "wholeATsPassed": [],
+          "refusalCasesPassed": 5,
+          "runtimeEvidence": "build/evidence/R0.01/runtime-fixture-verification.json"
+        },
+        "nativeBindingReview": "build/evidence/R0.01/native-binding-source-review.json",
+        "policyFixtureExecuted": true,
+        "runtimeFixtureVerification": "build/evidence/R0.01/runtime-fixture-verification.json",
+        "nativeUnboundRefusal": {
+          "state": "CLI_SUBSETS_VERIFIED",
+          "evidence": "build/evidence/R0.01/native-refusal-fixture-verification.json",
+          "canonicalAlias": "siwc_responses",
+          "assignedProbeIds": [
+            "AT-hermes-config-78",
+            "AT-ops-55"
+          ],
+          "sourceBoundChecks": 4,
+          "authRegressionChecks": 6,
+          "freshAuthOperationChildren": 7,
+          "paidFallbackSuppressed": true,
+          "liveGrantReaderBound": false,
+          "wholeATComplete": false
+        }
+      },
+      "protectedHostDependency": {
+        "state": "BLOCKED_ON_R0_04_BOOTSTRAP",
+        "reason": "Actual _toy_control identity is absent; source-only protected factory cannot host the supported sign-in flow",
+        "evidence": "build/evidence/R0.04/identity-inventory-doctor.json",
+        "safeIndependentWork": "Bounded native unbound-SIWC no-fallback and auth regression subsets verified; source unit closed. Next work must resolve a concrete assigned R0 prerequisite without reopening kitchen or R0.03 units."
+      },
+      "providerSendDependency": {
+        "state": "OWNER_INTERFACE_AND_POLICY_PREPARED_CANONICAL_DATABASE_ACCOUNTING_PENDING",
+        "card": "R0.06",
+        "owner": "Protected ModelAdmission; canonical Self-Improvement accounting owner",
+        "ledger": [
+          "toy_si.model_call",
+          "toy_si.budget_group",
+          "toy_si.quota_snapshot"
+        ],
+        "source": "specs/ops.md section 13",
+        "nativeBindingPermitted": false,
+        "evidence": "build/evidence/R0.06/accounting-policy-preparation.json"
+      },
+      "nativeRefusalUnit": {
+        "state": "STOPPED_NATIVE_CANONICAL_ALIAS_CLI_SUBSETS_AND_AUTH_REGRESSION_VERIFIED",
+        "interface": "docs/adr/0021-supported-model-route.md",
+        "startedAt": "2026-10-06T10:02:07.094319+00:00",
+        "targetStopAt": "2026-10-06T12:02:07.094319+00:00",
+        "scope": "One native public CLI unbound-SIWC grant with configured paid fallback and synthetic inherited keys; reuse existing private runner. No live binding or extra infrastructure.",
+        "wholeATsPassed": [],
+        "replanEvidence": "build/evidence/R0.01/native-refusal-replan.json",
+        "stoppedAt": "2026-10-06T10:21:22.803403+00:00",
+        "evidence": "build/evidence/R0.01/native-refusal-fixture-verification.json"
+      }
     },
     "R0.02": {
-      "implementation": "NOT_IMPLEMENTED",
+      "implementation": "IN_PROGRESS",
       "acceptance": "PENDING",
       "sourceRowHash": "64fec579eb4943748e507927904712ccad25bdb21948238340b4a7b7e324699e",
       "dependsOn": "R0.01 started",
-      "evidence": [],
+      "evidence": [
+        "build/evidence/R0.02/research-inspection-preparation.json"
+      ],
       "requiredATs": [
         "AT-RESEARCH-REGISTER-1",
         "AT-RESEARCH-REGISTER-2",
@@ -271,14 +439,48 @@
         "AT-workflows-10",
         "AT-workflows-11",
         "AT-workflows-2"
-      ]
+      ],
+      "preparation": {
+        "status": "READ_ONLY_REGISTER_INSPECTION_AVAILABLE_SIX_CLI_CHECKS_PASS_WHOLE_ATS_PENDING",
+        "interface": "docs/adr/0022-research-register-inspection.md",
+        "acceptanceComplete": false,
+        "timeboxSeconds": 7200,
+        "startedAt": "2026-10-06T05:00:16.176597+00:00",
+        "deferred": [
+          "Actual dependency closure and source/API gate receipts",
+          "Assigned CLI mutation cases",
+          "Authenticated Sol/medium/Fast research with pinned loaded mattpocock skill",
+          "Connector catalog closure",
+          "Stable source snapshot for aggregate feature-map freshness; concurrent planning edits retained"
+        ],
+        "inventoryComponentsObserved": 165,
+        "componentCount": 165,
+        "reportCount": 15,
+        "pinMissingCount": 106,
+        "evidence": "build/evidence/R0.02/research-inspection-preparation.json",
+        "wholeATsPassed": [],
+        "staticCodeGates": "PASS_TS_PYTHON_BOUNDARIES_LINT_GENERATED_283_ARTIFACTS",
+        "aggregateCheck": "PASS_AT_LATEST_GLOBAL_CHECK",
+        "aggregateEvidence": "build/evidence/R0.03/profile-auth-full-check-output.txt",
+        "stoppedAt": "2026-10-06T05:05:55.712170+00:00"
+      }
     },
     "R0.03": {
-      "implementation": "NOT_IMPLEMENTED",
+      "implementation": "IN_PROGRESS",
       "acceptance": "PENDING",
       "sourceRowHash": "2ba2e282e10b0e4058c1acbf65ec7cf313369cf209463a01f3efe4a376378b90",
       "dependsOn": "R0.01; R0.K3 probe adapter available",
-      "evidence": [],
+      "evidence": [
+        "build/evidence/R0.03/profile-auth-preparation.json",
+        "build/evidence/R0.03/dashboard-source-preparation.json",
+        "build/evidence/R0.03/fresh-process-fixture-prerequisite.json",
+        "build/evidence/R0.03/public-auth-source-review.json",
+        "build/evidence/R0.03/native-auth-fixture-replan.json",
+        "build/evidence/R0.03/native-runtime-fixture-verification.json",
+        "build/evidence/R0.03/httpx-fixture-source-preparation.json",
+        "build/evidence/R0.03/auth-fresh-process-fixture-verification.json",
+        "build/evidence/R0.03/auth-save-fault-fixture-verification.json"
+      ],
       "requiredATs": [
         "AT-hermes-config-34",
         "AT-hermes-config-35",
@@ -292,14 +494,106 @@
         "AT-hermes-config-90",
         "AT-hermes-config-91",
         "AT-ops-14"
-      ]
+      ],
+      "preparation": {
+        "status": "REAL_NATIVE_AUTH_FRESH_PROCESS_BEHAVIOR_SEQUENCE_VERIFIED_FULL_REGISTRATION_PENDING",
+        "interface": "docs/adr/0024-profile-auth-persistence.md",
+        "evidence": "build/evidence/R0.03/profile-auth-preparation.json",
+        "acceptanceComplete": false,
+        "wholeATsPassed": [],
+        "nativeSourceChanged": false,
+        "deferred": [
+          "Protected per-AT auth.fresh-process owner manifest, controller identity and unfiltered assigned route acceptance",
+          "Remaining registered auth OS/storage-fault, concurrency, dashboard and independent-scope matrices",
+          "Independent live supported SIWC grant/refresh/restart and zero-credit account attestation"
+        ],
+        "dashboard": {
+          "patch": "patches/hermes-auth-dashboard.patch",
+          "evidence": "build/evidence/R0.03/dashboard-source-preparation.json",
+          "files": 3,
+          "syntaxVerified": true,
+          "combinedPatchApplicabilityVerified": true,
+          "runtimeVerified": false,
+          "installedSourceChanged": false,
+          "wholeATsPassed": []
+        },
+        "freshProcessFixture": {
+          "state": "NATIVE_AUTH_FRESH_PROCESS_BEHAVIOR_SEQUENCE_VERIFIED_FULL_ACCEPTANCE_PENDING",
+          "evidence": "build/evidence/R0.03/auth-save-fault-fixture-verification.json",
+          "runtimeEvidence": "build/evidence/R0.03/native-runtime-fixture-verification.json",
+          "sourceImplemented": true,
+          "nativePublicHelpExecuted": true,
+          "authAddChatRefreshExecuted": true,
+          "wholeATsPassed": [],
+          "fixturePatch": "patches/hermes-auth-fixture.patch",
+          "newOAuthOriginOrTLSRequired": false,
+          "initialFreshChatExecuted": true,
+          "rotatedGrantFreshReloadExecuted": true
+        },
+        "currentStatic": {
+          "command": "npm run check",
+          "exitCode": 0,
+          "output": "build/evidence/R0.03-save-fault-check.txt",
+          "completedAt": "2026-10-06T09:53:21.251Z",
+          "contractArtifacts": 320,
+          "contracts": 252,
+          "features": 89,
+          "commands": 55,
+          "ATIndexEntries": 1447,
+          "swiftInvoked": false,
+          "generatedAt": "2026-10-06T09:53:21.251Z",
+          "schemaDigest": "e1ecf4e021a4793b4e248883a13ced71e9cfb52bf2361f097a292525d7939efe"
+        },
+        "nativeRuntimeAvailability": {
+          "state": "VERIFIED",
+          "interface": "hermes --help",
+          "evidence": "build/evidence/R0.03/native-runtime-fixture-verification.json",
+          "interpreterSource": "existing-committed-venv",
+          "newDependencyInstall": false,
+          "protectedServiceIdentityVerified": false
+        },
+        "saveFaultFixture": {
+          "state": "TWO_EXTERNAL_STORAGE_FAULT_CELLS_VERIFIED_FULL_ACCEPTANCE_PENDING",
+          "evidence": "build/evidence/R0.03/auth-save-fault-fixture-verification.json",
+          "sourceImplemented": true,
+          "authExitNonzero": true,
+          "bothStreamsTokenHygieneVerified": true,
+          "freshUnsavedGrantUnusable": true,
+          "wholeATsPassed": []
+        }
+      },
+      "timebox": {
+        "startedAt": "2026-10-06T08:16:57.483Z",
+        "targetStopAt": "2026-10-06T10:16:57.486Z",
+        "scope": "Minimum native profile/auth assigned CLI fixture source and evidence; no new production runtime or extra protocols.",
+        "boundedWorkerStopReason": "Prepared one external HTTPX fixture patch; parent resolved actual private-home dependency selection through existing committed venv without installing packages",
+        "sourceUnitCheckpointAt": "2026-10-06T09:39:02.134975+00:00",
+        "nativePublicRuntimeVerifiedAt": "2026-10-06T09:02:50.705Z",
+        "remainingWork": "Protected exact per-AT route/controller registration, actual OS-denial/crash and remaining auth matrices plus live supported-grant attestation are deferred; original stop remains 10:16:57.486 UTC. R0.01 is critical.",
+        "boundedWorkerObservedCompleteAt": "2026-10-06T09:02:03.114883+00:00",
+        "sourceUnitVerifiedAt": "2026-10-06T09:56:39.219348+00:00",
+        "sourceUnitStoppedAt": "2026-10-06T09:56:39.219348+00:00"
+      },
+      "lastVerification": {
+        "evidence": "build/evidence/R0.03/auth-save-fault-fixture-verification.json",
+        "verdict": "PASS_THIRTEEN_NATIVE_PUBLIC_CLI_SUBSET_OBSERVATIONS",
+        "acceptanceComplete": false,
+        "wholeATsPassed": [],
+        "observedAt": "2026-10-06T09:55:09.864Z",
+        "schemaDigest": "e1ecf4e021a4793b4e248883a13ced71e9cfb52bf2361f097a292525d7939efe"
+      }
     },
     "R0.04": {
-      "implementation": "NOT_IMPLEMENTED",
+      "implementation": "IN_PROGRESS",
       "acceptance": "PENDING",
       "sourceRowHash": "a20d3be6c853a26586d4cfcb495ad2481f04225731118c7c17234320c40a1547",
       "dependsOn": "R0.02",
-      "evidence": [],
+      "evidence": [
+        "build/evidence/R0.04/role-inventory-preparation.json",
+        "build/evidence/R0.04/identity-bootstrap-preparation.json",
+        "build/evidence/R0.04-post-bootstrap-doctor.json",
+        "build/evidence/R0.04/macos-bootstrap-verification.json"
+      ],
       "requiredATs": [
         "AT-authority-34",
         "AT-authority-35",
@@ -312,7 +606,51 @@
         "AT-lifestore-41",
         "AT-ops-30",
         "AT-ops-70"
-      ]
+      ],
+      "preparation": {
+        "status": "ACTUAL_ROLE_IDENTITIES_OBSERVED_MACOS_REGRESSION_AND_FULL_ENFORCEMENT_PENDING",
+        "interface": "docs/adr/0025-role-identity-inventory.md",
+        "evidence": "build/evidence/R0.04/role-inventory-preparation.json",
+        "acceptanceComplete": false,
+        "wholeATsPassed": [],
+        "canonicalRoles": 8,
+        "observedIdentities": 8,
+        "missingIdentities": 0,
+        "unknownIdentities": 0,
+        "createdIdentities": 8,
+        "deferred": [
+          "Execute canonical root bootstrap and confirm real Directory Service/account/directory readbacks",
+          "Independent maintenance/recovery identity; immutable runtime and complete role/socket/credential manifest",
+          "Actual-UID filesystem/MCP/IPC/GUI and privilege/secret positive/denial matrix",
+          "R0.01 protected SIWC host, native Keychain/browser and Hermes/Ops provider integration"
+        ],
+        "boundedDetail": "UID/GID and measured admin membership only; complete inventory fits existing doctor wire bound",
+        "bootstrap": {
+          "interface": "docs/adr/0026-role-identity-bootstrap.md",
+          "command": "toy bootstrap identities --plan --request-id UUID --json",
+          "evidence": "build/evidence/R0.04/identity-bootstrap-preparation.json",
+          "sourceCompiled": true,
+          "cliGuardInvocations": 8,
+          "planState": "blocked",
+          "planReason": "DIRECTORY_QUERY_UNAVAILABLE",
+          "rootApplyExecuted": false,
+          "servicesActivated": false,
+          "wholeATsPassed": []
+        }
+      },
+      "actualRuntimeUnit": {
+        "startedAt": "2026-10-06T15:02:44.142623+00:00",
+        "targetStopAt": "2026-10-06T17:02:44.142623+00:00",
+        "scope": "Review externally supplied3macOS bootstrap fixes; CLI-only externalOS regressions, actual identity readbacks, commit and minimum required runtime protection.",
+        "bootstrapFixesVerifiedAt": "2026-10-06T15:06:33.297547+00:00"
+      },
+      "lastVerification": {
+        "evidence": "build/evidence/R0.04/macos-bootstrap-verification.json",
+        "verdict": "PASS_MACOS_CLI_OS_SEAM_REGRESSIONS_AND_ACTUAL_IDENTITY_OBSERVATIONS",
+        "acceptanceComplete": false,
+        "wholeATsPassed": [],
+        "cliInvocations": 12
+      }
     },
     "R0.05": {
       "implementation": "NOT_IMPLEMENTED",
@@ -352,11 +690,16 @@
       }
     },
     "R0.06": {
-      "implementation": "NOT_IMPLEMENTED",
+      "implementation": "IN_PROGRESS",
       "acceptance": "PENDING",
       "sourceRowHash": "c86063194aa598231bd2cd6c10d8de5029e019b379325ad402ff40fbd9ab6746",
       "dependsOn": "R0.01, R0.03, R0.05",
-      "evidence": [],
+      "evidence": [
+        "build/evidence/R0.06/accounting-policy-preparation.json",
+        "build/evidence/R0.06/accounting-owner-preparation.json",
+        "build/evidence/R0.06/migration-artifact-readback.json",
+        "build/evidence/R0.06/accounting-runtime-blocker.json"
+      ],
       "requiredATs": [
         "AT-hermes-config-59",
         "AT-ops-10",
@@ -369,7 +712,79 @@
         "AT-ops-52",
         "AT-ops-55",
         "AT-ops-9"
-      ]
+      ],
+      "preparation": {
+        "status": "CANONICAL_ACCOUNTING_FIXTURE_SOURCE_PREPARED_CLI_INITIALIZATION_PERMISSION_DENIED",
+        "ownerInterface": "docs/adr/0027-model-admission-accounting.md",
+        "evidence": "build/evidence/R0.06/accounting-owner-preparation.json",
+        "canonicalAccountingTables": [
+          "toy_si.model_call",
+          "toy_si.budget_group",
+          "toy_si.quota_snapshot"
+        ],
+        "realDatabaseAccountingImplemented": false,
+        "policyRuntimeExecuted": false,
+        "providerSendPermitIssued": false,
+        "wholeATsPromoted": [],
+        "deferred": [
+          {
+            "owner": "R0.06",
+            "work": "Execute the prepared owned PostgreSQL lifecycle and assigned CLI transaction/threshold/fallback/uncertainty cases in a permitted runtime; then implement required durable deferred slot/wake state."
+          },
+          {
+            "owner": "R0.05",
+            "work": "Actual canonical run/contract references before production foreign keys."
+          },
+          {
+            "owner": "R0.04",
+            "work": "Actual role and protected runtime installation before production database grants."
+          },
+          {
+            "owner": "R0.01",
+            "work": "Bind verified accounting plus native grant reader; supported auth/refresh/restart compatibility after independent consent and per-app zero-credit readback."
+          },
+          {
+            "owner": "R1",
+            "work": "Assigned full concurrency and restore campaigns."
+          },
+          {
+            "owner": "R3",
+            "work": "Swift contract generation and compilation."
+          }
+        ],
+        "accountingOwnerSourceImplemented": true,
+        "postgresqlMigrationSourceGenerated": true,
+        "accountingTransactionsExecuted": false,
+        "currentStatic": {
+          "command": "npm run check",
+          "exitCode": 0,
+          "output": "build/evidence/R0.03-native-runtime-final-check.txt",
+          "artifacts": 319,
+          "contracts": 251,
+          "featureCount": 89,
+          "commandCount": 55,
+          "ATCount": 1447,
+          "schemaDigest": "5723fe15e5f7ca69312b73b3f690a1159383fea7dfc6c73b4311a405872c7ce8",
+          "swiftInvoked": false,
+          "generatedAt": "2026-10-06T09:03:12.941Z"
+        },
+        "disposableLifecycleSourceImplemented": true,
+        "registeredAccountingCasesPrepared": [
+          "AT-ops-49",
+          "AT-ops-51",
+          "AT-ops-52"
+        ],
+        "databaseInitializationAttempted": true,
+        "databaseInitializationAttempts": 3,
+        "databaseInitializationBlocked": "ACCOUNTING_FIXTURE_INITIALIZATION_DENIED"
+      },
+      "timebox": {
+        "startedAt": "2026-10-06T06:30:23.364Z",
+        "targetStopAt": "2026-10-06T08:30:23.364Z",
+        "scope": "Minimum accounting source and assigned R0 CLI evidence required by the single supported R0.01 provider seam; defer unrelated infrastructure.",
+        "implementationStoppedAt": "2026-10-06T08:15:51.467Z",
+        "stopReason": "Three initialization failures are permission-blocked; stop this source unit within its two-hour box and continue independent work."
+      }
     },
     "R0.07": {
       "implementation": "NOT_IMPLEMENTED",
@@ -385,12 +800,17 @@
       ]
     },
     "R0.08": {
-      "implementation": "NOT_IMPLEMENTED",
+      "implementation": "IN_PROGRESS",
       "acceptance": "PENDING",
       "sourceRowHash": "8e4302876ac266ff5aa5c5c6b8f179664e69d87453a01fc79be3e25e1c45f979",
       "dependsOn": "R0.02",
       "evidence": [
-        "build/evidence/R0.08/toolchain-preparation.json"
+        "build/evidence/R0.08/toolchain-preparation.json",
+        "build/evidence/R0.08/runtime-fixture-verification.json",
+        "build/evidence/R0.08-eligibility-stack-up.json",
+        "build/evidence/R0.08-eligibility-check-final.txt",
+        "build/evidence/R0.08/live-prerequisite-inventory.json",
+        "build/evidence/R0.08/live-membership-chrome-inventory.json"
       ],
       "requiredATs": [
         "AT-activity-focus-61",
@@ -403,19 +823,68 @@
         "AT-ops-81"
       ],
       "preparation": {
-        "status": "READ_ONLY_TOOLCHAIN_METADATA",
+        "status": "CANONICAL_NO_SPEND_POLICY_AND_ASSIGNED_CLI_FIXTURE_SUBSETS_VERIFIED",
         "dependencySatisfied": false,
         "signingEligibilityVerified": false,
-        "acceptanceComplete": false
+        "acceptanceComplete": false,
+        "interface": "docs/adr/0028-native-release-eligibility.md",
+        "policySource": "packages/ops/src/native-release-eligibility.ts",
+        "probeSource": "packages/ops/src/native-release-eligibility-probe.ts",
+        "wholeATsPassed": [],
+        "registeredCase": "native-release-eligibility",
+        "runtimeFixture": "build/evidence/R0.08/runtime-fixture-verification.json",
+        "currentStatic": {
+          "command": "npm run check",
+          "exitCode": 0,
+          "output": "build/evidence/R0.03-native-runtime-final-check.txt",
+          "artifacts": 319,
+          "contracts": 251,
+          "featureCount": 89,
+          "commandCount": 55,
+          "ATCount": 1447,
+          "schemaDigest": "5723fe15e5f7ca69312b73b3f690a1159383fea7dfc6c73b4311a405872c7ce8",
+          "swiftInvoked": false,
+          "generatedAt": "2026-10-06T09:03:12.941Z"
+        },
+        "fixtureCellsPerProbe": 8,
+        "nativeCompilationPerformed": false,
+        "realAccountDeviceLicenceProof": false,
+        "conservativeAT81Branch": "Absent membership or Cold Turkey Pro defers R3 native capabilities and selects web/PWA plus Discord",
+        "deferred": [
+          "Real OS/hardware and Apple signing/account/entitlement inventory",
+          "Actual Cold Turkey and Porcupine licence inventory",
+          "R0.02 prerequisite closure",
+          "Complete assigned AT assertions"
+        ],
+        "liveInventory": {
+          "state": "PENDING_BROWSER_POLICY_AND_AUTHENTICATED_STATUS_ACCESS",
+          "evidence": "build/evidence/R0.08/live-prerequisite-inventory.json",
+          "appleDeveloperMembership": "PENDING",
+          "coldTurkeyPro": "PENDING",
+          "noNegativeInference": true,
+          "noAccountOrLicenceChanged": true,
+          "wholeATsPassed": [],
+          "followupEvidence": "build/evidence/R0.08/live-membership-chrome-inventory.json",
+          "retriesOrAlternateSurfacesAttempted": false
+        }
+      },
+      "timebox": {
+        "startedAt": "2026-10-06T08:24:00.000Z",
+        "stoppedAt": "2026-10-06T08:41:00.570990+00:00",
+        "targetStopAt": "2026-10-06T10:24:00.000Z",
+        "scope": "Minimum canonical no-spend eligibility and its assigned CLI fake-world cases",
+        "stopReason": "Policy fixture unit verified; defer actual account/device prerequisites and stop source expansion"
       }
     },
     "R0.09": {
-      "implementation": "NOT_IMPLEMENTED",
+      "implementation": "IN_PROGRESS",
       "acceptance": "PENDING",
       "sourceRowHash": "58c0a18c8c84f96cdb534a9b14fbaf3f72891c563de72edea3bc935006aad52a",
       "dependsOn": "R0.02, R0.05",
       "evidence": [
-        "build/evidence/R0.09/storage-preparation.json"
+        "build/evidence/R0.09/storage-preparation.json",
+        "build/evidence/R0.09/capacity-fixture-verification.json",
+        "build/evidence/R0.09/remote-capacity-browser-inventory.json"
       ],
       "requiredATs": [
         "AT-lifestore-63",
@@ -423,11 +892,43 @@
         "AT-sources-216"
       ],
       "preparation": {
-        "status": "READ_ONLY_MOUNTED_VOLUME_METADATA",
-        "mountedExternalDestinationObserved": false,
+        "status": "MINIMAL_CAPACITY_POLICY_AND_ASSIGNED_CLI_SUBSETS_VERIFIED",
+        "interface": "docs/adr/0029-backup-capacity-admission.md",
+        "source": "packages/ops/src/backup-capacity.ts",
+        "registeredCase": "backup-capacity",
+        "evidence": "build/evidence/R0.09/capacity-fixture-verification.json",
+        "sourceBoundChecks": 24,
+        "localPrimaryAvailableBytes": "122298724352",
+        "externalMetadataState": "unavailable",
         "cloudCapacityVerified": false,
         "restoreVerified": false,
-        "acceptanceComplete": false
+        "sourcePauseEffectsVerified": false,
+        "dependencySatisfied": false,
+        "acceptanceComplete": false,
+        "wholeATsPassed": [],
+        "remoteInventory": "build/evidence/R0.09/remote-capacity-browser-inventory.json",
+        "currentStatic": {
+          "command": "npm run check",
+          "exitCode": 0,
+          "log": "build/evidence/R0.09-capacity-check-final.txt",
+          "generatedAt": "2026-10-06T10:30:32.390Z",
+          "artifacts": 327,
+          "contracts": 259,
+          "features": 90,
+          "commands": 55,
+          "indexedATs": 1447,
+          "swiftInvoked": false
+        }
+      },
+      "capacityUnit": {
+        "state": "STOPPED_CLI_SUBSETS_LOCAL_READ_AND_CLEANUP_VERIFIED",
+        "interface": "docs/adr/0029-backup-capacity-admission.md",
+        "startedAt": "2026-10-06T10:24:41.887792+00:00",
+        "targetStopAt": "2026-10-06T12:24:41.887792+00:00",
+        "scope": "Minimum read-only local capacity plus no-spend forecast/refusal policy and fixed assigned CLI subsets; no backup repository, remote/account access or restore certification",
+        "wholeATsPassed": [],
+        "stoppedAt": "2026-10-06T10:38:55.221804+00:00",
+        "evidence": "build/evidence/R0.09/capacity-fixture-verification.json"
       }
     },
     "R0.10": {
@@ -436,7 +937,12 @@
       "sourceRowHash": "bd835ecc193c682aa06edf7b25defd2d6a23d0c8a4cda1144a1a9a82c4f90315",
       "dependsOn": "R0.02, R0.05",
       "evidence": [
-        "build/evidence/R0.10/schema-preparation.json"
+        "build/evidence/R0.10/schema-preparation.json",
+        "build/evidence/R0.10/current-pin-revalidation.json",
+        "build/evidence/R0.10/registry-availability.json",
+        "build/evidence/R0.10/local-gate-audit.json",
+        "build/evidence/R0.10/local-audit-admission.json",
+        "build/evidence/R0.10/package-access-restored.json"
       ],
       "requiredATs": [
         "AT-activity-focus-86",
@@ -451,12 +957,27 @@
         "AT-obligations-76"
       ],
       "preparation": {
-        "status": "READ_ONLY_SOURCE_PIN_AND_GENERATED_INVENTORY",
+        "status": "CURRENT_SOURCE_PINS_REVALIDATED_CLOSURE_AND_RUNTIME_PENDING",
         "zodSelectionRecorded": true,
         "runtimeValidatorInstalled": false,
         "typescriptSourcePinReconciled": false,
         "dependencySatisfied": false,
-        "acceptanceComplete": false
+        "acceptanceComplete": false,
+        "evidence": "build/evidence/R0.10/current-pin-revalidation.json",
+        "currentPinConditions": [
+          "B01 TypeScript5.9.3 versus manifest/lock6.0.3",
+          "Ajv8.17.1 owner undeclared",
+          "pg8.23.1 and pg-boss12.36.0/schema44 absent from shared lock",
+          "B02 historical CONTRACTS/package-lock digest bindings require current proof"
+        ],
+        "wholeATsPassed": [],
+        "registryAvailability": {
+          "state": "REQUIRED_PIN_METADATA_AND_TARBALL_UNAVAILABLE",
+          "evidence": "build/evidence/R0.10/registry-availability.json",
+          "requiredPgPgBossCached": false,
+          "registryError": "ENOTFOUND",
+          "dependencyPinsChanged": false
+        }
       }
     },
     "R0.11": {
@@ -648,7 +1169,7 @@
     "R1.K1": {
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
-      "sourceRowHash": "6e8c4e9d5e84c920fca3c2a7a6710f738df8fe6222a3b1b7f398fcbe24319f27",
+      "sourceRowHash": "76da6f965780fec0113f7d4373e220259d9e26c3eb658b1a4ab129701392f2dc",
       "dependsOn": "Preparation: R0.14, R0.K4, canonical skill registry additions; completion: R1.16\u201318, CLI-07b/08",
       "evidence": [],
       "requiredATs": [
@@ -1029,29 +1550,28 @@
     "R1.18": {
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
-      "sourceRowHash": "5c2d24d361c363d7c40f4dffa198f826cd84e73b6f21927c5a45a8c4bd0dcd8e",
-      "dependsOn": "R1.16, R1.17",
+      "sourceRowHash": "a7e630123387cb1268683ac050cd09d835f4e9db495409c183d6bd168709a742",
+      "dependsOn": "R1.16\u201317; R1.05/09\u201315 interfaces available",
       "evidence": [],
       "requiredATs": [
-        "AT-hermes-config-13",
-        "AT-hermes-config-20",
-        "AT-hermes-config-47",
-        "AT-hermes-config-74",
-        "AT-self-improvement-10",
-        "AT-self-improvement-11",
-        "AT-self-improvement-13",
-        "AT-self-improvement-14",
-        "AT-self-improvement-2",
-        "AT-self-improvement-3",
-        "AT-self-improvement-34",
+        "AT-hermes-config-12",
+        "AT-self-improvement-1",
+        "AT-self-improvement-100",
+        "AT-self-improvement-102",
+        "AT-self-improvement-103",
+        "AT-self-improvement-104",
+        "AT-self-improvement-105",
+        "AT-self-improvement-106",
+        "AT-self-improvement-107",
+        "AT-self-improvement-108",
+        "AT-self-improvement-109",
+        "AT-self-improvement-110",
+        "AT-self-improvement-12",
+        "AT-self-improvement-29",
         "AT-self-improvement-35",
-        "AT-self-improvement-4",
-        "AT-self-improvement-5",
-        "AT-self-improvement-52",
-        "AT-self-improvement-70",
-        "AT-self-improvement-85",
         "AT-self-improvement-97",
-        "AT-self-improvement-98"
+        "AT-self-improvement-98",
+        "AT-user-sim-72"
       ]
     },
     "R1.19": {
@@ -1393,7 +1913,7 @@
     "R1.32": {
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
-      "sourceRowHash": "bb53421817319cfbe92d288b18320167467d18a9f7f197efb4dc0120250a6312",
+      "sourceRowHash": "7b1a2ff19c6a63340fd01a01b81763cf4377451551bbc011390c60f2b5c7b7f1",
       "dependsOn": "R1.27\u201331",
       "evidence": [],
       "requiredATs": [
@@ -1972,18 +2492,42 @@
         "AT-ops-84",
         "AT-ops-85",
         "AT-ops-9",
+        "AT-self-improvement-1",
         "AT-self-improvement-10",
         "AT-self-improvement-100",
+        "AT-self-improvement-102",
+        "AT-self-improvement-103",
+        "AT-self-improvement-104",
+        "AT-self-improvement-105",
+        "AT-self-improvement-106",
+        "AT-self-improvement-107",
+        "AT-self-improvement-108",
+        "AT-self-improvement-109",
         "AT-self-improvement-11",
+        "AT-self-improvement-110",
+        "AT-self-improvement-12",
         "AT-self-improvement-13",
         "AT-self-improvement-14",
+        "AT-self-improvement-15",
+        "AT-self-improvement-16",
+        "AT-self-improvement-17",
         "AT-self-improvement-18",
         "AT-self-improvement-19",
         "AT-self-improvement-2",
         "AT-self-improvement-20",
         "AT-self-improvement-21",
         "AT-self-improvement-22",
+        "AT-self-improvement-23",
+        "AT-self-improvement-24",
+        "AT-self-improvement-25",
+        "AT-self-improvement-26",
+        "AT-self-improvement-27",
+        "AT-self-improvement-28",
+        "AT-self-improvement-29",
         "AT-self-improvement-3",
+        "AT-self-improvement-30",
+        "AT-self-improvement-31",
+        "AT-self-improvement-32",
         "AT-self-improvement-34",
         "AT-self-improvement-35",
         "AT-self-improvement-4",
@@ -2010,13 +2554,18 @@
         "AT-self-improvement-73",
         "AT-self-improvement-74",
         "AT-self-improvement-75",
+        "AT-self-improvement-76",
         "AT-self-improvement-78",
         "AT-self-improvement-79",
         "AT-self-improvement-8",
         "AT-self-improvement-80",
+        "AT-self-improvement-81",
+        "AT-self-improvement-82",
+        "AT-self-improvement-83",
         "AT-self-improvement-85",
         "AT-self-improvement-87",
         "AT-self-improvement-88",
+        "AT-self-improvement-9",
         "AT-self-improvement-90",
         "AT-self-improvement-97",
         "AT-self-improvement-98",
@@ -2216,7 +2765,7 @@
     "R1.38": {
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
-      "sourceRowHash": "b4e59d09f6a0b8629ab95055eaaa38180c250e72d9606a377b78ca8e71961738",
+      "sourceRowHash": "51ba971f320806726268f326c4031705b76df3c0483040965a7641f150885f7b",
       "dependsOn": "R1.34\u201337",
       "evidence": [],
       "requiredATs": [
@@ -2762,18 +3311,42 @@
         "AT-ops-84",
         "AT-ops-85",
         "AT-ops-9",
+        "AT-self-improvement-1",
         "AT-self-improvement-10",
         "AT-self-improvement-100",
+        "AT-self-improvement-102",
+        "AT-self-improvement-103",
+        "AT-self-improvement-104",
+        "AT-self-improvement-105",
+        "AT-self-improvement-106",
+        "AT-self-improvement-107",
+        "AT-self-improvement-108",
+        "AT-self-improvement-109",
         "AT-self-improvement-11",
+        "AT-self-improvement-110",
+        "AT-self-improvement-12",
         "AT-self-improvement-13",
         "AT-self-improvement-14",
+        "AT-self-improvement-15",
+        "AT-self-improvement-16",
+        "AT-self-improvement-17",
         "AT-self-improvement-18",
         "AT-self-improvement-19",
         "AT-self-improvement-2",
         "AT-self-improvement-20",
         "AT-self-improvement-21",
         "AT-self-improvement-22",
+        "AT-self-improvement-23",
+        "AT-self-improvement-24",
+        "AT-self-improvement-25",
+        "AT-self-improvement-26",
+        "AT-self-improvement-27",
+        "AT-self-improvement-28",
+        "AT-self-improvement-29",
         "AT-self-improvement-3",
+        "AT-self-improvement-30",
+        "AT-self-improvement-31",
+        "AT-self-improvement-32",
         "AT-self-improvement-34",
         "AT-self-improvement-35",
         "AT-self-improvement-4",
@@ -2800,13 +3373,18 @@
         "AT-self-improvement-73",
         "AT-self-improvement-74",
         "AT-self-improvement-75",
+        "AT-self-improvement-76",
         "AT-self-improvement-78",
         "AT-self-improvement-79",
         "AT-self-improvement-8",
         "AT-self-improvement-80",
+        "AT-self-improvement-81",
+        "AT-self-improvement-82",
+        "AT-self-improvement-83",
         "AT-self-improvement-85",
         "AT-self-improvement-87",
         "AT-self-improvement-88",
+        "AT-self-improvement-9",
         "AT-self-improvement-90",
         "AT-self-improvement-97",
         "AT-self-improvement-98",
@@ -2968,7 +3546,7 @@
     "R2.02": {
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
-      "sourceRowHash": "f7a4e3a9b26c07e399766964ed8015411c5d10db2f8c6e0cf42aee4bf4e53fea",
+      "sourceRowHash": "4a8f13292abd8f43381637a15f2472e9731df466173cd8654aa7e83763426a44",
       "dependsOn": "R2.01",
       "evidence": [],
       "requiredATs": [
@@ -3175,7 +3753,7 @@
     "R2.07": {
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
-      "sourceRowHash": "737805625e86ef7714332ab74d14dc9d5399786040ba1d1cb220484ff40d0ad4",
+      "sourceRowHash": "a5fe0797389be7e49354f71791a2e87653cf4344f236b72c4927d4b65e1757a9",
       "dependsOn": "R2.02\u201305",
       "evidence": [],
       "requiredATs": [
@@ -3244,8 +3822,8 @@
     "R2.08": {
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
-      "sourceRowHash": "639a795e51c8423a2274cbcf1316baf3a652239db7dad7f26f875ef8594bd861",
-      "dependsOn": "R2.01\u201307",
+      "sourceRowHash": "81095f8c67f6d0b1793e666de26ba0c92760fbc4f9e311a333d6335e7db57d27",
+      "dependsOn": "R2.01\u201307 and R2.SI1\u2013SI4 acceptance",
       "evidence": [],
       "requiredATs": [
         "AT-RESEARCH-REGISTER-1",
@@ -3530,6 +4108,7 @@
         "AT-cli-30",
         "AT-cli-31",
         "AT-cli-32",
+        "AT-cli-39",
         "AT-cli-4",
         "AT-cli-5",
         "AT-cli-6",
@@ -3695,6 +4274,7 @@
         "AT-hermes-config-15",
         "AT-hermes-config-16",
         "AT-hermes-config-17",
+        "AT-hermes-config-18",
         "AT-hermes-config-19",
         "AT-hermes-config-2",
         "AT-hermes-config-20",
@@ -3716,6 +4296,7 @@
         "AT-hermes-config-35",
         "AT-hermes-config-36",
         "AT-hermes-config-37",
+        "AT-hermes-config-38",
         "AT-hermes-config-39",
         "AT-hermes-config-4",
         "AT-hermes-config-40",
@@ -3738,12 +4319,14 @@
         "AT-hermes-config-56",
         "AT-hermes-config-59",
         "AT-hermes-config-6",
+        "AT-hermes-config-60",
         "AT-hermes-config-62",
         "AT-hermes-config-63",
         "AT-hermes-config-64",
         "AT-hermes-config-65",
         "AT-hermes-config-66",
         "AT-hermes-config-67",
+        "AT-hermes-config-68",
         "AT-hermes-config-69",
         "AT-hermes-config-7",
         "AT-hermes-config-70",
@@ -4024,12 +4607,34 @@
         "AT-ops-83",
         "AT-ops-84",
         "AT-ops-85",
+        "AT-ops-86",
         "AT-ops-9",
         "AT-self-improvement-1",
         "AT-self-improvement-10",
         "AT-self-improvement-100",
+        "AT-self-improvement-101",
+        "AT-self-improvement-102",
+        "AT-self-improvement-103",
+        "AT-self-improvement-104",
+        "AT-self-improvement-105",
+        "AT-self-improvement-106",
+        "AT-self-improvement-107",
+        "AT-self-improvement-108",
+        "AT-self-improvement-109",
         "AT-self-improvement-11",
+        "AT-self-improvement-110",
+        "AT-self-improvement-111",
+        "AT-self-improvement-112",
+        "AT-self-improvement-113",
+        "AT-self-improvement-114",
+        "AT-self-improvement-115",
+        "AT-self-improvement-116",
+        "AT-self-improvement-117",
+        "AT-self-improvement-118",
+        "AT-self-improvement-119",
         "AT-self-improvement-12",
+        "AT-self-improvement-120",
+        "AT-self-improvement-121",
         "AT-self-improvement-13",
         "AT-self-improvement-14",
         "AT-self-improvement-15",
@@ -4051,11 +4656,28 @@
         "AT-self-improvement-3",
         "AT-self-improvement-30",
         "AT-self-improvement-31",
+        "AT-self-improvement-32",
+        "AT-self-improvement-33",
         "AT-self-improvement-34",
         "AT-self-improvement-35",
+        "AT-self-improvement-36",
+        "AT-self-improvement-37",
+        "AT-self-improvement-38",
+        "AT-self-improvement-39",
         "AT-self-improvement-4",
+        "AT-self-improvement-40",
+        "AT-self-improvement-41",
+        "AT-self-improvement-42",
+        "AT-self-improvement-43",
+        "AT-self-improvement-44",
+        "AT-self-improvement-45",
+        "AT-self-improvement-46",
         "AT-self-improvement-47",
+        "AT-self-improvement-48",
+        "AT-self-improvement-49",
         "AT-self-improvement-5",
+        "AT-self-improvement-50",
+        "AT-self-improvement-51",
         "AT-self-improvement-52",
         "AT-self-improvement-53",
         "AT-self-improvement-54",
@@ -4070,14 +4692,19 @@
         "AT-self-improvement-62",
         "AT-self-improvement-63",
         "AT-self-improvement-64",
+        "AT-self-improvement-65",
         "AT-self-improvement-66",
         "AT-self-improvement-67",
+        "AT-self-improvement-68",
+        "AT-self-improvement-69",
         "AT-self-improvement-7",
         "AT-self-improvement-70",
+        "AT-self-improvement-72",
         "AT-self-improvement-73",
         "AT-self-improvement-74",
         "AT-self-improvement-75",
         "AT-self-improvement-76",
+        "AT-self-improvement-77",
         "AT-self-improvement-78",
         "AT-self-improvement-79",
         "AT-self-improvement-8",
@@ -4087,6 +4714,7 @@
         "AT-self-improvement-83",
         "AT-self-improvement-84",
         "AT-self-improvement-85",
+        "AT-self-improvement-86",
         "AT-self-improvement-87",
         "AT-self-improvement-88",
         "AT-self-improvement-9",
@@ -4094,8 +4722,11 @@
         "AT-self-improvement-92",
         "AT-self-improvement-93",
         "AT-self-improvement-94",
+        "AT-self-improvement-95",
+        "AT-self-improvement-96",
         "AT-self-improvement-97",
         "AT-self-improvement-98",
+        "AT-self-improvement-99",
         "AT-sources-1",
         "AT-sources-10",
         "AT-sources-11",
@@ -4220,6 +4851,7 @@
         "AT-user-sim-19",
         "AT-user-sim-2",
         "AT-user-sim-20",
+        "AT-user-sim-21",
         "AT-user-sim-22",
         "AT-user-sim-23",
         "AT-user-sim-24",
@@ -4245,7 +4877,9 @@
         "AT-user-sim-42",
         "AT-user-sim-47",
         "AT-user-sim-48",
+        "AT-user-sim-49",
         "AT-user-sim-5",
+        "AT-user-sim-50",
         "AT-user-sim-51",
         "AT-user-sim-52",
         "AT-user-sim-53",
@@ -4272,7 +4906,12 @@
         "AT-user-sim-72",
         "AT-user-sim-73",
         "AT-user-sim-74",
+        "AT-user-sim-77",
+        "AT-user-sim-78",
+        "AT-user-sim-79",
         "AT-user-sim-8",
+        "AT-user-sim-80",
+        "AT-user-sim-81",
         "AT-user-sim-9",
         "AT-workflows-1",
         "AT-workflows-10",
@@ -4428,7 +5067,7 @@
     "R3.05": {
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
-      "sourceRowHash": "e58754317885919123491647f7dc883af21ee5810ac555e2a90a6d7b358d2dba",
+      "sourceRowHash": "6c0e7b935c4155f0afd3c3cb7b5d34f7fc916a27d4b15899bdc4f161b4cb010f",
       "dependsOn": "R3.02; R3.03\u201304 if enabled",
       "evidence": [],
       "requiredATs": [
@@ -4751,6 +5390,7 @@
         "AT-cli-31",
         "AT-cli-32",
         "AT-cli-33",
+        "AT-cli-39",
         "AT-cli-4",
         "AT-cli-5",
         "AT-cli-6",
@@ -4934,6 +5574,7 @@
         "AT-hermes-config-15",
         "AT-hermes-config-16",
         "AT-hermes-config-17",
+        "AT-hermes-config-18",
         "AT-hermes-config-19",
         "AT-hermes-config-2",
         "AT-hermes-config-20",
@@ -4955,6 +5596,7 @@
         "AT-hermes-config-35",
         "AT-hermes-config-36",
         "AT-hermes-config-37",
+        "AT-hermes-config-38",
         "AT-hermes-config-39",
         "AT-hermes-config-4",
         "AT-hermes-config-40",
@@ -4979,6 +5621,7 @@
         "AT-hermes-config-58",
         "AT-hermes-config-59",
         "AT-hermes-config-6",
+        "AT-hermes-config-60",
         "AT-hermes-config-61",
         "AT-hermes-config-62",
         "AT-hermes-config-63",
@@ -4986,6 +5629,7 @@
         "AT-hermes-config-65",
         "AT-hermes-config-66",
         "AT-hermes-config-67",
+        "AT-hermes-config-68",
         "AT-hermes-config-69",
         "AT-hermes-config-7",
         "AT-hermes-config-70",
@@ -5269,12 +5913,34 @@
         "AT-ops-83",
         "AT-ops-84",
         "AT-ops-85",
+        "AT-ops-86",
         "AT-ops-9",
         "AT-self-improvement-1",
         "AT-self-improvement-10",
         "AT-self-improvement-100",
+        "AT-self-improvement-101",
+        "AT-self-improvement-102",
+        "AT-self-improvement-103",
+        "AT-self-improvement-104",
+        "AT-self-improvement-105",
+        "AT-self-improvement-106",
+        "AT-self-improvement-107",
+        "AT-self-improvement-108",
+        "AT-self-improvement-109",
         "AT-self-improvement-11",
+        "AT-self-improvement-110",
+        "AT-self-improvement-111",
+        "AT-self-improvement-112",
+        "AT-self-improvement-113",
+        "AT-self-improvement-114",
+        "AT-self-improvement-115",
+        "AT-self-improvement-116",
+        "AT-self-improvement-117",
+        "AT-self-improvement-118",
+        "AT-self-improvement-119",
         "AT-self-improvement-12",
+        "AT-self-improvement-120",
+        "AT-self-improvement-121",
         "AT-self-improvement-13",
         "AT-self-improvement-14",
         "AT-self-improvement-15",
@@ -5296,11 +5962,28 @@
         "AT-self-improvement-3",
         "AT-self-improvement-30",
         "AT-self-improvement-31",
+        "AT-self-improvement-32",
+        "AT-self-improvement-33",
         "AT-self-improvement-34",
         "AT-self-improvement-35",
+        "AT-self-improvement-36",
+        "AT-self-improvement-37",
+        "AT-self-improvement-38",
+        "AT-self-improvement-39",
         "AT-self-improvement-4",
+        "AT-self-improvement-40",
+        "AT-self-improvement-41",
+        "AT-self-improvement-42",
+        "AT-self-improvement-43",
+        "AT-self-improvement-44",
+        "AT-self-improvement-45",
+        "AT-self-improvement-46",
         "AT-self-improvement-47",
+        "AT-self-improvement-48",
+        "AT-self-improvement-49",
         "AT-self-improvement-5",
+        "AT-self-improvement-50",
+        "AT-self-improvement-51",
         "AT-self-improvement-52",
         "AT-self-improvement-53",
         "AT-self-improvement-54",
@@ -5315,14 +5998,19 @@
         "AT-self-improvement-62",
         "AT-self-improvement-63",
         "AT-self-improvement-64",
+        "AT-self-improvement-65",
         "AT-self-improvement-66",
         "AT-self-improvement-67",
+        "AT-self-improvement-68",
+        "AT-self-improvement-69",
         "AT-self-improvement-7",
         "AT-self-improvement-70",
+        "AT-self-improvement-72",
         "AT-self-improvement-73",
         "AT-self-improvement-74",
         "AT-self-improvement-75",
         "AT-self-improvement-76",
+        "AT-self-improvement-77",
         "AT-self-improvement-78",
         "AT-self-improvement-79",
         "AT-self-improvement-8",
@@ -5332,6 +6020,7 @@
         "AT-self-improvement-83",
         "AT-self-improvement-84",
         "AT-self-improvement-85",
+        "AT-self-improvement-86",
         "AT-self-improvement-87",
         "AT-self-improvement-88",
         "AT-self-improvement-89",
@@ -5341,8 +6030,11 @@
         "AT-self-improvement-92",
         "AT-self-improvement-93",
         "AT-self-improvement-94",
+        "AT-self-improvement-95",
+        "AT-self-improvement-96",
         "AT-self-improvement-97",
         "AT-self-improvement-98",
+        "AT-self-improvement-99",
         "AT-sources-1",
         "AT-sources-10",
         "AT-sources-11",
@@ -5474,6 +6166,7 @@
         "AT-user-sim-19",
         "AT-user-sim-2",
         "AT-user-sim-20",
+        "AT-user-sim-21",
         "AT-user-sim-22",
         "AT-user-sim-23",
         "AT-user-sim-24",
@@ -5501,7 +6194,9 @@
         "AT-user-sim-44",
         "AT-user-sim-47",
         "AT-user-sim-48",
+        "AT-user-sim-49",
         "AT-user-sim-5",
+        "AT-user-sim-50",
         "AT-user-sim-51",
         "AT-user-sim-52",
         "AT-user-sim-53",
@@ -5529,7 +6224,12 @@
         "AT-user-sim-73",
         "AT-user-sim-74",
         "AT-user-sim-75",
+        "AT-user-sim-77",
+        "AT-user-sim-78",
+        "AT-user-sim-79",
         "AT-user-sim-8",
+        "AT-user-sim-80",
+        "AT-user-sim-81",
         "AT-user-sim-9",
         "AT-workflows-1",
         "AT-workflows-10",
@@ -5838,7 +6538,7 @@
     "R4.07": {
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
-      "sourceRowHash": "58d5440137c61fdb769521afda978a2913cd63e771e60daa8081de2d0355241a",
+      "sourceRowHash": "e22908d652f35c592cf18d45621d7eac2194b243c11020e43dbbc20a8b60c935",
       "dependsOn": "R4.01\u201306, applicable branch",
       "evidence": [],
       "requiredATs": [
@@ -6250,6 +6950,7 @@
         "AT-cli-32",
         "AT-cli-33",
         "AT-cli-34",
+        "AT-cli-39",
         "AT-cli-4",
         "AT-cli-5",
         "AT-cli-6",
@@ -6434,6 +7135,7 @@
         "AT-hermes-config-15",
         "AT-hermes-config-16",
         "AT-hermes-config-17",
+        "AT-hermes-config-18",
         "AT-hermes-config-19",
         "AT-hermes-config-2",
         "AT-hermes-config-20",
@@ -6455,6 +7157,7 @@
         "AT-hermes-config-35",
         "AT-hermes-config-36",
         "AT-hermes-config-37",
+        "AT-hermes-config-38",
         "AT-hermes-config-39",
         "AT-hermes-config-4",
         "AT-hermes-config-40",
@@ -6479,6 +7182,7 @@
         "AT-hermes-config-58",
         "AT-hermes-config-59",
         "AT-hermes-config-6",
+        "AT-hermes-config-60",
         "AT-hermes-config-61",
         "AT-hermes-config-62",
         "AT-hermes-config-63",
@@ -6486,6 +7190,7 @@
         "AT-hermes-config-65",
         "AT-hermes-config-66",
         "AT-hermes-config-67",
+        "AT-hermes-config-68",
         "AT-hermes-config-69",
         "AT-hermes-config-7",
         "AT-hermes-config-70",
@@ -6772,12 +7477,34 @@
         "AT-ops-83",
         "AT-ops-84",
         "AT-ops-85",
+        "AT-ops-86",
         "AT-ops-9",
         "AT-self-improvement-1",
         "AT-self-improvement-10",
         "AT-self-improvement-100",
+        "AT-self-improvement-101",
+        "AT-self-improvement-102",
+        "AT-self-improvement-103",
+        "AT-self-improvement-104",
+        "AT-self-improvement-105",
+        "AT-self-improvement-106",
+        "AT-self-improvement-107",
+        "AT-self-improvement-108",
+        "AT-self-improvement-109",
         "AT-self-improvement-11",
+        "AT-self-improvement-110",
+        "AT-self-improvement-111",
+        "AT-self-improvement-112",
+        "AT-self-improvement-113",
+        "AT-self-improvement-114",
+        "AT-self-improvement-115",
+        "AT-self-improvement-116",
+        "AT-self-improvement-117",
+        "AT-self-improvement-118",
+        "AT-self-improvement-119",
         "AT-self-improvement-12",
+        "AT-self-improvement-120",
+        "AT-self-improvement-121",
         "AT-self-improvement-13",
         "AT-self-improvement-14",
         "AT-self-improvement-15",
@@ -6799,11 +7526,28 @@
         "AT-self-improvement-3",
         "AT-self-improvement-30",
         "AT-self-improvement-31",
+        "AT-self-improvement-32",
+        "AT-self-improvement-33",
         "AT-self-improvement-34",
         "AT-self-improvement-35",
+        "AT-self-improvement-36",
+        "AT-self-improvement-37",
+        "AT-self-improvement-38",
+        "AT-self-improvement-39",
         "AT-self-improvement-4",
+        "AT-self-improvement-40",
+        "AT-self-improvement-41",
+        "AT-self-improvement-42",
+        "AT-self-improvement-43",
+        "AT-self-improvement-44",
+        "AT-self-improvement-45",
+        "AT-self-improvement-46",
         "AT-self-improvement-47",
+        "AT-self-improvement-48",
+        "AT-self-improvement-49",
         "AT-self-improvement-5",
+        "AT-self-improvement-50",
+        "AT-self-improvement-51",
         "AT-self-improvement-52",
         "AT-self-improvement-53",
         "AT-self-improvement-54",
@@ -6818,14 +7562,19 @@
         "AT-self-improvement-62",
         "AT-self-improvement-63",
         "AT-self-improvement-64",
+        "AT-self-improvement-65",
         "AT-self-improvement-66",
         "AT-self-improvement-67",
+        "AT-self-improvement-68",
+        "AT-self-improvement-69",
         "AT-self-improvement-7",
         "AT-self-improvement-70",
+        "AT-self-improvement-72",
         "AT-self-improvement-73",
         "AT-self-improvement-74",
         "AT-self-improvement-75",
         "AT-self-improvement-76",
+        "AT-self-improvement-77",
         "AT-self-improvement-78",
         "AT-self-improvement-79",
         "AT-self-improvement-8",
@@ -6835,6 +7584,7 @@
         "AT-self-improvement-83",
         "AT-self-improvement-84",
         "AT-self-improvement-85",
+        "AT-self-improvement-86",
         "AT-self-improvement-87",
         "AT-self-improvement-88",
         "AT-self-improvement-89",
@@ -6844,8 +7594,11 @@
         "AT-self-improvement-92",
         "AT-self-improvement-93",
         "AT-self-improvement-94",
+        "AT-self-improvement-95",
+        "AT-self-improvement-96",
         "AT-self-improvement-97",
         "AT-self-improvement-98",
+        "AT-self-improvement-99",
         "AT-sources-1",
         "AT-sources-10",
         "AT-sources-100",
@@ -7076,6 +7829,7 @@
         "AT-user-sim-19",
         "AT-user-sim-2",
         "AT-user-sim-20",
+        "AT-user-sim-21",
         "AT-user-sim-22",
         "AT-user-sim-23",
         "AT-user-sim-24",
@@ -7105,7 +7859,9 @@
         "AT-user-sim-46",
         "AT-user-sim-47",
         "AT-user-sim-48",
+        "AT-user-sim-49",
         "AT-user-sim-5",
+        "AT-user-sim-50",
         "AT-user-sim-51",
         "AT-user-sim-52",
         "AT-user-sim-53",
@@ -7134,7 +7890,12 @@
         "AT-user-sim-74",
         "AT-user-sim-75",
         "AT-user-sim-76",
+        "AT-user-sim-77",
+        "AT-user-sim-78",
+        "AT-user-sim-79",
         "AT-user-sim-8",
+        "AT-user-sim-80",
+        "AT-user-sim-81",
         "AT-user-sim-9",
         "AT-workflows-1",
         "AT-workflows-10",
@@ -7203,8 +7964,8 @@
     "R5.01": {
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
-      "sourceRowHash": "5b37503bfb1a8e31296a3b94d43782c2aafd1d49bbb7cf0f0233943a2df37000",
-      "dependsOn": "R4.07",
+      "sourceRowHash": "de3372aa7df787aa64486b0d48120d41fc62b9f624744ce4dbcb0989c25616e5",
+      "dependsOn": "R4.07; R2.SI2/4 already passed",
       "evidence": [],
       "requiredATs": [
         "AT-activity-focus-84",
@@ -7215,64 +7976,44 @@
         "AT-ops-78",
         "AT-ops-79",
         "AT-ops-86",
-        "AT-self-improvement-49",
-        "AT-self-improvement-50",
-        "AT-self-improvement-65",
-        "AT-self-improvement-68",
-        "AT-self-improvement-69",
         "AT-self-improvement-71",
-        "AT-self-improvement-72",
-        "AT-self-improvement-96"
+        "AT-self-improvement-96",
+        "AT-user-sim-77"
       ]
     },
     "R5.02": {
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
-      "sourceRowHash": "c8f2420ffe252c2c73bc04d28f4d0d7c9a5e8be76fee29d5c64f14033480b847",
-      "dependsOn": "R5.01",
+      "sourceRowHash": "6f72add8ca41c8e6c154bfa3a76f7c2d6112f41369bae607f43872395f273c9d",
+      "dependsOn": "R5.01; R2.SI3",
       "evidence": [],
       "requiredATs": [
         "AT-RESEARCH-REGISTER-22",
         "AT-hands-47",
-        "AT-hermes-config-18",
-        "AT-self-improvement-33",
-        "AT-self-improvement-36",
-        "AT-self-improvement-37",
-        "AT-self-improvement-38",
-        "AT-self-improvement-39",
-        "AT-self-improvement-40",
-        "AT-self-improvement-41",
-        "AT-self-improvement-42",
-        "AT-self-improvement-46",
-        "AT-self-improvement-51"
+        "AT-self-improvement-118",
+        "AT-self-improvement-99",
+        "AT-user-sim-79"
       ]
     },
     "R5.03": {
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
-      "sourceRowHash": "c2ed0854c66be238207adc6d18111f730b9801c3111fd287f2620c2467672048",
-      "dependsOn": "R5.02",
+      "sourceRowHash": "0e1b6043a61fb3314e155ff88d83db19fbca91710636d8e180b41bbd26586700",
+      "dependsOn": "R5.02; R2.SI4",
       "evidence": [],
       "requiredATs": [
         "AT-authority-38",
         "AT-hands-79",
-        "AT-hermes-config-38",
-        "AT-hermes-config-68",
         "AT-obligations-99",
         "AT-ops-29",
-        "AT-self-improvement-43",
-        "AT-self-improvement-44",
-        "AT-self-improvement-45",
-        "AT-self-improvement-77",
-        "AT-self-improvement-86",
-        "AT-self-improvement-95"
+        "AT-self-improvement-119"
       ]
     },
     "R5.04": {
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
-      "sourceRowHash": "1cee48b3d91ea8f93fe7275f75b85f1d42d888de988874e48b82557f55755464",
-      "dependsOn": "R5.01\u201303; distinct pilot admission",
+      "sourceRowHash": "c6b84b002613f4088513a8c3b2d6f35cd93d55934ff38304b8960867ec207b0e",
+      "dependsOn": "R5.01\u201303; separate pilot admission",
       "evidence": [],
       "requiredATs": [
         "AT-lifestore-31",
@@ -7284,7 +8025,7 @@
     "R5.05": {
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
-      "sourceRowHash": "e5ca4da25e4a8082907205cca23c85faee38691e64a3415b2a0e5713346abd20",
+      "sourceRowHash": "d1107aab1f55fe0e84b9e669f597f1236594fe13e6f86c117a701f9dbbee15e1",
       "dependsOn": "R5.01\u201303; R5.04 if enabled",
       "evidence": [],
       "requiredATs": [
@@ -7709,6 +8450,7 @@
         "AT-cli-36",
         "AT-cli-37",
         "AT-cli-38",
+        "AT-cli-39",
         "AT-cli-4",
         "AT-cli-5",
         "AT-cli-6",
@@ -8254,8 +8996,28 @@
         "AT-self-improvement-10",
         "AT-self-improvement-100",
         "AT-self-improvement-101",
+        "AT-self-improvement-102",
+        "AT-self-improvement-103",
+        "AT-self-improvement-104",
+        "AT-self-improvement-105",
+        "AT-self-improvement-106",
+        "AT-self-improvement-107",
+        "AT-self-improvement-108",
+        "AT-self-improvement-109",
         "AT-self-improvement-11",
+        "AT-self-improvement-110",
+        "AT-self-improvement-111",
+        "AT-self-improvement-112",
+        "AT-self-improvement-113",
+        "AT-self-improvement-114",
+        "AT-self-improvement-115",
+        "AT-self-improvement-116",
+        "AT-self-improvement-117",
+        "AT-self-improvement-118",
+        "AT-self-improvement-119",
         "AT-self-improvement-12",
+        "AT-self-improvement-120",
+        "AT-self-improvement-121",
         "AT-self-improvement-13",
         "AT-self-improvement-14",
         "AT-self-improvement-15",
@@ -8649,6 +9411,7 @@
         "AT-user-sim-79",
         "AT-user-sim-8",
         "AT-user-sim-80",
+        "AT-user-sim-81",
         "AT-user-sim-9",
         "AT-workflows-1",
         "AT-workflows-10",
@@ -8714,11 +9477,150 @@
         "AT-workflows-8",
         "AT-workflows-9"
       ]
+    },
+    "R2.SI1": {
+      "implementation": "NOT_IMPLEMENTED",
+      "acceptance": "PENDING",
+      "evidence": [],
+      "sourceRowHash": "3b46b4a5c0b332995f01329fccb1678253396d9ee2e634ca7f03752c683fd654",
+      "dependsOn": "R1.38; R1 research/import and incident interfaces; R2.03 policy/retrieval implementation",
+      "requiredATs": [
+        "AT-self-improvement-111",
+        "AT-self-improvement-112",
+        "AT-self-improvement-120",
+        "AT-self-improvement-33",
+        "AT-self-improvement-86"
+      ]
+    },
+    "R2.SI2": {
+      "implementation": "NOT_IMPLEMENTED",
+      "acceptance": "PENDING",
+      "evidence": [],
+      "sourceRowHash": "10b24b8efc20ac114d73205b10b39a22c827f9ecbcd6df43764d30f5e8c98711",
+      "dependsOn": "R2.SI1 implementation; R0.04\u201305 actual identities; R1.29 control foundations; R2.03 and R2.05 read broker interfaces",
+      "requiredATs": [
+        "AT-cli-39",
+        "AT-ops-86",
+        "AT-self-improvement-113",
+        "AT-self-improvement-114",
+        "AT-self-improvement-115",
+        "AT-self-improvement-116",
+        "AT-self-improvement-117",
+        "AT-self-improvement-49",
+        "AT-self-improvement-50",
+        "AT-self-improvement-65",
+        "AT-self-improvement-68",
+        "AT-self-improvement-69",
+        "AT-self-improvement-72",
+        "AT-self-improvement-96",
+        "AT-user-sim-77",
+        "AT-user-sim-81"
+      ]
+    },
+    "R2.SI3": {
+      "implementation": "NOT_IMPLEMENTED",
+      "acceptance": "PENDING",
+      "evidence": [],
+      "sourceRowHash": "e51d892a1a9172167e215fee565f74c567a515a0792d34f7180be21ea01d86be",
+      "dependsOn": "R2.SI2 acceptance; real-Toy runner/CLI; R2.SI1 frozen candidate",
+      "requiredATs": [
+        "AT-self-improvement-101",
+        "AT-self-improvement-118",
+        "AT-self-improvement-36",
+        "AT-self-improvement-37",
+        "AT-self-improvement-38",
+        "AT-self-improvement-39",
+        "AT-self-improvement-40",
+        "AT-self-improvement-41",
+        "AT-self-improvement-42",
+        "AT-self-improvement-99",
+        "AT-user-sim-21",
+        "AT-user-sim-78",
+        "AT-user-sim-79"
+      ]
+    },
+    "R2.SI4": {
+      "implementation": "NOT_IMPLEMENTED",
+      "acceptance": "PENDING",
+      "evidence": [],
+      "sourceRowHash": "830edacf2307205ffa6a40e138d2dd4d6b2b138d2f8c1f5786b6c69dc3540f9d",
+      "dependsOn": "R2.SI3 acceptance; R1.29 publisher available; all applicable R1/R2 safety/compatibility checks",
+      "requiredATs": [
+        "AT-hermes-config-18",
+        "AT-hermes-config-38",
+        "AT-hermes-config-60",
+        "AT-hermes-config-68",
+        "AT-self-improvement-119",
+        "AT-self-improvement-121",
+        "AT-self-improvement-43",
+        "AT-self-improvement-44",
+        "AT-self-improvement-45",
+        "AT-self-improvement-77",
+        "AT-self-improvement-95",
+        "AT-user-sim-49",
+        "AT-user-sim-50",
+        "AT-user-sim-80"
+      ]
     }
   },
   "trialDeadlines": [],
   "humanSteps": "build/HUMAN-STEPS.md",
-  "blockers": [],
+  "blockers": [
+    {
+      "condition": "PRESSURE_QUERY_DENIED",
+      "scope": "Automatic OS pressure-level measurement remains unavailable; this does not block the current Johan-observed normal-pressure fake-stack/helper admission",
+      "independentProgress": "Multiple real fake stacks and one Luna/max helper were admitted under available-memory plus operator-observed normal pressure. Strictly-free pages never blocked native CLI fixture work.",
+      "historicalResolvedBy": "2026-10-06 unrestricted execution profile and actual service-account observation; original failed evidence retained"
+    },
+    {
+      "condition": "GIT_METADATA_READ_ONLY",
+      "scope": "Commit/push; working files and evidence remain writable",
+      "independentProgress": "Source work continues; checkpoint patch retained",
+      "historicalResolvedBy": "2026-10-06 unrestricted execution profile and actual service-account observation; original failed evidence retained"
+    },
+    {
+      "condition": "DIRECTORY_QUERY_UNAVAILABLE",
+      "scope": "Fixed bootstrap CLI cannot query local Directory Service; no candidate IDs or snapshot issued",
+      "independentProgress": "Prepared bounded source and real CLI refusals; no privilege escalation or permission bypass",
+      "historicalResolvedBy": "2026-10-06 unrestricted execution profile and actual service-account observation; original failed evidence retained"
+    },
+    {
+      "condition": "PRIVILEGED_RUNTIME_OUTSIDE_WORKSPACE",
+      "scope": "Root installer, service identities and protected runtime paths; current caller is non-root and writes are limited to the workspace",
+      "independentProgress": "Prepared bounded source and real CLI refusals; no privilege escalation or permission bypass",
+      "historicalResolvedBy": "2026-10-06 unrestricted execution profile and actual service-account observation; original failed evidence retained"
+    },
+    {
+      "condition": "POSTGRESQL_INITIALIZATION_PERMISSION_DENIED",
+      "scope": "R0.06 real PostgreSQL schema/accounting transaction probes and verified R0.01 provider accounting prerequisite",
+      "independentProgress": "Three public CLI initialization attempts retained; stop unchanged retries. Canonical policy/source and independent R0.01 native no-fallback subsets verified; actual database runtime remains pending.",
+      "evidence": "build/evidence/R0.06/accounting-runtime-blocker.json"
+    },
+    {
+      "condition": "PROTECTED_AUTH_AT_REGISTRATION_PENDING",
+      "scope": "Full assigned native auth acceptance requires protected per-AT manifest, controller identity and unfiltered route; save-fault, auth refresh/reload and native unbound-SIWC no-fallback subsets have passed",
+      "evidence": "build/evidence/R0.03/auth-save-fault-fixture-verification.json",
+      "independentProgress": "R0.01 remains critical; defer larger auth matrix until actual assigned prerequisites are available. No simulated-UID pass."
+    },
+    {
+      "condition": "BROWSER_DOMAIN_ACCESS_DENIED",
+      "scope": "Actual Apple Developer membership and B2 account-capacity inventory. User-declined domain access; do not retry through another browser, raw CDP, commands or indirect requests.",
+      "evidence": "build/evidence/R0.09/remote-capacity-browser-inventory.json",
+      "independentProgress": "Current safe source/policy evidence retained; no unsupported substitute or acceptance promotion."
+    },
+    {
+      "condition": "SCHEMA_PIN_CLOSURE_PENDING",
+      "scope": "R0.10 exact TypeScript/Ajv/pg/pg-boss pin agreement and corresponding assigned runtime probes.",
+      "evidence": "build/evidence/R0.10/current-pin-revalidation.json",
+      "independentProgress": "Current safe source/policy evidence retained; no unsupported substitute or acceptance promotion."
+    },
+    {
+      "condition": "NPM_REGISTRY_UNRESOLVED_REQUIRED_PINS_NOT_CACHED",
+      "scope": "Exact missing pg/pg-boss application lock closure; TypeScript/Ajv exact tarballs also not observed",
+      "evidence": "build/evidence/R0.10/registry-availability.json",
+      "independentProgress": "Source/lock contradictions and available metadata revalidated; stop unchanged registry attempts. No unsupported package substitution or DNS/network bypass."
+    }
+  ],
   "deployment": {
     "performed": false,
     "preservedServices": [
@@ -8726,8 +9628,8 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Finish the minimal K3 CLI stack/clock/registered-probe implementation, integrate four verified K4a references, then K4 generators/map ATs and immediately R0.01 supported ChatGPT route. Do not add native protocols or kernel/ABI research. Swift generation and compilation resume at R3. Memory admits test stack and the sole Luna helper under the corrected available-page policy.",
-  "previousTurnClassification": "progress",
+  "nextAction": "Verify and commit macOS bootstrap fixes and largest-interface OS-seam regressions. Continue R0.04 protection and restored real PostgreSQL accounting prerequisites for R0.01. Preserve existing accounts/root/profile/services; no repeat bootstrap apply.",
+  "previousTurnClassification": "NO_PROGRESS",
   "failures": [
     {
       "id": "K1.integration-public-entry-fixture",
@@ -8776,13 +9678,66 @@
       "status": "RESOLVED",
       "resolution": "Remove only the untracked obsolete artifact from this change; regenerate all 193 artifacts and verify drift/static checks. Backup files use the existing owner root.",
       "evidence": "build/evidence/R0.K3/journal-migration.json"
+    },
+    {
+      "id": "R008.absent-licence-branch-assertion",
+      "condition": "Initial narrow absent-licences predicate passed while missing the explicit AT-ops-81 R3 branch requirement",
+      "unchangedAttempts": 1,
+      "status": "RESOLVED",
+      "resolution": "Policy shared native prerequisites enforce Cold Turkey Pro; stronger full branch assertion passes through fresh public CLI operations and readbacks",
+      "evidence": "build/evidence/R0.08/runtime-fixture-verification.json"
+    },
+    {
+      "id": "R008.checkview-prerequisite-size",
+      "condition": "Stronger gate expanded fixed evidence beyond the canonical 2000-character CheckView prerequisite limit; real CLI returned ATTESTATION_INVALID",
+      "unchangedAttempts": 1,
+      "status": "RESOLVED",
+      "resolution": "Remove duplicated empty-evidence IDs in favor of count while preserving complete input states and decision; all three final real CLI runs pass with maximum 1783 characters",
+      "evidence": "build/evidence/R0.08/runtime-fixture-verification.json"
+    },
+    {
+      "id": "R003.private-home-no-committed-dependency-environment",
+      "condition": "Two real public native CLI --help attempts exited1 with fixed upstream missing committed dependency environment error",
+      "unchangedAttempts": 2,
+      "status": "RESOLVED",
+      "resolution": "Use real existing committed venv interpreter and unchanged public runtime command in isolated HOME/HERMES_HOME; final compiled-source-bound native help and persisted readback pass",
+      "evidence": "build/evidence/R0.03/native-runtime-fixture-verification.json"
+    },
+    {
+      "id": "R003.tuple-generator-rejection",
+      "condition": "Sole DTO generator rejects prefixItems tuple schemas",
+      "unchangedAttempts": 1,
+      "status": "RESOLVED",
+      "resolution": "Use its supported fixed-length canonical string array and owner checks for -I/-c/--help positions before native execution; no generator extension",
+      "evidence": "build/evidence/R0.03-committed-venv-contract-generation-final.txt"
+    },
+    {
+      "id": "R001.native-siwc-paid-fallback",
+      "condition": "Real native CLI attempted configured OpenAI fallback with a synthetic paid key after unbound SIWC authorization refusal",
+      "attempts": 3,
+      "status": "RESOLVED_NATIVE_PUBLIC_CLI_SUBSET_OTHER_ASSIGNED_PATHS_PENDING",
+      "resolution": "ProviderProfile.allows_fallback defaults true; SIWC declares false. Existing fallback boundaries consult the policy. Canonical siwc_responses CLI checks observe refusal and zero HTTP/socket/fallback effects; auth regression passes.",
+      "replanEvidence": "build/evidence/R0.01/native-refusal-replan.json",
+      "evidence": "build/evidence/R0.01/native-refusal-fixture-verification.json"
+    },
+    {
+      "id": "R009.registered-case-and-feature-interface",
+      "condition": "Initial build rejected undeclared registered case/check IDs; map update refused the new interface absent from the canonical feature facts registry",
+      "status": "RESOLVED",
+      "owner": "integration owner",
+      "resolution": "Register exact case/check IDs and the already written interface in the sole canonical inventories. Strict checks and all fixed CLI cases/readbacks pass. Existing compiler/map checks enforce the correction.",
+      "evidence": "build/evidence/R0.09/capacity-fixture-verification.json"
     }
   ],
   "specIndex": {
-    "masterCards": 83,
-    "ATs": 1425,
-    "staleLineReferences": 1301,
-    "resolution": "Exact unique assertion ID binding; original and actual source lines and assertion digests retained"
+    "masterCards": 87,
+    "ATs": 1447,
+    "cliCards": 12,
+    "staleLineReferences": 0,
+    "resolution": "Canonical source-bound 84-feature/55-command/1447-AT map passes",
+    "driftEvidence": "build/evidence/R0.01/keychain-updated-acceptance-state.json",
+    "sourceFreshness": "PASS_AT_CURRENT_CHECK",
+    "freshnessEvidence": "build/evidence/R0.01/selection-full-check-output.txt"
   },
   "host": {
     "os": "macOS 26.7.1",
@@ -8795,24 +9750,42 @@
     "contractsSwiftSDK": "/Library/Developer/CommandLineTools/SDKs/MacOSX26.5.sdk"
   },
   "admission": {
-    "concurrentChildren": 1,
+    "concurrentChildren": 0,
     "maximumChildren": 1,
     "semanticStackAdmitted": false,
     "testStackMemoryAdmitted": true,
-    "observedAt": "2026-10-05T17:51:10.724Z",
+    "observedAt": "2026-10-06T14:58:28.748Z",
     "availableBytesVerified": true,
-    "measurementEvidence": "build/evidence/R0.K3/memory-admission-v2.json",
-    "measurementMeaning": "Available = free + inactive + purgeable + speculative page bytes; pressure must be normal; job need + 512 MiB",
-    "availableBytes": "2936455168",
+    "measurementEvidence": "build/evidence/R0.04-post-bootstrap-doctor.json",
+    "measurementMeaning": "OS pressure normal; helper1GiB plus bounded parent CLI/source job512MiB plus margin512MiB admitted. No1GiBteststack concurrently.",
+    "availableBytes": 2365341696,
     "testStackNeedBytes": "1073741824",
-    "helperNeedBytes": "268435456",
+    "helperNeedBytes": "1073741824",
     "marginBytes": "536870912",
     "pressure": "normal",
     "headroomSatisfied": true,
     "resourcePermitIssued": false,
-    "childAdmission": true
+    "childAdmission": "INDEPENDENT_LUNA_MAX_R010_PACKAGE_ACCESS_COMPLETED",
+    "testStackHeadroomSatisfied": true,
+    "normalPressureObserved": true,
+    "physicalAdmissionDependency": null,
+    "historicalVerifiedAdmission": {
+      "observedAt": "2026-10-05T17:51:10.724Z",
+      "availableBytes": "2936455168",
+      "pressure": "normal",
+      "evidence": "build/evidence/R0.K3/memory-admission-v2.json"
+    },
+    "admissionScope": "Confined R0 fake stack and current helper; fresh headroom measurement per new physical work",
+    "userReportedPressure": "normal",
+    "currentEvidence": "build/evidence/R0.04-post-bootstrap-doctor.json",
+    "pressureSource": "os",
+    "testStackRuntimeWasAdmitted": true,
+    "testStackCurrentlyRunning": false,
+    "testStackTeardownComplete": true,
+    "repairWorkerFloorScope": "1.5 GiB floor applies only to R5 repair worker",
+    "currentStackId": null
   },
-  "currentTurnClassification": "progress",
+  "currentTurnClassification": "PROGRESS",
   "cliCards": {
     "CLI-01": {
       "implementation": "AVAILABLE",
@@ -8874,7 +9847,7 @@
     "CLI-06": {
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
-      "sourceRowHash": "27afb2a50d29b7c11752ffb29426305741b5b7706710d330982557725a11acfa",
+      "sourceRowHash": "616b74438db18e65a49eabb44735a452c2a1303a91e6916204e22d8f4f930b34",
       "requiredATs": [
         "AT-cli-15",
         "AT-cli-16",
@@ -8904,7 +9877,7 @@
     "CLI-07b": {
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
-      "sourceRowHash": "9fb362099e24781e798ebda55b4dd604698d70092c6010eae92e164cf1e12037",
+      "sourceRowHash": "d2344a8dbff1974628a98e330aeeea6b911f74ce7b4c77272d861f619d84c165",
       "requiredATs": [
         "AT-cli-25",
         "AT-cli-26",
@@ -8916,7 +9889,7 @@
     "CLI-08": {
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
-      "sourceRowHash": "82b58560f1b8e24d9012e90285e2dc8be92df308f0d667160bcf620de131581d",
+      "sourceRowHash": "0c8169b5306e090367f2d70ce9f45a3a15f1ac1f2b12a157622bff8759bb2ab1",
       "requiredATs": [
         "AT-cli-28"
       ],
@@ -8925,7 +9898,7 @@
     "CLI-09": {
       "implementation": "NOT_IMPLEMENTED",
       "acceptance": "PENDING",
-      "sourceRowHash": "06ca730ade7f3fb8394a2a362138b4cdaee29ac0f5ba6d5d02c8e643e4b2052f",
+      "sourceRowHash": "86b40e1309bfb38a954587788d35393f8335682252ddbb7ddba8803bb67c3121",
       "requiredATs": [
         "AT-cli-29",
         "AT-cli-30",
@@ -8949,18 +9922,6 @@
       "sourceRowHash": "9ad64f0080fb9ce9731f38716182f65cb47dcbe7ecea5b0522303ce74659fcda",
       "requiredATs": [
         "AT-cli-34"
-      ],
-      "evidence": []
-    },
-    "CLI-12": {
-      "implementation": "NOT_IMPLEMENTED",
-      "acceptance": "PENDING",
-      "sourceRowHash": "d42c12506b26b9720c9296c6930d04c12d05fa0cc7ae081412e369d3e9911eb2",
-      "requiredATs": [
-        "AT-cli-35",
-        "AT-cli-36",
-        "AT-cli-37",
-        "AT-cli-38"
       ],
       "evidence": []
     }
@@ -9027,7 +9988,16 @@
       "rung": "CLI",
       "firstRelease": "R0",
       "sourceAssertionHash": "d4c9ae3095b081a03ffeb72a648568018cd883116e15eac02182c579918c317b",
-      "evidence": []
+      "evidence": [
+        "build/evidence/R0.08/runtime-fixture-verification.json"
+      ],
+      "subsetVerification": {
+        "rung": "CLI",
+        "fixedExternalInventoryChecksPassed": 8,
+        "persistedReadbackMatches": true,
+        "wholeAssertionComplete": false,
+        "evidence": "build/evidence/R0.08/runtime-fixture-verification.json"
+      }
     },
     "AT-activity-focus-86": {
       "state": "NOT_IMPLEMENTED",
@@ -9184,18 +10154,26 @@
       "evidence": []
     },
     "AT-cli-7": {
-      "state": "NOT_IMPLEMENTED",
+      "state": "PASS",
       "rung": "CLI",
       "firstRelease": "R0",
       "sourceAssertionHash": "dd1ca5df77063f1fe35bb65b8a4f3f99d8d60c748e2b2f31d6e317b2adc392fa",
-      "evidence": []
+      "evidence": [
+        "build/evidence/R0.K4/static-verification.json",
+        "build/evidence/R0.K4/attempts/2026-10-06T03-37-14.859Z-a098f480-8252-454b-a3c8-3f1e39797fcd/receipts.json"
+      ],
+      "verifiedAt": "2026-10-06T03:38:30.654Z"
     },
     "AT-cli-8": {
-      "state": "NOT_IMPLEMENTED",
+      "state": "PASS",
       "rung": "CLI",
       "firstRelease": "R0",
       "sourceAssertionHash": "b739f21a6f8c1b3763701ddc0ccf41aa2502106c2ac3b5b631f45b4a92ea2b19",
-      "evidence": []
+      "evidence": [
+        "build/evidence/R0.K4/static-verification.json",
+        "build/evidence/R0.K4/attempts/2026-10-06T03-37-14.859Z-a098f480-8252-454b-a3c8-3f1e39797fcd/receipts.json"
+      ],
+      "verifiedAt": "2026-10-06T03:38:30.654Z"
     },
     "AT-cli-9": {
       "state": "NOT_IMPLEMENTED",
@@ -9230,7 +10208,16 @@
       "rung": "CLI",
       "firstRelease": "R0",
       "sourceAssertionHash": "f4caef7202502076f80e1ebc139f0f25d5f81cc2964c5ac722bf29ba4fce7fb2",
-      "evidence": []
+      "evidence": [
+        "build/evidence/R0.08/runtime-fixture-verification.json"
+      ],
+      "subsetVerification": {
+        "rung": "CLI",
+        "fixedExternalInventoryChecksPassed": 8,
+        "persistedReadbackMatches": true,
+        "wholeAssertionComplete": false,
+        "evidence": "build/evidence/R0.08/runtime-fixture-verification.json"
+      }
     },
     "AT-hands-60": {
       "state": "NOT_IMPLEMENTED",
@@ -9433,7 +10420,21 @@
       "rung": "CLI",
       "firstRelease": "R0",
       "sourceAssertionHash": "1945ba7e3df83056f7a11ddb1cc4f6f74b3c2e91744c47f77a85e3f34e21ff67",
-      "evidence": []
+      "evidence": [
+        "build/evidence/R0.03/native-runtime-fixture-verification.json",
+        "build/evidence/R0.03/httpx-fixture-source-preparation.json",
+        "build/evidence/R0.03/auth-fresh-process-fixture-verification.json"
+      ],
+      "runtimeAvailabilitySubset": {
+        "rung": "CLI",
+        "publicNativeHelpPassed": true,
+        "exactPersistedReadback": true,
+        "wholeAssertionComplete": false,
+        "authExecuted": false,
+        "evidence": "build/evidence/R0.03/native-runtime-fixture-verification.json"
+      },
+      "nativeBehaviorSequenceVerified": true,
+      "fullRegistrationPending": true
     },
     "AT-hermes-config-86": {
       "state": "NOT_IMPLEMENTED",
@@ -9485,11 +10486,15 @@
       "evidence": []
     },
     "AT-hermes-config-101": {
-      "state": "NOT_IMPLEMENTED",
+      "state": "PASS",
       "rung": "CLI",
       "firstRelease": "R0",
       "sourceAssertionHash": "6ea119d88a2d96cd626ae62275cc5363bb0220bda0f71b399c2ce8d76f5b41ee",
-      "evidence": []
+      "evidence": [
+        "build/evidence/R0.K4/static-verification.json",
+        "build/evidence/R0.K4/attempts/2026-10-06T03-37-14.859Z-a098f480-8252-454b-a3c8-3f1e39797fcd/receipts.json"
+      ],
+      "verifiedAt": "2026-10-06T03:38:30.654Z"
     },
     "AT-lifestore-41": {
       "state": "NOT_IMPLEMENTED",
@@ -9720,7 +10725,16 @@
       "rung": "CLI",
       "firstRelease": "R0",
       "sourceAssertionHash": "88d84164c5ee83c25b0ed94eed080de98cff8ed2c7ce27ad1f5982e8f9c99311",
-      "evidence": []
+      "evidence": [
+        "build/evidence/R0.08/runtime-fixture-verification.json"
+      ],
+      "subsetVerification": {
+        "rung": "CLI",
+        "fixedExternalInventoryChecksPassed": 8,
+        "persistedReadbackMatches": true,
+        "wholeAssertionComplete": false,
+        "evidence": "build/evidence/R0.08/runtime-fixture-verification.json"
+      }
     },
     "AT-self-improvement-54": {
       "state": "NOT_IMPLEMENTED",
@@ -11098,7 +12112,7 @@
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
       "firstRelease": "R1",
-      "sourceAssertionHash": "c8b9b6b5907828db726280f60ba4c05f5ab328f63b64e13770a126e46dec3deb",
+      "sourceAssertionHash": "a9715152e3f883cab5c5705ed063caa6f81cf8a9871703c094376cc18fd59596",
       "evidence": []
     },
     "AT-cli-24": {
@@ -11588,7 +12602,7 @@
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
       "firstRelease": "R1",
-      "sourceAssertionHash": "7d7c5caac3211cc55e02170caf116e70ae7ec6bf78b0f2ac605c86d9df29960d",
+      "sourceAssertionHash": "1cb4ff49991f90e5635679166025136c34e223438695e04f62f7dccccb96d5eb",
       "evidence": []
     },
     "AT-hermes-config-13": {
@@ -11826,7 +12840,7 @@
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
       "firstRelease": "R1",
-      "sourceAssertionHash": "8d027ac30eb6015d5ad61ceaa4469b0d26f9909927691175a5e33ec5496d7532",
+      "sourceAssertionHash": "54b6a18e4add6888cbfe94e7870e25adbe36e495fa987e5ca73e05db749a3390",
       "evidence": []
     },
     "AT-hermes-config-104": {
@@ -12652,14 +13666,14 @@
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
       "firstRelease": "R1",
-      "sourceAssertionHash": "6b1eb093edd4d82614fd99523fcf3868b314fbde57f446ca13c2fd4ff425efe4",
+      "sourceAssertionHash": "bf9b619997bc836ec3721308b2a6fd3ad46d9191241029609795a4ebecfcea46",
       "evidence": []
     },
     "AT-ops-28": {
       "state": "NOT_IMPLEMENTED",
       "rung": "SIM",
       "firstRelease": "R1",
-      "sourceAssertionHash": "84efe259459eae6dec299839d862deb6c2a06dbf38555e5c5a81fe6185bda07a",
+      "sourceAssertionHash": "6cd2e81f2d690ed69c20fd5b69538176b615f954dd9596284352a2f7c3267b7e",
       "evidence": []
     },
     "AT-ops-31": {
@@ -12862,7 +13876,7 @@
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
       "firstRelease": "R1",
-      "sourceAssertionHash": "ed6c39fdc999703da1b3309aedea82dc5defeca4c3a15999683683db55d795a3",
+      "sourceAssertionHash": "f952e1c813dfc34a2c9c6ff82a1332c98c6e3104ff624078a729d2df58b6a2ff",
       "evidence": []
     },
     "AT-ops-80": {
@@ -12883,7 +13897,7 @@
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
       "firstRelease": "R1",
-      "sourceAssertionHash": "1da594d161fe66c26ab81606b2e1fa96f0035755ee58c4d5343c11b8ab0693cc",
+      "sourceAssertionHash": "6ecab0be8dcf936499d5686e2eb954fe4d2b550065cc4ba1e538ccfbb3478f97",
       "evidence": []
     },
     "AT-ops-85": {
@@ -13016,7 +14030,7 @@
       "state": "NOT_IMPLEMENTED",
       "rung": "SIM",
       "firstRelease": "R1",
-      "sourceAssertionHash": "da6f86e1366e3ea1fc005913fb6239ac3800cba9b7fdc29cd819e0986cba7b73",
+      "sourceAssertionHash": "38bdcb7020c4d2b44f263461c9686a3bdf7bdf4b6eaac63ce07cea116386ccdd",
       "evidence": []
     },
     "AT-self-improvement-47": {
@@ -13093,7 +14107,7 @@
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
       "firstRelease": "R1",
-      "sourceAssertionHash": "5e1bf9bc57ceb03a9b19a235792f11e013ea1e986849d939729267ebcc283539",
+      "sourceAssertionHash": "0dbd4539ea0cae49b047cdacaf8f8e6b23fa85fe708446f1c254060b7206fdda",
       "evidence": []
     },
     "AT-self-improvement-73": {
@@ -13107,14 +14121,14 @@
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
       "firstRelease": "R1",
-      "sourceAssertionHash": "b9bd69ab226947b925e4210cb7899a2a1e1564557b8fc961e75e811c50736d51",
+      "sourceAssertionHash": "2df8c3361057687b70d023c10204a3f31f2db01e03d40edceb2f1baa733dbf74",
       "evidence": []
     },
     "AT-self-improvement-75": {
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
       "firstRelease": "R1",
-      "sourceAssertionHash": "4b549af0512d8d6cf8a1ef108d86e3cdd90c3e4a0824d1ba702f40a062a6c89d",
+      "sourceAssertionHash": "3511907b8d328c0172fe1d31fdef6e99e8221045f89aea19f6bd5e29f1bbe77e",
       "evidence": []
     },
     "AT-self-improvement-79": {
@@ -13135,7 +14149,7 @@
       "state": "NOT_IMPLEMENTED",
       "rung": "SIM",
       "firstRelease": "R1",
-      "sourceAssertionHash": "6811282aa542f42d159955ad0e369ce8fb62902f8dc59a9d62328f1e373eee69",
+      "sourceAssertionHash": "74e16609a6dc287c31f66b050e9c543d3180c5b3403382ceafdd36f6df756338",
       "evidence": []
     },
     "AT-self-improvement-87": {
@@ -13170,7 +14184,7 @@
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
       "firstRelease": "R1",
-      "sourceAssertionHash": "09e3e5c684bd00de0f24bc3fe2f416bb7cf247531c5db33850cede9a2291e44e",
+      "sourceAssertionHash": "91b9b6c08c6fe55da8448bbd129fb88fcaf724d5d74c9465eb54eda35940319a",
       "evidence": []
     },
     "AT-self-improvement-100": {
@@ -13821,7 +14835,7 @@
       "state": "NOT_IMPLEMENTED",
       "rung": "SIM",
       "firstRelease": "R1",
-      "sourceAssertionHash": "d5f1e1782f1ee6a5a30339f1d5e3a07ad3505a0c1947e4c91f074aaad210ee45",
+      "sourceAssertionHash": "0f15c87ef02e4a15da10db703f0f17a839d0bbb2bafe2c2cf383857a9b4fdae3",
       "evidence": []
     },
     "AT-user-sim-71": {
@@ -13835,14 +14849,14 @@
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
       "firstRelease": "R1",
-      "sourceAssertionHash": "2157c4bd63b8ffc56dd1a28fb95bfb83f7c71c86832afd129f896552b76d783d",
+      "sourceAssertionHash": "64226a912138df563fd306fa477d16455210beeb5b6d1187310c8da2e0e5b320",
       "evidence": []
     },
     "AT-user-sim-73": {
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
       "firstRelease": "R1",
-      "sourceAssertionHash": "8e9b22c2d1fb6b82d1cdc13be77c7b09aff2a2c63a2eb71cdcd655fa6344fba7",
+      "sourceAssertionHash": "128d6c6722803b8ef0c72a9347b4eeba71f8ab92c4b891b25b2e5d4973e44ef7",
       "evidence": []
     },
     "AT-workflows-7": {
@@ -15619,134 +16633,134 @@
     "AT-self-improvement-1": {
       "state": "NOT_IMPLEMENTED",
       "rung": "SIM",
-      "firstRelease": "R2",
-      "sourceAssertionHash": "4dd73bcf12e4a300fb4c9715d90e6587e03eb86d18e2c6aa451152949f6d9cf2",
+      "firstRelease": "R1",
+      "sourceAssertionHash": "1a9c7c68c44ef44ad50b00ee734c29b6b4e6273a1f73b39c2f9fd58c7f9c56f0",
       "evidence": []
     },
     "AT-self-improvement-9": {
       "state": "NOT_IMPLEMENTED",
       "rung": "SIM",
-      "firstRelease": "R2",
-      "sourceAssertionHash": "9b2f5c15f5c0299c44b4455dd17dea7cf7bbdbc972d74040aa460b1b9d93850d",
+      "firstRelease": "R1",
+      "sourceAssertionHash": "c4cd4b55534c9cb962b669a74cef430efadf128da5ce4c696f1051055445c28f",
       "evidence": []
     },
     "AT-self-improvement-12": {
       "state": "NOT_IMPLEMENTED",
       "rung": "SIM",
-      "firstRelease": "R2",
-      "sourceAssertionHash": "962b13492a8b4a849dc32b158c59bf7a86ed2ebbb4fa0a91fe1ff20b33d9f587",
+      "firstRelease": "R1",
+      "sourceAssertionHash": "4187ab2814509a3fbbcecd25c63f1afdea68e0b196f3d4eab565a5a6a6ceac3a",
       "evidence": []
     },
     "AT-self-improvement-15": {
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
-      "firstRelease": "R2",
-      "sourceAssertionHash": "a4e8b81a9d4dd5b7f86099222821b52cd0ef76098204aaa4c22176acb134e24a",
+      "firstRelease": "R1",
+      "sourceAssertionHash": "a28b917ff02c866da8b7f389780f5c07f9e055aeeb3836b328ec02e9fec60a8e",
       "evidence": []
     },
     "AT-self-improvement-16": {
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
-      "firstRelease": "R2",
-      "sourceAssertionHash": "03625780cdfc59d8e755b0dda1c2e8e9128e2f0a51c4d800d11ca7a477de1f86",
+      "firstRelease": "R1",
+      "sourceAssertionHash": "bc88d89d0577e640ae3ab2d91cee7f07a472cf4dcb7b3dd599fc0e359382bfdd",
       "evidence": []
     },
     "AT-self-improvement-17": {
       "state": "NOT_IMPLEMENTED",
       "rung": "SIM",
-      "firstRelease": "R2",
-      "sourceAssertionHash": "a891d6517b30f5eb94e4d9bf75165353d589823033edd871e989d968f63b39dc",
+      "firstRelease": "R1",
+      "sourceAssertionHash": "ad5753671651faba84030c88e3906dd12915a1592e8bf5f61866f186888bcafc",
       "evidence": []
     },
     "AT-self-improvement-23": {
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
-      "firstRelease": "R2",
-      "sourceAssertionHash": "4ecde12d71b585dd392340c59c11428e0fd8d15e800d0505b89236a3abafd6b7",
+      "firstRelease": "R1",
+      "sourceAssertionHash": "5405d6e8a81b0b282cf61d54106d39ce8e22766f2ec8c3d4a4f6de848c0d69a0",
       "evidence": []
     },
     "AT-self-improvement-24": {
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
-      "firstRelease": "R2",
-      "sourceAssertionHash": "3438c9563a2872999f46159a430ce42678cd35eb763d0757c0d3ecf9eff5aef2",
+      "firstRelease": "R1",
+      "sourceAssertionHash": "a300694063e62b3b429425c1e4c38e15eab798a247d9c2e25ec86119c3632de6",
       "evidence": []
     },
     "AT-self-improvement-25": {
       "state": "NOT_IMPLEMENTED",
       "rung": "SIM",
-      "firstRelease": "R2",
-      "sourceAssertionHash": "a26cc40c43c4f1bb05e648b317804bb9eefcc3d2984619e3aa28c2003088bc11",
+      "firstRelease": "R1",
+      "sourceAssertionHash": "b83cb734bc439149f08f46bc2c60e789b03a8abb266f9217a92d9e55d7f08803",
       "evidence": []
     },
     "AT-self-improvement-26": {
       "state": "NOT_IMPLEMENTED",
       "rung": "SIM",
-      "firstRelease": "R2",
-      "sourceAssertionHash": "02ac580b9918c3d17020add2d4da1d39f6942cfb238bd6f85676ae9187da288e",
+      "firstRelease": "R1",
+      "sourceAssertionHash": "c92fe8ef8b32306e445b61342ad580ba8607d36342cc0d8ca17c577403374515",
       "evidence": []
     },
     "AT-self-improvement-27": {
       "state": "NOT_IMPLEMENTED",
       "rung": "SIM",
-      "firstRelease": "R2",
-      "sourceAssertionHash": "4d00badd357b39da01ee49098644f09e043b9ddbcbc37520aa48968c41945da6",
+      "firstRelease": "R1",
+      "sourceAssertionHash": "6b2b0d63c554dbfb53cf48800958567d3e5f7a4f7794692f43061d26463d9f2b",
       "evidence": []
     },
     "AT-self-improvement-28": {
       "state": "NOT_IMPLEMENTED",
       "rung": "SIM",
-      "firstRelease": "R2",
-      "sourceAssertionHash": "e3b03925f86181b440382c668acf7f59a03b02021ba10e9ad9aa2f3e713ad4ce",
+      "firstRelease": "R1",
+      "sourceAssertionHash": "956deaa1220750c28a3011a101a89326c848e07e91f5f058c8c69e97e9fd7e6b",
       "evidence": []
     },
     "AT-self-improvement-29": {
       "state": "NOT_IMPLEMENTED",
       "rung": "SIM",
-      "firstRelease": "R2",
-      "sourceAssertionHash": "8bcff838359f8f57ddea0da86877b2b5fc86548a5424e5857c9538b879c24bbe",
+      "firstRelease": "R1",
+      "sourceAssertionHash": "8a87efdc0ef3aa5bf9c63bfebf700c61e9aef666517ee7543f38c16831875b03",
       "evidence": []
     },
     "AT-self-improvement-30": {
       "state": "NOT_IMPLEMENTED",
       "rung": "SIM",
-      "firstRelease": "R2",
-      "sourceAssertionHash": "8345b48490a2c97034a693eb1ce6b83b6d3fca6ab8a77e77bee061f98f83f041",
+      "firstRelease": "R1",
+      "sourceAssertionHash": "5ff32e20cd35ef43ccc0b60c232cd2ec2168efbe480529c8575149820f65adc8",
       "evidence": []
     },
     "AT-self-improvement-31": {
       "state": "NOT_IMPLEMENTED",
       "rung": "SIM",
-      "firstRelease": "R2",
-      "sourceAssertionHash": "665095ecea6bc11331c13d2b52e340d86a00666afe02813600631fcd9cfc1715",
+      "firstRelease": "R1",
+      "sourceAssertionHash": "34697c04f57f772810798a4add9a5dea25b2ab024fc7192b1a9a8f257632a53d",
       "evidence": []
     },
     "AT-self-improvement-76": {
       "state": "NOT_IMPLEMENTED",
       "rung": "SIM",
-      "firstRelease": "R2",
-      "sourceAssertionHash": "0cdb31a537f565646a267d245242e27035680a7f154518d842b3979830e764f7",
+      "firstRelease": "R1",
+      "sourceAssertionHash": "c36312c96c54f11d900f305f7092f6d0135e2887b4f3fb6494421b9bc06fddd3",
       "evidence": []
     },
     "AT-self-improvement-81": {
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
-      "firstRelease": "R2",
-      "sourceAssertionHash": "03baf7528709663aa2c7dd4b5aebcb65f9b7af630c3e275b72f30bc09b435039",
+      "firstRelease": "R1",
+      "sourceAssertionHash": "01f8d2e21149f0976f09895115a96ff62c60b5f1e8f1ea32de04a50381ac0146",
       "evidence": []
     },
     "AT-self-improvement-82": {
       "state": "NOT_IMPLEMENTED",
       "rung": "SIM",
-      "firstRelease": "R2",
-      "sourceAssertionHash": "628d8d8491dcf8fae26c08da9bd074512f7c2d5fccc06b0d928a4a176816eefb",
+      "firstRelease": "R1",
+      "sourceAssertionHash": "f3357a29782168a949b872a1f4f271db052a8028572aca5d762983aefb2abf0e",
       "evidence": []
     },
     "AT-self-improvement-83": {
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
-      "firstRelease": "R2",
-      "sourceAssertionHash": "9ab57bb55bf539b786ade98f834c8010f2d50c4b3959678104e430b5e2a72a9c",
+      "firstRelease": "R1",
+      "sourceAssertionHash": "6a6de4276701481e6093dfae8cd30a5bd206027dbcdf10f879179d1a8c52fa7f",
       "evidence": []
     },
     "AT-self-improvement-84": {
@@ -18525,7 +19539,7 @@
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
       "firstRelease": "R5",
-      "sourceAssertionHash": "8ea02e6fe437dd5f8c609f5a5b5de47a0bb539ea71405c593a2a5a903ab6c253",
+      "sourceAssertionHash": "528aee1b013f75094054e8fe0e33d489e85df34083bcdce7d9ef0b118d10cfba",
       "evidence": []
     },
     "AT-cli-36": {
@@ -18580,29 +19594,29 @@
     "AT-hermes-config-18": {
       "state": "NOT_IMPLEMENTED",
       "rung": "SIM",
-      "firstRelease": "R5",
-      "sourceAssertionHash": "0a9d126691109da6696d0ff5144b520de584474b7f7cc7a4fea95e7d1ade339b",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "4d630596863c246686c5e3288f74dd45f1e2333d7580ca9db7e90f1c387574a8",
       "evidence": []
     },
     "AT-hermes-config-38": {
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
-      "firstRelease": "R5",
-      "sourceAssertionHash": "8fd817921d449751f9b9a9c72bc5f0ef78349ec16f396c9c97185fd5c6b92a92",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "93ef013f337c4d45ea20be77767a4be7faf7579159dfd958057f1743ddc080b4",
       "evidence": []
     },
     "AT-hermes-config-60": {
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
-      "firstRelease": "R5",
-      "sourceAssertionHash": "72e2ca779d30ab63a1fb96050562f2a13b1e8f141371e7694a5dddbd57236b59",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "41f8e883b9be362a4548ea176e681c1f547c993da91e93c0878a669882d1bbfb",
       "evidence": []
     },
     "AT-hermes-config-68": {
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
-      "firstRelease": "R5",
-      "sourceAssertionHash": "fc4fbe433b8453c8c8cc0312ac983a9c49150c73da16615a8a6c5d92552fee70",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "d445b669026b5b6b4c644c06160e1ee3fd2ad586938b12561fdc0883241563e8",
       "evidence": []
     },
     "AT-lifestore-31": {
@@ -18658,7 +19672,7 @@
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
       "firstRelease": "R5",
-      "sourceAssertionHash": "19eaa10ded8a0819218d3bb54cde42a2dbabb1bae4ef39b0f108c7796d8cf941",
+      "sourceAssertionHash": "24e1e5e8532fc8d1919d663cf1a0e08833fc741b89d5c8b81307880215f55fb3",
       "evidence": []
     },
     "AT-ops-79": {
@@ -18671,148 +19685,148 @@
     "AT-ops-86": {
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
-      "firstRelease": "R5",
-      "sourceAssertionHash": "82c041dfedf07d6d4b4fa0b2a93cb87410f54d58913be2b433f048b105ab4b13",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "0282caeda816ca5ef1173953f36dff456b59aff4ce13d0c042f62e82f2689b94",
       "evidence": []
     },
     "AT-self-improvement-32": {
       "state": "NOT_IMPLEMENTED",
       "rung": "SIM",
-      "firstRelease": "R5",
-      "sourceAssertionHash": "f628c5d58bf4f58d3b4adc3710a357302d3b98f30d6ad93f6a792cce9281b899",
+      "firstRelease": "R1",
+      "sourceAssertionHash": "f638e5964e475585a149a5a39e8d1625752ec6215f695b83f16ce95148ca0bbf",
       "evidence": []
     },
     "AT-self-improvement-33": {
       "state": "NOT_IMPLEMENTED",
       "rung": "SIM",
-      "firstRelease": "R5",
-      "sourceAssertionHash": "4d01ac450cfb3a6b411a6686abfe0728815406fedfdd50714dc5698bef33dbb6",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "ad391d00dd55bbbb603156db6103d36daf9ded6a8a977f97ae6f1baf11d5e8d7",
       "evidence": []
     },
     "AT-self-improvement-36": {
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
-      "firstRelease": "R5",
-      "sourceAssertionHash": "f13716e5299c5d4d384afb12f026d203a8d8b1f5014b0f3fa4df21378c79ecab",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "dc6568a64fe64e4ddd2c9bacbc6154e0dd213a8301e0060294a90fef8f23b4b2",
       "evidence": []
     },
     "AT-self-improvement-37": {
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
-      "firstRelease": "R5",
-      "sourceAssertionHash": "41c9f44fdc272712bee02597ee314f665945fdeb3f7910f4b2968cf8b7e865a1",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "86cee8ed1c591814121b0938235bef5a0a25d94cc13a9d93247e8638a97949c7",
       "evidence": []
     },
     "AT-self-improvement-38": {
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
-      "firstRelease": "R5",
-      "sourceAssertionHash": "34a20cb53fe79ab9f4aa9fc12985ce65075bb7c79e5b682999e92386b7610780",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "5f0a2c52f8ef471058d3ece67df066fb5471045dc2c4cdc96089b9fd13d11416",
       "evidence": []
     },
     "AT-self-improvement-39": {
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
-      "firstRelease": "R5",
-      "sourceAssertionHash": "3d00ae6b2d6e76de5055a237d213341501fbbd2f4cd68057d22c95667f249d12",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "b257069214c1b458f76a3845a66038bc9067e6365608cd4fddfc8de7f8b3eb55",
       "evidence": []
     },
     "AT-self-improvement-40": {
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
-      "firstRelease": "R5",
-      "sourceAssertionHash": "e85a08a2ebb5173224993dd9ec000aff22db080b56f9b5564e8c11f1faea1f12",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "403d6da47f2e4f83198d90e06689137672499e8fc90ef0aaba1e73e101b493ec",
       "evidence": []
     },
     "AT-self-improvement-41": {
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
-      "firstRelease": "R5",
-      "sourceAssertionHash": "310af971cc5a581cb52fd4cccb75f70b625e8576166a7e4e5c4da61394897a4c",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "c1be3b6ab0b8f8a6326b2897ad9bde316022b784c436507535bc3fd483793309",
       "evidence": []
     },
     "AT-self-improvement-42": {
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
-      "firstRelease": "R5",
-      "sourceAssertionHash": "1124752eba8cffbffe40fc2c6394999fca86b75f2eed18ffbecddf88adf1d212",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "92450e2d773f6e3af11d99e70d37a2b45748b7d2ace446844587ee0aa633952e",
       "evidence": []
     },
     "AT-self-improvement-43": {
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
-      "firstRelease": "R5",
-      "sourceAssertionHash": "ae4f8c5df76cb5055802c5bb7a76576ae3d51c6766fe8d4c479145a5fa9138e1",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "17c76a0143833083bac14d2571098aca3edcb60866648ecf85396802ed78479f",
       "evidence": []
     },
     "AT-self-improvement-44": {
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
-      "firstRelease": "R5",
-      "sourceAssertionHash": "962c37619da1a9d47147e5c97beb9fd29c42db5e5d6ae26ecf5e0215305867af",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "04319a25f38cf3488f8953b57617dadcfcfe6f0c2d6ff549d79e6fecfda87009",
       "evidence": []
     },
     "AT-self-improvement-45": {
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
-      "firstRelease": "R5",
-      "sourceAssertionHash": "6b2c37f8eb51f36913ceba6cd53af9685154523d467e3d59e2b618d1acdbe4ca",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "70b32cd7ef77766057ee90124bc45130b7f21af918e42453911c9039b2868ca3",
       "evidence": []
     },
     "AT-self-improvement-46": {
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
-      "firstRelease": "R5",
-      "sourceAssertionHash": "dc480aa89a2b480b0d3a5636abb62775c45f1ef6ee084065ea514a08d3c7ad2e",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "135fbb393f5ed29d5b79cbb44e0ae36923314914a2ce7410106f86b95186f998",
       "evidence": []
     },
     "AT-self-improvement-48": {
       "state": "NOT_IMPLEMENTED",
       "rung": "SIM",
-      "firstRelease": "R5",
-      "sourceAssertionHash": "b65ab4f8c5e37deff376bf2be535ad53886fbed4decc21d9765c2d7f3fa25bf4",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "a4c029f8d19609e9e7ac7c0a210b8267f14ae17b3882b5efdefee1a59d1d398c",
       "evidence": []
     },
     "AT-self-improvement-49": {
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
-      "firstRelease": "R5",
-      "sourceAssertionHash": "68626ede65a8650c008350c385a9a18029598a863cd816f520e1a156c697d08e",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "93746d1d422d8f1760e4dc115faf7bdc7cde551355a164b971d9eadd8062217f",
       "evidence": []
     },
     "AT-self-improvement-50": {
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
-      "firstRelease": "R5",
-      "sourceAssertionHash": "d44339f16503f9401d10229e3ee2d4d2c49dca0288192469b23f21263e7556d7",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "4cb01690c84bc81aad3e371bfb030820c6a4949a7df04ec5199af2ebb4554d93",
       "evidence": []
     },
     "AT-self-improvement-51": {
       "state": "NOT_IMPLEMENTED",
       "rung": "SIM",
-      "firstRelease": "R5",
-      "sourceAssertionHash": "5c473737e5231432020f0fbbf6f42648027495cb2e38570079d8f258d73c1042",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "52cff5502cf19623da04cae4924b80c2cc478c0b7c63580a3eaa881d09cd3edb",
       "evidence": []
     },
     "AT-self-improvement-65": {
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
-      "firstRelease": "R5",
-      "sourceAssertionHash": "60bd3b1d96cd4142e59564ccb6b757bc1d227f985f828336d8e5c96d0e984cf1",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "524b74ad53c836c9ee2d9acfaf9c51438db2f1934eeac12f387a96c068ccc7a5",
       "evidence": []
     },
     "AT-self-improvement-68": {
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
-      "firstRelease": "R5",
-      "sourceAssertionHash": "fb9f5b5333593c019ba070d0d74bb1c94417dd14d3d22d01e28534e6d627053a",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "79dc19fd5a56a5734342bea7663a7c02fa7beccced57b0a5c6d55fe6a7915cc5",
       "evidence": []
     },
     "AT-self-improvement-69": {
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
-      "firstRelease": "R5",
-      "sourceAssertionHash": "455bc847c7d47b5214570f49183ee47f423ea12e2c2c78e629fcc714f44a531e",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "1bfd53eaa800b582f5b404577e62969742760a47e510986157ff1ccb13f355c9",
       "evidence": []
     },
     "AT-self-improvement-71": {
@@ -18825,50 +19839,50 @@
     "AT-self-improvement-72": {
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
-      "firstRelease": "R5",
-      "sourceAssertionHash": "0c6116e4ae93508745d8ab4e4fbfab0a53845a5a404b266c85a9e9ce87b19d51",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "e840315d6ce7e5c53978a85d4313acbe81901f3379ab79f1f34e68ce84400c5b",
       "evidence": []
     },
     "AT-self-improvement-77": {
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
-      "firstRelease": "R5",
-      "sourceAssertionHash": "5a46d58234d07514f23c789c8e8c3e00a93dfc4cea4dd654cc8dfe8670380e2e",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "e348cfc2d8e3901d3edaec4405d61cd3ab65c91b56fb8e9a65dd91bc6e0355ff",
       "evidence": []
     },
     "AT-self-improvement-86": {
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
-      "firstRelease": "R5",
-      "sourceAssertionHash": "f85dd3fc95939a30567fab47a357e37f3e84f8d87b1ea2c08100b423e7010474",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "7724e722d8882a515ed432b48a48b3786e58ac2ed0f8f9a59f3df38ad9131f12",
       "evidence": []
     },
     "AT-self-improvement-95": {
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
-      "firstRelease": "R5",
-      "sourceAssertionHash": "0232ac3b2f82760c9d992d76662ae6c6e7b5cc94dbc9731feaafc5cbba302afe",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "69defd90a4f8013862b27d2f238994f90b7afc4e9324afe4adaa0d41402246da",
       "evidence": []
     },
     "AT-self-improvement-96": {
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
-      "firstRelease": "R5",
-      "sourceAssertionHash": "9185f4935efdc8b47283baf8eed5310d563cfdee388c9adfe46fcecb573dec16",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "352cdabeb6be9f5d61edeb0205e3e994ac5d5f0fd5d7727af897f241a644ca4b",
       "evidence": []
     },
     "AT-self-improvement-99": {
       "state": "NOT_IMPLEMENTED",
       "rung": "SIM",
-      "firstRelease": "R5",
-      "sourceAssertionHash": "d8dfb1b72a93d4380bfae52a85c0a4c034fcdb0deadea605693aeffdb7ab881d",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "eb42f0ebfda2da960beeac8dd6b0ec3e62ad63539975bcf06184acf5920553bc",
       "evidence": []
     },
     "AT-self-improvement-101": {
       "state": "NOT_IMPLEMENTED",
       "rung": "SIM",
-      "firstRelease": "R5",
-      "sourceAssertionHash": "7a8cac5b66f1ab9555f26e6b2d5f77b65b595d246975b65619d16d918f5d00a9",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "1067105816be4c299c2da605fd5dbe94d86fcdd71c7e73add08e5891cf3a3ae7",
       "evidence": []
     },
     "AT-sources-163": {
@@ -18888,50 +19902,50 @@
     "AT-user-sim-21": {
       "state": "NOT_IMPLEMENTED",
       "rung": "SIM",
-      "firstRelease": "R5",
-      "sourceAssertionHash": "6777e4b3ba1fb2a0dca6edeb6e22fae7b2d2943988a0ab8987a45f1f3f9b27da",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "a9fbca1219943f882838e14b29d452bf40b515178e8fe298de9df946bddd3c47",
       "evidence": []
     },
     "AT-user-sim-49": {
       "state": "NOT_IMPLEMENTED",
       "rung": "SIM",
-      "firstRelease": "R5",
-      "sourceAssertionHash": "63b5bc7d7a02f14cf123bf0b919e7dff97c5bb3c84de3a6fa080e6d030ff4197",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "83926a11439ce1990cc6ca621214ae2191bcbb256acab45bc140afb8fc8fd8d5",
       "evidence": []
     },
     "AT-user-sim-50": {
       "state": "NOT_IMPLEMENTED",
       "rung": "SIM",
-      "firstRelease": "R5",
-      "sourceAssertionHash": "5a7f99e6d60f5bef043b2d32dabcfd3f4f8bb4e1d6195f6012711759b604b8a5",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "8a60705373f70c4db85ecc7f7e2fc2cd75da0c2816217aea685df7ea02720567",
       "evidence": []
     },
     "AT-user-sim-77": {
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
-      "firstRelease": "R5",
-      "sourceAssertionHash": "bc2aa2163867be5abbc7a73c034e3cbf1105e7314567e18d25feca0c077189cc",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "fbb681fd58ab350ab29ae13c07aad505994bd71b450e57e2ce81e11f70ad0391",
       "evidence": []
     },
     "AT-user-sim-78": {
       "state": "NOT_IMPLEMENTED",
       "rung": "SIM",
-      "firstRelease": "R5",
-      "sourceAssertionHash": "f6b674e1a6e253d805740d9e25bc57eb889b4741630a71f6c69076f06f42d9b5",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "7df9dd200f9e43108d4c04f1c38257506344e25574a957752d62cbc54f271428",
       "evidence": []
     },
     "AT-user-sim-79": {
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
-      "firstRelease": "R5",
-      "sourceAssertionHash": "6f8c89b6cc399ddfd45762d638ae8b66c34e54df61aade9587bf8127a045b338",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "119295029538c8ef435a4a56cdf7bbbf8d512383b303d654c040b3a05347b43d",
       "evidence": []
     },
     "AT-user-sim-80": {
       "state": "NOT_IMPLEMENTED",
       "rung": "SIM",
-      "firstRelease": "R5",
-      "sourceAssertionHash": "9663f3cbc6495887a0fe2833715428f3dc5ac5f68565b3b41de9bb96c9acbc63",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "5f728880b835682e4d410f6e9d2efb10b8153643270bf6973244702dfe3e21cf",
       "evidence": []
     },
     "AT-workflows-55": {
@@ -18940,32 +19954,193 @@
       "firstRelease": "R5",
       "sourceAssertionHash": "bee279a1a5de3c69b01b5c04990599777db8668ea1c0e305309ec6c46fb08b8f",
       "evidence": []
+    },
+    "AT-self-improvement-102": {
+      "state": "NOT_IMPLEMENTED",
+      "evidence": [],
+      "rung": "SIM",
+      "firstRelease": "R1",
+      "sourceAssertionHash": "87fc4780c314f92b98af459d9c02a98ce877e8c23de08709bec6dc085548a095"
+    },
+    "AT-self-improvement-103": {
+      "state": "NOT_IMPLEMENTED",
+      "evidence": [],
+      "rung": "SIM",
+      "firstRelease": "R1",
+      "sourceAssertionHash": "7b7489a408ad7be8de7c52ab0bafbb47f2d1fe8c000af412a7b2167f68af66fd"
+    },
+    "AT-self-improvement-104": {
+      "state": "NOT_IMPLEMENTED",
+      "evidence": [],
+      "rung": "SIM",
+      "firstRelease": "R1",
+      "sourceAssertionHash": "070b4f9659b15169553af9fd9146809eb3f929e88cf0e95ee2a27df08f0d4260"
+    },
+    "AT-self-improvement-105": {
+      "state": "NOT_IMPLEMENTED",
+      "evidence": [],
+      "rung": "SIM",
+      "firstRelease": "R1",
+      "sourceAssertionHash": "5d91f25f774371a92af289a1fcda1599e8b9a65650fe0a7ff657b00033bf084f"
+    },
+    "AT-self-improvement-106": {
+      "state": "NOT_IMPLEMENTED",
+      "evidence": [],
+      "rung": "SIM",
+      "firstRelease": "R1",
+      "sourceAssertionHash": "6b4a479512fc52a62168d45042c694653f15c03202f4ecde696de040e3bc1177"
+    },
+    "AT-self-improvement-107": {
+      "state": "NOT_IMPLEMENTED",
+      "evidence": [],
+      "rung": "SIM",
+      "firstRelease": "R1",
+      "sourceAssertionHash": "a7635eb17774b03230664bc9a371e2a3b717a76b8d480369b6f9c25770b6bc83"
+    },
+    "AT-self-improvement-108": {
+      "state": "NOT_IMPLEMENTED",
+      "evidence": [],
+      "rung": "SIM",
+      "firstRelease": "R1",
+      "sourceAssertionHash": "7cc054c6688d2dede607b3444f78789d0145b01f9532ed1d0837d1503ad984b8"
+    },
+    "AT-self-improvement-109": {
+      "state": "NOT_IMPLEMENTED",
+      "evidence": [],
+      "rung": "SIM",
+      "firstRelease": "R1",
+      "sourceAssertionHash": "b89e13469331be32369c80748a223f6b2de0b74343be5c2afa55d8d46a5316ed"
+    },
+    "AT-self-improvement-110": {
+      "state": "NOT_IMPLEMENTED",
+      "rung": "SIM",
+      "firstRelease": "R1",
+      "sourceAssertionHash": "5c61a04ae1acbd97b7e483b6b614943115ee96ae4dde8b814477ff41f43ef201",
+      "evidence": []
+    },
+    "AT-self-improvement-111": {
+      "state": "NOT_IMPLEMENTED",
+      "evidence": [],
+      "rung": "SIM",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "b134edc2cffe3b2def172f7204f80051983a514c8799823d0dc6ddd84a9b7f20"
+    },
+    "AT-self-improvement-112": {
+      "state": "NOT_IMPLEMENTED",
+      "rung": "CLI",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "e20eb48ba48589c168262704209e6c1df5cf30039cdf7c74a1f8c200b4868454",
+      "evidence": []
+    },
+    "AT-self-improvement-113": {
+      "state": "NOT_IMPLEMENTED",
+      "rung": "CLI",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "a4a887c223759fa0c598609c4054ffa013359f3feab10af59f107d5f82f3dfbe",
+      "evidence": []
+    },
+    "AT-self-improvement-114": {
+      "state": "NOT_IMPLEMENTED",
+      "rung": "CLI",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "2d8d7d4d5b78593c13c8862210e4c30b62d5de73362ffd445037e7ab12c5e131",
+      "evidence": []
+    },
+    "AT-self-improvement-115": {
+      "state": "NOT_IMPLEMENTED",
+      "rung": "CLI",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "09927f4c6f3f74978065c7a3e3120f2989c303cbe0b12741ebf6253e6e3df9bd",
+      "evidence": []
+    },
+    "AT-self-improvement-116": {
+      "state": "NOT_IMPLEMENTED",
+      "evidence": [],
+      "rung": "CLI",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "a0ccd1c8efdab60654446e8c9ee9487cf551648b6257447708dd8fdb15005c46"
+    },
+    "AT-self-improvement-117": {
+      "state": "NOT_IMPLEMENTED",
+      "evidence": [],
+      "rung": "CLI",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "ec915daa3760fbdae6e19e00e144785319e2982d54e8cbf9ce0cad32fa2a0b2f"
+    },
+    "AT-self-improvement-118": {
+      "state": "NOT_IMPLEMENTED",
+      "rung": "SIM",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "165969863603d1f5dccbf66f2086d677d0e3c29b3ee69c7b1901e1c5e56186b1",
+      "evidence": []
+    },
+    "AT-self-improvement-119": {
+      "state": "NOT_IMPLEMENTED",
+      "evidence": [],
+      "rung": "SIM",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "2fc429f12e4b0da08e7e8e94674e28053cf4cdf5eebe385112fe44b007afb493"
+    },
+    "AT-self-improvement-120": {
+      "state": "NOT_IMPLEMENTED",
+      "evidence": [],
+      "rung": "SIM",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "05e2f20e8f6d72d2dd91c23fb5143bf9108980e6b11d74d3a5bca24e56fe0b72"
+    },
+    "AT-self-improvement-121": {
+      "state": "NOT_IMPLEMENTED",
+      "evidence": [],
+      "rung": "SIM",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "90960c7009c15a46fb733580ecc5a3decee512dcfafda9cf6c152db705cecd70"
+    },
+    "AT-cli-39": {
+      "state": "NOT_IMPLEMENTED",
+      "rung": "CLI",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "8ebab30e6d9f13f2b2d30c49b6f376e85152d6363f249f55a57512117e0511f1",
+      "evidence": []
+    },
+    "AT-user-sim-81": {
+      "state": "NOT_IMPLEMENTED",
+      "rung": "SIM",
+      "firstRelease": "R2",
+      "sourceAssertionHash": "ef1342cf89b63c4e366103a97181def00664abae70af2e0295ca24428c55bed7",
+      "evidence": []
     }
   },
   "coordinator": {
     "threadId": "01a109d1-2f67-7643-9677-404a83617cf8",
     "lockFile": "build/coordinator.lock",
-    "lockKind": "exclusive session marker; not process-liveness evidence"
+    "lockKind": "exclusive session marker; not process-liveness evidence",
+    "checkpoint": "build/checkpoints/2026-10-06-r0-blocked-audit-3"
   },
   "pullRequest": "https://github.com/JohanSardar/toy-harness/pull/1",
   "lastWorker": {
-    "id": "/root/k4a_minimal_references",
+    "card": "R0.10",
+    "task": "r010_package_access",
     "model": "gpt-6-luna",
     "reasoning": "max",
-    "status": "completed",
-    "ownedScope": "Four K4a reference sources and read-only integration handoff; no builds or runtime claims"
+    "state": "complete",
+    "ownedScope": "Exact official package metadata/cache only, no shared manifest edits",
+    "result": "OFFICIAL_EXACT_PACKAGE_METADATA_TARBALLS_AND_CACHE_INTEGRITY_VERIFIED",
+    "evidence": "build/evidence/R0.10/package-access-restored.json"
   },
   "continuationAssessment": {
-    "generatedAt": "2026-10-05T18:30:31.128Z",
+    "generatedAt": "2026-10-06T15:02:44.142623+00:00",
     "classification": "progress",
+    "reason": "All8actual service identities and automatic normal-pressure level verified;3macOS bootstrap corrections have12publicCLI regression invocations plus fullstrictchecks. Exact4requiredpackage artifacts now available and integrity verified.",
+    "consecutiveGoalTurnsAtSameImpasse": 0,
+    "goalStatus": "active",
     "evidence": [
-      "build/evidence/R0.K3/fixture-stack-verification.json"
+      "build/evidence/R0.04/macos-bootstrap-verification.json",
+      "build/evidence/R0.10/package-access-restored.json"
     ],
-    "reason": "A real fixed trusted fake R0 process/SQLite lifecycle now passes packed toy clock/probe/retry/conflict/teardown/restart checks. Complete TS/Python static gate passes without Swift. K3 is implementation available, with actual identity and whole-AT predicates pending.",
-    "nextUnit": "K4a public reference probes using actual existing read-only Ops owner for the thin tool, followed immediately by minimal K4 generators/map/static gate and R0.01"
+    "blockedStatusThresholdReached": false
   },
   "executionPolicy": {
-    "authority": "Johan direct instruction 2026-10-05; CONTRACTS.md Memory admission row",
+    "authority": "Johan direct current-session instruction; CONTRACTS.md Memory admission (Johan, 2026-10-05)",
     "kitchenCardTimeboxSeconds": 7200,
     "implementation": "Simplest implementation passing assigned ATs at their rung, then stop",
     "research": "Only to resolve an actually failing assigned check",
@@ -18974,6 +20149,31 @@
       "Python"
     ],
     "nextCriticalCard": "R0.01",
-    "deferredLog": "docs/adr/0017-r0-kitchen-speed.md"
+    "deferredLog": "docs/adr/0017-r0-kitchen-speed.md",
+    "memoryAvailableCategories": [
+      "free",
+      "inactive",
+      "purgeable",
+      "speculative"
+    ],
+    "pressureRequired": "normal",
+    "strictlyFreeAdmission": false,
+    "repairWorkerFloorScope": "R5 repair worker only",
+    "updatedAt": "2026-10-06T10:38:55.221804+00:00"
+  },
+  "latestStaticVerification": {
+    "command": "npm run check",
+    "exitCode": 0,
+    "log": "build/evidence/R0.04-macos-check.txt",
+    "generatedAt": "2026-10-06T15:06:33.297547+00:00",
+    "artifacts": 327,
+    "contracts": 259,
+    "features": 90,
+    "commands": 55,
+    "indexedATs": 1447,
+    "swiftInvoked": false,
+    "schemaDigest": "7763e332fc9a951fcc2072a493b960ee356e1bc8f28890e6d2b34912e7f8ffd6",
+    "wholeATComplete": false,
+    "output": "build/evidence/R0.04-macos-check.txt"
   }
 }

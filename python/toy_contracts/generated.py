@@ -43,34 +43,649 @@ Release = Literal[
     "R5",
 ]
 
-CliAccess = Literal[
-    "read",
-    "guarded",
-    "test",
-    "engineering",
-    "human",
+class CliBootstrapIdentitiesResult(TypedDict):
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
+    commandId: "CliBootstrapIdentitiesResultCommandId"
+    invocationId: "UUID"
+    generatedAt: "Instant"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
+    schemaDigest: "Digest"
+    environment: "CliEnvironment"
+    meta: "CliMetadata"
+    ok: "CliBootstrapIdentitiesResultOk"
+    data: "RoleBootstrapReportV1"
+
+CliBootstrapIdentitiesResultSchemaVersion = Literal[
+    "toy.cli.v1",
 ]
 
-CliArgumentKind = Literal[
-    "UUID",
-    "Instant",
-    "UInt64String",
-    "SHA256",
-    "Duration",
-    "integer",
-    "enum",
-    "registered",
-    "text",
-    "input",
-    "boolean",
-    "life-ref",
-    "name",
+CliBootstrapIdentitiesResultCommandId = Literal[
+    "bootstrap.identities",
+]
+
+CliBootstrapIdentitiesResultCliVersion = Literal[
+    "1.0.0",
+]
+
+class CliEnvironment(TypedDict):
+    kind: "CliEnvironmentKind"
+    instanceId: Optional["UUID"]
+    stackId: Optional["UUID"]
+
+CliEnvironmentKind = Literal[
+    "prod",
+    "test",
+]
+
+class CliMetadata(TypedDict):
+    exitCode: int
+    releaseDigest: Optional["Digest"]
+    controlDigest: Optional["Digest"]
+    evaluatedAt: Optional["Instant"]
+    operationId: Optional["UUID"]
+    effectState: "CliMetadataEffectState"
+    recordRefs: list["RecordRef"]
+    evidence: list["ObservationEvidenceRef"]
+
+CliMetadataEffectState = Literal[
+    "none",
+    "confirmed",
+    "unknown",
+]
+
+class RecordRef(TypedDict):
+    module: str
+    kind: str
+    id: "UUID"
+
+class ObservationEvidenceRef(TypedDict):
+    observationRef: "ObservationRef"
+    documentId: NotRequired["UUID"]
+    byteFrom: NotRequired["Revision"]
+    byteTo: NotRequired["Revision"]
+    quote: NotRequired[str]
+
+ObservationRef = NewType("ObservationRef", str)
+
+CliBootstrapIdentitiesResultOk = Literal[
+    True,
+]
+
+class RoleBootstrapReportV1(TypedDict):
+    schemaVersion: "RoleBootstrapReportV1SchemaVersion"
+    requestId: "UUID"
+    observedAt: "Instant"
+    mode: "RoleBootstrapReportV1Mode"
+    state: "RoleBootstrapReportV1State"
+    reasonCode: "RoleBootstrapReportV1ReasonCode"
+    snapshotDigest: Optional["Digest"]
+    allocationMethod: "RoleBootstrapReportV1AllocationMethod"
+    callerUid: int
+    roles: list["RoleBootstrapRoleV1"]
+    directories: list["RoleBootstrapDirectoryV1"]
+    accountsVerified: int
+    effectState: "CliMetadataEffectState"
+    identityGateVerified: "RoleBootstrapReportV1IdentityGateVerified"
+    maintenanceIdentityVerified: "RoleBootstrapReportV1IdentityGateVerified"
+    servicesActivated: "RoleBootstrapReportV1IdentityGateVerified"
+
+RoleBootstrapReportV1SchemaVersion = Literal[
+    "toy.role-identity-bootstrap.v1",
+]
+
+RoleBootstrapReportV1Mode = Literal[
+    "plan",
+    "apply",
+]
+
+RoleBootstrapReportV1State = Literal[
+    "planned",
+    "blocked",
+    "created",
+    "partial",
+]
+
+RoleBootstrapReportV1ReasonCode = Literal[
+    "PLAN_READY",
+    "ROOT_CALLER_REQUIRED",
+    "SNAPSHOT_CHANGED",
+    "DIRECTORY_QUERY_UNAVAILABLE",
+    "DIRECTORY_QUERY_DENIED",
+    "DIRECTORY_QUERY_TIMEOUT",
+    "DIRECTORY_QUERY_INVALID",
+    "ROLE_NAME_CONFLICT",
+    "ID_POOL_EXHAUSTED",
+    "PATH_CONFLICT",
+    "OS_CHANGE_FAILED",
+    "ROLE_IDENTITIES_CREATED",
+]
+
+RoleBootstrapReportV1AllocationMethod = Literal[
+    "observed_vacancy",
+]
+
+class RoleBootstrapRoleV1(TypedDict):
+    observation: "ServiceRoleIdentityObservationV1"
+    candidateUid: Optional[int]
+    candidateGid: Optional[int]
+
+class ServiceRoleIdentityObservationV1(TypedDict):
+    role: "ServiceRoleNameV1"
+    state: "ServiceRoleIdentityObservationV1State"
+    uid: Optional[int]
+    gid: Optional[int]
+    adminGroupObserved: Optional[bool]
+
+ServiceRoleNameV1 = Literal[
+    "_toy_agent",
+    "_toy_control",
+    "_toy_review",
+    "_toy_repair",
+    "_toy_evaluator",
+    "_toy_pg",
+    "_toy_app",
+    "_toy_ops",
+]
+
+ServiceRoleIdentityObservationV1State = Literal[
+    "observed",
+    "missing",
+    "unknown",
+]
+
+class RoleBootstrapDirectoryV1(TypedDict):
+    path: "RoleBootstrapDirectoryV1Path"
+    owner: "RoleBootstrapDirectoryV1Owner"
+    mode: "RoleBootstrapDirectoryV1Mode"
+
+RoleBootstrapDirectoryV1Path = Literal[
+    "/Library/Application Support/Toy",
+    "/Library/Application Support/Toy/control",
+    "/Library/Application Support/Toy/state",
+    "/Library/Application Support/Toy/state/homes",
+    "/Library/Application Support/Toy/run",
+    "/Library/Application Support/Toy/state/homes/_toy_agent",
+    "/Library/Application Support/Toy/state/homes/_toy_control",
+    "/Library/Application Support/Toy/state/homes/_toy_review",
+    "/Library/Application Support/Toy/state/homes/_toy_repair",
+    "/Library/Application Support/Toy/state/homes/_toy_evaluator",
+    "/Library/Application Support/Toy/state/homes/_toy_pg",
+    "/Library/Application Support/Toy/state/homes/_toy_app",
+    "/Library/Application Support/Toy/state/homes/_toy_ops",
+]
+
+RoleBootstrapDirectoryV1Owner = Literal[
+    "root",
+    "_toy_agent",
+    "_toy_control",
+    "_toy_review",
+    "_toy_repair",
+    "_toy_evaluator",
+    "_toy_pg",
+    "_toy_app",
+    "_toy_ops",
+]
+
+RoleBootstrapDirectoryV1Mode = Literal[
+    "0700",
+    "0711",
+    "0755",
+]
+
+RoleBootstrapReportV1IdentityGateVerified = Literal[
+    False,
+]
+
+CliBootstrapIdentitiesCommandResult = Union[
+    "CliBootstrapIdentitiesResult",
+    "CliBootstrapIdentitiesCommandResultVariant1",
+]
+
+class CliBootstrapIdentitiesCommandResultVariant1(TypedDict):
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
+    commandId: "CliBootstrapIdentitiesResultCommandId"
+    invocationId: "UUID"
+    generatedAt: "Instant"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
+    schemaDigest: "Digest"
+    environment: "CliEnvironment"
+    meta: "CliMetadata"
+    ok: "RoleBootstrapReportV1IdentityGateVerified"
+    error: "CliError"
+
+class CliError(TypedDict):
+    module: "ModuleId"
+    code: "CliErrorCode"
+    message: "CliSafeMessage"
+    retryable: bool
+    retryAt: Optional["Instant"]
+    effectState: "CliMetadataEffectState"
+    currentRevision: Optional["Revision"]
+    currentGeneration: Optional["Revision"]
+    operationRef: Optional["RecordRef"]
+    requiredInteraction: None
+    incidentId: NotRequired["UUID"]
+
+CliErrorCode = Literal[
+    "INVALID_INPUT",
+    "TEST_ONLY",
+    "UNAUTHORIZED",
+    "NOT_IMPLEMENTED",
+    "DEPENDENCY_UNAVAILABLE",
+    "ATTESTATION_INVALID",
+    "INTERNAL_ERROR",
+    "OUTPUT_INVALID",
+    "CONFLICT",
+    "MEMORY_PRESSURE",
+    "DISK_PRESSURE",
+    "SECRET_UNAVAILABLE",
+    "SECRET_REVOKED",
+    "BACKUP_DESTINATION_MISSING",
+    "BACKUP_INCOMPLETE",
+    "INCOMPATIBLE_SCHEMA",
+    "ARTIFACT_MISMATCH",
+    "TIMEOUT",
+]
+
+CliSafeMessage = Literal[
+    "The invocation does not match the registered command schema.",
+    "This command requires a named disposable test environment.",
+    "The calling identity is not authorized for this operation.",
+    "The registered owner operation is not implemented.",
+    "The required installed owner or launcher is unavailable.",
+    "The environment attestation is missing or invalid.",
+    "The command could not produce a valid result.",
+    "The owner response did not match the registered output schema.",
+    "The request conflicts with the recorded operation or artifact.",
+    "Measured memory admission does not permit this operation.",
+    "Measured disk admission does not permit this operation.",
+    "The required secret is unavailable to the authorized owner.",
+    "The required secret has been revoked.",
+    "The registered backup destination is unavailable.",
+    "The required backup evidence is incomplete.",
+    "The installed schema is incompatible with this operation.",
+    "The required artifact does not match its recorded identity.",
+    "The bounded owner operation timed out; reconcile its recorded state.",
+]
+
+class CliResearchCheckResult(TypedDict):
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
+    commandId: "CliResearchCheckResultCommandId"
+    invocationId: "UUID"
+    generatedAt: "Instant"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
+    schemaDigest: "Digest"
+    environment: "CliEnvironment"
+    meta: "CliMetadata"
+    ok: "CliBootstrapIdentitiesResultOk"
+    data: "ResearchRegisterInspectionV1"
+
+CliResearchCheckResultCommandId = Literal[
+    "research.check",
+]
+
+class ResearchRegisterInspectionV1(TypedDict):
+    requestedRelease: Optional["Release"]
+    registerPath: str
+    registerDigest: "Digest"
+    components: list["ResearchComponentInspectionV1"]
+    reports: list["ResearchRegisterInspectionV1ReportsItem"]
+    findings: list["ResearchInspectionFindingV1"]
+    scope: "ResearchRegisterInspectionV1Scope"
+    admission: "ResearchRegisterInspectionV1Admission"
+    acceptanceComplete: "RoleBootstrapReportV1IdentityGateVerified"
+
+class ResearchComponentInspectionV1(TypedDict):
+    id: str
+    sourceLine: int
+    rowDigest: "Digest"
+    componentAndPin: str
+    consumingSpecs: str
+    researchReference: str
+    alternativesAndReason: str
+    releaseGate: str
+    missingPinDeclared: bool
+    reportKeys: list[str]
+    certification: "ResearchComponentInspectionV1Certification"
+
+ResearchComponentInspectionV1Certification = Literal[
+    "UNVERIFIED",
+]
+
+class ResearchRegisterInspectionV1ReportsItem(TypedDict):
+    key: str
+    path: str
+    listedSections: str
+    digest: Optional["Digest"]
+
+class ResearchInspectionFindingV1(TypedDict):
+    componentId: Optional[str]
+    code: "ResearchInspectionFindingV1Code"
+    sourceLine: Optional[int]
+
+ResearchInspectionFindingV1Code = Literal[
+    "PIN_MISSING",
+    "CONSUMING_SPECS_MISSING",
+    "RESEARCH_CHOICE_OPEN",
+    "RESEARCH_REFERENCE_MISSING",
+    "REPORT_MISSING",
+    "DECISION_MISSING",
+    "GATE_MISSING",
+    "GATE_EVIDENCE_UNVERIFIED",
+    "RESEARCH_ATTESTATION_UNVERIFIED",
+    "DEPENDENCY_CLOSURE_UNVERIFIED",
+]
+
+ResearchRegisterInspectionV1Scope = Literal[
+    "register_inventory",
+]
+
+ResearchRegisterInspectionV1Admission = Literal[
+    "BLOCKED",
+]
+
+CliResearchCheckCommandResult = Union[
+    "CliResearchCheckResult",
+    "CliResearchCheckCommandResultVariant1",
+]
+
+class CliResearchCheckCommandResultVariant1(TypedDict):
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
+    commandId: "CliResearchCheckResultCommandId"
+    invocationId: "UUID"
+    generatedAt: "Instant"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
+    schemaDigest: "Digest"
+    environment: "CliEnvironment"
+    meta: "CliMetadata"
+    ok: "RoleBootstrapReportV1IdentityGateVerified"
+    error: "CliError"
+
+class CliNewConnectorResult(TypedDict):
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
+    commandId: "CliNewConnectorResultCommandId"
+    invocationId: "UUID"
+    generatedAt: "Instant"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
+    schemaDigest: "Digest"
+    environment: "CliEnvironment"
+    meta: "CliMetadata"
+    ok: "CliBootstrapIdentitiesResultOk"
+    data: "GeneratorPlanV1"
+
+CliNewConnectorResultCommandId = Literal[
+    "new.connector",
+]
+
+class GeneratorPlanV1(TypedDict):
+    kind: "GeneratorPlanV1Kind"
+    name: str
+    owner: "ModuleId"
+    templateDigest: "Digest"
+    patches: list["FilePatchV1"]
+    featureIds: list[str]
+    requiredAtIds: list[str]
+    prerequisites: list[str]
+    applied: bool
+    beforeInventoryDigest: "Digest"
+    afterInventoryDigest: "Digest"
+
+GeneratorPlanV1Kind = Literal[
+    "connector",
+    "tool",
+    "skill",
+    "migration",
+]
+
+class FilePatchV1(TypedDict):
+    path: str
+    beforeDigest: Optional["Digest"]
+    afterDigest: Optional["Digest"]
+    kind: "FilePatchV1Kind"
+    mediaType: str
+    patch: str
+
+FilePatchV1Kind = Literal[
+    "create",
+    "update",
+]
+
+CliNewConnectorCommandResult = Union[
+    "CliNewConnectorResult",
+    "CliNewConnectorCommandResultVariant1",
+]
+
+class CliNewConnectorCommandResultVariant1(TypedDict):
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
+    commandId: "CliNewConnectorResultCommandId"
+    invocationId: "UUID"
+    generatedAt: "Instant"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
+    schemaDigest: "Digest"
+    environment: "CliEnvironment"
+    meta: "CliMetadata"
+    ok: "RoleBootstrapReportV1IdentityGateVerified"
+    error: "CliError"
+
+class CliNewToolResult(TypedDict):
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
+    commandId: "CliNewToolResultCommandId"
+    invocationId: "UUID"
+    generatedAt: "Instant"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
+    schemaDigest: "Digest"
+    environment: "CliEnvironment"
+    meta: "CliMetadata"
+    ok: "CliBootstrapIdentitiesResultOk"
+    data: "GeneratorPlanV1"
+
+CliNewToolResultCommandId = Literal[
+    "new.tool",
+]
+
+CliNewToolCommandResult = Union[
+    "CliNewToolResult",
+    "CliNewToolCommandResultVariant1",
+]
+
+class CliNewToolCommandResultVariant1(TypedDict):
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
+    commandId: "CliNewToolResultCommandId"
+    invocationId: "UUID"
+    generatedAt: "Instant"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
+    schemaDigest: "Digest"
+    environment: "CliEnvironment"
+    meta: "CliMetadata"
+    ok: "RoleBootstrapReportV1IdentityGateVerified"
+    error: "CliError"
+
+class CliNewSkillResult(TypedDict):
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
+    commandId: "CliNewSkillResultCommandId"
+    invocationId: "UUID"
+    generatedAt: "Instant"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
+    schemaDigest: "Digest"
+    environment: "CliEnvironment"
+    meta: "CliMetadata"
+    ok: "CliBootstrapIdentitiesResultOk"
+    data: "GeneratorPlanV1"
+
+CliNewSkillResultCommandId = Literal[
+    "new.skill",
+]
+
+CliNewSkillCommandResult = Union[
+    "CliNewSkillResult",
+    "CliNewSkillCommandResultVariant1",
+]
+
+class CliNewSkillCommandResultVariant1(TypedDict):
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
+    commandId: "CliNewSkillResultCommandId"
+    invocationId: "UUID"
+    generatedAt: "Instant"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
+    schemaDigest: "Digest"
+    environment: "CliEnvironment"
+    meta: "CliMetadata"
+    ok: "RoleBootstrapReportV1IdentityGateVerified"
+    error: "CliError"
+
+class CliNewMigrationResult(TypedDict):
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
+    commandId: "CliNewMigrationResultCommandId"
+    invocationId: "UUID"
+    generatedAt: "Instant"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
+    schemaDigest: "Digest"
+    environment: "CliEnvironment"
+    meta: "CliMetadata"
+    ok: "CliBootstrapIdentitiesResultOk"
+    data: "GeneratorPlanV1"
+
+CliNewMigrationResultCommandId = Literal[
+    "new.migration",
+]
+
+CliNewMigrationCommandResult = Union[
+    "CliNewMigrationResult",
+    "CliNewMigrationCommandResultVariant1",
+]
+
+class CliNewMigrationCommandResultVariant1(TypedDict):
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
+    commandId: "CliNewMigrationResultCommandId"
+    invocationId: "UUID"
+    generatedAt: "Instant"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
+    schemaDigest: "Digest"
+    environment: "CliEnvironment"
+    meta: "CliMetadata"
+    ok: "RoleBootstrapReportV1IdentityGateVerified"
+    error: "CliError"
+
+class CliMapCheckResult(TypedDict):
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
+    commandId: "CliMapCheckResultCommandId"
+    invocationId: "UUID"
+    generatedAt: "Instant"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
+    schemaDigest: "Digest"
+    environment: "CliEnvironment"
+    meta: "CliMetadata"
+    ok: "CliBootstrapIdentitiesResultOk"
+    data: "FeatureMapCheckV1"
+
+CliMapCheckResultCommandId = Literal[
+    "feature-map.check",
+]
+
+class FeatureMapCheckV1(TypedDict):
+    sourceDigest: "Digest"
+    actualMapDigest: "Digest"
+    expectedMapDigest: "Digest"
+    featureCount: "UInt64String"
+    commandCount: "UInt64String"
+    atCount: "UInt64String"
+    findings: list["CheckViewV1"]
+    state: "AcceptanceStateV1"
+
+class CheckViewV1(TypedDict):
+    id: "RegisteredCheckIdV1"
+    owner: "ModuleId"
+    state: "AcceptanceStateV1"
+    checkedAt: "Instant"
+    reasonCode: Optional[str]
+    prerequisite: Optional[str]
+    nextCommandId: Optional["CliCommandId"]
+    links: "EvidenceLinksV1"
+
+RegisteredCheckIdV1 = Literal[
+    "service.postgres",
+    "service.backend",
+    "service.workers",
+    "service.hermes",
+    "service.hermes-interactive",
+    "service.ops",
+    "service.authority",
+    "service.ingress",
+    "service.approval",
+    "service.review",
+    "service.attention-delivery",
+    "service.hands",
+    "service.backup",
+    "service.secrets",
+    "service.publisher",
+    "service.evaluator",
+    "service.repair",
+    "service.tailscale",
+    "service.recorder",
+    "read.model-route",
+    "read.model-route-policy",
+    "read.ops",
+    "read.sources",
+    "read.attention",
+    "read.quota",
+    "read.cadence",
+    "read.release",
+    "engineering.map",
+    "engineering.static",
+    "accounting.model-admission",
+    "release.native-eligibility",
+    "backup.local-inventory",
+    "backup.capacity",
+    "auth.native-runtime",
+    "auth.native-fixture",
+    "bootstrap.reference.connector",
+    "bootstrap.reference.tool",
+    "bootstrap.reference.skill",
+    "bootstrap.reference.migration",
+    "bootstrap.fixture-runtime",
+    "bootstrap.fixture-identities",
+    "bootstrap.role-identities",
+    "bootstrap.journal",
+    "bootstrap.signature",
+    "bootstrap.native-entry",
+    "bootstrap.inherited-child",
+    "bootstrap.fs-denial",
+    "bootstrap.network-denial",
+    "bootstrap.keychain-denial",
+    "bootstrap.container-isolation",
+    "bootstrap.postgres-unix",
+    "bootstrap.controller-peer",
+    "bootstrap.resource-admission",
+    "bootstrap.cleanup",
+]
+
+AcceptanceStateV1 = Literal[
+    "PASS",
+    "FAIL",
+    "BLOCKED",
+    "DEFERRED_CAPABILITY",
+    "NOT_IMPLEMENTED",
 ]
 
 CliCommandId = Literal[
     "help",
     "version",
     "status",
+    "research.check",
+    "bootstrap.identities",
     "doctor",
     "capture",
     "due",
@@ -123,6 +738,180 @@ CliCommandId = Literal[
     "release.rollback",
 ]
 
+class EvidenceLinksV1(TypedDict):
+    recordRefs: list["RecordRef"]
+    observations: list["ObservationEvidenceRef"]
+    artifactDigests: list["Digest"]
+
+CliMapCheckCommandResult = Union[
+    "CliMapCheckResult",
+    "CliMapCheckCommandResultVariant1",
+]
+
+class CliMapCheckCommandResultVariant1(TypedDict):
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
+    commandId: "CliMapCheckResultCommandId"
+    invocationId: "UUID"
+    generatedAt: "Instant"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
+    schemaDigest: "Digest"
+    environment: "CliEnvironment"
+    meta: "CliMetadata"
+    ok: "RoleBootstrapReportV1IdentityGateVerified"
+    error: "CliError"
+
+class CliMapUpdateResult(TypedDict):
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
+    commandId: "CliMapUpdateResultCommandId"
+    invocationId: "UUID"
+    generatedAt: "Instant"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
+    schemaDigest: "Digest"
+    environment: "CliEnvironment"
+    meta: "CliMetadata"
+    ok: "CliBootstrapIdentitiesResultOk"
+    data: "FeatureMapUpdateV1"
+
+CliMapUpdateResultCommandId = Literal[
+    "feature-map.update",
+]
+
+class FeatureMapUpdateV1(TypedDict):
+    check: "FeatureMapCheckV1"
+    patches: list["FilePatchV1"]
+    changedFeatureIds: list[str]
+    applied: bool
+
+CliMapUpdateCommandResult = Union[
+    "CliMapUpdateResult",
+    "CliMapUpdateCommandResultVariant1",
+]
+
+class CliMapUpdateCommandResultVariant1(TypedDict):
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
+    commandId: "CliMapUpdateResultCommandId"
+    invocationId: "UUID"
+    generatedAt: "Instant"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
+    schemaDigest: "Digest"
+    environment: "CliEnvironment"
+    meta: "CliMetadata"
+    ok: "RoleBootstrapReportV1IdentityGateVerified"
+    error: "CliError"
+
+class CliGardenResult(TypedDict):
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
+    commandId: "CliGardenResultCommandId"
+    invocationId: "UUID"
+    generatedAt: "Instant"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
+    schemaDigest: "Digest"
+    environment: "CliEnvironment"
+    meta: "CliMetadata"
+    ok: "CliBootstrapIdentitiesResultOk"
+    data: "GardenerReportV1"
+
+CliGardenResultCommandId = Literal[
+    "gardener.run",
+]
+
+class GardenerReportV1(TypedDict):
+    mode: "GardenerReportV1Mode"
+    findings: list["GardenerFindingV1"]
+    patches: list["FilePatchV1"]
+    verificationRefs: list["RecordRef"]
+    state: "AcceptanceStateV1"
+    complete: bool
+
+GardenerReportV1Mode = Literal[
+    "scan",
+    "fix",
+]
+
+class GardenerFindingV1(TypedDict):
+    id: "Digest"
+    check: "CheckViewV1"
+    correctionRung: "GardenerFindingV1CorrectionRung"
+    disposition: "GardenerFindingV1Disposition"
+    obligationId: Optional["UUID"]
+    incidentId: Optional["UUID"]
+
+GardenerFindingV1CorrectionRung = Union[
+    "GardenerFindingV1CorrectionRungVariant0",
+    "GardenerFindingV1CorrectionRungVariant1",
+    "GardenerFindingV1CorrectionRungVariant2",
+    "GardenerFindingV1CorrectionRungVariant3",
+]
+
+GardenerFindingV1CorrectionRungVariant0 = Literal[
+    1,
+]
+
+GardenerFindingV1CorrectionRungVariant1 = Literal[
+    2,
+]
+
+GardenerFindingV1CorrectionRungVariant2 = Literal[
+    3,
+]
+
+GardenerFindingV1CorrectionRungVariant3 = Literal[
+    4,
+]
+
+GardenerFindingV1Disposition = Literal[
+    "fixed",
+    "rule_proposed",
+    "obligation_open",
+    "blocked",
+]
+
+CliGardenCommandResult = Union[
+    "CliGardenResult",
+    "CliGardenCommandResultVariant1",
+]
+
+class CliGardenCommandResultVariant1(TypedDict):
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
+    commandId: "CliGardenResultCommandId"
+    invocationId: "UUID"
+    generatedAt: "Instant"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
+    schemaDigest: "Digest"
+    environment: "CliEnvironment"
+    meta: "CliMetadata"
+    ok: "RoleBootstrapReportV1IdentityGateVerified"
+    error: "CliError"
+
+CliAccess = Literal[
+    "read",
+    "guarded",
+    "test",
+    "engineering",
+    "human",
+]
+
+CliArgumentKind = Literal[
+    "UUID",
+    "Instant",
+    "UInt64String",
+    "SHA256",
+    "Duration",
+    "integer",
+    "enum",
+    "registered",
+    "text",
+    "input",
+    "boolean",
+    "life-ref",
+    "name",
+]
+
 class CliArgument(TypedDict):
     name: str
     kind: "CliArgumentKind"
@@ -165,173 +954,62 @@ class CliHelpV1(TypedDict):
     compatibility: "CliHelpV1Compatibility"
 
 class CliHelpV1Compatibility(TypedDict):
-    wireVersions: list["CliHelpV1CompatibilityWireVersionsItem"]
+    wireVersions: list["CliBootstrapIdentitiesResultSchemaVersion"]
     nodeVersion: "CliHelpV1CompatibilityNodeVersion"
-
-CliHelpV1CompatibilityWireVersionsItem = Literal[
-    "toy.cli.v1",
-]
 
 CliHelpV1CompatibilityNodeVersion = Literal[
     "24.21.0",
 ]
 
 class CliVersionV1(TypedDict):
-    cliVersion: "CliVersionV1CliVersion"
-    contractsVersion: "CliVersionV1CliVersion"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
     executableDigest: "Digest"
     packageDigest: "Digest"
     schemaDigest: "Digest"
     compatibility: "CliHelpV1Compatibility"
 
-CliVersionV1CliVersion = Literal[
-    "1.0.0",
-]
-
-class CliEnvironment(TypedDict):
-    kind: "CliEnvironmentKind"
-    instanceId: Optional["UUID"]
-    stackId: Optional["UUID"]
-
-CliEnvironmentKind = Literal[
-    "prod",
-    "test",
-]
-
-CliSafeMessage = Literal[
-    "The invocation does not match the registered command schema.",
-    "This command requires a named disposable test environment.",
-    "The calling identity is not authorized for this operation.",
-    "The registered owner operation is not implemented.",
-    "The required installed owner or launcher is unavailable.",
-    "The environment attestation is missing or invalid.",
-    "The command could not produce a valid result.",
-    "The owner response did not match the registered output schema.",
-    "The request conflicts with the recorded operation or artifact.",
-    "Measured memory admission does not permit this operation.",
-    "Measured disk admission does not permit this operation.",
-    "The required secret is unavailable to the authorized owner.",
-    "The required secret has been revoked.",
-    "The registered backup destination is unavailable.",
-    "The required backup evidence is incomplete.",
-    "The installed schema is incompatible with this operation.",
-    "The required artifact does not match its recorded identity.",
-    "The bounded owner operation timed out; reconcile its recorded state.",
-]
-
-CliErrorCode = Literal[
-    "INVALID_INPUT",
-    "TEST_ONLY",
-    "UNAUTHORIZED",
-    "NOT_IMPLEMENTED",
-    "DEPENDENCY_UNAVAILABLE",
-    "ATTESTATION_INVALID",
-    "INTERNAL_ERROR",
-    "OUTPUT_INVALID",
-    "CONFLICT",
-    "MEMORY_PRESSURE",
-    "DISK_PRESSURE",
-    "SECRET_UNAVAILABLE",
-    "SECRET_REVOKED",
-    "BACKUP_DESTINATION_MISSING",
-    "BACKUP_INCOMPLETE",
-    "INCOMPATIBLE_SCHEMA",
-    "ARTIFACT_MISMATCH",
-    "TIMEOUT",
-]
-
-class CliError(TypedDict):
-    module: "ModuleId"
-    code: "CliErrorCode"
-    message: "CliSafeMessage"
-    retryable: bool
-    retryAt: Optional["Instant"]
-    effectState: "CliErrorEffectState"
-    currentRevision: Optional["Revision"]
-    currentGeneration: Optional["Revision"]
-    operationRef: Optional["RecordRef"]
-    requiredInteraction: None
-    incidentId: NotRequired["UUID"]
-
-CliErrorEffectState = Literal[
-    "none",
-    "confirmed",
-    "unknown",
-]
-
-class RecordRef(TypedDict):
-    module: str
-    kind: str
-    id: "UUID"
-
-class CliMetadata(TypedDict):
-    exitCode: int
-    releaseDigest: Optional["Digest"]
-    controlDigest: Optional["Digest"]
-    evaluatedAt: Optional["Instant"]
-    operationId: Optional["UUID"]
-    effectState: "CliErrorEffectState"
-    recordRefs: list["RecordRef"]
-    evidence: list["ObservationEvidenceRef"]
-
-class ObservationEvidenceRef(TypedDict):
-    observationRef: "ObservationRef"
-    documentId: NotRequired["UUID"]
-    byteFrom: NotRequired["Revision"]
-    byteTo: NotRequired["Revision"]
-    quote: NotRequired[str]
-
-ObservationRef = NewType("ObservationRef", str)
-
 class CliFailure(TypedDict):
-    schemaVersion: "CliHelpV1CompatibilityWireVersionsItem"
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
     commandId: "CliCommandId"
     invocationId: "UUID"
     generatedAt: "Instant"
-    cliVersion: "CliVersionV1CliVersion"
-    contractsVersion: "CliVersionV1CliVersion"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
     schemaDigest: "Digest"
     environment: "CliEnvironment"
     meta: "CliMetadata"
-    ok: "CliFailureOk"
+    ok: "RoleBootstrapReportV1IdentityGateVerified"
     error: "CliError"
 
-CliFailureOk = Literal[
-    False,
-]
-
 class CliHelpResult(TypedDict):
-    schemaVersion: "CliHelpV1CompatibilityWireVersionsItem"
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
     commandId: "CliHelpResultCommandId"
     invocationId: "UUID"
     generatedAt: "Instant"
-    cliVersion: "CliVersionV1CliVersion"
-    contractsVersion: "CliVersionV1CliVersion"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
     schemaDigest: "Digest"
     environment: "CliEnvironment"
     meta: "CliMetadata"
-    ok: "CliHelpResultOk"
+    ok: "CliBootstrapIdentitiesResultOk"
     data: "CliHelpV1"
 
 CliHelpResultCommandId = Literal[
     "help",
 ]
 
-CliHelpResultOk = Literal[
-    True,
-]
-
 class CliVersionResult(TypedDict):
-    schemaVersion: "CliHelpV1CompatibilityWireVersionsItem"
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
     commandId: "CliVersionResultCommandId"
     invocationId: "UUID"
     generatedAt: "Instant"
-    cliVersion: "CliVersionV1CliVersion"
-    contractsVersion: "CliVersionV1CliVersion"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
     schemaDigest: "Digest"
     environment: "CliEnvironment"
     meta: "CliMetadata"
-    ok: "CliHelpResultOk"
+    ok: "CliBootstrapIdentitiesResultOk"
     data: "CliVersionV1"
 
 CliVersionResultCommandId = Literal[
@@ -339,16 +1017,16 @@ CliVersionResultCommandId = Literal[
 ]
 
 class CliStatusResult(TypedDict):
-    schemaVersion: "CliHelpV1CompatibilityWireVersionsItem"
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
     commandId: "CliStatusResultCommandId"
     invocationId: "UUID"
     generatedAt: "Instant"
-    cliVersion: "CliVersionV1CliVersion"
-    contractsVersion: "CliVersionV1CliVersion"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
     schemaDigest: "Digest"
     environment: "CliEnvironment"
     meta: "CliMetadata"
-    ok: "CliHelpResultOk"
+    ok: "CliBootstrapIdentitiesResultOk"
     data: "ControlStatusV1"
 
 CliStatusResultCommandId = Literal[
@@ -452,7 +1130,7 @@ class SubscriptionStatus(TypedDict):
     fetchedAt: Optional["Instant"]
     state: "SubscriptionStatusState"
     windows: list["QuotaWindow"]
-    paidUsageAllowed: "CliFailureOk"
+    paidUsageAllowed: "RoleBootstrapReportV1IdentityGateVerified"
     noOverageVerifiedAt: Optional["Instant"]
 
 SubscriptionStatusProvider = Literal[
@@ -488,71 +1166,6 @@ class OpsStatusReviewSlots(TypedDict):
     reviewed: int
     deferred: int
     missed: int
-
-class CheckViewV1(TypedDict):
-    id: "RegisteredCheckIdV1"
-    owner: "ModuleId"
-    state: "AcceptanceStateV1"
-    checkedAt: "Instant"
-    reasonCode: Optional[str]
-    prerequisite: Optional[str]
-    nextCommandId: Optional["CliCommandId"]
-    links: "EvidenceLinksV1"
-
-RegisteredCheckIdV1 = Literal[
-    "service.postgres",
-    "service.backend",
-    "service.workers",
-    "service.hermes",
-    "service.hermes-interactive",
-    "service.ops",
-    "service.authority",
-    "service.ingress",
-    "service.approval",
-    "service.review",
-    "service.attention-delivery",
-    "service.hands",
-    "service.backup",
-    "service.secrets",
-    "service.publisher",
-    "service.evaluator",
-    "service.repair",
-    "service.tailscale",
-    "service.recorder",
-    "read.ops",
-    "read.sources",
-    "read.attention",
-    "read.quota",
-    "read.cadence",
-    "read.release",
-    "bootstrap.fixture-runtime",
-    "bootstrap.fixture-identities",
-    "bootstrap.journal",
-    "bootstrap.signature",
-    "bootstrap.native-entry",
-    "bootstrap.inherited-child",
-    "bootstrap.fs-denial",
-    "bootstrap.network-denial",
-    "bootstrap.keychain-denial",
-    "bootstrap.container-isolation",
-    "bootstrap.postgres-unix",
-    "bootstrap.controller-peer",
-    "bootstrap.resource-admission",
-    "bootstrap.cleanup",
-]
-
-AcceptanceStateV1 = Literal[
-    "PASS",
-    "FAIL",
-    "BLOCKED",
-    "DEFERRED_CAPABILITY",
-    "NOT_IMPLEMENTED",
-]
-
-class EvidenceLinksV1(TypedDict):
-    recordRefs: list["RecordRef"]
-    observations: list["ObservationEvidenceRef"]
-    artifactDigests: list["Digest"]
 
 class SourceHealthV1(TypedDict):
     items: list["SourceStatus"]
@@ -667,6 +1280,8 @@ RegisteredCapabilityIdV1 = Literal[
     "control.help",
     "control.version",
     "control.status",
+    "control.research.check",
+    "control.bootstrap.identities",
     "control.doctor",
     "control.capture",
     "control.due",
@@ -981,7 +1596,7 @@ class QuotaAdmissionViewV1(TypedDict):
     optionalEvaluationAllowed: bool
     pauseReason: Optional[str]
     fallbackJobCount: Optional["UInt64String"]
-    paidUsageAllowed: "CliFailureOk"
+    paidUsageAllowed: "RoleBootstrapReportV1IdentityGateVerified"
 
 class CadenceCoverageV1(TypedDict):
     policyDigest: "Digest"
@@ -1082,16 +1697,16 @@ SecretReadinessV1State = Literal[
 ]
 
 class CliDoctorResult(TypedDict):
-    schemaVersion: "CliHelpV1CompatibilityWireVersionsItem"
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
     commandId: "CliDoctorResultCommandId"
     invocationId: "UUID"
     generatedAt: "Instant"
-    cliVersion: "CliVersionV1CliVersion"
-    contractsVersion: "CliVersionV1CliVersion"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
     schemaDigest: "Digest"
     environment: "CliEnvironment"
     meta: "CliMetadata"
-    ok: "CliHelpResultOk"
+    ok: "CliBootstrapIdentitiesResultOk"
     data: "DoctorReportV1"
 
 CliDoctorResultCommandId = Literal[
@@ -1107,6 +1722,8 @@ class DoctorReportV1(TypedDict):
     links: "EvidenceLinksV1"
 
 CliResult = Union[
+    "CliBootstrapIdentitiesResult",
+    "CliResearchCheckResult",
     "CliFailure",
     "CliHelpResult",
     "CliVersionResult",
@@ -1120,19 +1737,26 @@ CliResult = Union[
     "CliClockAdvanceResult",
     "CliProbeRunResult",
     "CliProbeShowResult",
+    "CliNewConnectorResult",
+    "CliNewToolResult",
+    "CliNewSkillResult",
+    "CliNewMigrationResult",
+    "CliMapCheckResult",
+    "CliMapUpdateResult",
+    "CliGardenResult",
 ]
 
 class CliStackUpResult(TypedDict):
-    schemaVersion: "CliHelpV1CompatibilityWireVersionsItem"
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
     commandId: "CliStackUpResultCommandId"
     invocationId: "UUID"
     generatedAt: "Instant"
-    cliVersion: "CliVersionV1CliVersion"
-    contractsVersion: "CliVersionV1CliVersion"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
     schemaDigest: "Digest"
     environment: "CliEnvironment"
     meta: "CliMetadata"
-    ok: "CliHelpResultOk"
+    ok: "CliBootstrapIdentitiesResultOk"
     data: "TestStackOperationV1"
 
 CliStackUpResultCommandId = Literal[
@@ -1191,16 +1815,16 @@ class TestStackTeardownV1(TypedDict):
     complete: bool
 
 class CliStackDownResult(TypedDict):
-    schemaVersion: "CliHelpV1CompatibilityWireVersionsItem"
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
     commandId: "CliStackDownResultCommandId"
     invocationId: "UUID"
     generatedAt: "Instant"
-    cliVersion: "CliVersionV1CliVersion"
-    contractsVersion: "CliVersionV1CliVersion"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
     schemaDigest: "Digest"
     environment: "CliEnvironment"
     meta: "CliMetadata"
-    ok: "CliHelpResultOk"
+    ok: "CliBootstrapIdentitiesResultOk"
     data: "TestStackOperationV1"
 
 CliStackDownResultCommandId = Literal[
@@ -1208,16 +1832,16 @@ CliStackDownResultCommandId = Literal[
 ]
 
 class CliClockShowResult(TypedDict):
-    schemaVersion: "CliHelpV1CompatibilityWireVersionsItem"
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
     commandId: "CliClockShowResultCommandId"
     invocationId: "UUID"
     generatedAt: "Instant"
-    cliVersion: "CliVersionV1CliVersion"
-    contractsVersion: "CliVersionV1CliVersion"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
     schemaDigest: "Digest"
     environment: "CliEnvironment"
     meta: "CliMetadata"
-    ok: "CliHelpResultOk"
+    ok: "CliBootstrapIdentitiesResultOk"
     data: "TestClockStateV1"
 
 CliClockShowResultCommandId = Literal[
@@ -1236,16 +1860,16 @@ class TestClockStateV1(TypedDict):
     coverage: "CadenceCoverageV1"
 
 class CliClockFreezeResult(TypedDict):
-    schemaVersion: "CliHelpV1CompatibilityWireVersionsItem"
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
     commandId: "CliClockFreezeResultCommandId"
     invocationId: "UUID"
     generatedAt: "Instant"
-    cliVersion: "CliVersionV1CliVersion"
-    contractsVersion: "CliVersionV1CliVersion"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
     schemaDigest: "Digest"
     environment: "CliEnvironment"
     meta: "CliMetadata"
-    ok: "CliHelpResultOk"
+    ok: "CliBootstrapIdentitiesResultOk"
     data: "TestClockReceiptV1"
 
 CliClockFreezeResultCommandId = Literal[
@@ -1259,16 +1883,16 @@ class TestClockReceiptV1(TypedDict):
     barrierRef: "RecordRef"
 
 class CliClockResumeResult(TypedDict):
-    schemaVersion: "CliHelpV1CompatibilityWireVersionsItem"
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
     commandId: "CliClockResumeResultCommandId"
     invocationId: "UUID"
     generatedAt: "Instant"
-    cliVersion: "CliVersionV1CliVersion"
-    contractsVersion: "CliVersionV1CliVersion"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
     schemaDigest: "Digest"
     environment: "CliEnvironment"
     meta: "CliMetadata"
-    ok: "CliHelpResultOk"
+    ok: "CliBootstrapIdentitiesResultOk"
     data: "TestClockReceiptV1"
 
 CliClockResumeResultCommandId = Literal[
@@ -1276,16 +1900,16 @@ CliClockResumeResultCommandId = Literal[
 ]
 
 class CliClockAdvanceResult(TypedDict):
-    schemaVersion: "CliHelpV1CompatibilityWireVersionsItem"
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
     commandId: "CliClockAdvanceResultCommandId"
     invocationId: "UUID"
     generatedAt: "Instant"
-    cliVersion: "CliVersionV1CliVersion"
-    contractsVersion: "CliVersionV1CliVersion"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
     schemaDigest: "Digest"
     environment: "CliEnvironment"
     meta: "CliMetadata"
-    ok: "CliHelpResultOk"
+    ok: "CliBootstrapIdentitiesResultOk"
     data: "ClockAdvanceOperationV1"
 
 CliClockAdvanceResultCommandId = Literal[
@@ -1310,16 +1934,16 @@ ClockAdvanceOperationV1Barrier = Literal[
 ]
 
 class CliProbeRunResult(TypedDict):
-    schemaVersion: "CliHelpV1CompatibilityWireVersionsItem"
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
     commandId: "CliProbeRunResultCommandId"
     invocationId: "UUID"
     generatedAt: "Instant"
-    cliVersion: "CliVersionV1CliVersion"
-    contractsVersion: "CliVersionV1CliVersion"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
     schemaDigest: "Digest"
     environment: "CliEnvironment"
     meta: "CliMetadata"
-    ok: "CliHelpResultOk"
+    ok: "CliBootstrapIdentitiesResultOk"
     data: "RegisteredProbeOperationV1"
 
 CliProbeRunResultCommandId = Literal[
@@ -1539,6 +2163,7 @@ RegisteredCliProbeIdV1 = Literal[
     "AT-cli-36",
     "AT-cli-37",
     "AT-cli-38",
+    "AT-cli-39",
     "AT-cli-4",
     "AT-cli-5",
     "AT-cli-6",
@@ -1868,6 +2493,12 @@ RegisteredCliProbeIdV1 = Literal[
     "AT-RESEARCH-REGISTER-7",
     "AT-RESEARCH-REGISTER-8",
     "AT-self-improvement-11",
+    "AT-self-improvement-112",
+    "AT-self-improvement-113",
+    "AT-self-improvement-114",
+    "AT-self-improvement-115",
+    "AT-self-improvement-116",
+    "AT-self-improvement-117",
     "AT-self-improvement-13",
     "AT-self-improvement-15",
     "AT-self-improvement-16",
@@ -2014,16 +2645,16 @@ class ArtifactBindingV1(TypedDict):
     fixtureDigest: Optional["Digest"]
 
 class CliProbeShowResult(TypedDict):
-    schemaVersion: "CliHelpV1CompatibilityWireVersionsItem"
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
     commandId: "CliProbeShowResultCommandId"
     invocationId: "UUID"
     generatedAt: "Instant"
-    cliVersion: "CliVersionV1CliVersion"
-    contractsVersion: "CliVersionV1CliVersion"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
     schemaDigest: "Digest"
     environment: "CliEnvironment"
     meta: "CliMetadata"
-    ok: "CliHelpResultOk"
+    ok: "CliBootstrapIdentitiesResultOk"
     data: "RegisteredProbeOperationV1"
 
 CliProbeShowResultCommandId = Literal[
@@ -2042,16 +2673,16 @@ CliHelpCommandResult = Union[
 ]
 
 class CliHelpCommandResultVariant1(TypedDict):
-    schemaVersion: "CliHelpV1CompatibilityWireVersionsItem"
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
     commandId: "CliHelpResultCommandId"
     invocationId: "UUID"
     generatedAt: "Instant"
-    cliVersion: "CliVersionV1CliVersion"
-    contractsVersion: "CliVersionV1CliVersion"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
     schemaDigest: "Digest"
     environment: "CliEnvironment"
     meta: "CliMetadata"
-    ok: "CliFailureOk"
+    ok: "RoleBootstrapReportV1IdentityGateVerified"
     error: "CliError"
 
 CliVersionCommandResult = Union[
@@ -2060,16 +2691,16 @@ CliVersionCommandResult = Union[
 ]
 
 class CliVersionCommandResultVariant1(TypedDict):
-    schemaVersion: "CliHelpV1CompatibilityWireVersionsItem"
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
     commandId: "CliVersionResultCommandId"
     invocationId: "UUID"
     generatedAt: "Instant"
-    cliVersion: "CliVersionV1CliVersion"
-    contractsVersion: "CliVersionV1CliVersion"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
     schemaDigest: "Digest"
     environment: "CliEnvironment"
     meta: "CliMetadata"
-    ok: "CliFailureOk"
+    ok: "RoleBootstrapReportV1IdentityGateVerified"
     error: "CliError"
 
 CliStatusCommandResult = Union[
@@ -2078,16 +2709,16 @@ CliStatusCommandResult = Union[
 ]
 
 class CliStatusCommandResultVariant1(TypedDict):
-    schemaVersion: "CliHelpV1CompatibilityWireVersionsItem"
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
     commandId: "CliStatusResultCommandId"
     invocationId: "UUID"
     generatedAt: "Instant"
-    cliVersion: "CliVersionV1CliVersion"
-    contractsVersion: "CliVersionV1CliVersion"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
     schemaDigest: "Digest"
     environment: "CliEnvironment"
     meta: "CliMetadata"
-    ok: "CliFailureOk"
+    ok: "RoleBootstrapReportV1IdentityGateVerified"
     error: "CliError"
 
 CliDoctorCommandResult = Union[
@@ -2096,16 +2727,16 @@ CliDoctorCommandResult = Union[
 ]
 
 class CliDoctorCommandResultVariant1(TypedDict):
-    schemaVersion: "CliHelpV1CompatibilityWireVersionsItem"
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
     commandId: "CliDoctorResultCommandId"
     invocationId: "UUID"
     generatedAt: "Instant"
-    cliVersion: "CliVersionV1CliVersion"
-    contractsVersion: "CliVersionV1CliVersion"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
     schemaDigest: "Digest"
     environment: "CliEnvironment"
     meta: "CliMetadata"
-    ok: "CliFailureOk"
+    ok: "RoleBootstrapReportV1IdentityGateVerified"
     error: "CliError"
 
 CliStackUpCommandResult = Union[
@@ -2114,16 +2745,16 @@ CliStackUpCommandResult = Union[
 ]
 
 class CliStackUpCommandResultVariant1(TypedDict):
-    schemaVersion: "CliHelpV1CompatibilityWireVersionsItem"
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
     commandId: "CliStackUpResultCommandId"
     invocationId: "UUID"
     generatedAt: "Instant"
-    cliVersion: "CliVersionV1CliVersion"
-    contractsVersion: "CliVersionV1CliVersion"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
     schemaDigest: "Digest"
     environment: "CliEnvironment"
     meta: "CliMetadata"
-    ok: "CliFailureOk"
+    ok: "RoleBootstrapReportV1IdentityGateVerified"
     error: "CliError"
 
 CliStackDownCommandResult = Union[
@@ -2132,16 +2763,16 @@ CliStackDownCommandResult = Union[
 ]
 
 class CliStackDownCommandResultVariant1(TypedDict):
-    schemaVersion: "CliHelpV1CompatibilityWireVersionsItem"
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
     commandId: "CliStackDownResultCommandId"
     invocationId: "UUID"
     generatedAt: "Instant"
-    cliVersion: "CliVersionV1CliVersion"
-    contractsVersion: "CliVersionV1CliVersion"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
     schemaDigest: "Digest"
     environment: "CliEnvironment"
     meta: "CliMetadata"
-    ok: "CliFailureOk"
+    ok: "RoleBootstrapReportV1IdentityGateVerified"
     error: "CliError"
 
 CliClockShowCommandResult = Union[
@@ -2150,16 +2781,16 @@ CliClockShowCommandResult = Union[
 ]
 
 class CliClockShowCommandResultVariant1(TypedDict):
-    schemaVersion: "CliHelpV1CompatibilityWireVersionsItem"
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
     commandId: "CliClockShowResultCommandId"
     invocationId: "UUID"
     generatedAt: "Instant"
-    cliVersion: "CliVersionV1CliVersion"
-    contractsVersion: "CliVersionV1CliVersion"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
     schemaDigest: "Digest"
     environment: "CliEnvironment"
     meta: "CliMetadata"
-    ok: "CliFailureOk"
+    ok: "RoleBootstrapReportV1IdentityGateVerified"
     error: "CliError"
 
 CliClockFreezeCommandResult = Union[
@@ -2168,16 +2799,16 @@ CliClockFreezeCommandResult = Union[
 ]
 
 class CliClockFreezeCommandResultVariant1(TypedDict):
-    schemaVersion: "CliHelpV1CompatibilityWireVersionsItem"
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
     commandId: "CliClockFreezeResultCommandId"
     invocationId: "UUID"
     generatedAt: "Instant"
-    cliVersion: "CliVersionV1CliVersion"
-    contractsVersion: "CliVersionV1CliVersion"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
     schemaDigest: "Digest"
     environment: "CliEnvironment"
     meta: "CliMetadata"
-    ok: "CliFailureOk"
+    ok: "RoleBootstrapReportV1IdentityGateVerified"
     error: "CliError"
 
 CliClockResumeCommandResult = Union[
@@ -2186,16 +2817,16 @@ CliClockResumeCommandResult = Union[
 ]
 
 class CliClockResumeCommandResultVariant1(TypedDict):
-    schemaVersion: "CliHelpV1CompatibilityWireVersionsItem"
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
     commandId: "CliClockResumeResultCommandId"
     invocationId: "UUID"
     generatedAt: "Instant"
-    cliVersion: "CliVersionV1CliVersion"
-    contractsVersion: "CliVersionV1CliVersion"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
     schemaDigest: "Digest"
     environment: "CliEnvironment"
     meta: "CliMetadata"
-    ok: "CliFailureOk"
+    ok: "RoleBootstrapReportV1IdentityGateVerified"
     error: "CliError"
 
 CliClockAdvanceCommandResult = Union[
@@ -2204,16 +2835,16 @@ CliClockAdvanceCommandResult = Union[
 ]
 
 class CliClockAdvanceCommandResultVariant1(TypedDict):
-    schemaVersion: "CliHelpV1CompatibilityWireVersionsItem"
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
     commandId: "CliClockAdvanceResultCommandId"
     invocationId: "UUID"
     generatedAt: "Instant"
-    cliVersion: "CliVersionV1CliVersion"
-    contractsVersion: "CliVersionV1CliVersion"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
     schemaDigest: "Digest"
     environment: "CliEnvironment"
     meta: "CliMetadata"
-    ok: "CliFailureOk"
+    ok: "RoleBootstrapReportV1IdentityGateVerified"
     error: "CliError"
 
 CliProbeRunCommandResult = Union[
@@ -2222,16 +2853,16 @@ CliProbeRunCommandResult = Union[
 ]
 
 class CliProbeRunCommandResultVariant1(TypedDict):
-    schemaVersion: "CliHelpV1CompatibilityWireVersionsItem"
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
     commandId: "CliProbeRunResultCommandId"
     invocationId: "UUID"
     generatedAt: "Instant"
-    cliVersion: "CliVersionV1CliVersion"
-    contractsVersion: "CliVersionV1CliVersion"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
     schemaDigest: "Digest"
     environment: "CliEnvironment"
     meta: "CliMetadata"
-    ok: "CliFailureOk"
+    ok: "RoleBootstrapReportV1IdentityGateVerified"
     error: "CliError"
 
 CliProbeShowCommandResult = Union[
@@ -2240,16 +2871,16 @@ CliProbeShowCommandResult = Union[
 ]
 
 class CliProbeShowCommandResultVariant1(TypedDict):
-    schemaVersion: "CliHelpV1CompatibilityWireVersionsItem"
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
     commandId: "CliProbeShowResultCommandId"
     invocationId: "UUID"
     generatedAt: "Instant"
-    cliVersion: "CliVersionV1CliVersion"
-    contractsVersion: "CliVersionV1CliVersion"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
     schemaDigest: "Digest"
     environment: "CliEnvironment"
     meta: "CliMetadata"
-    ok: "CliFailureOk"
+    ok: "RoleBootstrapReportV1IdentityGateVerified"
     error: "CliError"
 
 class CapabilityManifest(TypedDict):
@@ -2353,6 +2984,7 @@ class OpsError(TypedDict):
     retryable: bool
     incidentId: NotRequired["UUID"]
     message: "OpsSafeMessage"
+    effectState: NotRequired["CliMetadataEffectState"]
 
 OpsErrorModule = Literal[
     "ops",
@@ -2376,6 +3008,16 @@ RegisteredTestCaseV1 = Literal[
     "native-denials",
     "postgres-unix",
     "stack-lifecycle",
+    "k4a-connector",
+    "k4a-tool",
+    "k4a-skill",
+    "k4a-migration",
+    "model-route-policy",
+    "model-route-stream",
+    "model-admission",
+    "native-release-eligibility",
+    "native-auth-cli",
+    "backup-capacity",
 ]
 
 ElapsedDurationV1 = NewType("ElapsedDurationV1", str)
@@ -2386,11 +3028,11 @@ OpsTestStackResultV1 = Union[
 ]
 
 class OpsTestStackResultV1Variant0(TypedDict):
-    ok: "CliHelpResultOk"
+    ok: "CliBootstrapIdentitiesResultOk"
     data: "TestStackOperationV1"
 
 class OpsTestStackResultV1Variant1(TypedDict):
-    ok: "CliFailureOk"
+    ok: "RoleBootstrapReportV1IdentityGateVerified"
     error: "OpsError"
 
 class TestStackUpInputV1(TypedDict):
@@ -2400,6 +3042,11 @@ class TestStackUpInputV1(TypedDict):
     clock: "TestStackClockV1"
     model: "TestStackModelV1"
     waitMs: int
+    observedPressure: NotRequired["TestStackUpInputV1ObservedPressure"]
+
+TestStackUpInputV1ObservedPressure = Literal[
+    "normal",
+]
 
 class TestStackDownInputV1(TypedDict):
     requestId: "UUID"
@@ -2437,7 +3084,7 @@ class NativeEntryReceiptV1(TypedDict):
     protocol: "NativeEntryReceiptV1Protocol"
     parent: "NativeProcessIdentityV1"
     child: Optional["NativeProcessIdentityV1"]
-    entered: "CliHelpResultOk"
+    entered: "CliBootstrapIdentitiesResultOk"
     inheritedChildEntered: bool
     containerHomeReady: bool
 
@@ -2481,9 +3128,9 @@ class NativeEntryReceiptV2(TypedDict):
     protocol: "NativeEntryReceiptV2Protocol"
     parent: "NativeProcessIdentityV1"
     child: "NativeProcessIdentityV1"
-    entered: "CliHelpResultOk"
-    inheritedChildEntered: "CliHelpResultOk"
-    containerHomeReady: "CliFailureOk"
+    entered: "CliBootstrapIdentitiesResultOk"
+    inheritedChildEntered: "CliBootstrapIdentitiesResultOk"
+    containerHomeReady: "RoleBootstrapReportV1IdentityGateVerified"
 
 NativeEntryReceiptV2Protocol = Literal[
     "toy.bootstrap-native.v2",
@@ -2535,10 +3182,10 @@ class NativeSignatureObservationV1(TypedDict):
     artifactDigest: "Digest"
     codeIdentifierHex: str
     signatureFlags: int
-    adHoc: "CliHelpResultOk"
+    adHoc: "CliBootstrapIdentitiesResultOk"
     teamIdentifier: None
-    hardenedRuntime: "CliHelpResultOk"
-    libraryValidation: "CliHelpResultOk"
+    hardenedRuntime: "CliBootstrapIdentitiesResultOk"
+    libraryValidation: "CliBootstrapIdentitiesResultOk"
     entitlementProfile: "NativeSignatureObservationV1EntitlementProfile"
 
 NativeSignatureObservationV1Role = Literal[
@@ -2572,8 +3219,8 @@ class NativeSupervisorReceiptV1(TypedDict):
     stdoutBytes: int
     stderrBytes: None
     parentReaped: bool
-    completeDescendantCleanup: "CliFailureOk"
-    ready: "CliFailureOk"
+    completeDescendantCleanup: "RoleBootstrapReportV1IdentityGateVerified"
+    ready: "RoleBootstrapReportV1IdentityGateVerified"
 
 NativeSupervisorReceiptV1Protocol = Literal[
     "toy.bootstrap-supervisor.receipt.v1",
@@ -2623,6 +3270,7 @@ class BootstrapUpRequestV1(TypedDict):
     world: "RegisteredTestWorldV1"
     clock: "TestStackClockV1"
     model: "TestStackModelV1"
+    observedPressure: NotRequired["TestStackUpInputV1ObservedPressure"]
 
 BootstrapUpRequestV1SchemaVersion = Literal[
     "toy.bootstrap-up-request.v1",
@@ -2639,8 +3287,8 @@ class BootstrapOperationRecordV1(TypedDict):
     acceptedAt: "Instant"
     state: "BootstrapOperationRecordV1State"
     errorCode: "BootstrapOperationRecordV1ErrorCode"
-    nativeExecutionPerformed: "CliFailureOk"
-    resourcePermitIssued: "CliFailureOk"
+    nativeExecutionPerformed: "RoleBootstrapReportV1IdentityGateVerified"
+    resourcePermitIssued: "RoleBootstrapReportV1IdentityGateVerified"
 
 BootstrapOperationRecordV1SchemaVersion = Literal[
     "toy.bootstrap-operation-record.v1",
@@ -2663,8 +3311,8 @@ class BootstrapJournalBackupIntentV1(TypedDict):
     schemaVersion: "BootstrapJournalBackupIntentV1SchemaVersion"
     backupId: "UUID"
     storeId: "UUID"
-    sourceVersion: "BootstrapJournalBackupIntentV1SourceVersion"
-    targetVersion: "BootstrapJournalBackupIntentV1TargetVersion"
+    sourceVersion: "GardenerFindingV1CorrectionRungVariant0"
+    targetVersion: "GardenerFindingV1CorrectionRungVariant1"
     startedAt: "Instant"
     sourceSchemaDigest: "Digest"
     sourceLogicalDigest: "Digest"
@@ -2675,20 +3323,12 @@ BootstrapJournalBackupIntentV1SchemaVersion = Literal[
     "toy.bootstrap-journal-backup-intent.v1",
 ]
 
-BootstrapJournalBackupIntentV1SourceVersion = Literal[
-    1,
-]
-
-BootstrapJournalBackupIntentV1TargetVersion = Literal[
-    2,
-]
-
 class BootstrapJournalBackupReceiptV1(TypedDict):
     schemaVersion: "BootstrapJournalBackupReceiptV1SchemaVersion"
     backupId: "UUID"
     storeId: "UUID"
-    sourceVersion: "BootstrapJournalBackupIntentV1SourceVersion"
-    targetVersion: "BootstrapJournalBackupIntentV1TargetVersion"
+    sourceVersion: "GardenerFindingV1CorrectionRungVariant0"
+    targetVersion: "GardenerFindingV1CorrectionRungVariant1"
     startedAt: "Instant"
     completedAt: "Instant"
     sourceSchemaDigest: "Digest"
@@ -2698,8 +3338,8 @@ class BootstrapJournalBackupReceiptV1(TypedDict):
     artifactDigest: "Digest"
     byteLength: "UInt64String"
     pageCount: "UInt64String"
-    integrityVerified: "CliHelpResultOk"
-    sourceSnapshotVerified: "CliHelpResultOk"
+    integrityVerified: "CliBootstrapIdentitiesResultOk"
+    sourceSnapshotVerified: "CliBootstrapIdentitiesResultOk"
 
 BootstrapJournalBackupReceiptV1SchemaVersion = Literal[
     "toy.bootstrap-journal-backup-receipt.v1",
@@ -2709,8 +3349,8 @@ class BootstrapJournalMigrationV1(TypedDict):
     schemaVersion: "BootstrapJournalMigrationV1SchemaVersion"
     migrationId: "UUID"
     storeId: "UUID"
-    sourceVersion: "BootstrapJournalBackupIntentV1SourceVersion"
-    targetVersion: "BootstrapJournalBackupIntentV1TargetVersion"
+    sourceVersion: "GardenerFindingV1CorrectionRungVariant0"
+    targetVersion: "GardenerFindingV1CorrectionRungVariant1"
     appliedAt: "Instant"
     backupId: "UUID"
     backupReceiptDigest: "Digest"
@@ -2760,7 +3400,7 @@ class BootstrapWorkLeaseRecordV1(TypedDict):
     expiresAt: "Instant"
     expiresMonotonicNanoseconds: "UInt64String"
     state: "BootstrapWorkLeaseRecordV1State"
-    protectedGlobalLeaseVerified: "CliFailureOk"
+    protectedGlobalLeaseVerified: "RoleBootstrapReportV1IdentityGateVerified"
 
 BootstrapWorkLeaseRecordV1SchemaVersion = Literal[
     "toy.bootstrap-work-lease.v1",
@@ -2788,8 +3428,8 @@ class BootstrapJournalReadV1(TypedDict):
     backupVerified: bool
     ownerCount: "UInt64String"
     leaseCount: "UInt64String"
-    runtimeAdmissionAvailable: "CliFailureOk"
-    protectedGlobalLeaseVerified: "CliFailureOk"
+    runtimeAdmissionAvailable: "RoleBootstrapReportV1IdentityGateVerified"
+    protectedGlobalLeaseVerified: "RoleBootstrapReportV1IdentityGateVerified"
 
 BootstrapJournalReadV1SchemaVersion = Literal[
     "toy.bootstrap-journal-read.v1",
@@ -2811,12 +3451,21 @@ class BootstrapResourceSampleV1(TypedDict):
     speculativeBytes: Optional["UInt64String"]
     availableBytes: Optional["UInt64String"]
     pressure: "OpsStatusMemoryPressure"
+    pressureSource: NotRequired["BootstrapResourceSampleV1PressureSource"]
+    pressureQueryOutput: NotRequired[str]
+
+BootstrapResourceSampleV1PressureSource = Literal[
+    "os",
+    "operator-observation",
+    "unavailable",
+]
 
 BootstrapResourceReasonV1 = Literal[
     "MEASUREMENT_UNAVAILABLE",
     "NORMAL_PRESSURE_REQUIRED",
     "AVAILABLE_MEMORY_TOO_LOW",
     "TIMEOUT",
+    "PRESSURE_QUERY_DENIED",
 ]
 
 class BootstrapResourcePreflightV1(TypedDict):
@@ -2831,7 +3480,7 @@ class BootstrapResourcePreflightV1(TypedDict):
     normalPressureObserved: bool
     headroomSatisfied: bool
     reasons: list["BootstrapResourceReasonV1"]
-    resourcePermitIssued: "CliFailureOk"
+    resourcePermitIssued: "RoleBootstrapReportV1IdentityGateVerified"
     admissionState: "BootstrapResourcePreflightV1AdmissionState"
 
 BootstrapResourcePreflightV1SchemaVersion = Literal[
@@ -2845,6 +3494,18 @@ BootstrapResourcePreflightV1MarginBytes = Literal[
 BootstrapResourcePreflightV1AdmissionState = Literal[
     "admitted",
     "blocked",
+]
+
+class ServiceRoleIdentityInventoryV1(TypedDict):
+    schemaVersion: "ServiceRoleIdentityInventoryV1SchemaVersion"
+    observedAt: "Instant"
+    roles: list["ServiceRoleIdentityObservationV1"]
+    allExpectedIdentitiesObserved: bool
+    identityGateVerified: "RoleBootstrapReportV1IdentityGateVerified"
+    maintenanceIdentityVerified: "RoleBootstrapReportV1IdentityGateVerified"
+
+ServiceRoleIdentityInventoryV1SchemaVersion = Literal[
+    "toy.service-role-identity-inventory.v1",
 ]
 
 class FixtureStackRecordV1(TypedDict):
@@ -2862,6 +3523,7 @@ class FixtureStackRecordV1(TypedDict):
     createdAt: "Instant"
     realExpiresAt: "Instant"
     evidenceId: "UUID"
+    resourcePreflight: NotRequired["BootstrapResourcePreflightV1"]
     failureCode: NotRequired["FixtureStackRecordV1FailureCode"]
 
 FixtureStackRecordV1SchemaVersion = Literal[
@@ -3003,9 +3665,1473 @@ ToySourcesStatusResultV1 = Union[
 ]
 
 class ToySourcesStatusResultV1Variant0(TypedDict):
-    ok: "CliHelpResultOk"
+    ok: "CliBootstrapIdentitiesResultOk"
     data: "ToySourcesStatusDataV1"
 
 class ToySourcesStatusResultV1Variant1(TypedDict):
-    ok: "CliFailureOk"
+    ok: "RoleBootstrapReportV1IdentityGateVerified"
     error: "ToySourcesStatusErrorV1"
+
+class GeneratorInputV1(TypedDict):
+    kind: "GeneratorPlanV1Kind"
+    name: str
+    owner: "ModuleId"
+    provider: Optional[str]
+    operation: Optional[str]
+    plan: bool
+
+class MapCheckInputV1(TypedDict):
+    release: Optional["Release"]
+
+class MapUpdateInputV1(TypedDict):
+    plan: bool
+
+class GardenerInputV1(TypedDict):
+    requestId: "UUID"
+    mode: "GardenerReportV1Mode"
+    waitMs: int
+
+class FeatureFactsV1(TypedDict):
+    schemaVersion: "FeatureFactsV1SchemaVersion"
+    features: list["EngineeringFeatureV1"]
+    requirements: list["FeatureFactsV1RequirementsItem"]
+    interfaces: list["FeatureFactsV1InterfacesItem"]
+    commands: list[str]
+    ats: list[str]
+
+FeatureFactsV1SchemaVersion = Literal[
+    "toy.feature-facts.v1",
+]
+
+class EngineeringFeatureV1(TypedDict):
+    id: str
+    description: str
+    implementation: "CliDeclarationImplementation"
+    requirementIds: list[str]
+    entry: str
+    owner: "ModuleId"
+    publicInterface: str
+    paths: list[str]
+    firstRelease: "Release"
+    commands: list[str]
+    atIds: list[str]
+
+class FeatureFactsV1RequirementsItem(TypedDict):
+    id: str
+    path: str
+
+class FeatureFactsV1InterfacesItem(TypedDict):
+    id: str
+    owner: "ModuleId"
+    path: str
+
+class AcceptanceIndexV1(TypedDict):
+    sourceDigest: "Digest"
+    acceptance: list["AcceptanceIndexV1AcceptanceItem"]
+
+class AcceptanceIndexV1AcceptanceItem(TypedDict):
+    id: str
+    source: str
+    sourceLine: int
+    firstRelease: "Release"
+    sourceAssertion: str
+    sourceAssertionHash: "Digest"
+    sourceDigest: "Digest"
+    indexedSourceLine: int
+    rung: "AcceptanceIndexV1AcceptanceItemRung"
+    requiredEvidence: str
+
+AcceptanceIndexV1AcceptanceItemRung = Literal[
+    "SIM",
+    "CLI",
+    "MOD",
+    "INT",
+]
+
+class KitchenGateSummaryV1(TypedDict):
+    verdict: "KitchenGateSummaryV1Verdict"
+    checks: list["KitchenGateSummaryV1ChecksItem"]
+    evidence: str
+    attemptEvidence: NotRequired[str]
+    acceptanceComplete: "RoleBootstrapReportV1IdentityGateVerified"
+
+KitchenGateSummaryV1Verdict = Literal[
+    "PASS",
+    "FAIL",
+]
+
+class KitchenGateSummaryV1ChecksItem(TypedDict):
+    id: str
+    passed: bool
+
+class ReferenceAdmissionEvidenceV1(TypedDict):
+    referencesVerified: "CliBootstrapIdentitiesResultOk"
+    sourceHashes: dict[str, "Digest"]
+    references: list["ReferenceAdmissionEvidenceV1ReferencesItem"]
+
+class ReferenceAdmissionEvidenceV1ReferencesItem(TypedDict):
+    pattern: "GeneratorPlanV1Kind"
+    observation: "ReferenceAdmissionEvidenceV1ReferencesItemObservation"
+
+class ReferenceAdmissionEvidenceV1ReferencesItemObservation(TypedDict):
+    state: "ReferenceAdmissionEvidenceV1ReferencesItemObservationState"
+
+ReferenceAdmissionEvidenceV1ReferencesItemObservationState = Literal[
+    "PASS",
+]
+
+class InstalledCodexRuntimeV1(TypedDict):
+    expectedVersion: "InstalledCodexRuntimeV1ExpectedVersion"
+    observedVersion: Optional[str]
+    executableDigest: Optional["Digest"]
+    versionMatches: bool
+    protocol: "CodexProtocolInspectionV1"
+    inferenceAttested: "RoleBootstrapReportV1IdentityGateVerified"
+    authorizationInspected: "RoleBootstrapReportV1IdentityGateVerified"
+    paidFallbackPermitted: "RoleBootstrapReportV1IdentityGateVerified"
+
+InstalledCodexRuntimeV1ExpectedVersion = Literal[
+    "0.160.0",
+]
+
+class CodexProtocolInspectionV1(TypedDict):
+    state: "CodexProtocolInspectionV1State"
+    schemaDigest: Optional["Digest"]
+    experimentalIncluded: bool
+    threadFields: list[str]
+    turnFields: list[str]
+    dynamicToolFields: list[str]
+    defaultToolsCanBeDisabled: bool
+    inferenceAttested: "RoleBootstrapReportV1IdentityGateVerified"
+    authorizationInspected: "RoleBootstrapReportV1IdentityGateVerified"
+
+CodexProtocolInspectionV1State = Literal[
+    "observed",
+    "unavailable",
+]
+
+ModelRoleV1 = Literal[
+    "foreground",
+    "background",
+    "cron",
+    "auxiliary",
+    "continuation",
+    "research",
+    "child",
+]
+
+ModelArmV1 = Literal[
+    "original",
+    "experimental-background-high-standard",
+]
+
+class ModelRouteSettingsV1(TypedDict):
+    model: "ModelRouteSettingsV1Model"
+    effort: "ModelRouteSettingsV1Effort"
+    serviceTier: "ModelRouteSettingsV1ServiceTier"
+
+ModelRouteSettingsV1Model = Literal[
+    "gpt-6.1-sol",
+    "gpt-6-luna",
+]
+
+ModelRouteSettingsV1Effort = Literal[
+    "max",
+    "medium",
+    "high",
+]
+
+ModelRouteSettingsV1ServiceTier = Literal[
+    "priority",
+    "default",
+]
+
+class ModelRoutePolicyV1(TypedDict):
+    schemaVersion: "ModelRoutePolicyV1SchemaVersion"
+    provider: "ModelRoutePolicyV1Provider"
+    paidFallbackPermitted: "RoleBootstrapReportV1IdentityGateVerified"
+    original: "ModelRoutePolicyV1Original"
+    experimentalBackgroundHighStandard: "ModelRoutePolicyV1ExperimentalBackgroundHighStandard"
+
+ModelRoutePolicyV1SchemaVersion = Literal[
+    "toy.models.v1",
+]
+
+ModelRoutePolicyV1Provider = Literal[
+    "siwc_responses",
+]
+
+class ModelRoutePolicyV1Original(TypedDict):
+    foreground: "ModelRoutePolicyV1OriginalForeground"
+    background: "ModelRoutePolicyV1OriginalForeground"
+    cron: "ModelRoutePolicyV1OriginalForeground"
+    auxiliary: "ModelRoutePolicyV1OriginalForeground"
+    continuation: "ModelRoutePolicyV1OriginalForeground"
+    research: "ModelRoutePolicyV1OriginalResearch"
+    child: "ModelRoutePolicyV1OriginalChild"
+
+class ModelRoutePolicyV1OriginalForeground(TypedDict):
+    model: "ModelRoutePolicyV1OriginalForegroundModel"
+    effort: "ModelRoutePolicyV1OriginalForegroundEffort"
+    serviceTier: "ModelRoutePolicyV1OriginalForegroundServiceTier"
+
+ModelRoutePolicyV1OriginalForegroundModel = Literal[
+    "gpt-6.1-sol",
+]
+
+ModelRoutePolicyV1OriginalForegroundEffort = Literal[
+    "max",
+]
+
+ModelRoutePolicyV1OriginalForegroundServiceTier = Literal[
+    "priority",
+]
+
+class ModelRoutePolicyV1OriginalResearch(TypedDict):
+    model: "ModelRoutePolicyV1OriginalForegroundModel"
+    effort: "ModelRoutePolicyV1OriginalResearchEffort"
+    serviceTier: "ModelRoutePolicyV1OriginalForegroundServiceTier"
+
+ModelRoutePolicyV1OriginalResearchEffort = Literal[
+    "medium",
+]
+
+class ModelRoutePolicyV1OriginalChild(TypedDict):
+    model: "ModelRoutePolicyV1OriginalChildModel"
+    effort: "ModelRoutePolicyV1OriginalForegroundEffort"
+    serviceTier: "ModelRoutePolicyV1OriginalForegroundServiceTier"
+
+ModelRoutePolicyV1OriginalChildModel = Literal[
+    "gpt-6-luna",
+]
+
+class ModelRoutePolicyV1ExperimentalBackgroundHighStandard(TypedDict):
+    model: "ModelRoutePolicyV1OriginalForegroundModel"
+    effort: "ModelRoutePolicyV1ExperimentalBackgroundHighStandardEffort"
+    serviceTier: "ModelRoutePolicyV1ExperimentalBackgroundHighStandardServiceTier"
+
+ModelRoutePolicyV1ExperimentalBackgroundHighStandardEffort = Literal[
+    "high",
+]
+
+ModelRoutePolicyV1ExperimentalBackgroundHighStandardServiceTier = Literal[
+    "default",
+]
+
+class ModelRouteSelectInputV1(TypedDict):
+    role: "ModelRoleV1"
+    arm: "ModelArmV1"
+
+ModelRouteSelectionV1 = Union[
+    "ModelRouteSelectionV1Variant0",
+    "ModelRouteSelectionV1Variant1",
+    "ModelRouteSelectionV1Variant2",
+    "ModelRouteSelectionV1Variant3",
+    "ModelRouteSelectionV1Variant4",
+    "ModelRouteSelectionV1Variant5",
+    "ModelRouteSelectionV1Variant6",
+    "ModelRouteSelectionV1Variant7",
+    "ModelRouteSelectionV1Variant8",
+]
+
+class ModelRouteSelectionV1Variant0(TypedDict):
+    role: "ModelRouteSelectionV1Variant0Role"
+    arm: "ModelRouteSelectionV1Variant0Arm"
+    provider: "ModelRoutePolicyV1Provider"
+    settings: "ModelRoutePolicyV1OriginalForeground"
+    policyDigest: "Digest"
+    localOutputReservationTokens: "ModelRouteSelectionV1Variant0LocalOutputReservationTokens"
+    outputLimitKind: "ModelRouteSelectionV1Variant0OutputLimitKind"
+    providerOutputCap: None
+    paidFallbackPermitted: "RoleBootstrapReportV1IdentityGateVerified"
+
+ModelRouteSelectionV1Variant0Role = Literal[
+    "foreground",
+]
+
+ModelRouteSelectionV1Variant0Arm = Literal[
+    "original",
+]
+
+ModelRouteSelectionV1Variant0LocalOutputReservationTokens = Literal[
+    4096,
+]
+
+ModelRouteSelectionV1Variant0OutputLimitKind = Literal[
+    "estimate",
+]
+
+class ModelRouteSelectionV1Variant1(TypedDict):
+    role: "ModelRouteSelectionV1Variant1Role"
+    arm: "ModelRouteSelectionV1Variant0Arm"
+    provider: "ModelRoutePolicyV1Provider"
+    settings: "ModelRoutePolicyV1OriginalForeground"
+    policyDigest: "Digest"
+    localOutputReservationTokens: "ModelRouteSelectionV1Variant0LocalOutputReservationTokens"
+    outputLimitKind: "ModelRouteSelectionV1Variant0OutputLimitKind"
+    providerOutputCap: None
+    paidFallbackPermitted: "RoleBootstrapReportV1IdentityGateVerified"
+
+ModelRouteSelectionV1Variant1Role = Literal[
+    "background",
+]
+
+class ModelRouteSelectionV1Variant2(TypedDict):
+    role: "ModelRouteSelectionV1Variant2Role"
+    arm: "ModelRouteSelectionV1Variant0Arm"
+    provider: "ModelRoutePolicyV1Provider"
+    settings: "ModelRoutePolicyV1OriginalForeground"
+    policyDigest: "Digest"
+    localOutputReservationTokens: "ModelRouteSelectionV1Variant0LocalOutputReservationTokens"
+    outputLimitKind: "ModelRouteSelectionV1Variant0OutputLimitKind"
+    providerOutputCap: None
+    paidFallbackPermitted: "RoleBootstrapReportV1IdentityGateVerified"
+
+ModelRouteSelectionV1Variant2Role = Literal[
+    "cron",
+]
+
+class ModelRouteSelectionV1Variant3(TypedDict):
+    role: "ModelRouteSelectionV1Variant3Role"
+    arm: "ModelRouteSelectionV1Variant0Arm"
+    provider: "ModelRoutePolicyV1Provider"
+    settings: "ModelRoutePolicyV1OriginalForeground"
+    policyDigest: "Digest"
+    localOutputReservationTokens: "ModelRouteSelectionV1Variant0LocalOutputReservationTokens"
+    outputLimitKind: "ModelRouteSelectionV1Variant0OutputLimitKind"
+    providerOutputCap: None
+    paidFallbackPermitted: "RoleBootstrapReportV1IdentityGateVerified"
+
+ModelRouteSelectionV1Variant3Role = Literal[
+    "auxiliary",
+]
+
+class ModelRouteSelectionV1Variant4(TypedDict):
+    role: "ModelRouteSelectionV1Variant4Role"
+    arm: "ModelRouteSelectionV1Variant0Arm"
+    provider: "ModelRoutePolicyV1Provider"
+    settings: "ModelRoutePolicyV1OriginalForeground"
+    policyDigest: "Digest"
+    localOutputReservationTokens: "ModelRouteSelectionV1Variant0LocalOutputReservationTokens"
+    outputLimitKind: "ModelRouteSelectionV1Variant0OutputLimitKind"
+    providerOutputCap: None
+    paidFallbackPermitted: "RoleBootstrapReportV1IdentityGateVerified"
+
+ModelRouteSelectionV1Variant4Role = Literal[
+    "continuation",
+]
+
+class ModelRouteSelectionV1Variant5(TypedDict):
+    role: "ModelRouteSelectionV1Variant5Role"
+    arm: "ModelRouteSelectionV1Variant0Arm"
+    provider: "ModelRoutePolicyV1Provider"
+    settings: "ModelRoutePolicyV1OriginalResearch"
+    policyDigest: "Digest"
+    localOutputReservationTokens: "ModelRouteSelectionV1Variant0LocalOutputReservationTokens"
+    outputLimitKind: "ModelRouteSelectionV1Variant0OutputLimitKind"
+    providerOutputCap: None
+    paidFallbackPermitted: "RoleBootstrapReportV1IdentityGateVerified"
+
+ModelRouteSelectionV1Variant5Role = Literal[
+    "research",
+]
+
+class ModelRouteSelectionV1Variant6(TypedDict):
+    role: "ModelRouteSelectionV1Variant6Role"
+    arm: "ModelRouteSelectionV1Variant0Arm"
+    provider: "ModelRoutePolicyV1Provider"
+    settings: "ModelRoutePolicyV1OriginalChild"
+    policyDigest: "Digest"
+    localOutputReservationTokens: "ModelRouteSelectionV1Variant0LocalOutputReservationTokens"
+    outputLimitKind: "ModelRouteSelectionV1Variant0OutputLimitKind"
+    providerOutputCap: None
+    paidFallbackPermitted: "RoleBootstrapReportV1IdentityGateVerified"
+
+ModelRouteSelectionV1Variant6Role = Literal[
+    "child",
+]
+
+class ModelRouteSelectionV1Variant7(TypedDict):
+    role: "ModelRouteSelectionV1Variant1Role"
+    arm: "ModelRouteSelectionV1Variant7Arm"
+    provider: "ModelRoutePolicyV1Provider"
+    settings: "ModelRoutePolicyV1ExperimentalBackgroundHighStandard"
+    policyDigest: "Digest"
+    localOutputReservationTokens: "ModelRouteSelectionV1Variant0LocalOutputReservationTokens"
+    outputLimitKind: "ModelRouteSelectionV1Variant0OutputLimitKind"
+    providerOutputCap: None
+    paidFallbackPermitted: "RoleBootstrapReportV1IdentityGateVerified"
+
+ModelRouteSelectionV1Variant7Arm = Literal[
+    "experimental-background-high-standard",
+]
+
+class ModelRouteSelectionV1Variant8(TypedDict):
+    role: "ModelRouteSelectionV1Variant2Role"
+    arm: "ModelRouteSelectionV1Variant7Arm"
+    provider: "ModelRoutePolicyV1Provider"
+    settings: "ModelRoutePolicyV1ExperimentalBackgroundHighStandard"
+    policyDigest: "Digest"
+    localOutputReservationTokens: "ModelRouteSelectionV1Variant0LocalOutputReservationTokens"
+    outputLimitKind: "ModelRouteSelectionV1Variant0OutputLimitKind"
+    providerOutputCap: None
+    paidFallbackPermitted: "RoleBootstrapReportV1IdentityGateVerified"
+
+class ModelRouteUsageV1(TypedDict):
+    inputTokens: int
+    outputTokens: int
+    reasoningTokens: int
+
+ModelRouteProviderEventV1 = Union[
+    "ModelRouteProviderEventV1Variant0",
+    "ModelRouteProviderEventV1Variant1",
+    "ModelRouteProviderEventV1Variant2",
+    "ModelRouteProviderEventV1Variant3",
+    "ModelRouteProviderEventV1Variant4",
+    "ModelRouteProviderEventV1Variant5",
+    "ModelRouteProviderEventV1Variant6",
+]
+
+class ModelRouteProviderEventV1Variant0(TypedDict):
+    type: "ModelRouteProviderEventV1Variant0Type"
+    settings: "ModelRouteSettingsV1"
+
+ModelRouteProviderEventV1Variant0Type = Literal[
+    "route",
+]
+
+class ModelRouteProviderEventV1Variant1(TypedDict):
+    type: "ModelRouteProviderEventV1Variant1Type"
+    text: str
+
+ModelRouteProviderEventV1Variant1Type = Literal[
+    "output",
+]
+
+class ModelRouteProviderEventV1Variant2(TypedDict):
+    type: "ModelRouteProviderEventV1Variant2Type"
+    callId: str
+    name: str
+    namespace: NotRequired[str]
+    argumentsJson: str
+
+ModelRouteProviderEventV1Variant2Type = Literal[
+    "tool-call",
+]
+
+class ModelRouteProviderEventV1Variant3(TypedDict):
+    type: "ModelRouteProviderEventV1Variant3Type"
+    usage: "ModelRouteUsageV1"
+
+ModelRouteProviderEventV1Variant3Type = Literal[
+    "usage",
+]
+
+class ModelRouteProviderEventV1Variant4(TypedDict):
+    type: "ModelRouteProviderEventV1Variant4Type"
+
+ModelRouteProviderEventV1Variant4Type = Literal[
+    "completed",
+]
+
+class ModelRouteProviderEventV1Variant5(TypedDict):
+    type: "ModelRouteProviderEventV1Variant5Type"
+    code: "ModelRouteProviderEventV1Variant5Code"
+
+ModelRouteProviderEventV1Variant5Type = Literal[
+    "failed",
+]
+
+ModelRouteProviderEventV1Variant5Code = Literal[
+    "quota_exhausted",
+    "authentication_unavailable",
+    "provider_failed",
+    "protocol_invalid",
+]
+
+class ModelRouteProviderEventV1Variant6(TypedDict):
+    type: "ModelRouteProviderEventV1Variant6Type"
+
+ModelRouteProviderEventV1Variant6Type = Literal[
+    "interrupted",
+]
+
+class ModelRouteReceiptV1(TypedDict):
+    requested: "ModelRouteSelectionV1"
+    observed: Optional["ModelRouteSettingsV1"]
+    terminal: "ModelRouteReceiptV1Terminal"
+    completion: "ModelRouteReceiptV1Completion"
+    usage: Optional["ModelRouteUsageV1"]
+    usageState: "ModelRouteReceiptV1UsageState"
+    reservationTokens: "ModelRouteReceiptV1ReservationTokens"
+    outputStarted: bool
+    reasonCode: Optional["ModelRouteReceiptV1ReasonCodeValue"]
+    paidFallbackAttempted: "RoleBootstrapReportV1IdentityGateVerified"
+
+ModelRouteReceiptV1Terminal = Literal[
+    "completed",
+    "failed",
+    "interrupted",
+]
+
+ModelRouteReceiptV1Completion = Literal[
+    "complete",
+    "pending",
+]
+
+ModelRouteReceiptV1UsageState = Literal[
+    "known",
+    "uncertain",
+]
+
+ModelRouteReceiptV1ReservationTokens = Union[
+    "ModelRouteReceiptV1ReservationTokensVariant0",
+    "ModelRouteSelectionV1Variant0LocalOutputReservationTokens",
+]
+
+ModelRouteReceiptV1ReservationTokensVariant0 = Literal[
+    0,
+]
+
+ModelRouteReceiptV1ReasonCodeValue = Literal[
+    "quota_exhausted",
+    "authentication_unavailable",
+    "provider_failed",
+    "protocol_invalid",
+    "route_mismatch",
+    "route_unobserved",
+    "usage_unavailable",
+    "stream_interrupted",
+]
+
+ModelRouteStreamEventV1 = Union[
+    "ModelRouteProviderEventV1",
+    "ModelRouteStreamEventV1Variant1",
+]
+
+class ModelRouteStreamEventV1Variant1(TypedDict):
+    type: "ModelRouteStreamEventV1Variant1Type"
+    receipt: "ModelRouteReceiptV1"
+
+ModelRouteStreamEventV1Variant1Type = Literal[
+    "receipt",
+]
+
+ModelRouteInputItemV1 = Union[
+    "ModelRouteInputItemV1Variant0",
+    "ModelRouteInputItemV1Variant1",
+    "ModelRouteInputItemV1Variant2",
+    "ModelRouteInputItemV1Variant3",
+]
+
+class ModelRouteInputItemV1Variant0(TypedDict):
+    type: "ModelRouteInputItemV1Variant0Type"
+    role: "ModelRouteInputItemV1Variant0Role"
+    content: "ModelRouteInputItemV1Variant0Content"
+    phase: NotRequired["ModelRouteInputItemV1Variant0Phase"]
+    id: NotRequired[str]
+    status: NotRequired["ModelRouteInputItemV1Variant0Status"]
+
+ModelRouteInputItemV1Variant0Type = Literal[
+    "message",
+]
+
+ModelRouteInputItemV1Variant0Role = Literal[
+    "developer",
+    "user",
+    "assistant",
+]
+
+ModelRouteInputItemV1Variant0Content = Union[
+    str,
+    list["ModelRouteInputItemV1Variant0ContentVariant1Item"],
+]
+
+ModelRouteInputItemV1Variant0ContentVariant1Item = Union[
+    "ModelRouteInputItemV1Variant0ContentVariant1ItemVariant0",
+    "ModelRouteInputItemV1Variant0ContentVariant1ItemVariant1",
+    "ModelRouteInputItemV1Variant0ContentVariant1ItemVariant2",
+]
+
+class ModelRouteInputItemV1Variant0ContentVariant1ItemVariant0(TypedDict):
+    type: "ModelRouteInputItemV1Variant0ContentVariant1ItemVariant0Type"
+    text: str
+
+ModelRouteInputItemV1Variant0ContentVariant1ItemVariant0Type = Literal[
+    "input_text",
+]
+
+class ModelRouteInputItemV1Variant0ContentVariant1ItemVariant1(TypedDict):
+    type: "ModelRouteInputItemV1Variant0ContentVariant1ItemVariant1Type"
+    text: str
+
+ModelRouteInputItemV1Variant0ContentVariant1ItemVariant1Type = Literal[
+    "output_text",
+]
+
+class ModelRouteInputItemV1Variant0ContentVariant1ItemVariant2(TypedDict):
+    type: "ModelRouteInputItemV1Variant0ContentVariant1ItemVariant2Type"
+    image_url: str
+    detail: "ModelRouteInputItemV1Variant0ContentVariant1ItemVariant2Detail"
+
+ModelRouteInputItemV1Variant0ContentVariant1ItemVariant2Type = Literal[
+    "input_image",
+]
+
+ModelRouteInputItemV1Variant0ContentVariant1ItemVariant2Detail = Literal[
+    "auto",
+    "low",
+    "high",
+    "original",
+]
+
+ModelRouteInputItemV1Variant0Phase = Literal[
+    "commentary",
+    "final_answer",
+]
+
+ModelRouteInputItemV1Variant0Status = Literal[
+    "in_progress",
+    "completed",
+    "incomplete",
+]
+
+class ModelRouteInputItemV1Variant1(TypedDict):
+    type: "ModelRouteInputItemV1Variant1Type"
+    call_id: str
+    name: str
+    namespace: NotRequired[str]
+    arguments: str
+
+ModelRouteInputItemV1Variant1Type = Literal[
+    "function_call",
+]
+
+class ModelRouteInputItemV1Variant2(TypedDict):
+    type: "ModelRouteInputItemV1Variant2Type"
+    call_id: str
+    output: str
+
+ModelRouteInputItemV1Variant2Type = Literal[
+    "function_call_output",
+]
+
+class ModelRouteInputItemV1Variant3(TypedDict):
+    type: "ModelRouteInputItemV1Variant3Type"
+    id: NotRequired[str]
+    encrypted_content: str
+    summary: list["ModelRouteInputItemV1Variant3SummaryItem"]
+
+ModelRouteInputItemV1Variant3Type = Literal[
+    "reasoning",
+]
+
+class ModelRouteInputItemV1Variant3SummaryItem(TypedDict):
+    type: "ModelRouteInputItemV1Variant3SummaryItemType"
+    text: str
+
+ModelRouteInputItemV1Variant3SummaryItemType = Literal[
+    "summary_text",
+]
+
+class ModelRouteNamespaceToolV1(TypedDict):
+    type: "ModelRouteNamespaceToolV1Type"
+    name: str
+    description: str
+    tools: list["ModelRouteNamespaceToolV1ToolsItem"]
+
+ModelRouteNamespaceToolV1Type = Literal[
+    "namespace",
+]
+
+class ModelRouteNamespaceToolV1ToolsItem(TypedDict):
+    type: "ModelRouteNamespaceToolV1ToolsItemType"
+    name: str
+    description: str
+    parameters: dict[str, object]
+    strict: "CliBootstrapIdentitiesResultOk"
+
+ModelRouteNamespaceToolV1ToolsItemType = Literal[
+    "function",
+]
+
+class ModelRouteConversationV1(TypedDict):
+    input: list["ModelRouteInputItemV1"]
+    instructions: NotRequired[str]
+    tools: list["ModelRouteNamespaceToolV1"]
+
+class ModelRouteResponsesRequestV1(TypedDict):
+    model: "ModelRouteSettingsV1Model"
+    reasoning: "ModelRouteResponsesRequestV1Reasoning"
+    service_tier: "ModelRouteSettingsV1ServiceTier"
+    input: list["ModelRouteInputItemV1"]
+    instructions: NotRequired[str]
+    tools: list["ModelRouteNamespaceToolV1"]
+    store: "RoleBootstrapReportV1IdentityGateVerified"
+    stream: "CliBootstrapIdentitiesResultOk"
+    include: list["ModelRouteResponsesRequestV1IncludeItem"]
+
+class ModelRouteResponsesRequestV1Reasoning(TypedDict):
+    effort: "ModelRouteSettingsV1Effort"
+
+ModelRouteResponsesRequestV1IncludeItem = Literal[
+    "reasoning.encrypted_content",
+]
+
+class SiwcAuthorizationStatusV1(TypedDict):
+    state: "SiwcAuthorizationStatusV1State"
+    code: "SiwcAuthorizationStatusV1Code"
+    planPermissionGranted: bool
+    zeroCreditVerified: "RoleBootstrapReportV1IdentityGateVerified"
+    inferencePermitted: "RoleBootstrapReportV1IdentityGateVerified"
+
+SiwcAuthorizationStatusV1State = Literal[
+    "idle",
+    "starting",
+    "waiting",
+    "exchanging",
+    "saved",
+    "refused",
+    "cancelled",
+]
+
+SiwcAuthorizationStatusV1Code = Literal[
+    "authorization_required",
+    "attempt_active",
+    "waiting_for_browser",
+    "validating_authorization",
+    "authorization_saved",
+    "authorization_denied",
+    "callback_invalid",
+    "registration_invalid",
+    "token_exchange_failed",
+    "identity_invalid",
+    "credential_owner_unavailable",
+    "credential_readback_failed",
+    "attempt_expired",
+    "cancelled",
+]
+
+class SiwcTokenResponse(TypedDict):
+    access_token: str
+    refresh_token: str
+    id_token: str
+    token_type: "SiwcTokenResponseTokentype"
+    expires_in: int
+    scope: str
+
+SiwcTokenResponseTokentype = Literal[
+    "Bearer",
+]
+
+class SiwcJwtHeaderV1(TypedDict):
+    alg: "SiwcJwtHeaderV1Alg"
+    kid: str
+
+SiwcJwtHeaderV1Alg = Literal[
+    "RS256",
+]
+
+class SiwcIdentityClaimsV1(TypedDict):
+    iss: "SiwcIdentityClaimsV1Iss"
+    sub: str
+    aud: "SiwcIdentityClaimsV1Aud"
+    exp: int
+    iat: int
+    nbf: NotRequired[int]
+    nonce: str
+    azp: NotRequired[str]
+
+SiwcIdentityClaimsV1Iss = Literal[
+    "https://auth.openai.com",
+]
+
+SiwcIdentityClaimsV1Aud = Union[
+    str,
+    list[str],
+]
+
+class SiwcJwksV1(TypedDict):
+    keys: list[object]
+
+class SiwcRsaKeyV1(TypedDict):
+    kty: "SiwcRsaKeyV1Kty"
+    kid: str
+    n: str
+    e: str
+    use: NotRequired["SiwcRsaKeyV1Use"]
+    alg: NotRequired["SiwcJwtHeaderV1Alg"]
+
+SiwcRsaKeyV1Kty = Literal[
+    "RSA",
+]
+
+SiwcRsaKeyV1Use = Literal[
+    "sig",
+]
+
+class SiwcRegistration(TypedDict):
+    clientId: str
+    subject: str
+
+class SiwcStoredGrant(TypedDict):
+    registration: "SiwcRegistration"
+    hostId: str
+    issuer: "SiwcIdentityClaimsV1Iss"
+    audience: "SiwcStoredGrantAudience"
+    accessToken: str
+    refreshToken: str
+    idToken: str
+    expiresAt: int
+    scopes: list[str]
+    identityVerified: "CliBootstrapIdentitiesResultOk"
+    zeroCreditVerified: "RoleBootstrapReportV1IdentityGateVerified"
+
+SiwcStoredGrantAudience = Literal[
+    "https://api.openai.com/v1",
+]
+
+class SiwcGrantVaultV1(TypedDict):
+    schemaVersion: "SiwcGrantVaultV1SchemaVersion"
+    hostId: str
+    registration: Optional["SiwcRegistration"]
+    pendingClientId: Optional[str]
+    grant: Optional["SiwcStoredGrant"]
+
+SiwcGrantVaultV1SchemaVersion = Literal[
+    "toy.siwc-grant-vault.v1",
+]
+
+class SiwcKeychainLauncherV1(TypedDict):
+    pythonExecutable: str
+    pythonDigest: "Digest"
+    helperDigest: "Digest"
+
+class RoleBootstrapInputV1(TypedDict):
+    plan: bool
+    requestId: "UUID"
+    expectedSnapshotDigest: Optional["Digest"]
+
+class ModelQuotaWindowV1(TypedDict):
+    bucketId: str
+    durationMinutes: int
+    usedPercent: float
+    resetAt: "Instant"
+
+class ModelQuotaObservationV1(TypedDict):
+    id: "UUID"
+    provider: "ModelRoutePolicyV1Provider"
+    accountRef: str
+    reportedAt: "Instant"
+    sourceAuthorized: bool
+    schemaValid: bool
+    status: "ModelQuotaObservationV1Status"
+    windows: list["ModelQuotaWindowV1"]
+    bodyRef: str
+
+ModelQuotaObservationV1Status = Literal[
+    "available",
+    "unavailable",
+    "exhausted",
+]
+
+ModelAdmissionWorkV1 = Union[
+    "ModelAdmissionWorkV1Variant0",
+    "ModelAdmissionWorkV1Variant1",
+    "ModelAdmissionWorkV1Variant2",
+]
+
+ModelAdmissionWorkV1Variant0 = TypedDict(
+    "ModelAdmissionWorkV1Variant0",
+    {
+        "class": "ModelRouteSelectionV1Variant0Role",
+        "authenticatedRequestId": "UUID",
+    },
+)
+
+ModelAdmissionWorkV1Variant1 = TypedDict(
+    "ModelAdmissionWorkV1Variant1",
+    {
+        "class": "ModelAdmissionWorkV1Variant1Class",
+        "authenticatedRequestId": "UUID",
+        "parentCallId": "UUID",
+    },
+)
+
+ModelAdmissionWorkV1Variant1Class = Literal[
+    "foreground-judge",
+]
+
+ModelAdmissionWorkV1Variant2 = TypedDict(
+    "ModelAdmissionWorkV1Variant2",
+    {
+        "class": "ModelAdmissionWorkV1Variant2Class",
+    },
+)
+
+ModelAdmissionWorkV1Variant2Class = Literal[
+    "event",
+    "quiet-tick",
+    "repair",
+    "replay",
+    "continuation",
+    "child",
+    "research",
+    "judge",
+    "auxiliary",
+]
+
+class ModelAdmissionLedgerV1(TypedDict):
+    accountRef: str
+    utcDay: str
+    policyDigest: "Digest"
+    ready: bool
+    restoredUnreconciled: bool
+    providerLeaseActive: bool
+    foregroundWaiting: bool
+    fallbackJobsReserved: int
+    unreflectedFiveHourUpperPercent: Optional[float]
+    unreflectedWeeklyUpperPercent: Optional[float]
+
+class ModelAdmissionInputV1(TypedDict):
+    now: "Instant"
+    accountRef: str
+    requested: "ModelRouteSelectionV1"
+    work: "ModelAdmissionWorkV1"
+    ledger: "ModelAdmissionLedgerV1"
+    observation: Optional["ModelQuotaObservationV1"]
+    expectedFiveHourUpperPercent: Optional[float]
+    expectedWeeklyUpperPercent: Optional[float]
+
+class ModelAdmissionDecisionV1(TypedDict):
+    eligible: bool
+    mode: "ModelAdmissionDecisionV1Mode"
+    reason: "ModelAdmissionDecisionV1Reason"
+    retryAt: Optional["Instant"]
+    quotaSnapshotId: Optional["UUID"]
+    foregroundInputAccepted: "CliBootstrapIdentitiesResultOk"
+    providerSendPermitIssued: "RoleBootstrapReportV1IdentityGateVerified"
+    paidFallbackPermitted: "RoleBootstrapReportV1IdentityGateVerified"
+
+ModelAdmissionDecisionV1Mode = Literal[
+    "foreground",
+    "measured",
+    "fixed-count",
+    "unavailable",
+]
+
+ModelAdmissionDecisionV1Reason = Literal[
+    "ELIGIBLE",
+    "ACCOUNTING_UNAVAILABLE",
+    "POLICY_CHANGED",
+    "PROVIDER_BUSY",
+    "FOREGROUND_WAITING",
+    "RESTORE_UNRECONCILED",
+    "QUOTA_EXHAUSTED",
+    "FIVE_HOUR_THRESHOLD",
+    "WEEKLY_THRESHOLD",
+    "OPTIONAL_WORK_PAUSED",
+    "DAILY_JOB_CEILING",
+    "RESERVATION_UNKNOWN",
+    "RESERVATION_THRESHOLD",
+]
+
+class ModelAdmissionRequestV1(TypedDict):
+    callKey: str
+    budgetGroupId: "UUID"
+    rootContractId: "UUID"
+    runId: Optional["UUID"]
+    generation: str
+    parentCallId: Optional["UUID"]
+    attempt: int
+    accountRef: str
+    requested: "ModelRouteSelectionV1"
+    work: "ModelAdmissionWorkV1"
+    reservedInputTokens: int
+    expectedFiveHourUpperPercent: Optional[float]
+    expectedWeeklyUpperPercent: Optional[float]
+
+class ModelAdmissionRecordV1(TypedDict):
+    id: "UUID"
+    callKey: str
+    requestHash: "Digest"
+    budgetGroupId: "UUID"
+    accountRef: str
+    utcDay: str
+    runId: Optional["UUID"]
+    generation: str
+    requested: "ModelRouteSelectionV1"
+    work: "ModelAdmissionWorkV1"
+    state: "ModelAdmissionRecordV1State"
+    reservationCharged: bool
+    leaseActive: bool
+    nativeSendCount: "ModelAdmissionRecordV1NativeSendCount"
+    nativeTerminalAcknowledged: bool
+    decision: "ModelAdmissionDecisionV1"
+    expectedFiveHourUpperPercent: Optional[float]
+    expectedWeeklyUpperPercent: Optional[float]
+    usage: Optional["ModelRouteUsageV1"]
+    reportedTotalTokens: Optional["UInt64String"]
+    startedAt: "Instant"
+    endedAt: Optional["Instant"]
+
+ModelAdmissionRecordV1State = Literal[
+    "reserved",
+    "sending",
+    "denied",
+    "uncertain",
+    "settled",
+]
+
+ModelAdmissionRecordV1NativeSendCount = Union[
+    "ModelRouteReceiptV1ReservationTokensVariant0",
+    "GardenerFindingV1CorrectionRungVariant0",
+]
+
+class ModelAdmissionStoreViewV1(TypedDict):
+    ledger: "ModelAdmissionLedgerV1"
+    observation: Optional["ModelQuotaObservationV1"]
+    record: Optional["ModelAdmissionRecordV1"]
+    budgetBinding: Optional["ModelAdmissionStoreViewV1BudgetBindingValue"]
+
+class ModelAdmissionStoreViewV1BudgetBindingValue(TypedDict):
+    rootContractId: "UUID"
+    accountRef: str
+    policyDigest: "Digest"
+    state: "ModelAdmissionStoreViewV1BudgetBindingValueState"
+
+ModelAdmissionStoreViewV1BudgetBindingValueState = Literal[
+    "open",
+    "closed",
+    "restored_unreconciled",
+]
+
+ModelAdmissionSettlementV1 = Union[
+    "ModelAdmissionSettlementV1Variant0",
+    "ModelAdmissionSettlementV1Variant1",
+]
+
+class ModelAdmissionSettlementV1Variant0(TypedDict):
+    callId: "UUID"
+    nativeTerminalAcknowledged: bool
+    usage: "ModelRouteUsageV1"
+    reportedTotalTokens: str
+
+class ModelAdmissionSettlementV1Variant1(TypedDict):
+    callId: "UUID"
+    nativeTerminalAcknowledged: bool
+    usage: None
+    reportedTotalTokens: None
+
+class ModelAdmissionConnectionV1(TypedDict):
+    socketDirectory: str
+    database: str
+    peerRole: str
+    clientDigest: "Digest"
+
+class ModelAdmissionRuntimeV1(TypedDict):
+    connection: "ModelAdmissionConnectionV1"
+    policyDigest: "Digest"
+
+class ModelAdmissionClaimV1(TypedDict):
+    claimed: bool
+    record: "ModelAdmissionRecordV1"
+    providerSendPermitIssued: "RoleBootstrapReportV1IdentityGateVerified"
+
+NativeReleasePrerequisiteIdV1 = Literal[
+    "osHardware",
+    "appleMembership",
+    "distributionSigning",
+    "nativeAppEntitlements",
+    "shareEntitlements",
+    "pushEntitlements",
+    "alarmEntitlements",
+    "familyControlsEntitlements",
+    "familyControlsPermission",
+    "coldTurkeyPro",
+    "porcupineLicenseAndModel",
+]
+
+class NativeReleasePrerequisiteV1(TypedDict):
+    state: "NativeReleasePrerequisiteV1State"
+    checkedAt: "Instant"
+    links: "EvidenceLinksV1"
+
+NativeReleasePrerequisiteV1State = Literal[
+    "unknown",
+    "absent",
+    "unverified",
+    "verified",
+]
+
+class NativeReleaseEligibilityInputV1(TypedDict):
+    observedAt: "Instant"
+    prerequisites: "NativeReleaseEligibilityInputV1Prerequisites"
+
+class NativeReleaseEligibilityInputV1Prerequisites(TypedDict):
+    osHardware: "NativeReleasePrerequisiteV1"
+    appleMembership: "NativeReleasePrerequisiteV1"
+    distributionSigning: "NativeReleasePrerequisiteV1"
+    nativeAppEntitlements: "NativeReleasePrerequisiteV1"
+    shareEntitlements: "NativeReleasePrerequisiteV1"
+    pushEntitlements: "NativeReleasePrerequisiteV1"
+    alarmEntitlements: "NativeReleasePrerequisiteV1"
+    familyControlsEntitlements: "NativeReleasePrerequisiteV1"
+    familyControlsPermission: "NativeReleasePrerequisiteV1"
+    coldTurkeyPro: "NativeReleasePrerequisiteV1"
+    porcupineLicenseAndModel: "NativeReleasePrerequisiteV1"
+
+class NativeReleaseCapabilityDispositionV1(TypedDict):
+    state: "NativeReleaseCapabilityDispositionV1State"
+    missingPrerequisites: list["NativeReleasePrerequisiteIdV1"]
+
+NativeReleaseCapabilityDispositionV1State = Literal[
+    "deferred",
+    "eligible-for-testing",
+]
+
+class NativeReleaseEligibilityDecisionV1(TypedDict):
+    observedAt: "Instant"
+    capabilities: "NativeReleaseEligibilityDecisionV1Capabilities"
+    deliveryBranch: "NativeReleaseEligibilityDecisionV1DeliveryBranch"
+    purchaseAssumed: "RoleBootstrapReportV1IdentityGateVerified"
+    weeklyFreeProvisioningCounted: "RoleBootstrapReportV1IdentityGateVerified"
+    liveActivationAdmitted: "RoleBootstrapReportV1IdentityGateVerified"
+
+class NativeReleaseEligibilityDecisionV1Capabilities(TypedDict):
+    nativeApp: "NativeReleaseCapabilityDispositionV1"
+    shareExtension: "NativeReleaseCapabilityDispositionV1"
+    pushNotifications: "NativeReleaseCapabilityDispositionV1"
+    alarmKit: "NativeReleaseCapabilityDispositionV1"
+    familyControls: "NativeReleaseCapabilityDispositionV1"
+    appBlocking: "NativeReleaseCapabilityDispositionV1"
+    wakeWord: "NativeReleaseCapabilityDispositionV1"
+
+NativeReleaseEligibilityDecisionV1DeliveryBranch = Literal[
+    "web-pwa-plus-discord",
+    "native-candidate-plus-web-and-discord",
+]
+
+class InstalledHermesDependencyRecordV1(TypedDict):
+    packages: "InstalledHermesDependencyRecordV1Packages"
+
+class InstalledHermesDependencyRecordV1Packages(TypedDict):
+    venv: "InstalledHermesDependencyRecordV1PackagesVenv"
+
+class InstalledHermesDependencyRecordV1PackagesVenv(TypedDict):
+    environment: str
+
+HermesPublicRuntimeCommandV1 = list[str]
+
+class HermesAuthFixtureResultV1(TypedDict):
+    schema: "HermesAuthFixtureResultV1Schema"
+    operation: "HermesAuthFixtureResultV1Operation"
+    public_argv: list[str]
+    exit_code: int
+    markers: list["HermesAuthFixtureResultV1MarkersItem"]
+    processIdentity: "HermesAuthFixtureResultV1ProcessIdentity"
+    observations: "HermesAuthFixtureResultV1Observations"
+    http_ledger: "HermesAuthFixtureResultV1Httpledger"
+    network_audit: "HermesAuthFixtureResultV1Networkaudit"
+
+HermesAuthFixtureResultV1Schema = Literal[
+    "toy.hermes-httpx-auth-fixture.v1",
+]
+
+HermesAuthFixtureResultV1Operation = Literal[
+    "add",
+    "list",
+    "chat",
+]
+
+HermesAuthFixtureResultV1MarkersItem = Literal[
+    "AUTH_ADD_OK",
+    "AUTH_ADD_NOT_CONFIRMED",
+    "AUTH_SAVE_DENIED",
+    "AUTH_SAVE_FAULT_NOT_CONFIRMED",
+    "AUTH_LIST_READBACK_OK",
+    "AUTH_LIST_EMPTY",
+    "AUTH_LIST_NOT_CONFIRMED",
+    "CHAT_RESPONSE_OK",
+    "CHAT_RESPONSE_NOT_CONFIRMED",
+    "CHAT_GRANT_UNUSABLE",
+    "CHAT_GRANT_USABILITY_NOT_CONFIRMED",
+    "SIWC_AUTHORIZATION_REQUIRED",
+    "SIWC_AUTHORIZATION_NOT_CONFIRMED",
+    "CLI_EXIT_NONZERO",
+    "CLI_EXCEPTION",
+]
+
+class HermesAuthFixtureResultV1ProcessIdentity(TypedDict):
+    pid: int
+    parentPid: int
+    uid: int
+    gid: int
+
+class HermesAuthFixtureResultV1Observations(TypedDict):
+    provider: "HermesAuthFixtureResultV1ObservationsProvider"
+    phase: "HermesAuthFixtureResultV1ObservationsPhase"
+    credential_count: NotRequired[int]
+    access_generation: Optional["HermesAuthFixtureResultV1ObservationsAccessgenerationValue"]
+    storage_fault_triggered: bool
+    token_hygiene: bool
+    success_claim_absent: bool
+    fallback_attempted: bool
+    network_denials: list["HermesAuthFixtureResultV1ObservationsNetworkdenialsItem"]
+    socket_origin: Optional[str]
+
+HermesAuthFixtureResultV1ObservationsProvider = Literal[
+    "openai-codex",
+    "openai-chatgpt",
+]
+
+HermesAuthFixtureResultV1ObservationsPhase = Literal[
+    "add",
+    "list",
+    "chat",
+    "chat-expired",
+    "chat-reloaded",
+    "add-enospc",
+    "add-replace-fault",
+    "list-after-fault",
+    "chat-after-fault",
+    "siwc-unbound",
+]
+
+HermesAuthFixtureResultV1ObservationsAccessgenerationValue = Literal[
+    "initial",
+    "rotated",
+]
+
+HermesAuthFixtureResultV1ObservationsNetworkdenialsItem = Literal[
+    "model-mismatch",
+    "authorization-mismatch",
+    "grant-mismatch",
+    "paid-model-fallback",
+    "device-grant-outside-add",
+    "device-poll-outside-add",
+    "model-request-outside-chat",
+    "model-catalog-outside-chat",
+    "codex-model-discovery",
+    "openai-model-discovery",
+    "unregistered-http",
+    "tokenizer-download",
+    "unregistered-socket",
+]
+
+class HermesAuthFixtureResultV1Httpledger(TypedDict):
+    device_code_requests: int
+    device_code_polls: int
+    token_exchanges: int
+    token_refreshes: int
+    model_catalog_requests: int
+    model_requests: int
+    denied_http_requests: int
+    blocked_socket_events: int
+
+HermesAuthFixtureResultV1Networkaudit = Literal[
+    "socket-audit-hook-installed",
+]
+
+class BackupCapacityInventoryV1(TypedDict):
+    observedAt: "Instant"
+    dataFilesystemPath: "BackupCapacityInventoryV1DataFilesystemPath"
+    primaryTotalBytes: Optional["UInt64String"]
+    primaryAvailableBytes: Optional["UInt64String"]
+    externalPhysicalDiskCount: Optional[int]
+    localCapacityState: "BackupCapacityInventoryV1LocalCapacityState"
+    externalMetadataState: "BackupCapacityInventoryV1LocalCapacityState"
+    independentDestinationCapacityVerified: "RoleBootstrapReportV1IdentityGateVerified"
+    remoteAccountInspected: "RoleBootstrapReportV1IdentityGateVerified"
+    restoreVerified: "RoleBootstrapReportV1IdentityGateVerified"
+
+BackupCapacityInventoryV1DataFilesystemPath = Literal[
+    "/System/Volumes/Data",
+]
+
+BackupCapacityInventoryV1LocalCapacityState = Literal[
+    "measured",
+    "unavailable",
+]
+
+class BackupCapacityForecastV1(TypedDict):
+    state: "BackupCapacityForecastV1State"
+    checkedAt: "Instant"
+    links: "EvidenceLinksV1"
+    retainedBytes: "UInt64String"
+    dumpBytes: "UInt64String"
+    versionBytes: "UInt64String"
+    stagingBytes: "UInt64String"
+    pruneScratchBytes: "UInt64String"
+    restoreWorkspaceBytes: "UInt64String"
+    shortGrowthBytesPerDay: "UInt64String"
+    longGrowthBytesPerDay: "UInt64String"
+    horizonDays: "UInt64String"
+
+BackupCapacityForecastV1State = Literal[
+    "unmeasured",
+    "measured",
+]
+
+class BackupCapacityDestinationV1(TypedDict):
+    kind: "BackupCapacityDestinationV1Kind"
+    state: "BackupCapacityDestinationV1State"
+    availableBytes: Optional["UInt64String"]
+    independentVerified: bool
+    policyEligible: bool
+    noSpendVerified: bool
+    escrowVerified: bool
+    restoreVerified: bool
+    checkedAt: "Instant"
+    links: "EvidenceLinksV1"
+
+BackupCapacityDestinationV1Kind = Literal[
+    "external",
+    "b2",
+    "internal-snapshot",
+]
+
+BackupCapacityDestinationV1State = Literal[
+    "unknown",
+    "missing",
+    "outage",
+    "ready",
+]
+
+class BackupCapacityInputV1(TypedDict):
+    observedAt: "Instant"
+    primaryAvailableBytes: Optional["UInt64String"]
+    stagingWriteBytes: "UInt64String"
+    stagingFloorBytes: "BackupCapacityInputV1StagingFloorBytes"
+    forecast: "BackupCapacityForecastV1"
+    destinations: "BackupCapacityInputV1Destinations"
+
+BackupCapacityInputV1StagingFloorBytes = Literal[
+    "10000000000",
+]
+
+class BackupCapacityInputV1Destinations(TypedDict):
+    external: "BackupCapacityInputV1DestinationsExternal"
+    b2: "BackupCapacityInputV1DestinationsB2"
+    internalSnapshot: "BackupCapacityInputV1DestinationsInternalSnapshot"
+
+class BackupCapacityInputV1DestinationsExternal(TypedDict):
+    kind: "BackupCapacityInputV1DestinationsExternalKind"
+    state: "BackupCapacityDestinationV1State"
+    availableBytes: Optional["UInt64String"]
+    independentVerified: bool
+    policyEligible: bool
+    noSpendVerified: bool
+    escrowVerified: bool
+    restoreVerified: bool
+    checkedAt: "Instant"
+    links: "EvidenceLinksV1"
+
+BackupCapacityInputV1DestinationsExternalKind = Literal[
+    "external",
+]
+
+class BackupCapacityInputV1DestinationsB2(TypedDict):
+    kind: "BackupCapacityInputV1DestinationsB2Kind"
+    state: "BackupCapacityDestinationV1State"
+    availableBytes: Optional["UInt64String"]
+    independentVerified: bool
+    policyEligible: bool
+    noSpendVerified: bool
+    escrowVerified: bool
+    restoreVerified: bool
+    checkedAt: "Instant"
+    links: "EvidenceLinksV1"
+
+BackupCapacityInputV1DestinationsB2Kind = Literal[
+    "b2",
+]
+
+class BackupCapacityInputV1DestinationsInternalSnapshot(TypedDict):
+    kind: "BackupCapacityInputV1DestinationsInternalSnapshotKind"
+    state: "BackupCapacityDestinationV1State"
+    availableBytes: Optional["UInt64String"]
+    independentVerified: bool
+    policyEligible: bool
+    noSpendVerified: bool
+    escrowVerified: bool
+    restoreVerified: bool
+    checkedAt: "Instant"
+    links: "EvidenceLinksV1"
+
+BackupCapacityInputV1DestinationsInternalSnapshotKind = Literal[
+    "internal-snapshot",
+]
+
+BackupCapacityReasonV1 = Literal[
+    "INVENTORY_UNPROVEN",
+    "DESTINATION_MISSING",
+    "DESTINATION_OUTAGE",
+    "CAPACITY_EXCEEDED",
+    "INTERNAL_SNAPSHOT",
+    "POLICY_UNPROVEN",
+    "NO_SPEND_UNPROVEN",
+    "ESCROW_UNPROVEN",
+    "RESTORE_UNPROVEN",
+    "FORECAST_UNPROVEN",
+    "FORECAST_OVERFLOW",
+]
+
+class BackupCapacityDestinationDecisionV1(TypedDict):
+    kind: "BackupCapacityDestinationV1Kind"
+    state: "BackupCapacityDestinationDecisionV1State"
+    reasons: list["BackupCapacityReasonV1"]
+    remainingDays: Optional["UInt64String"]
+
+BackupCapacityDestinationDecisionV1State = Literal[
+    "unavailable",
+    "blocked",
+    "eligible-for-testing",
+]
+
+class BackupCapacityDecisionV1(TypedDict):
+    observedAt: "Instant"
+    verdict: "BackupCapacityDecisionV1Verdict"
+    requiredBytes: Optional["UInt64String"]
+    growthBytesPerDay: Optional["UInt64String"]
+    destinations: list["BackupCapacityDestinationDecisionV1"]
+    independentDestinationCount: int
+    disasterRpo: "BackupCapacityDecisionV1DisasterRpo"
+    staging: "BackupCapacityDecisionV1Staging"
+    pauseLowPriority: bool
+    gaps: list["BackupCapacityDecisionV1GapsItem"]
+    sealedPartialSets: "BackupCapacityDecisionV1SealedPartialSets"
+    deletePermittedData: "RoleBootstrapReportV1IdentityGateVerified"
+    purchaseAssumed: "RoleBootstrapReportV1IdentityGateVerified"
+    uploadPermitted: "RoleBootstrapReportV1IdentityGateVerified"
+    deployedCoverageVerified: "RoleBootstrapReportV1IdentityGateVerified"
+
+BackupCapacityDecisionV1Verdict = Literal[
+    "PASS",
+    "FAIL",
+    "INCOMPLETE",
+]
+
+BackupCapacityDecisionV1DisasterRpo = Literal[
+    "unattainable",
+    "unproven",
+    "eligible-for-testing",
+]
+
+BackupCapacityDecisionV1Staging = Literal[
+    "refused",
+    "eligible-for-testing",
+]
+
+BackupCapacityDecisionV1GapsItem = Literal[
+    "FORECAST_UNPROVEN",
+    "FORECAST_OVERFLOW",
+    "STAGING_FLOOR",
+    "NONCRITICAL_DISK_FLOOR",
+    "DESTINATION_OUTAGE",
+    "OFFSITE_CAPACITY_UNAVAILABLE",
+]
+
+BackupCapacityDecisionV1SealedPartialSets = Literal[
+    "reuse-before-new-staging",
+]

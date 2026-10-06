@@ -8,6 +8,8 @@ import {
   testClockAdvanceInputSchema, testClockFreezeInputSchema, testClockReceiptSchema, testClockResumeInputSchema, testClockShowInputSchema,
   testClockStateSchema, testStackDownInputSchema, testStackOperationSchema, testStackUpInputSchema
 } from "./test-control.js";
+import { generatorInputSchema, generatorPlanSchema, mapCheckInputSchema, mapUpdateInputSchema, featureMapCheckSchema, featureMapUpdateSchema, gardenerInputSchema, gardenerReportSchema, researchRegisterInspectionSchema } from "./engineering-control.js";
+import { roleBootstrapInputSchema, roleBootstrapReportSchema } from "./identity-bootstrap.js";
 export * from "./cli-declarations.js";
 
 export const cliHelpSchema = z.strictObject({
@@ -76,10 +78,30 @@ export const cliClockResumeResultSchema = cliEnvelopeSchema.extend({ commandId: 
 export const cliClockAdvanceResultSchema = cliEnvelopeSchema.extend({ commandId: z.literal("clock.advance"), ok: z.literal(true), data: clockAdvanceOperationSchema });
 export const cliProbeRunResultSchema = cliEnvelopeSchema.extend({ commandId: z.literal("probe.run"), ok: z.literal(true), data: registeredProbeOperationSchema });
 export const cliProbeShowResultSchema = cliEnvelopeSchema.extend({ commandId: z.literal("probe.show"), ok: z.literal(true), data: registeredProbeOperationSchema });
+export const cliNewConnectorResultSchema = cliEnvelopeSchema.extend({ commandId: z.literal("new.connector"), ok: z.literal(true), data: generatorPlanSchema });
+export const cliNewConnectorCommandResultSchema = z.union([cliNewConnectorResultSchema, cliFailureSchema.extend({ commandId: z.literal("new.connector") })]);
+export const cliNewToolResultSchema = cliEnvelopeSchema.extend({ commandId: z.literal("new.tool"), ok: z.literal(true), data: generatorPlanSchema });
+export const cliNewToolCommandResultSchema = z.union([cliNewToolResultSchema, cliFailureSchema.extend({ commandId: z.literal("new.tool") })]);
+export const cliNewSkillResultSchema = cliEnvelopeSchema.extend({ commandId: z.literal("new.skill"), ok: z.literal(true), data: generatorPlanSchema });
+export const cliNewSkillCommandResultSchema = z.union([cliNewSkillResultSchema, cliFailureSchema.extend({ commandId: z.literal("new.skill") })]);
+export const cliNewMigrationResultSchema = cliEnvelopeSchema.extend({ commandId: z.literal("new.migration"), ok: z.literal(true), data: generatorPlanSchema });
+export const cliNewMigrationCommandResultSchema = z.union([cliNewMigrationResultSchema, cliFailureSchema.extend({ commandId: z.literal("new.migration") })]);
+export const cliMapCheckResultSchema = cliEnvelopeSchema.extend({ commandId: z.literal("feature-map.check"), ok: z.literal(true), data: featureMapCheckSchema });
+export const cliMapCheckCommandResultSchema = z.union([cliMapCheckResultSchema, cliFailureSchema.extend({ commandId: z.literal("feature-map.check") })]);
+export const cliMapUpdateResultSchema = cliEnvelopeSchema.extend({ commandId: z.literal("feature-map.update"), ok: z.literal(true), data: featureMapUpdateSchema });
+export const cliMapUpdateCommandResultSchema = z.union([cliMapUpdateResultSchema, cliFailureSchema.extend({ commandId: z.literal("feature-map.update") })]);
+export const cliGardenResultSchema = cliEnvelopeSchema.extend({ commandId: z.literal("gardener.run"), ok: z.literal(true), data: gardenerReportSchema });
+export const cliGardenCommandResultSchema = z.union([cliGardenResultSchema, cliFailureSchema.extend({ commandId: z.literal("gardener.run") })]);
+export const cliResearchCheckResultSchema = cliEnvelopeSchema.extend({ commandId: z.literal("research.check"), ok: z.literal(true), data: researchRegisterInspectionSchema });
+export const cliResearchCheckCommandResultSchema = z.union([cliResearchCheckResultSchema, cliFailureSchema.extend({ commandId: z.literal("research.check") })]);
+export const cliBootstrapIdentitiesResultSchema = cliEnvelopeSchema.extend({ commandId: z.literal("bootstrap.identities"), ok: z.literal(true), data: roleBootstrapReportSchema });
+export const cliBootstrapIdentitiesCommandResultSchema = z.union([cliBootstrapIdentitiesResultSchema, cliFailureSchema.extend({ commandId: z.literal("bootstrap.identities") })]);
 export const cliResultSchema = z.union([
+  cliBootstrapIdentitiesResultSchema,
+  cliResearchCheckResultSchema,
   cliFailureSchema, cliHelpResultSchema, cliVersionResultSchema, cliStatusResultSchema, cliDoctorResultSchema,
   cliStackUpResultSchema, cliStackDownResultSchema, cliClockShowResultSchema, cliClockFreezeResultSchema,
-  cliClockResumeResultSchema, cliClockAdvanceResultSchema, cliProbeRunResultSchema, cliProbeShowResultSchema
+  cliClockResumeResultSchema, cliClockAdvanceResultSchema, cliProbeRunResultSchema, cliProbeShowResultSchema, cliNewConnectorResultSchema, cliNewToolResultSchema, cliNewSkillResultSchema, cliNewMigrationResultSchema, cliMapCheckResultSchema, cliMapUpdateResultSchema, cliGardenResultSchema
 ]);
 export type CliResult = z.infer<typeof cliResultSchema>;
 export type CliFailure = z.infer<typeof cliFailureSchema>;
@@ -101,6 +123,15 @@ export const cliClockAdvanceCommandResultSchema = z.union([cliClockAdvanceResult
 export const cliProbeRunCommandResultSchema = z.union([cliProbeRunResultSchema, cliFailureSchema.extend({ commandId: z.literal("probe.run") })]);
 export const cliProbeShowCommandResultSchema = z.union([cliProbeShowResultSchema, cliFailureSchema.extend({ commandId: z.literal("probe.show") })]);
 export const cliCommandSchemas = {
+  "bootstrap.identities": { input: roleBootstrapInputSchema, data: roleBootstrapReportSchema, result: cliBootstrapIdentitiesCommandResultSchema },
+  "research.check": { input: mapCheckInputSchema, data: researchRegisterInspectionSchema, result: cliResearchCheckCommandResultSchema },
+  "new.connector": { input: generatorInputSchema, data: generatorPlanSchema, result: cliNewConnectorCommandResultSchema },
+  "new.tool": { input: generatorInputSchema, data: generatorPlanSchema, result: cliNewToolCommandResultSchema },
+  "new.skill": { input: generatorInputSchema, data: generatorPlanSchema, result: cliNewSkillCommandResultSchema },
+  "new.migration": { input: generatorInputSchema, data: generatorPlanSchema, result: cliNewMigrationCommandResultSchema },
+  "feature-map.check": { input: mapCheckInputSchema, data: featureMapCheckSchema, result: cliMapCheckCommandResultSchema },
+  "feature-map.update": { input: mapUpdateInputSchema, data: featureMapUpdateSchema, result: cliMapUpdateCommandResultSchema },
+  "gardener.run": { input: gardenerInputSchema, data: gardenerReportSchema, result: cliGardenCommandResultSchema },
   help: { input: cliHelpInputSchema, data: cliHelpSchema, result: cliHelpCommandResultSchema },
   version: { input: cliVersionInputSchema, data: cliVersionSchema, result: cliVersionCommandResultSchema },
   status: { input: controlStatusInputSchema, data: controlStatusSchema, result: cliStatusCommandResultSchema },
@@ -119,6 +150,16 @@ export type CliDataV1<C extends keyof typeof cliCommandSchemas> = z.infer<(typeo
 export type CliResultV1<C extends keyof typeof cliCommandSchemas> = z.infer<(typeof cliCommandSchemas)[C]["result"]>;
 
 export const cliSchemaInventory = {
+  CliBootstrapIdentitiesResult: cliBootstrapIdentitiesResultSchema, CliBootstrapIdentitiesCommandResult: cliBootstrapIdentitiesCommandResultSchema,
+  CliResearchCheckResult: cliResearchCheckResultSchema, CliResearchCheckCommandResult: cliResearchCheckCommandResultSchema,
+  CliNewConnectorResult: cliNewConnectorResultSchema, CliNewConnectorCommandResult: cliNewConnectorCommandResultSchema,
+  CliNewToolResult: cliNewToolResultSchema, CliNewToolCommandResult: cliNewToolCommandResultSchema,
+  CliNewSkillResult: cliNewSkillResultSchema, CliNewSkillCommandResult: cliNewSkillCommandResultSchema,
+  CliNewMigrationResult: cliNewMigrationResultSchema, CliNewMigrationCommandResult: cliNewMigrationCommandResultSchema,
+  CliMapCheckResult: cliMapCheckResultSchema, CliMapCheckCommandResult: cliMapCheckCommandResultSchema,
+  CliMapUpdateResult: cliMapUpdateResultSchema, CliMapUpdateCommandResult: cliMapUpdateCommandResultSchema,
+  CliGardenResult: cliGardenResultSchema, CliGardenCommandResult: cliGardenCommandResultSchema,
+
   CliAccess: cliAccessSchema, CliArgumentKind: cliArgumentKindSchema, CliCommandId: cliCommandIdSchema,
   CliArgument: cliArgumentSchema, CliDeclaration: cliDeclarationSchema,
   CliHelpV1: cliHelpSchema, CliVersionV1: cliVersionSchema, CliEnvironment: cliEnvironmentSchema,

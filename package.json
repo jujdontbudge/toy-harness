@@ -14,16 +14,19 @@
   "scripts": {
     "build": "tsc -b",
     "typecheck": "tsc -b --pretty false && tsc -p scripts/tsconfig.json --pretty false",
-    "boundaries": "depcruise --config .dependency-cruiser.cjs packages cli tests",
+    "boundaries": "depcruise --config .dependency-cruiser.cjs packages cli tests control",
     "python:check": "pyright && .venv/bin/ruff check python && PYTHONPATH=python .venv/bin/lint-imports",
     "lint": "node scripts/run-eslint.mjs && node scripts/check-source-policy.mjs && .venv/bin/python scripts/check-python-policy.py && node scripts/check-contract-ownership.mjs && node scripts/check-contract-pin.mjs && node scripts/check-int-registry.mjs",
     "contracts:generate": "node scripts/generate-contracts.mjs --registry-only && tsc -b packages/contracts --pretty false && node scripts/generate-contracts.mjs",
     "contracts:check": "tsc -b packages/contracts --pretty false && node scripts/generate-contracts.mjs --check && tsc --ignoreConfig --noEmit --strict --noUncheckedIndexedAccess --target ES2024 --module NodeNext --moduleResolution NodeNext packages/contracts/generated/types.ts",
-    "check": "npm run typecheck && node scripts/typecheck-tests.mjs && npm run boundaries && npm run python:check && npm run lint && npm run contracts:check",
+    "check": "npm run typecheck && node scripts/typecheck-tests.mjs && npm run boundaries && npm run python:check && npm run lint && npm run contracts:check && node cli/dist/main.js feature-map check --json",
     "check:k2": "node scripts/check-k2.mjs",
     "check:foundations": "node scripts/check-foundations.mjs",
     "check:cli-bootstrap": "npm run build && node --test tests/cli/bootstrap.cli.test.ts",
-    "native:build": "npm run build && tsc -p scripts/tsconfig.json --pretty false && node scripts/build-native-bootstrap.mts"
+    "native:build": "npm run build && tsc -p scripts/tsconfig.json --pretty false && node scripts/build-native-bootstrap.mts",
+    "check:engineering": "npm run build && node --test tests/cli/engineering.cli.test.ts",
+    "check:model-route": "npm run build && node --test tests/cli/model-route.cli.test.ts",
+    "check:identity-bootstrap": "npm run build && node --test tests/cli/identity-bootstrap.cli.test.ts"
   },
   "devDependencies": {
     "@types/node": "24.19.1",

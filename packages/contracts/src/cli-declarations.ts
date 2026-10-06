@@ -43,8 +43,8 @@ const range = (required: boolean): CliArgument[] => [arg("from", "Instant", requ
 const release = (required = false): CliArgument => choice("release", releaseSchema.options, required);
 const declaration = <CommandId extends string>(commandId: CommandId, owner: CliDeclaration["owner"], operation: string, access: CliDeclaration["access"], firstRelease: CliDeclaration["firstRelease"], args: CliArgument[]) => cliDeclarationSchema.extend({ id: z.literal(commandId) }).parse({
   id: commandId, owner, operation, access, firstRelease,
-  implementation: ["help", "version", "status", "doctor"].includes(commandId) ? "built" : "specified",
-  ownerSchemas: ["help", "version", "status", "doctor", "stack.up", "stack.down", "clock.show", "clock.freeze", "clock.resume", "clock.advance", "probe.run", "probe.show"].includes(commandId) ? "registered" : "pending",
+  implementation: ["help", "version", "status", "doctor", "stack.up", "stack.down", "clock.show", "clock.freeze", "clock.resume", "clock.advance", "probe.run", "probe.show", "new.connector", "new.tool", "new.skill", "new.migration", "feature-map.check", "feature-map.update", "gardener.run", "research.check", "bootstrap.identities"].includes(commandId) ? "built" : "specified",
+  ownerSchemas: ["help", "version", "status", "doctor", "stack.up", "stack.down", "clock.show", "clock.freeze", "clock.resume", "clock.advance", "probe.run", "probe.show", "new.connector", "new.tool", "new.skill", "new.migration", "feature-map.check", "feature-map.update", "gardener.run", "research.check", "bootstrap.identities"].includes(commandId) ? "registered" : "pending",
   inputSchemaId: `urn:toy:contracts:v1:CliInputV1:${commandId}`,
   outputSchemaId: `urn:toy:contracts:v1:CliResultV1:${commandId}`,
   dataSchemaId: `urn:toy:contracts:v1:CliDataV1:${commandId}`,
@@ -55,6 +55,8 @@ export const cliDeclarations = [
   declaration("help", "contracts", "CliHelpV1", "read", "R0", [arg("group", "registered", false, true)]),
   declaration("version", "contracts", "CliVersionV1", "read", "R0", []),
   declaration("status", "ops", "OpsControlRead.status", "read", "R0", [release()]),
+  declaration("research.check", "self-improvement", "EngineeringControl.checkResearch", "read", "R0", [release()]),
+  declaration("bootstrap.identities", "ops", "RoleIdentityBootstrap.run", "human", "R0", [flag("plan"), request(), arg("expected-snapshot", "SHA256")]),
   declaration("doctor", "ops", "OpsControlRead.doctor", "read", "R0", [release(), flag("deep")]),
   declaration("capture", "obligations", "Obligations.capture", "guarded", "R1", [input()]),
   declaration("due", "obligations", "Obligations.due", "read", "R1", [choice("view", ["due", "open", "waiting", "upcoming", "resolved"]), choice("owner", ["johan", "toy", "all"]), arg("through", "Instant"), ...page()]),
@@ -92,7 +94,7 @@ export const cliDeclarations = [
   declaration("clock.freeze", "ops", "TestClockControl.freeze", "test", "R0", [arg("at", "Instant", true), request()]),
   declaration("clock.advance", "ops", "TestClockControl.advance", "test", "R0", [arg("by", "Duration", true), request(), wait()]),
   declaration("clock.resume", "ops", "TestClockControl.resume", "test", "R0", [request()]),
-  declaration("stack.up", "ops", "OpsTestStack.up", "test", "R0", [release(true), request(), arg("world", "registered"), choice("clock", ["fake", "real"]), choice("model", ["fake", "supported"]), wait()]),
+  declaration("stack.up", "ops", "OpsTestStack.up", "test", "R0", [release(true), request(), arg("world", "registered"), choice("clock", ["fake", "real"]), choice("model", ["fake", "supported"]), choice("observed-pressure", ["normal"]), wait()]),
   declaration("stack.down", "ops", "OpsTestStack.down", "test", "R0", [request(), wait()]),
   declaration("probe.run", "self-improvement", "ReplayEnvironment.runRegisteredProbe", "test", "R0", [arg("at-id", "registered", true, true), request(), arg("case", "registered"), wait()]),
   declaration("probe.show", "self-improvement", "ReplayEnvironment.registeredProbeStatus", "test", "R0", [id("operation-id")]),

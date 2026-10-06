@@ -9,7 +9,7 @@ const testPlan = await readFile(join(planningRoot, "specs/TEST-PLAN.md"), "utf8"
 const cliSpec = await readFile(join(planningRoot, "specs/cli.md"), "utf8");
 const cards = [];
 for (const line of plan.split("\n")) {
-  const match = line.match(/^\| (R[0-5]\.(?:K[1-4]a?|\d{2}))\b/);
+  const match = line.match(/^\| (R[0-5]\.(?:K[1-4]a?|SI[1-9][0-9]*|\d{2}))\b/);
   if (!match) continue;
   const cells = line.split("|").slice(1, -1).map((cell) => cell.trim());
   cards.push({ id: match[1], sourceRow: line, sourceRowHash: hash(line), result: cells[1], dependsOn: cells[2] });

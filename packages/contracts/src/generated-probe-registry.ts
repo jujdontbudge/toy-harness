@@ -887,7 +887,7 @@ export const registeredCliProbeInventory = [
   },
   {
     "id": "AT-cli-23",
-    "sourceAssertionHash": "c8b9b6b5907828db726280f60ba4c05f5ab328f63b64e13770a126e46dec3deb",
+    "sourceAssertionHash": "a9715152e3f883cab5c5705ed063caa6f81cf8a9871703c094376cc18fd59596",
     "firstRelease": "R1"
   },
   {
@@ -952,7 +952,7 @@ export const registeredCliProbeInventory = [
   },
   {
     "id": "AT-cli-35",
-    "sourceAssertionHash": "8ea02e6fe437dd5f8c609f5a5b5de47a0bb539ea71405c593a2a5a903ab6c253",
+    "sourceAssertionHash": "528aee1b013f75094054e8fe0e33d489e85df34083bcdce7d9ef0b118d10cfba",
     "firstRelease": "R5"
   },
   {
@@ -969,6 +969,11 @@ export const registeredCliProbeInventory = [
     "id": "AT-cli-38",
     "sourceAssertionHash": "de892e824ce2bbfd26ae984c756ffa2a87146f461a7f75949bd1a1673f485a09",
     "firstRelease": "R5"
+  },
+  {
+    "id": "AT-cli-39",
+    "sourceAssertionHash": "8ebab30e6d9f13f2b2d30c49b6f376e85152d6363f249f55a57512117e0511f1",
+    "firstRelease": "R2"
   },
   {
     "id": "AT-cli-4",
@@ -1502,12 +1507,12 @@ export const registeredCliProbeInventory = [
   },
   {
     "id": "AT-hermes-config-103",
-    "sourceAssertionHash": "8d027ac30eb6015d5ad61ceaa4469b0d26f9909927691175a5e33ec5496d7532",
+    "sourceAssertionHash": "54b6a18e4add6888cbfe94e7870e25adbe36e495fa987e5ca73e05db749a3390",
     "firstRelease": "R1"
   },
   {
     "id": "AT-hermes-config-12",
-    "sourceAssertionHash": "7d7c5caac3211cc55e02170caf116e70ae7ec6bf78b0f2ac605c86d9df29960d",
+    "sourceAssertionHash": "1cb4ff49991f90e5635679166025136c34e223438695e04f62f7dccccb96d5eb",
     "firstRelease": "R1"
   },
   {
@@ -1577,8 +1582,8 @@ export const registeredCliProbeInventory = [
   },
   {
     "id": "AT-hermes-config-38",
-    "sourceAssertionHash": "8fd817921d449751f9b9a9c72bc5f0ef78349ec16f396c9c97185fd5c6b92a92",
-    "firstRelease": "R5"
+    "sourceAssertionHash": "93ef013f337c4d45ea20be77767a4be7faf7579159dfd958057f1743ddc080b4",
+    "firstRelease": "R2"
   },
   {
     "id": "AT-hermes-config-39",
@@ -1627,8 +1632,8 @@ export const registeredCliProbeInventory = [
   },
   {
     "id": "AT-hermes-config-60",
-    "sourceAssertionHash": "72e2ca779d30ab63a1fb96050562f2a13b1e8f141371e7694a5dddbd57236b59",
-    "firstRelease": "R5"
+    "sourceAssertionHash": "41f8e883b9be362a4548ea176e681c1f547c993da91e93c0878a669882d1bbfb",
+    "firstRelease": "R2"
   },
   {
     "id": "AT-hermes-config-61",
@@ -1642,8 +1647,8 @@ export const registeredCliProbeInventory = [
   },
   {
     "id": "AT-hermes-config-68",
-    "sourceAssertionHash": "fc4fbe433b8453c8c8cc0312ac983a9c49150c73da16615a8a6c5d92552fee70",
-    "firstRelease": "R5"
+    "sourceAssertionHash": "d445b669026b5b6b4c644c06160e1ee3fd2ad586938b12561fdc0883241563e8",
+    "firstRelease": "R2"
   },
   {
     "id": "AT-hermes-config-69",
@@ -2257,7 +2262,7 @@ export const registeredCliProbeInventory = [
   },
   {
     "id": "AT-ops-27",
-    "sourceAssertionHash": "6b1eb093edd4d82614fd99523fcf3868b314fbde57f446ca13c2fd4ff425efe4",
+    "sourceAssertionHash": "bf9b619997bc836ec3721308b2a6fd3ad46d9191241029609795a4ebecfcea46",
     "firstRelease": "R1"
   },
   {
@@ -2482,12 +2487,12 @@ export const registeredCliProbeInventory = [
   },
   {
     "id": "AT-ops-77",
-    "sourceAssertionHash": "ed6c39fdc999703da1b3309aedea82dc5defeca4c3a15999683683db55d795a3",
+    "sourceAssertionHash": "f952e1c813dfc34a2c9c6ff82a1332c98c6e3104ff624078a729d2df58b6a2ff",
     "firstRelease": "R1"
   },
   {
     "id": "AT-ops-78",
-    "sourceAssertionHash": "19eaa10ded8a0819218d3bb54cde42a2dbabb1bae4ef39b0f108c7796d8cf941",
+    "sourceAssertionHash": "24e1e5e8532fc8d1919d663cf1a0e08833fc741b89d5c8b81307880215f55fb3",
     "firstRelease": "R5"
   },
   {
@@ -2512,7 +2517,7 @@ export const registeredCliProbeInventory = [
   },
   {
     "id": "AT-ops-84",
-    "sourceAssertionHash": "1da594d161fe66c26ab81606b2e1fa96f0035755ee58c4d5343c11b8ab0693cc",
+    "sourceAssertionHash": "6ecab0be8dcf936499d5686e2eb954fe4d2b550065cc4ba1e538ccfbb3478f97",
     "firstRelease": "R1"
   },
   {
@@ -2522,8 +2527,8 @@ export const registeredCliProbeInventory = [
   },
   {
     "id": "AT-ops-86",
-    "sourceAssertionHash": "82c041dfedf07d6d4b4fa0b2a93cb87410f54d58913be2b433f048b105ab4b13",
-    "firstRelease": "R5"
+    "sourceAssertionHash": "0282caeda816ca5ef1173953f36dff456b59aff4ce13d0c042f62e82f2689b94",
+    "firstRelease": "R2"
   },
   {
     "id": "AT-ops-9",
@@ -2616,19 +2621,49 @@ export const registeredCliProbeInventory = [
     "firstRelease": "R1"
   },
   {
+    "id": "AT-self-improvement-112",
+    "sourceAssertionHash": "e20eb48ba48589c168262704209e6c1df5cf30039cdf7c74a1f8c200b4868454",
+    "firstRelease": "R2"
+  },
+  {
+    "id": "AT-self-improvement-113",
+    "sourceAssertionHash": "a4a887c223759fa0c598609c4054ffa013359f3feab10af59f107d5f82f3dfbe",
+    "firstRelease": "R2"
+  },
+  {
+    "id": "AT-self-improvement-114",
+    "sourceAssertionHash": "2d8d7d4d5b78593c13c8862210e4c30b62d5de73362ffd445037e7ab12c5e131",
+    "firstRelease": "R2"
+  },
+  {
+    "id": "AT-self-improvement-115",
+    "sourceAssertionHash": "09927f4c6f3f74978065c7a3e3120f2989c303cbe0b12741ebf6253e6e3df9bd",
+    "firstRelease": "R2"
+  },
+  {
+    "id": "AT-self-improvement-116",
+    "sourceAssertionHash": "a0ccd1c8efdab60654446e8c9ee9487cf551648b6257447708dd8fdb15005c46",
+    "firstRelease": "R2"
+  },
+  {
+    "id": "AT-self-improvement-117",
+    "sourceAssertionHash": "ec915daa3760fbdae6e19e00e144785319e2982d54e8cbf9ce0cad32fa2a0b2f",
+    "firstRelease": "R2"
+  },
+  {
     "id": "AT-self-improvement-13",
     "sourceAssertionHash": "dc220c4ac9533b42eb7e007048829eb621af668077ec540bc2ba3dd3992fe735",
     "firstRelease": "R1"
   },
   {
     "id": "AT-self-improvement-15",
-    "sourceAssertionHash": "a4e8b81a9d4dd5b7f86099222821b52cd0ef76098204aaa4c22176acb134e24a",
-    "firstRelease": "R2"
+    "sourceAssertionHash": "a28b917ff02c866da8b7f389780f5c07f9e055aeeb3836b328ec02e9fec60a8e",
+    "firstRelease": "R1"
   },
   {
     "id": "AT-self-improvement-16",
-    "sourceAssertionHash": "03625780cdfc59d8e755b0dda1c2e8e9128e2f0a51c4d800d11ca7a477de1f86",
-    "firstRelease": "R2"
+    "sourceAssertionHash": "bc88d89d0577e640ae3ab2d91cee7f07a472cf4dcb7b3dd599fc0e359382bfdd",
+    "firstRelease": "R1"
   },
   {
     "id": "AT-self-improvement-18",
@@ -2657,78 +2692,78 @@ export const registeredCliProbeInventory = [
   },
   {
     "id": "AT-self-improvement-23",
-    "sourceAssertionHash": "4ecde12d71b585dd392340c59c11428e0fd8d15e800d0505b89236a3abafd6b7",
-    "firstRelease": "R2"
+    "sourceAssertionHash": "5405d6e8a81b0b282cf61d54106d39ce8e22766f2ec8c3d4a4f6de848c0d69a0",
+    "firstRelease": "R1"
   },
   {
     "id": "AT-self-improvement-24",
-    "sourceAssertionHash": "3438c9563a2872999f46159a430ce42678cd35eb763d0757c0d3ecf9eff5aef2",
-    "firstRelease": "R2"
+    "sourceAssertionHash": "a300694063e62b3b429425c1e4c38e15eab798a247d9c2e25ec86119c3632de6",
+    "firstRelease": "R1"
   },
   {
     "id": "AT-self-improvement-36",
-    "sourceAssertionHash": "f13716e5299c5d4d384afb12f026d203a8d8b1f5014b0f3fa4df21378c79ecab",
-    "firstRelease": "R5"
+    "sourceAssertionHash": "dc6568a64fe64e4ddd2c9bacbc6154e0dd213a8301e0060294a90fef8f23b4b2",
+    "firstRelease": "R2"
   },
   {
     "id": "AT-self-improvement-37",
-    "sourceAssertionHash": "41c9f44fdc272712bee02597ee314f665945fdeb3f7910f4b2968cf8b7e865a1",
-    "firstRelease": "R5"
+    "sourceAssertionHash": "86cee8ed1c591814121b0938235bef5a0a25d94cc13a9d93247e8638a97949c7",
+    "firstRelease": "R2"
   },
   {
     "id": "AT-self-improvement-38",
-    "sourceAssertionHash": "34a20cb53fe79ab9f4aa9fc12985ce65075bb7c79e5b682999e92386b7610780",
-    "firstRelease": "R5"
+    "sourceAssertionHash": "5f0a2c52f8ef471058d3ece67df066fb5471045dc2c4cdc96089b9fd13d11416",
+    "firstRelease": "R2"
   },
   {
     "id": "AT-self-improvement-39",
-    "sourceAssertionHash": "3d00ae6b2d6e76de5055a237d213341501fbbd2f4cd68057d22c95667f249d12",
-    "firstRelease": "R5"
+    "sourceAssertionHash": "b257069214c1b458f76a3845a66038bc9067e6365608cd4fddfc8de7f8b3eb55",
+    "firstRelease": "R2"
   },
   {
     "id": "AT-self-improvement-40",
-    "sourceAssertionHash": "e85a08a2ebb5173224993dd9ec000aff22db080b56f9b5564e8c11f1faea1f12",
-    "firstRelease": "R5"
+    "sourceAssertionHash": "403d6da47f2e4f83198d90e06689137672499e8fc90ef0aaba1e73e101b493ec",
+    "firstRelease": "R2"
   },
   {
     "id": "AT-self-improvement-41",
-    "sourceAssertionHash": "310af971cc5a581cb52fd4cccb75f70b625e8576166a7e4e5c4da61394897a4c",
-    "firstRelease": "R5"
+    "sourceAssertionHash": "c1be3b6ab0b8f8a6326b2897ad9bde316022b784c436507535bc3fd483793309",
+    "firstRelease": "R2"
   },
   {
     "id": "AT-self-improvement-42",
-    "sourceAssertionHash": "1124752eba8cffbffe40fc2c6394999fca86b75f2eed18ffbecddf88adf1d212",
-    "firstRelease": "R5"
+    "sourceAssertionHash": "92450e2d773f6e3af11d99e70d37a2b45748b7d2ace446844587ee0aa633952e",
+    "firstRelease": "R2"
   },
   {
     "id": "AT-self-improvement-43",
-    "sourceAssertionHash": "ae4f8c5df76cb5055802c5bb7a76576ae3d51c6766fe8d4c479145a5fa9138e1",
-    "firstRelease": "R5"
+    "sourceAssertionHash": "17c76a0143833083bac14d2571098aca3edcb60866648ecf85396802ed78479f",
+    "firstRelease": "R2"
   },
   {
     "id": "AT-self-improvement-44",
-    "sourceAssertionHash": "962c37619da1a9d47147e5c97beb9fd29c42db5e5d6ae26ecf5e0215305867af",
-    "firstRelease": "R5"
+    "sourceAssertionHash": "04319a25f38cf3488f8953b57617dadcfcfe6f0c2d6ff549d79e6fecfda87009",
+    "firstRelease": "R2"
   },
   {
     "id": "AT-self-improvement-45",
-    "sourceAssertionHash": "6b2c37f8eb51f36913ceba6cd53af9685154523d467e3d59e2b618d1acdbe4ca",
-    "firstRelease": "R5"
+    "sourceAssertionHash": "70b32cd7ef77766057ee90124bc45130b7f21af918e42453911c9039b2868ca3",
+    "firstRelease": "R2"
   },
   {
     "id": "AT-self-improvement-46",
-    "sourceAssertionHash": "dc480aa89a2b480b0d3a5636abb62775c45f1ef6ee084065ea514a08d3c7ad2e",
-    "firstRelease": "R5"
+    "sourceAssertionHash": "135fbb393f5ed29d5b79cbb44e0ae36923314914a2ce7410106f86b95186f998",
+    "firstRelease": "R2"
   },
   {
     "id": "AT-self-improvement-49",
-    "sourceAssertionHash": "68626ede65a8650c008350c385a9a18029598a863cd816f520e1a156c697d08e",
-    "firstRelease": "R5"
+    "sourceAssertionHash": "93746d1d422d8f1760e4dc115faf7bdc7cde551355a164b971d9eadd8062217f",
+    "firstRelease": "R2"
   },
   {
     "id": "AT-self-improvement-50",
-    "sourceAssertionHash": "d44339f16503f9401d10229e3ee2d4d2c49dca0288192469b23f21263e7556d7",
-    "firstRelease": "R5"
+    "sourceAssertionHash": "4cb01690c84bc81aad3e371bfb030820c6a4949a7df04ec5199af2ebb4554d93",
+    "firstRelease": "R2"
   },
   {
     "id": "AT-self-improvement-53",
@@ -2777,22 +2812,22 @@ export const registeredCliProbeInventory = [
   },
   {
     "id": "AT-self-improvement-65",
-    "sourceAssertionHash": "60bd3b1d96cd4142e59564ccb6b757bc1d227f985f828336d8e5c96d0e984cf1",
-    "firstRelease": "R5"
+    "sourceAssertionHash": "524b74ad53c836c9ee2d9acfaf9c51438db2f1934eeac12f387a96c068ccc7a5",
+    "firstRelease": "R2"
   },
   {
     "id": "AT-self-improvement-68",
-    "sourceAssertionHash": "fb9f5b5333593c019ba070d0d74bb1c94417dd14d3d22d01e28534e6d627053a",
-    "firstRelease": "R5"
+    "sourceAssertionHash": "79dc19fd5a56a5734342bea7663a7c02fa7beccced57b0a5c6d55fe6a7915cc5",
+    "firstRelease": "R2"
   },
   {
     "id": "AT-self-improvement-69",
-    "sourceAssertionHash": "455bc847c7d47b5214570f49183ee47f423ea12e2c2c78e629fcc714f44a531e",
-    "firstRelease": "R5"
+    "sourceAssertionHash": "1bfd53eaa800b582f5b404577e62969742760a47e510986157ff1ccb13f355c9",
+    "firstRelease": "R2"
   },
   {
     "id": "AT-self-improvement-70",
-    "sourceAssertionHash": "5e1bf9bc57ceb03a9b19a235792f11e013ea1e986849d939729267ebcc283539",
+    "sourceAssertionHash": "0dbd4539ea0cae49b047cdacaf8f8e6b23fa85fe708446f1c254060b7206fdda",
     "firstRelease": "R1"
   },
   {
@@ -2802,23 +2837,23 @@ export const registeredCliProbeInventory = [
   },
   {
     "id": "AT-self-improvement-72",
-    "sourceAssertionHash": "0c6116e4ae93508745d8ab4e4fbfab0a53845a5a404b266c85a9e9ce87b19d51",
-    "firstRelease": "R5"
+    "sourceAssertionHash": "e840315d6ce7e5c53978a85d4313acbe81901f3379ab79f1f34e68ce84400c5b",
+    "firstRelease": "R2"
   },
   {
     "id": "AT-self-improvement-74",
-    "sourceAssertionHash": "b9bd69ab226947b925e4210cb7899a2a1e1564557b8fc961e75e811c50736d51",
+    "sourceAssertionHash": "2df8c3361057687b70d023c10204a3f31f2db01e03d40edceb2f1baa733dbf74",
     "firstRelease": "R1"
   },
   {
     "id": "AT-self-improvement-75",
-    "sourceAssertionHash": "4b549af0512d8d6cf8a1ef108d86e3cdd90c3e4a0824d1ba702f40a062a6c89d",
+    "sourceAssertionHash": "3511907b8d328c0172fe1d31fdef6e99e8221045f89aea19f6bd5e29f1bbe77e",
     "firstRelease": "R1"
   },
   {
     "id": "AT-self-improvement-77",
-    "sourceAssertionHash": "5a46d58234d07514f23c789c8e8c3e00a93dfc4cea4dd654cc8dfe8670380e2e",
-    "firstRelease": "R5"
+    "sourceAssertionHash": "e348cfc2d8e3901d3edaec4405d61cd3ab65c91b56fb8e9a65dd91bc6e0355ff",
+    "firstRelease": "R2"
   },
   {
     "id": "AT-self-improvement-78",
@@ -2837,18 +2872,18 @@ export const registeredCliProbeInventory = [
   },
   {
     "id": "AT-self-improvement-81",
-    "sourceAssertionHash": "03baf7528709663aa2c7dd4b5aebcb65f9b7af630c3e275b72f30bc09b435039",
-    "firstRelease": "R2"
+    "sourceAssertionHash": "01f8d2e21149f0976f09895115a96ff62c60b5f1e8f1ea32de04a50381ac0146",
+    "firstRelease": "R1"
   },
   {
     "id": "AT-self-improvement-83",
-    "sourceAssertionHash": "9ab57bb55bf539b786ade98f834c8010f2d50c4b3959678104e430b5e2a72a9c",
-    "firstRelease": "R2"
+    "sourceAssertionHash": "6a6de4276701481e6093dfae8cd30a5bd206027dbcdf10f879179d1a8c52fa7f",
+    "firstRelease": "R1"
   },
   {
     "id": "AT-self-improvement-86",
-    "sourceAssertionHash": "f85dd3fc95939a30567fab47a357e37f3e84f8d87b1ea2c08100b423e7010474",
-    "firstRelease": "R5"
+    "sourceAssertionHash": "7724e722d8882a515ed432b48a48b3786e58ac2ed0f8f9a59f3df38ad9131f12",
+    "firstRelease": "R2"
   },
   {
     "id": "AT-self-improvement-88",
@@ -2867,13 +2902,13 @@ export const registeredCliProbeInventory = [
   },
   {
     "id": "AT-self-improvement-95",
-    "sourceAssertionHash": "0232ac3b2f82760c9d992d76662ae6c6e7b5cc94dbc9731feaafc5cbba302afe",
-    "firstRelease": "R5"
+    "sourceAssertionHash": "69defd90a4f8013862b27d2f238994f90b7afc4e9324afe4adaa0d41402246da",
+    "firstRelease": "R2"
   },
   {
     "id": "AT-self-improvement-96",
-    "sourceAssertionHash": "9185f4935efdc8b47283baf8eed5310d563cfdee388c9adfe46fcecb573dec16",
-    "firstRelease": "R5"
+    "sourceAssertionHash": "352cdabeb6be9f5d61edeb0205e3e994ac5d5f0fd5d7727af897f241a644ca4b",
+    "firstRelease": "R2"
   },
   {
     "id": "AT-self-improvement-97",
@@ -2882,7 +2917,7 @@ export const registeredCliProbeInventory = [
   },
   {
     "id": "AT-self-improvement-98",
-    "sourceAssertionHash": "09e3e5c684bd00de0f24bc3fe2f416bb7cf247531c5db33850cede9a2291e44e",
+    "sourceAssertionHash": "91b9b6c08c6fe55da8448bbd129fb88fcaf724d5d74c9465eb54eda35940319a",
     "firstRelease": "R1"
   },
   {
@@ -3242,12 +3277,12 @@ export const registeredCliProbeInventory = [
   },
   {
     "id": "AT-user-sim-72",
-    "sourceAssertionHash": "2157c4bd63b8ffc56dd1a28fb95bfb83f7c71c86832afd129f896552b76d783d",
+    "sourceAssertionHash": "64226a912138df563fd306fa477d16455210beeb5b6d1187310c8da2e0e5b320",
     "firstRelease": "R1"
   },
   {
     "id": "AT-user-sim-73",
-    "sourceAssertionHash": "8e9b22c2d1fb6b82d1cdc13be77c7b09aff2a2c63a2eb71cdcd655fa6344fba7",
+    "sourceAssertionHash": "128d6c6722803b8ef0c72a9347b4eeba71f8ab92c4b891b25b2e5d4973e44ef7",
     "firstRelease": "R1"
   },
   {
@@ -3257,13 +3292,13 @@ export const registeredCliProbeInventory = [
   },
   {
     "id": "AT-user-sim-77",
-    "sourceAssertionHash": "bc2aa2163867be5abbc7a73c034e3cbf1105e7314567e18d25feca0c077189cc",
-    "firstRelease": "R5"
+    "sourceAssertionHash": "fbb681fd58ab350ab29ae13c07aad505994bd71b450e57e2ce81e11f70ad0391",
+    "firstRelease": "R2"
   },
   {
     "id": "AT-user-sim-79",
-    "sourceAssertionHash": "6f8c89b6cc399ddfd45762d638ae8b66c34e54df61aade9587bf8127a045b338",
-    "firstRelease": "R5"
+    "sourceAssertionHash": "119295029538c8ef435a4a56cdf7bbbf8d512383b303d654c040b3a05347b43d",
+    "firstRelease": "R2"
   },
   {
     "id": "AT-workflows-1",
@@ -3301,4 +3336,4 @@ export const registeredCliProbeInventory = [
     "firstRelease": "R2"
   }
 ] as const;
-export const acceptanceSourceDigest = "766aa798a4e980ebf5e4522363c8b038da4fdf66efaa507676d4d970fe0d11f3";
+export const acceptanceSourceDigest = "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2";

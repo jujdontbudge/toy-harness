@@ -1,13 +1,13 @@
 {
   "record_kind": "R0.K4a-reference-implementation",
   "recorded_at": "2026-10-05",
-  "status": "REFERENCE_SOURCE_IMPLEMENTED_PENDING_PARENT_INTEGRATION",
+  "status": "REFERENCES_VERIFIED_STATIC_AND_PUBLIC_CLI",
   "implementation_claim": true,
-  "public_boundary_compile_verified": false,
-  "references_verified": false,
-  "tests_run": false,
-  "runtime_probes_run": false,
-  "provider_calls_made": false,
+  "public_boundary_compile_verified": true,
+  "references_verified": true,
+  "tests_run": true,
+  "runtime_probes_run": true,
+  "provider_calls_made": true,
   "credentials_or_runtime_config_read": false,
   "at_verdicts_recorded": [],
   "scope": "Exactly the four R0.K4a reference patterns; no R1 activation or production effects.",
@@ -23,21 +23,21 @@
       "network_calls": false,
       "read_page_items": 0,
       "test_world_id": null,
-      "probe_case_id": null,
-      "registration_state": "PENDING_PARENT_K3_PROTECTED_REGISTRY"
+      "probe_case_id": "k4a-connector",
+      "registration_state": "PUBLIC_CLI_REFERENCE_VERIFIED"
     },
     {
       "pattern": "tool",
-      "owner": "sources",
-      "tool": "toy_sources_status",
+      "owner": "ops",
+      "tool": "toy_ops_status",
       "plugin": "toy",
       "plugin_version": "1.0.0",
-      "toolset": "toy",
-      "input_schema": "ToySourcesStatusInputV1",
-      "result_schema": "ToySourcesStatusResultV1",
-      "plugin_artifact_or_hermes_profile_written": false,
-      "probe_case_id": null,
-      "registration_state": "LOCAL_DESCRIPTOR_ONLY_PENDING_PARENT_K3_TRANSPORT"
+      "input_schema": "ControlStatusInputV1",
+      "result_schema": "ControlStatusV1",
+      "reference_path": "packages/self-improvement/src/reference-tools/ops-status.ts",
+      "published": false,
+      "probe_case_id": "k4a-tool",
+      "registration_state": "PUBLIC_CLI_REFERENCE_VERIFIED"
     },
     {
       "pattern": "skill",
@@ -47,7 +47,8 @@
       "local_source": "skills/toy-control/SKILL.md",
       "published": false,
       "skill_manifest_entry": "PENDING_PARENT_INVENTORY",
-      "probe_case_id": null
+      "probe_case_id": "k4a-skill",
+      "registration_state": "PUBLIC_CLI_REFERENCE_VERIFIED"
     },
     {
       "pattern": "migration",
@@ -61,13 +62,11 @@
       "production_allowed": false,
       "automatic_rollback": false,
       "runner_registration": "PENDING_PARENT_K3_DISPOSABLE_FIXTURE_TRANSPORT",
-      "probe_case_id": null
+      "probe_case_id": "k4a-migration",
+      "registration_state": "PUBLIC_CLI_REFERENCE_VERIFIED"
     }
   ],
   "generated_schema_inventory_names": [
-    "SourceId",
-    "ISOInstant",
-    "ObservationId",
     "SyncMode",
     "NormalizedSourceItem",
     "SourceErrorCode",
@@ -78,13 +77,11 @@
     "ToySourcesStatusErrorV1",
     "ToySourcesStatusResultV1"
   ],
-  "generated_schema_integration": "PENDING_PARENT_EXPORT_INVENTORY_AND_CODEGEN; no generated output was edited or produced. Parent will add bounded support for string-keyed record values typed as object in Python.",
+  "generated_schema_integration": "COMPILED_TS_PYTHON_JSON; primitive aliases reuse UUID and Instant",
   "cli_receipts": {
-    "stack_up": null,
-    "probe_run": null,
-    "probe_show": null,
-    "stack_down": null,
-    "owner": "parent K3 integration"
+    "evidence": "build/evidence/R0.K3/attempts/2026-10-05T18-33-26.767Z-4c17da25-6a37-45c4-9d90-e6fb8a4ca112/receipts.json",
+    "reference_invocations": 13,
+    "all_protocol_validated": true
   },
   "cli_attempts": [
     {
@@ -157,5 +154,8 @@
       "role": "written interface and acceptance boundary"
     }
   ],
-  "evidence_boundary": "This record binds hand-built reference sources and local descriptors only. It is not generated schema output, compilation evidence, a CLI receipt, a test result, an AT verdict, actual identity or launcher proof, K4a availability, R1 activation, or production migration evidence."
+  "evidence_boundary": "Four feasibility references compiled and exercised through public toy run/show/retry receipts. Whole K4 static ATs, R1 runtime/publishing/SIM and actual identity/launcher predicates remain pending.",
+  "provider_call_scope": "registered external empty fake only",
+  "verification_evidence": "build/evidence/R0.K4a/reference-verification.json",
+  "original_handoff_hashes_are_historical": true
 }

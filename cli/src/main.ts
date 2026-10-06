@@ -6,8 +6,10 @@ import {
   cliCommandSchemas, cliCommonArguments, cliDeclarations, cliErrorMessages, cliFailureSchema, cliResultSchema,
   digestSchema, instantSchema, opsErrorExitCodes, opsTestStackResultSchema, schemaBundleDigest, uint64Schema, uuidSchema
 } from "@toy/contracts";
-import type { CliArgument, CliCommandId, CliDeclaration, CliEnvironment, CliFailure, CliResult, OpsError, OpsTestStackResultV1 } from "@toy/contracts";
-import { OpsControlRead, OpsTestStack, TestClockControl, TestProbeControl } from "@toy/ops/public";
+import type { CliArgument, CliCommandId, CliDeclaration, CliEnvironment, CliFailure, CliResult, OpsError, OpsTestStackResultV1, RegisteredProbeOperationV1, Result } from "@toy/contracts";
+import { BackupCapacityProbe, NativeReleaseEligibilityProbe, OpsControlRead, OpsTestStack, RoleIdentityBootstrap, TestClockControl } from "@toy/ops/public";
+import { EngineeringControl, ReplayEnvironment } from "@toy/self-improvement/public";
+import { HermesAuthProbe, ModelRoute, ModelRouteProbe } from "@toy/hermes/public";
 
 const args = process.argv.slice(2);
 const commonNames = new Set(cliCommonArguments.map((argument) => argument.name));
@@ -30,7 +32,7 @@ const failure = (code: CliFailure["error"]["code"], exitCode: number, module: Cl
 };
 const ownerFailure = (error: OpsError): CliFailure => {
   const result = failure(error.code, opsErrorExitCodes[error.code], error.module);
-  return cliFailureSchema.parse({ ...result, error: { ...result.error, ...error } });
+  return cliFailureSchema.parse({ ...result, meta: { ...result.meta, effectState: error.effectState ?? "none" }, error: { ...result.error, ...error } });
 };
 
 const validArgument = (argument: CliArgument, value: string | boolean): boolean => {
@@ -141,7 +143,7 @@ const run = async (): Promise<CliResult> => {
   const requestId = values.get("request-id");
   const waitMs = Number(values.get("wait-ms") ?? 0);
   const upInput = commandId === "stack.up" ? cliCommandSchemas["stack.up"].input.safeParse({
-    release: values.get("release"), requestId, world: values.get("world"), clock: values.get("clock") ?? "fake", model: values.get("model") ?? "fake", waitMs
+    release: values.get("release"), requestId, world: values.get("world"), clock: values.get("clock") ?? "fake", model: values.get("model") ?? "fake", waitMs, observedPressure: values.get("observed-pressure")
   }) : null;
   const downInput = commandId === "stack.down" ? cliCommandSchemas["stack.down"].input.safeParse({ requestId, waitMs }) : null;
   if (upInput && !upInput.success || downInput && !downInput.success) return failure("INVALID_INPUT", 2);
@@ -152,6 +154,42 @@ const run = async (): Promise<CliResult> => {
   if (commandId === "probe.run" && !cliCommandSchemas["probe.run"].input.safeParse({ probeId: operands[0], requestId, caseId: values.get("case") }).success) return failure("INVALID_INPUT", 2);
   if (commandId === "probe.show" && !cliCommandSchemas["probe.show"].input.safeParse({ operationId: operands[0] }).success) return failure("INVALID_INPUT", 2);
   const context = { environment, invocationId, timeoutMs: Number(values.get("timeout-ms") ?? 30000) };
+  if (commandId === "bootstrap.identities") {
+    const input = cliCommandSchemas[commandId].input.safeParse({ plan: values.has("plan"), requestId, expectedSnapshotDigest: values.get("expected-snapshot") ?? null });
+    if (!input.success) return failure("INVALID_INPUT", 2);
+    const result = RoleIdentityBootstrap.run(input.data, context);
+    if (!result.ok) return ownerFailure(result.error);
+    const exitCode = result.data.state === "created" || result.data.state === "planned" ? 0 : result.data.state === "partial" ? 1 : 5;
+    const base = envelope(exitCode);
+    return cliCommandSchemas[commandId].result.parse({ ...base, commandId, ok: true, data: result.data, meta: { ...base.meta, effectState: result.data.effectState, evaluatedAt: result.data.observedAt } });
+  }
+  if (commandId === "new.connector" || commandId === "new.tool" || commandId === "new.skill" || commandId === "new.migration") {
+    const input = cliCommandSchemas[commandId].input.safeParse({ kind: commandId.slice(4), name: operands[0], owner: values.get("module") ?? "sources", provider: values.get("provider") ?? null, operation: values.get("operation") ?? null, plan: values.has("plan") });
+    if (!input.success) return failure("INVALID_INPUT", 2);
+    const result = EngineeringControl.generate(input.data, context);
+    if (!result.ok) return ownerFailure(result.error);
+    return cliCommandSchemas[commandId].result.parse({ ...envelope(0), commandId, ok: true, data: result.data });
+  }
+  if (commandId === "research.check") {
+    const result = EngineeringControl.checkResearch(cliCommandSchemas[commandId].input.parse({ release: values.get("release") ?? null }), context);
+    if (!result.ok) return ownerFailure(result.error);
+    return cliCommandSchemas[commandId].result.parse({ ...envelope(5), commandId, ok: true, data: result.data });
+  }
+  if (commandId === "feature-map.check") {
+    const result = EngineeringControl.checkFeatureMap(cliCommandSchemas[commandId].input.parse({ release: values.get("release") ?? null }), context);
+    if (!result.ok) return ownerFailure(result.error);
+    return cliCommandSchemas[commandId].result.parse({ ...envelope(result.data.state === "PASS" ? 0 : 1), commandId, ok: true, data: result.data });
+  }
+  if (commandId === "feature-map.update") {
+    const result = EngineeringControl.updateFeatureMap(cliCommandSchemas[commandId].input.parse({ plan: values.has("plan") }), context);
+    if (!result.ok) return ownerFailure(result.error);
+    return cliCommandSchemas[commandId].result.parse({ ...envelope(0), commandId, ok: true, data: result.data });
+  }
+  if (commandId === "gardener.run") {
+    const result = EngineeringControl.garden(cliCommandSchemas[commandId].input.parse({ requestId, mode: values.get("mode") ?? "scan", waitMs }), context);
+    if (!result.ok) return ownerFailure(result.error);
+    return cliCommandSchemas[commandId].result.parse({ ...envelope(result.data.state === "PASS" ? 0 : 1), commandId, ok: true, data: result.data });
+  }
   if (commandId === "stack.up" || commandId === "stack.down") {
     let response: OpsTestStackResultV1;
     if (commandId === "stack.up") {
@@ -195,11 +233,16 @@ const run = async (): Promise<CliResult> => {
       return cliCommandSchemas["clock.advance"].result.parse({ ...envelope(0), commandId, ok: true, data: result.data, meta: { ...envelope(0).meta, effectState: "confirmed" } });
     }
     if (commandId === "probe.run" || commandId === "probe.show") {
-      const result = commandId === "probe.run"
-        ? TestProbeControl.run(cliCommandSchemas["probe.run"].input.parse({ probeId: operands[0], requestId, caseId: values.get("case") }), context)
-        : TestProbeControl.show(cliCommandSchemas["probe.show"].input.parse({ operationId: operands[0] }), context);
+      const probeInput = commandId === "probe.run" ? cliCommandSchemas["probe.run"].input.parse({ probeId: operands[0], requestId, caseId: values.get("case") }) : null;
+      let result: Result<RegisteredProbeOperationV1>;
+      if (probeInput?.caseId === "backup-capacity") result = BackupCapacityProbe.run(probeInput, context);
+      else if (probeInput?.caseId === "native-release-eligibility") result = NativeReleaseEligibilityProbe.run(probeInput, context);
+      else if (probeInput?.caseId === "native-auth-cli") result = await HermesAuthProbe.run(probeInput, context);
+      else if (probeInput?.caseId === "model-route-policy" || probeInput?.caseId === "model-route-stream") result = await ModelRouteProbe.run(probeInput, context);
+      else if (probeInput) result = await ReplayEnvironment.runRegisteredProbe(probeInput, context);
+      else result = ReplayEnvironment.registeredProbeStatus(cliCommandSchemas["probe.show"].input.parse({ operationId: operands[0] }), context);
       if (!result.ok) return ownerFailure(result.error);
-      const exitCode = result.data.operation.state === "succeeded" ? 0 : 5;
+      const exitCode = result.data.result?.cases.some(check => check.state === "FAIL") ? 1 : result.data.operation.state === "succeeded" ? 0 : 5;
       return cliCommandSchemas[commandId].result.parse({ ...envelope(exitCode), commandId, ok: true, data: result.data, meta: { ...envelope(exitCode).meta, effectState: commandId === "probe.run" ? "confirmed" : "none" } });
     }
   }
@@ -215,7 +258,7 @@ const run = async (): Promise<CliResult> => {
       const exitCode = data.probes.some((probe) => probe.state === "FAIL") ? 1 : data.complete ? 0 : 5;
       return cliCommandSchemas.status.result.parse({ ...envelope(exitCode), ok: true, data });
     }
-    const data = await OpsControlRead.doctor(cliCommandSchemas.doctor.input.parse({ ...releaseInput, deep: values.has("deep") }), context);
+    const data = await OpsControlRead.doctor(cliCommandSchemas.doctor.input.parse({ ...releaseInput, deep: values.has("deep") }), context, values.has("deep") ? [ModelRoute.inspect()] : []);
     const exitCode = data.verdict === "FAIL" ? 1 : data.complete && data.verdict === "PASS" ? 0 : 5;
     return cliCommandSchemas.doctor.result.parse({ ...envelope(exitCode), ok: true, data });
   }

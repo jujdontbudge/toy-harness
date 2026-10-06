@@ -97,7 +97,8 @@ export const opsErrorExitCodes = {
 } as const satisfies Record<z.infer<typeof opsErrorCodeSchema>, number>;
 export const opsSafeMessageSchema = z.enum(Object.values(opsErrorMessages));
 export const opsErrorSchema = z.strictObject({
-  module: z.literal("ops"), code: opsErrorCodeSchema, retryable: z.boolean(), incidentId: uuidSchema.optional(), message: opsSafeMessageSchema
+  module: z.literal("ops"), code: opsErrorCodeSchema, retryable: z.boolean(), incidentId: uuidSchema.optional(), message: opsSafeMessageSchema,
+  effectState: z.enum(["none", "confirmed", "unknown"]).optional()
 });
 export const opsResultSchema = <Schema extends z.ZodType>(data: Schema) => z.union([
   z.strictObject({ ok: z.literal(true), data }), z.strictObject({ ok: z.literal(false), error: opsErrorSchema })

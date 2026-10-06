@@ -47,7 +47,7 @@ const fixture = async (files, action) => {
 };
 
 execute("valid-types", process.execPath, ["node_modules/typescript/bin/tsc", "-b", "--pretty", "false"]);
-execute("valid-boundaries", process.execPath, ["node_modules/dependency-cruiser/bin/dependency-cruiser.mjs", "--config", ".dependency-cruiser.cjs", "packages", "cli"]);
+execute("valid-boundaries", process.execPath, ["node_modules/dependency-cruiser/bin/dependency-cruiser.mjs", "--config", ".dependency-cruiser.cjs", "packages", "cli", "control"]);
 execute("valid-pyright", process.execPath, ["node_modules/pyright/index.js"]);
 execute("valid-ruff", ".venv/bin/ruff", ["check", "python"]);
 execute("valid-python-boundaries", ".venv/bin/lint-imports", ["--no-cache"]);
@@ -71,6 +71,9 @@ await fixture([
   ["cli/src/denial-fixture.ts", "export { oracleValue } from '../../control/evaluator/denial-fixture.js';\n"]
 ], () => execute("protected-import-denied", process.execPath, ["node_modules/dependency-cruiser/bin/dependency-cruiser.mjs", "--config", ".dependency-cruiser.cjs", "packages", "cli"], /protected-controls/));
 await fixture([
+  ["control/secrets/denial-fixture.ts", "export { ModelRoute } from '../../packages/hermes/src/public.js';\n"]
+], () => execute("protected-agent-dependency-denied", process.execPath, ["node_modules/dependency-cruiser/bin/dependency-cruiser.mjs", "--config", ".dependency-cruiser.cjs", "packages", "cli", "control"], /protected-controls-contracts-only/));
+await fixture([
   ["cli/src/denial-fixture.ts", "export const unsafeIndex: string = ['value'][1];\n"]
 ], () => execute("unchecked-index-denied", process.execPath, ["node_modules/typescript/bin/tsc", "-b", "--pretty", "false"], /TS2322/));
 await fixture([
@@ -79,6 +82,9 @@ await fixture([
 await fixture([
   ["python/toy_adapter/denial_fixture.py", "from toy_control import public\n\n__all__ = ['public']\n"]
 ], () => execute("python-protected-import-denied", ".venv/bin/lint-imports", ["--no-cache"], /BROKEN/));
+await fixture([
+  ["python/toy_control/denial_fixture.py", "from toy_adapter import public\n\n__all__ = ['public']\n"]
+], () => execute("python-protected-agent-dependency-denied", ".venv/bin/lint-imports", ["--no-cache"], /BROKEN/));
 execute("clean-after-fixtures", process.execPath, ["node_modules/typescript/bin/tsc", "-b", "--pretty", "false"]);
 const inputs = ["architecture/modules.json", "tsconfig.base.json", ".dependency-cruiser.cjs", "pyrightconfig.json", "pyproject.toml", "package-lock.json", "scripts/check-foundations.mjs"];
 const digests = Object.fromEntries(await Promise.all(inputs.map(async (path) => [path, createHash("sha256").update(await readFile(resolve(root, path))).digest("hex")])));

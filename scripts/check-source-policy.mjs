@@ -3,7 +3,7 @@ import { extname, relative, resolve } from "node:path";
 import ts from "typescript";
 
 const root = resolve(import.meta.dirname, "..");
-const sourceRoots = ["packages", "cli", "plugins/toy", "behavior", "scripts", "tests", "python", "swift"];
+const sourceRoots = ["packages", "cli", "plugins/toy", "behavior", "scripts", "tests", "python", "swift", "control"];
 const sourceExtensions = new Set([".ts", ".tsx", ".mts", ".cts", ".js", ".jsx", ".mjs", ".cjs", ".py", ".swift"]);
 const selected = process.argv.slice(2).map((path) => resolve(root, path));
 const generatedManifest = JSON.parse(await readFile(resolve(root, "scripts/generated-artifacts.json"), "utf8"));

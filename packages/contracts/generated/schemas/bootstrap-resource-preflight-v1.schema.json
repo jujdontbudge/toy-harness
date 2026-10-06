@@ -115,6 +115,18 @@
               "critical",
               "unknown"
             ]
+          },
+          "pressureSource": {
+            "type": "string",
+            "enum": [
+              "os",
+              "operator-observation",
+              "unavailable"
+            ]
+          },
+          "pressureQueryOutput": {
+            "type": "string",
+            "maxLength": 8192
           }
         },
         "required": [
@@ -172,7 +184,8 @@
           "MEASUREMENT_UNAVAILABLE",
           "NORMAL_PRESSURE_REQUIRED",
           "AVAILABLE_MEMORY_TOO_LOW",
-          "TIMEOUT"
+          "TIMEOUT",
+          "PRESSURE_QUERY_DENIED"
         ]
       }
     },

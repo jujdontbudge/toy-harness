@@ -5,7 +5,7 @@ import { createHash, randomUUID } from "node:crypto";
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import test from "node:test";
-import { bootstrapJournalReadSchema, bootstrapResourcePreflightSchema, cliCommandSchemas, cliDeclarations, cliResultSchema, registeredCliProbeInventory, releaseSchema, schemaBundleArtifacts, schemaBundleDigest, serviceIdSchema } from "@toy/contracts";
+import { bootstrapJournalReadSchema, bootstrapResourcePreflightSchema, cliCommandSchemas, cliDeclarations, cliResultSchema, opsControlReadInventory, registeredCliProbeInventory, releaseSchema, schemaBundleArtifacts, schemaBundleDigest, serviceIdSchema } from "@toy/contracts";
 
 const root = resolve(import.meta.dirname, "../..");
 const attemptId = new Date().toISOString().replaceAll(":", "-") + "-" + randomUUID();
@@ -14,7 +14,8 @@ await mkdir(join(root, "build/tmp"), { recursive: true });
 const fixture = await mkdtemp(join(root, "build/tmp/k3-packed-"));
 await mkdir(receiptDirectory, { recursive: true });
 const setup = (args: string[]): void => {
-  const child = spawnSync("npm", args, { cwd: fixture, encoding: "utf8", timeout: 120000, maxBuffer: 2 * 1024 * 1024 });
+  const child = spawnSync("npm", args, { cwd: fixture, encoding: "utf8", timeout: 120000, maxBuffer: 2 * 1024 * 1024,
+    env: { PATH: process.env.PATH, HOME: fixture, TMPDIR: fixture, LANG: "C", LC_ALL: "C", npm_config_cache: join(fixture, "cache"), npm_config_userconfig: join(fixture, "absent.npmrc") } });
   assert.ok(child.error === undefined, "Offline package preparation did not complete");
   assert.equal(child.status, 0, "Offline package preparation failed");
 };
@@ -88,11 +89,11 @@ const invokeConcurrent = async (id: string, args: string[], exitCode: number) =>
 };
 
 try {
-  for (const path of ["cli", "packages/contracts", "packages/ops", "node_modules/zod"]) {
+  for (const path of ["cli", "packages/contracts", "packages/ops", "packages/sources", "packages/self-improvement", "packages/hermes", "node_modules/zod"]) {
     setup(["pack", join(root, path), "--pack-destination", fixture, "--ignore-scripts", "--offline", "--json"]);
   }
   await writeFile(join(fixture, "package.json"), JSON.stringify({ name: "toy-k3-offline-fixture", version: "1.0.0", private: true }) + "\n", { flag: "wx" });
-  setup(["install", "--offline", "--ignore-scripts", "--no-audit", "--no-fund", "--cache", join(fixture, "cache"), "./toy-cli-1.0.0.tgz", "./toy-contracts-1.0.0.tgz", "./toy-ops-1.0.0.tgz", "./zod-4.6.5.tgz"]);
+  setup(["install", "--offline", "--ignore-scripts", "--no-audit", "--no-fund", "--cache", join(fixture, "cache"), "./toy-cli-1.0.0.tgz", "./toy-contracts-1.0.0.tgz", "./toy-ops-1.0.0.tgz", "./toy-sources-1.0.0.tgz", "./toy-self-improvement-1.0.0.tgz", "./toy-hermes-1.0.0.tgz", "./zod-4.6.5.tgz"]);
 
   await test("compiled packed CLI offline inventory and protocol boundary", async (suite) => {
     await suite.test("online-backed journal transition preserves pre-existing blocked identity across processes", async () => {
@@ -266,6 +267,26 @@ try {
         const readback = invoke("fixture-probe-show", [...named, "probe", "show", probed.data.operation.operationId, "--json"], 0);
         assert.ok(readback?.ok && readback.commandId === "probe.show");
         assert.deepEqual(readback.data, probed.data);
+        for (const caseId of ["k4a-connector", "k4a-tool", "k4a-skill", "k4a-migration"] as const) {
+          const args = [...named, "probe", "run", "AT-hermes-config-101", "--case", caseId, "--request-id", randomUUID(), "--json"];
+          const reference = invoke("reference-run-" + caseId, args, 0);
+          assert.ok(reference?.ok && reference.commandId === "probe.run" && reference.data.result);
+          assert.equal(reference.data.result.complete, false);
+          assert.equal(reference.data.result.state, "NOT_IMPLEMENTED");
+          assert.equal(reference.data.result.cases.length, 1);
+          const check = reference.data.result.cases[0];
+          assert.ok(check?.state === "PASS" && check.links.artifactDigests.length > 0 && check.prerequisite);
+          if (caseId === "k4a-migration") {
+            assert.ok(check.prerequisite.includes('"reference_id":"R0.K4a","owner":"ops"'));
+            invoke("reference-migration-existing-readback", args.map(arg => arg === args[args.length - 2] ? randomUUID() : arg), 0);
+          }
+          const retry = invoke("reference-retry-" + caseId, args, 0);
+          assert.ok(retry?.ok && retry.commandId === "probe.run");
+          assert.deepEqual(retry.data, reference.data);
+          const shown = invoke("reference-show-" + caseId, [...named, "probe", "show", reference.data.operation.operationId, "--json"], 0);
+          assert.ok(shown?.ok && shown.commandId === "probe.show");
+          assert.deepEqual(shown.data, reference.data);
+        }
         for (const [flag, value] of [["--release", "R1"], ["--clock", "real"], ["--model", "supported"]] as const) {
           invoke("fixture-stack-up-conflict-" + flag, flag === "--release" ? args.map(arg => arg === "R0" ? value : arg) : [...args, flag, value], 4);
         }
@@ -321,9 +342,9 @@ try {
         assert.equal(result.data.deep, deep);
         assert.equal(result.data.complete, false);
         assert.equal(result.data.verdict, "NOT_IMPLEMENTED");
-        assert.equal(result.data.checks.length, serviceIdSchema.options.length + 6 + Number(deep) * 2);
-        assert.equal(result.data.checks.filter((check) => check.state === "NOT_IMPLEMENTED").length, serviceIdSchema.options.length + 6);
-        assert.ok(result.data.checks.every((check) => ["bootstrap.journal", "bootstrap.resource-admission"].includes(check.id) ? check.state !== "FAIL" : check.state !== "PASS" && check.links.recordRefs.length === 0));
+        assert.equal(result.data.checks.length, opsControlReadInventory.length + Number(deep) * 2);
+        assert.equal(result.data.checks.filter((check) => check.state === "NOT_IMPLEMENTED").length, opsControlReadInventory.length - Number(deep) * 2);
+        assert.ok(result.data.checks.every((check) => ["bootstrap.journal", "bootstrap.resource-admission", "read.model-route", "read.model-route-policy"].includes(check.id) && deep ? check.state !== "FAIL" : check.state !== "PASS" && check.links.recordRefs.length === 0));
         if (deep) {
           const check = result.data.checks.find((entry) => entry.id === "bootstrap.resource-admission");
           assert.ok(check?.prerequisite);
@@ -368,7 +389,7 @@ try {
       schemaVersion: "toy.bootstrap-cli.v2", card: "R0.K3", attemptId, generatedAt: new Date().toISOString(),
       route: "compiled-packed-cli-subprocess", acceptanceComplete: false,
       receiptPolicy: "No arguments or raw stderr; only validated stdout, otherwise byte counts",
-      limitation: "Offline/parser subset only. Full assigned AT assertions, owner schemas/transports, input files, actual identities and attested stacks remain pending.",
+      limitation: "Parser and trusted fake process/SQLite/clock/probe/reference subsets only. Full assigned AT assertions, future owners/input files, actual identities and attested target execution remain pending.",
       schemaDigest: schemaBundleDigest, receipts
     }, null, 2) + "\n";
     assert.ok([...canaries].every((canary) => !archive.includes(canary)), "Receipt archive disclosed a private canary");

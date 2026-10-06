@@ -7,7 +7,7 @@ import { registeredCliProbeInventory } from "./generated-probe-registry.js";
 export { registeredCliProbeInventory, acceptanceSourceDigest } from "./generated-probe-registry.js";
 export const registeredCliProbeIdSchema = z.enum(registeredCliProbeInventory.map((entry) => entry.id));
 export const registeredTestWorldSchema = z.enum(["r0-bootstrap"]);
-export const registeredTestCaseSchema = z.enum(["native-entry", "native-denials", "postgres-unix", "stack-lifecycle"]);
+export const registeredTestCaseSchema = z.enum(["native-entry", "native-denials", "postgres-unix", "stack-lifecycle", "k4a-connector", "k4a-tool", "k4a-skill", "k4a-migration", "model-route-policy", "model-route-stream", "model-admission", "native-release-eligibility", "native-auth-cli", "backup-capacity"]);
 export const testStackClockSchema = z.enum(["fake", "real"]);
 export const testStackModelSchema = z.enum(["fake", "supported"]);
 export const elapsedDurationSchema = z.string().min(3).max(80).regex(/^P(?=\d|T\d)(?:\d+D)?(?:T(?=\d)(?:\d+H)?(?:\d+M)?(?:\d+(?:\.\d{1,3})?S)?)?(?![\s\S])/);
@@ -51,7 +51,7 @@ export const registeredProbeOperationSchema = z.strictObject({
 });
 export const testStackUpInputSchema = z.strictObject({
   release: releaseSchema, requestId: uuidSchema, world: registeredTestWorldSchema.optional(),
-  clock: testStackClockSchema, model: testStackModelSchema, waitMs: waitMsSchema
+  clock: testStackClockSchema, model: testStackModelSchema, waitMs: waitMsSchema, observedPressure: z.literal("normal").optional()
 });
 export const testStackDownInputSchema = z.strictObject({ requestId: uuidSchema, waitMs: waitMsSchema });
 export const testClockShowInputSchema = z.strictObject({});
@@ -120,7 +120,7 @@ export const bootstrapJournalStateSchema = z.strictObject({
 });
 export const bootstrapUpRequestSchema = z.strictObject({
   schemaVersion: z.literal("toy.bootstrap-up-request.v1"), requestId: uuidSchema,
-  release: releaseSchema, world: registeredTestWorldSchema, clock: testStackClockSchema, model: testStackModelSchema
+  release: releaseSchema, world: registeredTestWorldSchema, clock: testStackClockSchema, model: testStackModelSchema, observedPressure: z.literal("normal").optional()
 });
 export const bootstrapOperationRecordSchema = z.strictObject({
   schemaVersion: z.literal("toy.bootstrap-operation-record.v1"), storeId: uuidSchema,
@@ -171,10 +171,12 @@ export const bootstrapResourceSampleSchema = z.strictObject({
   observedAt: instantSchema, monotonicNanoseconds: uint64Schema, physicalBytes: uint64Schema.nullable(),
   pageSizeBytes: uint64Schema.nullable(), freeBytes: uint64Schema.nullable(), inactiveBytes: uint64Schema.nullable(),
   purgeableBytes: uint64Schema.nullable(), speculativeBytes: uint64Schema.nullable(), availableBytes: uint64Schema.nullable(),
-  pressure: z.enum(["normal", "warning", "critical", "unknown"])
+  pressure: z.enum(["normal", "warning", "critical", "unknown"]),
+  pressureSource: z.enum(["os", "operator-observation", "unavailable"]).optional(),
+  pressureQueryOutput: z.string().max(8192).optional()
 });
 export const bootstrapResourceReasonSchema = z.enum([
-  "MEASUREMENT_UNAVAILABLE", "NORMAL_PRESSURE_REQUIRED", "AVAILABLE_MEMORY_TOO_LOW", "TIMEOUT"
+  "MEASUREMENT_UNAVAILABLE", "NORMAL_PRESSURE_REQUIRED", "AVAILABLE_MEMORY_TOO_LOW", "TIMEOUT", "PRESSURE_QUERY_DENIED"
 ]);
 export const bootstrapResourcePreflightSchema = z.strictObject({
   schemaVersion: z.literal("toy.bootstrap-resource-preflight.v2"), measuredAt: instantSchema,
@@ -184,12 +186,26 @@ export const bootstrapResourcePreflightSchema = z.strictObject({
   normalPressureObserved: z.boolean(), headroomSatisfied: z.boolean(),
   reasons: z.array(bootstrapResourceReasonSchema), resourcePermitIssued: z.literal(false), admissionState: z.enum(["admitted", "blocked"])
 });
+export const serviceRoleNameSchema = z.enum(["_toy_agent", "_toy_control", "_toy_review", "_toy_repair", "_toy_evaluator", "_toy_pg", "_toy_app", "_toy_ops"]);
+export const serviceRoleIdentityObservationSchema = z.strictObject({
+  role: serviceRoleNameSchema, state: z.enum(["observed", "missing", "unknown"]),
+  uid: z.int().nonnegative().max(4294967295).nullable(), gid: z.int().nonnegative().max(4294967295).nullable(),
+  adminGroupObserved: z.boolean().nullable()
+}).refine(value => value.state !== "observed" || value.uid !== null && value.gid !== null && value.adminGroupObserved !== null, "Observed identity requires complete measurements")
+  .refine(value => value.state !== "missing" || value.uid === null && value.gid === null && value.adminGroupObserved === null, "Missing identity has no measurements");
+export const serviceRoleIdentityInventorySchema = z.strictObject({
+  schemaVersion: z.literal("toy.service-role-identity-inventory.v1"), observedAt: instantSchema,
+  roles: z.array(serviceRoleIdentityObservationSchema).length(8), allExpectedIdentitiesObserved: z.boolean(),
+  identityGateVerified: z.literal(false), maintenanceIdentityVerified: z.literal(false)
+}).refine(value => new Set(value.roles.map(role => role.role)).size === 8, "Each canonical role must appear once")
+  .refine(value => value.allExpectedIdentitiesObserved === value.roles.every(role => role.state === "observed"), "Aggregate agrees with role observations");
 export const fixtureStackRecordSchema = z.strictObject({
   schemaVersion: z.literal("toy.r0-fixture-stack.v1"), stackId: uuidSchema, request: bootstrapUpRequestSchema,
   operation: operationRefSchema, generation: uint64Schema, ownerUid: z.int().nonnegative(),
   nonce: uuidSchema, schemaDigest: digestSchema, runtimeDigest: digestSchema,
   state: z.enum(["starting", "running", "stopped", "failed"]), pid: z.int().positive().nullable(),
   createdAt: instantSchema, realExpiresAt: instantSchema, evidenceId: uuidSchema,
+  resourcePreflight: bootstrapResourcePreflightSchema.optional(),
   failureCode: z.enum(["PACKAGE_METADATA_DENIED", "CONTRACTS_READ_DENIED", "ZOD_READ_DENIED", "WORLD_READ_DENIED", "RUNTIME_READ_DENIED", "MODULE_NOT_FOUND", "SCHEMA_INVALID", "SQLITE_FAILURE", "SPAWN_FAILED", "STARTUP_TIMEOUT", "UNKNOWN_EXIT"]).optional()
 });
 export const fixtureWorkerStateSchema = z.strictObject({
@@ -239,6 +255,9 @@ export type BootstrapJournalReadV1 = z.infer<typeof bootstrapJournalReadSchema>;
 export type BootstrapResourceSampleV1 = z.infer<typeof bootstrapResourceSampleSchema>;
 export type BootstrapResourceReasonV1 = z.infer<typeof bootstrapResourceReasonSchema>;
 export type BootstrapResourcePreflightV1 = z.infer<typeof bootstrapResourcePreflightSchema>;
+export type ServiceRoleNameV1 = z.infer<typeof serviceRoleNameSchema>;
+export type ServiceRoleIdentityObservationV1 = z.infer<typeof serviceRoleIdentityObservationSchema>;
+export type ServiceRoleIdentityInventoryV1 = z.infer<typeof serviceRoleIdentityInventorySchema>;
 export const testControlSchemaInventory = {
   RegisteredCliProbeIdV1: registeredCliProbeIdSchema, RegisteredTestWorldV1: registeredTestWorldSchema,
   RegisteredTestCaseV1: registeredTestCaseSchema, TestStackClockV1: testStackClockSchema, TestStackModelV1: testStackModelSchema,
@@ -263,5 +282,7 @@ export const testControlSchemaInventory = {
   BootstrapWorkLeaseRecordV1: bootstrapWorkLeaseRecordSchema, BootstrapJournalReadV1: bootstrapJournalReadSchema,
   BootstrapResourceSampleV1: bootstrapResourceSampleSchema, BootstrapResourceReasonV1: bootstrapResourceReasonSchema,
   BootstrapResourcePreflightV1: bootstrapResourcePreflightSchema,
+  ServiceRoleNameV1: serviceRoleNameSchema, ServiceRoleIdentityObservationV1: serviceRoleIdentityObservationSchema,
+  ServiceRoleIdentityInventoryV1: serviceRoleIdentityInventorySchema,
   FixtureStackRecordV1: fixtureStackRecordSchema, FixtureWorkerStateV1: fixtureWorkerStateSchema
 };

@@ -1,0 +1,309 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "observedAt": {
+      "type": "string",
+      "minLength": 24,
+      "maxLength": 24,
+      "format": "date-time",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+    },
+    "capabilities": {
+      "type": "object",
+      "properties": {
+        "nativeApp": {
+          "type": "object",
+          "properties": {
+            "state": {
+              "type": "string",
+              "enum": [
+                "deferred",
+                "eligible-for-testing"
+              ]
+            },
+            "missingPrerequisites": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "osHardware",
+                  "appleMembership",
+                  "distributionSigning",
+                  "nativeAppEntitlements",
+                  "shareEntitlements",
+                  "pushEntitlements",
+                  "alarmEntitlements",
+                  "familyControlsEntitlements",
+                  "familyControlsPermission",
+                  "coldTurkeyPro",
+                  "porcupineLicenseAndModel"
+                ]
+              }
+            }
+          },
+          "required": [
+            "state",
+            "missingPrerequisites"
+          ],
+          "additionalProperties": false
+        },
+        "shareExtension": {
+          "type": "object",
+          "properties": {
+            "state": {
+              "type": "string",
+              "enum": [
+                "deferred",
+                "eligible-for-testing"
+              ]
+            },
+            "missingPrerequisites": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "osHardware",
+                  "appleMembership",
+                  "distributionSigning",
+                  "nativeAppEntitlements",
+                  "shareEntitlements",
+                  "pushEntitlements",
+                  "alarmEntitlements",
+                  "familyControlsEntitlements",
+                  "familyControlsPermission",
+                  "coldTurkeyPro",
+                  "porcupineLicenseAndModel"
+                ]
+              }
+            }
+          },
+          "required": [
+            "state",
+            "missingPrerequisites"
+          ],
+          "additionalProperties": false
+        },
+        "pushNotifications": {
+          "type": "object",
+          "properties": {
+            "state": {
+              "type": "string",
+              "enum": [
+                "deferred",
+                "eligible-for-testing"
+              ]
+            },
+            "missingPrerequisites": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "osHardware",
+                  "appleMembership",
+                  "distributionSigning",
+                  "nativeAppEntitlements",
+                  "shareEntitlements",
+                  "pushEntitlements",
+                  "alarmEntitlements",
+                  "familyControlsEntitlements",
+                  "familyControlsPermission",
+                  "coldTurkeyPro",
+                  "porcupineLicenseAndModel"
+                ]
+              }
+            }
+          },
+          "required": [
+            "state",
+            "missingPrerequisites"
+          ],
+          "additionalProperties": false
+        },
+        "alarmKit": {
+          "type": "object",
+          "properties": {
+            "state": {
+              "type": "string",
+              "enum": [
+                "deferred",
+                "eligible-for-testing"
+              ]
+            },
+            "missingPrerequisites": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "osHardware",
+                  "appleMembership",
+                  "distributionSigning",
+                  "nativeAppEntitlements",
+                  "shareEntitlements",
+                  "pushEntitlements",
+                  "alarmEntitlements",
+                  "familyControlsEntitlements",
+                  "familyControlsPermission",
+                  "coldTurkeyPro",
+                  "porcupineLicenseAndModel"
+                ]
+              }
+            }
+          },
+          "required": [
+            "state",
+            "missingPrerequisites"
+          ],
+          "additionalProperties": false
+        },
+        "familyControls": {
+          "type": "object",
+          "properties": {
+            "state": {
+              "type": "string",
+              "enum": [
+                "deferred",
+                "eligible-for-testing"
+              ]
+            },
+            "missingPrerequisites": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "osHardware",
+                  "appleMembership",
+                  "distributionSigning",
+                  "nativeAppEntitlements",
+                  "shareEntitlements",
+                  "pushEntitlements",
+                  "alarmEntitlements",
+                  "familyControlsEntitlements",
+                  "familyControlsPermission",
+                  "coldTurkeyPro",
+                  "porcupineLicenseAndModel"
+                ]
+              }
+            }
+          },
+          "required": [
+            "state",
+            "missingPrerequisites"
+          ],
+          "additionalProperties": false
+        },
+        "appBlocking": {
+          "type": "object",
+          "properties": {
+            "state": {
+              "type": "string",
+              "enum": [
+                "deferred",
+                "eligible-for-testing"
+              ]
+            },
+            "missingPrerequisites": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "osHardware",
+                  "appleMembership",
+                  "distributionSigning",
+                  "nativeAppEntitlements",
+                  "shareEntitlements",
+                  "pushEntitlements",
+                  "alarmEntitlements",
+                  "familyControlsEntitlements",
+                  "familyControlsPermission",
+                  "coldTurkeyPro",
+                  "porcupineLicenseAndModel"
+                ]
+              }
+            }
+          },
+          "required": [
+            "state",
+            "missingPrerequisites"
+          ],
+          "additionalProperties": false
+        },
+        "wakeWord": {
+          "type": "object",
+          "properties": {
+            "state": {
+              "type": "string",
+              "enum": [
+                "deferred",
+                "eligible-for-testing"
+              ]
+            },
+            "missingPrerequisites": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "osHardware",
+                  "appleMembership",
+                  "distributionSigning",
+                  "nativeAppEntitlements",
+                  "shareEntitlements",
+                  "pushEntitlements",
+                  "alarmEntitlements",
+                  "familyControlsEntitlements",
+                  "familyControlsPermission",
+                  "coldTurkeyPro",
+                  "porcupineLicenseAndModel"
+                ]
+              }
+            }
+          },
+          "required": [
+            "state",
+            "missingPrerequisites"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "nativeApp",
+        "shareExtension",
+        "pushNotifications",
+        "alarmKit",
+        "familyControls",
+        "appBlocking",
+        "wakeWord"
+      ],
+      "additionalProperties": false
+    },
+    "deliveryBranch": {
+      "type": "string",
+      "enum": [
+        "web-pwa-plus-discord",
+        "native-candidate-plus-web-and-discord"
+      ]
+    },
+    "purchaseAssumed": {
+      "type": "boolean",
+      "const": false
+    },
+    "weeklyFreeProvisioningCounted": {
+      "type": "boolean",
+      "const": false
+    },
+    "liveActivationAdmitted": {
+      "type": "boolean",
+      "const": false
+    }
+  },
+  "required": [
+    "observedAt",
+    "capabilities",
+    "deliveryBranch",
+    "purchaseAssumed",
+    "weeklyFreeProvisioningCounted",
+    "liveActivationAdmitted"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:NativeReleaseEligibilityDecisionV1"
+}

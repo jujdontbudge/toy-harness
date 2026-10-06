@@ -7,7 +7,7 @@ import tokenize
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-SOURCE_ROOTS = ("packages", "cli", "plugins/toy", "behavior", "scripts", "tests", "python")
+SOURCE_ROOTS = ("packages", "cli", "plugins/toy", "behavior", "scripts", "tests", "python", "control")
 SPDX = {"0BSD", "Apache-2.0", "BSD-2-Clause", "BSD-3-Clause", "ISC", "MIT", "MPL-2.0", "Unlicense"}
 GENERATED_MANIFEST = json.loads((ROOT / "scripts/generated-artifacts.json").read_text(encoding="utf-8"))
 GENERATED_FILES = set(GENERATED_MANIFEST["codeArtifacts"])

@@ -10,15 +10,16 @@ import { fileURLToPath } from "node:url";
 import {
   bootstrapUpRequestSchema, fixtureStackRecordSchema, fixtureWorkerStateSchema, opsErrorMessages,
   schemaBundleDigest, testClockReceiptSchema, testClockStateSchema, testStackOperationSchema,
-  registeredProbeOperationSchema, registeredCliProbeInventory, clockAdvanceOperationSchema
+  registeredProbeOperationSchema, registeredCliProbeInventory, clockAdvanceOperationSchema, checkViewSchema
 } from "@toy/contracts";
 import type {
   FixtureStackRecordV1, OpsControlContextV1, OpsErrorCode, Result, TestStackOperationV1, TestStackUpInputV1,
   TestStackDownInputV1, TestClockStateV1, TestClockReceiptV1, TestClockFreezeInputV1, TestClockAdvanceInputV1,
-  TestClockResumeInputV1, ClockAdvanceOperationV1, RegisteredProbeInputV1, RegisteredProbeShowInputV1, RegisteredProbeOperationV1
+  TestClockResumeInputV1, ClockAdvanceOperationV1, RegisteredProbeInputV1, RegisteredProbeShowInputV1, RegisteredProbeOperationV1, CheckViewV1
 } from "@toy/contracts";
 import { findBlockedBootstrapUp } from "./bootstrap-journal.js";
 import { measureBootstrapResources } from "./bootstrap-resources.js";
+import { trustedCheckoutRoot } from "./checkout-root.js";
 
 class FixtureRefusal extends Error {
   constructor(readonly code: OpsErrorCode) { super(code); }
@@ -28,7 +29,7 @@ const digest = (value: string | Buffer): string => createHash("sha256").update(v
 const workerPath = join(import.meta.dirname, "fixture-worker.js");
 const links = { recordRefs: [], observations: [], artifactDigests: [] };
 const home = userInfo();
-const root = join(home.homedir, ".toy-r0-fixtures");
+const fixtureRoot = (): string => join(trustedCheckoutRoot(), "build/.toy-r0-fixtures");
 const owned = (path: string, directory = false): void => {
   const stat = lstatSync(path);
   if (stat.uid !== home.uid || (stat.mode & 0o077) !== 0 || (directory ? !stat.isDirectory() : !stat.isFile() || stat.nlink !== 1)) refuse("ATTESTATION_INVALID");
@@ -46,6 +47,7 @@ const decode = (value: unknown): unknown => {
   try { const parsed: unknown = JSON.parse(value); return parsed; } catch { return refuse("ATTESTATION_INVALID"); }
 };
 const index = (create = false): DatabaseSync => {
+  const root = fixtureRoot();
   if (create) privateDirectory(root); else owned(root, true);
   const path = join(root, "control.db");
   const fresh = !existsSync(path);
@@ -55,7 +57,7 @@ const index = (create = false): DatabaseSync => {
   if (fresh) db.exec("CREATE TABLE stack (id TEXT PRIMARY KEY, request_id TEXT UNIQUE NOT NULL, record TEXT NOT NULL CHECK(json_valid(record))) STRICT");
   return db;
 };
-const worldPath = (id: string): string => join(root, id);
+const worldPath = (id: string): string => join(fixtureRoot(), id);
 const record = (db: DatabaseSync, stackId: string): FixtureStackRecordV1 => {
   const row = db.prepare("SELECT record FROM stack WHERE id=?").get(stackId);
   if (!row) return refuse("ATTESTATION_INVALID");
@@ -64,7 +66,7 @@ const record = (db: DatabaseSync, stackId: string): FixtureStackRecordV1 => {
   const path = worldPath(stackId); owned(path, true); owned(join(path, "manifest.json")); owned(join(path, "world.db"));
   const manifest = fixtureStackRecordSchema.parse(decode(readFileSync(join(path, "manifest.json"), "utf8")));
   if (manifest.nonce !== value.nonce || manifest.stackId !== value.stackId || manifest.request.requestId !== value.request.requestId
-    || manifest.runtimeDigest !== value.runtimeDigest || manifest.schemaDigest !== value.schemaDigest) refuse("ATTESTATION_INVALID");
+    || manifest.runtimeDigest !== value.runtimeDigest || manifest.schemaDigest !== value.schemaDigest || JSON.stringify(manifest.request) !== JSON.stringify(value.request)) refuse("ATTESTATION_INVALID");
   return value;
 };
 const world = (value: FixtureStackRecordV1): DatabaseSync => {
@@ -92,6 +94,8 @@ const view = (value: FixtureStackRecordV1, completeTeardown = false, startupReso
       stackId: value.stackId, release: "R0", manifestDigest: digest(readFileSync(join(worldPath(value.stackId), "manifest.json"))),
       clock: "fake", model: "fake", ready, evidenceLocation: value.evidenceId,
       components: [
+        ...(value.resourcePreflight === undefined ? [] : [{ id: "bootstrap.resource-admission", owner: "ops", state: value.resourcePreflight.admissionState === "admitted" ? "PASS" : "BLOCKED",
+          checkedAt: value.resourcePreflight.measuredAt, reasonCode: "AVAILABLE_MEMORY_AND_OBSERVED_PRESSURE", nextCommandId: "stack.up", prerequisite: JSON.stringify(value.resourcePreflight), links }]),
         { id: "bootstrap.fixture-runtime", owner: "ops", state: ready ? "PASS" : completeTeardown ? "PASS" : "BLOCKED",
           checkedAt: new Date().toISOString(), reasonCode: ready ? "TRUSTED_FAKE_FIXTURE_READY" : completeTeardown ? "OWNED_FIXTURE_STOPPED" : value.failureCode ?? "FIXTURE_UNAVAILABLE", links, nextCommandId: "stack.up", prerequisite: startupResource },
         { id: "bootstrap.fixture-identities", owner: "ops", state: "NOT_IMPLEMENTED", checkedAt: new Date().toISOString(),
@@ -123,8 +127,8 @@ export const fixtureStackUp = async (input: TestStackUpInputV1, context: OpsCont
   let target: DatabaseSync | undefined;
   try {
     const supported = input.release === "R0" && input.clock === "fake" && input.model === "fake";
-    if (!supported && !existsSync(root)) refuse("DEPENDENCY_UNAVAILABLE");
-    const request = bootstrapUpRequestSchema.parse({ schemaVersion: "toy.bootstrap-up-request.v1", requestId: input.requestId.toLowerCase(), release: input.release, world: input.world ?? "r0-bootstrap", clock: input.clock, model: input.model });
+    if (!supported && !existsSync(fixtureRoot())) refuse("DEPENDENCY_UNAVAILABLE");
+    const request = bootstrapUpRequestSchema.parse({ schemaVersion: "toy.bootstrap-up-request.v1", requestId: input.requestId.toLowerCase(), release: input.release, world: input.world ?? "r0-bootstrap", clock: input.clock, model: input.model, observedPressure: input.observedPressure });
     db = index(supported);
     db.exec("BEGIN IMMEDIATE");
     const existing = db.prepare("SELECT id,record FROM stack WHERE request_id=?").get(request.requestId);
@@ -135,13 +139,13 @@ export const fixtureStackUp = async (input: TestStackUpInputV1, context: OpsCont
       return { ok: true, data: view(record(db, old.stackId), old.state === "stopped") };
     }
     if (!supported) refuse("DEPENDENCY_UNAVAILABLE");
-    const measured = await measureBootstrapResources(context.timeoutMs);
-    if (measured.admissionState !== "admitted") refuse("MEMORY_PRESSURE");
+    const measured = await measureBootstrapResources(context.timeoutMs, 1073741824n, input.observedPressure);
+    if (measured.admissionState !== "admitted") refuse(measured.completeMeasurements ? "MEMORY_PRESSURE" : "DEPENDENCY_UNAVAILABLE");
     const stackId = randomUUID(); const now = new Date().toISOString();
     const value = fixtureStackRecordSchema.parse({ schemaVersion: "toy.r0-fixture-stack.v1", stackId, request,
       operation: { operationId: randomUUID(), state: "queued", acceptedAt: now }, generation: "1", ownerUid: home.uid,
       nonce: randomUUID(), schemaDigest: schemaBundleDigest, runtimeDigest: digest(readFileSync(workerPath)), state: "starting", pid: null,
-      createdAt: now, realExpiresAt: new Date(Date.now() + 7200000).toISOString(), evidenceId: randomUUID() });
+      createdAt: now, realExpiresAt: new Date(Date.now() + 7200000).toISOString(), evidenceId: randomUUID(), resourcePreflight: measured });
     const path = worldPath(stackId); privateDirectory(path); newFile(join(path, "manifest.json"), JSON.stringify(value)); newFile(join(path, "world.db"));
     target = world(value);
     target.exec("CREATE TABLE control (singleton INTEGER PRIMARY KEY CHECK(singleton=1), stop INTEGER NOT NULL CHECK(stop IN (0,1))); INSERT INTO control VALUES (1,0); CREATE TABLE worker (singleton INTEGER PRIMARY KEY CHECK(singleton=1), receipt TEXT NOT NULL CHECK(json_valid(receipt))); CREATE TABLE clock (singleton INTEGER PRIMARY KEY CHECK(singleton=1), state TEXT NOT NULL CHECK(json_valid(state))); CREATE TABLE request (id TEXT PRIMARY KEY, digest TEXT NOT NULL, receipt TEXT NOT NULL CHECK(json_valid(receipt))) STRICT");
@@ -279,17 +283,41 @@ export const FixtureClock = {
   }
 };
 export const FixtureProbe = {
-  run(input: RegisteredProbeInputV1, context: OpsControlContextV1): Result<RegisteredProbeOperationV1> {
+  run(input: RegisteredProbeInputV1, context: OpsControlContextV1, observations: readonly CheckViewV1[] = []): Result<RegisteredProbeOperationV1> {
     return clockCall(context, (db, value) => {
       const key = "probe:" + input.requestId; const hash = digest(JSON.stringify(input)); const old = db.prepare("SELECT digest,receipt FROM request WHERE id=?").get(key);
       if (old) { if (old.digest !== hash) refuse("CONFLICT"); return registeredProbeOperationSchema.parse(decode(old.receipt)); }
       const registered = registeredCliProbeInventory.find(entry => entry.id === input.probeId);
       if (!registered) refuse("INVALID_INPUT");
-      const implemented = (input.probeId === "AT-cli-4" || input.probeId === "AT-hermes-config-100") && (input.caseId === undefined || input.caseId === "stack-lifecycle");
-      const caseManifestDigest = digest(JSON.stringify({ probeId: input.probeId, caseId: input.caseId ?? "stack-lifecycle", source: registered }));
+      const lifecycle = (input.probeId === "AT-cli-4" || input.probeId === "AT-hermes-config-100") && (input.caseId === undefined || input.caseId === "stack-lifecycle");
+      const checks = observations.map(check => checkViewSchema.parse(check));
+      const reference = input.probeId === "AT-hermes-config-101" && ["k4a-connector", "k4a-tool", "k4a-skill"].includes(input.caseId ?? "");
+      const modelPolicy = input.caseId === "model-route-policy" && ["AT-hermes-config-1", "AT-hermes-config-76", "AT-hermes-config-77"].includes(input.probeId);
+      const modelStream = input.caseId === "model-route-stream" && ["AT-hermes-config-40", "AT-self-improvement-58"].includes(input.probeId);
+      const accounting = input.caseId === "model-admission" && ["AT-ops-49", "AT-ops-51", "AT-ops-52"].includes(input.probeId);
+      const nativeEligibility = input.caseId === "native-release-eligibility" && ["AT-ops-81", "AT-client-apps-49", "AT-activity-focus-64"].includes(input.probeId);
+      const nativeAuth = input.caseId === "native-auth-cli" && ["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-78", "AT-ops-55"].includes(input.probeId);
+      const backupCapacity = input.caseId === "backup-capacity" && ["AT-ops-62", "AT-lifestore-63", "AT-sources-216"].includes(input.probeId);
+      if (checks.length > 0 && !reference && !(modelPolicy || modelStream || accounting || nativeEligibility || nativeAuth || backupCapacity)) refuse("INVALID_INPUT");
+      if ((modelPolicy || modelStream) && checks.some(check => check.id !== "read.model-route-policy" || check.owner !== "hermes")) refuse("INVALID_INPUT");
+      if (accounting && checks.some(check => check.id !== "accounting.model-admission" || check.owner !== "self-improvement")) refuse("INVALID_INPUT");
+      if (nativeEligibility && checks.some(check => check.id !== "release.native-eligibility" || check.owner !== "ops")) refuse("INVALID_INPUT");
+      if (nativeAuth && checks.some(check => !["auth.native-runtime", "auth.native-fixture"].includes(check.id) || check.owner !== "hermes")) refuse("INVALID_INPUT");
+      if (backupCapacity && checks.some(check => check.id !== "backup.capacity" || check.owner !== "ops")) refuse("INVALID_INPUT");
+      if (input.probeId === "AT-hermes-config-101" && input.caseId === "k4a-migration") {
+        const sql = readFileSync(join(dirname(import.meta.dirname), "migrations/0001-k4a-reference.sql"));
+        const descriptor = readFileSync(join(dirname(import.meta.dirname), "migrations/0001-k4a-reference.json"));
+        if (digest(sql) !== "937f34c9c347e6306cc39a30f8910eade7ae539d17823627b57e645dd24a4e22" || digest(descriptor) !== "0dd2c45c2d1810d6fd93e510b417a866d59b3e2751e14b8bd51fb45d0e433839") refuse("ATTESTATION_INVALID");
+        if (!db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='k4a_reference_marker'").get()) db.exec(sql.toString("utf8"));
+        db.prepare("INSERT OR IGNORE INTO k4a_reference_marker VALUES (?,?)").run("R0.K4a", "ops");
+        const readback = db.prepare("SELECT reference_id,owner FROM k4a_reference_marker WHERE reference_id=?").get("R0.K4a");
+        checks.push(checkViewSchema.parse({ id: "bootstrap.reference.migration", owner: "ops", state: readback?.owner === "ops" ? "PASS" : "FAIL", checkedAt: new Date().toISOString(), reasonCode: "DISPOSABLE_OWNER_MIGRATION_READBACK", prerequisite: JSON.stringify({ migrationId: "ops.k4a.reference.0001", schema: "main", readback }), nextCommandId: "probe.show", links: { ...links, artifactDigests: [digest(sql), digest(descriptor)] } }));
+      }
+      const implemented = lifecycle || checks.length > 0;
+      const caseManifestDigest = digest(JSON.stringify({ probeId: input.probeId, caseId: input.caseId ?? "stack-lifecycle", source: registered, artifacts: checks.flatMap(check => check.links.artifactDigests) }));
       const observed = worker(db, value);
       const operation = registeredProbeOperationSchema.parse({ operation: { operationId: randomUUID(), state: implemented ? "succeeded" : "blocked", acceptedAt: new Date().toISOString() }, requestId: input.requestId, stackId: value.stackId, links,
-        probeId: input.probeId, binding: { releaseDigest: value.runtimeDigest, controlDigest: value.runtimeDigest, schemaDigest: value.schemaDigest, fixtureDigest: digest(readFileSync(join(worldPath(value.stackId), "manifest.json"))) }, caseManifestDigest, result: { probeId: input.probeId, caseManifestDigest, state: "NOT_IMPLEMENTED", complete: false, links, cases: [{ id: "bootstrap.fixture-runtime", owner: "ops", state: implemented && observed?.state === "running" ? "PASS" : "BLOCKED", checkedAt: new Date().toISOString(), reasonCode: implemented ? "TRUSTED_FIXTURE_LIFECYCLE_SUBSET" : "REGISTERED_CASE_NOT_IMPLEMENTED", nextCommandId: "probe.show", links, prerequisite: JSON.stringify(observed) }] } });
+        probeId: input.probeId, binding: { releaseDigest: value.runtimeDigest, controlDigest: value.runtimeDigest, schemaDigest: value.schemaDigest, fixtureDigest: digest(readFileSync(join(worldPath(value.stackId), "manifest.json"))) }, caseManifestDigest, result: { probeId: input.probeId, caseManifestDigest, state: "NOT_IMPLEMENTED", complete: false, links, cases: checks.length > 0 ? checks : [{ id: "bootstrap.fixture-runtime", owner: "ops", state: implemented && observed?.state === "running" ? "PASS" : "BLOCKED", checkedAt: new Date().toISOString(), reasonCode: implemented ? "TRUSTED_FIXTURE_LIFECYCLE_SUBSET" : "REGISTERED_CASE_NOT_IMPLEMENTED", nextCommandId: "probe.show", links, prerequisite: JSON.stringify(observed) }] } });
       db.prepare("INSERT INTO request VALUES (?,?,?)").run(key, hash, JSON.stringify(operation));
       return operation;
     });

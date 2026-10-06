@@ -462,7 +462,7 @@ export const findBlockedBootstrapUp = (input: TestStackUpInputV1, timeoutMs: num
     const { root, owner } = storeRoot("inspect");
     const request = bootstrapUpRequestSchema.parse({
       schemaVersion: "toy.bootstrap-up-request.v1", requestId: input.requestId.toLowerCase(), release: input.release,
-      world: input.world ?? "r0-bootstrap", clock: input.clock, model: input.model
+      world: input.world ?? "r0-bootstrap", clock: input.clock, model: input.model, observedPressure: input.observedPressure
     });
     ownedFile(join(root, "ops.db"), owner.uid, 16777216n);
     db = openDatabase(join(root, "ops.db"), deadline, true);
@@ -485,7 +485,7 @@ export const recordBlockedBootstrapUp = async (input: TestStackUpInputV1, timeou
     inTime();
     const request = bootstrapUpRequestSchema.parse({
       schemaVersion: "toy.bootstrap-up-request.v1", requestId: input.requestId.toLowerCase(), release: input.release,
-      world: input.world ?? "r0-bootstrap", clock: input.clock, model: input.model
+      world: input.world ?? "r0-bootstrap", clock: input.clock, model: input.model, observedPressure: input.observedPressure
     });
     const supported = request.release === "R0" && request.clock === "fake" && request.model === "fake";
     const { root, owner, created } = storeRoot(supported ? "create" : "inspect");

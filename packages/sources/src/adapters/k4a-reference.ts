@@ -1,5 +1,9 @@
 import { capabilityManifestSchema } from "@toy/contracts";
+import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
 import type { R0AdapterContext, R0AdapterPage, R0PartitionDefinition, SourceAdapterR0 } from "@toy/contracts";
+
+export const k4aReferenceSourceDigest = createHash("sha256").update(readFileSync(import.meta.filename)).digest("hex");
 
 const fixturePartition: R0PartitionDefinition = { partition: "empty" };
 

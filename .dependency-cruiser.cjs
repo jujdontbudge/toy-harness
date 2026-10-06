@@ -6,6 +6,7 @@ const forbidden = [
   { name: "no-unresolved", severity: "error", from: {}, to: { couldNotResolve: true } },
   { name: "no-cycles", severity: "error", from: {}, to: { circular: true } },
   { name: "protected-controls", severity: "error", from: { path: "^(packages|cli|plugins|tests)/" }, to: { path: "^control/" } },
+  { name: "protected-controls-contracts-only", severity: "error", from: { path: "^control/" }, to: { path: "^(packages/(?!contracts/)|cli/|plugins/|tests/)" } },
   { name: "contracts-no-owners", severity: "error", from: { path: "^packages/contracts/" }, to: { path: "^(packages/(?!contracts/)|cli/|control/)" } },
   { name: "cli-public-only", severity: "error", from: { path: "^cli/" }, to: { path: `^packages/(?!${publicModules(graph.cliDependencies)})` } },
   { name: "tests-public-only", severity: "error", from: { path: "^tests/" }, to: { path: `^packages/(?!${publicModules(graph.modules.map((item) => item.id))})` } },

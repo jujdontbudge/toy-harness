@@ -12,12 +12,24 @@ export type ServiceId = z.infer<typeof serviceIdSchema>;
 const declaration = <Id extends string>(id: Id, owner: ModuleId, nextCommandId: CliCommandId) => ({ id, owner, nextCommandId });
 export const opsControlReadInventory = [
   ...serviceIdSchema.options.map((id) => declaration(`service.${id}`, "ops", "status")),
+  declaration("read.model-route", "ops", "doctor"),
+  declaration("read.model-route-policy", "hermes", "doctor"),
   declaration("read.ops", "ops", "status"), declaration("read.sources", "sources", "sources.health"),
   declaration("read.attention", "attention", "attention.snapshot"), declaration("read.quota", "ops", "status"),
   declaration("read.cadence", "self-improvement", "review.slots"), declaration("read.release", "ops", "release.status")
 ];
 export const testStackCheckInventory = [
+  declaration("engineering.map", "self-improvement", "feature-map.check"), declaration("engineering.static", "self-improvement", "gardener.run"),
+  declaration("accounting.model-admission", "self-improvement", "probe.run"),
+  declaration("release.native-eligibility", "ops", "probe.run"),
+  declaration("backup.local-inventory", "ops", "doctor"),
+  declaration("backup.capacity", "ops", "probe.run"),
+  declaration("auth.native-runtime", "hermes", "probe.run"),
+  declaration("auth.native-fixture", "hermes", "probe.run"),
+  declaration("bootstrap.reference.connector", "sources", "probe.run"), declaration("bootstrap.reference.tool", "self-improvement", "probe.run"),
+  declaration("bootstrap.reference.skill", "self-improvement", "probe.run"), declaration("bootstrap.reference.migration", "ops", "probe.run"),
   declaration("bootstrap.fixture-runtime", "ops", "stack.up"), declaration("bootstrap.fixture-identities", "ops", "doctor"),
+  declaration("bootstrap.role-identities", "ops", "doctor"),
   declaration("bootstrap.journal", "ops", "stack.up"),
   declaration("bootstrap.signature", "ops", "stack.up"), declaration("bootstrap.native-entry", "ops", "stack.up"),
   declaration("bootstrap.inherited-child", "ops", "stack.up"), declaration("bootstrap.fs-denial", "ops", "stack.up"),

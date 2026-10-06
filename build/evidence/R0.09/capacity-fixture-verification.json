@@ -1,0 +1,394 @@
+{
+  "kind": "toy.r009-capacity-fixture-verification.v1",
+  "generatedAt": "2026-10-06T10:37:47.251551+00:00",
+  "verdict": "PASS_CAPACITY_POLICY_CLI_SUBSETS_LOCAL_READ_AND_CLEANUP",
+  "schemaDigest": "7763e332fc9a951fcc2072a493b960ee356e1bc8f28890e6d2b34912e7f8ffd6",
+  "assignedRung": "CLI",
+  "diagnosticCase": "backup-capacity",
+  "sourceBoundChecks": 24,
+  "maximumCheckPrerequisiteLength": 1504,
+  "wholeATsPassed": [],
+  "fullATComplete": false,
+  "operations": [
+    {
+      "probeId": "AT-ops-62",
+      "operationId": "53ed2383-fcb5-4bad-bdc3-1e1e6eec7c83",
+      "run": "build/evidence/R0.09-capacity-ops-probe.json",
+      "show": "build/evidence/R0.09-capacity-ops-show.json",
+      "exactReadback": true,
+      "runSha256": "d8c7f36375078a3c0b9d904984b168d62ec40bd447cb775de57ae7c49ef9c1ef",
+      "showSha256": "55978ded83c7b483720cf51ab3490d27e3f37de8ddee29af63ccf4915daa7f13",
+      "caseManifestDigest": "cc7293d1bda1f0d59c6a0099eddb54c4fffddfe0d93639ee0dca6302a5e33c56",
+      "binding": {
+        "releaseDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "controlDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "schemaDigest": "7763e332fc9a951fcc2072a493b960ee356e1bc8f28890e6d2b34912e7f8ffd6",
+        "fixtureDigest": "e0e32a71f11591a5302baa73ba680c1145184d33616c8446339fd915c89381d6"
+      },
+      "checks": 8,
+      "cells": [
+        {
+          "scenario": "missing-external-b2-free-cap-exceeded",
+          "verdict": "FAIL",
+          "independentDestinationCount": 0,
+          "staging": "eligible-for-testing",
+          "pauseLowPriority": true,
+          "gaps": [
+            "OFFSITE_CAPACITY_UNAVAILABLE"
+          ]
+        },
+        {
+          "scenario": "unproved-offsite-capacity",
+          "verdict": "INCOMPLETE",
+          "independentDestinationCount": 1,
+          "staging": "eligible-for-testing",
+          "pauseLowPriority": true,
+          "gaps": [
+            "OFFSITE_CAPACITY_UNAVAILABLE"
+          ]
+        },
+        {
+          "scenario": "outage-and-staging-floor-equality",
+          "verdict": "FAIL",
+          "independentDestinationCount": 1,
+          "staging": "refused",
+          "pauseLowPriority": true,
+          "gaps": [
+            "STAGING_FLOOR",
+            "NONCRITICAL_DISK_FLOOR",
+            "DESTINATION_OUTAGE",
+            "OFFSITE_CAPACITY_UNAVAILABLE"
+          ]
+        },
+        {
+          "scenario": "next-write-crosses-staging-floor",
+          "verdict": "FAIL",
+          "independentDestinationCount": 2,
+          "staging": "refused",
+          "pauseLowPriority": true,
+          "gaps": [
+            "STAGING_FLOOR",
+            "NONCRITICAL_DISK_FLOOR"
+          ]
+        },
+        {
+          "scenario": "growth-and-all-overhead-control",
+          "verdict": "PASS",
+          "independentDestinationCount": 2,
+          "staging": "eligible-for-testing",
+          "pauseLowPriority": false,
+          "gaps": []
+        },
+        {
+          "scenario": "internal-snapshot-never-independent",
+          "verdict": "PASS",
+          "independentDestinationCount": 2,
+          "staging": "eligible-for-testing",
+          "pauseLowPriority": false,
+          "gaps": []
+        },
+        {
+          "scenario": "unmeasured-growth-stays-incomplete",
+          "verdict": "INCOMPLETE",
+          "independentDestinationCount": 0,
+          "staging": "eligible-for-testing",
+          "pauseLowPriority": true,
+          "gaps": [
+            "FORECAST_UNPROVEN",
+            "OFFSITE_CAPACITY_UNAVAILABLE"
+          ]
+        },
+        {
+          "scenario": "forecast-overflow-refuses",
+          "verdict": "FAIL",
+          "independentDestinationCount": 0,
+          "staging": "eligible-for-testing",
+          "pauseLowPriority": true,
+          "gaps": [
+            "FORECAST_OVERFLOW",
+            "OFFSITE_CAPACITY_UNAVAILABLE"
+          ]
+        }
+      ]
+    },
+    {
+      "probeId": "AT-lifestore-63",
+      "operationId": "a50d29e2-934e-4692-a478-f1e5e3254e1e",
+      "run": "build/evidence/R0.09-capacity-lifestore-probe.json",
+      "show": "build/evidence/R0.09-capacity-lifestore-show.json",
+      "exactReadback": true,
+      "runSha256": "1b4bee8eb32d20bd4808b4137a35fead69fd23aa786a84a356110aac794c5a43",
+      "showSha256": "34a4b85315186564a7e9298721dbbd75463de7e09fef6226d96e802acc71ad2a",
+      "caseManifestDigest": "05a7f1b3cf2b2355999d2635a67c85cd0d6d4107fc3de0aef457ca6bcc3e2c6d",
+      "binding": {
+        "releaseDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "controlDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "schemaDigest": "7763e332fc9a951fcc2072a493b960ee356e1bc8f28890e6d2b34912e7f8ffd6",
+        "fixtureDigest": "e0e32a71f11591a5302baa73ba680c1145184d33616c8446339fd915c89381d6"
+      },
+      "checks": 8,
+      "cells": [
+        {
+          "scenario": "missing-external-b2-free-cap-exceeded",
+          "verdict": "FAIL",
+          "independentDestinationCount": 0,
+          "staging": "eligible-for-testing",
+          "pauseLowPriority": true,
+          "gaps": [
+            "OFFSITE_CAPACITY_UNAVAILABLE"
+          ]
+        },
+        {
+          "scenario": "unproved-offsite-capacity",
+          "verdict": "INCOMPLETE",
+          "independentDestinationCount": 1,
+          "staging": "eligible-for-testing",
+          "pauseLowPriority": true,
+          "gaps": [
+            "OFFSITE_CAPACITY_UNAVAILABLE"
+          ]
+        },
+        {
+          "scenario": "outage-and-staging-floor-equality",
+          "verdict": "FAIL",
+          "independentDestinationCount": 1,
+          "staging": "refused",
+          "pauseLowPriority": true,
+          "gaps": [
+            "STAGING_FLOOR",
+            "NONCRITICAL_DISK_FLOOR",
+            "DESTINATION_OUTAGE",
+            "OFFSITE_CAPACITY_UNAVAILABLE"
+          ]
+        },
+        {
+          "scenario": "next-write-crosses-staging-floor",
+          "verdict": "FAIL",
+          "independentDestinationCount": 2,
+          "staging": "refused",
+          "pauseLowPriority": true,
+          "gaps": [
+            "STAGING_FLOOR",
+            "NONCRITICAL_DISK_FLOOR"
+          ]
+        },
+        {
+          "scenario": "growth-and-all-overhead-control",
+          "verdict": "PASS",
+          "independentDestinationCount": 2,
+          "staging": "eligible-for-testing",
+          "pauseLowPriority": false,
+          "gaps": []
+        },
+        {
+          "scenario": "internal-snapshot-never-independent",
+          "verdict": "PASS",
+          "independentDestinationCount": 2,
+          "staging": "eligible-for-testing",
+          "pauseLowPriority": false,
+          "gaps": []
+        },
+        {
+          "scenario": "unmeasured-growth-stays-incomplete",
+          "verdict": "INCOMPLETE",
+          "independentDestinationCount": 0,
+          "staging": "eligible-for-testing",
+          "pauseLowPriority": true,
+          "gaps": [
+            "FORECAST_UNPROVEN",
+            "OFFSITE_CAPACITY_UNAVAILABLE"
+          ]
+        },
+        {
+          "scenario": "forecast-overflow-refuses",
+          "verdict": "FAIL",
+          "independentDestinationCount": 0,
+          "staging": "eligible-for-testing",
+          "pauseLowPriority": true,
+          "gaps": [
+            "FORECAST_OVERFLOW",
+            "OFFSITE_CAPACITY_UNAVAILABLE"
+          ]
+        }
+      ]
+    },
+    {
+      "probeId": "AT-sources-216",
+      "operationId": "95a6fc9d-2756-49cf-8779-e0e627d14d6c",
+      "run": "build/evidence/R0.09-capacity-sources-probe.json",
+      "show": "build/evidence/R0.09-capacity-sources-show.json",
+      "exactReadback": true,
+      "runSha256": "79e13fa7803a030ca909e71052f1b93d33f66cddff8593170cc957191f4215eb",
+      "showSha256": "1406cc1108d95393bf4fc2085cfe1878237e5d56485dfc6b394b30c5ec797aa9",
+      "caseManifestDigest": "628a6e68abadfc548ab9e9aeaa349d32c8a4db0ac6614839bbf8fc1cdd63ce87",
+      "binding": {
+        "releaseDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "controlDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "schemaDigest": "7763e332fc9a951fcc2072a493b960ee356e1bc8f28890e6d2b34912e7f8ffd6",
+        "fixtureDigest": "e0e32a71f11591a5302baa73ba680c1145184d33616c8446339fd915c89381d6"
+      },
+      "checks": 8,
+      "cells": [
+        {
+          "scenario": "missing-external-b2-free-cap-exceeded",
+          "verdict": "FAIL",
+          "independentDestinationCount": 0,
+          "staging": "eligible-for-testing",
+          "pauseLowPriority": true,
+          "gaps": [
+            "OFFSITE_CAPACITY_UNAVAILABLE"
+          ]
+        },
+        {
+          "scenario": "unproved-offsite-capacity",
+          "verdict": "INCOMPLETE",
+          "independentDestinationCount": 1,
+          "staging": "eligible-for-testing",
+          "pauseLowPriority": true,
+          "gaps": [
+            "OFFSITE_CAPACITY_UNAVAILABLE"
+          ]
+        },
+        {
+          "scenario": "outage-and-staging-floor-equality",
+          "verdict": "FAIL",
+          "independentDestinationCount": 1,
+          "staging": "refused",
+          "pauseLowPriority": true,
+          "gaps": [
+            "STAGING_FLOOR",
+            "NONCRITICAL_DISK_FLOOR",
+            "DESTINATION_OUTAGE",
+            "OFFSITE_CAPACITY_UNAVAILABLE"
+          ]
+        },
+        {
+          "scenario": "next-write-crosses-staging-floor",
+          "verdict": "FAIL",
+          "independentDestinationCount": 2,
+          "staging": "refused",
+          "pauseLowPriority": true,
+          "gaps": [
+            "STAGING_FLOOR",
+            "NONCRITICAL_DISK_FLOOR"
+          ]
+        },
+        {
+          "scenario": "growth-and-all-overhead-control",
+          "verdict": "PASS",
+          "independentDestinationCount": 2,
+          "staging": "eligible-for-testing",
+          "pauseLowPriority": false,
+          "gaps": []
+        },
+        {
+          "scenario": "internal-snapshot-never-independent",
+          "verdict": "PASS",
+          "independentDestinationCount": 2,
+          "staging": "eligible-for-testing",
+          "pauseLowPriority": false,
+          "gaps": []
+        },
+        {
+          "scenario": "unmeasured-growth-stays-incomplete",
+          "verdict": "INCOMPLETE",
+          "independentDestinationCount": 0,
+          "staging": "eligible-for-testing",
+          "pauseLowPriority": true,
+          "gaps": [
+            "FORECAST_UNPROVEN",
+            "OFFSITE_CAPACITY_UNAVAILABLE"
+          ]
+        },
+        {
+          "scenario": "forecast-overflow-refuses",
+          "verdict": "FAIL",
+          "independentDestinationCount": 0,
+          "staging": "eligible-for-testing",
+          "pauseLowPriority": true,
+          "gaps": [
+            "FORECAST_OVERFLOW",
+            "OFFSITE_CAPACITY_UNAVAILABLE"
+          ]
+        }
+      ]
+    }
+  ],
+  "sourceDigests": {
+    "packages/ops/dist/backup-capacity.js": "2d5307018e0e1e57709262b4ef38d73093e7d3f66cb90033cc06fda6d987c2c9",
+    "packages/ops/dist/backup-capacity-probe.js": "4440d9007128f689dfb15bb8f306af14674c2a4563f0bb7e40b38ca5246ddddb",
+    "packages/ops/dist/fixture-stack.js": "4f388f1fd7f19a4f0bf160169920d204242554664c512b34ac58a2e9ac0470ca",
+    "packages/ops/src/backup-capacity.ts": "0b57f10b25a130cae105d1f3ba0b1426e99b36a7a22e0360b205b6864b452d14",
+    "packages/ops/src/backup-capacity-probe.ts": "82e3d9ae29ac6b1d80b3c815cb45aafae69dae3ebc6776104b8f3e0bbae36506",
+    "packages/contracts/src/backup-capacity.ts": "ba408f6da6d72506e767632960ab9ba9d7d9ea96d08ff39e753588670e89415b",
+    "packages/contracts/src/ops-registry.ts": "91bde6620c30a11d993942456e2c957e5f26baaf6a443d1dc0838af2b1c53957",
+    "packages/contracts/src/test-control.ts": "c67dab8f6589a714f548fa78781647c253f89eea166abd0fa05dcbb6237c1253",
+    "cli/dist/main.js": "a17695bee7f4ae8806edf33c7de86f65686b1840b63ea13f2d8b2161a652f96a",
+    "architecture/features.json": "1f95b2b39417b79c1f7e589f0eebeeece92d6238ee85da219f36461e3849ccca",
+    "skills/toy-control/FEATURE-MAP.md": "26c4d10af6ff254d025981a1c3e8464b6a7c1a49335c3d678d53ab17ae02528d"
+  },
+  "staticChecks": {
+    "command": "npm run check",
+    "exitCode": 0,
+    "log": "build/evidence/R0.09-capacity-check-final.txt",
+    "generatedAt": "2026-10-06T10:30:32.390Z",
+    "artifacts": 327,
+    "contracts": 259,
+    "features": 90,
+    "commands": 55,
+    "indexedATs": 1447,
+    "swiftInvoked": false
+  },
+  "localInventory": {
+    "receipt": "build/evidence/R0.09-capacity-local-doctor.json",
+    "observation": {
+      "observedAt": "2026-10-06T10:30:17.044Z",
+      "dataFilesystemPath": "/System/Volumes/Data",
+      "primaryTotalBytes": "245107195904",
+      "primaryAvailableBytes": "122298724352",
+      "externalPhysicalDiskCount": null,
+      "localCapacityState": "measured",
+      "externalMetadataState": "unavailable",
+      "independentDestinationCapacityVerified": false,
+      "remoteAccountInspected": false,
+      "restoreVerified": false
+    },
+    "externalUnavailableIsNotAbsenceProof": true
+  },
+  "memoryAdmission": {
+    "up": "build/evidence/R0.09-capacity-stack-up.json",
+    "availableBytes": "3429122048",
+    "pressure": "normal",
+    "pressureSource": "operator-observation",
+    "jobNeedBytes": "1073741824",
+    "marginBytes": "536870912",
+    "strictlyFreeGate": false,
+    "r5RepairFloorUsed": false
+  },
+  "cleanup": {
+    "down": "build/evidence/R0.09-capacity-stack-down.json",
+    "complete": true,
+    "unresolvedResourceRefs": [],
+    "helpersRunning": 0
+  },
+  "remoteInventory": "build/evidence/R0.09/remote-capacity-browser-inventory.json",
+  "scope": {
+    "actualIndependentDestinationCapacityVerified": false,
+    "actualNoSpendAccountAllowanceVerified": false,
+    "actualRestoreExecuted": false,
+    "actualSourcePauseOrReuseExecuted": false,
+    "durableBackupStateImplemented": false,
+    "liveProfileOrServiceChanged": false,
+    "credentialsInspected": false,
+    "uploadOrPurchase": false
+  },
+  "pending": [
+    "R0.02 and actual R0.05 dependencies",
+    "Actual independent destination/account headroom, no-spend allowance and recovery escrow",
+    "Measured permitted-source growth and destination throughput",
+    "Harmless independent restore and lifecycle proof",
+    "Actual Sources pause/gaps and sealed-set reuse effects",
+    "Complete assigned acceptance manifests"
+  ],
+  "wholeGoalComplete": false
+}

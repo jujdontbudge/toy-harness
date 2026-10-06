@@ -1,0 +1,181 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "observedAt": {
+      "type": "string",
+      "minLength": 24,
+      "maxLength": 24,
+      "format": "date-time",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+    },
+    "verdict": {
+      "type": "string",
+      "enum": [
+        "PASS",
+        "FAIL",
+        "INCOMPLETE"
+      ]
+    },
+    "requiredBytes": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^(?:0|[1-9][0-9]{0,18}|1[0-7][0-9]{18}|18[0-3][0-9]{17}|184[0-3][0-9]{16}|1844[0-5][0-9]{15}|18446[0-6][0-9]{14}|184467[0-3][0-9]{13}|1844674[0-3][0-9]{12}|184467440[0-6][0-9]{10}|1844674407[0-2][0-9]{9}|18446744073[0-6][0-9]{8}|1844674407370[0-8][0-9]{6}|18446744073709[0-4][0-9]{5}|184467440737095[0-4][0-9]{4}|18446744073709550[0-9]{3}|18446744073709551[0-5][0-9]{2}|1844674407370955160[0-9]{1}|1844674407370955161[0-4]|18446744073709551615)(?![\\s\\S])"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "growthBytesPerDay": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^(?:0|[1-9][0-9]{0,18}|1[0-7][0-9]{18}|18[0-3][0-9]{17}|184[0-3][0-9]{16}|1844[0-5][0-9]{15}|18446[0-6][0-9]{14}|184467[0-3][0-9]{13}|1844674[0-3][0-9]{12}|184467440[0-6][0-9]{10}|1844674407[0-2][0-9]{9}|18446744073[0-6][0-9]{8}|1844674407370[0-8][0-9]{6}|18446744073709[0-4][0-9]{5}|184467440737095[0-4][0-9]{4}|18446744073709550[0-9]{3}|18446744073709551[0-5][0-9]{2}|1844674407370955160[0-9]{1}|1844674407370955161[0-4]|18446744073709551615)(?![\\s\\S])"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "destinations": {
+      "maxItems": 3,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "external",
+              "b2",
+              "internal-snapshot"
+            ]
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "unavailable",
+              "blocked",
+              "eligible-for-testing"
+            ]
+          },
+          "reasons": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "INVENTORY_UNPROVEN",
+                "DESTINATION_MISSING",
+                "DESTINATION_OUTAGE",
+                "CAPACITY_EXCEEDED",
+                "INTERNAL_SNAPSHOT",
+                "POLICY_UNPROVEN",
+                "NO_SPEND_UNPROVEN",
+                "ESCROW_UNPROVEN",
+                "RESTORE_UNPROVEN",
+                "FORECAST_UNPROVEN",
+                "FORECAST_OVERFLOW"
+              ]
+            }
+          },
+          "remainingDays": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^(?:0|[1-9][0-9]{0,18}|1[0-7][0-9]{18}|18[0-3][0-9]{17}|184[0-3][0-9]{16}|1844[0-5][0-9]{15}|18446[0-6][0-9]{14}|184467[0-3][0-9]{13}|1844674[0-3][0-9]{12}|184467440[0-6][0-9]{10}|1844674407[0-2][0-9]{9}|18446744073[0-6][0-9]{8}|1844674407370[0-8][0-9]{6}|18446744073709[0-4][0-9]{5}|184467440737095[0-4][0-9]{4}|18446744073709550[0-9]{3}|18446744073709551[0-5][0-9]{2}|1844674407370955160[0-9]{1}|1844674407370955161[0-4]|18446744073709551615)(?![\\s\\S])"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "kind",
+          "state",
+          "reasons",
+          "remainingDays"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "independentDestinationCount": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 2
+    },
+    "disasterRpo": {
+      "type": "string",
+      "enum": [
+        "unattainable",
+        "unproven",
+        "eligible-for-testing"
+      ]
+    },
+    "staging": {
+      "type": "string",
+      "enum": [
+        "refused",
+        "eligible-for-testing"
+      ]
+    },
+    "pauseLowPriority": {
+      "type": "boolean"
+    },
+    "gaps": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "FORECAST_UNPROVEN",
+          "FORECAST_OVERFLOW",
+          "STAGING_FLOOR",
+          "NONCRITICAL_DISK_FLOOR",
+          "DESTINATION_OUTAGE",
+          "OFFSITE_CAPACITY_UNAVAILABLE"
+        ]
+      }
+    },
+    "sealedPartialSets": {
+      "type": "string",
+      "const": "reuse-before-new-staging"
+    },
+    "deletePermittedData": {
+      "type": "boolean",
+      "const": false
+    },
+    "purchaseAssumed": {
+      "type": "boolean",
+      "const": false
+    },
+    "uploadPermitted": {
+      "type": "boolean",
+      "const": false
+    },
+    "deployedCoverageVerified": {
+      "type": "boolean",
+      "const": false
+    }
+  },
+  "required": [
+    "observedAt",
+    "verdict",
+    "requiredBytes",
+    "growthBytesPerDay",
+    "destinations",
+    "independentDestinationCount",
+    "disasterRpo",
+    "staging",
+    "pauseLowPriority",
+    "gaps",
+    "sealedPartialSets",
+    "deletePermittedData",
+    "purchaseAssumed",
+    "uploadPermitted",
+    "deployedCoverageVerified"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:BackupCapacityDecisionV1"
+}

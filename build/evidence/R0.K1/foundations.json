@@ -1,8 +1,8 @@
 {
   "schemaVersion": "toy.bootstrap-gate.v1",
   "card": "R0.K1",
-  "attemptId": "2026-10-05T03-04-33-885Z-a2bdbf3f-1828-4801-85c4-52f405abb4a0",
-  "generatedAt": "2026-10-05T03:04:37.246Z",
+  "attemptId": "2026-10-06T07-38-21-801Z-f5e78e0a-47bb-4ea2-a1f8-898601249dd6",
+  "generatedAt": "2026-10-06T07:38:28.560Z",
   "verdict": "PASS",
   "acceptanceComplete": false,
   "pendingATs": [
@@ -10,13 +10,13 @@
   ],
   "limitation": "Bootstrap compiler/import proof only; full CLI/generator/map assertion and independently protected filesystem identities remain pending.",
   "digests": {
-    "architecture/modules.json": "ec2fd331b5794b88659f19cf3eb1b62a71c8638e0e71da740a3558d1a70bb44d",
+    "architecture/modules.json": "570e921735ed76778864746ef954875cbac9431bf3862f70d38bf69533190b93",
     "tsconfig.base.json": "b943304f54927c227fe1722743af742e7296e7e3af63b29c2d8dbe6fa065b1b8",
-    ".dependency-cruiser.cjs": "8ebe13ebc225472224243a5bb8b638a659986c000a4054e0317ba7d0663b6d7e",
+    ".dependency-cruiser.cjs": "d62bbe60ae0f503e83734c938c4068077288cdf5ef39a44481bc0748345f7ed4",
     "pyrightconfig.json": "b028b4bcd890bca1db4ba3fa1f2458e5a5780a64de0a221d6d7f9b8ca5610c57",
     "pyproject.toml": "42ab3303f1125548926ec06f6b2b1ef0aa17574be4ab7735a8c7de88281758d4",
-    "package-lock.json": "f89d9e8a476c2ad247f24a1e30f32c9d635b9d2533f95f816b5a4f79f836fe2f",
-    "scripts/check-foundations.mjs": "9f7e815d8a158d4699aa7de32dfdb4c3ce9af6d80cde515fea071ea932644198"
+    "package-lock.json": "df9aaf44c7a95730510a2363b5919b4bf0ccdc5071ad9d95b4c9d44318f00909",
+    "scripts/check-foundations.mjs": "4a16beef012d3ef85a83005c3b802385ce4b655321585c05797fd0168d5e8f99"
   },
   "results": [
     {
@@ -40,11 +40,12 @@
         "--config",
         ".dependency-cruiser.cjs",
         "packages",
-        "cli"
+        "cli",
+        "control"
       ],
       "exitCode": 0,
       "passed": true,
-      "output": "\n✔ no dependency violations found (44 modules, 32 dependencies cruised)\n\n"
+      "output": "\n✔ no dependency violations found (183 modules, 535 dependencies cruised)\n\n"
     },
     {
       "id": "valid-pyright",
@@ -75,7 +76,7 @@
       ],
       "exitCode": 0,
       "passed": true,
-      "output": "\u001b[1m=============\u001b[0m\n\u001b[1mImport Linter\u001b[0m\n\u001b[1m=============\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[1m---------\u001b[0m\n\u001b[1mContracts\u001b[0m\n\u001b[1m---------\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[1mAnalyzed 4 files, 0 dependencies.\u001b[0m\n\u001b[1m---------------------------------\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[22mHermes adapter cannot import protected controls \u001b[0m\u001b[32m\u001b[22mKEPT\u001b[0m\u001b[33m\u001b[22m\u001b[0m\u001b[22m\u001b[0m\n\u001b[22mProtected controls cannot depend on agent implementation \u001b[0m\u001b[32m\u001b[22mKEPT\u001b[0m\u001b[33m\u001b[22m\u001b[0m\u001b[22m\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[22mContracts: 2 kept, 0 broken.\u001b[0m\n"
+      "output": "\u001b[1m=============\u001b[0m\n\u001b[1mImport Linter\u001b[0m\n\u001b[1m=============\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[1m---------\u001b[0m\n\u001b[1mContracts\u001b[0m\n\u001b[1m---------\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[1mAnalyzed 13 files, 9 dependencies.\u001b[0m\n\u001b[1m----------------------------------\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[22mHermes adapter cannot import protected controls \u001b[0m\u001b[32m\u001b[22mKEPT\u001b[0m\u001b[33m\u001b[22m\u001b[0m\u001b[22m\u001b[0m\n\u001b[22mProtected controls cannot depend on agent implementation \u001b[0m\u001b[32m\u001b[22mKEPT\u001b[0m\u001b[33m\u001b[22m\u001b[0m\u001b[22m\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[22mContracts: 2 kept, 0 broken.\u001b[0m\n"
     },
     {
       "id": "private-import-denied",
@@ -89,7 +90,7 @@
       ],
       "exitCode": 1,
       "passed": true,
-      "output": "\n  error obligations-public-boundaries: packages/obligations/src/denial-fixture.ts → packages/sources/src/denial-fixture.ts\n\nx 1 dependency violations (1 errors, 0 warnings). 46 modules, 33 dependencies cruised.\n\n"
+      "output": "\n  error obligations-public-boundaries: packages/obligations/src/denial-fixture.ts → packages/sources/src/denial-fixture.ts\n\nx 1 dependency violations (1 errors, 0 warnings). 169 modules, 489 dependencies cruised.\n\n"
     },
     {
       "id": "compiled-public-import-allowed",
@@ -103,7 +104,7 @@
       ],
       "exitCode": 0,
       "passed": true,
-      "output": "\n✔ no dependency violations found (45 modules, 34 dependencies cruised)\n\n"
+      "output": "\n✔ no dependency violations found (168 modules, 490 dependencies cruised)\n\n"
     },
     {
       "id": "contracts-private-import-denied",
@@ -117,7 +118,7 @@
       ],
       "exitCode": 1,
       "passed": true,
-      "output": "\n  error obligations-public-boundaries: packages/obligations/src/denial-fixture.ts → packages/contracts/src/denial-fixture.ts\n\nx 1 dependency violations (1 errors, 0 warnings). 46 modules, 33 dependencies cruised.\n\n"
+      "output": "\n  error obligations-public-boundaries: packages/obligations/src/denial-fixture.ts → packages/contracts/src/denial-fixture.ts\n\nx 1 dependency violations (1 errors, 0 warnings). 169 modules, 489 dependencies cruised.\n\n"
     },
     {
       "id": "tests-private-import-denied",
@@ -132,7 +133,7 @@
       ],
       "exitCode": 1,
       "passed": true,
-      "output": "\n  error tests-public-only: tests/fixtures/denial-fixture.ts → packages/contracts/src/denial-fixture.ts\n\nx 1 dependency violations (1 errors, 0 warnings). 46 modules, 33 dependencies cruised.\n\n"
+      "output": "\n  error tests-public-only: tests/fixtures/denial-fixture.ts → packages/contracts/src/denial-fixture.ts\n\nx 1 dependency violations (1 errors, 0 warnings). 175 modules, 521 dependencies cruised.\n\n"
     },
     {
       "id": "protected-import-denied",
@@ -146,7 +147,22 @@
       ],
       "exitCode": 1,
       "passed": true,
-      "output": "\n  error protected-controls: cli/src/denial-fixture.ts → control/evaluator/denial-fixture.ts\n\nx 1 dependency violations (1 errors, 0 warnings). 47 modules, 33 dependencies cruised.\n\n"
+      "output": "\n  error protected-controls: cli/src/denial-fixture.ts → control/evaluator/denial-fixture.ts\n\nx 1 dependency violations (1 errors, 0 warnings). 169 modules, 489 dependencies cruised.\n\n"
+    },
+    {
+      "id": "protected-agent-dependency-denied",
+      "executable": "/Users/johansardar/.local/share/node/node-v24.21.0-darwin-arm64/bin/node",
+      "argv": [
+        "node_modules/dependency-cruiser/bin/dependency-cruiser.mjs",
+        "--config",
+        ".dependency-cruiser.cjs",
+        "packages",
+        "cli",
+        "control"
+      ],
+      "exitCode": 1,
+      "passed": true,
+      "output": "\n  error protected-controls-contracts-only: control/secrets/denial-fixture.ts → packages/hermes/src/public.ts\n\nx 1 dependency violations (1 errors, 0 warnings). 184 modules, 536 dependencies cruised.\n\n"
     },
     {
       "id": "unchecked-index-denied",
@@ -179,7 +195,17 @@
       ],
       "exitCode": 1,
       "passed": true,
-      "output": "\u001b[1m=============\u001b[0m\n\u001b[1mImport Linter\u001b[0m\n\u001b[1m=============\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[1m---------\u001b[0m\n\u001b[1mContracts\u001b[0m\n\u001b[1m---------\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[1mAnalyzed 5 files, 1 dependencies.\u001b[0m\n\u001b[1m---------------------------------\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[22mHermes adapter cannot import protected controls \u001b[0m\u001b[31m\u001b[22mBROKEN\u001b[0m\u001b[33m\u001b[22m\u001b[0m\u001b[22m\u001b[0m\n\u001b[22mProtected controls cannot depend on agent implementation \u001b[0m\u001b[32m\u001b[22mKEPT\u001b[0m\u001b[33m\u001b[22m\u001b[0m\u001b[22m\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[22mContracts: 1 kept, 1 broken.\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[31m\u001b[1m----------------\u001b[0m\n\u001b[31m\u001b[1mBroken contracts\u001b[0m\n\u001b[31m\u001b[1m----------------\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[31m\u001b[1mHermes adapter cannot import protected controls\u001b[0m\n\u001b[31m\u001b[1m-----------------------------------------------\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[31m\u001b[1mtoy_adapter is not allowed to import toy_control:\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[31m\u001b[22m-   toy_adapter.denial_fixture -> toy_control.public (l.1)\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[22m\u001b[0m\n"
+      "output": "\u001b[1m=============\u001b[0m\n\u001b[1mImport Linter\u001b[0m\n\u001b[1m=============\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[1m---------\u001b[0m\n\u001b[1mContracts\u001b[0m\n\u001b[1m---------\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[1mAnalyzed 14 files, 10 dependencies.\u001b[0m\n\u001b[1m-----------------------------------\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[22mHermes adapter cannot import protected controls \u001b[0m\u001b[31m\u001b[22mBROKEN\u001b[0m\u001b[33m\u001b[22m\u001b[0m\u001b[22m\u001b[0m\n\u001b[22mProtected controls cannot depend on agent implementation \u001b[0m\u001b[32m\u001b[22mKEPT\u001b[0m\u001b[33m\u001b[22m\u001b[0m\u001b[22m\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[22mContracts: 1 kept, 1 broken.\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[31m\u001b[1m----------------\u001b[0m\n\u001b[31m\u001b[1mBroken contracts\u001b[0m\n\u001b[31m\u001b[1m----------------\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[31m\u001b[1mHermes adapter cannot import protected controls\u001b[0m\n\u001b[31m\u001b[1m-----------------------------------------------\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[31m\u001b[1mtoy_adapter is not allowed to import toy_control:\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[31m\u001b[22m-   toy_adapter.denial_fixture -> toy_control.public (l.1)\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[22m\u001b[0m\n"
+    },
+    {
+      "id": "python-protected-agent-dependency-denied",
+      "executable": ".venv/bin/lint-imports",
+      "argv": [
+        "--no-cache"
+      ],
+      "exitCode": 1,
+      "passed": true,
+      "output": "\u001b[1m=============\u001b[0m\n\u001b[1mImport Linter\u001b[0m\n\u001b[1m=============\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[1m---------\u001b[0m\n\u001b[1mContracts\u001b[0m\n\u001b[1m---------\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[1mAnalyzed 14 files, 10 dependencies.\u001b[0m\n\u001b[1m-----------------------------------\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[22mHermes adapter cannot import protected controls \u001b[0m\u001b[32m\u001b[22mKEPT\u001b[0m\u001b[33m\u001b[22m\u001b[0m\u001b[22m\u001b[0m\n\u001b[22mProtected controls cannot depend on agent implementation \u001b[0m\u001b[31m\u001b[22mBROKEN\u001b[0m\u001b[33m\u001b[22m\u001b[0m\u001b[22m\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[22mContracts: 1 kept, 1 broken.\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[31m\u001b[1m----------------\u001b[0m\n\u001b[31m\u001b[1mBroken contracts\u001b[0m\n\u001b[31m\u001b[1m----------------\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[31m\u001b[1mProtected controls cannot depend on agent implementation\u001b[0m\n\u001b[31m\u001b[1m--------------------------------------------------------\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[31m\u001b[1mtoy_control is not allowed to import toy_adapter:\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[31m\u001b[22m-   toy_control.denial_fixture -> toy_adapter.public (l.1)\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[22m\u001b[0m\n"
     },
     {
       "id": "clean-after-fixtures",

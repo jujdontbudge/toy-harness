@@ -3,7 +3,7 @@ import { extname, relative, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 
 const root = resolve(import.meta.dirname, "..");
-const roots = ["packages", "cli", "plugins/toy", "behavior", "tests", "scripts"];
+const roots = ["packages", "cli", "plugins/toy", "behavior", "tests", "scripts", "control"];
 const extensions = new Set([".ts", ".tsx", ".mts", ".cts", ".js", ".jsx", ".mjs", ".cjs"]);
 const walk = async (path) => {
   let entries;
