@@ -221,6 +221,7 @@ export type ResearchComponentComparisonCheckV2 = z.infer<typeof schemaInventory.
 export type ResearchRegisterInspectionV2 = z.infer<typeof schemaInventory.ResearchRegisterInspectionV2>;
 export type ResearchSourcesComponentComparisonV1 = z.infer<typeof schemaInventory.ResearchSourcesComponentComparisonV1>;
 export type ResearchSourcesComponentComparisonV2 = z.infer<typeof schemaInventory.ResearchSourcesComponentComparisonV2>;
+export type ResearchComponentComparisonV3 = z.infer<typeof schemaInventory.ResearchComponentComparisonV3>;
 export type ResearchAttentionDecisionV1 = z.infer<typeof schemaInventory.ResearchAttentionDecisionV1>;
 export type ResearchAttentionDecisionCheckV1 = z.infer<typeof schemaInventory.ResearchAttentionDecisionCheckV1>;
 export type ResearchRegisterInspectionV3 = z.infer<typeof schemaInventory.ResearchRegisterInspectionV3>;

@@ -2,7 +2,7 @@ import { createHash, randomUUID } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import { checkViewSchema, modelRoleSchema, modelRouteSelectionSchema, opsErrorMessages, registeredProbeInputSchema, registeredCliAcceptanceManifestInventory, researchSkillPinSchema, codexDelegationTaskSchema, researchAttentionDecisionSchema, researchAttentionDecisionIdSchema } from "@toy/contracts";
+import { checkViewSchema, modelRoleSchema, modelRouteSelectionSchema, opsErrorMessages, registeredProbeInputSchema, registeredCliAcceptanceManifestInventory, researchSkillPinSchema, codexDelegationTaskSchema, researchAttentionDecisionSchema, researchAttentionDecisionIdSchema, researchComponentComparisonV3Schema } from "@toy/contracts";
 import type { CheckViewV1, ModelRouteConversationV1, ModelRouteHttpTransport, ModelRouteReceiptV1, ModelRouteSettingsV1, OpsControlContextV1, RegisteredProbeInputV1, RegisteredProbeOperationV1, CodexDelegationExecutor, ModelRouteDelegationInputV1, ResearchSkillResourceReader, ResearchAttentionDecisionV1, Result } from "@toy/contracts";
 import { OpsTestStack, TestProbeControl, trustedCheckoutRoot } from "@toy/ops/public";
 import { EngineeringControl } from "@toy/self-improvement/public";
@@ -69,6 +69,7 @@ const refusedBeforeSend = async (selection: unknown): Promise<boolean> => {
 export const ModelRouteProbe = {
   async run(input: RegisteredProbeInputV1, context: OpsControlContextV1): Promise<Result<RegisteredProbeOperationV1>> {
     if (!registeredProbeInputSchema.safeParse(input).success) return { ok: false, error: { module: "ops", code: "INVALID_INPUT", message: opsErrorMessages.INVALID_INPUT, retryable: false } };
+    if (input.caseId === undefined && registeredCliAcceptanceManifestInventory.some(entry => entry.id === input.probeId && entry.owner === "hermes" && entry.scenarioId === "research.component-receipts")) return componentReceiptProbe(input, context);
     if (input.caseId === undefined && input.probeId === "AT-attention-66") return attentionProbe(input, context);
     if (input.caseId === undefined && registeredCliAcceptanceManifestInventory.some(entry => entry.id === input.probeId && entry.owner === "hermes" && entry.scenarioId === "delegation.route-skill")) return delegationProbe(input, context);
     const policy = input.caseId === "model-route-policy" && ["AT-hermes-config-1", "AT-hermes-config-76", "AT-hermes-config-77"].includes(input.probeId);
@@ -257,6 +258,59 @@ const attentionProbe = async (input: RegisteredProbeInputV1, context: OpsControl
         links: { recordRefs: [], observations: [], artifactDigests: [digest(markdown), digest(readFileSync(new URL("./model-route-probe.js", import.meta.url))), digest(readFileSync(new URL("./model-route.js", import.meta.url)))] }
       }));
     }
+  }
+  return TestProbeControl.run(input, context, checks);
+};
+
+const componentReceiptProbe = async (input: RegisteredProbeInputV1, context: OpsControlContextV1): Promise<Result<RegisteredProbeOperationV1>> => {
+  const cases = ["missing-decision", "missing-primary-evidence", "unsupported-alternatives", "unsupported-selection", "missing-reliability", "missing-validation", "missing-acceptance-link", "unrelated-acceptance-link", "unresolved-selected-assumption", "ordinary-luna-receipt", "missing-route-observation", "wrong-observed-model", "wrong-observed-reasoning", "wrong-observed-tier", "missing-research-skill", "wrong-skill-hash", "complete-authority-decision"];
+  const manifest = registeredCliAcceptanceManifestInventory.find(entry => entry.id === input.probeId);
+  if (input.probeId !== "AT-authority-60" || !manifest || manifest.scenarioId !== "research.component-receipts" || JSON.stringify(manifest.mandatoryCases.map(entry => entry.id)) !== JSON.stringify(cases)) return { ok: false, error: { module: "ops", code: "ATTESTATION_INVALID", message: opsErrorMessages.ATTESTATION_INVALID, retryable: false } };
+  const baseline = EngineeringControl.checkResearch({ release: "R0" }, context);
+  if (!baseline.ok) return baseline;
+  const component = baseline.data.components.find(entry => entry.id === "M03");
+  const archive = baseline.data.reports.find(entry => entry.key === "CJ" && entry.originalDigest !== null);
+  const required = baseline.data.componentDecisions.find(entry => entry.componentId === "M03");
+  if (!component || !archive?.originalDigest || !required || required.comparisonDigest !== null || !component.reportKeys.includes(archive.key)) return { ok: false, error: { module: "ops", code: "ARTIFACT_MISMATCH", message: opsErrorMessages.ARTIFACT_MISMATCH, retryable: false } };
+  const routeFaults: Readonly<Record<string, string>> = { "missing-route-observation": "research-route-missing", "wrong-observed-model": "research-route-luna", "wrong-observed-reasoning": "research-route-wrong-effort", "wrong-observed-tier": "research-route-wrong-tier", "missing-research-skill": "research-skill-missing", "wrong-skill-hash": "research-skill-wrong-bytes" };
+  const expectedCodes: Readonly<Record<string, string>> = { "missing-decision": "DECISION_MISSING", "missing-primary-evidence": "PRIMARY_EVIDENCE_MISSING", "unsupported-alternatives": "REQUIRED_OPTIONS_MISSING", "unsupported-selection": "CHOICE_UNSUPPORTED", "missing-reliability": "TRADEOFFS_MISSING", "missing-validation": "VALIDATION_ID_MISSING", "missing-acceptance-link": "ACCEPTANCE_LINK_MISSING", "unrelated-acceptance-link": "ACCEPTANCE_LINK_MISSING", "unresolved-selected-assumption": "SELECTED_FACT_UNRESOLVED", "ordinary-luna-receipt": "VALIDATION_ID_MISSING", "missing-route-observation": "VALIDATION_ID_MISSING", "wrong-observed-model": "VALIDATION_ID_MISSING", "wrong-observed-reasoning": "VALIDATION_ID_MISSING", "wrong-observed-tier": "VALIDATION_ID_MISSING", "missing-research-skill": "VALIDATION_ID_MISSING", "wrong-skill-hash": "VALIDATION_ID_MISSING" };
+  const checks: CheckViewV1[] = [];
+  for (const caseId of cases) {
+    const purpose = caseId === "ordinary-luna-receipt" ? "implementation" : "research";
+    const fixture = await delegationFixture(routeFaults[caseId] ?? "research-route-observed", purpose, context, "Compare only seeded M03 Authority adapter options and primary evidence; preserve protected admission and perform no live effects.");
+    if (!fixture.result.ok) return fixture.result;
+    const ids = ["protected-adapter", "supported-vendor-sdk", "outside"];
+    const report = researchComponentComparisonV3Schema.parse({ scope: "required-research-component", componentId: component.id, executionReceipt: fixture.result.data,
+      mappedRequirements: required.missingRequirementIds,
+      options: ids.map(id => ({ id, tool: id, example: id === "outside" ? null : id, viable: true, support: "proven", primaryEvidenceIds: component.reportKeys, reliability: "Seeded primary report distinguishes safe read retries from uncertain writes and readback.", maintenance: "Pin and maintain the typed adapter before live admission.", resources: "Use the shared local store and measured protected process budget." })),
+      evidence: component.reportKeys.map(id => ({ id, url: "https://primary.example.test/authority/" + id, publisher: "Seeded primary Authority report", kind: "primary", supportedOptionIds: ids })),
+      selectedOptionId: "protected-adapter", unresolvedFacts: [], acceptanceIds: ["AT-authority-60"], validationPlan: "Validate positive, refusal and recovery cases in the owned fixture before dependent live admission.", releaseGate: component.releaseGate,
+      validations: [{ id: "G0:R0:" + component.id, support: "proven", sourceIds: component.reportKeys, testIds: ["AT-authority-60"] }]
+    });
+    if (caseId === "missing-primary-evidence") report.evidence = [];
+    if (caseId === "unsupported-alternatives") for (const option of report.options) if (option.id !== report.selectedOptionId) option.support = "unsupported";
+    if (caseId === "unsupported-selection") report.selectedOptionId = "uncompared";
+    if (caseId === "missing-reliability") for (const option of report.options) option.reliability = "";
+    if (caseId === "missing-validation") report.validations = [];
+    if (caseId === "missing-acceptance-link") report.acceptanceIds = [];
+    if (caseId === "unrelated-acceptance-link") { report.acceptanceIds = ["AT-attention-66"]; for (const validation of report.validations) validation.testIds = report.acceptanceIds; }
+    if (caseId === "unresolved-selected-assumption") report.unresolvedFacts = [{ optionId: report.selectedOptionId, fact: "Selected capability has not been established." }];
+    const markdown = "# Seeded external Authority decision\n\n" + (caseId === "missing-decision" ? "No decision supplied.\n" : "```ResearchComponentComparisonV3\n" + JSON.stringify(report) + "\n```\n");
+    const inspection = EngineeringControl.checkResearch({ release: "R0" }, context, [{ reportKey: archive.key, originalDigest: archive.originalDigest, contentDigest: digest(markdown), markdown }]);
+    if (!inspection.ok) return inspection;
+    const result = inspection.data.componentDecisions.find(entry => entry.componentId === component.id);
+    const bound = inspection.data.reports.find(entry => entry.key === archive.key);
+    if (!result || !bound) return { ok: false, error: { module: "ops", code: "ARTIFACT_MISMATCH", message: opsErrorMessages.ARTIFACT_MISMATCH, retryable: false } };
+    const code = expectedCodes[caseId];
+    const missingId = caseId.includes("skill") ? "SKILL:R0:M03" : caseId === "ordinary-luna-receipt" || caseId.includes("route") || caseId.startsWith("wrong-observed-") ? "ROUTE:R0:M03" : null;
+    const exported = fixture.sends === 0 || fixture.exportReadback && fixture.nativeArgumentsMatched;
+    const passed = exported && bound.path === archive.path && bound.originalDigest === archive.originalDigest && bound.digest === digest(markdown) && bound.origin === "seeded_document" && result.comparisonDigest === (caseId === "missing-decision" ? null : digest(JSON.stringify(report))) && (code === undefined
+      ? result.state === "PASS" && result.findings.length === 0 && result.selectedOptionId === report.selectedOptionId
+      : result.state === "BLOCKED" && result.findings.some(finding => finding === code) && (missingId === null || result.missingValidationIds.includes(missingId)));
+    checks.push(checkViewSchema.parse({ id: "research.component-comparison", owner: "self-improvement", state: passed ? "PASS" : "FAIL", checkedAt: new Date().toISOString(), reasonCode: passed ? "AUTHORITY_RESEARCH_DIAGNOSTIC_PASS" : "AUTHORITY_RESEARCH_DIAGNOSTIC_FAIL", nextCommandId: "probe.show",
+      prerequisite: JSON.stringify({ caseId, actualUid: process.getuid?.() ?? null, archive: { key: bound.key, originalDigest: bound.originalDigest, contentDigest: bound.digest, origin: bound.origin }, result, execution: { ownerReceiptProduced: true, externalCliSends: fixture.sends, exportsVerified: exported, receiptDigest: digest(JSON.stringify(report.executionReceipt)), observed: report.executionReceipt?.invocation?.observed ?? null, loadedDigest: report.executionReceipt?.skill?.loadedDigest ?? null, sourceCommit: report.executionReceipt?.skill?.sourceCommit ?? null, nativeExecutionVerified: false }, registerAdmission: inspection.data.admission, liveProviderSends: 0, wholeATComplete: false }),
+      links: { recordRefs: [], observations: [], artifactDigests: [digest(markdown), digest(readFileSync(new URL("./model-route-probe.js", import.meta.url))), digest(readFileSync(new URL("./model-route.js", import.meta.url)))] }
+    }));
   }
   return TestProbeControl.run(input, context, checks);
 };

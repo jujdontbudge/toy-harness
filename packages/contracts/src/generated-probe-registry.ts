@@ -3612,6 +3612,189 @@ export const registeredCliAcceptanceManifestInventory = [
     "simUnavailableReason": "SIM cannot drive pre-build actual OS service-identity denials. The CLI invokes only the fixed root-owned owner with real OS results and independent canary readbacks."
   },
   {
+    "id": "AT-authority-60",
+    "rung": "CLI",
+    "sourceAssertionHash": "6f9730e29aba4b5e9fe10a2999ce36b36f2da2f745d45223d96d8b8b7a055337",
+    "commandId": "probe.run",
+    "scenarioId": "research.component-receipts",
+    "owner": "hermes",
+    "firstRelease": "R0",
+    "kind": "static_gate",
+    "mandatoryCases": [
+      {
+        "id": "missing-decision",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "missing-decision"
+      },
+      {
+        "id": "missing-primary-evidence",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "missing-primary-evidence"
+      },
+      {
+        "id": "unsupported-alternatives",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "unsupported-alternatives"
+      },
+      {
+        "id": "unsupported-selection",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "unsupported-selection"
+      },
+      {
+        "id": "missing-reliability",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "missing-reliability"
+      },
+      {
+        "id": "missing-validation",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "missing-validation"
+      },
+      {
+        "id": "missing-acceptance-link",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "missing-acceptance-link"
+      },
+      {
+        "id": "unrelated-acceptance-link",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "unrelated-acceptance-link"
+      },
+      {
+        "id": "unresolved-selected-assumption",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "unresolved-selected-assumption"
+      },
+      {
+        "id": "ordinary-luna-receipt",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "ordinary-luna-receipt"
+      },
+      {
+        "id": "missing-route-observation",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "missing-route-observation"
+      },
+      {
+        "id": "wrong-observed-model",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "wrong-observed-model"
+      },
+      {
+        "id": "wrong-observed-reasoning",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "wrong-observed-reasoning"
+      },
+      {
+        "id": "wrong-observed-tier",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "wrong-observed-tier"
+      },
+      {
+        "id": "missing-research-skill",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "missing-research-skill"
+      },
+      {
+        "id": "wrong-skill-hash",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "wrong-skill-hash"
+      },
+      {
+        "id": "complete-authority-decision",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "complete-authority-decision"
+      }
+    ],
+    "trigger": "Inspect the indexed Authority M03 decision and public Hermes research receipt; compare primary-supported proven options, reliable selection and validation IDs while all disposable probes remain provisional.",
+    "faultControls": [
+      {
+        "id": "external-authority-report-faults",
+        "seam": "provider",
+        "affectedPhases": [
+          "missing-decision",
+          "missing-primary-evidence",
+          "unsupported-alternatives",
+          "unsupported-selection",
+          "missing-reliability",
+          "missing-validation",
+          "missing-acceptance-link",
+          "unrelated-acceptance-link",
+          "unresolved-selected-assumption"
+        ]
+      },
+      {
+        "id": "external-cli-role-and-route",
+        "seam": "provider",
+        "affectedPhases": [
+          "ordinary-luna-receipt",
+          "missing-route-observation",
+          "wrong-observed-model",
+          "wrong-observed-reasoning",
+          "wrong-observed-tier"
+        ]
+      },
+      {
+        "id": "published-research-artifact-faults",
+        "seam": "os",
+        "affectedPhases": [
+          "missing-research-skill",
+          "wrong-skill-hash"
+        ]
+      }
+    ],
+    "observations": [
+      {
+        "id": "indexed-central-authority-decision",
+        "independentReader": "EngineeringControl.checkResearch: indexed archive binding, decision predicates and central route/skill validation IDs",
+        "caseIds": [
+          "missing-decision",
+          "missing-primary-evidence",
+          "unsupported-alternatives",
+          "unsupported-selection",
+          "missing-reliability",
+          "missing-validation",
+          "missing-acceptance-link",
+          "unrelated-acceptance-link",
+          "unresolved-selected-assumption",
+          "ordinary-luna-receipt",
+          "missing-route-observation",
+          "wrong-observed-model",
+          "wrong-observed-reasoning",
+          "wrong-observed-tier",
+          "missing-research-skill",
+          "wrong-skill-hash",
+          "complete-authority-decision"
+        ]
+      },
+      {
+        "id": "public-route-owner-and-readback",
+        "independentReader": "External Codex CLI: task/skill readback; toy probe.show: stored source-bound decision and receipt diagnostics",
+        "caseIds": [
+          "missing-decision",
+          "missing-primary-evidence",
+          "unsupported-alternatives",
+          "unsupported-selection",
+          "missing-reliability",
+          "missing-validation",
+          "missing-acceptance-link",
+          "unrelated-acceptance-link",
+          "unresolved-selected-assumption",
+          "ordinary-luna-receipt",
+          "missing-route-observation",
+          "wrong-observed-model",
+          "wrong-observed-reasoning",
+          "wrong-observed-tier",
+          "missing-research-skill",
+          "wrong-skill-hash",
+          "complete-authority-decision"
+        ]
+      }
+    ],
+    "simUnavailableReason": "SIM cannot inspect administrative pre-build decisions and research metadata. CLI invokes public owners with fixed external document, Codex CLI and OS artifact fakes."
+  },
+  {
     "id": "AT-hermes-config-75",
     "rung": "CLI",
     "sourceAssertionHash": "901516dd5ec64a9d7e28c9fcfec9f7877b8e539031fcfda5fe347e06919316cd",

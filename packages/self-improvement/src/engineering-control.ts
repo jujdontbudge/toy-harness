@@ -2,8 +2,8 @@ import { createHash, randomUUID } from "node:crypto";
 import { spawnSync } from "node:child_process";
 import { existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, realpathSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
-import { acceptanceIndexSchema, checkoutPathSchema, cliDeclarations, featureFactsSchema, featureMapCheckSchema, featureMapUpdateSchema, generatorInputSchema, generatorPlanSchema, gardenerInputSchema, gardenerReportSchema, kitchenGateSummarySchema, mapCheckInputSchema, mapUpdateInputSchema, opsControlContextSchema, opsErrorMessages, referenceAdmissionEvidenceSchema, researchCatalogCoverageSchema, researchComponentComparisonSchema, researchComponentComparisonCheckSchema, researchDocumentOverlaySchema, researchRegisterInspectionV3Schema, researchAttentionDecisionSchema, researchAttentionDecisionCheckSchema, researchAttentionDecisionIdSchema, researchComponentComparisonV2Schema, researchComponentComparisonCheckV2Schema, researchSourcesComponentComparisonSchema, researchSourcesComponentComparisonV2Schema, researchSkillPinSchema, modelRoutePolicySchema } from "@toy/contracts";
-import type { CheckViewV1, FeatureFactsV1, FilePatchV1, GeneratorInputV1, GeneratorPlanV1, FeatureMapCheckV1, FeatureMapUpdateV1, MapCheckInputV1, MapUpdateInputV1, GardenerInputV1, GardenerReportV1, OpsControlContextV1, ResearchCatalogCoverageFindingV1, ResearchCatalogMemberV1, ResearchCatalogSectionV1, ResearchInspectionFindingV1, ResearchComponentComparisonV1, ResearchComponentComparisonCheckV1, ResearchDocumentOverlayV1, ResearchRegisterInspectionV1, ResearchComponentComparisonV2, ResearchComponentComparisonCheckV2, ResearchSourcesComponentComparisonV1, ResearchSourcesComponentComparisonV2, ResearchAttentionDecisionV1, ResearchAttentionDecisionCheckV1, ResearchRegisterInspectionV3, Result } from "@toy/contracts";
+import { acceptanceIndexSchema, checkoutPathSchema, cliDeclarations, featureFactsSchema, featureMapCheckSchema, featureMapUpdateSchema, generatorInputSchema, generatorPlanSchema, gardenerInputSchema, gardenerReportSchema, kitchenGateSummarySchema, mapCheckInputSchema, mapUpdateInputSchema, opsControlContextSchema, opsErrorMessages, referenceAdmissionEvidenceSchema, researchCatalogCoverageSchema, researchComponentComparisonSchema, researchComponentComparisonCheckSchema, researchDocumentOverlaySchema, researchRegisterInspectionV3Schema, researchAttentionDecisionSchema, researchAttentionDecisionCheckSchema, researchAttentionDecisionIdSchema, researchComponentComparisonV2Schema, researchComponentComparisonV3Schema, researchComponentComparisonCheckV2Schema, researchSourcesComponentComparisonSchema, researchSourcesComponentComparisonV2Schema, researchSkillPinSchema, modelRoutePolicySchema } from "@toy/contracts";
+import type { CheckViewV1, FeatureFactsV1, FilePatchV1, GeneratorInputV1, GeneratorPlanV1, FeatureMapCheckV1, FeatureMapUpdateV1, MapCheckInputV1, MapUpdateInputV1, GardenerInputV1, GardenerReportV1, OpsControlContextV1, ResearchCatalogCoverageFindingV1, ResearchCatalogMemberV1, ResearchCatalogSectionV1, ResearchInspectionFindingV1, ResearchComponentComparisonV1, ResearchComponentComparisonCheckV1, ResearchDocumentOverlayV1, ResearchRegisterInspectionV1, ResearchComponentComparisonV2, ResearchComponentComparisonV3, ResearchComponentComparisonCheckV2, ResearchSourcesComponentComparisonV1, ResearchSourcesComponentComparisonV2, ResearchAttentionDecisionV1, ResearchAttentionDecisionCheckV1, ResearchRegisterInspectionV3, Result } from "@toy/contracts";
 import { OpsTestStack, trustedCheckoutRoot, trustedToolEnvironment } from "@toy/ops/public";
 import { modelAdmissionMigration } from "./model-admission-migration.js";
 import { capacityTrialMigration } from "./capacity-trial-migration.js";
@@ -482,16 +482,16 @@ const inspectComponentComparisons = (reports: ResearchRegisterInspectionV1["repo
   return [...comparisons.values()];
 };
 const inspectComponentDecisions = (reports: ResearchRegisterInspectionV1["reports"], components: ResearchRegisterInspectionV1["components"], findings: ResearchInspectionFindingV1[], documents: ReadonlyMap<string, ResearchDocumentOverlayV1>, requirementIds: readonly string[], release: string): ResearchComponentComparisonCheckV2[] => {
-  const decisions = new Map<string, ResearchComponentComparisonV2 | ResearchSourcesComponentComparisonV1 | ResearchSourcesComponentComparisonV2>();
+  const decisions = new Map<string, ResearchComponentComparisonV2 | ResearchComponentComparisonV3 | ResearchSourcesComponentComparisonV1 | ResearchSourcesComponentComparisonV2>();
   for (const report of reports) {
     if (report.digest === null) continue;
     const original = readResearchFile(report.path);
     const raw = documents.get(report.key)?.markdown ?? original;
     if (hash(original) !== report.originalDigest || hash(raw) !== report.digest) throw new Error("RESEARCH_DOCUMENT_CHANGED");
-    for (const match of raw.matchAll(/^```(ResearchComponentComparisonV2|ResearchSourcesComponentComparisonV1|ResearchSourcesComponentComparisonV2)\r?\n([\s\S]*?)^```[ \t]*$/gm)) {
+    for (const match of raw.matchAll(/^```(ResearchComponentComparisonV2|ResearchComponentComparisonV3|ResearchSourcesComponentComparisonV1|ResearchSourcesComponentComparisonV2)\r?\n([\s\S]*?)^```[ \t]*$/gm)) {
       const sourceLine = raw.slice(0, match.index).split(/\r?\n/).length;
       try {
-        const schema = match[1] === "ResearchSourcesComponentComparisonV2" ? researchSourcesComponentComparisonV2Schema : match[1] === "ResearchSourcesComponentComparisonV1" ? researchSourcesComponentComparisonSchema : researchComponentComparisonV2Schema;
+        const schema = match[1] === "ResearchComponentComparisonV3" ? researchComponentComparisonV3Schema : match[1] === "ResearchSourcesComponentComparisonV2" ? researchSourcesComponentComparisonV2Schema : match[1] === "ResearchSourcesComponentComparisonV1" ? researchSourcesComponentComparisonSchema : researchComponentComparisonV2Schema;
         const record = schema.parse(JSON.parse(match[2] ?? ""));
         if (!components.some(component => component.id === record.componentId && component.reportKeys.includes(report.key)) || decisions.has(record.componentId)) throw new Error("COMPARISON_BINDING_INVALID");
         decisions.set(record.componentId, record);
@@ -501,7 +501,7 @@ const inspectComponentDecisions = (reports: ResearchRegisterInspectionV1["report
   const acceptanceIds = new Set(acceptanceIndexSchema.parse(JSON.parse(read("tests/acceptance-index.json"))).acceptance.map(entry => entry.id));
   return components.map(component => compareDecision(decisions.get(component.id), component, findings, requirementIds, release, acceptanceIds));
 };
-const compareDecision = (record: ResearchComponentComparisonV2 | ResearchSourcesComponentComparisonV1 | ResearchSourcesComponentComparisonV2 | ResearchAttentionDecisionV1 | undefined, component: ResearchRegisterInspectionV1["components"][number], findings: ResearchInspectionFindingV1[], requirementIds: readonly string[], release: string, acceptanceIds: ReadonlySet<string>): ResearchComponentComparisonCheckV2 => {
+const compareDecision = (record: ResearchComponentComparisonV2 | ResearchComponentComparisonV3 | ResearchSourcesComponentComparisonV1 | ResearchSourcesComponentComparisonV2 | ResearchAttentionDecisionV1 | undefined, component: ResearchRegisterInspectionV1["components"][number], findings: ResearchInspectionFindingV1[], requirementIds: readonly string[], release: string, acceptanceIds: ReadonlySet<string>): ResearchComponentComparisonCheckV2 => {
   const codes: ResearchComponentComparisonCheckV2["findings"] = [];
   const add = (code: ResearchComponentComparisonCheckV2["findings"][number]): void => { if (!codes.includes(code)) codes.push(code); };
   const validationId = "G0:" + release + ":" + component.id + (record?.scope === "attention-research-decision" ? ":" + record.decisionId : "");
@@ -523,7 +523,7 @@ const compareDecision = (record: ResearchComponentComparisonV2 | ResearchSources
     if ((record?.scope !== "sources-component" && record?.scope !== "sources-research-component") || !record.regionValidationPlan.trim()) missingValidationIds.add("REGION:" + release + ":" + component.id);
     if (missingValidationIds.size) add("VALIDATION_PLAN_MISSING");
   }
-  if (record?.scope === "sources-research-component" || record?.scope === "attention-research-decision") {
+  if (record?.scope === "sources-research-component" || record?.scope === "attention-research-decision" || record?.scope === "required-research-component") {
     const policyBytes = read("behavior/models.yaml");
     const expected = modelRoutePolicySchema.parse(JSON.parse(policyBytes)).original.research;
     const pin = researchSkillPinSchema.parse(JSON.parse(read("behavior/research-skill.json")));
@@ -544,6 +544,10 @@ const compareDecision = (record: ResearchComponentComparisonV2 | ResearchSources
     };
     if (required[record.decisionId].some(example => !record.options.some(option => option.example === example))) add("REQUIRED_OPTIONS_MISSING");
     if (!record.acceptanceIds.some(id => id.startsWith("AT-attention-"))) add("ACCEPTANCE_LINK_MISSING");
+  }
+  if (record?.scope === "required-research-component") {
+    if (record.options.filter(option => option.support === "proven" && option.primaryEvidenceIds.length > 0 && option.primaryEvidenceIds.every(id => sourceSupports(id, option.id))).length < 2) add("REQUIRED_OPTIONS_MISSING");
+    if (component.id === "M03" && !record.acceptanceIds.some(id => id.startsWith("AT-authority-"))) add("ACCEPTANCE_LINK_MISSING");
   }
   if (!record) add("DECISION_MISSING");
   if (missingRequirementIds.length) add("MAPPED_REQUIREMENTS_MISSING");

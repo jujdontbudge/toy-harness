@@ -1,0 +1,835 @@
+{
+  "recordedAt": "2026-10-06T22:48:16.951080+00:00",
+  "card": "R0.10",
+  "rung": "CLI",
+  "records": [
+    {
+      "AT": "AT-authority-60",
+      "unfiltered": true,
+      "operationId": "cf88f686-677a-4920-9730-d605d65886f9",
+      "runExit": 0,
+      "showExit": 0,
+      "runShowExact": true,
+      "wholeState": "NOT_IMPLEMENTED",
+      "acceptanceComplete": false,
+      "checks": 17,
+      "allChecksPass": true,
+      "maximumPrerequisiteLength": 1419,
+      "runtimeBinding": {
+        "releaseDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "controlDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "schemaDigest": "2f2627a77cfbdb9c7d0cd97f49742fea8f336d5db7f05a834584252fff7dee61",
+        "fixtureDigest": "0f5f2d9557e0fd04e7c9ee2911efe44ead6edf7352ba3ea4d2c3e725ec5d79e5"
+      },
+      "caseManifestDigest": "190f5d784bda3a5686314ef8be50f4512c89db16823a263e1aaed29adf36c4b8",
+      "sourceRegistration": {
+        "id": "AT-authority-60",
+        "rung": "CLI",
+        "sourceAssertionHash": "6f9730e29aba4b5e9fe10a2999ce36b36f2da2f745d45223d96d8b8b7a055337",
+        "commandId": "probe.run",
+        "scenarioId": "research.component-receipts",
+        "owner": "hermes",
+        "firstRelease": "R0",
+        "kind": "static_gate",
+        "mandatoryCases": [
+          {
+            "id": "missing-decision",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-decision"
+          },
+          {
+            "id": "missing-primary-evidence",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-primary-evidence"
+          },
+          {
+            "id": "unsupported-alternatives",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "unsupported-alternatives"
+          },
+          {
+            "id": "unsupported-selection",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "unsupported-selection"
+          },
+          {
+            "id": "missing-reliability",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-reliability"
+          },
+          {
+            "id": "missing-validation",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-validation"
+          },
+          {
+            "id": "missing-acceptance-link",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-acceptance-link"
+          },
+          {
+            "id": "unrelated-acceptance-link",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "unrelated-acceptance-link"
+          },
+          {
+            "id": "unresolved-selected-assumption",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "unresolved-selected-assumption"
+          },
+          {
+            "id": "ordinary-luna-receipt",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "ordinary-luna-receipt"
+          },
+          {
+            "id": "missing-route-observation",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-route-observation"
+          },
+          {
+            "id": "wrong-observed-model",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "wrong-observed-model"
+          },
+          {
+            "id": "wrong-observed-reasoning",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "wrong-observed-reasoning"
+          },
+          {
+            "id": "wrong-observed-tier",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "wrong-observed-tier"
+          },
+          {
+            "id": "missing-research-skill",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-research-skill"
+          },
+          {
+            "id": "wrong-skill-hash",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "wrong-skill-hash"
+          },
+          {
+            "id": "complete-authority-decision",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "complete-authority-decision"
+          }
+        ],
+        "trigger": "Inspect the indexed Authority M03 decision and public Hermes research receipt; compare primary-supported proven options, reliable selection and validation IDs while all disposable probes remain provisional.",
+        "faultControls": [
+          {
+            "id": "external-authority-report-faults",
+            "seam": "provider",
+            "affectedPhases": [
+              "missing-decision",
+              "missing-primary-evidence",
+              "unsupported-alternatives",
+              "unsupported-selection",
+              "missing-reliability",
+              "missing-validation",
+              "missing-acceptance-link",
+              "unrelated-acceptance-link",
+              "unresolved-selected-assumption"
+            ]
+          },
+          {
+            "id": "external-cli-role-and-route",
+            "seam": "provider",
+            "affectedPhases": [
+              "ordinary-luna-receipt",
+              "missing-route-observation",
+              "wrong-observed-model",
+              "wrong-observed-reasoning",
+              "wrong-observed-tier"
+            ]
+          },
+          {
+            "id": "published-research-artifact-faults",
+            "seam": "os",
+            "affectedPhases": [
+              "missing-research-skill",
+              "wrong-skill-hash"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "indexed-central-authority-decision",
+            "independentReader": "EngineeringControl.checkResearch: indexed archive binding, decision predicates and central route/skill validation IDs",
+            "caseIds": [
+              "missing-decision",
+              "missing-primary-evidence",
+              "unsupported-alternatives",
+              "unsupported-selection",
+              "missing-reliability",
+              "missing-validation",
+              "missing-acceptance-link",
+              "unrelated-acceptance-link",
+              "unresolved-selected-assumption",
+              "ordinary-luna-receipt",
+              "missing-route-observation",
+              "wrong-observed-model",
+              "wrong-observed-reasoning",
+              "wrong-observed-tier",
+              "missing-research-skill",
+              "wrong-skill-hash",
+              "complete-authority-decision"
+            ]
+          },
+          {
+            "id": "public-route-owner-and-readback",
+            "independentReader": "External Codex CLI: task/skill readback; toy probe.show: stored source-bound decision and receipt diagnostics",
+            "caseIds": [
+              "missing-decision",
+              "missing-primary-evidence",
+              "unsupported-alternatives",
+              "unsupported-selection",
+              "missing-reliability",
+              "missing-validation",
+              "missing-acceptance-link",
+              "unrelated-acceptance-link",
+              "unresolved-selected-assumption",
+              "ordinary-luna-receipt",
+              "missing-route-observation",
+              "wrong-observed-model",
+              "wrong-observed-reasoning",
+              "wrong-observed-tier",
+              "missing-research-skill",
+              "wrong-skill-hash",
+              "complete-authority-decision"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot inspect administrative pre-build decisions and research metadata. CLI invokes public owners with fixed external document, Codex CLI and OS artifact fakes."
+      },
+      "failures": []
+    },
+    {
+      "AT": "AT-attention-66",
+      "unfiltered": true,
+      "operationId": "55535d13-22b8-4371-9bf9-28332d3201a9",
+      "runExit": 0,
+      "showExit": 0,
+      "runShowExact": true,
+      "wholeState": "NOT_IMPLEMENTED",
+      "acceptanceComplete": false,
+      "checks": 88,
+      "allChecksPass": true,
+      "maximumPrerequisiteLength": 1450,
+      "runtimeBinding": {
+        "releaseDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "controlDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "schemaDigest": "2f2627a77cfbdb9c7d0cd97f49742fea8f336d5db7f05a834584252fff7dee61",
+        "fixtureDigest": "0f5f2d9557e0fd04e7c9ee2911efe44ead6edf7352ba3ea4d2c3e725ec5d79e5"
+      },
+      "caseManifestDigest": "cb38b05d2d49b1e70bad25656d3b5e409bd00daa0eb5635fc96ac784af2736bf",
+      "sourceRegistration": {
+        "id": "AT-attention-66",
+        "rung": "CLI",
+        "sourceAssertionHash": "19bd2c265bd8baa95cbb780ca34b0ad5f53ba75f1bde7891147eb2838d4842f9",
+        "commandId": "probe.run",
+        "scenarioId": "research.attention-decisions",
+        "owner": "hermes",
+        "firstRelease": "R0",
+        "kind": "static_gate",
+        "mandatoryCases": [
+          {
+            "id": "complete-set",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "complete-set"
+          },
+          {
+            "id": "missing-discord-delivery",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-discord-delivery"
+          },
+          {
+            "id": "missing-push-delivery",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-push-delivery"
+          },
+          {
+            "id": "missing-alarm-delivery",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-alarm-delivery"
+          },
+          {
+            "id": "missing-reminder-scheduling",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-reminder-scheduling"
+          },
+          {
+            "id": "duplicate-decision",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "duplicate-decision"
+          },
+          {
+            "id": "missing-primary-evidence",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-primary-evidence"
+          },
+          {
+            "id": "missing-required-option",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-required-option"
+          },
+          {
+            "id": "missing-tradeoffs",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-tradeoffs"
+          },
+          {
+            "id": "missing-acceptance-link",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-acceptance-link"
+          },
+          {
+            "id": "unrelated-acceptance-link",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "unrelated-acceptance-link"
+          },
+          {
+            "id": "missing-requirement",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-requirement"
+          },
+          {
+            "id": "unsupported-selection",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "unsupported-selection"
+          },
+          {
+            "id": "missing-outside-option",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-outside-option"
+          },
+          {
+            "id": "unsupported-outside-option",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "unsupported-outside-option"
+          },
+          {
+            "id": "missing-route-receipt",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-route-receipt"
+          },
+          {
+            "id": "wrong-observed-model",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "wrong-observed-model"
+          },
+          {
+            "id": "wrong-observed-reasoning",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "wrong-observed-reasoning"
+          },
+          {
+            "id": "wrong-observed-tier",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "wrong-observed-tier"
+          },
+          {
+            "id": "missing-research-skill",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-research-skill"
+          },
+          {
+            "id": "wrong-skill-revision",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "wrong-skill-revision"
+          },
+          {
+            "id": "wrong-loaded-skill-digest",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "wrong-loaded-skill-digest"
+          }
+        ],
+        "trigger": "Inspect four distinct indexed Attention decisions with public ModelRoute owner receipts, primary-supported alternatives and the shared central gate; retain native/authenticated research and whole admission as pending.",
+        "faultControls": [
+          {
+            "id": "external-research-documents",
+            "seam": "provider",
+            "affectedPhases": [
+              "missing-discord-delivery",
+              "missing-push-delivery",
+              "missing-alarm-delivery",
+              "missing-reminder-scheduling",
+              "duplicate-decision",
+              "missing-primary-evidence",
+              "missing-required-option",
+              "missing-tradeoffs",
+              "missing-acceptance-link",
+              "missing-requirement",
+              "unsupported-selection",
+              "missing-outside-option",
+              "unsupported-outside-option",
+              "missing-route-receipt",
+              "wrong-skill-revision",
+              "unrelated-acceptance-link"
+            ]
+          },
+          {
+            "id": "external-cli-route-observations",
+            "seam": "provider",
+            "affectedPhases": [
+              "wrong-observed-model",
+              "wrong-observed-reasoning",
+              "wrong-observed-tier"
+            ]
+          },
+          {
+            "id": "published-research-artifact-faults",
+            "seam": "os",
+            "affectedPhases": [
+              "missing-research-skill",
+              "wrong-loaded-skill-digest"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "four-distinct-central-decisions",
+            "independentReader": "EngineeringControl.checkResearch: four indexed decisions and exact central route/skill validation IDs",
+            "caseIds": [
+              "complete-set",
+              "missing-discord-delivery",
+              "missing-push-delivery",
+              "missing-alarm-delivery",
+              "missing-reminder-scheduling",
+              "duplicate-decision",
+              "missing-primary-evidence",
+              "missing-required-option",
+              "missing-tradeoffs",
+              "missing-acceptance-link",
+              "unrelated-acceptance-link",
+              "missing-requirement",
+              "unsupported-selection",
+              "missing-outside-option",
+              "unsupported-outside-option",
+              "missing-route-receipt",
+              "wrong-observed-model",
+              "wrong-observed-reasoning",
+              "wrong-observed-tier",
+              "missing-research-skill",
+              "wrong-skill-revision",
+              "wrong-loaded-skill-digest"
+            ]
+          },
+          {
+            "id": "public-model-route-receipts",
+            "independentReader": "External Codex CLI: task/skill readback; toy probe.show: stored source-bound decision and receipt diagnostics",
+            "caseIds": [
+              "complete-set",
+              "missing-discord-delivery",
+              "missing-push-delivery",
+              "missing-alarm-delivery",
+              "missing-reminder-scheduling",
+              "duplicate-decision",
+              "missing-primary-evidence",
+              "missing-required-option",
+              "missing-tradeoffs",
+              "missing-acceptance-link",
+              "unrelated-acceptance-link",
+              "missing-requirement",
+              "unsupported-selection",
+              "missing-outside-option",
+              "unsupported-outside-option",
+              "missing-route-receipt",
+              "wrong-observed-model",
+              "wrong-observed-reasoning",
+              "wrong-observed-tier",
+              "missing-research-skill",
+              "wrong-skill-revision",
+              "wrong-loaded-skill-digest"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot inspect administrative pre-build report bindings and delegated research metadata. CLI drives the real public route and central owner with external CLI, document and OS artifact fakes."
+      },
+      "failures": []
+    },
+    {
+      "AT": "AT-sources-190",
+      "unfiltered": true,
+      "operationId": "f3cd38b5-5294-4880-965d-78689efe418b",
+      "runExit": 0,
+      "showExit": 0,
+      "runShowExact": true,
+      "wholeState": "NOT_IMPLEMENTED",
+      "acceptanceComplete": false,
+      "checks": 10,
+      "allChecksPass": true,
+      "maximumPrerequisiteLength": 1358,
+      "runtimeBinding": {
+        "releaseDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "controlDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "schemaDigest": "2f2627a77cfbdb9c7d0cd97f49742fea8f336d5db7f05a834584252fff7dee61",
+        "fixtureDigest": "0f5f2d9557e0fd04e7c9ee2911efe44ead6edf7352ba3ea4d2c3e725ec5d79e5"
+      },
+      "caseManifestDigest": "762673c36dfd4637407febb86dadcc2c71a83758c6bd90fc9c7dcadaa7d4adbd",
+      "sourceRegistration": {
+        "id": "AT-sources-190",
+        "rung": "CLI",
+        "sourceAssertionHash": "dfc4c143354044cd88c82c6868b2f0b3fc6ab39a9fe45aa595692bf881f9831a",
+        "commandId": "probe.run",
+        "scenarioId": "research.component-comparison",
+        "owner": "self-improvement",
+        "firstRelease": "R0",
+        "kind": "static_gate",
+        "mandatoryCases": [
+          {
+            "id": "missing-route-receipt",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-route-receipt"
+          },
+          {
+            "id": "wrong-observed-model",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "wrong-observed-model"
+          },
+          {
+            "id": "wrong-observed-reasoning",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "wrong-observed-reasoning"
+          },
+          {
+            "id": "wrong-observed-tier",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "wrong-observed-tier"
+          },
+          {
+            "id": "missing-research-skill",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-research-skill"
+          },
+          {
+            "id": "wrong-skill-revision",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "wrong-skill-revision"
+          },
+          {
+            "id": "wrong-loaded-skill-digest",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "wrong-loaded-skill-digest"
+          },
+          {
+            "id": "missing-outside-option",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-outside-option"
+          },
+          {
+            "id": "unsupported-outside-option",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "unsupported-outside-option"
+          },
+          {
+            "id": "complete-research-receipt",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "complete-research-receipt"
+          }
+        ],
+        "trigger": "Inspect indexed connector decisions with canonical research receipts, shared observed route, exact loaded skill and proven outside alternative; preserve whole authentication gates.",
+        "faultControls": [
+          {
+            "id": "external-research-receipt-and-option-faults",
+            "seam": "provider",
+            "affectedPhases": [
+              "missing-route-receipt",
+              "wrong-observed-model",
+              "wrong-observed-reasoning",
+              "wrong-observed-tier",
+              "missing-research-skill",
+              "wrong-skill-revision",
+              "wrong-loaded-skill-digest",
+              "missing-outside-option",
+              "unsupported-outside-option"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "research-execution-admission",
+            "independentReader": "EngineeringControl.checkResearch: indexed report, canonical receipt and exact validation IDs",
+            "caseIds": [
+              "missing-route-receipt",
+              "wrong-observed-model",
+              "wrong-observed-reasoning",
+              "wrong-observed-tier",
+              "missing-research-skill",
+              "wrong-skill-revision",
+              "wrong-loaded-skill-digest",
+              "missing-outside-option",
+              "unsupported-outside-option",
+              "complete-research-receipt"
+            ]
+          },
+          {
+            "id": "persisted-research-receipt",
+            "independentReader": "toy probe.show: exact stored route/skill admission diagnostics and source binding",
+            "caseIds": [
+              "missing-route-receipt",
+              "wrong-observed-model",
+              "wrong-observed-reasoning",
+              "wrong-observed-tier",
+              "missing-research-skill",
+              "wrong-skill-revision",
+              "wrong-loaded-skill-digest",
+              "missing-outside-option",
+              "unsupported-outside-option",
+              "complete-research-receipt"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot replace administrative pre-build research reports or inspect execution metadata. CLI drives the real indexed owner with external report/receipt fixtures."
+      },
+      "failures": []
+    },
+    {
+      "AT": "AT-self-improvement-54",
+      "unfiltered": true,
+      "operationId": "182455e4-c1e2-4f3e-b362-5a0eec7ef1e1",
+      "runExit": 0,
+      "showExit": 0,
+      "runShowExact": true,
+      "wholeState": "NOT_IMPLEMENTED",
+      "acceptanceComplete": false,
+      "checks": 4,
+      "allChecksPass": true,
+      "maximumPrerequisiteLength": 1050,
+      "runtimeBinding": {
+        "releaseDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "controlDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "schemaDigest": "2f2627a77cfbdb9c7d0cd97f49742fea8f336d5db7f05a834584252fff7dee61",
+        "fixtureDigest": "0f5f2d9557e0fd04e7c9ee2911efe44ead6edf7352ba3ea4d2c3e725ec5d79e5"
+      },
+      "caseManifestDigest": "68fe30d7beefb50c787243d79aa80c5eabb817083d13fff6dec613cec4472ea6",
+      "sourceRegistration": {
+        "id": "AT-self-improvement-54",
+        "rung": "CLI",
+        "sourceAssertionHash": "b4141538d262d66d789eb55ef7608df4effefb5dd4c7c6fc801f1c54e41e4c23",
+        "commandId": "probe.run",
+        "scenarioId": "research.component-comparison",
+        "owner": "self-improvement",
+        "firstRelease": "R0",
+        "kind": "static_gate",
+        "mandatoryCases": [
+          {
+            "id": "required-component-absent",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "required-component-absent"
+          },
+          {
+            "id": "required-component-unsupported",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "required-component-unsupported"
+          },
+          {
+            "id": "required-component-incomplete-ids",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "required-component-incomplete-ids"
+          },
+          {
+            "id": "required-component-complete-outside-selected",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "required-component-complete-outside-selected"
+          }
+        ],
+        "trigger": "Check absent, unsupported, incomplete and outside-selected required-component decisions through the real indexed research owner; report exact missing IDs while whole admission remains unresolved.",
+        "faultControls": [
+          {
+            "id": "external-required-decision-omissions",
+            "seam": "provider",
+            "affectedPhases": [
+              "required-component-absent",
+              "required-component-unsupported",
+              "required-component-incomplete-ids"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "indexed-required-component-result",
+            "independentReader": "EngineeringControl.checkResearch: bound archive digests and exact requirement/source/validation IDs",
+            "caseIds": [
+              "required-component-absent",
+              "required-component-unsupported",
+              "required-component-incomplete-ids",
+              "required-component-complete-outside-selected"
+            ]
+          },
+          {
+            "id": "stored-cli-readback",
+            "independentReader": "toy probe.show: persisted exact required-component decisions",
+            "caseIds": [
+              "required-component-absent",
+              "required-component-unsupported",
+              "required-component-incomplete-ids",
+              "required-component-complete-outside-selected"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot invoke administrative pre-build research gates or replace indexed external research documents. The CLI drives the real public owner through its owned document seam."
+      },
+      "failures": []
+    },
+    {
+      "AT": "AT-RESEARCH-REGISTER-3",
+      "unfiltered": true,
+      "operationId": "d9d7c938-4271-4ef9-bbbc-73ff95c9b42c",
+      "runExit": 0,
+      "showExit": 0,
+      "runShowExact": true,
+      "wholeState": "NOT_IMPLEMENTED",
+      "acceptanceComplete": false,
+      "checks": 9,
+      "allChecksPass": true,
+      "maximumPrerequisiteLength": 1857,
+      "runtimeBinding": {
+        "releaseDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "controlDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+        "schemaDigest": "2f2627a77cfbdb9c7d0cd97f49742fea8f336d5db7f05a834584252fff7dee61",
+        "fixtureDigest": "0f5f2d9557e0fd04e7c9ee2911efe44ead6edf7352ba3ea4d2c3e725ec5d79e5"
+      },
+      "caseManifestDigest": "bf43f56529df0190e104fb7a034f89c57f65b44e2edd8d4900a4421fb8483ceb",
+      "sourceRegistration": {
+        "id": "AT-RESEARCH-REGISTER-3",
+        "rung": "CLI",
+        "sourceAssertionHash": "66b6a7b0728b7600898836f7310b83a2fe570cccc124c935bc02e2ac0b6a92aa",
+        "commandId": "probe.run",
+        "scenarioId": "delegation.route-skill",
+        "owner": "hermes",
+        "firstRelease": "R0",
+        "kind": "behavioral",
+        "mandatoryCases": [
+          {
+            "id": "research-route-observed",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "research-route-observed"
+          },
+          {
+            "id": "research-route-missing",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "research-route-missing"
+          },
+          {
+            "id": "research-route-luna",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "research-route-luna"
+          },
+          {
+            "id": "research-route-wrong-effort",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "research-route-wrong-effort"
+          },
+          {
+            "id": "research-route-wrong-tier",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "research-route-wrong-tier"
+          },
+          {
+            "id": "research-skill-missing",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "research-skill-missing"
+          },
+          {
+            "id": "research-skill-wrong-bytes",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "research-skill-wrong-bytes"
+          },
+          {
+            "id": "ordinary-implementation-luna",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "ordinary-implementation-luna"
+          },
+          {
+            "id": "module-local-override-refused",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "module-local-override-refused"
+          }
+        ],
+        "trigger": "Reject absent or mismatched research route and loaded skill through canonical receipts; preserve ordinary Luna and no paid fallback while report/obligation/native gates remain incomplete.",
+        "faultControls": [
+          {
+            "id": "external-cli-route-observations",
+            "seam": "provider",
+            "affectedPhases": [
+              "research-route-missing",
+              "research-route-luna",
+              "research-route-wrong-effort",
+              "research-route-wrong-tier"
+            ]
+          },
+          {
+            "id": "published-research-artifact-faults",
+            "seam": "os",
+            "affectedPhases": [
+              "research-skill-missing",
+              "research-skill-wrong-bytes"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "native-role-request-and-receipt",
+            "independentReader": "Fixed external Codex CLI: argument/task/skill readback and actual emitted settings",
+            "caseIds": [
+              "research-route-observed",
+              "research-route-missing",
+              "research-route-luna",
+              "research-route-wrong-effort",
+              "research-route-wrong-tier",
+              "research-skill-missing",
+              "research-skill-wrong-bytes",
+              "ordinary-implementation-luna",
+              "module-local-override-refused"
+            ]
+          },
+          {
+            "id": "persisted-cli-evidence",
+            "independentReader": "toy probe.show: source-bound exact route/skill receipt and no-send refusal readback",
+            "caseIds": [
+              "research-route-observed",
+              "research-route-missing",
+              "research-route-luna",
+              "research-route-wrong-effort",
+              "research-route-wrong-tier",
+              "research-skill-missing",
+              "research-skill-wrong-bytes",
+              "ordinary-implementation-luna",
+              "module-local-override-refused"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot inspect administrative pre-build delegation settings and published skill bytes. CLI exercises the public owner with external CLI/OS fakes and real isolated exports."
+      },
+      "failures": []
+    }
+  ],
+  "upExit": 0,
+  "stackId": "b27f167c-1b7d-43b3-8fca-9beb9fb5ebba",
+  "downExit": 0,
+  "teardown": {
+    "stackId": "b27f167c-1b7d-43b3-8fca-9beb9fb5ebba",
+    "checkpointRefs": [],
+    "fenceRefs": [],
+    "stoppedResourceRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "b27f167c-1b7d-43b3-8fca-9beb9fb5ebba"
+      }
+    ],
+    "retainedArtifactRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "b27f167c-1b7d-43b3-8fca-9beb9fb5ebba"
+      }
+    ],
+    "unresolvedResourceRefs": [],
+    "complete": true
+  }
+}

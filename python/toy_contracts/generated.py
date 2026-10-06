@@ -4590,6 +4590,24 @@ ModelRouteReceiptV1ReasonCodeValue = Literal[
     "stream_interrupted",
 ]
 
+class ResearchComponentComparisonV3(TypedDict):
+    scope: "ResearchComponentComparisonV3Scope"
+    componentId: str
+    mappedRequirements: list[str]
+    options: list["ResearchComponentComparisonV2OptionsItem"]
+    evidence: list["ResearchComponentComparisonV1EvidenceItem"]
+    selectedOptionId: str
+    unresolvedFacts: list["ResearchComponentComparisonCheckV1UnresolvedFactsItem"]
+    acceptanceIds: list[str]
+    validationPlan: str
+    releaseGate: str
+    validations: list["ResearchComponentComparisonV2ValidationsItem"]
+    executionReceipt: Optional["ModelRouteDelegationReceiptV1"]
+
+ResearchComponentComparisonV3Scope = Literal[
+    "required-research-component",
+]
+
 class ResearchAttentionDecisionV1(TypedDict):
     scope: "ResearchAttentionDecisionV1Scope"
     componentId: "ResearchAttentionDecisionV1ComponentId"
