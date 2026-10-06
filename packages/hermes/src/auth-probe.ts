@@ -16,8 +16,13 @@ export const HermesAuthProbe = {
   async run(input: RegisteredProbeInputV1, context: OpsControlContextV1): Promise<Result<RegisteredProbeOperationV1>> {
     const started = process.hrtime.bigint();
     const invalid: Result<RegisteredProbeOperationV1> = { ok: false, error: { module: "ops", code: "INVALID_INPUT", message: opsErrorMessages.INVALID_INPUT, retryable: false } };
-    const unfilteredAuth = ["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-87"].includes(input.probeId) && input.caseId === undefined;
-    if (!registeredProbeInputSchema.safeParse(input).success || (!unfilteredAuth && input.caseId !== "native-auth-cli") || !["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-87", "AT-hermes-config-78", "AT-ops-55"].includes(input.probeId)) return Promise.resolve(invalid);
+    const unfilteredAuth = ["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-87", "AT-hermes-config-88"].includes(input.probeId) && input.caseId === undefined;
+    if (!registeredProbeInputSchema.safeParse(input).success || (!unfilteredAuth && input.caseId !== "native-auth-cli") || !["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-87", "AT-hermes-config-88", "AT-hermes-config-78", "AT-ops-55"].includes(input.probeId)) return Promise.resolve(invalid);
+    if (input.probeId === "AT-hermes-config-88") {
+      const manifest = registeredCliAcceptanceManifestInventory.find(entry => entry.id === input.probeId);
+      const mandatoryCases = ["root-add", "borrowed-list", "borrowed-use", "borrowed-refresh", "profile-reload", "root-reload"].map(id => ({ id, publicOperation: "HermesAuthProbe.run", phase: id }));
+      if (!manifest || manifest.owner !== "hermes" || manifest.scenarioId !== "auth.borrowed-refresh" || manifest.kind !== "behavioral" || JSON.stringify(manifest.mandatoryCases) !== JSON.stringify(mandatoryCases)) return Promise.resolve({ ok: false, error: { module: "ops", code: "ATTESTATION_INVALID", message: opsErrorMessages.ATTESTATION_INVALID, retryable: false } });
+    }
     if (input.probeId === "AT-hermes-config-87") {
       const manifest = registeredCliAcceptanceManifestInventory.find(entry => entry.id === input.probeId);
       const mandatoryCases = ["add-first", "refresh-first", "before-replace", "after-replace"].map(id => ({ id, publicOperation: "HermesAuthProbe.run", phase: id }));
@@ -77,6 +82,7 @@ export const HermesAuthProbe = {
       const fixtureBudgetMs = context.timeoutMs - Number((process.hrtime.bigint() - started) / 1000000n);
       const checks = [check];
       if (publicHelpObserved && fixtureBudgetMs > 0 && input.probeId === "AT-hermes-config-85") checks.push(...await runHermesAuthFixture(interpreter, home, hermesHome, fixtureBudgetMs));
+      if (publicHelpObserved && fixtureBudgetMs > 0 && input.probeId === "AT-hermes-config-88") checks.push(...await runHermesAuthFixture(interpreter, home, hermesHome, fixtureBudgetMs, "add", true));
       if (publicHelpObserved && fixtureBudgetMs > 0 && input.probeId === "AT-hermes-config-87") checks.push(...await runHermesAuthFixture(interpreter, home, hermesHome, fixtureBudgetMs, "concurrent-refresh-add"));
       if (publicHelpObserved && fixtureBudgetMs > 0 && ["AT-hermes-config-78", "AT-ops-55"].includes(input.probeId)) checks.push(...await runHermesAuthFixture(interpreter, home, hermesHome, fixtureBudgetMs, "siwc-unbound"));
       if (publicHelpObserved && input.probeId === "AT-hermes-config-84") {

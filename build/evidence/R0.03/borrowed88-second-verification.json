@@ -1,0 +1,408 @@
+{
+  "rung": "CLI",
+  "unfiltered": true,
+  "wholeATComplete": false,
+  "liveProviderSends": 0,
+  "admissionEvidence": "build/evidence/R0.03/borrowed88-retry-doctor.json",
+  "up": {
+    "exitCode": 0,
+    "path": "build/evidence/R0.03/borrowed88-second-cli/up.json",
+    "sha256": "5270071efd7121fb8b96ad437aa26cd5a41caec182b5e2eb31bb24f62f199780"
+  },
+  "stackId": "332ddab3-4f8d-45b0-adb5-64b8133a5928",
+  "run": {
+    "exitCode": 1,
+    "path": "build/evidence/R0.03/borrowed88-second-cli/run.json",
+    "sha256": "55d6f2ca392f9f7d8d7f0d2649432f9c86ab586ae6381f4a98a1cb262d4f12e1"
+  },
+  "operationId": "73d653a7-1823-491f-8d4f-5bde4aea2b09",
+  "show": {
+    "exitCode": 1,
+    "path": "build/evidence/R0.03/borrowed88-second-cli/show.json",
+    "sha256": "256171e9d37d0e7148f8b249f11dcd4d9d2e648fc940ef391f2f1a44676021b7"
+  },
+  "sameData": true,
+  "sourceRegistration": {
+    "id": "AT-hermes-config-88",
+    "rung": "CLI",
+    "sourceAssertionHash": "44f05ed1596b043197fd5efdc8aeaee582e2b9c25dac2f03db41b25a682961ed",
+    "commandId": "probe.run",
+    "scenarioId": "auth.borrowed-refresh",
+    "owner": "hermes",
+    "firstRelease": "R0",
+    "kind": "behavioral",
+    "mandatoryCases": [
+      {
+        "id": "root-add",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "root-add"
+      },
+      {
+        "id": "borrowed-list",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "borrowed-list"
+      },
+      {
+        "id": "borrowed-use",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "borrowed-use"
+      },
+      {
+        "id": "borrowed-refresh",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "borrowed-refresh"
+      },
+      {
+        "id": "profile-reload",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "profile-reload"
+      },
+      {
+        "id": "root-reload",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "root-reload"
+      }
+    ],
+    "trigger": "Create a synthetic root grant through public auth-add, then use, expire, refresh and reload it through fresh profile processes without a profile credential copy; independently reload the root owner.",
+    "faultControls": [
+      {
+        "id": "borrowed-access-token-expiry",
+        "seam": "clock",
+        "affectedPhases": [
+          "borrowed-refresh"
+        ]
+      }
+    ],
+    "observations": [
+      {
+        "id": "borrowed-root-readback",
+        "independentReader": "HermesAuthProbe.run: public argv, process identity, provider generation/ledger and independent root/profile readbacks",
+        "caseIds": [
+          "root-add",
+          "borrowed-list",
+          "borrowed-use",
+          "borrowed-refresh",
+          "profile-reload",
+          "root-reload"
+        ]
+      }
+    ],
+    "simUnavailableReason": "SIM cannot create or reload temporary root ownership lineage or invoke administrative auth-add. CLI drives the public native auth/chat entries with fake external providers and clock."
+  },
+  "cases": [
+    {
+      "id": "auth.native-runtime",
+      "state": "PASS",
+      "reasonCode": "NATIVE_PUBLIC_CLI_READY_AUTH_PENDING",
+      "observation": {
+        "interface": "hermes --help",
+        "installedCommit": "8d5e3e412138342e8bf30443e72bd4e6a9abd057",
+        "launcherDigest": "307ef6a7792a42083f6e4f71e9500543efd9c707e211068f80b138db76975397",
+        "interpreterSource": "existing-committed-venv",
+        "interpreterDigest": "e046691799a36090b5946d8910084f982bf819ed4dfaf27a4bfa5bdf9c8360ee",
+        "publicRuntimeCommandDigest": "e99338b03dfdad1b660705657d5e8c4273cc8e1b53f2fe6cf995d9cb36e05403",
+        "bytecodeWritesDisabled": true,
+        "isolatedHome": true,
+        "inheritedProviderEnvironment": false,
+        "publicHelpObserved": true,
+        "childExitCode": 0,
+        "childSignal": null,
+        "outputDigest": "1b74616851009c28894dd94adf51fc3064e3d353021e1b37b716a4904b3881e3",
+        "errorOutputDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "dependencyEnvironmentUnavailable": false,
+        "missingModule": false,
+        "repairSuggested": false,
+        "sourceUpdateIncomplete": false,
+        "authExecuted": false,
+        "credentialInspected": false,
+        "wholeATComplete": false
+      }
+    },
+    {
+      "id": "auth.native-fixture",
+      "state": "PASS",
+      "reasonCode": "NATIVE_AUTH_FIXTURE_ADD_OBSERVED",
+      "observation": {
+        "profileCreate": {
+          "publicArgv": [
+            "hermes",
+            "profile",
+            "create",
+            "toy",
+            "--no-skills"
+          ],
+          "exitCode": 0,
+          "profileCreated": true,
+          "autoTitleDisabledByPublicConfig": true,
+          "stdoutDigest": "969a0b2c234caaccec3ff61b582c31b015f106f19a687efb5afa5722e97e8cf6",
+          "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "result": {
+          "schema": "toy.hermes-httpx-auth-fixture.v1",
+          "operation": "add",
+          "public_argv": [
+            "hermes",
+            "auth",
+            "add",
+            "openai-codex",
+            "--type",
+            "oauth",
+            "--no-browser"
+          ],
+          "exit_code": 0,
+          "markers": [
+            "AUTH_ADD_OK"
+          ],
+          "processIdentity": {
+            "pid": 10992,
+            "parentPid": 10956,
+            "uid": 501,
+            "gid": 20
+          },
+          "observations": {
+            "provider": "openai-codex",
+            "phase": "add",
+            "access_generation": null,
+            "catalog_access_generation": null,
+            "storage_fault_triggered": false,
+            "token_hygiene": true,
+            "success_claim_absent": false,
+            "fallback_attempted": false,
+            "network_denials": [],
+            "socket_origin": null
+          },
+          "http_ledger": {
+            "device_code_requests": 1,
+            "device_code_polls": 1,
+            "token_exchanges": 1,
+            "token_refreshes": 0,
+            "model_catalog_requests": 0,
+            "model_requests": 0,
+            "denied_http_requests": 0,
+            "blocked_socket_events": 0
+          },
+          "network_audit": "socket-audit-hook-installed"
+        },
+        "childPidMatches": true,
+        "freshChildPid": true,
+        "parentPidMatches": true,
+        "uidMatches": true,
+        "gidMatches": true,
+        "childStdoutDigest": "f8b59f8619b86f1e052b0ff5f39c6bbe5cd00de1f77bd924a642077d3a3bdb45",
+        "childStderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "rootAuthBefore": {
+          "exists": false,
+          "digest": null
+        },
+        "rootEnvBefore": {
+          "exists": false,
+          "digest": null
+        },
+        "rootStoreUnchanged": false,
+        "profileAuthBefore": {
+          "exists": false,
+          "digest": null
+        },
+        "profileAuthAfterCreate": {
+          "exists": false,
+          "digest": null
+        },
+        "profileAuthAfterAdd": {
+          "exists": false,
+          "digest": null
+        },
+        "caseId": "root-add",
+        "storeScope": "root",
+        "borrowedRootStoreVerified": true,
+        "profileCopyAbsent": true,
+        "wholeATComplete": false
+      }
+    },
+    {
+      "id": "auth.native-fixture",
+      "state": "PASS",
+      "reasonCode": "NATIVE_AUTH_FIXTURE_LIST_OBSERVED",
+      "observation": {
+        "result": {
+          "schema": "toy.hermes-httpx-auth-fixture.v1",
+          "operation": "list",
+          "public_argv": [
+            "hermes",
+            "--profile",
+            "toy",
+            "auth",
+            "list",
+            "openai-codex"
+          ],
+          "exit_code": 0,
+          "markers": [
+            "AUTH_LIST_READBACK_OK"
+          ],
+          "processIdentity": {
+            "pid": 11001,
+            "parentPid": 10956,
+            "uid": 501,
+            "gid": 20
+          },
+          "observations": {
+            "provider": "openai-codex",
+            "phase": "list",
+            "credential_count": 1,
+            "access_generation": null,
+            "catalog_access_generation": null,
+            "storage_fault_triggered": false,
+            "token_hygiene": true,
+            "success_claim_absent": true,
+            "fallback_attempted": false,
+            "network_denials": [],
+            "socket_origin": null
+          },
+          "http_ledger": {
+            "device_code_requests": 0,
+            "device_code_polls": 0,
+            "token_exchanges": 0,
+            "token_refreshes": 0,
+            "model_catalog_requests": 0,
+            "model_requests": 0,
+            "denied_http_requests": 0,
+            "blocked_socket_events": 0
+          },
+          "network_audit": "socket-audit-hook-installed"
+        },
+        "childPidMatches": true,
+        "freshChildPid": true,
+        "parentPidMatches": true,
+        "uidMatches": true,
+        "gidMatches": true,
+        "childStdoutDigest": "5f99572d16c5892879c9979c6458ccb110443c3a6b6045d35981cfebad7c8566",
+        "childStderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "rootStoreUnchanged": false,
+        "caseId": "borrowed-list",
+        "storeScope": "profile",
+        "borrowedRootStoreVerified": true,
+        "profileCopyAbsent": true,
+        "wholeATComplete": false
+      }
+    },
+    {
+      "id": "auth.native-fixture",
+      "state": "FAIL",
+      "reasonCode": "NATIVE_AUTH_FIXTURE_OPERATION_FAILED",
+      "observation": {
+        "result": {
+          "schema": "toy.hermes-httpx-auth-fixture.v1",
+          "operation": "chat",
+          "public_argv": [
+            "hermes",
+            "--profile",
+            "toy",
+            "chat",
+            "--provider",
+            "openai-codex",
+            "--model",
+            "gpt-6.1-sol",
+            "--toolsets",
+            "none",
+            "-q",
+            "Return the fixed fixture marker."
+          ],
+          "exit_code": 1,
+          "markers": [
+            "CHAT_RESPONSE_NOT_CONFIRMED",
+            "CLI_EXIT_NONZERO"
+          ],
+          "processIdentity": {
+            "pid": 11003,
+            "parentPid": 10956,
+            "uid": 501,
+            "gid": 20
+          },
+          "observations": {
+            "provider": "openai-codex",
+            "phase": "chat",
+            "access_generation": null,
+            "catalog_access_generation": null,
+            "storage_fault_triggered": false,
+            "token_hygiene": true,
+            "success_claim_absent": true,
+            "fallback_attempted": false,
+            "network_denials": [],
+            "socket_origin": null
+          },
+          "http_ledger": {
+            "device_code_requests": 0,
+            "device_code_polls": 0,
+            "token_exchanges": 0,
+            "token_refreshes": 0,
+            "model_catalog_requests": 0,
+            "model_requests": 0,
+            "denied_http_requests": 0,
+            "blocked_socket_events": 0
+          },
+          "network_audit": "socket-audit-hook-installed"
+        },
+        "childPidMatches": true,
+        "freshChildPid": true,
+        "parentPidMatches": true,
+        "uidMatches": true,
+        "gidMatches": true,
+        "childStdoutDigest": "21ba26b2683fa5cfbe2ee03b79b825460024d4d7a8e76bacffabcb578982e6df",
+        "childStderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "rootAuthBefore": {
+          "exists": false,
+          "digest": null
+        },
+        "rootAuthAfter": {
+          "exists": true,
+          "digest": "e125cf8bfaa3ce1d8d952b43382427905080578a93116b8812dec56597bb3f9a"
+        },
+        "rootEnvBefore": {
+          "exists": false,
+          "digest": null
+        },
+        "rootEnvAfter": {
+          "exists": false,
+          "digest": null
+        },
+        "rootStoreUnchanged": false,
+        "profileAuthCurrent": {
+          "exists": false,
+          "digest": null
+        },
+        "caseId": "borrowed-use",
+        "storeScope": "profile",
+        "borrowedRootStoreVerified": true,
+        "profileCopyAbsent": true,
+        "wholeATComplete": false
+      }
+    }
+  ],
+  "resultState": "NOT_IMPLEMENTED",
+  "complete": false,
+  "down": {
+    "exitCode": 0,
+    "path": "build/evidence/R0.03/borrowed88-second-cli/down.json",
+    "sha256": "98e06095298a274fb3821c1226294651437094648a38bed1da08e0bd75a0d4ba"
+  },
+  "teardown": {
+    "stackId": "332ddab3-4f8d-45b0-adb5-64b8133a5928",
+    "checkpointRefs": [],
+    "fenceRefs": [],
+    "stoppedResourceRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "332ddab3-4f8d-45b0-adb5-64b8133a5928"
+      }
+    ],
+    "retainedArtifactRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "332ddab3-4f8d-45b0-adb5-64b8133a5928"
+      }
+    ],
+    "unresolvedResourceRefs": [],
+    "complete": true
+  }
+}

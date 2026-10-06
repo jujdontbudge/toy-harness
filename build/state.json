@@ -2,9 +2,9 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-06T23:37:21.831146+00:00",
+  "updatedAt": "2026-10-06T23:55:04.828886+00:00",
   "phase": "R0_FEASIBILITY",
-  "activeCard": "R0.10",
+  "activeCard": "R0.03",
   "cardCount": 87,
   "acceptanceCount": 1447,
   "cards": {
@@ -538,6 +538,13 @@
           "Attested report persistence/native account/device/protected controller",
           "Other whole R0.02 assigned acceptance and whole register admission"
         ]
+      },
+      "opsScopeMinimumPlan": {
+        "evidence": "build/evidence/R0.02/ops43-44-next-minimum-plan.json",
+        "reviewedAt": "2026-10-06T23:55:04.828886+00:00",
+        "scope": "Source-derived Ops requirement/component mapping only; do not substitute M02/D01 or fabricate AT44 proof",
+        "status": "ACCEPTED_NEXT_INDEPENDENT_SOURCE_UNIT",
+        "wholeATComplete": false
       }
     },
     "R0.03": {
@@ -572,7 +579,14 @@
         "build/evidence/R0.03/held-response-replan.json",
         "build/evidence/R0.03/held-response-baseline.json",
         "build/evidence/R0.03/held-response-diagnostic.json",
-        "build/evidence/R0.03/held-response-restored-check-result.json"
+        "build/evidence/R0.03/held-response-restored-check-result.json",
+        "docs/adr/0042-borrowed-root-auth-probe.md",
+        "build/evidence/R0.03/borrowed88-baseline.json",
+        "build/evidence/R0.03/borrowed88-final-verification.json",
+        "build/evidence/R0.03/borrowed88-regression-verification.json",
+        "build/evidence/R0.03/borrowed88-source-review.json",
+        "build/evidence/R0.03/borrowed88-strict-result.json",
+        "build/evidence/R0.03/borrowed88-root-pins.json"
       ],
       "requiredATs": [
         "AT-hermes-config-34",
@@ -692,9 +706,10 @@
         "sourceUnitStoppedAt": "2026-10-06T09:56:39.219348+00:00"
       },
       "lastVerification": {
-        "evidence": "build/evidence/R0.03/unfiltered-auth-verification.json",
-        "verdict": "PASS_26_UNFILTERED_SOURCE_BOUND_NATIVE_DIAGNOSTICS",
-        "checks": 26,
+        "evidence": "build/evidence/R0.03/borrowed88-final-verification.json",
+        "verdict": "PASS_SIX_BORROWED_ROOT_PUBLIC_AUTH_CELLS_AND_32_SHARED_REGRESSIONS",
+        "checks": 7,
+        "regressionChecks": 32,
         "runShowExact": true,
         "cleanupPassed": true,
         "ownedWorldsDown": true,
@@ -886,6 +901,49 @@
         "parentDecision": "The extra endpoint/lock observer does not add required behavior beyond the retained passed diagnostic slice",
         "implementationStarted": false,
         "wholeATComplete": false
+      },
+      "borrowedRootUnit": {
+        "status": "STOPPED_AFTER_ASSIGNED_NATIVE_DIAGNOSTIC_PASS",
+        "startedAt": "2026-10-06T23:45:00Z",
+        "targetStopAt": "2026-10-07T01:45:00Z",
+        "stoppedAt": "2026-10-06T23:55:04.828886+00:00",
+        "interface": "HermesAuthProbe.run",
+        "writtenInterface": "docs/adr/0042-borrowed-root-auth-probe.md",
+        "evidence": "build/evidence/R0.03/borrowed88-final-verification.json",
+        "sourceAssertionHash": "44f05ed1596b043197fd5efdc8aeaee582e2b9c25dac2f03db41b25a682961ed",
+        "unfiltered": true,
+        "mandatoryCasesPassed": 6,
+        "checksPassed": 7,
+        "sourceRegistrationExact": true,
+        "runShowExact": true,
+        "nativeAttempts": 2,
+        "nativeFailedAttempts": 1,
+        "failureEvidence": "build/evidence/R0.03/borrowed88-second-verification.json",
+        "failureResolution": "Select the intended profile provider through public config before borrowed-root chat; no upstream startup bypass or credential copy.",
+        "profileCopyAbsent": true,
+        "nativeUid": 501,
+        "nativeGid": 20,
+        "protectedNativeRoleVerified": false,
+        "providerGenerations": [
+          "initial",
+          "rotated"
+        ],
+        "refreshCalls": [
+          0,
+          1,
+          0,
+          0
+        ],
+        "regressionChecks": 32,
+        "regressionEvidence": "build/evidence/R0.03/borrowed88-regression-verification.json",
+        "cleanupComplete": true,
+        "ownedWorldsDown": true,
+        "wholeATComplete": false,
+        "acceptanceComplete": false,
+        "liveProviderSends": 0,
+        "SwiftDeferredTo": "R3",
+        "sourceCommit": null,
+        "sourcePushed": false
       }
     },
     "R0.04": {
@@ -10678,7 +10736,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Poll both pending ROOT-REQUESTS; exact root02 DONE immediately prioritizes R0.01 native owner load. DTO source unit is stopped after eight unfiltered CLI diagnostics pass. Continue the next actual canonical owner prerequisite under its assigned card; principal mapping, Client/Life ownership, RunAdmission/TurnReview and Swift/R3 remain pending. Do not treat wire representation or a pending root step as goal completion or goal blockage.",
+  "nextAction": "Commit/push the stopped R0.03 borrowed-root source unit and evidence. Poll ROOT-REQUESTS; exact root02 DONE immediately prioritizes R0.01 native owner load. Otherwise continue the bounded source-derived Ops requirement/component mapping under R0.02; AT44 remains pending genuine source-bound research and protected route/account proof. Pending root work never blocks the goal.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -21218,8 +21276,8 @@
     "ownedScope": "Corrected exact canonical DTO minimum plan only; parent owned implementation after helper completion"
   },
   "continuationAssessment": {
-    "observedAt": "2026-10-06T22:36:16.865800+00:00",
-    "reason": "Gateway a7b39c8 and failure/replan checkpoint063e347 pushed. Earlier auth source restored with strict checks; source-unit failures retained, no whole promotion. Attention66 exact assigned unfiltered baseline now saved/exact readback/complete teardown; next bounded central behavior has version/import corrections. Both root requests remain pending, goal active.",
+    "observedAt": "2026-10-06T23:55:04.828886+00:00",
+    "reason": "Six borrowed-root public auth-entry cells and32 shared fixture regressions verified with source-bound exact readbacks and complete teardown. Unit stops; no whole AT/card promotion. Root requests remain pending; source-derived Ops research scope is the next independent work.",
     "goalStatus": "active"
   },
   "executionPolicy": {
@@ -21251,7 +21309,7 @@
       "pendingRootDoesNotBlockGoal": true,
       "pollWhileIndependentWork": true,
       "exactRegisteredCommandOrRepoScriptRequired": true,
-      "lastPollAt": "2026-10-06T23:37:21.831146+00:00",
+      "lastPollAt": "2026-10-06T23:55:04.828886+00:00",
       "pendingRequests": [
         "ROOT-R004-20261006-02",
         "ROOT-R005-20261006-01"
@@ -21262,22 +21320,24 @@
     "queuedRootReserveAdmissionGate": false
   },
   "latestStaticVerification": {
-    "recordedAt": "2026-10-06T23:30:12.104Z",
-    "command": "npm run check",
     "exitCode": 0,
     "artifacts": 385,
     "contracts": 317,
-    "cliManifests": 29,
+    "cliManifests": 30,
     "features": 100,
     "commands": 55,
     "indexedATs": 1447,
     "schemaDigest": "a0c2cef4fe1c805c37d92191a87701cbbf708e7dccc0c22d932dbc3cc0c14c9d",
-    "evidence": "build/evidence/R0.10/dto50-strict-check-final.txt",
+    "featureMapState": "PASS",
     "languages": [
       "TypeScript",
       "Python"
     ],
-    "SwiftDeferredTo": "R3"
+    "SwiftDeferredTo": "R3",
+    "evidence": "build/evidence/R0.03/borrowed88-provider-config-strict.txt",
+    "recordedAt": "2026-10-06T23:55:04.828886+00:00",
+    "command": "npm run check; toy feature-map update/check after metadata-only refresh",
+    "featureMapEvidence": "build/evidence/R0.03/borrowed88-map-check-final.json"
   },
   "sourceCheckpointCommit": "d141e9b",
   "sourceCheckpointPushed": true,
@@ -21319,15 +21379,15 @@
     }
   },
   "resourceAdmission": {
-    "measuredAt": "2026-10-06T23:15:44.098Z",
-    "availableBytes": "2110586880",
+    "measuredAt": "2026-10-06T23:52:21.794Z",
+    "availableBytes": "2143666176",
     "pressure": "normal",
     "strictlyFreeAdmission": false,
     "repairFloorApplied": false,
     "ownedWorldsRunning": 0,
-    "helpersRunning": 1,
+    "helpersRunning": 0,
     "helperNeedBytes": "268435456",
-    "measurementSource": "build/evidence/R0.09/unfiltered-current-doctor.json",
+    "measurementSource": "build/evidence/R0.03/borrowed88-regression-cli/up.json",
     "marginBytes": "536870912",
     "ownedStackId": null,
     "stackAndNativeChildrenNeedBytes": "0",

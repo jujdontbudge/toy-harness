@@ -4396,6 +4396,73 @@ export const registeredCliAcceptanceManifestInventory = [
     "simUnavailableReason": "SIM ingress cannot run administrative auth add or select native subprocess storage crash boundaries. The CLI drives real public commands in a seeded disposable profile with external provider, clock and OS controls."
   },
   {
+    "id": "AT-hermes-config-88",
+    "rung": "CLI",
+    "sourceAssertionHash": "44f05ed1596b043197fd5efdc8aeaee582e2b9c25dac2f03db41b25a682961ed",
+    "commandId": "probe.run",
+    "scenarioId": "auth.borrowed-refresh",
+    "owner": "hermes",
+    "firstRelease": "R0",
+    "kind": "behavioral",
+    "mandatoryCases": [
+      {
+        "id": "root-add",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "root-add"
+      },
+      {
+        "id": "borrowed-list",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "borrowed-list"
+      },
+      {
+        "id": "borrowed-use",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "borrowed-use"
+      },
+      {
+        "id": "borrowed-refresh",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "borrowed-refresh"
+      },
+      {
+        "id": "profile-reload",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "profile-reload"
+      },
+      {
+        "id": "root-reload",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "root-reload"
+      }
+    ],
+    "trigger": "Create a synthetic root grant through public auth-add, then use, expire, refresh and reload it through fresh profile processes without a profile credential copy; independently reload the root owner.",
+    "faultControls": [
+      {
+        "id": "borrowed-access-token-expiry",
+        "seam": "clock",
+        "affectedPhases": [
+          "borrowed-refresh"
+        ]
+      }
+    ],
+    "observations": [
+      {
+        "id": "borrowed-root-readback",
+        "independentReader": "HermesAuthProbe.run: public argv, process identity, provider generation/ledger and independent root/profile readbacks",
+        "caseIds": [
+          "root-add",
+          "borrowed-list",
+          "borrowed-use",
+          "borrowed-refresh",
+          "profile-reload",
+          "root-reload"
+        ]
+      }
+    ],
+    "simUnavailableReason": "SIM cannot create or reload temporary root ownership lineage or invoke administrative auth-add. CLI drives the public native auth/chat entries with fake external providers and clock."
+  },
+  {
     "id": "AT-lifestore-63",
     "rung": "CLI",
     "sourceAssertionHash": "33af59a30239c658b2475fce5dc48de4ad95de524e63222f988e8b086260e61d",

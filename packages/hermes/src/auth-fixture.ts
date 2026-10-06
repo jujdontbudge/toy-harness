@@ -19,8 +19,8 @@ const isWithin = (base: string, target: string): boolean => {
   return path === "" || (!isAbsolute(path) && path !== ".." && !path.startsWith(`..${sep}`));
 };
 
-const publicArgv = (operation: FixtureOperation, order?: HermesAuthConcurrencyObservationV1["order"], storageContext = false): string[] => {
-  const prefix = ["hermes", "--profile", "toy"];
+const publicArgv = (operation: FixtureOperation, order?: HermesAuthConcurrencyObservationV1["order"], storageContext = false, rootScope = false): string[] => {
+  const prefix = rootScope ? ["hermes"] : ["hermes", "--profile", "toy"];
   const label = storageContext ? "toy-fixture-storage-cut" : `toy-fixture-added-${order}`;
   if (operation.startsWith("add")) return [...prefix, "auth", "add", "openai-codex", "--type", "oauth", "--no-browser", ...(order === undefined ? [] : ["--label", label])];
   if (operation.startsWith("list")) return [...prefix, "auth", "list", "openai-codex"];
@@ -135,7 +135,7 @@ const check = (state: CheckViewV1["state"], reasonCode: string, prerequisite: un
   links: { recordRefs: [], observations: [], artifactDigests: [...new Set(artifactDigests)] }
 });
 
-export const runHermesAuthFixture = async (interpreter: string, home: string, hermesHome: string, timeoutMs: number, firstOperation: FixtureOperation = "add"): Promise<CheckViewV1[]> => {
+export const runHermesAuthFixture = async (interpreter: string, home: string, hermesHome: string, timeoutMs: number, firstOperation: FixtureOperation = "add", borrowedRoot = false): Promise<CheckViewV1[]> => {
   const started = process.hrtime.bigint();
   const remainingMs = (): number => timeoutMs - Number((process.hrtime.bigint() - started) / 1000000n);
   const evidence: Record<string, unknown> = { wholeATComplete: false, fixtureSubsetComplete: false };
@@ -151,7 +151,8 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
     const concurrentRun = firstOperation === "concurrent-refresh-add";
     const saveFault = firstOperation === "add-enospc" || firstOperation === "add-replace-fault";
     const deniedGrant = saveFault || siwcUnbound;
-    const operations: readonly FixtureOperation[] = siwcUnbound ? [firstOperation] : saveFault ? [firstOperation, "list-after-fault", "chat-after-fault"] : concurrentRun ? ["add", "list"] : ["add", "list", "chat", "chat-expired", "chat-reloaded"];
+    if (borrowedRoot && firstOperation !== "add") return fail("BLOCKED", "NATIVE_AUTH_FIXTURE_OPERATION_INVALID");
+    const operations: readonly FixtureOperation[] = borrowedRoot ? ["add", "list", "chat", "chat-expired", "chat-reloaded", "chat-reloaded"] : siwcUnbound ? [firstOperation] : saveFault ? [firstOperation, "list-after-fault", "chat-after-fault"] : concurrentRun ? ["add", "list"] : ["add", "list", "chat", "chat-expired", "chat-reloaded"];
     if (!Number.isInteger(timeoutMs) || timeoutMs < 1 || timeoutMs > 120000) return fail("BLOCKED", "NATIVE_AUTH_FIXTURE_TIMEOUT_INVALID");
     const homeRoot = realpathSync(home);
     const hermesRoot = realpathSync(hermesHome);
@@ -178,12 +179,12 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
       PYTHONDONTWRITEBYTECODE: "1",
       PYTHONNOUSERSITE: "1"
     };
-    const bounded = (file: string, args: string[], maxBuffer: number, capMs: number, input?: Buffer, cwd = homeRoot) => {
+    const bounded = (file: string, args: string[], maxBuffer: number, capMs: number, input?: Buffer, cwd = homeRoot, childEnvironment: NodeJS.ProcessEnv = environment) => {
       const budget = remainingMs();
       if (budget <= 0) return { timedOut: true as const, result: null };
       const result = spawnSync(file, args, {
         cwd,
-        env: environment,
+        env: childEnvironment,
         timeout: Math.max(1, Math.min(budget, capMs)),
         maxBuffer,
         input
@@ -237,6 +238,7 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
     const profileAuthAfterCreate = privateStoreDigests(hermesRoot).profileAuth;
     const fallback = [{ provider: "openai", model: "gpt-6.1-sol" }];
     const profileConfigCommands = [["--profile", "toy", "config", "set", "auxiliary.title_generation.enabled", "false"]];
+    if (borrowedRoot) profileConfigCommands.push(["config", "set", "auxiliary.title_generation.enabled", "false"], ["--profile", "toy", "config", "set", "model.provider", "openai-codex"]);
     if (siwcUnbound) profileConfigCommands.push(["--profile", "toy", "config", "set", "fallback_model", JSON.stringify(fallback)], ["--profile", "toy", "config", "get", "fallback_model", "--json"]);
     for (const profileConfigArgs of profileConfigCommands) {
       const profileConfigRequest = bounded(interpreter, ["-B", "-I", candidateStore, "--print-runtime-command", "--module", "hermes_cli.main", "--", ...profileConfigArgs], maxChildBytes, 5000);
@@ -260,8 +262,11 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
       artifacts.push(digest(JSON.stringify(profileConfigCommand)));
     }
     let profileAuthAfterAdd: { exists: boolean; digest: string | null } | null = null;
+    let previousRootAuth = storesBefore.rootAuth;
     const childPids = new Set<number>();
-    for (const operation of operations) {
+    for (const [operationIndex, operation] of operations.entries()) {
+      const rootScope = borrowedRoot && (operationIndex === 0 || operationIndex === 5);
+      const borrowedCase = ["root-add", "borrowed-list", "borrowed-use", "borrowed-refresh", "profile-reload", "root-reload"][operationIndex];
       const commandRequest = bounded(interpreter, ["-B", "-I", candidateStore, "--print-runtime-command", "--module", fixtureModule, "--", operation], maxChildBytes, 5000);
       if (commandRequest.timedOut || !commandRequest.result || commandRequest.result.error || commandRequest.result.status !== 0) return fail("BLOCKED", "NATIVE_AUTH_FIXTURE_PUBLIC_COMMAND_UNAVAILABLE", { installedCommit, archiveDigest, operation });
       const rawPublicCommand: unknown = JSON.parse(commandRequest.result.stdout.toString("utf8"));
@@ -272,7 +277,8 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
       const commandInterpreter = realpathSync(commandInterpreterValue);
       if (commandInterpreter !== expectedInterpreter || !bootstrap.includes(fixtureModule) || !bootstrap.includes(candidateRoot)) return fail("FAIL", "NATIVE_AUTH_FIXTURE_PUBLIC_COMMAND_INVALID", { installedCommit, archiveDigest, operation });
       const commandDigest = digest(JSON.stringify(publicCommand));
-      const child = bounded(interpreter, ["-B", ...publicCommand.slice(1)], maxChildBytes, 30000);
+      const scopedEnvironment = { ...environment, TOY_AUTH_STORE_SCOPE: rootScope ? "root" : "profile" };
+      const child = bounded(interpreter, ["-B", ...publicCommand.slice(1)], maxChildBytes, 30000, undefined, homeRoot, borrowedRoot ? scopedEnvironment : environment);
       if (child.timedOut || !child.result || child.result.error || child.result.status === null) return fail("BLOCKED", "NATIVE_AUTH_FIXTURE_CHILD_UNAVAILABLE", { installedCommit, archiveDigest, operation, commandDigest, childExitCode: child.result?.status ?? null, childSignal: child.result?.signal ?? null, childError: child.result?.error?.message.includes("ETIMEDOUT") ? "TIMEOUT" : child.result?.error ? "EXECUTION_UNAVAILABLE" : null, stdoutDigest: digest(child.result?.stdout ?? ""), stderrDigest: digest(child.result?.stderr ?? "") });
       const stdout = child.result.stdout.toString("utf8");
       const stderrDigest = digest(child.result.stderr);
@@ -285,7 +291,7 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
       const parsedResult = hermesAuthFixtureResultSchema.safeParse(rawResult);
       if (!parsedResult.success) return fail("FAIL", "NATIVE_AUTH_FIXTURE_RESULT_INVALID", { installedCommit, archiveDigest, operation, commandDigest, stdoutDigest: digest(child.result.stdout), stderrDigest });
       const result: HermesAuthFixtureResultV1 = parsedResult.data;
-      const expectedArgv = publicArgv(operation);
+      const expectedArgv = publicArgv(operation, undefined, false, rootScope);
       const addOperation = operation.startsWith("add");
       const listOperation = operation.startsWith("list");
       const resultMarker = siwcUnbound ? "SIWC_AUTHORIZATION_REQUIRED" : addOperation ? saveFault ? "AUTH_SAVE_DENIED" : "AUTH_ADD_OK" : listOperation ? saveFault ? "AUTH_LIST_EMPTY" : "AUTH_LIST_READBACK_OK" : saveFault ? "CHAT_GRANT_UNUSABLE" : "CHAT_RESPONSE_OK";
@@ -309,9 +315,14 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
       const storesAfterOperation = privateStoreDigests(hermesRoot);
       const rootStoreUnchanged = JSON.stringify(storesBefore.rootAuth) === JSON.stringify(storesAfterOperation.rootAuth)
         && JSON.stringify(storesBefore.rootEnv) === JSON.stringify(storesAfterOperation.rootEnv);
-      const profileStoreVerified = deniedGrant ? !storesAfterOperation.profileAuth.exists : storesAfterOperation.profileAuth.exists
+      const profileStoreVerified = borrowedRoot ? !profileAuthAfterCreate.exists && !storesAfterOperation.profileAuth.exists : deniedGrant ? !storesAfterOperation.profileAuth.exists : storesAfterOperation.profileAuth.exists
         && (operation !== "add" || storesAfterOperation.profileAuth.digest !== profileAuthAfterCreate.digest)
         && (operation !== "chat-expired" || storesAfterOperation.profileAuth.digest !== profileAuthAfterAdd?.digest);
+      const borrowedRootStoreVerified = storesAfterOperation.rootAuth.exists
+        && JSON.stringify(storesBefore.rootEnv) === JSON.stringify(storesAfterOperation.rootEnv)
+        && (operation === "add" || operation === "chat-expired"
+          ? storesAfterOperation.rootAuth.digest !== previousRootAuth.digest
+          : storesAfterOperation.rootAuth.digest === previousRootAuth.digest);
       const expectedGeneration = deniedGrant ? null : chatOperation ? operation === "chat" ? "initial" : "rotated" : null;
       const exitMatches = result.exit_code === child.result.status && (deniedGrant && (addOperation || chatOperation) ? result.exit_code !== 0 : result.exit_code === 0);
       const operationPassed = result.operation === (chatOperation ? "chat" : addOperation ? "add" : "list")
@@ -332,7 +343,7 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
         && result.network_audit === "socket-audit-hook-installed"
         && ledgerMatches
         && profileStoreVerified
-        && rootStoreUnchanged
+        && (borrowedRoot ? borrowedRootStoreVerified : rootStoreUnchanged)
         && identityMatches;
       if (addOperation) profileAuthAfterAdd = storesAfterOperation.profileAuth;
       const storeEvidence = addOperation
@@ -362,12 +373,14 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
           childStdoutDigest: digest(child.result.stdout),
           childStderrDigest: stderrDigest,
           ...storeEvidence,
+          ...(borrowedRoot ? { caseId: borrowedCase, storeScope: rootScope ? "root" : "profile", borrowedRootStoreVerified, profileCopyAbsent: profileStoreVerified } : {}),
           wholeATComplete: false
         },
         [...artifacts, archiveDigest, profileCreateDigest, commandDigest]
       );
       operationChecks.push(operationCheck);
       if (!operationPassed) return operationChecks;
+      previousRootAuth = storesAfterOperation.rootAuth;
     }
     if (concurrentRun) {
       const launchFixture = (operation: FixtureOperation, order: HermesAuthConcurrencyObservationV1["order"], actor: HermesAuthConcurrencyObservationV1["actor"], barrierDirectory: string, crashCut: HermesAuthConcurrencyObservationV1["crashCut"], holdAfterResult: boolean, storage?: { cut?: "before-replace" | "after-replace" }): ConcurrentChildHandle | null => {

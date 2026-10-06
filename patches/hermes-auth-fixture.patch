@@ -496,7 +496,7 @@
 +
 +
 +def _public_argv(operation: str) -> list[str]:
-+    prefix = ["hermes", "--profile", "toy"]
++    prefix = ["hermes"] if os.environ.get("TOY_AUTH_STORE_SCOPE") == "root" else ["hermes", "--profile", "toy"]
 +    if operation == "add":
 +        label = ["--label", _fixture_label()] if os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR") == "auth-add" else []
 +        return [*prefix, "auth", "add", "openai-codex", "--type", "oauth", "--no-browser", *label]

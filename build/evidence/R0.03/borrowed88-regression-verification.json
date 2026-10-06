@@ -1,0 +1,454 @@
+{
+  "rung": "CLI",
+  "unfiltered": true,
+  "wholeATComplete": false,
+  "liveProviderSends": 0,
+  "probes": [
+    {
+      "probeId": "AT-hermes-config-85",
+      "operationId": "0efede1b-2efa-48c1-baf8-bf66a2410797",
+      "sameData": true,
+      "sourceRegistration": {
+        "id": "AT-hermes-config-85",
+        "rung": "CLI",
+        "sourceAssertionHash": "1945ba7e3df83056f7a11ddb1cc4f6f74b3c2e91744c47f77a85e3f34e21ff67",
+        "commandId": "probe.run",
+        "scenarioId": "auth.fresh-process",
+        "owner": "hermes",
+        "firstRelease": "R0",
+        "kind": "behavioral",
+        "mandatoryCases": [
+          {
+            "id": "add",
+            "publicOperation": "hermes --profile toy auth add openai-codex --type oauth --no-browser",
+            "phase": "add"
+          },
+          {
+            "id": "list",
+            "publicOperation": "hermes --profile toy auth list openai-codex",
+            "phase": "list"
+          },
+          {
+            "id": "chat",
+            "publicOperation": "hermes --profile toy chat --provider openai-codex --model gpt-6.1-sol --toolsets none -q \"Return the fixed fixture marker.\"",
+            "phase": "chat"
+          },
+          {
+            "id": "chat-expired",
+            "publicOperation": "hermes --profile toy chat --provider openai-codex --model gpt-6.1-sol --toolsets none -q \"Return the fixed fixture marker.\"",
+            "phase": "chat-expired"
+          },
+          {
+            "id": "chat-reloaded",
+            "publicOperation": "hermes --profile toy chat --provider openai-codex --model gpt-6.1-sol --toolsets none -q \"Return the fixed fixture marker.\"",
+            "phase": "chat-reloaded"
+          }
+        ],
+        "trigger": "Save a fresh synthetic Codex profile grant with real auth-add, terminate that process, use it in a fresh chat process, expire the fake access token, then refresh and use the newest grant in another fresh process.",
+        "faultControls": [
+          {
+            "id": "access-token-expiry",
+            "seam": "clock",
+            "affectedPhases": [
+              "chat-expired"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "process-identity-exit",
+            "independentReader": "HermesAuthProbe.run: result.processIdentity, exit_code and child/fresh-child/parent/UID/GID matches",
+            "caseIds": [
+              "add",
+              "list",
+              "chat",
+              "chat-expired",
+              "chat-reloaded"
+            ]
+          },
+          {
+            "id": "public-argv",
+            "independentReader": "HermesAuthProbe.run: result.public_argv",
+            "caseIds": [
+              "add",
+              "list",
+              "chat",
+              "chat-expired",
+              "chat-reloaded"
+            ]
+          },
+          {
+            "id": "fake-provider-ledger",
+            "independentReader": "HermesAuthProbe.run: result.http_ledger and observations.network_denials",
+            "caseIds": [
+              "add",
+              "list",
+              "chat",
+              "chat-expired",
+              "chat-reloaded"
+            ]
+          },
+          {
+            "id": "root-profile-store-readback",
+            "independentReader": "HermesAuthProbe.run: rootStoreUnchanged, profileAuthAfterAdd, profileAuthCurrent and root/profile digests",
+            "caseIds": [
+              "add",
+              "list",
+              "chat",
+              "chat-expired",
+              "chat-reloaded"
+            ]
+          },
+          {
+            "id": "token-hygiene",
+            "independentReader": "HermesAuthProbe.run: result.observations.token_hygiene",
+            "caseIds": [
+              "add",
+              "list",
+              "chat",
+              "chat-expired",
+              "chat-reloaded"
+            ]
+          },
+          {
+            "id": "fresh-process-usability",
+            "independentReader": "HermesAuthProbe.run: fresh chat CHAT_RESPONSE_OK and observations.access_generation",
+            "caseIds": [
+              "chat",
+              "chat-expired",
+              "chat-reloaded"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM ingress cannot start Hermes's administrative auth-add flow or select independent native subprocess exit/restart boundaries. The CLI drives those public commands in a seeded disposable profile and reads independent provider/store evidence."
+      },
+      "checks": [
+        {
+          "id": "auth.native-runtime",
+          "state": "PASS",
+          "reasonCode": "NATIVE_PUBLIC_CLI_READY_AUTH_PENDING"
+        },
+        {
+          "id": "auth.native-fixture",
+          "state": "PASS",
+          "reasonCode": "NATIVE_AUTH_FIXTURE_ADD_OBSERVED"
+        },
+        {
+          "id": "auth.native-fixture",
+          "state": "PASS",
+          "reasonCode": "NATIVE_AUTH_FIXTURE_LIST_OBSERVED"
+        },
+        {
+          "id": "auth.native-fixture",
+          "state": "PASS",
+          "reasonCode": "NATIVE_AUTH_FIXTURE_CHAT_OBSERVED"
+        },
+        {
+          "id": "auth.native-fixture",
+          "state": "PASS",
+          "reasonCode": "NATIVE_AUTH_FIXTURE_CHAT_EXPIRED_OBSERVED"
+        },
+        {
+          "id": "auth.native-fixture",
+          "state": "PASS",
+          "reasonCode": "NATIVE_AUTH_FIXTURE_CHAT_RELOADED_OBSERVED"
+        }
+      ],
+      "allPass": true,
+      "checkCount": 6
+    },
+    {
+      "probeId": "AT-hermes-config-87",
+      "operationId": "d84f328f-c867-433e-8a6e-27cba5cfa008",
+      "sameData": true,
+      "sourceRegistration": {
+        "id": "AT-hermes-config-87",
+        "rung": "CLI",
+        "sourceAssertionHash": "b8ba9587534e2983742157a3ab9ae8911da4928e48e3ab0894944914bb91e6bb",
+        "commandId": "probe.run",
+        "scenarioId": "auth.concurrent-persistence",
+        "owner": "hermes",
+        "firstRelease": "R0",
+        "kind": "behavioral",
+        "mandatoryCases": [
+          {
+            "id": "add-first",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "add-first"
+          },
+          {
+            "id": "refresh-first",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "refresh-first"
+          },
+          {
+            "id": "before-replace",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "before-replace"
+          },
+          {
+            "id": "after-replace",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "after-replace"
+          }
+        ],
+        "trigger": "Run real public expired-grant chat and independent auth-add subprocesses in both persistence orders, then kill disposable auth-add immediately before and after atomic replace and inspect fresh public list, priority and chat.",
+        "faultControls": [
+          {
+            "id": "persistence-order",
+            "seam": "provider",
+            "affectedPhases": [
+              "add-first",
+              "refresh-first"
+            ]
+          },
+          {
+            "id": "expired-access",
+            "seam": "clock",
+            "affectedPhases": [
+              "add-first",
+              "refresh-first"
+            ]
+          },
+          {
+            "id": "native-process-crash",
+            "seam": "os",
+            "affectedPhases": [
+              "before-replace",
+              "after-replace"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "fresh-process-and-public-command",
+            "independentReader": "HermesAuthProbe.run: processIdentity/public_argv/exit and SIGKILL boundary identity",
+            "caseIds": [
+              "add-first",
+              "refresh-first",
+              "before-replace",
+              "after-replace"
+            ]
+          },
+          {
+            "id": "provider-generation-and-effects",
+            "independentReader": "HermesAuthProbe.run: exact refreshEffects, catalog/model generations and HTTP ledger",
+            "caseIds": [
+              "add-first",
+              "refresh-first",
+              "before-replace",
+              "after-replace"
+            ]
+          },
+          {
+            "id": "independent-persistence-readback",
+            "independentReader": "HermesAuthProbe.run: fresh public list/count/label, priority, chat and unchanged root stores",
+            "caseIds": [
+              "add-first",
+              "refresh-first",
+              "before-replace",
+              "after-replace"
+            ]
+          },
+          {
+            "id": "stored-readback-and-teardown",
+            "independentReader": "toy probe.show and stack.down: exact persisted result and complete owned-world teardown",
+            "caseIds": [
+              "add-first",
+              "refresh-first",
+              "before-replace",
+              "after-replace"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM ingress cannot run administrative auth add or select native subprocess storage crash boundaries. The CLI drives real public commands in a seeded disposable profile with external provider, clock and OS controls."
+      },
+      "checks": [
+        {
+          "id": "auth.native-runtime",
+          "state": "PASS",
+          "reasonCode": "NATIVE_PUBLIC_CLI_READY_AUTH_PENDING"
+        },
+        {
+          "id": "auth.native-fixture",
+          "state": "PASS",
+          "reasonCode": "NATIVE_AUTH_FIXTURE_ADD_OBSERVED"
+        },
+        {
+          "id": "auth.native-fixture",
+          "state": "PASS",
+          "reasonCode": "NATIVE_AUTH_FIXTURE_LIST_OBSERVED"
+        },
+        {
+          "id": "auth.native-fixture",
+          "state": "PASS",
+          "reasonCode": "NATIVE_AUTH_CONCURRENCY_ADD_CRASH_CUT_OBSERVED"
+        },
+        {
+          "id": "auth.native-fixture",
+          "state": "PASS",
+          "reasonCode": "NATIVE_AUTH_CONCURRENCY_CHAT_CRASH_CUT_OBSERVED"
+        },
+        {
+          "id": "auth.native-fixture",
+          "state": "PASS",
+          "reasonCode": "NATIVE_AUTH_CONCURRENCY_FRESH_LIST_OBSERVED"
+        },
+        {
+          "id": "auth.native-fixture",
+          "state": "PASS",
+          "reasonCode": "NATIVE_AUTH_CONCURRENCY_FRESH_REFRESH_RELOAD_OBSERVED"
+        },
+        {
+          "id": "auth.native-fixture",
+          "state": "PASS",
+          "reasonCode": "NATIVE_AUTH_CONCURRENCY_ADDED_PRIORITY_OBSERVED"
+        },
+        {
+          "id": "auth.native-fixture",
+          "state": "PASS",
+          "reasonCode": "NATIVE_AUTH_CONCURRENCY_FRESH_GRANT_RELOAD_OBSERVED"
+        },
+        {
+          "id": "auth.native-fixture",
+          "state": "PASS",
+          "reasonCode": "NATIVE_AUTH_CONCURRENCY_PRIMARY_PRIORITY_RESTORED"
+        },
+        {
+          "id": "auth.native-fixture",
+          "state": "PASS",
+          "reasonCode": "NATIVE_AUTH_CONCURRENCY_FINAL_LIST_OBSERVED"
+        },
+        {
+          "id": "auth.native-fixture",
+          "state": "PASS",
+          "reasonCode": "NATIVE_AUTH_CONCURRENCY_ADD_OBSERVED"
+        },
+        {
+          "id": "auth.native-fixture",
+          "state": "PASS",
+          "reasonCode": "NATIVE_AUTH_CONCURRENCY_CHAT_CRASH_CUT_OBSERVED"
+        },
+        {
+          "id": "auth.native-fixture",
+          "state": "PASS",
+          "reasonCode": "NATIVE_AUTH_CONCURRENCY_FRESH_LIST_OBSERVED"
+        },
+        {
+          "id": "auth.native-fixture",
+          "state": "PASS",
+          "reasonCode": "NATIVE_AUTH_CONCURRENCY_FRESH_REFRESH_RELOAD_OBSERVED"
+        },
+        {
+          "id": "auth.native-fixture",
+          "state": "PASS",
+          "reasonCode": "NATIVE_AUTH_CONCURRENCY_ADDED_PRIORITY_OBSERVED"
+        },
+        {
+          "id": "auth.native-fixture",
+          "state": "PASS",
+          "reasonCode": "NATIVE_AUTH_CONCURRENCY_FRESH_GRANT_RELOAD_OBSERVED"
+        },
+        {
+          "id": "auth.native-fixture",
+          "state": "PASS",
+          "reasonCode": "NATIVE_AUTH_CONCURRENCY_PRIMARY_PRIORITY_RESTORED"
+        },
+        {
+          "id": "auth.native-fixture",
+          "state": "PASS",
+          "reasonCode": "NATIVE_AUTH_CONCURRENCY_FINAL_LIST_OBSERVED"
+        },
+        {
+          "id": "auth.native-fixture",
+          "state": "PASS",
+          "reasonCode": "NATIVE_AUTH_STORAGE_CRASH_CUT_OBSERVED"
+        },
+        {
+          "id": "auth.native-fixture",
+          "state": "PASS",
+          "reasonCode": "NATIVE_AUTH_STORAGE_FRESH_LIST_OBSERVED"
+        },
+        {
+          "id": "auth.native-fixture",
+          "state": "PASS",
+          "reasonCode": "NATIVE_AUTH_STORAGE_FRESH_USE_OBSERVED"
+        },
+        {
+          "id": "auth.native-fixture",
+          "state": "PASS",
+          "reasonCode": "NATIVE_AUTH_STORAGE_CRASH_CUT_OBSERVED"
+        },
+        {
+          "id": "auth.native-fixture",
+          "state": "PASS",
+          "reasonCode": "NATIVE_AUTH_STORAGE_FRESH_LIST_OBSERVED"
+        },
+        {
+          "id": "auth.native-fixture",
+          "state": "PASS",
+          "reasonCode": "NATIVE_AUTH_STORAGE_EXACT_PRIORITY_OBSERVED"
+        },
+        {
+          "id": "auth.native-fixture",
+          "state": "PASS",
+          "reasonCode": "NATIVE_AUTH_STORAGE_FRESH_USE_OBSERVED"
+        }
+      ],
+      "allPass": true,
+      "checkCount": 26
+    }
+  ],
+  "up": {
+    "exitCode": 0,
+    "path": "build/evidence/R0.03/borrowed88-regression-cli/up.json",
+    "sha256": "069880d1cf5e774fcc7b9eeea4225e4ec40751f1fee77f97f6f12b9a28c63c35"
+  },
+  "stackId": "c3fcc972-c081-439a-8c31-8c0f3598f8ef",
+  "AT-hermes-config-85-run": {
+    "exitCode": 0,
+    "path": "build/evidence/R0.03/borrowed88-regression-cli/AT-hermes-config-85-run.json",
+    "sha256": "4ef821d712e143f2e609fe0dbb7f0e66fbec74ba8a08756fa72f4d1ef04df2c5"
+  },
+  "AT-hermes-config-85-show": {
+    "exitCode": 0,
+    "path": "build/evidence/R0.03/borrowed88-regression-cli/AT-hermes-config-85-show.json",
+    "sha256": "50d2b28fbd2715915beb9586ae86c4c1a76e79c259198383f2da0aa8717aadb0"
+  },
+  "AT-hermes-config-87-run": {
+    "exitCode": 0,
+    "path": "build/evidence/R0.03/borrowed88-regression-cli/AT-hermes-config-87-run.json",
+    "sha256": "0b91ab9f0c234cafa6339a6e6a393a796c2264d7f03a993ea9e8fd607590d1d7"
+  },
+  "AT-hermes-config-87-show": {
+    "exitCode": 0,
+    "path": "build/evidence/R0.03/borrowed88-regression-cli/AT-hermes-config-87-show.json",
+    "sha256": "b5a0539da025730c863d304a6e5972ec06e3198f0a600d1f720111ac6e62642e"
+  },
+  "down": {
+    "exitCode": 0,
+    "path": "build/evidence/R0.03/borrowed88-regression-cli/down.json",
+    "sha256": "433231562777713407cb1feec171e33d85256c5c94f499b3a4996727a9506bd1"
+  },
+  "teardown": {
+    "stackId": "c3fcc972-c081-439a-8c31-8c0f3598f8ef",
+    "checkpointRefs": [],
+    "fenceRefs": [],
+    "stoppedResourceRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "c3fcc972-c081-439a-8c31-8c0f3598f8ef"
+      }
+    ],
+    "retainedArtifactRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "c3fcc972-c081-439a-8c31-8c0f3598f8ef"
+      }
+    ],
+    "unresolvedResourceRefs": [],
+    "complete": true
+  }
+}

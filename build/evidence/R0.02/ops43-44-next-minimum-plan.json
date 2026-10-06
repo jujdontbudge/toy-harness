@@ -1,0 +1,107 @@
+{
+  "recordedAt": "2026-10-06T23:51:20Z",
+  "card": "R0.02",
+  "artifactKind": "read_only_minimum_source_plan",
+  "scope": "AT-ops-43 and AT-ops-44 only; no source changes, builds, probes, service/account operations, root actions, or external research were performed",
+  "disposition": "NOT_IMPLEMENTED",
+  "complete": false,
+  "acceptance": [
+    {
+      "id": "AT-ops-43",
+      "source": "specs/ops.md:1964",
+      "sourceAssertionHash": "622d138b7d6baa289d66ff4d0cd45d786d5fe878f3adfff837f9e3d1e3274a82",
+      "assertion": "Given OPS components mapped by README requirements 0.1/0.2/0.10/2.4/5.10, When the research/register gate validates component decisions, Then every component has compared options, primary evidence, tradeoffs, selected tool and acceptance IDs, and removing one required decision/evidence/validation plan produces FAIL before its build starts.",
+      "rung": "CLI",
+      "requiredEvidence": "static, probe:AT-ops-43"
+    },
+    {
+      "id": "AT-ops-44",
+      "source": "specs/ops.md:1965",
+      "sourceAssertionHash": "7a7100f87f1e08f4c6aaa35582495f2984c39ba058b27c14962f0157c8f14804",
+      "assertion": "Given a research fixture whose most reliable suitable tool was not named by Johan, When the prescribed research route compares it with the named options, Then the decision record evaluates and can select that tool on evidence without inventing a new application host or weakening his requirements.",
+      "rung": "CLI",
+      "requiredEvidence": "static, probe:AT-ops-44"
+    }
+  ],
+  "sourceHashes": {
+    "tests/acceptance-index.json": "c9b645eab7f55b2ebf35d7db769a534a4837de23ad3dc3d913f3189e781d44fa",
+    "tests/registry.yaml": "1fc8ea115f9d8f6dee6cd450841783d69f9f09a2053321bd23899eb31389d98f",
+    "packages/self-improvement/src/engineering-control.ts": "0e26b0540dc02fe29cefaa02778cbb90579c98870764c2b005aaf295f03f0925",
+    "packages/self-improvement/src/component-comparison-probe.ts": "f9d5b8ba69f44b07b58a9a203d92c83d4028a47d22496daf87c36aa9e1ddc713",
+    "packages/ops/src/public.ts": "9646f70f89434cf774e66a602eed45f751c353f200b2f3e1a2cf41968e079284",
+    "packages/contracts/src/engineering-control.ts": "f04b91f3ee915526ed5f5706d18e39b3842cbfa51498ddccb9c230218c8a889c",
+    "packages/contracts/src/generated-probe-registry.ts": "e230ad3ee16d23973777ff97bcc48fb22dd4061b6649d1a5a86c8cf79d623740",
+    "cli/src/main.ts": "d6f506f99f6b8f7a4dd2536d84f055c46628cbff7fc01fa27e4c90e2a7e84663",
+    "docs/adr/0037-component-comparison-gate.md": "b0ee0533462404a737f9df08c8d3103107c30786e68ec6df460a6040fea82565",
+    "../personal-assistant-harness/specs/README.md": "2c02bdb4d13abd198231446873eaacfe30177a97f66235158912fd2accd006f4",
+    "../personal-assistant-harness/specs/ops.md": "f07aab65088c82e4ff21e4d63edb2f279e2324e6d7e2bbb801e0fd7494104b0b",
+    "../personal-assistant-harness/specs/RESEARCH-REGISTER.md": "e89b3336e0c2458ac204fb0927da30f4541abfab48a9d55735c4655719a3f10d",
+    "build/evidence/R0.10/component-comparison-verification.json": "a5b55a4d01d4396a28af6b22869f2bbf0c4710e98523bc9c2e61f689012ba6d8",
+    "build/evidence/R0.02/research-inspection-preparation.json": "historical evidence; contains source hashes from an earlier revision and is not current source proof"
+  },
+  "currentOwnerAndRoute": {
+    "publicInspection": "toy research check --release R0 --json -> cli/src/main.ts research.check -> EngineeringControl.checkResearch -> ResearchRegisterInspectionV3",
+    "registeredProbePath": "toy --env test --stack <owned-test-stack-uuid> probe run <AT-id> --request-id <fresh-uuid> --json -> cli/src/main.ts generic probe dispatch -> ReplayEnvironment.runRegisteredProbe in packages/self-improvement/src/public.ts -> componentComparisonProbe in packages/self-improvement/src/component-comparison-probe.ts; probe.show reads the operation",
+    "routeLimitation": "research.check is a read-only inventory. The CLI route exists, but tests/registry.yaml has no AT-ops-43/44 manifests, packages/ops/src/public.ts dispatches only AT-obligations-74, AT-self-improvement-54 and AT-sources-188/190 to this owner, and componentComparisonProbe rejects both IDs. Generated acceptance IDs alone do not register an executable probe manifest.",
+    "gateLimitation": "checkResearch currently returns admission BLOCKED, acceptanceComplete false, wholeATsPassed empty and dependencyClosureVerified false. It reports component decision checks, but no observed build-start consumer or passing admission path proves that the findings stop a component build. A diagnostic FAIL before starting any build is the strongest claim available until the real build gate is wired and read back.",
+    "scopeLimitation": "checkResearch parses only the register-wide sentence 'README maps 0.1, 0.2 and 0.10 to all specs'. It has raw per-spec reference rows but does not preserve/join README's per-spec requirement mapping. inspectComponentDecisions consequently compares all register rows using the global requirement IDs (and adds 0.9 only for Sources), rather than identifying the OPS source component set and applying OPS-mapped 0.1/0.2/0.10/2.4/5.10 requirements. M02-only and D01-only probes cannot establish the AT-ops-43 universal scope.",
+    "fixtureLimitation": "The existing V2 comparator can represent an arbitrary named option (example null), but existing probes use a single M02 decision and synthetic primary.example.test sources; the 'outside' option remains unselected in the Obligations positive case. These are diagnostic fixtures, not Ops source evidence or AT-ops-44 proof."
+  },
+  "smallestSourceRequiredUnit": {
+    "interface": "Extend the existing research/register inspection path to retain source-derived requirement-to-spec mapping from canonical specs/README.md and derive the OPS component IDs from canonical specs/ops.md references joined to the register. Apply the exact README-mapped requirement set to each in-scope OPS component. Expose enough scope/mapping in the typed result for the CLI probe to verify the complete expected ID set; add a written ADR interface before changing contracts.",
+    "opsScopeRule": "Use the component IDs actually referenced by specs/ops.md and present in RESEARCH-REGISTER inventory, not M02, D01, all 165 inventory rows, or a hand-maintained subset. For each scoped component, derive applicable IDs from README's requirement-to-spec table: 0.1 and 0.10 are mapped to all specs, 0.2 maps to ops/all, and 2.4 plus 5.10 map to ops. Keep the canonical RESEARCH-REGISTER group mappings visible; do not silently narrow the set to the A03-A06/A11-A19 2.4/5.10 rows if AT-ops-43's direct OPS component scope includes more rows.",
+    "minimumFiles": [
+      "docs/adr/0037-component-comparison-gate.md: specify the typed, source-derived Ops scope and component requirement mapping",
+      "packages/contracts/src/engineering-control.ts: expose the Ops scope/mapping needed for independent CLI readback only if the existing inspection fields cannot express it",
+      "packages/self-improvement/src/engineering-control.ts: parse and join the canonical mappings; check each Ops component against its own mapped requirements",
+      "packages/self-improvement/src/component-comparison-probe.ts: add unfiltered AT-ops-43 and AT-ops-44 cases using the existing EngineeringControl.checkResearch/document-overlay owner; require complete Ops scope, not a narrow representative component",
+      "packages/self-improvement/src/public.ts: dispatch the two registered IDs to the existing component-comparison owner",
+      "tests/registry.yaml: register exact assertion hashes and mandatory cases for both existing ATs; regenerate packages/contracts/src/generated-probe-registry.ts through its owner"
+    ],
+    "ATops43MandatoryCases": [
+      "ops-scope-complete: read back exact source-derived component IDs; each has compared options, supported primary evidence, tradeoffs, selected tool, linked acceptance IDs, and a nonempty validation plan",
+      "required-decision-removed: remove one scoped component's record from a source-bound baseline and assert that component fails with its missing-decision finding before any build invocation",
+      "primary-evidence-removed: remove only one selected/source-supported primary evidence record and assert the scoped component fails with PRIMARY_EVIDENCE_MISSING",
+      "validation-plan-removed: blank only validationPlan for a scoped record and assert the component fails with VALIDATION_PLAN_MISSING; keep this isolated from evidence, requirement IDs, and G0 validation-record mutations"
+    ],
+    "ATops44MinimumCase": "Through the same unfiltered registered owner, provide a source-bound research fixture containing actual primary evidence for the compared named options and an unlisted suitable candidate; read back that candidate as selected, with its primary source and tradeoffs bound to the record and requirements unchanged. The comparator's V2 shape already allows an unlisted name; the missing part is trustworthy source/report input and its protected route receipt, not another option protocol.",
+    "manifestDispatch": "Use no --case in proof commands. Register full mandatory case sets in tests/registry.yaml. Existing CLI generic probe dispatch can reach ReplayEnvironment; its missing ID guard/dispatch and componentComparisonProbe's current ID guard must both be extended. Keep acceptance-index source hashes exact; the source ATs already exist."
+  },
+  "exactFutureCliProofCommands": [
+    "toy --env test --stack <owned-test-stack-uuid> probe run AT-ops-43 --request-id <fresh-uuid> --json",
+    "toy --env test --stack <owned-test-stack-uuid> probe show <returned-operation-uuid> --json",
+    "toy --env test --stack <owned-test-stack-uuid> probe run AT-ops-44 --request-id <fresh-uuid> --json",
+    "toy --env test --stack <owned-test-stack-uuid> probe show <returned-operation-uuid> --json"
+  ],
+  "protectedResearchPrerequisite": {
+    "authority": "README requirements 0.10 and AT-ops-45 require the prescribed protected ModelRoute for component research (gpt-6.1-sol, medium, Fast, pinned/loaded mattpocock skill); AT-ops-45 additionally requires stack and device/account evidence.",
+    "status": "No protected route receipt, account authorization, or source-grounded AT-ops-44 research result is established by this plan. Queue any user/root-only native route or account steps through the established root workflow; do not run them here or substitute a seeded primary.example.test citation.",
+    "separation": "The EngineeringControl document overlay is a test document seam, not an authenticated research run or a provider/model route. A fixture can test comparator behavior only when its asserted evidence is genuine and source-bound; no evidence is invented in this plan."
+  },
+  "currentEvidenceAndLimits": {
+    "historicalRegisterInventory": "build/evidence/R0.02/research-inspection-preparation.json recorded 165 register rows and 15 reports, but also recorded admission BLOCKED, acceptance incomplete and an earlier source snapshot; it is inventory history, not current AT proof.",
+    "currentComponentProbeEvidence": "build/evidence/R0.10/component-comparison-verification.json: AT-obligations-74's four fixed M02 diagnostics passed and the owned test world was torn down; whole state is NOT_IMPLEMENTED, complete=false, wholeATsPassed=[], acceptanceComplete=false. It does not cover Ops scope, AT-ops-43/44, authenticated research, or build admission.",
+    "unresolved": [
+      "AT-ops-43 has no source-derived Ops scope, complete Ops decision baseline, separately isolated missing-decision/evidence/validation-plan CLI cases, or observed build-gate refusal.",
+      "AT-ops-44 has no admissible source-bound unlisted-candidate research fixture or actual protected ModelRoute/account receipt; do not claim coverage until both exist.",
+      "Static registration and feature-map checks, native/protected role checks, current assigned-rung runs and whole release gates remain unverified."
+    ],
+    "wholeResult": {
+      "state": "NOT_IMPLEMENTED",
+      "complete": false,
+      "wholeATsPassed": [],
+      "acceptanceComplete": false
+    }
+  },
+  "verification": {
+    "sourceReview": "Read-only review of source, contracts, exact AT entries, canonical local specs and saved evidence; no CLI/build/test/runtime action.",
+    "jsonValidation": "jq parsed the artifact and verified two AT entries, NOT_IMPLEMENTED status, and incomplete whole result"
+  },
+  "parentReview": {
+    "observedAt": "2026-10-06T23:55:04.828886+00:00",
+    "decision": "ACCEPT_OPS_SCOPE_MAPPING_MINIMUM; DEFER_AT44_WITHOUT_AUTHENTICATED_PRIMARY_PROOF",
+    "routeCorrection": "ReplayEnvironment and componentComparisonProbe dispatch are in packages/self-improvement/src/public.ts; packages/ops/src/public.ts does not import Self-Improvement. Preserve the dependency graph.",
+    "wholeATComplete": false,
+    "sourceMutationStarted": false
+  }
+}
