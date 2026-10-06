@@ -2,8 +2,8 @@ import { createHash, randomUUID } from "node:crypto";
 import { spawnSync } from "node:child_process";
 import { existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, realpathSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
-import { acceptanceIndexSchema, checkoutPathSchema, cliDeclarations, featureFactsSchema, featureMapCheckSchema, featureMapUpdateSchema, generatorInputSchema, generatorPlanSchema, gardenerInputSchema, gardenerReportSchema, kitchenGateSummarySchema, mapCheckInputSchema, mapUpdateInputSchema, opsControlContextSchema, opsErrorMessages, referenceAdmissionEvidenceSchema, researchCatalogCoverageSchema, researchComponentComparisonSchema, researchComponentComparisonCheckSchema, researchDocumentOverlaySchema, researchRegisterInspectionSchema } from "@toy/contracts";
-import type { CheckViewV1, FeatureFactsV1, FilePatchV1, GeneratorInputV1, GeneratorPlanV1, FeatureMapCheckV1, FeatureMapUpdateV1, MapCheckInputV1, MapUpdateInputV1, GardenerInputV1, GardenerReportV1, OpsControlContextV1, ResearchCatalogCoverageFindingV1, ResearchCatalogMemberV1, ResearchCatalogSectionV1, ResearchInspectionFindingV1, ResearchComponentComparisonV1, ResearchComponentComparisonCheckV1, ResearchDocumentOverlayV1, ResearchRegisterInspectionV1, Result } from "@toy/contracts";
+import { acceptanceIndexSchema, checkoutPathSchema, cliDeclarations, featureFactsSchema, featureMapCheckSchema, featureMapUpdateSchema, generatorInputSchema, generatorPlanSchema, gardenerInputSchema, gardenerReportSchema, kitchenGateSummarySchema, mapCheckInputSchema, mapUpdateInputSchema, opsControlContextSchema, opsErrorMessages, referenceAdmissionEvidenceSchema, researchCatalogCoverageSchema, researchComponentComparisonSchema, researchComponentComparisonCheckSchema, researchDocumentOverlaySchema, researchRegisterInspectionV2Schema, researchComponentComparisonV2Schema, researchComponentComparisonCheckV2Schema } from "@toy/contracts";
+import type { CheckViewV1, FeatureFactsV1, FilePatchV1, GeneratorInputV1, GeneratorPlanV1, FeatureMapCheckV1, FeatureMapUpdateV1, MapCheckInputV1, MapUpdateInputV1, GardenerInputV1, GardenerReportV1, OpsControlContextV1, ResearchCatalogCoverageFindingV1, ResearchCatalogMemberV1, ResearchCatalogSectionV1, ResearchInspectionFindingV1, ResearchComponentComparisonV1, ResearchComponentComparisonCheckV1, ResearchDocumentOverlayV1, ResearchRegisterInspectionV1, ResearchRegisterInspectionV2, ResearchComponentComparisonV2, ResearchComponentComparisonCheckV2, Result } from "@toy/contracts";
 import { OpsTestStack, trustedCheckoutRoot, trustedToolEnvironment } from "@toy/ops/public";
 import { modelAdmissionMigration } from "./model-admission-migration.js";
 import { capacityTrialMigration } from "./capacity-trial-migration.js";
@@ -481,7 +481,67 @@ const inspectComponentComparisons = (reports: ResearchRegisterInspectionV1["repo
   }
   return [...comparisons.values()];
 };
-const inspectResearch = (input: MapCheckInputV1, testDocuments: readonly ResearchDocumentOverlayV1[]): ResearchRegisterInspectionV1 => {
+const inspectComponentDecisions = (reports: ResearchRegisterInspectionV1["reports"], components: ResearchRegisterInspectionV1["components"], findings: ResearchInspectionFindingV1[], documents: ReadonlyMap<string, ResearchDocumentOverlayV1>, requirementIds: readonly string[], release: string): ResearchComponentComparisonCheckV2[] => {
+  const decisions = new Map<string, ResearchComponentComparisonV2>();
+  for (const report of reports) {
+    if (report.digest === null) continue;
+    const original = readResearchFile(report.path);
+    const raw = documents.get(report.key)?.markdown ?? original;
+    if (hash(original) !== report.originalDigest || hash(raw) !== report.digest) throw new Error("RESEARCH_DOCUMENT_CHANGED");
+    for (const match of raw.matchAll(/^```ResearchComponentComparisonV2\r?\n([\s\S]*?)^```[ \t]*$/gm)) {
+      const sourceLine = raw.slice(0, match.index).split(/\r?\n/).length;
+      try {
+        const record = researchComponentComparisonV2Schema.parse(JSON.parse(match[1] ?? ""));
+        if (!components.some(component => component.id === record.componentId && component.reportKeys.includes(report.key)) || decisions.has(record.componentId)) throw new Error("COMPARISON_BINDING_INVALID");
+        decisions.set(record.componentId, record);
+      } catch { findings.push({ componentId: null, code: "COMPONENT_COMPARISON_INVALID", sourceLine, sourcePath: report.path }); }
+    }
+  }
+  const acceptance = acceptanceIndexSchema.parse(JSON.parse(read("tests/acceptance-index.json"))).acceptance;
+  const acceptanceIds = new Set(acceptance.map(entry => entry.id));
+  return components.map(component => {
+    const record = decisions.get(component.id);
+    const codes: ResearchComponentComparisonCheckV2["findings"] = [];
+    const add = (code: ResearchComponentComparisonCheckV2["findings"][number]): void => { if (!codes.includes(code)) codes.push(code); };
+    const validationId = "G0:" + release + ":" + component.id;
+    const options = new Map(record?.options.map(option => [option.id, option]) ?? []);
+    const sources = new Map(record?.evidence.map(source => [source.id, source]) ?? []);
+    const selected = record ? options.get(record.selectedOptionId) : undefined;
+    const sourceSupports = (id: string, optionId: string): boolean => {
+      const source = sources.get(id);
+      return source?.kind === "primary" && source.supportedOptionIds.includes(optionId);
+    };
+    const missingRequirementIds = requirementIds.filter(id => !record?.mappedRequirements.includes(id));
+    const missingSourceIds = new Set(component.reportKeys.filter(id => !selected || !sourceSupports(id, selected.id)));
+    if (component.reportKeys.length === 0) missingSourceIds.add("REGISTER:" + component.id);
+    const missingValidationIds = new Set<string>();
+    if (!record) add("DECISION_MISSING");
+    if (missingRequirementIds.length) add("MAPPED_REQUIREMENTS_MISSING");
+    if (!record || options.size < 2) add("REQUIRED_OPTIONS_MISSING");
+    if (!selected || !selected.viable || selected.support !== "proven") add("CHOICE_UNSUPPORTED");
+    for (const option of record?.options ?? []) {
+      if (!option.reliability.trim() || !option.maintenance.trim() || !option.resources.trim()) add("TRADEOFFS_MISSING");
+      if (option.support !== "proven") continue;
+      if (option.primaryEvidenceIds.length === 0) add("PRIMARY_EVIDENCE_MISSING");
+      for (const id of option.primaryEvidenceIds) if (!sourceSupports(id, option.id)) missingSourceIds.add(id);
+    }
+    if (missingSourceIds.size) add("PRIMARY_EVIDENCE_MISSING");
+    if (!record || record.releaseGate !== component.releaseGate || !/\[R[0-5]\b/.test(record.releaseGate)) add("RELEASE_GATE_MISSING");
+    if (!record?.validationPlan.trim()) add("VALIDATION_PLAN_MISSING");
+    const validation = record?.validations.find(entry => entry.id === validationId);
+    if (!validation || validation.support !== "proven" || validation.sourceIds.length === 0 || validation.testIds.length === 0) missingValidationIds.add(validationId);
+    for (const id of validation?.sourceIds ?? []) if (!selected || !sourceSupports(id, selected.id)) { missingSourceIds.add(id); missingValidationIds.add(validationId); }
+    for (const id of validation?.testIds ?? []) if (!acceptanceIds.has(id) || !record?.acceptanceIds.includes(id)) { missingValidationIds.add(id); missingValidationIds.add(validationId); }
+    if (!record?.acceptanceIds.length || record.acceptanceIds.some(id => !acceptanceIds.has(id))) add("ACCEPTANCE_LINK_MISSING");
+    if (missingValidationIds.size) add("VALIDATION_ID_MISSING");
+    if (missingSourceIds.size) add("PRIMARY_EVIDENCE_MISSING");
+    if (record && (options.size !== record.options.length || sources.size !== record.evidence.length || new Set(record.validations.map(entry => entry.id)).size !== record.validations.length)) add("DUPLICATE_REFERENCE");
+    if (record?.unresolvedFacts.some(fact => fact.optionId === null || fact.optionId === record.selectedOptionId)) add("SELECTED_FACT_UNRESOLVED");
+    if (codes.length) findings.push({ componentId: component.id, code: record ? "COMPONENT_COMPARISON_BLOCKED" : "COMPONENT_COMPARISON_MISSING", sourceLine: component.sourceLine });
+    return researchComponentComparisonCheckV2Schema.parse({ componentId: component.id, comparisonDigest: record ? hash(JSON.stringify(record)) : null, state: codes.length ? "BLOCKED" : "PASS", findings: codes, selectedOptionId: record?.selectedOptionId ?? null, selectedTool: selected?.tool ?? null, validationPlan: record?.validationPlan ?? "", unresolvedFacts: record?.unresolvedFacts ?? [], missingRequirementIds, missingSourceIds: [...missingSourceIds], missingValidationIds: [...missingValidationIds], scope: "component_comparison", researchAttestationVerified: false, acceptanceComplete: false });
+  });
+};
+const inspectResearch = (input: MapCheckInputV1, testDocuments: readonly ResearchDocumentOverlayV1[]): ResearchRegisterInspectionV2 => {
   const documents = new Map(testDocuments.map(document => [document.reportKey, document]));
   if (documents.size !== testDocuments.length) throw new Error("RESEARCH_DOCUMENT_DUPLICATE");
   const registerPath = "specs/RESEARCH-REGISTER.md";
@@ -542,11 +602,15 @@ const inspectResearch = (input: MapCheckInputV1, testDocuments: readonly Researc
   const componentComparisons = inspectComponentComparisons(reports, components, findings, documents);
   const specReferences = inspectResearchSpecs(components, findings);
   const sourcesCatalogCoverage = inspectSourcesCatalog(components);
-  return researchRegisterInspectionSchema.parse({ requestedRelease: input.release, registerPath, registerDigest: hash(raw), components, componentComparisons, reports, specReferences, sourcesCatalogCoverage, dependencyClosureVerified: false, findings, wholeATsPassed: [], scope: "register_inventory", admission: "BLOCKED", acceptanceComplete: false });
+  const globalMapping = /README maps ([^\n]+?) to all specs/.exec(raw)?.[1];
+  const requirementIds = [...new Set(globalMapping?.match(/\b[0-9]+\.[0-9]+\b/g) ?? [])];
+  if (requirementIds.length === 0) throw new Error("REGISTER_GLOBAL_REQUIREMENTS_MISSING");
+  const componentDecisions = inspectComponentDecisions(reports, components, findings, documents, requirementIds, input.release ?? "R0");
+  return researchRegisterInspectionV2Schema.parse({ componentDecisions, requestedRelease: input.release, registerPath, registerDigest: hash(raw), components, componentComparisons, reports, specReferences, sourcesCatalogCoverage, dependencyClosureVerified: false, findings, wholeATsPassed: [], scope: "register_inventory", admission: "BLOCKED", acceptanceComplete: false });
 };
 
 export const EngineeringControl = {
-  checkResearch(input: MapCheckInputV1, context: OpsControlContextV1, testDocuments: readonly ResearchDocumentOverlayV1[] = []): Result<ResearchRegisterInspectionV1> {
+  checkResearch(input: MapCheckInputV1, context: OpsControlContextV1, testDocuments: readonly ResearchDocumentOverlayV1[] = []): Result<ResearchRegisterInspectionV2> {
     if (!mapCheckInputSchema.safeParse(input).success || !opsControlContextSchema.safeParse(context).success || testDocuments.length > 100 || testDocuments.some(document => !researchDocumentOverlaySchema.safeParse(document).success)) return refused("INVALID_INPUT");
     if (testDocuments.length > 0) {
       const owned = OpsTestStack.inspect(context);

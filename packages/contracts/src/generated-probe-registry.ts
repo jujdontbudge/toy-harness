@@ -4042,6 +4042,73 @@ export const registeredCliAcceptanceManifestInventory = [
     "simUnavailableReason": "SIM cannot inspect pre-build immutable journal identities or drive the native PostgreSQL restart boundary. The CLI reaches the real journal owner with a fixed external fake clock; no elapsed native trial is certified."
   },
   {
+    "id": "AT-self-improvement-54",
+    "rung": "CLI",
+    "sourceAssertionHash": "b4141538d262d66d789eb55ef7608df4effefb5dd4c7c6fc801f1c54e41e4c23",
+    "commandId": "probe.run",
+    "scenarioId": "research.component-comparison",
+    "owner": "self-improvement",
+    "firstRelease": "R0",
+    "kind": "static_gate",
+    "mandatoryCases": [
+      {
+        "id": "required-component-absent",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "required-component-absent"
+      },
+      {
+        "id": "required-component-unsupported",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "required-component-unsupported"
+      },
+      {
+        "id": "required-component-incomplete-ids",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "required-component-incomplete-ids"
+      },
+      {
+        "id": "required-component-complete-outside-selected",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "required-component-complete-outside-selected"
+      }
+    ],
+    "trigger": "Check absent, unsupported, incomplete and outside-selected required-component decisions through the real indexed research owner; report exact missing IDs while whole admission remains unresolved.",
+    "faultControls": [
+      {
+        "id": "external-required-decision-omissions",
+        "seam": "provider",
+        "affectedPhases": [
+          "required-component-absent",
+          "required-component-unsupported",
+          "required-component-incomplete-ids"
+        ]
+      }
+    ],
+    "observations": [
+      {
+        "id": "indexed-required-component-result",
+        "independentReader": "EngineeringControl.checkResearch: bound archive digests and exact requirement/source/validation IDs",
+        "caseIds": [
+          "required-component-absent",
+          "required-component-unsupported",
+          "required-component-incomplete-ids",
+          "required-component-complete-outside-selected"
+        ]
+      },
+      {
+        "id": "stored-cli-readback",
+        "independentReader": "toy probe.show: persisted exact required-component decisions",
+        "caseIds": [
+          "required-component-absent",
+          "required-component-unsupported",
+          "required-component-incomplete-ids",
+          "required-component-complete-outside-selected"
+        ]
+      }
+    ],
+    "simUnavailableReason": "SIM cannot invoke administrative pre-build research gates or replace indexed external research documents. The CLI drives the real public owner through its owned document seam."
+  },
+  {
     "id": "AT-self-improvement-59",
     "rung": "CLI",
     "sourceAssertionHash": "e976ade51b0316f155936944aedb1c6f59d095df0f227607c9a6b9c5c4599b7d",

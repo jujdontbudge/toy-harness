@@ -2,9 +2,9 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-06T20:43:38.454564+00:00",
-  "phase": "R0.12 exact generic research-decision source gaps prepared; two root requests pending without goal blockage",
-  "activeCard": "R0.12",
+  "updatedAt": "2026-10-06T20:53:21.312221+00:00",
+  "phase": "R0.12 generic decision source unit closed; R0.11 ordered-admission minimum design next",
+  "activeCard": "R0.11",
   "cardCount": 87,
   "acceptanceCount": 1447,
   "cards": {
@@ -1493,7 +1493,9 @@
       "acceptance": "PENDING",
       "sourceRowHash": "b2203a9579e2028a9c9c46df77bfec7c9745ebc83795cbe2946c83ed9f692568",
       "dependsOn": "R0.07",
-      "evidence": [],
+      "evidence": [
+        "build/evidence/R0.11/minimum-assigned-at-plan.json"
+      ],
       "requiredATs": [
         "AT-hermes-config-37",
         "AT-ops-47",
@@ -1505,12 +1507,13 @@
       ]
     },
     "R0.12": {
-      "implementation": "NOT_IMPLEMENTED",
+      "implementation": "IN_PROGRESS",
       "acceptance": "PENDING",
       "sourceRowHash": "b80d2da65b1d360b17280f4760c437d6b593556918fa2e0a4f1dc6dc407a423e",
       "dependsOn": "R0.08, R0.09, R0.10",
       "evidence": [
-        "build/evidence/R0.12/minimum-assigned-at-plan.json"
+        "build/evidence/R0.12/minimum-assigned-at-plan.json",
+        "build/evidence/R0.12/decision-verification.json"
       ],
       "requiredATs": [
         "AT-adhd-features-106",
@@ -1527,12 +1530,19 @@
         "AT-sources-208"
       ],
       "preparation": {
-        "state": "PLAN_ONLY_SOURCE_REQUIRED_FIELD_GAPS",
+        "state": "GENERIC_DECISION_CLI_DIAGNOSTICS_PASS_WHOLE_ACCEPTANCE_PENDING",
         "plan": "build/evidence/R0.12/minimum-assigned-at-plan.json",
         "selectedAT": "AT-self-improvement-54",
         "sourceAssertionHash": "b4141538d262d66d789eb55ef7608df4effefb5dd4c7c6fc801f1c54e41e4c23",
-        "writtenInterfacePending": true,
-        "wholeATComplete": false
+        "writtenInterfacePending": false,
+        "wholeATComplete": false,
+        "sourceUnitStopped": true,
+        "diagnostics": 4,
+        "maximumPrerequisiteLength": 1050,
+        "unfiltered": true,
+        "recordFormatsVersioned": true,
+        "wholeRegisterAdmission": "BLOCKED",
+        "verification": "build/evidence/R0.12/decision-verification.json"
       }
     },
     "R0.13": {
@@ -10155,7 +10165,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Begin the minimum AT-self-improvement-54 generic decision-check source unit at the existing Research Register owner with exact missing-ID and selected-outside cases; preserve strict contract versioning and whole-incomplete gates. Poll ROOT-R004-20261006-02 and ROOT-R005-20261006-01; proceed to R0.01 immediately on verified root02 DONE.",
+  "nextAction": "Stop the passed AT-self-improvement-54 source unit. Continue independent R0 work using the corrected R0.11 ordered-admission source plan; no invented tier percentages. Poll both pending root requests; start the prepared R0.01 native grant-owner load step immediately on verified root02 DONE.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -11063,7 +11073,14 @@
       "rung": "CLI",
       "firstRelease": "R0",
       "sourceAssertionHash": "36411038b27cdb5922439aa3c32c12816bdf12ecfa39a5e46892e13158066ccb",
-      "evidence": []
+      "evidence": [],
+      "diagnosticVerification": {
+        "evidence": "build/evidence/R0.12/decision-verification.json",
+        "unfiltered": true,
+        "checksPassed": 4,
+        "wholeATComplete": false,
+        "runShowExact": true
+      }
     },
     "AT-obligations-75": {
       "state": "NOT_IMPLEMENTED",
@@ -11268,7 +11285,14 @@
       "rung": "CLI",
       "firstRelease": "R0",
       "sourceAssertionHash": "b4141538d262d66d789eb55ef7608df4effefb5dd4c7c6fc801f1c54e41e4c23",
-      "evidence": []
+      "evidence": [],
+      "diagnosticVerification": {
+        "evidence": "build/evidence/R0.12/decision-verification.json",
+        "unfiltered": true,
+        "checksPassed": 4,
+        "wholeATComplete": false,
+        "runShowExact": true
+      }
     },
     "AT-self-improvement-56": {
       "state": "NOT_IMPLEMENTED",
@@ -20694,21 +20718,21 @@
   "latestStaticVerification": {
     "command": "npm run check",
     "exitCode": 0,
-    "artifacts": 355,
-    "contracts": 287,
+    "evidence": "build/evidence/R0.12/decision-full-check-result.json",
+    "artifacts": 360,
+    "contracts": 292,
+    "cliManifests": 13,
     "features": 97,
     "commands": 55,
     "indexedATs": 1447,
-    "cliManifests": 12,
-    "schemaDigest": "1a768d76525382bf74bf62c4b5e645d26daebde2c55b079402d85a48d79c990e",
-    "evidence": "build/evidence/R0.06/swapped-quota-check-result.json",
+    "schemaDigest": "81ebf3c8594d31df185fd4721e7a96216cf189cc3ebf4ca3ddad38838ce7bcdc",
     "languages": [
       "TypeScript",
       "Python"
     ],
     "SwiftDeferredTo": "R3"
   },
-  "sourceCheckpointCommit": "a17829a",
+  "sourceCheckpointCommit": "fcff2fe",
   "sourceCheckpointPushed": true,
   "rootRequests": {
     "ROOT-R004-20261006-01": {
@@ -20766,5 +20790,16 @@
     "queuedRootReserveGate": false,
     "rule": "Normal OS pressure and available memory at least the current job declared need plus512MiB; no strictly-free, hypothetical reserve, swap or second physical-fit gate"
   },
-  "activeWorkers": []
+  "activeWorkers": [
+    {
+      "agent": "/root/r003_per_generation_refresh_plan",
+      "card": "R0.03",
+      "scope": "Read-only unfiltered AT-hermes-config-85 minimum plan",
+      "writeOwnership": [
+        "build/evidence/R0.03/unfiltered-refresh-minimum-plan.json"
+      ],
+      "deadlineUtc": "2026-10-06T20:59:00Z",
+      "admissionEvidence": "build/evidence/R0.11/ordered-admission-plan-admission.json"
+    }
+  ]
 }

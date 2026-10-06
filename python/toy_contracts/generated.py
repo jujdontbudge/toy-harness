@@ -1884,7 +1884,7 @@ class DoctorReportV1(TypedDict):
 
 CliResult = Union[
     "CliBootstrapIdentitiesResult",
-    "CliResearchCheckResult",
+    "CliResearchCheckResultV2",
     "CliFailure",
     "CliHelpResult",
     "CliVersionResult",
@@ -1905,6 +1905,68 @@ CliResult = Union[
     "CliMapCheckResult",
     "CliMapUpdateResult",
     "CliGardenResult",
+]
+
+class CliResearchCheckResultV2(TypedDict):
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
+    commandId: "CliResearchCheckResultCommandId"
+    invocationId: "UUID"
+    generatedAt: "Instant"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
+    schemaDigest: "Digest"
+    environment: "CliEnvironment"
+    meta: "CliMetadata"
+    ok: "CliBootstrapIdentitiesResultOk"
+    data: "ResearchRegisterInspectionV2"
+
+class ResearchRegisterInspectionV2(TypedDict):
+    requestedRelease: Optional["Release"]
+    registerPath: str
+    registerDigest: "Digest"
+    components: list["ResearchComponentInspectionV1"]
+    componentComparisons: list["ResearchComponentComparisonCheckV1"]
+    reports: list["ResearchRegisterInspectionV1ReportsItem"]
+    specReferences: list["ResearchSpecReferencesV1"]
+    sourcesCatalogCoverage: "ResearchCatalogCoverageV1"
+    dependencyClosureVerified: "RoleBootstrapReportV1IdentityGateVerified"
+    findings: list["ResearchInspectionFindingV1"]
+    wholeATsPassed: list[str]
+    scope: "ResearchRegisterInspectionV1Scope"
+    admission: "ResearchRegisterInspectionV1Admission"
+    acceptanceComplete: "RoleBootstrapReportV1IdentityGateVerified"
+    componentDecisions: list["ResearchComponentComparisonCheckV2"]
+
+class ResearchComponentComparisonCheckV2(TypedDict):
+    componentId: str
+    comparisonDigest: Optional["Digest"]
+    state: "ResearchComponentComparisonCheckV1State"
+    findings: list["ResearchComponentComparisonCheckV2FindingsItem"]
+    selectedTool: Optional[str]
+    validationPlan: str
+    unresolvedFacts: list["ResearchComponentComparisonCheckV1UnresolvedFactsItem"]
+    scope: "ResearchComponentComparisonCheckV1Scope"
+    researchAttestationVerified: "RoleBootstrapReportV1IdentityGateVerified"
+    acceptanceComplete: "RoleBootstrapReportV1IdentityGateVerified"
+    selectedOptionId: Optional[str]
+    missingRequirementIds: list[str]
+    missingSourceIds: list[str]
+    missingValidationIds: list[str]
+
+ResearchComponentComparisonCheckV2FindingsItem = Literal[
+    "MAPPED_REQUIREMENTS_MISSING",
+    "REQUIRED_OPTIONS_MISSING",
+    "OUTSIDE_OPTION_MISSING",
+    "PRIMARY_EVIDENCE_MISSING",
+    "CHOICE_UNSUPPORTED",
+    "TRADEOFFS_MISSING",
+    "ACCEPTANCE_LINK_MISSING",
+    "VALIDATION_PLAN_MISSING",
+    "SELECTED_FACT_UNRESOLVED",
+    "DUPLICATE_REFERENCE",
+    "DECISION_MISSING",
+    "RELEASE_GATE_MISSING",
+    "VALIDATION_ID_MISSING",
 ]
 
 class CliStackUpResult(TypedDict):
@@ -3092,6 +3154,11 @@ class CliProbeShowCommandResultVariant1(TypedDict):
     ok: "RoleBootstrapReportV1IdentityGateVerified"
     error: "CliError"
 
+CliResearchCheckCommandResultV2 = Union[
+    "CliResearchCheckResultV2",
+    "CliResearchCheckCommandResultVariant1",
+]
+
 class CapabilityManifest(TypedDict):
     provider: str
     adapterVersion: str
@@ -4047,6 +4114,40 @@ class ReferenceAdmissionEvidenceV1ReferencesItemObservation(TypedDict):
 ReferenceAdmissionEvidenceV1ReferencesItemObservationState = Literal[
     "PASS",
 ]
+
+class ResearchComponentComparisonV2(TypedDict):
+    scope: "ResearchComponentComparisonV2Scope"
+    componentId: str
+    mappedRequirements: list[str]
+    options: list["ResearchComponentComparisonV2OptionsItem"]
+    evidence: list["ResearchComponentComparisonV1EvidenceItem"]
+    selectedOptionId: str
+    unresolvedFacts: list["ResearchComponentComparisonCheckV1UnresolvedFactsItem"]
+    acceptanceIds: list[str]
+    validationPlan: str
+    releaseGate: str
+    validations: list["ResearchComponentComparisonV2ValidationsItem"]
+
+ResearchComponentComparisonV2Scope = Literal[
+    "required-component",
+]
+
+class ResearchComponentComparisonV2OptionsItem(TypedDict):
+    id: str
+    tool: str
+    example: Optional[str]
+    viable: bool
+    support: "ResearchComponentComparisonV1OptionsItemSupport"
+    primaryEvidenceIds: list[str]
+    reliability: str
+    maintenance: str
+    resources: str
+
+class ResearchComponentComparisonV2ValidationsItem(TypedDict):
+    id: str
+    support: "ResearchComponentComparisonV1OptionsItemSupport"
+    sourceIds: list[str]
+    testIds: list[str]
 
 class InstalledCodexRuntimeV1(TypedDict):
     expectedVersion: "InstalledCodexRuntimeV1ExpectedVersion"

@@ -8,7 +8,7 @@ import {
   testClockAdvanceInputSchema, testClockFreezeInputSchema, testClockReceiptSchema, testClockResumeInputSchema, testClockShowInputSchema,
   testClockStateSchema, testStackDownInputSchema, testStackOperationSchema, testStackUpInputSchema
 } from "./test-control.js";
-import { generatorInputSchema, generatorPlanSchema, mapCheckInputSchema, mapUpdateInputSchema, featureMapCheckSchema, featureMapUpdateSchema, gardenerInputSchema, gardenerReportSchema, researchRegisterInspectionSchema } from "./engineering-control.js";
+import { generatorInputSchema, generatorPlanSchema, mapCheckInputSchema, mapUpdateInputSchema, featureMapCheckSchema, featureMapUpdateSchema, gardenerInputSchema, gardenerReportSchema, researchRegisterInspectionSchema, researchRegisterInspectionV2Schema } from "./engineering-control.js";
 import { roleBootstrapInputSchema, roleBootstrapReportSchema } from "./identity-bootstrap.js";
 export * from "./cli-declarations.js";
 
@@ -93,12 +93,14 @@ export const cliMapUpdateCommandResultSchema = z.union([cliMapUpdateResultSchema
 export const cliGardenResultSchema = cliEnvelopeSchema.extend({ commandId: z.literal("gardener.run"), ok: z.literal(true), data: gardenerReportSchema });
 export const cliGardenCommandResultSchema = z.union([cliGardenResultSchema, cliFailureSchema.extend({ commandId: z.literal("gardener.run") })]);
 export const cliResearchCheckResultSchema = cliEnvelopeSchema.extend({ commandId: z.literal("research.check"), ok: z.literal(true), data: researchRegisterInspectionSchema });
+export const cliResearchCheckResultV2Schema = cliResearchCheckResultSchema.extend({ data: researchRegisterInspectionV2Schema });
+export const cliResearchCheckCommandResultV2Schema = z.union([cliResearchCheckResultV2Schema, cliFailureSchema.extend({ commandId: z.literal("research.check") })]);
 export const cliResearchCheckCommandResultSchema = z.union([cliResearchCheckResultSchema, cliFailureSchema.extend({ commandId: z.literal("research.check") })]);
 export const cliBootstrapIdentitiesResultSchema = cliEnvelopeSchema.extend({ commandId: z.literal("bootstrap.identities"), ok: z.literal(true), data: roleBootstrapReportSchema });
 export const cliBootstrapIdentitiesCommandResultSchema = z.union([cliBootstrapIdentitiesResultSchema, cliFailureSchema.extend({ commandId: z.literal("bootstrap.identities") })]);
 export const cliResultSchema = z.union([
   cliBootstrapIdentitiesResultSchema,
-  cliResearchCheckResultSchema,
+  cliResearchCheckResultV2Schema,
   cliFailureSchema, cliHelpResultSchema, cliVersionResultSchema, cliStatusResultSchema, cliDoctorResultSchema,
   cliStackUpResultSchema, cliStackDownResultSchema, cliClockShowResultSchema, cliClockFreezeResultSchema,
   cliClockResumeResultSchema, cliClockAdvanceResultSchema, cliProbeRunResultSchema, cliProbeShowResultSchema, cliNewConnectorResultSchema, cliNewToolResultSchema, cliNewSkillResultSchema, cliNewMigrationResultSchema, cliMapCheckResultSchema, cliMapUpdateResultSchema, cliGardenResultSchema
@@ -124,7 +126,7 @@ export const cliProbeRunCommandResultSchema = z.union([cliProbeRunResultSchema, 
 export const cliProbeShowCommandResultSchema = z.union([cliProbeShowResultSchema, cliFailureSchema.extend({ commandId: z.literal("probe.show") })]);
 export const cliCommandSchemas = {
   "bootstrap.identities": { input: roleBootstrapInputSchema, data: roleBootstrapReportSchema, result: cliBootstrapIdentitiesCommandResultSchema },
-  "research.check": { input: mapCheckInputSchema, data: researchRegisterInspectionSchema, result: cliResearchCheckCommandResultSchema },
+  "research.check": { input: mapCheckInputSchema, data: researchRegisterInspectionV2Schema, result: cliResearchCheckCommandResultV2Schema },
   "new.connector": { input: generatorInputSchema, data: generatorPlanSchema, result: cliNewConnectorCommandResultSchema },
   "new.tool": { input: generatorInputSchema, data: generatorPlanSchema, result: cliNewToolCommandResultSchema },
   "new.skill": { input: generatorInputSchema, data: generatorPlanSchema, result: cliNewSkillCommandResultSchema },
@@ -175,5 +177,6 @@ export const cliSchemaInventory = {
   CliStackUpCommandResult: cliStackUpCommandResultSchema, CliStackDownCommandResult: cliStackDownCommandResultSchema,
   CliClockShowCommandResult: cliClockShowCommandResultSchema, CliClockFreezeCommandResult: cliClockFreezeCommandResultSchema,
   CliClockResumeCommandResult: cliClockResumeCommandResultSchema, CliClockAdvanceCommandResult: cliClockAdvanceCommandResultSchema,
-  CliProbeRunCommandResult: cliProbeRunCommandResultSchema, CliProbeShowCommandResult: cliProbeShowCommandResultSchema
+  CliProbeRunCommandResult: cliProbeRunCommandResultSchema, CliProbeShowCommandResult: cliProbeShowCommandResultSchema,
+  CliResearchCheckResultV2: cliResearchCheckResultV2Schema, CliResearchCheckCommandResultV2: cliResearchCheckCommandResultV2Schema,
 };
