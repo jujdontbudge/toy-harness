@@ -2,8 +2,8 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-06T20:56:43.478639+00:00",
-  "phase": "R0.12 source unit pushed; R0.11 priority owner gap recorded; R0.03 existing unfiltered refresh route next",
+  "updatedAt": "2026-10-06T21:01:48.407199+00:00",
+  "phase": "Unfiltered AT85 existing native phases verified and affected AT87 regression green; root requests pending without goal blockage",
   "activeCard": "R0.03",
   "cardCount": 87,
   "acceptanceCount": 1447,
@@ -528,7 +528,8 @@
         "build/evidence/R0.03/client-selection-verification.json",
         "build/evidence/R0.03/storage-crash-minimum-plan.json",
         "build/evidence/R0.03/storage-crash-verification.json",
-        "build/evidence/R0.03/unfiltered-auth-verification.json"
+        "build/evidence/R0.03/unfiltered-auth-verification.json",
+        "build/evidence/R0.03/unfiltered-refresh-verification.json"
       ],
       "requiredATs": [
         "AT-hermes-config-34",
@@ -609,6 +610,20 @@
           "bothStreamsTokenHygieneVerified": true,
           "freshUnsavedGrantUnusable": true,
           "wholeATsPassed": []
+        },
+        "unfilteredFreshProcess": {
+          "state": "SIX_NATIVE_DIAGNOSTICS_PASS_WHOLE_PENDING",
+          "AT": "AT-hermes-config-85",
+          "sourceAssertionHash": "1945ba7e3df83056f7a11ddb1cc4f6f74b3c2e91744c47f77a85e3f34e21ff67",
+          "diagnosticChecks": 6,
+          "nativePhases": 5,
+          "unfiltered": true,
+          "sourceUnitStopped": true,
+          "maximumPrerequisiteLength": 1761,
+          "phaseProof": "build/evidence/R0.03/unfiltered-refresh-phase-proof.json",
+          "verification": "build/evidence/R0.03/unfiltered-refresh-verification.json",
+          "affectedAT87Checks": 26,
+          "wholeATComplete": false
         }
       },
       "timebox": {
@@ -10173,7 +10188,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Close the minimum two-guard unfiltered AT-hermes-config-85 route through its existing five native source-bound phases; collect exact run/show and teardown, retain whole-incomplete gates. Poll both pending root requests and prioritize R0.01 immediately on verified root02 DONE.",
+  "nextAction": "Stop the passed AT-hermes-config-85 source unit. Consume the bounded independent remaining R0.12 gate plan and choose its smallest actual existing-owner case; retain R0.11 ordering/live trial deferrals. Poll both root requests; prepare R0.01 native grant-owner load immediately on verified root02 DONE.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -10979,7 +10994,14 @@
         "evidence": "build/evidence/R0.03/native-runtime-fixture-verification.json"
       },
       "nativeBehaviorSequenceVerified": true,
-      "fullRegistrationPending": true
+      "fullRegistrationPending": true,
+      "diagnosticVerification": {
+        "evidence": "build/evidence/R0.03/unfiltered-refresh-verification.json",
+        "unfiltered": true,
+        "checksPassed": 6,
+        "wholeATComplete": false,
+        "runShowExact": true
+      }
     },
     "AT-hermes-config-86": {
       "state": "NOT_IMPLEMENTED",
@@ -20726,7 +20748,7 @@
   "latestStaticVerification": {
     "command": "npm run check",
     "exitCode": 0,
-    "evidence": "build/evidence/R0.12/decision-full-check-result.json",
+    "evidence": "build/evidence/R0.03/unfiltered-refresh-check-result-final.json",
     "artifacts": 360,
     "contracts": 292,
     "cliManifests": 13,
@@ -20740,7 +20762,7 @@
     ],
     "SwiftDeferredTo": "R3"
   },
-  "sourceCheckpointCommit": "6f3299b",
+  "sourceCheckpointCommit": "0f04080",
   "sourceCheckpointPushed": true,
   "rootRequests": {
     "ROOT-R004-20261006-01": {
@@ -20798,5 +20820,16 @@
     "queuedRootReserveGate": false,
     "rule": "Normal OS pressure and available memory at least the current job declared need plus512MiB; no strictly-free, hypothetical reserve, swap or second physical-fit gate"
   },
-  "activeWorkers": []
+  "activeWorkers": [
+    {
+      "agent": "/root/r007_minimum_trial_journal",
+      "card": "R0.12",
+      "scope": "Read-only remaining static required-gate minimum plan",
+      "writeOwnership": [
+        "build/evidence/R0.12/next-required-gate-minimum-plan.json"
+      ],
+      "deadlineUtc": "2026-10-06T21:03:00Z",
+      "admissionEvidence": "build/evidence/R0.03/unfiltered-refresh-baseline/up.json"
+    }
+  ]
 }

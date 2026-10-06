@@ -16,8 +16,8 @@ export const HermesAuthProbe = {
   async run(input: RegisteredProbeInputV1, context: OpsControlContextV1): Promise<Result<RegisteredProbeOperationV1>> {
     const started = process.hrtime.bigint();
     const invalid: Result<RegisteredProbeOperationV1> = { ok: false, error: { module: "ops", code: "INVALID_INPUT", message: opsErrorMessages.INVALID_INPUT, retryable: false } };
-    const unfilteredConcurrency = input.probeId === "AT-hermes-config-87" && input.caseId === undefined;
-    if (!registeredProbeInputSchema.safeParse(input).success || (!unfilteredConcurrency && input.caseId !== "native-auth-cli") || !["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-87", "AT-hermes-config-78", "AT-ops-55"].includes(input.probeId)) return Promise.resolve(invalid);
+    const unfilteredAuth = ["AT-hermes-config-85", "AT-hermes-config-87"].includes(input.probeId) && input.caseId === undefined;
+    if (!registeredProbeInputSchema.safeParse(input).success || (!unfilteredAuth && input.caseId !== "native-auth-cli") || !["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-87", "AT-hermes-config-78", "AT-ops-55"].includes(input.probeId)) return Promise.resolve(invalid);
     if (input.probeId === "AT-hermes-config-87") {
       const manifest = registeredCliAcceptanceManifestInventory.find(entry => entry.id === input.probeId);
       const mandatoryCases = ["add-first", "refresh-first", "before-replace", "after-replace"].map(id => ({ id, publicOperation: "HermesAuthProbe.run", phase: id }));

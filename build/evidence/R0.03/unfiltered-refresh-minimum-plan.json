@@ -15,18 +15,44 @@
     "requiredEvidence": "stack, probe:AT-hermes-config-85"
   },
   "existingSourceBoundCases": [
-    {"caseId": "add", "phase": "add", "publicOperation": "hermes --profile toy auth add openai-codex --type oauth --no-browser"},
-    {"caseId": "list", "phase": "list", "publicOperation": "hermes --profile toy auth list openai-codex"},
-    {"caseId": "chat", "phase": "chat", "publicOperation": "hermes --profile toy chat --provider openai-codex --model gpt-6.1-sol --toolsets none -q 'Return the fixed fixture marker.'"},
-    {"caseId": "chat-expired", "phase": "chat-expired", "publicOperation": "hermes --profile toy chat --provider openai-codex --model gpt-6.1-sol --toolsets none -q 'Return the fixed fixture marker.'"},
-    {"caseId": "chat-reloaded", "phase": "chat-reloaded", "publicOperation": "hermes --profile toy chat --provider openai-codex --model gpt-6.1-sol --toolsets none -q 'Return the fixed fixture marker.'"}
+    {
+      "caseId": "add",
+      "phase": "add",
+      "publicOperation": "hermes --profile toy auth add openai-codex --type oauth --no-browser"
+    },
+    {
+      "caseId": "list",
+      "phase": "list",
+      "publicOperation": "hermes --profile toy auth list openai-codex"
+    },
+    {
+      "caseId": "chat",
+      "phase": "chat",
+      "publicOperation": "hermes --profile toy chat --provider openai-codex --model gpt-6.1-sol --toolsets none -q 'Return the fixed fixture marker.'"
+    },
+    {
+      "caseId": "chat-expired",
+      "phase": "chat-expired",
+      "publicOperation": "hermes --profile toy chat --provider openai-codex --model gpt-6.1-sol --toolsets none -q 'Return the fixed fixture marker.'"
+    },
+    {
+      "caseId": "chat-reloaded",
+      "phase": "chat-reloaded",
+      "publicOperation": "hermes --profile toy chat --provider openai-codex --model gpt-6.1-sol --toolsets none -q 'Return the fixed fixture marker.'"
+    }
   ],
   "currentProof": {
     "behaviorVerification": "build/evidence/R0.03/auth-fresh-process-fixture-verification.json",
     "behaviorVerificationSha256": "40caffe0d6b1f6de70ff55ecd9205dfd372e14e5e712782867d367af09e52aa7",
     "recordedAt": "2026-10-06T09:39:02.134975+00:00",
     "diagnosticCase": "native-auth-cli",
-    "phasesPassed": ["add", "list", "chat", "chat-expired", "chat-reloaded"],
+    "phasesPassed": [
+      "add",
+      "list",
+      "chat",
+      "chat-expired",
+      "chat-reloaded"
+    ],
     "nativeAuthProcesses": 5,
     "initialFreshGrantUsed": true,
     "externalClockExpiryRefreshExecuted": true,
@@ -45,7 +71,14 @@
     "recentNeighborShowSha256": "4b96c65da0529ab5eea4de91dd4f8fed61c0e5d3ea695399c0a9201ee95715a9",
     "recentNeighborShowState": "NOT_IMPLEMENTED",
     "recentNeighborChecks": 6,
-    "recentNeighborPassedCheckIds": ["auth.native-runtime", "auth.native-fixture", "auth.native-fixture", "auth.native-fixture", "auth.native-fixture", "auth.native-fixture"]
+    "recentNeighborPassedCheckIds": [
+      "auth.native-runtime",
+      "auth.native-fixture",
+      "auth.native-fixture",
+      "auth.native-fixture",
+      "auth.native-fixture",
+      "auth.native-fixture"
+    ]
   },
   "sourceAssertions": [
     {
@@ -92,8 +125,13 @@
     }
   ],
   "minimumChange": {
-    "files": ["packages/hermes/src/auth-probe.ts", "packages/ops/src/fixture-stack.ts"],
+    "files": [
+      "cli/src/main.ts",
+      "packages/hermes/src/auth-probe.ts",
+      "packages/ops/src/fixture-stack.ts"
+    ],
     "changes": [
+      "CLI probe.run dispatch must route unfiltered AT-hermes-config-85 to HermesAuthProbe before ReplayEnvironment; it currently routes omitted caseId only for AT87.",
       "In HermesAuthProbe.run, permit caseId to be omitted specifically for AT-hermes-config-85 as well as the existing AT-87 exception; retain rejection of other unsupported/unfiltered auth IDs.",
       "In fixture-stack nativeAuth dispatch, accept unfiltered AT-hermes-config-85 alongside existing unfiltered AT-hermes-config-87 so its returned auth.native-runtime/auth.native-fixture checks reach the same Hermes owner validation.",
       "Keep AT-85 tied to the already parsed registered source manifest and its exact five-case/clock-fault binding. Run the existing default fixture sequence; do not add cases, change the clock seam, or widen the owner allowlist generically."
@@ -119,5 +157,11 @@
   "guardrails": [
     "No tests, builds, stack operations, services, credential access, source edits, external research or R0.11 changes were made.",
     "Installed Hermes and profiles remain untouched."
-  ]
+  ],
+  "parentReview": {
+    "recordedAt": "2026-10-06T20:57:24.672496+00:00",
+    "finding": "The helper omitted the CLI dispatcher guard at cli/src/main.ts:241. Source inspection and the actual unfiltered baseline confirm ReplayEnvironment otherwise returns REGISTERED_CASE_NOT_IMPLEMENTED. Three exact guards are required.",
+    "baselineEvidence": "build/evidence/R0.03/unfiltered-refresh-baseline.json",
+    "scope": "No manifest, DTO, fixture phase or provider seam change; installed Hermes remains untouched."
+  }
 }

@@ -1,0 +1,10 @@
+
+> toy-harness@1.0.0 check
+> npm run typecheck && node scripts/typecheck-tests.mjs && npm run boundaries && npm run python:check && npm run lint && npm run contracts:check && node cli/dist/main.js feature-map check --json
+
+
+> toy-harness@1.0.0 typecheck
+> tsc -b --pretty false && tsc -p scripts/tsconfig.json --pretty false
+
+cli/src/main.ts(241,217): error TS2345: Argument of type '{ probeId: "AT-activity-focus-1" | "AT-activity-focus-10" | "AT-activity-focus-11" | "AT-activity-focus-12" | "AT-activity-focus-13" | "AT-activity-focus-14" | "AT-activity-focus-18" | ... 659 more ... | "AT-workflows-58"; requestId: string; caseId?: "native-entry" | ... 16 more ... | undefined; } | null' is not assignable to parameter of type '{ probeId: "AT-activity-focus-1" | "AT-activity-focus-10" | "AT-activity-focus-11" | "AT-activity-focus-12" | "AT-activity-focus-13" | "AT-activity-focus-14" | "AT-activity-focus-18" | ... 659 more ... | "AT-workflows-58"; requestId: string; caseId?: "native-entry" | ... 16 more ... | undefined; }'.
+  Type 'null' is not assignable to type '{ probeId: "AT-activity-focus-1" | "AT-activity-focus-10" | "AT-activity-focus-11" | "AT-activity-focus-12" | "AT-activity-focus-13" | "AT-activity-focus-14" | "AT-activity-focus-18" | ... 659 more ... | "AT-workflows-58"; requestId: string; caseId?: "native-entry" | ... 16 more ... | undefined; }'.
