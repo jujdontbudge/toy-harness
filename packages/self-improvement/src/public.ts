@@ -21,7 +21,7 @@ export const ReplayEnvironment = {
     if (input.caseId === "capacity-trial") return capacityTrialProbe(input, context);
     if (input.caseId === "queue-transaction-faults" && input.probeId !== "AT-obligations-76") return { ok: false, error: { module: "ops", code: "INVALID_INPUT", message: opsErrorMessages.INVALID_INPUT, retryable: false } };
     try {
-      if (input.caseId === "queue-transaction-faults" && context.environment.stackId !== null) {
+      if ((input.caseId === "queue-transaction-faults" || (input.probeId === "AT-obligations-76" && input.caseId === undefined)) && context.environment.stackId !== null) {
         const stackId = context.environment.stackId;
         const checks = await withAccountingFixture(stackId, context.timeoutMs, () => QueueFaultProbe.exercise(input, context, accountingTestConnection(stackId)));
         return TestProbeControl.run(input, context, checks);

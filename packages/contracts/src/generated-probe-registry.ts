@@ -3609,6 +3609,56 @@ export const registeredCliAcceptanceManifestInventory = [
       }
     ],
     "simUnavailableReason": "SIM ingress cannot submit engineering research archives or inspect a pre-build component gate. The CLI exercises the real checker with fixed external-document inputs."
+  },
+  {
+    "id": "AT-obligations-76",
+    "rung": "CLI",
+    "sourceAssertionHash": "b2af7cd7997b6fb3db4123e05f46ddc89c9e1ca597f98a7b4d5e2073cd8b539e",
+    "commandId": "probe.run",
+    "scenarioId": "queue-transaction-faults",
+    "owner": "ops",
+    "firstRelease": "R0",
+    "kind": "mixed",
+    "mandatoryCases": [
+      {
+        "id": "queue-transaction-faults",
+        "publicOperation": "QueueFaultProbe.exercise",
+        "phase": "queue-transaction-faults"
+      }
+    ],
+    "trigger": "Run the pinned real PostgreSQL/pg-boss transaction and worker fault spike plus all five generated tool schemas through the existing queue owner.",
+    "faultControls": [],
+    "observations": [
+      {
+        "id": "generated-schema-validation",
+        "independentReader": "QueueFaultProbe.exercise: generated artifact digests, dialect and valid/invalid schema readbacks",
+        "caseIds": [
+          "queue-transaction-faults"
+        ]
+      },
+      {
+        "id": "native-transaction-and-worker-fencing",
+        "independentReader": "QueueFaultProbe.exercise: executeSql rollback/commit, native worker throw rollback and lost-claim readback",
+        "caseIds": [
+          "queue-transaction-faults"
+        ]
+      },
+      {
+        "id": "native-schema-and-cleanup",
+        "independentReader": "QueueFaultProbe.exercise: schema44/drift, recurrence and cleanup readbacks",
+        "caseIds": [
+          "queue-transaction-faults"
+        ]
+      },
+      {
+        "id": "persisted-cli-readback",
+        "independentReader": "toy probe.show and stack.down: exact persisted operation and complete teardown",
+        "caseIds": [
+          "queue-transaction-faults"
+        ]
+      }
+    ],
+    "simUnavailableReason": "SIM cannot check generated pre-build schema artifacts or native queue transaction/worker fault boundaries. The CLI drives the real public queue interface in an owned PostgreSQL fixture."
   }
 ] as const;
 export const acceptanceSourceDigest = "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2";

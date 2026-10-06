@@ -2,9 +2,9 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-06T20:11:44.741569+00:00",
-  "phase": "R0.03 unfiltered source-bound native matrix26 verified; root02 pending; R0.10 queue route plan ready",
-  "activeCard": "R0.03",
+  "updatedAt": "2026-10-06T20:15:33.236498+00:00",
+  "phase": "R0.10 source-bound unfiltered native queue9 verified; root02 pending; independent accounting route plan running",
+  "activeCard": "R0.10",
   "cardCount": 87,
   "acceptanceCount": 1447,
   "cards": {
@@ -1308,7 +1308,8 @@
         "build/evidence/R0.10/component-comparison-verification.json",
         "build/evidence/R0.10/component-comparison-review.json",
         "build/evidence/R0.10/archive-binding-minimum-plan.json",
-        "build/evidence/R0.10/archive-binding-verification.json"
+        "build/evidence/R0.10/archive-binding-verification.json",
+        "build/evidence/R0.10/unfiltered-queue-verification.json"
       ],
       "requiredATs": [
         "AT-activity-focus-86",
@@ -1351,9 +1352,9 @@
         "nativeRecurrenceEvidence": "build/evidence/R0.10/native-recurrence-verification.json"
       },
       "lastVerification": {
-        "evidence": "build/evidence/R0.10/archive-binding-verification.json",
-        "verdict": "PASS_FOUR_UNFILTERED_INDEXED_ARCHIVE_DIAGNOSTICS",
-        "checks": 4,
+        "evidence": "build/evidence/R0.10/unfiltered-queue-verification.json",
+        "verdict": "PASS_NINE_UNFILTERED_SOURCE_BOUND_NATIVE_QUEUE_DIAGNOSTICS",
+        "checks": 9,
         "runShowExact": true,
         "cleanupPassed": true,
         "ownedWorldsDown": true,
@@ -1421,6 +1422,19 @@
         "state": "SOURCE_BOUND_GAP_PLAN_ONLY",
         "evidence": "build/evidence/R0.10/unfiltered-queue-minimum-plan.json",
         "wholeATComplete": false
+      },
+      "unfilteredQueueUnit": {
+        "startedAt": "2026-10-06T20:12:55.146065+00:00",
+        "targetStopAt": "2026-10-06T22:12:55.146065+00:00",
+        "state": "CLOSED_NINE_SOURCE_BOUND_UNFILTERED_NATIVE_QUEUE_CHECKS_VERIFIED",
+        "sourcePlan": "build/evidence/R0.10/unfiltered-queue-minimum-plan.json",
+        "scope": "Exact AT76 unfiltered route invokes existing native queue/schema matrix with one source-bound manifest phase",
+        "wholeATComplete": false,
+        "stoppedAt": "2026-10-06T20:15:33.236498+00:00",
+        "diagnosticPasses": 9,
+        "unfiltered": true,
+        "runShowExact": true,
+        "cleanupComplete": true
       }
     },
     "R0.11": {
@@ -10080,7 +10094,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Stop passed R0.03 unfiltered route unit. Implement the bounded existing R0.10 unfiltered queue route from the independent plan. Poll root02 and continue R0.01 immediately on a verified DONE receipt.",
+  "nextAction": "Stop the passed R0.10 queue unit; consume the independent bounded R0.06 unfiltered accounting plan when ready. Poll root02 and continue R0.01 immediately on verified DONE.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -20624,16 +20638,16 @@
     "features": 97,
     "commands": 55,
     "indexedATs": 1447,
-    "cliManifests": 3,
+    "cliManifests": 4,
     "schemaDigest": "1a768d76525382bf74bf62c4b5e645d26daebde2c55b079402d85a48d79c990e",
-    "evidence": "build/evidence/R0.03/unfiltered-auth-check-result.json",
+    "evidence": "build/evidence/R0.10/unfiltered-queue-check-result.json",
     "languages": [
       "TypeScript",
       "Python"
     ],
     "SwiftDeferredTo": "R3"
   },
-  "sourceCheckpointCommit": "7abaa39",
+  "sourceCheckpointCommit": "795e6c2",
   "sourceCheckpointPushed": true,
   "rootRequests": {
     "ROOT-R004-20261006-01": {
@@ -20677,5 +20691,17 @@
     "queuedRootReserveGate": false,
     "rule": "Normal OS pressure and available memory at least the current job declared need plus512MiB; no strictly-free, hypothetical reserve, swap or second physical-fit gate"
   },
-  "activeWorkers": []
+  "activeWorkers": [
+    {
+      "task": "r005_control_probe_review",
+      "card": "R0.06",
+      "model": "gpt-6-luna",
+      "reasoning": "max",
+      "scope": "read-only minimum unfiltered accounting routing plan",
+      "targetStopAt": "2026-10-06T20:19:00Z",
+      "ownNeedBytes": "268435456",
+      "marginBytes": "536870912",
+      "admission": "build/evidence/R0.10/unfiltered-queue-admission.json"
+    }
+  ]
 }

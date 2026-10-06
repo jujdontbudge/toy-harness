@@ -315,7 +315,7 @@ export const FixtureProbe = {
       const nativeEligibility = input.caseId === "native-release-eligibility" && ["AT-ops-81", "AT-client-apps-49", "AT-activity-focus-64"].includes(input.probeId);
       const nativeAuth = (input.probeId === "AT-hermes-config-87" && input.caseId === undefined) || (input.caseId === "native-auth-cli" && ["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-87", "AT-hermes-config-78", "AT-ops-55"].includes(input.probeId));
       const roleDenials = input.caseId === "control-filesystem-denial" && input.probeId === "AT-authority-35";
-      const queueFaults = input.caseId === "queue-transaction-faults" && input.probeId === "AT-obligations-76";
+      const queueFaults = input.probeId === "AT-obligations-76" && (input.caseId === undefined || input.caseId === "queue-transaction-faults");
       const backupCapacity = input.caseId === "backup-capacity" && ["AT-ops-62", "AT-lifestore-63", "AT-sources-216"].includes(input.probeId);
       if (checks.length > 0 && !reference && !(modelPolicy || modelStream || accounting || componentComparison || capacityTrial || nativeEligibility || nativeAuth || backupCapacity || roleDenials || queueFaults)) refuse("INVALID_INPUT");
       if ((modelPolicy || modelStream) && checks.some(check => check.id !== "read.model-route-policy" || check.owner !== "hermes")) refuse("INVALID_INPUT");

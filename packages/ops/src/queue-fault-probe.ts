@@ -4,7 +4,7 @@ import { userInfo } from "node:os";
 import { PgBoss } from "pg-boss";
 import {
   checkViewSchema, modelAdmissionConnectionSchema, obligationToolParameters, obligationToolSchemaDialect,
-  registeredProbeInputSchema, schemaBundleArtifacts, validateObligationToolParameters
+  registeredCliAcceptanceManifestInventory, registeredProbeInputSchema, schemaBundleArtifacts, validateObligationToolParameters
 } from "@toy/contracts";
 import type { CheckViewV1, ModelAdmissionConnectionV1, OpsControlContextV1, RegisteredProbeInputV1 } from "@toy/contracts";
 import { fixtureStackInspect } from "./fixture-stack.js";
@@ -127,8 +127,10 @@ const checkView = (passed: boolean, evidenceValue: unknown, artifactDigests: str
 export const QueueFaultProbe = {
   async exercise(input: RegisteredProbeInputV1, context: OpsControlContextV1, connection: ModelAdmissionConnectionV1): Promise<CheckViewV1[]> {
     const stackId = context.environment.stackId;
-    if (!registeredProbeInputSchema.safeParse(input).success || input.probeId !== "AT-obligations-76" || input.caseId !== "queue-transaction-faults"
+    if (!registeredProbeInputSchema.safeParse(input).success || input.probeId !== "AT-obligations-76" || (input.caseId !== undefined && input.caseId !== "queue-transaction-faults")
       || context.environment.kind !== "test" || stackId === null) return [checkView(false, { refusal: "REGISTERED_TEST_CASE_REQUIRED" })];
+    const manifest = registeredCliAcceptanceManifestInventory.find(entry => entry.id === input.probeId);
+    if (!manifest || manifest.scenarioId !== "queue-transaction-faults" || JSON.stringify(manifest.mandatoryCases) !== JSON.stringify([{ id: "queue-transaction-faults", publicOperation: "QueueFaultProbe.exercise", phase: "queue-transaction-faults" }])) return [checkView(false, { refusal: "SOURCE_BOUND_MANIFEST_REQUIRED" })];
     const owned = fixtureStackInspect(context);
     if (!owned.ok || !owned.data.result?.ready || owned.data.result.stackId !== stackId || owned.data.result.release !== "R0"
       || owned.data.result.clock !== "fake" || owned.data.result.model !== "fake") return [checkView(false, { refusal: "OWNED_READY_R0_FIXTURE_REQUIRED" })];
