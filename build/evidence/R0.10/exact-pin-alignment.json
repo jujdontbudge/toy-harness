@@ -1,0 +1,167 @@
+{
+  "schemaVersion": "toy.r0.10-exact-pin-alignment.v1",
+  "generatedAt": "2026-10-06T15:22:23Z",
+  "gate": "R0.10",
+  "result": "PIN_DECLARATIONS_LOCK_INSTALL_AND_CAPTURED_CHECK_PASS;WHOLE_ACCEPTANCE_PENDING",
+  "scope": "Align exact dependency declarations and one shared npm lock with current canonical owners; reconcile TypeScript 5.9.3 command compatibility; verify the installed versions and record static check output.",
+  "sources": [
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/CONTRACTS.md",
+      "sha256": "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/RESEARCH-REGISTER.md",
+      "sha256": "8ebbcfb9e2e63041fd004dd55787a02473d36d9bcaa733eb4d322722b1ae4942"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/BUILD-PLAN.md",
+      "sha256": "aa84eb600e53bc65e6c6b1ed4fce45870ead861e0d18bf00d81613ff2595f49a"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/TEST-PLAN.md",
+      "sha256": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2"
+    }
+  ],
+  "pins": [
+    {
+      "name": "typescript",
+      "version": "5.9.3",
+      "owner": "root devDependencies",
+      "canonicalSource": "RESEARCH-REGISTER.md B01",
+      "lockEntry": "node_modules/typescript",
+      "lockIntegrity": "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==",
+      "installedVersion": "5.9.3"
+    },
+    {
+      "name": "ajv",
+      "version": "8.17.1",
+      "owner": "packages/contracts dependencies",
+      "canonicalSource": "RESEARCH-REGISTER.md B02",
+      "lockEntry": "packages/contracts/node_modules/ajv",
+      "lockIntegrity": "sha512-B/gBuNg5SiMTrPkC+A2+cW0RszwxYmn6VYxB/inlBStS5nx6xHIt/ehKRhIMhqusl7a8LjQoZnjCs5vhwxOQ1g==",
+      "installedVersion": "8.17.1",
+      "coexistingToolingPin": "ESLint retains its separate development-only Ajv 6.15.0 dependency; it does not replace the contracts owner pin."
+    },
+    {
+      "name": "pg",
+      "version": "8.23.1",
+      "owner": "root dependencies, shared application lock",
+      "canonicalSource": "CONTRACTS.md canonical dependencies; RESEARCH-REGISTER.md A08",
+      "lockEntry": "node_modules/pg",
+      "lockIntegrity": "sha512-aL96AHANtWjPLDOLqnhx+ngp9+UK7ETEU8VJrDCGvsSSi/mGLcWYsS6Herg7lmaBJe4uwrfqsa7gTEFaSizDoQ==",
+      "installedVersion": "8.23.1"
+    },
+    {
+      "name": "pg-boss",
+      "version": "12.36.0",
+      "owner": "packages/ops dependencies",
+      "canonicalSource": "CONTRACTS.md canonical dependencies; RESEARCH-REGISTER.md A09",
+      "schema": 44,
+      "lockEntry": "node_modules/pg-boss",
+      "lockIntegrity": "sha512-67Jj4xNuv8mkShTzfmsFtJeVa2ChXyrknjlw/WKZCIMuzRTwyHOUGjl2mf5Snrhmb0xglvFbkfAt5+hLtXukag==",
+      "installedVersion": "12.36.0",
+      "metadataClosure": "The exact upstream manifest's cron-parser, pg, rrule-temporal, and serialize-error ranges are represented by resolved versions and integrity values in package-lock.json."
+    },
+    {
+      "name": "@opentelemetry/api",
+      "version": "1.9.0",
+      "owner": "root dependencies, shared application lock",
+      "canonicalSource": "RESEARCH-REGISTER.md A17",
+      "reason": "The exact pg-boss manifest requires peer range ^1.9.0. The canonical app pin is declared explicitly so npm does not select 1.9.1 as an unpinned peer identity.",
+      "lockEntry": "node_modules/@opentelemetry/api",
+      "lockIntegrity": "sha512-3giAOQvZiH5F9bMlMiv8+GSPMeqg0dbaeo58/0SlA9sxSqZhnUtxzX9/2FzyhS9sWQf5S0GJE0AKBrFqjpeYcg==",
+      "installedVersion": "1.9.0"
+    },
+    {
+      "name": "zod",
+      "version": "4.6.5",
+      "owner": "packages/contracts dependencies, preserved",
+      "canonicalSource": "RESEARCH-REGISTER.md B02 and CONTRACTS.md Amendment M04",
+      "lockEntry": "node_modules/zod",
+      "lockIntegrity": "sha512-v5l/aFXZQeai4awLbOpSoHecE9UiMrnfx75tEXLjNonXVARxQ5mOeipTjROUchszUNCqnE+hqAMujRsRHsut2Q==",
+      "installedVersion": "4.6.5"
+    }
+  ],
+  "typescriptCommandCompatibility": {
+    "canonicalVersion": "5.9.3",
+    "priorCommandFlag": "--ignoreConfig",
+    "finding": "The verified TypeScript 5.9.3 archive does not provide --ignoreConfig. The contracts check already passes the generated source file explicitly, so removing that flag preserves the explicit compiler options without config discovery.",
+    "changedCommand": "tsc --noEmit --strict --noUncheckedIndexedAccess --target ES2024 --module NodeNext --moduleResolution NodeNext packages/contracts/generated/types.ts",
+    "archive": "build/npm-cache/exact-tarballs/typescript-5.9.3.tgz"
+  },
+  "packageResolution": {
+    "publicRegistry": "https://registry.npmjs.org",
+    "npmConfigFiles": [
+      "build/npm-public-user.npmrc",
+      "build/npm-public-global.npmrc"
+    ],
+    "cache": "build/npm-cache",
+    "scriptsDisabled": true,
+    "offlineAttempt": "The initial lock-only attempt stopped because pg-connection-string metadata was absent from the isolated cache (ENOTCACHED); no package version failed.",
+    "lockOnlyResolution": {
+      "command": "npm install --package-lock-only --ignore-scripts --no-audit --no-fund --fetch-retries=0 --fetch-timeout=15000 --cache build/npm-cache --userconfig build/npm-public-user.npmrc --globalconfig build/npm-public-global.npmrc",
+      "exitCode": 0
+    },
+    "install": {
+      "command": "npm install --ignore-scripts --no-audit --no-fund --fetch-retries=0 --fetch-timeout=15000 --cache build/npm-cache --userconfig build/npm-public-user.npmrc --globalconfig build/npm-public-global.npmrc",
+      "exitCode": 0,
+      "summary": "added 28 packages, changed 2 packages"
+    }
+  },
+  "verification": [
+    {
+      "command": "npm ls --all typescript ajv pg pg-boss @opentelemetry/api",
+      "exitCode": 0,
+      "evidence": "build/evidence/R0.10/exact-pin-alignment-npm-ls.txt",
+      "sha256": "0e9f251168196091eb266d4d1111427c7ceb370aa3fe6997e145d84cdac22e38"
+    },
+    {
+      "command": "npm run check",
+      "exitCode": 0,
+      "observedAt": "2026-10-06T15:21:21.818Z",
+      "result": "typecheck, test typecheck, boundaries, Python checks, lint, generated contract checks, and feature-map check passed; feature map reported 90 features, 55 commands, 1447 AT links, no findings.",
+      "evidence": "build/evidence/R0.10/exact-pin-alignment-check.log",
+      "sha256": "ab94be3505a6140fcfdf4a1bd44e5bc866a4138c2f5b27034a798db7ada98772",
+      "freshness": "This check predates the root agent's subsequent R0.04 generated/schema/map draft; root owns the joint post-regeneration check."
+    }
+  ],
+  "currentFileHashes": [
+    {
+      "path": "package.json",
+      "sha256": "a736773f68f3bf4517d00cac2558e6f5a7401ee1b163366d769e5af04d5e0699"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "e672bf4542f66c27c591a813dc0c44645578a4b268d10e4b796c275b0bd714b7"
+    },
+    {
+      "path": "packages/contracts/package.json",
+      "sha256": "58548a27ebef1188bc6ddf4349ec1a46b9cec328a49bace60d65ff09c1516178"
+    },
+    {
+      "path": "packages/ops/package.json",
+      "sha256": "38fc305e90a51920456229f124f7455d9b048477a7f303b40f5b5ba081b30841"
+    }
+  ],
+  "acceptance": false,
+  "wholeATs": [],
+  "assignedATs": [
+    { "id": "AT-obligations-74", "status": "PENDING" },
+    { "id": "AT-obligations-75", "status": "PENDING" },
+    { "id": "AT-obligations-76", "status": "PENDING" },
+    { "id": "AT-hermes-config-50", "status": "PENDING" },
+    { "id": "AT-hermes-config-69", "status": "PENDING" },
+    { "id": "AT-hermes-config-75", "status": "PENDING" },
+    { "id": "AT-hermes-config-81", "status": "PENDING" },
+    { "id": "AT-authority-60", "status": "PENDING" },
+    { "id": "AT-authority-61", "status": "PENDING" },
+    { "id": "AT-activity-focus-86", "status": "PENDING" }
+  ],
+  "runtimeLimits": "This bounded pin-alignment work did not run a Toy CLI probe, create a fake-provider stack, start PostgreSQL, or assert pg-boss transaction/claim behavior. R0.10 ATs remain pending at their assigned CLI rung.",
+  "actionsNotTaken": [
+    "No secret or general npm configuration was read.",
+    "No install lifecycle scripts ran.",
+    "No system service, database, account, feature map, planning state, or protected runtime was changed.",
+    "No commit or push was performed."
+  ]
+}

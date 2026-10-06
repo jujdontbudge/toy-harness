@@ -155,11 +155,11 @@ const run = async (): Promise<CliResult> => {
   if (commandId === "probe.show" && !cliCommandSchemas["probe.show"].input.safeParse({ operationId: operands[0] }).success) return failure("INVALID_INPUT", 2);
   const context = { environment, invocationId, timeoutMs: Number(values.get("timeout-ms") ?? 30000) };
   if (commandId === "bootstrap.identities") {
-    const input = cliCommandSchemas[commandId].input.safeParse({ plan: values.has("plan"), requestId, expectedSnapshotDigest: values.get("expected-snapshot") ?? null });
+    const input = cliCommandSchemas[commandId].input.safeParse({ plan: values.has("plan"), verify: values.has("verify"), requestId, expectedSnapshotDigest: values.get("expected-snapshot") ?? null });
     if (!input.success) return failure("INVALID_INPUT", 2);
     const result = RoleIdentityBootstrap.run(input.data, context);
     if (!result.ok) return ownerFailure(result.error);
-    const exitCode = result.data.state === "created" || result.data.state === "planned" ? 0 : result.data.state === "partial" ? 1 : 5;
+    const exitCode = result.data.state === "created" || result.data.state === "planned" || result.data.state === "verified" ? 0 : result.data.state === "partial" ? 1 : 5;
     const base = envelope(exitCode);
     return cliCommandSchemas[commandId].result.parse({ ...base, commandId, ok: true, data: result.data, meta: { ...base.meta, effectState: result.data.effectState, evaluatedAt: result.data.observedAt } });
   }

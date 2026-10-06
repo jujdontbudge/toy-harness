@@ -120,6 +120,7 @@ class RoleBootstrapReportV1(TypedDict):
     state: "RoleBootstrapReportV1State"
     reasonCode: "RoleBootstrapReportV1ReasonCode"
     snapshotDigest: Optional["Digest"]
+    bootstrapReceiptDigest: NotRequired["Digest"]
     allocationMethod: "RoleBootstrapReportV1AllocationMethod"
     callerUid: int
     roles: list["RoleBootstrapRoleV1"]
@@ -137,6 +138,7 @@ RoleBootstrapReportV1SchemaVersion = Literal[
 RoleBootstrapReportV1Mode = Literal[
     "plan",
     "apply",
+    "verify",
 ]
 
 RoleBootstrapReportV1State = Literal[
@@ -144,6 +146,7 @@ RoleBootstrapReportV1State = Literal[
     "blocked",
     "created",
     "partial",
+    "verified",
 ]
 
 RoleBootstrapReportV1ReasonCode = Literal[
@@ -159,6 +162,8 @@ RoleBootstrapReportV1ReasonCode = Literal[
     "PATH_CONFLICT",
     "OS_CHANGE_FAILED",
     "ROLE_IDENTITIES_CREATED",
+    "ROLE_IDENTITIES_VERIFIED",
+    "INSTALLATION_READBACK_FAILED",
 ]
 
 RoleBootstrapReportV1AllocationMethod = Literal[
@@ -4509,6 +4514,7 @@ class SiwcKeychainLauncherV1(TypedDict):
 
 class RoleBootstrapInputV1(TypedDict):
     plan: bool
+    verify: NotRequired[bool]
     requestId: "UUID"
     expectedSnapshotDigest: Optional["Digest"]
 

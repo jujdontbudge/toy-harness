@@ -13,7 +13,7 @@ export const RoleIdentityBootstrap = {
     if (context.environment.kind !== "prod" || context.environment.instanceId !== null || context.environment.stackId !== null) return failed("UNAUTHORIZED");
     if (process.platform !== "darwin") return failed("DEPENDENCY_UNAVAILABLE");
     if (!input.plan && (process.getuid?.() !== 0 || process.geteuid?.() !== 0)) return failed("UNAUTHORIZED");
-    const effectState = input.plan ? "none" : "unknown";
+    const effectState = input.plan || input.verify ? "none" : "unknown";
     try {
       const child = spawnSync(process.execPath, [join(trustedCheckoutRoot(), "control/dist/bootstrap/main.js"), String(context.timeoutMs)], {
         env: { PATH: "/usr/bin:/bin:/usr/sbin:/sbin", LANG: "C", LC_ALL: "C" }, input: JSON.stringify(input),
@@ -21,7 +21,7 @@ export const RoleIdentityBootstrap = {
       });
       if (child.error || child.status !== 0) return failed(child.error && "code" in child.error && child.error.code === "ETIMEDOUT" ? "TIMEOUT" : "DEPENDENCY_UNAVAILABLE", effectState);
       const report = roleBootstrapReportSchema.safeParse(JSON.parse(child.stdout));
-      if (!report.success || report.data.requestId !== input.requestId || report.data.mode !== (input.plan ? "plan" : "apply") || report.data.callerUid !== process.getuid?.()) return failed("ARTIFACT_MISMATCH", effectState);
+      if (!report.success || report.data.requestId !== input.requestId || report.data.mode !== (input.verify ? "verify" : input.plan ? "plan" : "apply") || report.data.callerUid !== process.getuid?.()) return failed("ARTIFACT_MISMATCH", effectState);
       return { ok: true, data: report.data };
     } catch { return failed("DEPENDENCY_UNAVAILABLE", effectState); }
   }

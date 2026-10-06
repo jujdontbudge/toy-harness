@@ -2,7 +2,7 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-06T15:06:33.297547+00:00",
+  "updatedAt": "2026-10-06T15:26:03.690998+00:00",
   "phase": "R0.01 critical;8actual identities observed;3macOS bootstrap fixes and12CLI regression invocations verified, source checkpoint commit pending",
   "activeCard": "R0.01",
   "cardCount": 87,
@@ -387,13 +387,13 @@
         }
       },
       "protectedHostDependency": {
-        "state": "BLOCKED_ON_R0_04_BOOTSTRAP",
-        "reason": "Actual _toy_control identity is absent; source-only protected factory cannot host the supported sign-in flow",
-        "evidence": "build/evidence/R0.04/identity-inventory-doctor.json",
+        "state": "ACTUAL_IDENTITIES_OBSERVED_PROTECTED_RUNTIME_PENDING",
+        "reason": "Actual _toy_control310 and all8roles observed; immutable runtime, full manifest and denial matrix remain.",
+        "evidence": "build/evidence/R0.04-post-bootstrap-doctor.json",
         "safeIndependentWork": "Bounded native unbound-SIWC no-fallback and auth regression subsets verified; source unit closed. Next work must resolve a concrete assigned R0 prerequisite without reopening kitchen or R0.03 units."
       },
       "providerSendDependency": {
-        "state": "OWNER_INTERFACE_AND_POLICY_PREPARED_CANONICAL_DATABASE_ACCOUNTING_PENDING",
+        "state": "REAL_CANONICAL_ACCOUNTING_CLI_SUBSETS_VERIFIED_NATIVE_PROTECTED_SEND_PENDING",
         "card": "R0.06",
         "owner": "Protected ModelAdmission; canonical Self-Improvement accounting owner",
         "ledger": [
@@ -403,7 +403,7 @@
         ],
         "source": "specs/ops.md section 13",
         "nativeBindingPermitted": false,
-        "evidence": "build/evidence/R0.06/accounting-policy-preparation.json"
+        "evidence": "build/evidence/R0.06/accounting-runtime-verification.json"
       },
       "nativeRefusalUnit": {
         "state": "STOPPED_NATIVE_CANONICAL_ALIAS_CLI_SUBSETS_AND_AUTH_REGRESSION_VERIFIED",
@@ -592,7 +592,8 @@
         "build/evidence/R0.04/role-inventory-preparation.json",
         "build/evidence/R0.04/identity-bootstrap-preparation.json",
         "build/evidence/R0.04-post-bootstrap-doctor.json",
-        "build/evidence/R0.04/macos-bootstrap-verification.json"
+        "build/evidence/R0.04/macos-bootstrap-verification.json",
+        "build/evidence/R0.04/existing-installation-verification.json"
       ],
       "requiredATs": [
         "AT-authority-34",
@@ -619,7 +620,6 @@
         "unknownIdentities": 0,
         "createdIdentities": 8,
         "deferred": [
-          "Execute canonical root bootstrap and confirm real Directory Service/account/directory readbacks",
           "Independent maintenance/recovery identity; immutable runtime and complete role/socket/credential manifest",
           "Actual-UID filesystem/MCP/IPC/GUI and privilege/secret positive/denial matrix",
           "R0.01 protected SIWC host, native Keychain/browser and Hermes/Ops provider integration"
@@ -630,12 +630,17 @@
           "command": "toy bootstrap identities --plan --request-id UUID --json",
           "evidence": "build/evidence/R0.04/identity-bootstrap-preparation.json",
           "sourceCompiled": true,
-          "cliGuardInvocations": 8,
+          "cliGuardInvocations": 11,
           "planState": "blocked",
           "planReason": "DIRECTORY_QUERY_UNAVAILABLE",
-          "rootApplyExecuted": false,
+          "rootApplyExecuted": true,
           "servicesActivated": false,
-          "wholeATsPassed": []
+          "wholeATsPassed": [],
+          "rootApplyReceiptVerified": true,
+          "rootApplyAttribution": "Johan-behalf update; original root-created receipt validated through fresh fixed root CLI readback",
+          "verificationEvidence": "build/evidence/R0.04/existing-installation-verification.json",
+          "readbackState": "verified",
+          "readbackMode": "verify"
         }
       },
       "actualRuntimeUnit": {
@@ -645,11 +650,13 @@
         "bootstrapFixesVerifiedAt": "2026-10-06T15:06:33.297547+00:00"
       },
       "lastVerification": {
-        "evidence": "build/evidence/R0.04/macos-bootstrap-verification.json",
-        "verdict": "PASS_MACOS_CLI_OS_SEAM_REGRESSIONS_AND_ACTUAL_IDENTITY_OBSERVATIONS",
+        "evidence": "build/evidence/R0.04/existing-installation-verification.json",
+        "verdict": "PASS_ACTUAL_ROOT_INSTALLATION_READBACK_AND_CLI_REGRESSIONS",
         "acceptanceComplete": false,
         "wholeATsPassed": [],
-        "cliInvocations": 12
+        "cliInvocations": 15,
+        "accountsVerified": 8,
+        "directoriesVerified": 13
       }
     },
     "R0.05": {
@@ -698,7 +705,8 @@
         "build/evidence/R0.06/accounting-policy-preparation.json",
         "build/evidence/R0.06/accounting-owner-preparation.json",
         "build/evidence/R0.06/migration-artifact-readback.json",
-        "build/evidence/R0.06/accounting-runtime-blocker.json"
+        "build/evidence/R0.06/accounting-runtime-blocker.json",
+        "build/evidence/R0.06/accounting-runtime-verification.json"
       ],
       "requiredATs": [
         "AT-hermes-config-59",
@@ -714,7 +722,7 @@
         "AT-ops-9"
       ],
       "preparation": {
-        "status": "CANONICAL_ACCOUNTING_FIXTURE_SOURCE_PREPARED_CLI_INITIALIZATION_PERMISSION_DENIED",
+        "status": "REAL_POSTGRESQL_ACCOUNTING_CLI_SUBSETS_VERIFIED_PROTECTED_SEND_PENDING",
         "ownerInterface": "docs/adr/0027-model-admission-accounting.md",
         "evidence": "build/evidence/R0.06/accounting-owner-preparation.json",
         "canonicalAccountingTables": [
@@ -722,8 +730,8 @@
           "toy_si.budget_group",
           "toy_si.quota_snapshot"
         ],
-        "realDatabaseAccountingImplemented": false,
-        "policyRuntimeExecuted": false,
+        "realDatabaseAccountingImplemented": true,
+        "policyRuntimeExecuted": true,
         "providerSendPermitIssued": false,
         "wholeATsPromoted": [],
         "deferred": [
@@ -754,7 +762,7 @@
         ],
         "accountingOwnerSourceImplemented": true,
         "postgresqlMigrationSourceGenerated": true,
-        "accountingTransactionsExecuted": false,
+        "accountingTransactionsExecuted": true,
         "currentStatic": {
           "command": "npm run check",
           "exitCode": 0,
@@ -776,7 +784,7 @@
         ],
         "databaseInitializationAttempted": true,
         "databaseInitializationAttempts": 3,
-        "databaseInitializationBlocked": "ACCOUNTING_FIXTURE_INITIALIZATION_DENIED"
+        "databaseInitializationBlocked": null
       },
       "timebox": {
         "startedAt": "2026-10-06T06:30:23.364Z",
@@ -784,6 +792,16 @@
         "scope": "Minimum accounting source and assigned R0 CLI evidence required by the single supported R0.01 provider seam; defer unrelated infrastructure.",
         "implementationStoppedAt": "2026-10-06T08:15:51.467Z",
         "stopReason": "Three initialization failures are permission-blocked; stop this source unit within its two-hour box and continue independent work."
+      },
+      "runtimeResume": {
+        "startedAt": "2026-10-06T15:08:29.441457+00:00",
+        "targetStopAt": "2026-10-06T17:08:29.441457+00:00",
+        "scope": "Resume existing canonical accounting CLI cases only after filesystem/network permissions changed; preserve original closed source timebox",
+        "stackId": "e67cbecd-9f33-4087-bea7-d5868eb29eb8",
+        "reason": "Actual execution profile changed; automatic normal-pressure admission and stack startup succeed",
+        "stoppedAt": "2026-10-06T15:19:59.556248+00:00",
+        "state": "CLI_SUBSETS_VERIFIED_CLEAN_TEARDOWN",
+        "evidence": "build/evidence/R0.06/accounting-runtime-verification.json"
       }
     },
     "R0.07": {
@@ -932,7 +950,7 @@
       }
     },
     "R0.10": {
-      "implementation": "NOT_IMPLEMENTED",
+      "implementation": "IN_PROGRESS",
       "acceptance": "PENDING",
       "sourceRowHash": "bd835ecc193c682aa06edf7b25defd2d6a23d0c8a4cda1144a1a9a82c4f90315",
       "dependsOn": "R0.02, R0.05",
@@ -942,7 +960,8 @@
         "build/evidence/R0.10/registry-availability.json",
         "build/evidence/R0.10/local-gate-audit.json",
         "build/evidence/R0.10/local-audit-admission.json",
-        "build/evidence/R0.10/package-access-restored.json"
+        "build/evidence/R0.10/package-access-restored.json",
+        "build/evidence/R0.10/exact-pin-alignment.json"
       ],
       "requiredATs": [
         "AT-activity-focus-86",
@@ -957,27 +976,26 @@
         "AT-obligations-76"
       ],
       "preparation": {
-        "status": "CURRENT_SOURCE_PINS_REVALIDATED_CLOSURE_AND_RUNTIME_PENDING",
+        "status": "EXACT_PINS_DECLARED_LOCKED_INSTALLED_JOINT_STATIC_PASS_RUNTIME_ATS_PENDING",
         "zodSelectionRecorded": true,
-        "runtimeValidatorInstalled": false,
-        "typescriptSourcePinReconciled": false,
+        "runtimeValidatorInstalled": true,
+        "typescriptSourcePinReconciled": true,
         "dependencySatisfied": false,
         "acceptanceComplete": false,
         "evidence": "build/evidence/R0.10/current-pin-revalidation.json",
         "currentPinConditions": [
-          "B01 TypeScript5.9.3 versus manifest/lock6.0.3",
-          "Ajv8.17.1 owner undeclared",
-          "pg8.23.1 and pg-boss12.36.0/schema44 absent from shared lock",
-          "B02 historical CONTRACTS/package-lock digest bindings require current proof"
+          "Runtime/schema/owner transaction probes and current contract source proof remain assigned acceptance work"
         ],
         "wholeATsPassed": [],
         "registryAvailability": {
-          "state": "REQUIRED_PIN_METADATA_AND_TARBALL_UNAVAILABLE",
-          "evidence": "build/evidence/R0.10/registry-availability.json",
-          "requiredPgPgBossCached": false,
-          "registryError": "ENOTFOUND",
+          "state": "EXACT_OFFICIAL_METADATA_TARBALLS_CACHED_INTEGRITY_VERIFIED",
+          "evidence": "build/evidence/R0.10/package-access-restored.json",
+          "requiredPgPgBossCached": true,
+          "registryError": null,
           "dependencyPinsChanged": false
-        }
+        },
+        "pinAlignmentEvidence": "build/evidence/R0.10/exact-pin-alignment.json",
+        "jointCheck": "build/evidence/R0.04-verify-joint-check.txt"
       }
     },
     "R0.11": {
@@ -9594,7 +9612,8 @@
       "condition": "POSTGRESQL_INITIALIZATION_PERMISSION_DENIED",
       "scope": "R0.06 real PostgreSQL schema/accounting transaction probes and verified R0.01 provider accounting prerequisite",
       "independentProgress": "Three public CLI initialization attempts retained; stop unchanged retries. Canonical policy/source and independent R0.01 native no-fallback subsets verified; actual database runtime remains pending.",
-      "evidence": "build/evidence/R0.06/accounting-runtime-blocker.json"
+      "evidence": "build/evidence/R0.06/accounting-runtime-blocker.json",
+      "historicalResolvedBy": "build/evidence/R0.06/accounting-runtime-verification.json"
     },
     {
       "condition": "PROTECTED_AUTH_AT_REGISTRATION_PENDING",
@@ -9618,7 +9637,8 @@
       "condition": "NPM_REGISTRY_UNRESOLVED_REQUIRED_PINS_NOT_CACHED",
       "scope": "Exact missing pg/pg-boss application lock closure; TypeScript/Ajv exact tarballs also not observed",
       "evidence": "build/evidence/R0.10/registry-availability.json",
-      "independentProgress": "Source/lock contradictions and available metadata revalidated; stop unchanged registry attempts. No unsupported package substitution or DNS/network bypass."
+      "independentProgress": "Source/lock contradictions and available metadata revalidated; stop unchanged registry attempts. No unsupported package substitution or DNS/network bypass.",
+      "historicalResolvedBy": "build/evidence/R0.10/package-access-restored.json"
     }
   ],
   "deployment": {
@@ -9628,7 +9648,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Verify and commit macOS bootstrap fixes and largest-interface OS-seam regressions. Continue R0.04 protection and restored real PostgreSQL accounting prerequisites for R0.01. Preserve existing accounts/root/profile/services; no repeat bootstrap apply.",
+  "nextAction": "R0.04 minimum actual protection/runtime manifest for R0.01; independent Luna aligns exact R0.10 pins. No test stack live.",
   "previousTurnClassification": "NO_PROGRESS",
   "failures": [
     {
@@ -9750,22 +9770,22 @@
     "contractsSwiftSDK": "/Library/Developer/CommandLineTools/SDKs/MacOSX26.5.sdk"
   },
   "admission": {
-    "concurrentChildren": 0,
+    "concurrentChildren": 1,
     "maximumChildren": 1,
     "semanticStackAdmitted": false,
     "testStackMemoryAdmitted": true,
-    "observedAt": "2026-10-06T14:58:28.748Z",
+    "observedAt": "2026-10-06T15:17:58.486Z",
     "availableBytesVerified": true,
-    "measurementEvidence": "build/evidence/R0.04-post-bootstrap-doctor.json",
-    "measurementMeaning": "OS pressure normal; helper1GiB plus bounded parent CLI/source job512MiB plus margin512MiB admitted. No1GiBteststack concurrently.",
-    "availableBytes": 2365341696,
+    "measurementEvidence": "build/evidence/R0.10-pin-alignment-admission-doctor-after-down.json",
+    "measurementMeaning": "Normal OS pressure, helper1GiB plus bounded parent source/read512MiB plus margin512MiB admitted; no live test stack.",
+    "availableBytes": 2487091200,
     "testStackNeedBytes": "1073741824",
     "helperNeedBytes": "1073741824",
     "marginBytes": "536870912",
     "pressure": "normal",
     "headroomSatisfied": true,
     "resourcePermitIssued": false,
-    "childAdmission": "INDEPENDENT_LUNA_MAX_R010_PACKAGE_ACCESS_COMPLETED",
+    "childAdmission": "R005_MINIMAL_ACTUAL_DENIALS_LUNA_MAX",
     "testStackHeadroomSatisfied": true,
     "normalPressureObserved": true,
     "physicalAdmissionDependency": null,
@@ -9777,7 +9797,7 @@
     },
     "admissionScope": "Confined R0 fake stack and current helper; fresh headroom measurement per new physical work",
     "userReportedPressure": "normal",
-    "currentEvidence": "build/evidence/R0.04-post-bootstrap-doctor.json",
+    "currentEvidence": "build/evidence/R0.04-verified-installation-doctor.json",
     "pressureSource": "os",
     "testStackRuntimeWasAdmitted": true,
     "testStackCurrentlyRunning": false,
@@ -20118,24 +20138,23 @@
   },
   "pullRequest": "https://github.com/JohanSardar/toy-harness/pull/1",
   "lastWorker": {
-    "card": "R0.10",
-    "task": "r010_package_access",
+    "card": "R0.05",
+    "task": "r005_minimal_actual_denials",
     "model": "gpt-6-luna",
     "reasoning": "max",
-    "state": "complete",
-    "ownedScope": "Exact official package metadata/cache only, no shared manifest edits",
-    "result": "OFFICIAL_EXACT_PACKAGE_METADATA_TARBALLS_AND_CACHE_INTEGRITY_VERIFIED",
-    "evidence": "build/evidence/R0.10/package-access-restored.json"
+    "state": "running",
+    "ownedScope": "Read-only minimal actual-UID35/36 registered-probe preparation"
   },
   "continuationAssessment": {
-    "generatedAt": "2026-10-06T15:02:44.142623+00:00",
+    "generatedAt": "2026-10-06T15:26:03.690998+00:00",
     "classification": "progress",
-    "reason": "All8actual service identities and automatic normal-pressure level verified;3macOS bootstrap corrections have12publicCLI regression invocations plus fullstrictchecks. Exact4requiredpackage artifacts now available and integrity verified.",
+    "reason": "Actual root installation readback,15CLI regressions,9realPG accounting cells and exact package pin closure pass; complete assigned protection/runtime gates remain pending.",
     "consecutiveGoalTurnsAtSameImpasse": 0,
     "goalStatus": "active",
     "evidence": [
-      "build/evidence/R0.04/macos-bootstrap-verification.json",
-      "build/evidence/R0.10/package-access-restored.json"
+      "build/evidence/R0.04/existing-installation-verification.json",
+      "build/evidence/R0.06/accounting-runtime-verification.json",
+      "build/evidence/R0.10/exact-pin-alignment.json"
     ],
     "blockedStatusThresholdReached": false
   },
@@ -20164,16 +20183,19 @@
   "latestStaticVerification": {
     "command": "npm run check",
     "exitCode": 0,
-    "log": "build/evidence/R0.04-macos-check.txt",
-    "generatedAt": "2026-10-06T15:06:33.297547+00:00",
+    "log": "build/evidence/R0.04-verify-joint-check.txt",
+    "generatedAt": "2026-10-06T15:26:03.690998+00:00",
     "artifacts": 327,
     "contracts": 259,
     "features": 90,
     "commands": 55,
     "indexedATs": 1447,
     "swiftInvoked": false,
-    "schemaDigest": "7763e332fc9a951fcc2072a493b960ee356e1bc8f28890e6d2b34912e7f8ffd6",
+    "schemaDigest": "04d47a207c970232246cd6359730a01bafbbd8ecea64b4752217afbc87f9d160",
     "wholeATComplete": false,
-    "output": "build/evidence/R0.04-macos-check.txt"
-  }
+    "output": "build/evidence/R0.04-verify-joint-check.txt",
+    "typescript": "5.9.3"
+  },
+  "sourceCheckpointCommit": "64c32c5",
+  "sourceCheckpointPushed": true
 }

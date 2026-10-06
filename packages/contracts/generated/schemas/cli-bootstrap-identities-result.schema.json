@@ -263,7 +263,8 @@
           "type": "string",
           "enum": [
             "plan",
-            "apply"
+            "apply",
+            "verify"
           ]
         },
         "state": {
@@ -272,7 +273,8 @@
             "planned",
             "blocked",
             "created",
-            "partial"
+            "partial",
+            "verified"
           ]
         },
         "reasonCode": {
@@ -289,7 +291,9 @@
             "ID_POOL_EXHAUSTED",
             "PATH_CONFLICT",
             "OS_CHANGE_FAILED",
-            "ROLE_IDENTITIES_CREATED"
+            "ROLE_IDENTITIES_CREATED",
+            "ROLE_IDENTITIES_VERIFIED",
+            "INSTALLATION_READBACK_FAILED"
           ]
         },
         "snapshotDigest": {
@@ -304,6 +308,12 @@
               "type": "null"
             }
           ]
+        },
+        "bootstrapReceiptDigest": {
+          "type": "string",
+          "minLength": 64,
+          "maxLength": 64,
+          "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
         },
         "allocationMethod": {
           "type": "string",

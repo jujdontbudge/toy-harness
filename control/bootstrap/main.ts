@@ -1,6 +1,6 @@
 import { spawnSync } from "node:child_process";
 import { createHash, randomUUID } from "node:crypto";
-import { chmodSync, chownSync, lstatSync, mkdirSync, writeFileSync } from "node:fs";
+import { chmodSync, chownSync, lstatSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import {
   roleBootstrapDirectorySchema, roleBootstrapInputSchema, roleBootstrapReportSchema, roleBootstrapRoleSchema,
   roleBootstrapRoot, serviceRoleNameSchema
@@ -54,11 +54,12 @@ const observe = (role: ServiceRoleIdentityObservationV1["role"]): ServiceRoleIde
 const run = (input: RoleBootstrapInputV1): RoleBootstrapReportV1 => {
   let roles: RoleBootstrapRoleV1[] = serviceRoleNameSchema.options.map(role => ({ observation: unknown(role), candidateUid: null, candidateGid: null }));
   let snapshotDigest: string | null = null;
+  let bootstrapReceiptDigest: string | undefined;
   let accountsVerified = 0;
   let effectsStarted = false;
   const report = (state: RoleBootstrapReportV1["state"], reasonCode: RoleBootstrapReportV1["reasonCode"]): RoleBootstrapReportV1 => roleBootstrapReportSchema.parse({
     schemaVersion: "toy.role-identity-bootstrap.v1", requestId: input.requestId, observedAt: new Date().toISOString(),
-    mode: input.plan ? "plan" : "apply", state, reasonCode, snapshotDigest, allocationMethod: "observed_vacancy", callerUid,
+    mode: input.verify ? "verify" : input.plan ? "plan" : "apply", state, reasonCode, snapshotDigest, bootstrapReceiptDigest, allocationMethod: "observed_vacancy", callerUid,
     roles, directories, accountsVerified, effectState: state === "created" ? "confirmed" : effectsStarted ? "unknown" : "none",
     identityGateVerified: false, maintenanceIdentityVerified: false, servicesActivated: false
   });
@@ -73,6 +74,42 @@ const run = (input: RoleBootstrapInputV1): RoleBootstrapReportV1 => {
     observation: users.some(user => user.name === role) ? observe(role) : { role, state: "missing", uid: null, gid: null, adminGroupObserved: null },
     candidateUid: null, candidateGid: null
   }));
+  if (input.verify) {
+    try {
+      for (const path of ["/", "/Library", "/Library/Application Support"]) {
+        const stat = lstatSync(path);
+        if (!stat.isDirectory() || stat.isSymbolicLink() || stat.uid !== 0 || !(path === "/Library/Application Support" ? [0, 80] : [0]).includes(stat.gid) || (stat.mode & 0o022) !== 0) throw new Error("PARENT_READBACK_FAILED");
+      }
+      roles = roles.map(role => roleBootstrapRoleSchema.parse({ ...role, candidateUid: role.observation.uid, candidateGid: role.observation.gid }));
+      if (roles.some(role => role.observation.state !== "observed" || role.observation.adminGroupObserved !== false || role.candidateUid === null || role.candidateGid !== role.candidateUid) || new Set(roles.map(role => role.candidateUid)).size !== 8) throw new Error("ROLE_READBACK_FAILED");
+      for (const role of roles) {
+        const name = role.observation.role;
+        const attributes = { UniqueID: String(role.candidateUid), PrimaryGroupID: String(role.candidateGid), NFSHomeDirectory: roleBootstrapRoot + "/state/homes/" + name, UserShell: "/usr/bin/false", RealName: "Toy " + name, IsHidden: "1" };
+        for (const [key, value] of Object.entries(attributes)) {
+          if (command("/usr/bin/dscl", ["/Local/Default", "-read", "/Users/" + name, key]).trim().replace(/^dsAttrTypeNative:/, "").replace(/:\s*\n\s*/, ": ") !== key + ": " + value) throw new Error("USER_READBACK_FAILED");
+        }
+        if (command("/usr/bin/dscl", ["/Local/Default", "-read", "/Groups/" + name, "PrimaryGroupID"]).trim() !== "PrimaryGroupID: " + role.candidateGid || !/is not allowed to authenticate/.test(command("/usr/bin/pwpolicy", ["-u", name, "-authentication-allowed"]))) throw new Error("ACCOUNT_READBACK_FAILED");
+        accountsVerified++;
+      }
+      const metadata = directories.map(directory => {
+        const identity = roles.find(role => role.observation.role === directory.owner)?.observation;
+        const uid = directory.owner === "root" ? 0 : identity?.uid;
+        const gid = directory.owner === "root" ? 0 : identity?.gid;
+        const stat = lstatSync(directory.path);
+        if (!stat.isDirectory() || stat.isSymbolicLink() || stat.uid !== uid || stat.gid !== gid || (stat.mode & 0o7777) !== Number.parseInt(directory.mode, 8)) throw new Error("DIRECTORY_READBACK_FAILED");
+        return { ...directory, device: String(stat.dev), inode: String(stat.ino) };
+      });
+      const receiptPath = roleBootstrapRoot + "/control/bootstrap-identities.json";
+      const receiptStat = lstatSync(receiptPath);
+      if (!receiptStat.isFile() || receiptStat.isSymbolicLink() || receiptStat.nlink !== 1 || receiptStat.uid !== 0 || receiptStat.gid !== 0 || (receiptStat.mode & 0o7777) !== 0o600 || receiptStat.size > 131072) throw new Error("RECEIPT_READBACK_FAILED");
+      const bytes = readFileSync(receiptPath);
+      const original = roleBootstrapReportSchema.parse(JSON.parse(bytes.toString("utf8")));
+      if (original.mode !== "apply" || original.state !== "created" || original.callerUid !== 0 || JSON.stringify(original.directories) !== JSON.stringify(directories) || JSON.stringify(original.roles) !== JSON.stringify(roles)) throw new Error("RECEIPT_READBACK_FAILED");
+      bootstrapReceiptDigest = createHash("sha256").update(bytes).digest("hex");
+      snapshotDigest = createHash("sha256").update(JSON.stringify({ roles, metadata, bootstrapReceiptDigest })).digest("hex");
+      return report("verified", "ROLE_IDENTITIES_VERIFIED");
+    } catch { return report("blocked", "INSTALLATION_READBACK_FAILED"); }
+  }
   if (roles.some(role => role.observation.state !== "missing") || groups.some(group => serviceRoleNameSchema.safeParse(group.name).success)) return report("blocked", "ROLE_NAME_CONFLICT");
   const parents = [];
   try {

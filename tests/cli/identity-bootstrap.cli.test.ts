@@ -53,7 +53,11 @@ await test("R0.04 real CLI bootstrap preparation and guard refusals; root/denial
     assert.equal(denied.error.code, "UNAUTHORIZED");
     assert.equal(denied.meta.exitCode, 3);
     assert.equal(denied.meta.effectState, "none");
-    for (const args of [request, ["--plan", ...request, "--expected-snapshot", "0".repeat(64)], ["--plan", ...request, "--uid", "0"], ["--plan", ...request, "--path", "/tmp/toy"], ["--plan", ...request, "--expected-snapshot", "invalid"]]) {
+    const verifyDenied = invoke("existing-installation verify requires already-root caller", ["--verify", ...request]);
+    assert.ok(!verifyDenied.ok);
+    assert.equal(verifyDenied.error.code, "UNAUTHORIZED");
+    assert.equal(verifyDenied.meta.effectState, "none");
+    for (const args of [["--verify", "--plan", ...request], ["--verify", ...request, "--expected-snapshot", "0".repeat(64)], request, ["--plan", ...request, "--expected-snapshot", "0".repeat(64)], ["--plan", ...request, "--uid", "0"], ["--plan", ...request, "--path", "/tmp/toy"], ["--plan", ...request, "--expected-snapshot", "invalid"]]) {
       const invalid = invoke("invalid or caller-selected bootstrap scope", args);
       assert.ok(!invalid.ok);
       assert.equal(invalid.error.code, "INVALID_INPUT");

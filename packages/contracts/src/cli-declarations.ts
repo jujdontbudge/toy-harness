@@ -56,7 +56,7 @@ export const cliDeclarations = [
   declaration("version", "contracts", "CliVersionV1", "read", "R0", []),
   declaration("status", "ops", "OpsControlRead.status", "read", "R0", [release()]),
   declaration("research.check", "self-improvement", "EngineeringControl.checkResearch", "read", "R0", [release()]),
-  declaration("bootstrap.identities", "ops", "RoleIdentityBootstrap.run", "human", "R0", [flag("plan"), request(), arg("expected-snapshot", "SHA256")]),
+  declaration("bootstrap.identities", "ops", "RoleIdentityBootstrap.run", "human", "R0", [flag("plan"), flag("verify"), request(), arg("expected-snapshot", "SHA256")]),
   declaration("doctor", "ops", "OpsControlRead.doctor", "read", "R0", [release(), flag("deep")]),
   declaration("capture", "obligations", "Obligations.capture", "guarded", "R1", [input()]),
   declaration("due", "obligations", "Obligations.due", "read", "R1", [choice("view", ["due", "open", "waiting", "upcoming", "resolved"]), choice("owner", ["johan", "toy", "all"]), arg("through", "Instant"), ...page()]),
