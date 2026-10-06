@@ -2,7 +2,7 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-06T19:22:54.644584+00:00",
+  "updatedAt": "2026-10-06T19:38:05.394551+00:00",
   "phase": "R0.07 fixture journal12checksverified/receiptboundrepairplanned; root02pending; R003catalogobservationnext",
   "activeCard": "R0.03",
   "cardCount": 87,
@@ -729,6 +729,12 @@
         "newestRotatedFreshProcessVerified": true,
         "freshAddedGrantUsable": false,
         "cleanupComplete": true
+      },
+      "clientSelectionPlan": {
+        "state": "SOURCE_SUPPORTED_CONDITIONAL_SELECTOR_REPAIR_PLAN",
+        "evidence": "build/evidence/R0.03/client-selection-minimum-plan.json",
+        "sha256": "2bb9de0ca9834ff722fb42565ab2ff2e9e5e20e827b6dd4642ba19d7c702445b",
+        "wholeATComplete": false
       }
     },
     "R0.04": {
@@ -1241,7 +1247,8 @@
         "build/evidence/R0.10/native-queue-verification.json",
         "build/evidence/R0.10/native-recurrence-verification.json",
         "build/evidence/R0.10/next-reachable-unit.json",
-        "build/evidence/R0.10/decision-baseline-verification.json"
+        "build/evidence/R0.10/decision-baseline-verification.json",
+        "build/evidence/R0.10/component-comparison-verification.json"
       ],
       "requiredATs": [
         "AT-activity-focus-86",
@@ -1284,13 +1291,10 @@
         "nativeRecurrenceEvidence": "build/evidence/R0.10/native-recurrence-verification.json"
       },
       "lastVerification": {
-        "evidence": "build/evidence/R0.10/native-recurrence-verification.json",
-        "verdict": "PASS_NINE_NATIVE_QUEUE_SCHEMA_AND_RECURRENCE_CLI_CHECKS",
-        "checks": 9,
-        "readbackExact": true,
-        "nativeSchemaVersion": 44,
-        "schemaDriftPassed": true,
-        "recurrenceCells": 3,
+        "evidence": "build/evidence/R0.10/component-comparison-verification.json",
+        "verdict": "PASS_FOUR_UNFILTERED_COMPONENT_COMPARISON_DIAGNOSTICS",
+        "checks": 4,
+        "runShowExact": true,
         "cleanupPassed": true,
         "ownedWorldsDown": true,
         "wholeATsPassed": [],
@@ -1316,6 +1320,21 @@
         "evidence": "build/evidence/R0.10/decision-baseline-verification.json",
         "runShowExact": true,
         "cleanupComplete": true
+      },
+      "componentDecisionUnit": {
+        "startedAt": "2026-10-06T19:29:12.001210+00:00",
+        "targetStopAt": "2026-10-06T21:29:12.004433+00:00",
+        "state": "CLOSED_FOUR_CLI_DIAGNOSTICS_VERIFIED",
+        "AT": "AT-obligations-74",
+        "interface": "docs/adr/0037-component-comparison-gate.md",
+        "scope": "Four mandatory component-comparison cases through existing public checker and sealed CLI manifest",
+        "wholeATComplete": false,
+        "stoppedAt": "2026-10-06T19:38:05.394551+00:00",
+        "diagnosticPasses": 4,
+        "unfiltered": true,
+        "runShowExact": true,
+        "cleanupComplete": true,
+        "archiveBinding": "Canonical ResearchComponentComparisonV1 JSON payloads within existing indexed Markdown reports"
       }
     },
     "R0.11": {
@@ -9975,7 +9994,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Move to independent R0.10 AT-obligations-74 minimum component-decision predicates while Luna traces the exact failed R0.03 fresh model-selection path; poll frozen root02, consume exact native UID310 read/restoration on DONE and advance R0.01.",
+  "nextAction": "Apply the bounded pinned pool selector repair and bind the added credential by its public label, preserving exact added-rotated model/catalog checks; poll pending ROOT-R004-20261006-02. No whole AT or deployment promotion.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -20514,16 +20533,20 @@
   "latestStaticVerification": {
     "command": "npm run check",
     "exitCode": 0,
-    "result": "build/evidence/R0.03/model-observation-final-scoped-check-result.json",
-    "artifacts": 352,
-    "contracts": 284,
+    "artifacts": 354,
+    "contracts": 286,
     "features": 97,
     "commands": 55,
-    "ATs": 1447,
-    "schemaDigest": "0b8ed3c0298b6629a0f42935b07cd0238a6bf53122e7fadc47c76485aab09b65",
-    "swiftInvoked": false
+    "indexedATs": 1447,
+    "schemaDigest": "b9b777782eabc898610e0219c7d09f2b9f28e6b9ae3be2e902bcbd71d6fb7090",
+    "evidence": "build/evidence/R0.10/component-comparison-check-final-result.json",
+    "languages": [
+      "TypeScript",
+      "Python"
+    ],
+    "SwiftDeferredTo": "R3"
   },
-  "sourceCheckpointCommit": "a331398",
+  "sourceCheckpointCommit": "8f4d5db",
   "sourceCheckpointPushed": true,
   "rootRequests": {
     "ROOT-R004-20261006-01": {

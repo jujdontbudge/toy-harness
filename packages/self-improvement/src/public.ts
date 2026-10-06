@@ -7,6 +7,7 @@ import type { OpsControlContextV1, RegisteredProbeInputV1, RegisteredProbeOperat
 import { OpsTestStack, QueueFaultProbe, TestProbeControl } from "@toy/ops/public";
 import { referenceCheck } from "./reference-check.js";
 import { accountingProbe } from "./accounting-probe.js";
+import { componentComparisonProbe } from "./component-comparison-probe.js";
 import { capacityTrialProbe } from "./capacity-trial-probe.js";
 import { accountingTestConnection, withAccountingFixture } from "./accounting-postgres.js";
 
@@ -15,6 +16,7 @@ export const ReplayEnvironment = {
     const owned = OpsTestStack.inspect(context);
     if (!owned.ok) return owned;
     if (!registeredProbeInputSchema.safeParse(input).success) return { ok: false, error: { module: "ops", code: "INVALID_INPUT", message: opsErrorMessages.INVALID_INPUT, retryable: false } };
+    if (input.probeId === "AT-obligations-74") return componentComparisonProbe(input, context);
     if (input.caseId === "model-admission") return accountingProbe(input, context);
     if (input.caseId === "capacity-trial") return capacityTrialProbe(input, context);
     if (input.caseId === "queue-transaction-faults" && input.probeId !== "AT-obligations-76") return { ok: false, error: { module: "ops", code: "INVALID_INPUT", message: opsErrorMessages.INVALID_INPUT, retryable: false } };

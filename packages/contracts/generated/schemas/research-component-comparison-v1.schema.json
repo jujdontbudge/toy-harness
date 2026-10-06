@@ -1,0 +1,209 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "scope": {
+      "type": "string",
+      "const": "obligations-scheduling"
+    },
+    "componentId": {
+      "type": "string",
+      "pattern": "^[A-Z][0-9]{2}(?![\\s\\S])"
+    },
+    "mappedRequirements": {
+      "maxItems": 100,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 120
+      }
+    },
+    "options": {
+      "maxItems": 100,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "tool": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "example": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "sqlite",
+                  "postgres-pg-boss",
+                  "hermes-one-shot-cron"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "viable": {
+            "type": "boolean"
+          },
+          "support": {
+            "type": "string",
+            "enum": [
+              "proven",
+              "unsupported",
+              "unknown"
+            ]
+          },
+          "primaryEvidenceIds": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            }
+          },
+          "reliability": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "maintenance": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "resources": {
+            "type": "string",
+            "maxLength": 2000
+          }
+        },
+        "required": [
+          "id",
+          "tool",
+          "example",
+          "viable",
+          "support",
+          "primaryEvidenceIds",
+          "reliability",
+          "maintenance",
+          "resources"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "evidence": {
+      "maxItems": 100,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "publisher": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "primary",
+              "secondary"
+            ]
+          },
+          "supportedOptionIds": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            }
+          }
+        },
+        "required": [
+          "id",
+          "url",
+          "publisher",
+          "kind",
+          "supportedOptionIds"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "selectedOptionId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "unresolvedFacts": {
+      "maxItems": 100,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "optionId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "fact": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          }
+        },
+        "required": [
+          "optionId",
+          "fact"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "acceptanceIds": {
+      "maxItems": 100,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^AT-[A-Za-z0-9-]+(?![\\s\\S])"
+      }
+    },
+    "validationPlan": {
+      "type": "string",
+      "maxLength": 4000
+    }
+  },
+  "required": [
+    "scope",
+    "componentId",
+    "mappedRequirements",
+    "options",
+    "evidence",
+    "selectedOptionId",
+    "unresolvedFacts",
+    "acceptanceIds",
+    "validationPlan"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:ResearchComponentComparisonV1"
+}

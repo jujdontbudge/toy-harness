@@ -894,6 +894,121 @@
                 "additionalProperties": false
               }
             },
+            "componentComparisons": {
+              "maxItems": 1000,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "componentId": {
+                    "type": "string",
+                    "pattern": "^[A-Z][0-9]{2}(?![\\s\\S])"
+                  },
+                  "comparisonDigest": {
+                    "type": "string",
+                    "minLength": 64,
+                    "maxLength": 64,
+                    "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+                  },
+                  "state": {
+                    "type": "string",
+                    "enum": [
+                      "PASS",
+                      "BLOCKED"
+                    ]
+                  },
+                  "findings": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "MAPPED_REQUIREMENTS_MISSING",
+                        "REQUIRED_OPTIONS_MISSING",
+                        "OUTSIDE_OPTION_MISSING",
+                        "PRIMARY_EVIDENCE_MISSING",
+                        "CHOICE_UNSUPPORTED",
+                        "TRADEOFFS_MISSING",
+                        "ACCEPTANCE_LINK_MISSING",
+                        "VALIDATION_PLAN_MISSING",
+                        "SELECTED_FACT_UNRESOLVED",
+                        "DUPLICATE_REFERENCE"
+                      ]
+                    }
+                  },
+                  "selectedTool": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "maxLength": 200
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "validationPlan": {
+                    "type": "string",
+                    "maxLength": 4000
+                  },
+                  "unresolvedFacts": {
+                    "maxItems": 100,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "optionId": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 120
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "fact": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 2000
+                        }
+                      },
+                      "required": [
+                        "optionId",
+                        "fact"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "scope": {
+                    "type": "string",
+                    "const": "component_comparison"
+                  },
+                  "researchAttestationVerified": {
+                    "type": "boolean",
+                    "const": false
+                  },
+                  "acceptanceComplete": {
+                    "type": "boolean",
+                    "const": false
+                  }
+                },
+                "required": [
+                  "componentId",
+                  "comparisonDigest",
+                  "state",
+                  "findings",
+                  "selectedTool",
+                  "validationPlan",
+                  "unresolvedFacts",
+                  "scope",
+                  "researchAttestationVerified",
+                  "acceptanceComplete"
+                ],
+                "additionalProperties": false
+              }
+            },
             "reports": {
               "maxItems": 100,
               "type": "array",
@@ -1399,7 +1514,10 @@
                       "GATE_EVIDENCE_UNVERIFIED",
                       "RESEARCH_ATTESTATION_UNVERIFIED",
                       "DEPENDENCY_CLOSURE_UNVERIFIED",
-                      "COMPONENT_REFERENCE_UNMAPPED"
+                      "COMPONENT_REFERENCE_UNMAPPED",
+                      "COMPONENT_COMPARISON_MISSING",
+                      "COMPONENT_COMPARISON_INVALID",
+                      "COMPONENT_COMPARISON_BLOCKED"
                     ]
                   },
                   "sourceLine": {
@@ -1454,6 +1572,7 @@
             "registerPath",
             "registerDigest",
             "components",
+            "componentComparisons",
             "reports",
             "specReferences",
             "sourcesCatalogCoverage",
@@ -3645,6 +3764,7 @@
                       "engineering.static",
                       "accounting.model-admission",
                       "capacity.trial-journal",
+                      "research.component-comparison",
                       "queue.obligation-faults",
                       "release.native-eligibility",
                       "backup.local-inventory",
@@ -5128,6 +5248,7 @@
                                         "engineering.static",
                                         "accounting.model-admission",
                                         "capacity.trial-journal",
+                                        "research.component-comparison",
                                         "queue.obligation-faults",
                                         "release.native-eligibility",
                                         "backup.local-inventory",
@@ -6695,6 +6816,7 @@
                                   "engineering.static",
                                   "accounting.model-admission",
                                   "capacity.trial-journal",
+                                  "research.component-comparison",
                                   "queue.obligation-faults",
                                   "release.native-eligibility",
                                   "backup.local-inventory",
@@ -7003,6 +7125,7 @@
                               "engineering.static",
                               "accounting.model-admission",
                               "capacity.trial-journal",
+                              "research.component-comparison",
                               "queue.obligation-faults",
                               "release.native-eligibility",
                               "backup.local-inventory",
@@ -7984,6 +8107,7 @@
                       "engineering.static",
                       "accounting.model-admission",
                       "capacity.trial-journal",
+                      "research.component-comparison",
                       "queue.obligation-faults",
                       "release.native-eligibility",
                       "backup.local-inventory",
@@ -8746,6 +8870,7 @@
                               "engineering.static",
                               "accounting.model-admission",
                               "capacity.trial-journal",
+                              "research.component-comparison",
                               "queue.obligation-faults",
                               "release.native-eligibility",
                               "backup.local-inventory",
@@ -9739,6 +9864,7 @@
                               "engineering.static",
                               "accounting.model-admission",
                               "capacity.trial-journal",
+                              "research.component-comparison",
                               "queue.obligation-faults",
                               "release.native-eligibility",
                               "backup.local-inventory",
@@ -14416,6 +14542,7 @@
                               "engineering.static",
                               "accounting.model-admission",
                               "capacity.trial-journal",
+                              "research.component-comparison",
                               "queue.obligation-faults",
                               "release.native-eligibility",
                               "backup.local-inventory",
@@ -16841,6 +16968,7 @@
                               "engineering.static",
                               "accounting.model-admission",
                               "capacity.trial-journal",
+                              "research.component-comparison",
                               "queue.obligation-faults",
                               "release.native-eligibility",
                               "backup.local-inventory",
@@ -20185,6 +20313,7 @@
                       "engineering.static",
                       "accounting.model-admission",
                       "capacity.trial-journal",
+                      "research.component-comparison",
                       "queue.obligation-faults",
                       "release.native-eligibility",
                       "backup.local-inventory",
@@ -20790,6 +20919,7 @@
                           "engineering.static",
                           "accounting.model-admission",
                           "capacity.trial-journal",
+                          "research.component-comparison",
                           "queue.obligation-faults",
                           "release.native-eligibility",
                           "backup.local-inventory",
@@ -21460,6 +21590,7 @@
                           "engineering.static",
                           "accounting.model-admission",
                           "capacity.trial-journal",
+                          "research.component-comparison",
                           "queue.obligation-faults",
                           "release.native-eligibility",
                           "backup.local-inventory",

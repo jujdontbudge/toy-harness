@@ -337,6 +337,7 @@ class ResearchRegisterInspectionV1(TypedDict):
     registerPath: str
     registerDigest: "Digest"
     components: list["ResearchComponentInspectionV1"]
+    componentComparisons: list["ResearchComponentComparisonCheckV1"]
     reports: list["ResearchRegisterInspectionV1ReportsItem"]
     specReferences: list["ResearchSpecReferencesV1"]
     sourcesCatalogCoverage: "ResearchCatalogCoverageV1"
@@ -362,6 +363,44 @@ class ResearchComponentInspectionV1(TypedDict):
 
 ResearchComponentInspectionV1Certification = Literal[
     "UNVERIFIED",
+]
+
+class ResearchComponentComparisonCheckV1(TypedDict):
+    componentId: str
+    comparisonDigest: "Digest"
+    state: "ResearchComponentComparisonCheckV1State"
+    findings: list["ResearchComponentComparisonCheckV1FindingsItem"]
+    selectedTool: Optional[str]
+    validationPlan: str
+    unresolvedFacts: list["ResearchComponentComparisonCheckV1UnresolvedFactsItem"]
+    scope: "ResearchComponentComparisonCheckV1Scope"
+    researchAttestationVerified: "RoleBootstrapReportV1IdentityGateVerified"
+    acceptanceComplete: "RoleBootstrapReportV1IdentityGateVerified"
+
+ResearchComponentComparisonCheckV1State = Literal[
+    "PASS",
+    "BLOCKED",
+]
+
+ResearchComponentComparisonCheckV1FindingsItem = Literal[
+    "MAPPED_REQUIREMENTS_MISSING",
+    "REQUIRED_OPTIONS_MISSING",
+    "OUTSIDE_OPTION_MISSING",
+    "PRIMARY_EVIDENCE_MISSING",
+    "CHOICE_UNSUPPORTED",
+    "TRADEOFFS_MISSING",
+    "ACCEPTANCE_LINK_MISSING",
+    "VALIDATION_PLAN_MISSING",
+    "SELECTED_FACT_UNRESOLVED",
+    "DUPLICATE_REFERENCE",
+]
+
+class ResearchComponentComparisonCheckV1UnresolvedFactsItem(TypedDict):
+    optionId: Optional[str]
+    fact: str
+
+ResearchComponentComparisonCheckV1Scope = Literal[
+    "component_comparison",
 ]
 
 class ResearchRegisterInspectionV1ReportsItem(TypedDict):
@@ -485,6 +524,9 @@ ResearchInspectionFindingV1Code = Literal[
     "RESEARCH_ATTESTATION_UNVERIFIED",
     "DEPENDENCY_CLOSURE_UNVERIFIED",
     "COMPONENT_REFERENCE_UNMAPPED",
+    "COMPONENT_COMPARISON_MISSING",
+    "COMPONENT_COMPARISON_INVALID",
+    "COMPONENT_COMPARISON_BLOCKED",
 ]
 
 ResearchRegisterInspectionV1Scope = Literal[
@@ -755,6 +797,7 @@ RegisteredCheckIdV1 = Literal[
     "engineering.static",
     "accounting.model-admission",
     "capacity.trial-journal",
+    "research.component-comparison",
     "queue.obligation-faults",
     "release.native-eligibility",
     "backup.local-inventory",
@@ -3833,6 +3876,56 @@ class ToySourcesStatusResultV1Variant0(TypedDict):
 class ToySourcesStatusResultV1Variant1(TypedDict):
     ok: "RoleBootstrapReportV1IdentityGateVerified"
     error: "ToySourcesStatusErrorV1"
+
+class ResearchComponentComparisonV1(TypedDict):
+    scope: "ResearchComponentComparisonV1Scope"
+    componentId: str
+    mappedRequirements: list[str]
+    options: list["ResearchComponentComparisonV1OptionsItem"]
+    evidence: list["ResearchComponentComparisonV1EvidenceItem"]
+    selectedOptionId: str
+    unresolvedFacts: list["ResearchComponentComparisonCheckV1UnresolvedFactsItem"]
+    acceptanceIds: list[str]
+    validationPlan: str
+
+ResearchComponentComparisonV1Scope = Literal[
+    "obligations-scheduling",
+]
+
+class ResearchComponentComparisonV1OptionsItem(TypedDict):
+    id: str
+    tool: str
+    example: Optional["ResearchComponentComparisonV1OptionsItemExampleValue"]
+    viable: bool
+    support: "ResearchComponentComparisonV1OptionsItemSupport"
+    primaryEvidenceIds: list[str]
+    reliability: str
+    maintenance: str
+    resources: str
+
+ResearchComponentComparisonV1OptionsItemExampleValue = Literal[
+    "sqlite",
+    "postgres-pg-boss",
+    "hermes-one-shot-cron",
+]
+
+ResearchComponentComparisonV1OptionsItemSupport = Literal[
+    "proven",
+    "unsupported",
+    "unknown",
+]
+
+class ResearchComponentComparisonV1EvidenceItem(TypedDict):
+    id: str
+    url: str
+    publisher: str
+    kind: "ResearchComponentComparisonV1EvidenceItemKind"
+    supportedOptionIds: list[str]
+
+ResearchComponentComparisonV1EvidenceItemKind = Literal[
+    "primary",
+    "secondary",
+]
 
 class GeneratorInputV1(TypedDict):
     kind: "GeneratorPlanV1Kind"

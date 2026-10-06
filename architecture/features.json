@@ -3255,10 +3255,13 @@
     },
     {
       "id": "control.research.check",
-      "description": "Read the research-register inventory and every flat spec digest, explicit component reference and requirement-mapping row; crosswalk every Sources catalog section and named provider to D01\u2013D66 with explicit route and supersession states while certification and build admission remain unverified",
+      "description": "Read the research-register inventory and every flat spec digest, explicit component reference and requirement-mapping row; crosswalk every Sources catalog section and named provider to D01\u2013D66 with explicit route and supersession states while certification and build admission remain unverified; check archived Obligations scheduling comparisons for primary evidence, supported selection, acceptance links and a viable independent alternative",
       "implementation": "built",
       "requirementIds": [
-        "0.17"
+        "0.17",
+        "0.1",
+        "0.2",
+        "0.10"
       ],
       "entry": "cli/src/main.ts",
       "owner": "self-improvement",
@@ -3267,11 +3270,16 @@
         "packages/self-improvement/src/engineering-control.ts",
         "packages/contracts/src/engineering-control.ts",
         "docs/adr/0022-research-register-inspection.md",
-        "tests/cli/research.cli.test.ts"
+        "tests/cli/research.cli.test.ts",
+        "docs/adr/0037-component-comparison-gate.md",
+        "packages/self-improvement/src/component-comparison-probe.ts",
+        "tests/registry.yaml"
       ],
       "firstRelease": "R0",
       "commands": [
-        "research.check"
+        "research.check",
+        "probe.run",
+        "probe.show"
       ],
       "atIds": [
         "AT-RESEARCH-REGISTER-1",
@@ -3280,7 +3288,8 @@
         "AT-RESEARCH-REGISTER-4",
         "AT-hands-62",
         "AT-ops-43",
-        "AT-workflows-1"
+        "AT-workflows-1",
+        "AT-obligations-74"
       ]
     },
     {
@@ -3891,6 +3900,18 @@
     {
       "id": "spec:workflows",
       "path": "specs/workflows.md"
+    },
+    {
+      "id": "0.1",
+      "path": "REQUIREMENTS.md"
+    },
+    {
+      "id": "0.2",
+      "path": "REQUIREMENTS.md"
+    },
+    {
+      "id": "0.10",
+      "path": "REQUIREMENTS.md"
     }
   ],
   "interfaces": [

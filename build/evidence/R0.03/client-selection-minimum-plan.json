@@ -1,0 +1,125 @@
+{
+  "schemaVersion": "toy.r0.03-client-selection-minimum-plan.v1",
+  "recordedAt": "2026-10-06T19:35:12Z",
+  "workspaceCommit": "8f4d5db",
+  "card": "R0.03",
+  "acceptanceTest": "AT-hermes-config-87",
+  "state": "SOURCE_DIAGNOSIS_PLAN_ONLY",
+  "wholeATComplete": false,
+  "finding": {
+    "observed": "The refresh-first fresh-add-reload public chat sent model generation stale; the model fake marked authorization denial and the child timed out with SIGKILL. A preceding corrected attempt recorded added→added-rotated refresh while catalog generation remained stale.",
+    "cause": "Source-supported selection mismatch, conditional on the fresh pool containing the expired, priority-0 added row and another still-valid stale row. Pinned chat resolves the credential pool before OAuth fallback. CredentialPool.select first chooses among currently available rows; _available_entries defers an expiring single-use row to pending_refresh, while a valid stale row remains available. select refreshes pending rows but reselects only when the pre-refresh selection was empty. It can therefore refresh added to added-rotated yet return stale for this chat. This matches the prior added→added-rotated plus stale-catalog observation and the latest stale-model marker.",
+    "generationBasis": "The fixture assigns added expiration 1893456000 and stale expiration 4102531200, then sets time to 1893466800 for fresh-add-reload. Thus added is expired and stale remains time-valid at selection. The requirement remains model generation added-rotated.",
+    "identityLimit": "The fixture currently targets pool ordinal 3 in refresh-first and accepts a generic ‘moved to priority 0’ marker; it does not attest the moved credential's label. The runtime selection defect explains the mismatch if the added row was moved as intended, but the final timed-out child has no result/refresh ledger to prove that identity for its attempt."
+  },
+  "minimumChange": {
+    "files": [
+      "patches/hermes-profile-auth.patch",
+      "patches/hermes-auth-fixture.patch",
+      "packages/hermes/src/auth-fixture.ts"
+    ],
+    "runtimeRepair": "In the existing upstream profile patch, make pool selection finish after pending refreshes: a successfully refreshed higher-priority row must be considered before returning a lower-priority provisional row. Preserve refresh outside the pool lock and avoid counting or applying round-robin movement to a provisional choice twice; failed refresh may still fall through to the next usable row.",
+    "fixtureIdentityAndOracle": "Pass a deterministic label on the public auth add, target that exact label with existing public auth priority, and require the priority output to name that label at #1. Once selection honors the refreshed priority row, require added-rotated for both catalog and model observations in this fresh-add-reload case; this makes the catalog check stricter and preserves the exact model requirement and all denial/equality checks.",
+    "writtenInterfaceChange": "None. The pinned CLI already supports auth add --label and auth priority by exact label; existing fixture result fields already represent public argv, catalog generation, model generation, request counts, refresh effects, and denial markers. No new protocol, service, public CLI command, or contract schema is needed."
+  },
+  "cliVerification": {
+    "rung": "CLI",
+    "largestInterface": "After the bounded repair, run registered AT-hermes-config-87 through the Toy probe.run route against the local stack and fake external provider, then read the same operation with probe.show and require exact run/show equality.",
+    "currentRouteLimit": "The latest evidence records the unfiltered AT operation as NOT_IMPLEMENTED and incomplete, so that route cannot currently certify the whole AT.",
+    "acceptance": [
+      "Public auth priority names the deterministic added-grant label at #1.",
+      "Fresh refresh-first catalog and model requests both use added-rotated; refresh ledger records the expected added→added-rotated effect and exact request counts.",
+      "No network or authorization denial, unknown generation, payload denial, or unexpected socket event; fresh process and root-store invariants remain intact.",
+      "Keep public priority restoration and final auth-list readback in the whole AT."
+    ]
+  },
+  "unresolvedWholeGates": [
+    "Fresh added-grant model use after refresh-first is currently failed.",
+    "Refresh-first public priority restoration and final list are not reached by the failed attempt.",
+    "Held older successful rotation response suppression.",
+    "Atomic storage-boundary crash/restart.",
+    "Protected unfiltered manifest/controller/native-role execution; current route is NOT_IMPLEMENTED."
+  ],
+  "oracleLimits": [
+    "The final child timed out before producing a canonical result or refresh ledger; its stale model marker is an observation, not a whole-AT receipt.",
+    "The preceding corrected attempt independently records added→added-rotated and stale catalog, but does not prove the final attempt's refresh effects.",
+    "The pinned source diagnosis is conditional on the target being the added row; the current generic priority marker leaves that row identity unverified.",
+    "Thirteen passing native concurrency diagnostics do not establish whole AT completion or protected service identity."
+  ],
+  "root02Status": "PENDING; left untouched",
+  "sourceEvidence": [
+    {
+      "path": "build/evidence/R0.03/model-observation-verification.json",
+      "sha256": "2466dd00f55095b4df868feb6a74fa65bcb1f8803cb212c3ef6aa12f8bfbe0b8",
+      "lines": "whole file",
+      "supports": "Thirteen diagnostics pass; latest stale model generation, denial, timeout, missing final ledger, prior refresh effect, and incomplete unfiltered route."
+    },
+    {
+      "path": "build/evidence/R0.03/model-observation-replan.json",
+      "sha256": "cc71e574705bd6cadabe3ea25ca79b3bbcda8e656215e7a839f1df72d56533b0",
+      "lines": "whole file",
+      "supports": "Strict added-rotated requirement and outstanding whole-AT gates."
+    },
+    {
+      "path": "packages/hermes/src/auth-fixture.ts",
+      "sha256": "f21ebed6a0542fd5da479287f70f6b9c658c398b3f9ef21f41ea6e8cc303a37d",
+      "lines": "22-27, 429-438, 588-602",
+      "supports": "Fixture uses ordinal priority targets; expected model generation stays added-rotated, catalog exception currently expects stale, and a fresh child runs after public priority."
+    },
+    {
+      "path": "patches/hermes-auth-fixture.patch",
+      "sha256": "5ff9ff2c7dca2b609a478f9d3f03bbc63d8cd5584feab0459fbc572364e465f8",
+      "lines": "45-46, 73-90, 408-421, 463-473, 563-582, 660-662",
+      "supports": "Synthetic JWT expiry values and fresh-process clock make added expired while stale remains valid; fixture expects added-rotated for model but specially accepts stale catalog; priority argv is positional and result marker is generic."
+    },
+    {
+      "path": "patches/hermes-profile-auth.patch",
+      "sha256": "50bf0fe15118845547e7b7f7ec62ccb67d889239c6ae3560c43f80307b9954a8",
+      "lines": "23-57, 95-157",
+      "supports": "Existing profile write seam verifies the exact newly added row by credential ID and returns the saved active-store row; it does not change runtime selection after refresh."
+    },
+    {
+      "path": "pinned:hermes_cli/runtime_provider.py",
+      "commit": "8d5e3e412138342e8bf30443e72bd4e6a9abd057",
+      "sha256": "6fa7cf555a6924fabac01212fdc38a88d1bae951b6a3a7be2ee85b9418020dda",
+      "lines": "635-659, 1044-1065",
+      "supports": "Public chat's resolution ladder invokes _resolve_from_pool before the OAuth resolver; the pool rung calls pool.select."
+    },
+    {
+      "path": "pinned:agent/credential_pool.py",
+      "commit": "8d5e3e412138342e8bf30443e72bd4e6a9abd057",
+      "sha256": "111d8e0d990630341a42dc2fa4a740f16746d5963e8d6900cfd25c54d109da66",
+      "lines": "2002-2008, 2072-2083, 2137-2140, 2175-2203",
+      "supports": "Pool selection refreshes deferred Codex rows outside the lock, but only reselects if its original available selection was null; otherwise the provisional row is returned."
+    },
+    {
+      "path": "pinned:hermes_cli/subcommands/auth.py",
+      "commit": "8d5e3e412138342e8bf30443e72bd4e6a9abd057",
+      "sha256": "6f8aa71d61b00dcdeffa277035bb558ef9f3210248a80a467f19ceab19707288",
+      "lines": "18-22, 51-55",
+      "supports": "Public add accepts --label; public priority target accepts entry ID or exact label."
+    },
+    {
+      "path": "pinned:hermes_cli/auth_commands.py",
+      "commit": "8d5e3e412138342e8bf30443e72bd4e6a9abd057",
+      "sha256": "16c18f21402ac9940815450a41854cfeaadad6a34bffeb98d27de648df749d1a",
+      "lines": "414-444, 466-495",
+      "supports": "auth add honors the requested label and persists an independent pool row; auth priority resolves its target then moves that ID and prints the moved label and effective priority."
+    },
+    {
+      "path": "pinned:agent/credential_pool_admin.py",
+      "commit": "8d5e3e412138342e8bf30443e72bd4e6a9abd057",
+      "sha256": "7bee61006914d539aa0e8e28289d3fdf0621d8f109d15164a1203fd8e2ebf8e1",
+      "lines": "67-108",
+      "supports": "Priority movement is keyed by credential ID; exact unique labels and IDs are accepted as stable targets."
+    },
+    {
+      "path": "pinned:agent/client_lifecycle.py",
+      "commit": "8d5e3e412138342e8bf30443e72bd4e6a9abd057",
+      "sha256": "5333b2dd5c96427996f060e9c01f6ca86d882cb89a59f60482e2281de8b66d5f",
+      "lines": "570-605",
+      "supports": "Reactive credential refresh/rebuild occurs after a failed request and avoids switching to a differing singleton key; it cannot satisfy the first-request added-rotated oracle after stale has already been sent."
+    }
+  ],
+  "executionBoundary": "No source edit, build, stack, test, CLI/provider run, credential-store read, raw subprocess stream inspection, or root02 access was performed."
+}

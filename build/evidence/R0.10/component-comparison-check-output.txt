@@ -1,0 +1,51 @@
+
+> toy-harness@1.0.0 check
+> npm run typecheck && node scripts/typecheck-tests.mjs && npm run boundaries && npm run python:check && npm run lint && npm run contracts:check && node cli/dist/main.js feature-map check --json
+
+
+> toy-harness@1.0.0 typecheck
+> tsc -b --pretty false && tsc -p scripts/tsconfig.json --pretty false
+
+
+> toy-harness@1.0.0 boundaries
+> depcruise --config .dependency-cruiser.cjs packages cli tests control
+
+
+✔ no dependency violations found (255 modules, 843 dependencies cruised)
+
+
+> toy-harness@1.0.0 python:check
+> pyright && .venv/bin/ruff check python && PYTHONPATH=python .venv/bin/lint-imports
+
+0 errors, 0 warnings, 0 informations
+All checks passed!
+[1m=============[0m
+[1mImport Linter[0m
+[1m=============[0m
+[22m[0m
+[1m---------[0m
+[1mContracts[0m
+[1m---------[0m
+[22m[0m
+[1mAnalyzed 13 files, 9 dependencies.[0m
+[1m----------------------------------[0m
+[22m[0m
+[22mHermes adapter cannot import protected controls [0m[32m[22mKEPT[0m[33m[22m[0m[22m[0m
+[22mProtected controls cannot depend on agent implementation [0m[32m[22mKEPT[0m[33m[22m[0m[22m[0m
+[22m[0m
+[22mContracts: 2 kept, 0 broken.[0m
+
+> toy-harness@1.0.0 lint
+> node scripts/run-eslint.mjs && node scripts/check-source-policy.mjs && .venv/bin/python scripts/check-python-policy.py && node scripts/check-contract-ownership.mjs && node scripts/check-contract-pin.mjs && node scripts/check-int-registry.mjs
+
+108 source files passed comment and debt policy
+8 Python source files passed comment and type policy
+80 TypeScript source files passed schema-inventory ownership policy for 286 contracts
+The sole Zod runtime pin is @toy/contracts 4.6.5.
+0 INT entries match 0 internal test files and 2 CLI acceptance registrations satisfy the public contract; 5 total test files declare a rung
+
+> toy-harness@1.0.0 contracts:check
+> tsc -b packages/contracts --pretty false && node scripts/generate-contracts.mjs --check && tsc --noEmit --strict --noUncheckedIndexedAccess --target ES2024 --module NodeNext --moduleResolution NodeNext packages/contracts/generated/types.ts
+
+Verified 354 contract artifacts
+{"schemaVersion":"toy.cli.v1","commandId":"feature-map.check","invocationId":"c7b24b8a-7628-45fe-93b5-85535ef1a4db","generatedAt":"2026-10-06T19:35:58.786Z","cliVersion":"1.0.0","contractsVersion":"1.0.0","schemaDigest":"b9b777782eabc898610e0219c7d09f2b9f28e6b9ae3be2e902bcbd71d6fb7090","environment":{"kind":"prod","instanceId":null,"stackId":null},"meta":{"exitCode":1,"releaseDigest":null,"controlDigest":null,"evaluatedAt":null,"operationId":null,"effectState":"none","recordRefs":[],"evidence":[]},"ok":true,"data":{"sourceDigest":"814d9600984b3b21600a6730d11520ca5156ee41d289b248d4d9e0e823d379f2","actualMapDigest":"516e43ee814defe425526182f93f17c93935553aa8af27557277b4ff6b348913","expectedMapDigest":"79be8c303ad3717f7d53df085d2d1e2c5addc24a009bc448d683b829182f3a6c","featureCount":"97","commandCount":"55","atCount":"1447","findings":[{"id":"engineering.map","owner":"self-improvement","state":"FAIL","checkedAt":"2026-10-06T19:35:58.772Z","reasonCode":"REQUIREMENT_DANGLING","prerequisite":"control.research.check:0.1","nextCommandId":"feature-map.check","links":{"recordRefs":[],"observations":[],"artifactDigests":["91edf2e37547a68332609b64eef25f85b54a95e2ada9842591e475ad7272a6e5"]}},{"id":"engineering.map","owner":"self-improvement","state":"FAIL","checkedAt":"2026-10-06T19:35:58.772Z","reasonCode":"REQUIREMENT_DANGLING","prerequisite":"control.research.check:0.2","nextCommandId":"feature-map.check","links":{"recordRefs":[],"observations":[],"artifactDigests":["8530f2d19d660474cc6544e7a4f81cf14c18e404d6ccc579dcd25cfbd63084eb"]}},{"id":"engineering.map","owner":"self-improvement","state":"FAIL","checkedAt":"2026-10-06T19:35:58.772Z","reasonCode":"REQUIREMENT_DANGLING","prerequisite":"control.research.check:0.10","nextCommandId":"feature-map.check","links":{"recordRefs":[],"observations":[],"artifactDigests":["557a59bd24eef3978821687cc5ffa87fae7f5a07ac00d7b5a63aaf2b226f9c45"]}},{"id":"engineering.map","owner":"self-improvement","state":"FAIL","checkedAt":"2026-10-06T19:35:58.784Z","reasonCode":"MAP_DIGEST_STALE","prerequisite":"skills/toy-control/FEATURE-MAP.md","nextCommandId":"feature-map.check","links":{"recordRefs":[],"observations":[],"artifactDigests":["3aaf5154ec0e80d198d2180046de7d2d3799ebdff45afa2c4d25a3a531206928"]}}],"state":"FAIL"}}

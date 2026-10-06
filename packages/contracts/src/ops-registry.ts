@@ -154,6 +154,7 @@ export const testStackCheckInventory = [
   declaration("engineering.map", "self-improvement", "feature-map.check"), declaration("engineering.static", "self-improvement", "gardener.run"),
   declaration("accounting.model-admission", "self-improvement", "probe.run"),
   declaration("capacity.trial-journal", "self-improvement", "probe.run"),
+  declaration("research.component-comparison", "self-improvement", "probe.run"),
   declaration("queue.obligation-faults", "ops", "probe.run"),
   declaration("release.native-eligibility", "ops", "probe.run"),
   declaration("backup.local-inventory", "ops", "doctor"),
