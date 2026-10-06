@@ -1,0 +1,123 @@
+{
+  "schema": "toy.r0.03.unfiltered-refresh-minimum-plan.v1",
+  "recordedAt": "2026-10-06T20:55:19Z",
+  "scope": "Read-only plan to dispatch AT-hermes-config-85 through its existing source-bound native Hermes auth owner when probe.run omits caseId. No source or runtime changes were made.",
+  "acceptance": {
+    "source": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/hermes-config.md",
+    "line": 3049,
+    "assertion": "AT-hermes-config-85 [R0]: Given a fresh profile credential saved through real auth-add, When a new subprocess uses and refreshes it against fake provider endpoints, Then active-store ownership/usability survives process exit independently of cache state and root digest remains unchanged.",
+    "sha256": "d3548fde13180bc750660f306caa0041101832e398ccdabd6cfdac0b3de8f4af",
+    "index": "tests/acceptance-index.json",
+    "indexLine": 801,
+    "assertionHash": "1945ba7e3df83056f7a11ddb1cc4f6f74b3c2e91744c47f77a85e3f34e21ff67",
+    "indexSha256": "87d21b7f24f9f900bb202e1e813ba46bbc51282b96e14cb2739d5fd67b32d9e6",
+    "rung": "CLI",
+    "requiredEvidence": "stack, probe:AT-hermes-config-85"
+  },
+  "existingSourceBoundCases": [
+    {"caseId": "add", "phase": "add", "publicOperation": "hermes --profile toy auth add openai-codex --type oauth --no-browser"},
+    {"caseId": "list", "phase": "list", "publicOperation": "hermes --profile toy auth list openai-codex"},
+    {"caseId": "chat", "phase": "chat", "publicOperation": "hermes --profile toy chat --provider openai-codex --model gpt-6.1-sol --toolsets none -q 'Return the fixed fixture marker.'"},
+    {"caseId": "chat-expired", "phase": "chat-expired", "publicOperation": "hermes --profile toy chat --provider openai-codex --model gpt-6.1-sol --toolsets none -q 'Return the fixed fixture marker.'"},
+    {"caseId": "chat-reloaded", "phase": "chat-reloaded", "publicOperation": "hermes --profile toy chat --provider openai-codex --model gpt-6.1-sol --toolsets none -q 'Return the fixed fixture marker.'"}
+  ],
+  "currentProof": {
+    "behaviorVerification": "build/evidence/R0.03/auth-fresh-process-fixture-verification.json",
+    "behaviorVerificationSha256": "40caffe0d6b1f6de70ff55ecd9205dfd372e14e5e712782867d367af09e52aa7",
+    "recordedAt": "2026-10-06T09:39:02.134975+00:00",
+    "diagnosticCase": "native-auth-cli",
+    "phasesPassed": ["add", "list", "chat", "chat-expired", "chat-reloaded"],
+    "nativeAuthProcesses": 5,
+    "initialFreshGrantUsed": true,
+    "externalClockExpiryRefreshExecuted": true,
+    "rotatedGrantUsedByFreshProcess": true,
+    "rootStoreUnchanged": true,
+    "acceptanceComplete": false,
+    "wholeATsPassed": [],
+    "pending": [
+      "Protected per-AT auth.fresh-process owner manifest, controller identity and unfiltered assigned route acceptance",
+      "Remaining registered auth OS/storage-fault, concurrency, dashboard and independent-scope matrices",
+      "Independent live supported SIWC grant/refresh/restart and zero-credit account attestation"
+    ],
+    "recentNeighborProbe": "build/evidence/R0.03/concurrent-auth-neighbor-85.json",
+    "recentNeighborProbeSha256": "4853d551d4ed4b4f129b94a96bb24afa747e9d000eb47466c218759e4ed52aad",
+    "recentNeighborShow": "build/evidence/R0.03/concurrent-auth-neighbor-85-show.json",
+    "recentNeighborShowSha256": "4b96c65da0529ab5eea4de91dd4f8fed61c0e5d3ea695399c0a9201ee95715a9",
+    "recentNeighborShowState": "NOT_IMPLEMENTED",
+    "recentNeighborChecks": 6,
+    "recentNeighborPassedCheckIds": ["auth.native-runtime", "auth.native-fixture", "auth.native-fixture", "auth.native-fixture", "auth.native-fixture", "auth.native-fixture"]
+  },
+  "sourceAssertions": [
+    {
+      "file": "packages/contracts/src/ops-registry.ts",
+      "sha256": "5917c9e4365fa07cdecf8c82402d24878c67dfb20f188b8e7d48e57d187ad93a",
+      "lines": "14-105, 107-142",
+      "evidence": "AT-85 already source-binds all five mandatory public operations/phases. The manifest refinement pins owner hermes, scenario auth.fresh-process, R0 behavioral kind, exact case map, access-token-expiry clock fault affecting only chat-expired, and six observation bindings. No manifest or phase expansion is required."
+    },
+    {
+      "file": "packages/hermes/src/auth-fixture.ts",
+      "sha256": "22f6ca68c6efb2316488bcb5ed051492735c0e51efdb06d3e7f636a23c762df1",
+      "lines": "138-155",
+      "evidence": "The default owner fixture executes add, list, chat, chat-expired and chat-reloaded. The existing clock-controlled chat-expired phase is already part of that full sequence."
+    },
+    {
+      "file": "patches/hermes-auth-fixture.patch",
+      "sha256": "3451e9c644f71614925648bda6083915ff77af3d2883c78cfd541dffcd43c2b5",
+      "lines": "698-701",
+      "evidence": "The external fake clock currently sets time for chat-expired and fresh-add-reload chat phases; AT-85 uses chat-expired to expire the initial JWT and drive the registered refresh."
+    },
+    {
+      "file": "packages/hermes/src/auth-probe.ts",
+      "sha256": "284b91640aade25d2fa76158a37a5f9125ffd455de9020a67bd8eb6e54e00fb5",
+      "lines": "15-25, 70-74",
+      "evidence": "HermesAuthProbe already runs the full default AT-85 fixture, but its input guard accepts omitted caseId only for AT-87. AT-85 currently requires caseId=native-auth-cli. The AT-85 fixture dispatch at line 72 requires no new phase-specific owner code."
+    },
+    {
+      "file": "packages/ops/src/fixture-stack.ts",
+      "sha256": "0ed768536a500f4b126da5957635bdecc25a6ac16fe021a174fb93c40869a37d",
+      "lines": "306-326, 339-343",
+      "evidence": "The native-auth check allowlist accepts unfiltered AT-87, while AT-85 only passes with caseId=native-auth-cli. The report builder already attaches registered sourceRegistration and binds its manifest into caseManifestDigest when checks are accepted."
+    },
+    {
+      "file": "packages/contracts/src/generated-probe-registry.ts",
+      "sha256": "da64c85c34575a99fb6425a459586f5f28c2f796e6504e2a4aeb5cb4c5d3da1a",
+      "lines": "AT-hermes-config-85 generated manifest entry",
+      "evidence": "Generated registry already contains the source-bound AT-85 entry. Regeneration or hand-editing the manifest is unnecessary for this route-only change."
+    },
+    {
+      "file": "packages/contracts/src/test-control.ts",
+      "sha256": "0af0d0e4349cae05bfdc06a77592e32c5171f0dc5d0e5964f2ef87faeaa4111c",
+      "lines": "64-65",
+      "evidence": "registeredProbeInputSchema already makes caseId optional, so this requires no CLI input/schema change."
+    }
+  ],
+  "minimumChange": {
+    "files": ["packages/hermes/src/auth-probe.ts", "packages/ops/src/fixture-stack.ts"],
+    "changes": [
+      "In HermesAuthProbe.run, permit caseId to be omitted specifically for AT-hermes-config-85 as well as the existing AT-87 exception; retain rejection of other unsupported/unfiltered auth IDs.",
+      "In fixture-stack nativeAuth dispatch, accept unfiltered AT-hermes-config-85 alongside existing unfiltered AT-hermes-config-87 so its returned auth.native-runtime/auth.native-fixture checks reach the same Hermes owner validation.",
+      "Keep AT-85 tied to the already parsed registered source manifest and its exact five-case/clock-fault binding. Run the existing default fixture sequence; do not add cases, change the clock seam, or widen the owner allowlist generically."
+    ],
+    "writtenInterfaceChange": "None. RegisteredProbeInput already allows omitted caseId; source manifest, CLI command ID, owner export and phase/result schemas already exist.",
+    "manifestChanges": "None. Keep tests/registry.yaml at CLI and the existing generated AT-85 source registration unchanged."
+  },
+  "largestVerification": {
+    "commands": [
+      "toy --env test --stack <stackId> probe run AT-hermes-config-85 --request-id <freshRequestId> --json",
+      "toy --env test --stack <stackId> probe show <returnedOperationId> --json",
+      "toy --env test --stack <stackId> stack down --json"
+    ],
+    "acceptanceEvidence": "Fresh run/show must include the exact AT-85 sourceRegistration and five manifest case mappings; fresh public add/list/chat/chat-expired/chat-reloaded subprocess results must each pass with the fake-provider ledger, profile ownership/readback and unchanged root digest. Require exact run/show linkage and complete owned-world teardown.",
+    "noWholeClaim": "The dispatcher fix only makes the already-required unfiltered source cases reachable. Whole AT remains NOT_IMPLEMENTED pending separately protected/controller and other assigned gates."
+  },
+  "stillOpen": [
+    "Protected controller/service identity and native-role acceptance; fixture UID observations do not establish service identity.",
+    "The newly permitted unfiltered AT-85 run has not yet been executed and verified with persisted probe.show evidence.",
+    "Whole AT-hermes-config-85 acceptance remains incomplete until all assigned proof gates pass.",
+    "Other auth matrices and independent supported live-grant attestation listed in current R0.03 verification remain separate gates."
+  ],
+  "guardrails": [
+    "No tests, builds, stack operations, services, credential access, source edits, external research or R0.11 changes were made.",
+    "Installed Hermes and profiles remain untouched."
+  ]
+}

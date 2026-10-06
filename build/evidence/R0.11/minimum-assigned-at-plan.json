@@ -1,7 +1,7 @@
 {
   "schemaVersion": "toy.builder-minimum-assigned-at-plan.v1",
   "card": "R0.11",
-  "status": "PLAN_ONLY_NOT_IMPLEMENTED",
+  "status": "PLAN_ONLY_ORDERING_OWNER_GAP_DEFERRED",
   "selectedUnit": "AT-ops-50 ordered durable ModelAdmission deferral through the existing public accounting CLI owner",
   "admission": {
     "readback": "build/evidence/R0.12/decision-check-admission.json",
@@ -35,7 +35,7 @@
   "currentRouteAndProofGap": {
     "publicRoute": "cli/src/main.ts falls through to ReplayEnvironment for an unfiltered probe.run. packages/self-improvement/src/public.ts dispatches unfiltered accounting only for AT-ops-49/51/52; accounting-probe.ts also rejects AT-ops-50 and has no AT-ops-50 phases. packages/ops/src/fixture-stack.ts accepts accounting observations only for AT-ops-49/51/52. The generated probe inventory already knows AT-ops-50, while tests/registry.yaml has no AT-ops-50 manifest. The feature-map accounting row already lists AT-ops-50.",
     "existingOwner": "ModelAdmissionPolicy.evaluate consumes the existing ledger, normalized quota observation, work class and reserved upper bounds. ModelAdmission.reserve persists the decision; ModelAdmission.inspect returns a persisted record. Existing accountingProbe runs through the real PostgreSQL fixture with fake clock/quota observations and issues no provider send.",
-    "policyGap": "Authoritative sources define common named-window cutoffs only: 60% of the five-hour quota and 70% of the weekly quota, with equality stopping autonomous admission. They specify repair → quiet-tick → event reviews, account-wide used plus reserved/unknown consumption, and no fraction-of-remainder guarantee. They do not authorize separate numerical cutoffs per work class. The source-required gap is to enforce and demonstrate the ordered pause behavior under the existing shared cutoffs. How work-class order is applied when request upper bounds differ remains an implementation detail for the existing Ops policy; do not invent thresholds. Probe fixture values are test inputs only, not policy authority.",
+    "policyGap": "Authoritative sources define common named-window cutoffs only: 60% of the five-hour quota and 70% of the weekly quota, with equality stopping autonomous admission. They specify repair \u2192 quiet-tick \u2192 event reviews, account-wide used plus reserved/unknown consumption, and no fraction-of-remainder guarantee. They do not authorize separate numerical cutoffs per work class. The source-required gap is to enforce and demonstrate the ordered pause behavior under the existing shared cutoffs. How work-class order is applied when request upper bounds differ remains an implementation detail for the existing Ops policy; do not invent thresholds. Probe fixture values are test inputs only, not policy authority.",
     "priorEvidence": {
       "path": "build/evidence/R0.06/accounting-runtime-verification.json",
       "verdict": "PASS_REAL_POSTGRESQL_ACCOUNTING_CLI_SUBSETS",
@@ -54,14 +54,14 @@
       "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/CONTRACTS.md",
       "lines": "295",
       "sha256": "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d",
-      "quote": "Ops admission policy is authoritative: autonomous semantic work pauses at ≥ 60% of the 5-hour window or ≥ 70% of the weekly window. Without usage data, a fixed daily job cap applies. Pause order: optional repair → quiet-tick reviews → event reviews. Johan's foreground and its mandatory stop judge are never paused by Toy quota thresholds."
+      "quote": "Ops admission policy is authoritative: autonomous semantic work pauses at \u2265 60% of the 5-hour window or \u2265 70% of the weekly window. Without usage data, a fixed daily job cap applies. Pause order: optional repair \u2192 quiet-tick reviews \u2192 event reviews. Johan's foreground and its mandatory stop judge are never paused by Toy quota thresholds."
     },
     {
       "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/ops.md",
       "lines": "1591-1594",
       "sha256": "f07aab65088c82e4ff21e4d63edb2f279e2324e6d7e2bbb801e0fd7494104b0b",
       "quote": [
-        "Relevant five-hour window **≥60% used**, or weekly window **≥70% used** | Pause **all autonomous semantic work**: repair/replay/judging, quiet-tick reviews, then event reviews/Continuation; persist deferred work. Equality stops admission. Either window can veto independently.",
+        "Relevant five-hour window **\u226560% used**, or weekly window **\u226570% used** | Pause **all autonomous semantic work**: repair/replay/judging, quiet-tick reviews, then event reviews/Continuation; persist deferred work. Equality stops admission. Either window can veto independently.",
         "Approaching a ceiling / outstanding reservations threaten it | Stop optional repair first, then quiet-tick reviews, then event reviews; re-evaluate account-wide usage and reserved/unknown consumption before the next send",
         "Fresh windows below both ceilings | Admit bounded autonomous work within measured headroom, fixed-count/continuation ceilings and one global send lane; foreground always has priority",
         "Missing/stale/unavailable required window | Apply conservative durable **per-day fixed job count**, never estimate a guaranteed percentage reserve; repair/replay remain paused"
@@ -78,7 +78,7 @@
       "lines": "1545,1549",
       "sha256": "23e69b258189148328f029acd3ec7c4c125544bf49d670757eee2bf071ab7014",
       "quote": [
-        "Ops' named-window thresholds (≥60% five-hour or ≥70% weekly) and conservative cap without reliable data remain protected admission rules. An admission hold checkpoints with a wake.",
+        "Ops' named-window thresholds (\u226560% five-hour or \u226570% weekly) and conservative cap without reliable data remain protected admission rules. An admission hold checkpoints with a wake.",
         "Foreground and deterministic deadlines precede stop review, normal three-minute review, useful continuation and background repair. Repair starts immediately but yields/checkpoints when foreground needs the model or resources."
       ]
     },
@@ -106,7 +106,7 @@
     }
   ],
   "minimumWrittenInterfaceAndFiles": {
-    "interface": "Keep the existing ModelAdmissionPolicy.evaluate(ModelAdmissionInputV1) and ModelAdmission API. Use only the common absolute ceilings: 60% five-hour and 70% weekly, with the existing comparison usedPercent + account-wide unreflected reserved/unknown upper bound + this request's expected upper bound >= ceiling. Shared-client consumption is represented by the authorized quota observation. Enforce the stated work-class pause order against these same cutoffs; do not create per-class percentages or numerical thresholds. Persist existing decision.reason and decision.retryAt with the threatened window reset as wake. No DTO, command, database owner, migration, provider seam, or fixture infrastructure is authorized by this rule.",
+    "interface": "The existing per-request reserve/claim owner enforces shared 60%/70% windows but does not own the ordering of known pending work. A future ordered-admission interface must enforce repair/replay -> quiet-tick -> event/Continuation pause order through canonical pending work and retain persisted reasons/wakes without inventing per-class numerical cutoffs. No such interface or fixture is implemented by this plan.",
     "allowedNumericalRule": "For measured windows, autonomous admission is denied when (fiveHourUsedPercent + accountWideUnreflectedFiveHourUpperPercent + requestExpectedFiveHourUpperPercent) >= 60, OR (weeklyUsedPercent + accountWideUnreflectedWeeklyUpperPercent + requestExpectedWeeklyUpperPercent) >= 70. The thresholds are fixed absolute provider-window percentages. Without a usable measured window, the existing fixed eight-job UTC-day cap applies; no percentage-of-remainder guarantee is allowed. There are no source-authorized class-specific numeric cutoffs.",
     "unresolvedDesignDetail": "The binding sources give no separate numerical cutoff for repair, quiet-tick, event, or Continuation. They require the pause order, but do not specify how the current per-request admission interface should order a set of pending requests whose expected upper bounds differ. Resolve this within the existing Ops policy/owner using the common 60/70 arithmetic; if that interface cannot express the required ordering, identify that exact gap before proposing any extra interface. Test vector percentages must be labeled fixture inputs, not policy constants.",
     "builderOwnedFiles": [
@@ -187,5 +187,18 @@
     "skills/toy-control/FEATURE-MAP.md": "1a9227c6576ab98d86ded9b3537015aa6d15b5660c60093004e56e3b31fedc1b",
     "docs/adr/0027-model-admission-accounting.md": "1f8c4fced778c40f05466a7a60eb71bf4c85e9033458ae20e1c29e1e059a6640",
     "build/evidence/R0.06/accounting-runtime-verification.json": "d13d5967afe038159fdb94284397f5a957406914731ea07faf5f9cf1de225272"
+  },
+  "parentReview": {
+    "recordedAt": "2026-10-06T20:56:43.478639+00:00",
+    "verifiedOwnerFacts": [
+      "reserve takes one request and acquires the unique provider lease when eligible",
+      "claimSend requires a reserved record with the active lease",
+      "ledger exposes total unreflected bounds but no pending work-class queue",
+      "per-request policy uses identical shared ceilings for all autonomous classes"
+    ],
+    "rejectedProof": "A probe sorting caller requests would establish caller ordering, not owner-enforced pause priority. Invented per-class percentages are not authorized by source.",
+    "disposition": "Defer this ordering interface to the actual canonical work/admission integration behind R0.07. Keep AT-ops-50 NOT_IMPLEMENTED; continue independent R0.03 existing-owner route.",
+    "wholeATComplete": false,
+    "goalBlocked": false
   }
 }
