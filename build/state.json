@@ -2,8 +2,8 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-06T16:13:26.912Z",
-  "phase": "R0.01 critical; actual identities and immutable control stage verified; native queue/schema CLI spike verified",
+  "updatedAt": "2026-10-06T16:30:29.372Z",
+  "phase": "R0.01 critical; actual-control runtime root diagnostic queued; independent R0.10 recurrence compatibility next",
   "activeCard": "R0.01",
   "cardCount": 87,
   "acceptanceCount": 1447,
@@ -595,7 +595,9 @@
         "build/evidence/R0.04/macos-bootstrap-verification.json",
         "build/evidence/R0.04/existing-installation-verification.json",
         "build/evidence/R0.04/siwc-control-stage-preparation.json",
-        "build/evidence/R0.04/root-stage-result.json"
+        "build/evidence/R0.04/root-stage-result.json",
+        "build/evidence/R0.04/control-runtime-probe-preparation.json",
+        "build/evidence/R0.04/control-runtime-probe-replan.json"
       ],
       "requiredATs": [
         "AT-authority-34",
@@ -611,7 +613,7 @@
         "AT-ops-70"
       ],
       "preparation": {
-        "status": "ACTUAL_IDENTITIES_AND_IMMUTABLE_CONTROL_STAGE_VERIFIED_RUNTIME_IDENTITY_PROBE_NEXT",
+        "status": "ACTUAL_IDENTITIES_AND_IMMUTABLE_STAGE_VERIFIED_CONTROL_RUNTIME_ROOT_REQUEST_PENDING",
         "interface": "docs/adr/0025-role-identity-inventory.md",
         "evidence": "build/evidence/R0.04/role-inventory-preparation.json",
         "acceptanceComplete": false,
@@ -655,6 +657,20 @@
           "keychainVerified": false,
           "serviceActivated": false,
           "acceptanceComplete": false
+        },
+        "siwcRuntimeProbe": {
+          "rootRequest": "ROOT-R004-20261006-02",
+          "requestId": "049154d9-4ed1-4db0-97e5-69b5a79190d9",
+          "artifactDigest": "927562c37b764041c752a6a8d71168aedef088599d1a077ecac0b2228d7e2f71",
+          "childDigest": "06870b8dd41d2ffc093cc04680ba56c4570f07b4aa0a27a9ab70796cdd8204bd",
+          "sourceCompiled": true,
+          "rootCallerGuardsVerified": true,
+          "rootExecuted": false,
+          "keychainVerified": false,
+          "servicesActivated": false,
+          "acceptanceComplete": false,
+          "evidence": "build/evidence/R0.04/control-runtime-probe-preparation.json",
+          "replan": "build/evidence/R0.04/control-runtime-probe-replan.json"
         }
       },
       "actualRuntimeUnit": {
@@ -662,7 +678,7 @@
         "targetStopAt": "2026-10-06T17:02:44.142623+00:00",
         "scope": "Review externally supplied3macOS bootstrap fixes; CLI-only externalOS regressions, actual identity readbacks, commit and minimum required runtime protection.",
         "bootstrapFixesVerifiedAt": "2026-10-06T15:06:33.297547+00:00",
-        "nextRootRequest": "Prepare ROOT-R004-20261006-02"
+        "nextRootRequest": "Poll ROOT-R004-20261006-02; consume sanitized Claude result when DONE or FAILED, never block goal for pending root"
       },
       "lastVerification": {
         "evidence": "build/evidence/R0.04/existing-installation-verification.json",
@@ -9701,7 +9717,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Prepare the next exact R0.04 root request for actual control UID runtime and native Keychain-read capability; Claude executes root; continue independent cards while pending.",
+  "nextAction": "Poll build/ROOT-REQUESTS.md for ROOT-R004-20261006-02 while implementing only existing R0.10 CLI schema44/recurrence spike. Keep compiled root-request entry/digest stable. Consume DONE immediately; on FAILED diagnose actual public reason. No root execution by builder.",
   "previousTurnClassification": "NO_PROGRESS",
   "failures": [
     {
@@ -20187,26 +20203,28 @@
     "threadId": "01a109d1-2f67-7643-9677-404a83617cf8",
     "lockFile": "build/coordinator.lock",
     "lockKind": "exclusive session marker; not process-liveness evidence",
-    "checkpoint": "build/checkpoints/2026-10-06-r0-blocked-audit-3"
+    "checkpoint": "build/checkpoints/2026-10-06-r004-root-request-02"
   },
   "pullRequest": "https://github.com/JohanSardar/toy-harness/pull/1",
   "lastWorker": {
-    "card": "R0.04",
-    "task": "r004_control_runtime_request",
+    "card": "R0.10",
+    "task": "r010_pg_boss_fault_plan",
     "model": "gpt-6-luna",
     "reasoning": "max",
     "state": "completed",
-    "ownedScope": "Read-only fixed next-root-operation plan; parent owns implementation"
+    "ownedScope": "Read-only smallest remaining native schema44/recurrence spike plan; parent owns implementation",
+    "evidence": "build/evidence/R0.10/remaining-native-spike-plan.json"
   },
   "continuationAssessment": {
-    "generatedAt": "2026-10-06T16:13:26.912Z",
+    "generatedAt": "2026-10-06T16:30:29.372Z",
     "classification": "progress",
-    "reason": "Claude staged and independently verified immutable control bundle; six native PostgreSQL/queue/schema CLI checks and exact persisted readback pass; all owned worlds down.",
+    "reason": "Strictly verified exact actual-control diagnostic and recovery prepared as pending Claude root request; three review attempts caused narrow full-inventory ACL replan; independent native recurrence plan prepared",
     "consecutiveGoalTurnsAtSameImpasse": 0,
     "goalStatus": "active",
     "evidence": [
-      "build/evidence/R0.04/root-stage-result.json",
-      "build/evidence/R0.10/native-queue-verification.json"
+      "build/evidence/R0.04/control-runtime-probe-preparation.json",
+      "build/evidence/R0.04/control-runtime-probe-replan.json",
+      "build/evidence/R0.10/remaining-native-spike-plan.json"
     ],
     "blockedStatusThresholdReached": false
   },
@@ -20244,18 +20262,18 @@
   "latestStaticVerification": {
     "command": "npm run check",
     "exitCode": 0,
-    "log": "build/evidence/R0.10/queue-check-complete.txt",
-    "artifacts": 337,
-    "contracts": 269,
-    "features": 94,
+    "log": "build/evidence/R0.04-runtime-probe-check.txt",
+    "artifacts": 340,
+    "contracts": 272,
+    "features": 95,
     "commands": 55,
     "indexedATs": 1447,
     "swiftInvoked": false,
-    "schemaDigest": "e49e3ae00b779e2dfc075d7de46f3957e033b76f4c24d347f62891fec12a6ddc",
-    "generatedAt": "2026-10-06T16:13:26.912Z",
+    "schemaDigest": "ace1c9d4f159ec0e140e2ff9a9623c9d6de4c670eba5fb7dddd8b9050cb57c62",
+    "generatedAt": "2026-10-06T16:29:19.796Z",
     "wholeATComplete": false
   },
-  "sourceCheckpointCommit": "f317b59",
+  "sourceCheckpointCommit": "0523138",
   "sourceCheckpointPushed": true,
   "rootRequests": {
     "ROOT-R004-20261006-01": {
@@ -20268,20 +20286,26 @@
       "rootExecuted": true,
       "rootExecutor": "Claude",
       "verificationEvidence": "build/evidence/R0.04/root-stage-result.json"
+    },
+    "ROOT-R004-20261006-02": {
+      "requestId": "049154d9-4ed1-4db0-97e5-69b5a79190d9",
+      "card": "R0.04",
+      "state": "PENDING",
+      "artifactDigest": "927562c37b764041c752a6a8d71168aedef088599d1a077ecac0b2228d7e2f71",
+      "file": "build/ROOT-REQUESTS.md",
+      "preparedEvidence": "build/evidence/R0.04/control-runtime-probe-preparation.json",
+      "rootExecuted": false,
+      "rootExecutor": "Claude"
     }
   },
   "resourceAdmission": {
-    "observedAt": "2026-10-06T16:07:24.453Z",
-    "minimumAvailableBytes": "2666594304",
+    "measuredAt": "2026-10-06T16:22:03.085Z",
+    "availableBytes": "2222424064",
     "pressure": "normal",
-    "pressureSource": "os",
-    "ownJobNeedBytes": "1073741824",
-    "childNeedBytes": "0",
-    "marginBytes": "536870912",
     "strictlyFreeAdmission": false,
-    "admitted": true,
-    "concurrentChildren": 0,
-    "ownedStacksRunning": 0,
-    "teardownComplete": true
+    "repairFloorApplied": false,
+    "ownedWorldsRunning": 0,
+    "helpersRunning": 0,
+    "measurementSource": "build/evidence/R0.04-runtime-probe-doctor.json"
   }
 }

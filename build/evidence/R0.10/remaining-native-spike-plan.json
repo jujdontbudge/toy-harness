@@ -1,0 +1,98 @@
+{
+  "schemaVersion": "toy.r0.10-remaining-native-spike-plan.v1",
+  "status": "PLAN_ONLY_WHOLE_ACCEPTANCE_PENDING",
+  "assignedAcceptance": {
+    "id": "AT-obligations-76",
+    "rung": "CLI; static, stack, probe",
+    "assertionSource": "specs/obligations.md:2677",
+    "assertion": "Given the pinned shared queue and generated @toy/contracts artifacts, when both checked-out application transactions and native pg-boss worker transactions run the fault spike, job/domain rollback and lost-claim fencing pass through executeSql, the five schemas validate with their declared dialect, and no homemade polling queue or second schema owner is needed.",
+    "r0SpikeRequirementSource": "specs/obligations.md:147-166, 2736",
+    "completionState": "PENDING; this plan and the existing native diagnostic are not whole-AT certification"
+  },
+  "existingCliEvidence": {
+    "path": "build/evidence/R0.10/native-queue-verification.json",
+    "observedAt": "2026-10-06T16:12:42.046Z",
+    "rung": "CLI",
+    "schemaCells": 5,
+    "sourceAndGeneratedSchemaChecks": "All five declared Draft 2020-12 tools have valid acceptance and invalid rejection; toy_due preserves omitted optional fields separately from explicit null.",
+    "applicationTransactions": "Rollback removes both marker and job; commit control reads both back.",
+    "nativeWorkers": "Thrown handler transaction rolls back its marker; public cancel during an active transaction loses the claim, rolls back its marker, and leaves the job cancelled.",
+    "cleanupAndPins": "CheckCount 6, all checks pass; cleanup passes; PostgreSQL major 17, pg 8.23.1, pg-boss 12.36.0, declared schema pin 44, Ajv 8.17.1 owned by contracts.",
+    "claimCoverage": "The assigned claim-loss behavior is already covered by nativeLostClaimFence in this public CLI result. Do not add a second claim protocol or duplicate worker-loss scenario to close this slice."
+  },
+  "smallestRemainingDiagnostic": {
+    "reuse": "Extend the same existing toy probe run case queue-transaction-faults and QueueFaultProbe.exercise after PgBoss.start and queue creation. Retain the existing TestProbeControl/CLI route and aggregate queue.obligation-faults result; add no CLI command, queue service, worker loop, database relation, or extra claim path.",
+    "schema44Readback": {
+      "calls": ["boss.schemaVersion()", "boss.detectSchemaDrift()"],
+      "passWhen": "schemaVersion() returns 44 and detectSchemaDrift().ok is true after the native instance starts; report only a bounded boolean/version summary in the existing aggregate check.",
+      "note": "SchemaDriftReport.extraIndexes is informational and excluded from its ok predicate; do not fail merely because that list is nonempty.",
+      "forbiddenSubstitute": "Do not read or write pgboss tables directly; use only the two public APIs."
+    },
+    "recurrence": {
+      "publicCalls": ["boss.schedule(name, expression, data, options)", "boss.getSchedule(name, key)", "boss.previewSchedule(expression, options)", "boss.unschedule(name, key)"],
+      "scheduleConfig": "Keep the already constructed PgBoss schedule option false, so this diagnostic stores and reads a recurrence but never runs an unattended scheduler or dispatches its occurrences. Use the existing disposable queue and one fixed namespaced key; always unschedule it before deleting the queue.",
+      "fixedCases": [
+        {
+          "id": "monthly-day-31-omits-short-months",
+          "expression": "DTSTART;TZID=America/Chicago:20270131T090000\\nRRULE:FREQ=MONTHLY;BYMONTHDAY=31",
+          "preview": {"tz": "America/Chicago", "from": "2027-01-01T00:00:00.000Z", "count": 3},
+          "expectedInstants": ["2027-01-31T15:00:00.000Z", "2027-03-31T14:00:00.000Z", "2027-05-31T14:00:00.000Z"],
+          "falsifier": "Fail if February or April is invented, an expected month is omitted, or the 09:00 America/Chicago wall time shifts."
+        },
+        {
+          "id": "spring-forward-gap-is-omitted",
+          "expression": "DTSTART;TZID=America/Chicago:20270313T023000\\nRRULE:FREQ=DAILY",
+          "preview": {"tz": "America/Chicago", "from": "2027-03-01T00:00:00.000Z", "count": 3},
+          "expectedInstants": ["2027-03-13T08:30:00.000Z", "2027-03-15T07:30:00.000Z", "2027-03-16T07:30:00.000Z"],
+          "falsifier": "Fail if the nonexistent 2027-03-14 02:30 local occurrence is shifted into another instant or if later 02:30 local occurrences move."
+        },
+        {
+          "id": "fall-back-overlap-has-one-earlier-occurrence",
+          "expression": "DTSTART;TZID=America/Chicago:20271106T013000\\nRRULE:FREQ=DAILY",
+          "preview": {"tz": "America/Chicago", "from": "2027-11-05T00:00:00.000Z", "count": 3},
+          "expectedInstants": ["2027-11-06T06:30:00.000Z", "2027-11-07T06:30:00.000Z", "2027-11-08T07:30:00.000Z"],
+          "falsifier": "Fail if the 2027-11-07 overlap produces two occurrences or chooses the later 01:30 CST instant."
+        }
+      ],
+      "storedScheduleReadback": "Register the monthly rule under the queue and fixed key with timezone America/Chicago; require getSchedule to report kind rrule, the same expression, queue name, and timezone. Require getSchedule to return null after unschedule.",
+      "proofLimit": "This proves the pinned pg-boss schedule API, schema-44 persistence/readback, preview path, and bundled rrule-temporal behavior for these bounded fixtures. It does not implement the Obligations recurrence engine or pass R1 recurrence ATs."
+    }
+  },
+  "pinnedPublicApiSources": [
+    {
+      "path": "node_modules/pg-boss/dist/index.d.ts:101-114",
+      "signatures": [
+        "schemaVersion(): Promise<number | null>",
+        "detectSchemaDrift(): Promise<SchemaDriftReport>",
+        "schedule(name: string, cron: string, data?: object | null, options?: ScheduleOptions): Promise<void>",
+        "unschedule(name: string, key?: string): Promise<void>",
+        "getSchedule(name: string, key?: string): Promise<Schedule | null>",
+        "previewSchedule(cron: string, options?: PreviewScheduleOptions): Date[]"
+      ]
+    },
+    {
+      "path": "node_modules/pg-boss/dist/types.d.ts:1073-1098,1487-1519",
+      "facts": ["Schedule.kind is cron or rrule; Schedule carries the expression and timezone.", "SchemaDriftReport.ok is false for missing, invalid, mismatched, or drifted managed items; extraIndexes is informational."]
+    },
+    {
+      "path": "node_modules/pg-boss/dist/rrule.js:90-210 and node_modules/pg-boss/dist/timekeeper.js:783-842",
+      "facts": ["Pinned scheduler RRULE path parses through rrule-temporal.", "Public previewSchedule validates a bounded occurrence count and returns Date instants."]
+    },
+    {
+      "path": "node_modules/pg-boss/package.json and node_modules/rrule-temporal/package.json",
+      "pins": {"pg-boss": "12.36.0", "rrule-temporal": "2.2.8"}
+    }
+  ],
+  "scopeAndStopRules": {
+    "ownerChangeSuggested": "Parent Ops owner, in the existing queue-fault-probe source and current public CLI case only.",
+    "notOwnedHere": ["Source edits", "CLI or database execution", "contracts/registry/generated artifacts", "new pg-boss table access", "whole AT certification"],
+    "r0Claim": "Schema44 and recurrence compatibility remain the smallest missing R0 spike evidence from the current report; claim-loss fencing already has a real public CLI result.",
+    "wholeAcceptanceReminder": "Keep AT-obligations-76 PENDING until the parent verifies current static gates, generated artifact identity, source/build binding, fixture lifecycle and CLI readback together."
+  },
+  "notPerformed": [
+    "No source edits",
+    "No compiler, CLI, PostgreSQL, stack, OS, browser, or root operation",
+    "No private pg-boss method calls or direct SQL against pg-boss tables",
+    "No external research"
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "toy.r0.05-control-runtime-probe-review.v1",
+  "subject": "R0.04 SIWC control runtime probe prerequisite",
+  "verdict": "blocked",
+  "reviewMode": "read-only source review; no physical runtime or AT verification",
+  "findings": [
+    {
+      "id": "R005-PROBE-01",
+      "severity": "blocker",
+      "location": "scripts/stage-siwc-control-runtime.mts:148-150; scripts/probe-siwc-control-runtime.mts:89-91",
+      "finding": "The existing verifier checks ancestor ownership and write bits but does not establish that the measured UID/GID 310 can traverse every ancestor left unchanged. The probe opens only control and control/releases. A root-owned Toy ancestor at mode 0700 passes the current verifier but still denies the dropped child access to the release.",
+      "impact": "The root operation can open protected parents and launch the child without establishing the path-access precondition needed for the actual-identity import/read proof. The child then fails to reach the staged payload.",
+      "requiredCorrection": "Before either chmod, validate UID/GID 310 traversal through the full fixed ancestor chain (or fail closed on any ancestor whose observed ownership/mode does not permit it)."
+    },
+    {
+      "id": "R005-PROBE-02",
+      "severity": "blocker",
+      "location": "scripts/probe-siwc-control-runtime.mts:89-116",
+      "finding": "Parent-mode restoration relies on JavaScript finally only. Default SIGINT/SIGTERM termination exits Node without running that finally block while control and releases are temporarily mode 0711.",
+      "impact": "An ordinarily interrupted root request can leave existing protected parent modes changed, violating the preservation and restoration invariant.",
+      "requiredCorrection": "Make ordinary signal termination enter a restoration path before exit, or require and verify a separately guaranteed restoration step before treating the operation as runnable."
+    }
+  ],
+  "reviewedFiles": [
+    "scripts/probe-siwc-control-runtime.mts",
+    "control/bootstrap/siwc-runtime-probe.ts",
+    "packages/contracts/src/siwc-control-stage.ts",
+    "docs/adr/0034-siwc-control-runtime-probe.md",
+    "scripts/stage-siwc-control-runtime.mts",
+    "build/ROOT-REQUESTS.md",
+    "build/evidence/R0.04/control-runtime-root-request-plan.json"
+  ],
+  "staticChecks": {
+    "fixedChildDigestArgumentAndCopy": "present",
+    "identityDropBeforeFrozenSecretsDynamicImport": "present",
+    "keychainHelperStandardStreams": "ignored",
+    "secretBytesCapturedByNode": false,
+    "parentRestoreReadback": "present for normal control flow",
+    "newProbeRootRequestEntry": "not present in build/ROOT-REQUESTS.md at review time"
+  },
+  "scopeDeviation": "An initial inventory command included read-only git status, and an accidental read-only stat inspected /Library and /Library/Application Support. Neither action changed files or system state; no Toy runtime, root command, browser, service, or Keychain operation was performed.",
+  "runtimeVerified": false,
+  "acceptanceTestsVerified": false
+}

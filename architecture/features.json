@@ -3708,6 +3708,24 @@
       ],
       "commands": ["probe.run", "probe.show"],
       "atIds": ["AT-obligations-76"]
+    },
+    {
+      "id": "ops.siwc-control-runtime-probe",
+      "description": "Exact root-request diagnostic backs up fixed parent metadata, runs the frozen Secrets import and native Keychain read as measured control UID, discards credential bytes and restores original permissions; no service or inference activation.",
+      "requirementIds": ["spec:ops", "spec:hermes-config"],
+      "firstRelease": "R0",
+      "implementation": "built",
+      "entry": "scripts/probe-siwc-control-runtime.mts",
+      "owner": "ops",
+      "publicInterface": "SiwcControlRuntimeProbe.run",
+      "paths": [
+        "scripts/probe-siwc-control-runtime.mts",
+        "control/bootstrap/siwc-runtime-probe.ts",
+        "packages/contracts/src/siwc-control-stage.ts",
+        "docs/adr/0034-siwc-control-runtime-probe.md"
+      ],
+      "commands": ["doctor", "bootstrap.identities"],
+      "atIds": ["AT-authority-34", "AT-ops-30"]
     }
   ],
   "requirements": [
@@ -4205,6 +4223,11 @@
       "id": "QueueFaultProbe.exercise",
       "owner": "ops",
       "path": "docs/adr/0033-r0-native-pg-boss-fault-probe.md"
+    },
+    {
+      "id": "SiwcControlRuntimeProbe.run",
+      "owner": "ops",
+      "path": "docs/adr/0034-siwc-control-runtime-probe.md"
     }
   ],
   "commands": [

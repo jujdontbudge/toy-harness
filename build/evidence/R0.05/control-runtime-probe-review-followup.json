@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "toy.r0.05-control-runtime-probe-review-followup.v1",
+  "subject": "R0.04 SIWC control runtime probe source changes",
+  "verdict": "blocked_pending_residual_boundary_gaps",
+  "reviewMode": "source-only re-review; no git, OS, root, runtime, CLI, compiler, or acceptance-test calls",
+  "priorFindings": {
+    "ancestorTraversalModeCheck": "addressed in source for POSIX mode bits",
+    "SIGINT_SIGTERM_finallyRestoration": "addressed in source for the handled signals"
+  },
+  "findings": [
+    {
+      "id": "R005-PROBE-FOLLOWUP-01",
+      "severity": "blocker",
+      "location": "scripts/probe-siwc-control-runtime.mts:52-54, 105-125, 132-150; docs/adr/0034-siwc-control-runtime-probe.md:9",
+      "finding": "The restoration handler covers SIGINT, SIGTERM and SIGHUP, but SIGQUIT remains unhandled and can terminate the Node process without running finally. SIGTSTP is also unhandled and can suspend the process while both parent modes are 0711. The ADR's manual recovery note covers uncatchable termination or power loss, not these catchable signals.",
+      "impact": "A catchable terminal signal can still leave existing parent modes changed or leave the permission window open while the root process is suspended.",
+      "requiredCorrection": "Cover the remaining ordinary termination and job-control signals that can strand the open window, or make the exact root-request recovery procedure mandatory for any interrupted process before reporting completion."
+    },
+    {
+      "id": "R005-PROBE-FOLLOWUP-02",
+      "severity": "blocker",
+      "location": "scripts/probe-siwc-control-runtime.mts:74-77, 82-85, 91-102",
+      "finding": "The new preflight infers effective access from lstat mode bits and checks only POSIX write bits. It does not inspect macOS ACL entries. ACLs can affect effective traversal or grant write access beyond the class-bit test, including on the protected parents or newly created request files.",
+      "impact": "The preflight does not establish actual UID/GID 310 traversal or exclude ACL-based write access before the root permission window. The current machine's ACL state was not inspected under this source-only scope.",
+      "requiredCorrection": "Fail closed on relevant ACL entries or verify effective access and ACL write restrictions for the fixed ancestors, opened parents, and sealed request artifacts before treating the physical proof as safe."
+    }
+  ],
+  "reviewedFiles": [
+    "scripts/probe-siwc-control-runtime.mts",
+    "control/bootstrap/siwc-runtime-probe.ts",
+    "packages/contracts/src/siwc-control-stage.ts",
+    "docs/adr/0034-siwc-control-runtime-probe.md"
+  ],
+  "runtimeVerified": false,
+  "acceptanceTestsVerified": false
+}

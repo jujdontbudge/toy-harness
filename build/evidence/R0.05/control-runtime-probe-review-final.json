@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "toy.r0.05-control-runtime-probe-review-final.v1",
+  "subject": "Final source-only review of the bounded SIWC control runtime probe",
+  "verdict": "blocked_pending_artifact_acl_coverage",
+  "reviewMode": "source-only; no git, OS, root, runtime, compiler, CLI, external, or acceptance-test calls",
+  "priorFindingsStatus": {
+    "unchangedAncestorTraversal": "POSIX mode-bit preflight added; fixed parent ACL checks added",
+    "ordinarySignalRestoration": "SIGINT, SIGTERM, SIGHUP, SIGQUIT, and SIGTSTP handlers added; restore-only path added for uncatchable termination"
+  },
+  "findings": [
+    {
+      "id": "R005-PROBE-FINAL-01",
+      "severity": "blocker",
+      "location": "scripts/probe-siwc-control-runtime.mts:95-100, 101-124, 129-130",
+      "finding": "The ACL audit covers fixed directories through the staged payload root, but not ACLs on the staged executable and files used by the probe, including runtime/node, the frozen Secrets import closure, and the Python helper. The stage verification and later sealing checks verify POSIX owner/mode/content metadata but do not establish that these nested executable/import files have no ACL write grants.",
+      "impact": "A UID/GID 310 process with a file-level ACL write grant could change code after the root verifier hashes it while the root probe subsequently executes or imports that code. The requested proof would then not establish that the measured runtime was the reviewed frozen code.",
+      "requiredCorrection": "Extend the fixed ACL rejection check to the staged files and directories actually executed or imported by this probe, including the transitive Secrets/contracts closure and Python helper, before opening the protected parents."
+    }
+  ],
+  "reviewedFiles": [
+    "scripts/probe-siwc-control-runtime.mts",
+    "packages/contracts/src/siwc-control-stage.ts",
+    "docs/adr/0034-siwc-control-runtime-probe.md"
+  ],
+  "restoreBranch": "Source inspection confirms the optional restore branch validates the root-only backup against request/artifact/child/receipt values, restores only fixed parents after inode/device checks, and reports restored state separately from read verification.",
+  "runtimeVerified": false,
+  "acceptanceTestsVerified": false
+}

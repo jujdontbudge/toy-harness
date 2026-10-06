@@ -5266,6 +5266,100 @@ SiwcControlStageReportV1Reason = Literal[
     "ARTIFACT_UNAVAILABLE",
 ]
 
+class SiwcControlRuntimeReceiptV1(TypedDict):
+    requestId: "UUID"
+    uid: int
+    euid: int
+    gid: int
+    egid: int
+    groups: list[int]
+    moduleImported: bool
+    keychainState: "SiwcControlRuntimeReceiptV1KeychainState"
+    helperExitCode: Optional[int]
+    helperTerminated: bool
+
+SiwcControlRuntimeReceiptV1KeychainState = Literal[
+    "not_called",
+    "absent",
+    "present",
+    "unavailable",
+]
+
+class SiwcControlRuntimeBackupV1(TypedDict):
+    schemaVersion: "SiwcControlRuntimeBackupV1SchemaVersion"
+    requestId: "UUID"
+    observedAt: "Instant"
+    artifactDigest: "Digest"
+    childDigest: "Digest"
+    bootstrapReceiptDigest: "Digest"
+    parents: list["SiwcControlRuntimeBackupV1ParentsItem"]
+
+SiwcControlRuntimeBackupV1SchemaVersion = Literal[
+    "toy.siwc-control-runtime-backup.v1",
+]
+
+class SiwcControlRuntimeBackupV1ParentsItem(TypedDict):
+    path: "SiwcControlRuntimeBackupV1ParentsItemPath"
+    uid: "ModelRouteReceiptV1ReservationTokensVariant0"
+    gid: "ModelRouteReceiptV1ReservationTokensVariant0"
+    mode: "SiwcControlRuntimeBackupV1ParentsItemMode"
+    device: "UInt64String"
+    inode: "UInt64String"
+
+SiwcControlRuntimeBackupV1ParentsItemPath = Literal[
+    "/Library/Application Support/Toy/control",
+    "/Library/Application Support/Toy/control/releases",
+]
+
+SiwcControlRuntimeBackupV1ParentsItemMode = Literal[
+    "0700",
+]
+
+class SiwcControlRuntimeReportV1(TypedDict):
+    schemaVersion: "SiwcControlRuntimeReportV1SchemaVersion"
+    requestId: "UUID"
+    observedAt: "Instant"
+    artifactDigest: "Digest"
+    state: "SiwcControlRuntimeReportV1State"
+    reason: "SiwcControlRuntimeReportV1Reason"
+    callerUid: int
+    controlUid: Optional[int]
+    controlGid: Optional[int]
+    childDigest: Optional["Digest"]
+    backupDigest: Optional["Digest"]
+    bootstrapReceiptDigest: Optional["Digest"]
+    artifactVerified: bool
+    backupWritten: bool
+    parentModesRestored: bool
+    bootstrapReceiptUnchanged: bool
+    child: Optional["SiwcControlRuntimeReceiptV1"]
+    keychainCalled: bool
+    credentialBytesCaptured: "RoleBootstrapReportV1IdentityGateVerified"
+    credentialWritten: "RoleBootstrapReportV1IdentityGateVerified"
+    currentPointerChanged: "RoleBootstrapReportV1IdentityGateVerified"
+    servicesActivated: "RoleBootstrapReportV1IdentityGateVerified"
+    liveProviderSends: "ModelRouteReceiptV1ReservationTokensVariant0"
+    acceptanceComplete: "RoleBootstrapReportV1IdentityGateVerified"
+
+SiwcControlRuntimeReportV1SchemaVersion = Literal[
+    "toy.siwc-control-runtime-report.v1",
+]
+
+SiwcControlRuntimeReportV1State = Literal[
+    "verified",
+    "restored",
+    "blocked",
+]
+
+SiwcControlRuntimeReportV1Reason = Literal[
+    "CONTROL_RUNTIME_READ_VERIFIED",
+    "PARENTS_RESTORED",
+    "ROOT_CALLER_REQUIRED",
+    "CONTROL_RUNTIME_UNAVAILABLE",
+    "CONTROL_KEYCHAIN_READ_UNAVAILABLE",
+    "PARENT_RESTORE_FAILED",
+]
+
 ToyCaptureParametersV1 = Union[
     "ToyCaptureParametersV1Variant0",
     "ToyCaptureParametersV1Variant1",

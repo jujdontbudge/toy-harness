@@ -37,6 +37,15 @@ const write = (path: string, bytes: Buffer | string, uid: number, gid: number, m
   writeFileSync(path, bytes, { flag: "wx", mode });
   chownSync(path, uid, gid); chmodSync(path, mode);
 };
+const rejectAcls = (paths: string[]): void => {
+  for (let start = 0; start < paths.length; start += 64) {
+    const batch = paths.slice(start, start + 64);
+    const observed = spawnSync("/bin/ls", ["-lde", ...batch], { env: environment, encoding: "utf8", timeout: 2000, maxBuffer: 131072 });
+    const lines = observed.stdout?.trimEnd().split("\n") ?? [];
+    if (observed.error || observed.status !== 0 || lines.length !== batch.length
+      || lines.some(line => !/^[dl-][rwxStTs-]{9}@?\s/.test(line))) throw new Error("ARTIFACT_ACL_UNVERIFIED");
+  }
+};
 const inventory = (source: string, destination: string, entries: SiwcControlStageEntryV1[], sources: Map<string, string>): void => {
   const stat = lstatSync(source);
   if (stat.isSymbolicLink()) {
@@ -76,6 +85,7 @@ const copyEntries = (sourceRoot: string, target: string, value: SiwcControlStage
   for (const entry of value.entries.filter(entry => entry.kind === "directory").sort((a, b) => b.path.length - a.path.length)) chmodSync(join(target, entry.path), Number.parseInt(entry.mode, 8));
 };
 const verifyEntries = (target: string, value: SiwcControlStageManifestV1, uid: number, gid: number): void => {
+  if (uid === 0) rejectAcls([target, ...value.entries.map(entry => join(target, entry.path))]);
   const expected = new Set(value.entries.map(entry => entry.path));
   const visit = (path: string): void => {
     for (const name of readdirSync(path).sort()) {
@@ -149,6 +159,7 @@ export const SiwcControlStage = {
         const stat = lstatSync(path);
         if (!stat.isDirectory() || stat.isSymbolicLink() || stat.uid !== 0 || ![0, ...(path === "/Library/Application Support" ? [80] : [])].includes(stat.gid) || (stat.mode & 0o022) !== 0) throw new Error("PROTECTED_PARENT_INVALID");
       }
+      rejectAcls(["/", "/Library", "/Library/Application Support", roleBootstrapRoot, roleBootstrapRoot + "/control"]);
       const original = roleBootstrapRoot + "/control/bootstrap-identities.json";
       const originalStat = lstatSync(original);
       if (!originalStat.isFile() || originalStat.isSymbolicLink() || originalStat.uid !== 0 || originalStat.gid !== 0 || originalStat.nlink !== 1 || (originalStat.mode & 0o7777) !== 0o600 || originalStat.size > 131072) throw new Error("BOOTSTRAP_RECEIPT_INVALID");
@@ -165,6 +176,7 @@ export const SiwcControlStage = {
       const releaseParent = roleBootstrapRoot + "/control/releases";
       if (operation === "stage") privateDirectory(releaseParent, 0, 0);
       else { const stat = lstatSync(releaseParent); if (!stat.isDirectory() || stat.isSymbolicLink() || stat.uid !== 0 || stat.gid !== 0 || (stat.mode & 0o7777) !== 0o700) throw new Error("RELEASE_PARENT_INVALID"); }
+      rejectAcls([releaseParent]);
       finalPath = join(releaseParent, artifactDigest);
       const frozen = join(candidates, artifactDigest);
       const manifestPath = operation === "stage" ? join(frozen, "manifest.json") : join(finalPath, "manifest.json");
@@ -173,6 +185,7 @@ export const SiwcControlStage = {
       const manifestBytes = readFileSync(manifestPath);
       if (sha(manifestBytes) !== artifactDigest) throw new Error("ARTIFACT_ID_CHANGED");
       manifest = siwcControlStageManifestSchema.parse(JSON.parse(manifestBytes.toString("utf8")));
+      if (operation === "verify") rejectAcls([finalPath, manifestPath]);
       if (operation === "stage") {
         if (existsSync(finalPath)) throw new Error("RELEASE_EXISTS");
         mkdirSync(finalPath, { mode: 0o700 }); preservedPartialStage = true;

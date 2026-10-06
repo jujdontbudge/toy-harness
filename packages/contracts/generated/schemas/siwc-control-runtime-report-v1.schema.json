@@ -1,0 +1,272 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "toy.siwc-control-runtime-report.v1"
+    },
+    "requestId": {
+      "type": "string",
+      "minLength": 36,
+      "maxLength": 36,
+      "format": "uuid",
+      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    },
+    "observedAt": {
+      "type": "string",
+      "minLength": 24,
+      "maxLength": 24,
+      "format": "date-time",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+    },
+    "artifactDigest": {
+      "type": "string",
+      "minLength": 64,
+      "maxLength": 64,
+      "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "verified",
+        "restored",
+        "blocked"
+      ]
+    },
+    "reason": {
+      "type": "string",
+      "enum": [
+        "CONTROL_RUNTIME_READ_VERIFIED",
+        "PARENTS_RESTORED",
+        "ROOT_CALLER_REQUIRED",
+        "CONTROL_RUNTIME_UNAVAILABLE",
+        "CONTROL_KEYCHAIN_READ_UNAVAILABLE",
+        "PARENT_RESTORE_FAILED"
+      ]
+    },
+    "callerUid": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "controlUid": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "controlGid": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "childDigest": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 64,
+          "maxLength": 64,
+          "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "backupDigest": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 64,
+          "maxLength": 64,
+          "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "bootstrapReceiptDigest": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 64,
+          "maxLength": 64,
+          "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "artifactVerified": {
+      "type": "boolean"
+    },
+    "backupWritten": {
+      "type": "boolean"
+    },
+    "parentModesRestored": {
+      "type": "boolean"
+    },
+    "bootstrapReceiptUnchanged": {
+      "type": "boolean"
+    },
+    "child": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "requestId": {
+              "type": "string",
+              "minLength": 36,
+              "maxLength": 36,
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "uid": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "euid": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "gid": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "egid": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "groups": {
+              "maxItems": 128,
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "moduleImported": {
+              "type": "boolean"
+            },
+            "keychainState": {
+              "type": "string",
+              "enum": [
+                "not_called",
+                "absent",
+                "present",
+                "unavailable"
+              ]
+            },
+            "helperExitCode": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "helperTerminated": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "requestId",
+            "uid",
+            "euid",
+            "gid",
+            "egid",
+            "groups",
+            "moduleImported",
+            "keychainState",
+            "helperExitCode",
+            "helperTerminated"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "keychainCalled": {
+      "type": "boolean"
+    },
+    "credentialBytesCaptured": {
+      "type": "boolean",
+      "const": false
+    },
+    "credentialWritten": {
+      "type": "boolean",
+      "const": false
+    },
+    "currentPointerChanged": {
+      "type": "boolean",
+      "const": false
+    },
+    "servicesActivated": {
+      "type": "boolean",
+      "const": false
+    },
+    "liveProviderSends": {
+      "type": "number",
+      "const": 0
+    },
+    "acceptanceComplete": {
+      "type": "boolean",
+      "const": false
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "requestId",
+    "observedAt",
+    "artifactDigest",
+    "state",
+    "reason",
+    "callerUid",
+    "controlUid",
+    "controlGid",
+    "childDigest",
+    "backupDigest",
+    "bootstrapReceiptDigest",
+    "artifactVerified",
+    "backupWritten",
+    "parentModesRestored",
+    "bootstrapReceiptUnchanged",
+    "child",
+    "keychainCalled",
+    "credentialBytesCaptured",
+    "credentialWritten",
+    "currentPointerChanged",
+    "servicesActivated",
+    "liveProviderSends",
+    "acceptanceComplete"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:SiwcControlRuntimeReportV1"
+}
