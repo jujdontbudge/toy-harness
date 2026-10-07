@@ -1,0 +1,111 @@
+{
+  "schemaVersion": "toy.r0.04.pg-artifact-descriptor-source-handoff.v1",
+  "recordedAt": "2026-10-07T08:08:22Z",
+  "card": "R0.04",
+  "decision": "Source step complete; parent may resume static, build, and CLI verification.",
+  "scope": {
+    "ownedChange": "Private read-only PostgreSQL artifact descriptor in the existing deep doctor path, with existing doctor feature facts and ADR.",
+    "noNewPublicInterface": true,
+    "noNewCliCommand": true,
+    "noNewDto": true,
+    "noManifestPrerequisite": true,
+    "nativeOperationPerformed": false,
+    "hostArtifactInspected": false,
+    "accountOrCredentialStoreInspected": false,
+    "daemonOrListenerStarted": false,
+    "rootQueueChanged": false,
+    "wholeAtOrCardComplete": false,
+    "sourceOwnerStopped": true
+  },
+  "sourceBehavior": {
+    "deepDoctorOnly": "packages/ops/src/public.ts:185-186 replaces only the registered service.postgres check. Status and non-deep doctor retain their existing fallback.",
+    "selector": "/opt/homebrew/opt/postgresql@17/bin/initdb, matching packages/self-improvement/src/accounting-postgres.ts:60-66; this selector is only realpathed by ordinary deep doctor and is never retained as the privileged execution path.",
+    "rootRefusal": "The helper checks platform/architecture and real/effective caller IDs before resolving or executing the selector; root and unknown-identity callers are refused.",
+    "resolvedArtifact": "Accept only a resolved versioned path under /opt/homebrew/Cellar/postgresql@17/ with a 17.11 keg version (optionally a numeric Homebrew revision). Record exact resolved path, observed initdb version and executable SHA-256.",
+    "boundedReads": "Execute only --version and --help with cwd /, PATH/LANG/LC_ALL fixed, timeouts capped at 2500 ms per invocation and bounded output. Output streams are parsed internally and never copied to the CheckView.",
+    "optionEvidence": "Record only presence of --pgdata, --encoding, --locale, --data-checksums, --auth-local, --auth-host and --username in help output. This does not attest that an authentication method value is accepted.",
+    "acquisitionReceipt": "Hash adjacent INSTALL_RECEIPT.json only when it is a regular non-symlink file within the resolved version directory and at most 65536 bytes; distinguish observed, absent, unmeasured, unreadable and invalid. No bottle identity is inferred.",
+    "publicReadback": "Return only CheckViewV1 for service.postgres with a JSON descriptor under prerequisite and executable/receipt hashes under artifactDigests. State remains BLOCKED for service readiness in every outcome.",
+    "sourceLines": {
+      "helper": "packages/ops/src/public.ts:47-133",
+      "doctorReplacement": "packages/ops/src/public.ts:185-186",
+      "existingSelector": "packages/self-improvement/src/accounting-postgres.ts:60-66",
+      "registeredInventory": "packages/contracts/src/ops-registry.ts:205-207",
+      "doctorFeatureFacts": "architecture/features.json: control.doctor and ops.postgres-artifact-descriptor",
+      "decisionRecord": "docs/adr/0057-native-postgres-artifact-inspection.md"
+    }
+  },
+  "frozenPins": [
+    "Acquisition selector is /opt/homebrew/opt/postgresql@17/bin/initdb.",
+    "Only its resolved versioned Cellar path under /opt/homebrew/Cellar/postgresql@17/ is recorded.",
+    "Observed initdb version must equal 17.11; no unobserved version is filled in.",
+    "Only bounded --version and --help reads are executed; no install, initdb operation, SQL, service, or listener action.",
+    "The descriptor reports only required help option names and hashes; no raw help/version streams or inferred bottle identity.",
+    "Registered service.postgres remains BLOCKED and whole acceptance remains incomplete."
+  ],
+  "sourcePins": [
+    {
+      "path": "packages/ops/src/public.ts",
+      "bytes": 17564,
+      "sha256": "3d5008da5215cb1d86f12bd80afc1b86c61ef82ab205e1dfa5f9a79ed7bff7c5",
+      "role": "owned doctor implementation"
+    },
+    {
+      "path": "architecture/features.json",
+      "bytes": 175960,
+      "sha256": "047b9bc4fd6518a164080194598b1a21dbb76756abfe39468ca9e6d2ab8c52f1",
+      "role": "existing doctor and artifact feature facts"
+    },
+    {
+      "path": "docs/adr/0057-native-postgres-artifact-inspection.md",
+      "bytes": 3898,
+      "sha256": "504c4e6d357af090575f0961a69c436cfe0595a4581ceecb0f56082e22fd6000",
+      "role": "written design decision before implementation"
+    },
+    {
+      "path": "packages/self-improvement/src/accounting-postgres.ts",
+      "bytes": 8521,
+      "sha256": "b9b2b721acec01d490a247b9fd415b6bd3e8ecc6d55fc4adab4b1b7bb91557f0",
+      "role": "read-only selector source; not modified"
+    },
+    {
+      "path": "packages/contracts/src/ops-registry.ts",
+      "bytes": 12721,
+      "sha256": "d3561c802167daf325008af504221809457cc4d42ad71d9118042dbcdc574933",
+      "role": "read-only registered service inventory; not modified"
+    },
+    {
+      "path": "build/evidence/R0.04/pg-plan-final-parent-review.json",
+      "bytes": 2131,
+      "sha256": "e401f30491b9c8a5ea0db6ff0eda753eec2f829721fe9f170143c9a4c05a58ed",
+      "role": "accepted scope and pin constraints"
+    }
+  ],
+  "baseline": {
+    "doctorEvidence": {
+      "path": "build/evidence/R0.04/pg-artifact-descriptor-source-admission-doctor.json",
+      "bytes": 23929,
+      "sha256": "0ab51ca007d80bf812014a8341439209034f5de4f641ca6315f6869c97212778",
+      "measuredAt": "2026-10-07T08:02:38.395Z",
+      "servicePostgresBeforeChange": {
+        "state": "NOT_IMPLEMENTED",
+        "reasonCode": "OWNER_TRANSPORT_NOT_IMPLEMENTED",
+        "prerequisite": "Verified installed-service manifest and authenticated public owner transport are required."
+      }
+    },
+    "nativeArtifactVersion": null,
+    "nativeArtifactPath": null,
+    "nativeArtifactSha256": null,
+    "acquisitionReceiptSha256": null,
+    "bottleIdentity": null
+  },
+  "verification": {
+    "sourceReadOnlyReviewPerformed": true,
+    "syntaxOrTypecheckRunByAgent": false,
+    "testsRunByAgent": false,
+    "buildOrGenerationRunByAgent": false,
+    "cliOrNativeProbeRunByAgent": false,
+    "parentMayResumeVerification": true
+  },
+  "next": "Parent may inspect this handoff and run the admitted static/build/CLI verification. Actual executable path, version, digest and receipt remain unobserved until that later doctor invocation. No root preparation request is part of this source step."
+}

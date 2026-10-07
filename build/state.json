@@ -2,7 +2,7 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-07T08:01:30.048Z",
+  "updatedAt": "2026-10-07T08:16:37.227Z",
   "phase": "R0_FEASIBILITY",
   "activeCard": "R0.04",
   "cardCount": 87,
@@ -1459,7 +1459,8 @@
         "build/evidence/R0.04/siwc-control-stage-preparation.json",
         "build/evidence/R0.04/root-stage-result.json",
         "build/evidence/R0.04/control-runtime-probe-preparation.json",
-        "build/evidence/R0.04/control-runtime-probe-replan.json"
+        "build/evidence/R0.04/control-runtime-probe-replan.json",
+        "build/evidence/R0.04/pg-artifact-descriptor-final-verification.json"
       ],
       "requiredATs": [
         "AT-authority-34",
@@ -1584,6 +1585,25 @@
           "Actual Ops/evaluator/agent target execution and native-launcher predicates",
           "Whole assigned acceptance verdicts"
         ]
+      },
+      "nativePgArtifactUnit": {
+        "state": "BOUNDED_ARTIFACT_INSPECTION_VERIFIED_AND_STOPPED",
+        "startedAt": "2026-10-07T08:04:41.025Z",
+        "sourceDeadline": "2026-10-07T08:25:00Z",
+        "targetStopAt": "2026-10-07T10:04:00Z",
+        "sourceOwner": null,
+        "sourceAdmission": "build/evidence/R0.04/pg-artifact-descriptor-source-admission.json",
+        "CLImeasurementAttempts": 2,
+        "maxCLImeasurementAttempts": 3,
+        "rootInitializationAllowed": false,
+        "wholeATComplete": false,
+        "serviceReady": false,
+        "handoff": "build/evidence/R0.04/pg-artifact-descriptor-source-handoff.json",
+        "firstMeasurementReview": "build/evidence/R0.04/pg-artifact-descriptor-first-measurement-review.json",
+        "stoppedAt": "2026-10-07T08:16:37.227Z",
+        "verification": "build/evidence/R0.04/pg-artifact-descriptor-final-verification.json",
+        "parserRepairHandoff": "build/evidence/R0.04/pg-artifact-descriptor-parser-repair-handoff.json",
+        "sourceMutationAllowed": false
       }
     },
     "R0.05": {
@@ -11700,7 +11720,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Await Auth87 phase1 SOURCE STOP; parent then paved generation/build/strict and fresh unfiltered CLI RED. Review actual owner-expired/duplicate-refresh evidence before admitting tiny phase2 manual-pool resync fix. Poll roots; valid ROOT02 DONE prioritizes R0.01 after owned cleanup.",
+  "nextAction": "Commit verified PostgreSQL artifact descriptor, then prepare the fixed native initialization operation without root execution or a new request while ROOT02 is pending. Poll root queue; valid ROOT02 DONE immediately prioritizes R0.01 after owned cleanup.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -22293,18 +22313,17 @@
     "queuedRootReserveAdmissionGate": false
   },
   "latestStaticVerification": {
-    "path": "build/evidence/R0.10/authority61-strict-check.log",
-    "sha256": "27e93956efa86f57479c90ffbb691aeeb7a324c6c6e5a6de68e7ec71f662bdad",
+    "path": "build/evidence/R0.04/pg-artifact-descriptor-second-check.txt",
+    "sha256": "fccd90d8de72ac76eb067cd3ee2411318dbc4f5c396612acd7f79d8b87b8c23f",
     "exitCode": 0,
     "artifacts": 403,
     "contracts": 335,
     "cliManifests": 43,
-    "features": 105,
+    "features": 106,
     "commands": 55,
     "indexedATs": 1447,
-    "schemaDigest": "3e0b8f7f6b1024f1c3bcdde8ee0816a971f4e22f722228426468bb08c426bfd7",
-    "log": "build/evidence/R0.10/authority61-strict-check.log",
-    "recordedAt": "2026-10-07T06:53:09.085Z",
+    "schemaDigest": "779e71109bfe7b8386d416292981e8538ee7363cc2fe3bda4e6280dbcb101e16",
+    "recordedAt": "2026-10-07T08:16:37.227Z",
     "command": "npm run check",
     "swiftInvoked": false
   },
@@ -22348,32 +22367,32 @@
     }
   },
   "resourceAdmission": {
-    "measuredAt": "2026-10-07T07:54:31.245Z",
-    "availableBytes": "2924904448",
+    "measuredAt": "2026-10-07T08:15:10.154Z",
+    "availableBytes": "2785951744",
     "pressure": "normal",
     "strictlyFreeAdmission": false,
     "repairFloorApplied": false,
     "ownedWorldsRunning": 0,
     "helpersRunning": 0,
     "helperNeedBytes": "268435456",
-    "measurementSource": "build/evidence/R0.03/auth87-owner-green-doctor.json",
+    "measurementSource": "build/evidence/R0.04/pg-artifact-descriptor-second-doctor.json",
     "marginBytes": "536870912",
     "ownedStackId": null,
     "stackAndNativeChildrenNeedBytes": "0",
-    "jobNeedBytes": "1073741824",
-    "requiredAvailableBytes": "1610612736",
+    "jobNeedBytes": "0",
+    "requiredAvailableBytes": "536870912",
     "secondPhysicalFitGate": false,
     "queuedRootReserveGate": false,
     "rule": "Normal OS pressure and available memory at least the current job declared need plus512MiB; no strictly-free, hypothetical reserve, swap or second physical-fit gate",
     "measurementHistorical": true
   },
   "activeWorkers": [],
-  "pullRequestUpdatedAt": "2026-10-07T06:59:14.756Z",
+  "pullRequestUpdatedAt": "2026-10-07T08:04:41.025Z",
   "continuationCheckpoint": {
-    "recordedAt": "2026-10-07T08:01:30.048Z",
-    "state": "BOUNDED_SERIALIZATION_UNIT_VERIFIED_AND_CLOSED_WHOLE_PENDING",
+    "recordedAt": "2026-10-07T08:11:25.294Z",
+    "state": "FIRST_CLI_VERSION_NOT_OBSERVED_BOUNDED_SOURCE_REPAIR",
     "wholeGoal": "ACTIVE",
-    "sourceMutator": null,
+    "sourceMutator": "/root/r004_pg_native_minimum_plan",
     "ownedWorldsRunning": 0,
     "rootQueueSha256": "6bdca8b36154b5ec87875c5a1fe0e5d5f9a8a0b6d172c26c7d99ad9f2dd6307e",
     "rootPinsUnchanged": true,
@@ -22381,7 +22400,7 @@
       "ROOT-R004-20261006-02",
       "ROOT-R005-20261006-01"
     ],
-    "next": "Commit verified boundedAuth87 source/evidence. Next R004 existingdoctor nativePGartifact descriptor only; no root03 while02pending. Valid root02DONE immediately prioritizesR001."
+    "next": "AfterparserrepairSOURCESTOP, parentbuild/strict then2ndactualCLImeasurement; atmost3total. No root03while02pending."
   },
   "readOnlyWorkers": []
 }

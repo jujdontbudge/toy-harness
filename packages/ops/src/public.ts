@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { spawnSync } from "node:child_process";
-import { readFileSync, realpathSync } from "node:fs";
-import { join } from "node:path";
+import { lstatSync, readFileSync, realpathSync } from "node:fs";
+import { dirname, join } from "node:path";
 import { trustedToolEnvironment } from "./checkout-root.js";
 import {
   capabilityViewSchema, checkViewSchema, cliDeclarations, controlStatusInputSchema, controlStatusSchema, doctorInputSchema, doctorReportSchema,
@@ -42,6 +42,119 @@ const inspectCodexRuntime = (remainingMs: number): CheckViewV1 => {
   const protocol = inspectCodexProtocol(observedVersion === "0.160.0" && executable !== null ? executable : "", observedVersion === "0.160.0" ? remainingMs - Number((process.hrtime.bigint() - started) / 1000000n) : 0);
   const measured = installedCodexRuntimeSchema.parse({ expectedVersion: "0.160.0", observedVersion, executableDigest, versionMatches: observedVersion === "0.160.0", protocol, inferenceAttested: false, authorizationInspected: false, paidFallbackPermitted: false });
   return checkViewSchema.parse({ id: "read.model-route", owner: "ops", state: measured.versionMatches ? "PASS" : "BLOCKED", checkedAt: new Date().toISOString(), reasonCode, prerequisite: JSON.stringify(measured), nextCommandId: "probe.run", links: { recordRefs: [], observations: [], artifactDigests: executableDigest === null ? [] : [executableDigest] } });
+};
+
+const inspectPostgresArtifact = (remainingMs: number): CheckViewV1 => {
+  const started = process.hrtime.bigint();
+  const expectedVersion = "17.11";
+  const selector = "/opt/homebrew/opt/postgresql@17/bin/initdb";
+  const cellarPrefix = "/opt/homebrew/Cellar/postgresql@17/";
+  const requiredOptions = ["--pgdata", "--encoding", "--locale", "--data-checksums", "--auth-local", "--auth-host", "--username"] as const;
+  const allowedSignals: readonly string[] = ["SIGABRT", "SIGBUS", "SIGFPE", "SIGHUP", "SIGILL", "SIGINT", "SIGKILL", "SIGPIPE", "SIGQUIT", "SIGSEGV", "SIGTERM", "SIGTRAP"];
+  let executablePath: string | null = null;
+  let cellarVersion: string | null = null;
+  let executableDigest: string | null = null;
+  let observedVersion: string | null = null;
+  let versionObservation = "unmeasured";
+  let versionStatus: number | null = null;
+  let versionSignal: string | null = null;
+  let versionErrorCategory = "unmeasured";
+  let versionCanonicalPrefix = false;
+  let versionHomebrewSuffix = false;
+  let helpObservation = "unmeasured";
+  let supportedOptions: string[] = [];
+  let receiptPath: string | null = null;
+  let receiptDigest: string | null = null;
+  let receiptObservation = "unmeasured";
+  let reasonCode = "POSTGRES_ARTIFACT_UNAVAILABLE";
+  const remaining = (): number => Math.max(0, remainingMs - Number((process.hrtime.bigint() - started) / 1000000n));
+  const environment = { PATH: "/usr/bin:/bin:/usr/sbin:/sbin", LANG: "C", LC_ALL: "C" };
+  try {
+    const realUid = process.getuid?.();
+    const effectiveUid = process.geteuid?.();
+    if (process.platform !== "darwin" || process.arch !== "arm64") reasonCode = "POSTGRES_ARTIFACT_PLATFORM_UNSUPPORTED";
+    else if (realUid === undefined || effectiveUid === undefined || realUid === 0 || effectiveUid === 0) reasonCode = "POSTGRES_ARTIFACT_ROOT_CALLER_REFUSED";
+    else {
+      executablePath = realpathSync(selector);
+      const pathMatch = executablePath.startsWith(cellarPrefix) ? /^([A-Za-z0-9._+-]+)\/bin\/initdb$/.exec(executablePath.slice(cellarPrefix.length)) : null;
+      const resolvedCellarVersion = pathMatch?.[1] ?? null;
+      if (resolvedCellarVersion === null || !/^17\.11(?:_[0-9]+)?$/.test(resolvedCellarVersion)) reasonCode = "POSTGRES_ARTIFACT_PATH_OUTSIDE_PINNED_CELLAR_VERSION";
+      else {
+        cellarVersion = resolvedCellarVersion;
+        const executableStat = lstatSync(executablePath);
+        if (!executableStat.isFile() || executableStat.isSymbolicLink()) reasonCode = "POSTGRES_ARTIFACT_NOT_REGULAR_FILE";
+        else {
+          executableDigest = createHash("sha256").update(readFileSync(executablePath)).digest("hex");
+          receiptPath = join(dirname(dirname(executablePath)), "INSTALL_RECEIPT.json");
+          try {
+            const receiptStat = lstatSync(receiptPath);
+            if (!receiptStat.isFile() || receiptStat.isSymbolicLink() || receiptStat.size > 65536) receiptObservation = "invalid";
+            else {
+              receiptDigest = createHash("sha256").update(readFileSync(receiptPath)).digest("hex");
+              receiptObservation = "observed";
+            }
+          } catch (error) {
+            const code = error instanceof Error && "code" in error && typeof error.code === "string" ? error.code : null;
+            receiptObservation = code === "ENOENT" ? "absent" : "unreadable";
+          }
+          const versionTimeout = Math.min(remaining(), 2500);
+          const versionChild = versionTimeout > 0 ? spawnSync(executablePath, ["--version"], {
+            cwd: "/", env: environment, encoding: "utf8", timeout: versionTimeout, killSignal: "SIGKILL", maxBuffer: 4096
+          }) : null;
+          const childStatus = versionChild?.status ?? null;
+          const childSignal = versionChild?.signal ?? null;
+          versionStatus = childStatus !== null && childStatus >= 0 && childStatus <= 255 ? childStatus : null;
+          versionSignal = childSignal === null ? null : allowedSignals.includes(childSignal) ? childSignal : "OTHER";
+          const versionErrorCode = versionChild?.error && "code" in versionChild.error && typeof versionChild.error.code === "string" ? versionChild.error.code : null;
+          const versionOutput = versionChild?.status === 0 && !versionChild.error ? versionChild.stdout.trim() : null;
+          versionCanonicalPrefix = versionOutput?.startsWith("initdb (PostgreSQL) ") ?? false;
+          versionHomebrewSuffix = versionOutput?.endsWith(" (Homebrew)") ?? false;
+          const versionMatch = versionOutput === null ? null : /^initdb \(PostgreSQL\) (\d+\.\d+(?:\.\d+)?)(?: \(Homebrew\))?$/.exec(versionOutput);
+          observedVersion = versionMatch?.[1] ?? null;
+          versionObservation = observedVersion === null ? "unavailable_or_unrecognized" : "observed";
+          if (versionChild === null) versionErrorCategory = "budget_exhausted";
+          else if (versionErrorCode === "ETIMEDOUT") versionErrorCategory = "timeout";
+          else if (versionChild.error) versionErrorCategory = "spawn_error";
+          else if (versionChild.status !== 0) versionErrorCategory = "nonzero_exit";
+          else versionErrorCategory = observedVersion === null ? "unrecognized_output" : "observed";
+          if (observedVersion !== expectedVersion) {
+            if (versionErrorCategory === "timeout" || versionErrorCategory === "budget_exhausted") reasonCode = "POSTGRES_VERSION_READ_TIMEOUT";
+            else if (versionErrorCategory === "spawn_error") reasonCode = "POSTGRES_VERSION_SPAWN_FAILED";
+            else if (versionErrorCategory === "nonzero_exit") reasonCode = "POSTGRES_VERSION_COMMAND_FAILED";
+            else reasonCode = observedVersion === null ? "POSTGRES_VERSION_OUTPUT_UNRECOGNIZED" : "POSTGRES_VERSION_MISMATCH";
+          } else {
+            const helpTimeout = Math.min(remaining(), 2500);
+            const helpChild = helpTimeout > 0 ? spawnSync(executablePath, ["--help"], {
+              cwd: "/", env: environment, encoding: "utf8", timeout: helpTimeout, killSignal: "SIGKILL", maxBuffer: 65536
+            }) : null;
+            const helpOutput = helpChild?.status === 0 && !helpChild.error ? helpChild.stdout + "\n" + helpChild.stderr : null;
+            helpObservation = helpOutput === null ? "unavailable" : "observed";
+            supportedOptions = helpOutput === null ? [] : requiredOptions.filter(option => helpOutput.includes(option));
+            reasonCode = helpOutput === null ? "POSTGRES_HELP_NOT_OBSERVED"
+              : supportedOptions.length !== requiredOptions.length ? "POSTGRES_REQUIRED_OPTION_NAMES_INCOMPLETE"
+                : "POSTGRES_ARTIFACT_ONLY_SERVICE_READINESS_PENDING";
+          }
+        }
+      }
+    }
+  } catch (error) {
+    const code = error instanceof Error && "code" in error && typeof error.code === "string" ? error.code : null;
+    reasonCode = code === "ENOENT" ? "POSTGRES_ARTIFACT_ABSENT" : code === "EACCES" || code === "EPERM" ? "POSTGRES_ARTIFACT_UNREADABLE" : "POSTGRES_ARTIFACT_READ_FAILED";
+  }
+  const descriptor = {
+    expectedVersion, observedVersion, versionMatches: observedVersion === expectedVersion, executablePath, cellarVersion,
+    executableSha256: executableDigest, versionObservation,
+    versionDiagnostic: { status: versionStatus, signal: versionSignal, errorCategory: versionErrorCategory, canonicalPrefix: versionCanonicalPrefix, homebrewSuffix: versionHomebrewSuffix },
+    helpObservation, requiredOptionNames: requiredOptions,
+    observedOptionNames: supportedOptions, acquisitionReceipt: { state: receiptObservation, path: receiptPath, sha256: receiptDigest },
+    artifactOnly: true, serviceReadiness: "blocked"
+  };
+  const artifactDigests = [executableDigest, receiptDigest].filter((digest): digest is string => digest !== null);
+  return checkViewSchema.parse({
+    id: "service.postgres", owner: "ops", state: "BLOCKED", checkedAt: new Date().toISOString(), reasonCode,
+    prerequisite: JSON.stringify(descriptor), nextCommandId: "doctor",
+    links: { recordRefs: [], observations: [], artifactDigests }
+  });
 };
 
 const unavailableSnapshot = (release: Release, context: OpsControlContextV1): ControlStatusV1 => {
@@ -94,6 +207,8 @@ export const OpsControlRead = {
       if (fixture.ok && fixture.data.result) checks.push(...fixture.data.result.components);
     }
     if (request.deep) {
+      const postgresIndex = checks.findIndex((check) => check.id === "service.postgres");
+      if (postgresIndex >= 0) checks[postgresIndex] = inspectPostgresArtifact(context.timeoutMs - Number((process.hrtime.bigint() - started) / 1000000n));
       const inventory = inspectBuildInventory(context, []);
       if (inventory.ok) checks.push(...inventory.data);
       else checks.push(checkViewSchema.parse({ id: "build.source-inventory", owner: "ops", state: "FAIL", checkedAt: new Date().toISOString(), reasonCode: inventory.error.code, prerequisite: "Actual source inventory could not be validated.", nextCommandId: "probe.run", links: { recordRefs: [], observations: [], artifactDigests: [] } }));
@@ -158,4 +273,3 @@ export { BackupCapacityProbe } from "./backup-capacity-probe.js";
 
 export { RoleControlProbe } from "./role-control-probe.js";
 export { QueueFaultProbe } from "./queue-fault-probe.js";
-

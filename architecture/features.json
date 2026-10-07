@@ -74,7 +74,7 @@
     },
     {
       "id": "control.doctor",
-      "description": "Inspect the public owner view",
+      "description": "Inspect the public owner view, including a read-only descriptor for the canonical native PostgreSQL initdb artifact; installed service readiness remains pending",
       "implementation": "built",
       "requirementIds": [
         "0.17"
@@ -84,7 +84,10 @@
       "publicInterface": "OpsControlRead.doctor",
       "paths": [
         "packages/contracts/src/cli-declarations.ts",
-        "packages/ops/src/public.ts"
+        "packages/ops/src/public.ts",
+        "packages/contracts/src/ops-registry.ts",
+        "packages/self-improvement/src/accounting-postgres.ts",
+        "docs/adr/0057-native-postgres-artifact-inspection.md"
       ],
       "firstRelease": "R0",
       "commands": [
@@ -3120,6 +3123,31 @@
         "AT-ops-46",
         "AT-hermes-config-39",
         "AT-self-improvement-57"
+      ]
+    },
+    {
+      "id": "ops.postgres-artifact-descriptor",
+      "description": "Inspect the resolved native PostgreSQL 17.11 initdb artifact through deep doctor, recording its exact Cellar path, version, executable digest, and optional acquisition-receipt digest; the service remains blocked and artifact provenance is not inferred",
+      "implementation": "built",
+      "requirementIds": [
+        "spec:ops"
+      ],
+      "entry": "cli/src/main.ts",
+      "owner": "ops",
+      "publicInterface": "OpsControlRead.doctor",
+      "paths": [
+        "packages/ops/src/public.ts",
+        "packages/contracts/src/ops-registry.ts",
+        "packages/self-improvement/src/accounting-postgres.ts",
+        "docs/adr/0057-native-postgres-artifact-inspection.md"
+      ],
+      "firstRelease": "R0",
+      "commands": [
+        "doctor"
+      ],
+      "atIds": [
+        "AT-cli-3",
+        "AT-cli-9"
       ]
     },
     {

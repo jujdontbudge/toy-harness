@@ -1,0 +1,90 @@
+{
+  "recordedAt": "2026-10-07T08:11:25.294Z",
+  "card": "R0.04",
+  "decision": "ADMIT_BOUNDED_VERSION_PARSER_AND_ALLOWLISTED_COMMAND_DIAGNOSIS_REPAIR",
+  "doctorPath": "build/evidence/R0.04/pg-artifact-descriptor-doctor.json",
+  "doctorSha256": "69590a52b9f03f0abb509c6237b02bd37c85ac352a5da2f24746f8232a6a7ea5",
+  "actualPostgresCheck": {
+    "id": "service.postgres",
+    "owner": "ops",
+    "state": "BLOCKED",
+    "checkedAt": "2026-10-07T08:10:06.621Z",
+    "reasonCode": "POSTGRES_VERSION_NOT_OBSERVED",
+    "prerequisite": "{\"expectedVersion\":\"17.11\",\"observedVersion\":null,\"versionMatches\":false,\"executablePath\":\"/opt/homebrew/Cellar/postgresql@17/17.11/bin/initdb\",\"cellarVersion\":\"17.11\",\"executableSha256\":\"0b6e460ed82fabebd4d42bdf85ebbf7ff1922ebad20ef349930a9b0fd2bfffb6\",\"versionObservation\":\"unavailable_or_unrecognized\",\"helpObservation\":\"unmeasured\",\"requiredOptionNames\":[\"--pgdata\",\"--encoding\",\"--locale\",\"--data-checksums\",\"--auth-local\",\"--auth-host\",\"--username\"],\"observedOptionNames\":[],\"acquisitionReceipt\":{\"state\":\"observed\",\"path\":\"/opt/homebrew/Cellar/postgresql@17/17.11/INSTALL_RECEIPT.json\",\"sha256\":\"ed7839a11f74e69a1b54300ad1c7c6f87449c9a6f3ceb9b5c75e07efbb1dd148\"},\"artifactOnly\":true,\"serviceReadiness\":\"blocked\"}",
+    "nextCommandId": "doctor",
+    "links": {
+      "recordRefs": [],
+      "observations": [],
+      "artifactDigests": [
+        "0b6e460ed82fabebd4d42bdf85ebbf7ff1922ebad20ef349930a9b0fd2bfffb6",
+        "ed7839a11f74e69a1b54300ad1c7c6f87449c9a6f3ceb9b5c75e07efbb1dd148"
+      ]
+    }
+  },
+  "actualDescriptor": {
+    "expectedVersion": "17.11",
+    "observedVersion": null,
+    "versionMatches": false,
+    "executablePath": "/opt/homebrew/Cellar/postgresql@17/17.11/bin/initdb",
+    "cellarVersion": "17.11",
+    "executableSha256": "0b6e460ed82fabebd4d42bdf85ebbf7ff1922ebad20ef349930a9b0fd2bfffb6",
+    "versionObservation": "unavailable_or_unrecognized",
+    "helpObservation": "unmeasured",
+    "requiredOptionNames": [
+      "--pgdata",
+      "--encoding",
+      "--locale",
+      "--data-checksums",
+      "--auth-local",
+      "--auth-host",
+      "--username"
+    ],
+    "observedOptionNames": [],
+    "acquisitionReceipt": {
+      "state": "observed",
+      "path": "/opt/homebrew/Cellar/postgresql@17/17.11/INSTALL_RECEIPT.json",
+      "sha256": "ed7839a11f74e69a1b54300ad1c7c6f87449c9a6f3ceb9b5c75e07efbb1dd148"
+    },
+    "artifactOnly": true,
+    "serviceReadiness": "blocked"
+  },
+  "predictedCause": "Unrecognized literal Homebrew suffix is a hypothesis, not yet actual output proof.",
+  "rawCommandStreamsCaptured": false,
+  "sourceOwner": "/root/r004_pg_native_minimum_plan",
+  "sourceDeadline": "2026-10-07T08:20:00Z",
+  "CLImeasurementAttempts": 1,
+  "maxCLImeasurementAttempts": 3,
+  "measurement": {
+    "schemaVersion": "toy.bootstrap-resource-preflight.v2",
+    "measuredAt": "2026-10-07T08:10:06.963Z",
+    "samples": [
+      {
+        "observedAt": "2026-10-07T08:10:06.963Z",
+        "monotonicNanoseconds": "229898700941208",
+        "physicalBytes": "8589934592",
+        "pageSizeBytes": "16384",
+        "freeBytes": "1426194432",
+        "inactiveBytes": "1245200384",
+        "purgeableBytes": "38584320",
+        "speculativeBytes": "34144256",
+        "availableBytes": "2744123392",
+        "pressure": "normal",
+        "pressureSource": "os",
+        "pressureQueryOutput": "1\n"
+      }
+    ],
+    "completeMeasurements": true,
+    "jobNeedBytes": "1073741824",
+    "marginBytes": "536870912",
+    "requiredAvailableBytes": "1610612736",
+    "minimumAvailableBytes": "2744123392",
+    "normalPressureObserved": true,
+    "headroomSatisfied": true,
+    "reasons": [],
+    "resourcePermitIssued": false,
+    "admissionState": "admitted"
+  },
+  "rootOperations": 0,
+  "root03Allowed": false,
+  "wholeATComplete": false
+}

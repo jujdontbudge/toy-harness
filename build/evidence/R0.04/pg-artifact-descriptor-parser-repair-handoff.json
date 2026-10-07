@@ -1,0 +1,96 @@
+{
+  "schemaVersion": "toy.r0.04.pg-artifact-descriptor-parser-repair-handoff.v1",
+  "recordedAt": "2026-10-07T08:12:46Z",
+  "card": "R0.04",
+  "state": "source_repair_complete_stop",
+  "previousHandoff": "build/evidence/R0.04/pg-artifact-descriptor-source-handoff.json",
+  "scope": {
+    "filesChanged": [
+      "packages/ops/src/public.ts",
+      "docs/adr/0057-native-postgres-artifact-inspection.md"
+    ],
+    "featureFactsChanged": false,
+    "cliOrDtoChanged": false,
+    "rootOrPostgresOperationPerformed": false,
+    "hostArtifactReadByAgent": false,
+    "testsBuildGenerationOrStaticChecksRunByAgent": false,
+    "wholeAtOrCardComplete": false,
+    "root02Pending": true
+  },
+  "priorActualDoctorMeasurement": {
+    "evidencePath": "build/evidence/R0.04/pg-artifact-descriptor-doctor.json",
+    "measurementTime": "2026-10-07T08:10:06.963Z",
+    "valuesProvidedByParentWithoutAgentReadingEvidenceFile": true,
+    "servicePostgresState": "BLOCKED",
+    "reasonCode": "POSTGRES_VERSION_NOT_OBSERVED",
+    "resolvedPath": "/opt/homebrew/Cellar/postgresql@17/17.11/bin/initdb",
+    "executableSha256": "0b6e460ed82fabebd4d42bdf85ebbf7ff1922ebad20ef349930a9b0fd2bfffb6",
+    "acquisitionReceiptSha256": "ed7839a11f74e69a1b54300ad1c7c6f87449c9a6f3ceb9b5c75e07efbb1dd148",
+    "observedVersion": null,
+    "helpObservation": "unmeasured",
+    "rawOutputAvailableToAgent": false,
+    "causeConfirmed": false
+  },
+  "boundedParserRepair": {
+    "acceptedVersionForms": [
+      "initdb (PostgreSQL) <version>",
+      "initdb (PostgreSQL) <version> (Homebrew)"
+    ],
+    "versionGrammar": "Anchored whole-output match; the only suffix accepted is the exact literal ` (Homebrew)`. The parsed numeric version must still equal 17.11. Arbitrary prefixes, suffixes, or extra output lines remain rejected.",
+    "safeDiagnostics": {
+      "status": "integer exit status 0 through 255 or null",
+      "signal": "known signal token or OTHER, or null",
+      "errorCategory": [
+        "unmeasured",
+        "budget_exhausted",
+        "timeout",
+        "spawn_error",
+        "nonzero_exit",
+        "unrecognized_output",
+        "observed"
+      ],
+      "canonicalPrefix": "boolean",
+      "homebrewSuffix": "boolean"
+    },
+    "neverExposed": [
+      "raw stdout",
+      "raw stderr",
+      "error message",
+      "argv",
+      "environment"
+    ],
+    "serviceReadiness": "BLOCKED in every outcome"
+  },
+  "sourcePins": [
+    {
+      "path": "packages/ops/src/public.ts",
+      "bytes": 19744,
+      "sha256": "546480a3d0e0629088b7dc59aed5bac582272cdb8a4c8feed83d95cdf6b6b2c5"
+    },
+    {
+      "path": "docs/adr/0057-native-postgres-artifact-inspection.md",
+      "bytes": 4506,
+      "sha256": "e3edee8f61db4f196e31c36a356ee8ff47d78892d41cf6e7bb99a804ccfb46fe"
+    },
+    {
+      "path": "architecture/features.json",
+      "bytes": 175960,
+      "sha256": "047b9bc4fd6518a164080194598b1a21dbb76756abfe39468ca9e6d2ab8c52f1",
+      "state": "unchanged from previous handoff"
+    },
+    {
+      "path": "build/evidence/R0.04/pg-plan-final-parent-review.json",
+      "bytes": 2131,
+      "sha256": "e401f30491b9c8a5ea0db6ff0eda753eec2f829721fe9f170143c9a4c05a58ed",
+      "state": "unchanged accepted scope pin"
+    }
+  ],
+  "frozenRootInputs": {
+    "changedByRepair": false,
+    "readByAgent": false,
+    "rootQueueChanged": false,
+    "root03Appended": false,
+    "parentEstablishedSixPinsRemainOutsideThisSourceRepair": true
+  },
+  "next": "Source ownership is stopped. Parent may use the remaining admitted CLI measurement attempts and resume verification. Do not treat the optional suffix as a measured cause until a later bounded readback confirms it; current artifact version and service readiness remain unverified."
+}
