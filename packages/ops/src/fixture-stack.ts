@@ -308,7 +308,12 @@ export const FixtureProbe = {
       const checks = observations.map(check => checkViewSchema.parse(check));
       const reference = input.probeId === "AT-hermes-config-101" && ["k4a-connector", "k4a-tool", "k4a-skill"].includes(input.caseId ?? "");
       const modelPolicy = (input.caseId === "model-route-policy" && ["AT-hermes-config-1", "AT-hermes-config-76", "AT-hermes-config-77"].includes(input.probeId)) || (input.caseId === undefined && sourceRegistration?.owner === "hermes" && ["model-route.roles", "delegation.route-skill"].includes(sourceRegistration.scenarioId));
-      const modelStream = input.caseId === "model-route-stream" && ["AT-hermes-config-40", "AT-self-improvement-58"].includes(input.probeId);
+      const stream40Phases = ["stream-interrupted", "stream-failed", "stream-disconnected", "stream-cancelled", "route-mismatch", "route-unobserved"];
+      const stream40ManifestCases = stream40Phases.map(phase => ({ id: phase, publicOperation: "ModelRoute.invoke + ModelAdmission.reserve/claimSend/settle/inspect", phase }));
+      const unfilteredStream40 = input.probeId === "AT-hermes-config-40" && input.caseId === undefined && sourceRegistration?.owner === "hermes"
+        && sourceRegistration.scenarioId === "model-route.stream-recovery" && sourceRegistration.sourceAssertionHash === "c84077f2c8edc141c70f1740cb2ab1cf329616c52f819cb5d6f3e05da4e520d3"
+        && sourceRegistration.firstRelease === "R0" && sourceRegistration.kind === "behavioral" && JSON.stringify(sourceRegistration.mandatoryCases) === JSON.stringify(stream40ManifestCases);
+      const modelStream = (input.caseId === "model-route-stream" && ["AT-hermes-config-40", "AT-self-improvement-58"].includes(input.probeId)) || unfilteredStream40;
       const profileConsumers = input.caseId === undefined && sourceRegistration?.owner === "hermes" && sourceRegistration.scenarioId === "profile.gateway-consumers";
       const mcpHttp = input.caseId === undefined && sourceRegistration?.owner === "hermes" && sourceRegistration.scenarioId === "profile.mcp-http";
       const accounting = (input.caseId === undefined || input.caseId === "model-admission") && ["AT-ops-10", "AT-ops-11", "AT-ops-49", "AT-ops-50", "AT-ops-51", "AT-ops-52"].includes(input.probeId);

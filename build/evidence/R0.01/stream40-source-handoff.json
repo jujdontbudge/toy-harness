@@ -1,0 +1,87 @@
+{
+  "schemaVersion": "toy.r001-stream40-source-handoff.v1",
+  "recordedAt": "2026-10-07T14:39:33Z",
+  "card": "R0.01",
+  "assignedAssertion": {
+    "id": "AT-hermes-config-40",
+    "sourceAssertionHash": "c84077f2c8edc141c70f1740cb2ab1cf329616c52f819cb5d6f3e05da4e520d3",
+    "rung": "CLI"
+  },
+  "sourceAdmission": {
+    "path": "build/evidence/R0.01/stream40-source-admission.json",
+    "state": "SOURCE_ADMITTED",
+    "baselineVerified": true,
+    "baselineWorldDown": true,
+    "parentVerificationAfterStop": true,
+    "acceptedPlan": {
+      "path": "build/evidence/R0.01/independent-route-next-minimum-20261007.json",
+      "sha256": "acc1a36b4f515b93788b5a28f8dca400af92253d467fd1dfad49d1a3183f3fa3"
+    }
+  },
+  "state": "SOURCE_STOP",
+  "sourceOwnershipStopped": true,
+  "ownedSourcePaths": [
+    {
+      "path": "packages/hermes/src/model-route-probe.ts",
+      "admissionSha256": "dcecd115c2b28fd39574b454ed9246172204dc295ce01103033a0e4b1492a4a8",
+      "handoffSha256": "820862303d2471517e4474440d697dc0bf3f043a4960dff680ea0fee6b605489"
+    },
+    {
+      "path": "cli/src/main.ts",
+      "admissionSha256": "59cf325b9a2d6465ea88e36ac9419320878488659c6f9151f22722eda1e8968a",
+      "handoffSha256": "2186840498e12e39156877da9e3e3431d86045af87108cbf2fd236105a1f2db5"
+    },
+    {
+      "path": "packages/ops/src/fixture-stack.ts",
+      "admissionSha256": "c570617d868f0a36d4c5984fa406c3358fb3cfecf393cb8cf12989f5a5f569aa",
+      "handoffSha256": "4311ee0309bfa3dbc2a9c6eff3c07b55bdaca4e1e2ad41ff1e2334595560dda6"
+    },
+    {
+      "path": "tests/registry.yaml",
+      "admissionSha256": "aba82b88c425775407e858fe6f81d16d21e43eaa3ce68e330561f9511b8fca36",
+      "handoffSha256": "2952c2a7bc3b66752de58360f3525957aa18fe6701d900427cf8f5df643f4004"
+    }
+  ],
+  "behavior": {
+    "manifest": "One AT40 behavioral manifest is bound to the exact canonical assertion hash, Hermes owner and model-route.stream-recovery scenario.",
+    "cases": ["stream-interrupted", "stream-failed", "stream-disconnected", "stream-cancelled", "route-mismatch", "route-unobserved"],
+    "explicitSubsetCompatibility": "The existing --case model-route-stream route remains supported for AT40 and AT-self-improvement-58.",
+    "durableOwner": "AT40 reserves and claims through public ModelAdmission.withTest, settles unknown usage, reopens public ModelAdmission.forTest against the same live owned PostgreSQL fixture, repeats the identical reserve request and reads the ledger through inspect.",
+    "terminalAcknowledgement": "nativeTerminalAcknowledged is derived only from exactly one observed fake HTTP ReadableStream close/cancel callback. If cleanup is unobserved, settle with false and stop before another case.",
+    "readbacks": "Case evidence includes actual route receipt fields, HTTP transport call bound to the claimed call id, stored call id/requestHash/charge/uncertain state, and before/after/reopened reservation counts.",
+    "providerPermission": "ModelAdmission claim continues to report providerSendPermitIssued=false; this is fixed fake-world route/accounting evidence only."
+  },
+  "invariants": {
+    "modelAdmissionOwnerEdited": false,
+    "productionTransportEdited": false,
+    "contractsOrDTOsEdited": false,
+    "databaseSchemaOrMigrationEdited": false,
+    "newModuleOrCommandOrEnum": false,
+    "featureMapManuallyEdited": false,
+    "generatedFilesEdited": false,
+    "actualCredentialsOrProfilesRead": false,
+    "nativeInferencePermissionClaimed": false
+  },
+  "frozenRootPins": {
+    "scripts/probe-siwc-control-runtime.mts": "96e1fd2d98469772c3d0d203386c3f7aa56af57db025c420fa93f1f4ecd7e70d",
+    "scripts/stage-siwc-control-runtime.mts": "13ff53e341ab7670dbed967ce810d5aa2834df7a47ffe1620f037ff1da3ee0d4",
+    "control/dist/bootstrap/siwc-runtime-probe.js": "06870b8dd41d2ffc093cc04680ba56c4570f07b4aa0a27a9ab70796cdd8204bd",
+    "scripts/probe-unfiltered-control-denials.mts": "1cb93d375df931a482d946170e31549450d8efb71d6a251f5d2bcea8c5b92529",
+    "packages/ops/dist/role-control-probe.js": "1764a98e5ae45694118007c242320711a7bd9e0d021b7c6d6ee0cbb8cff73ec2",
+    "control/dist/bootstrap/denial-probe.js": "7fda1824ec7bc308cac97d07c7c92cadd5527e87e89d79b410d33d95d1b30672"
+  },
+  "verification": {
+    "actualCliRun": false,
+    "buildOrGenerationOrStaticOrTestRun": false,
+    "runtimeOrNativeOrProviderOrOSAction": false,
+    "helpersSpawned": 0,
+    "commitsCreated": 0,
+    "backgroundProcessesStarted": 0,
+    "parentMustVerify": true,
+    "acceptanceComplete": false,
+    "wholeATPassed": false,
+    "wholeCardPassed": false,
+    "wholeGoalBlocked": false
+  },
+  "requiredNextStep": "Parent regenerates the manifest-derived artifacts, checks source/static integrity and frozen pins, then performs the admitted unfiltered public CLI run/readback and complete owned stack teardown. Stop at first implemented PASS."
+}

@@ -4809,6 +4809,102 @@ export const registeredCliAcceptanceManifestInventory = [
     "simUnavailableReason": "SIM cannot select raw auth-store lineage, invoke administrative PKCE login or force independent process reload and expiry boundaries. The assigned CLI probe uses real public Hermes subprocesses with only external provider, clock and OS seams."
   },
   {
+    "id": "AT-hermes-config-40",
+    "rung": "CLI",
+    "sourceAssertionHash": "c84077f2c8edc141c70f1740cb2ab1cf329616c52f819cb5d6f3e05da4e520d3",
+    "commandId": "probe.run",
+    "scenarioId": "model-route.stream-recovery",
+    "owner": "hermes",
+    "firstRelease": "R0",
+    "kind": "behavioral",
+    "mandatoryCases": [
+      {
+        "id": "stream-interrupted",
+        "publicOperation": "ModelRoute.invoke + ModelAdmission.reserve/claimSend/settle/inspect",
+        "phase": "stream-interrupted"
+      },
+      {
+        "id": "stream-failed",
+        "publicOperation": "ModelRoute.invoke + ModelAdmission.reserve/claimSend/settle/inspect",
+        "phase": "stream-failed"
+      },
+      {
+        "id": "stream-disconnected",
+        "publicOperation": "ModelRoute.invoke + ModelAdmission.reserve/claimSend/settle/inspect",
+        "phase": "stream-disconnected"
+      },
+      {
+        "id": "stream-cancelled",
+        "publicOperation": "ModelRoute.invoke + ModelAdmission.reserve/claimSend/settle/inspect",
+        "phase": "stream-cancelled"
+      },
+      {
+        "id": "route-mismatch",
+        "publicOperation": "ModelRoute.invoke + ModelAdmission.reserve/claimSend/settle/inspect",
+        "phase": "route-mismatch"
+      },
+      {
+        "id": "route-unobserved",
+        "publicOperation": "ModelRoute.invoke + ModelAdmission.reserve/claimSend/settle/inspect",
+        "phase": "route-unobserved"
+      }
+    ],
+    "trigger": "Run the six existing fixed external stream outcomes through the original background route. For each actual admitted call, observe the normalized receipt and HTTP body close/cancel, retain unknown-usage reservation charge, then reopen the public owner and confirm exact idempotent call readback without a duplicate charge. The test owner issues no provider-send permit; protected/native execution remains pending.",
+    "faultControls": [
+      {
+        "id": "fixed-external-stream-faults",
+        "seam": "provider",
+        "affectedPhases": [
+          "stream-interrupted",
+          "stream-failed",
+          "stream-disconnected",
+          "stream-cancelled",
+          "route-mismatch",
+          "route-unobserved"
+        ]
+      }
+    ],
+    "observations": [
+      {
+        "id": "stream-receipt-and-cleanup",
+        "independentReader": "ModelRoute.invoke receipt and actual fixed HTTP body close/cancel callbacks",
+        "caseIds": [
+          "stream-interrupted",
+          "stream-failed",
+          "stream-disconnected",
+          "stream-cancelled",
+          "route-mismatch",
+          "route-unobserved"
+        ]
+      },
+      {
+        "id": "durable-reservation-readback",
+        "independentReader": "ModelAdmission public reserve/claimSend/settle/inspect after same-world owner reopen",
+        "caseIds": [
+          "stream-interrupted",
+          "stream-failed",
+          "stream-disconnected",
+          "stream-cancelled",
+          "route-mismatch",
+          "route-unobserved"
+        ]
+      },
+      {
+        "id": "stored-cli-readback",
+        "independentReader": "toy probe.show and stack.down exact persisted result and complete teardown",
+        "caseIds": [
+          "stream-interrupted",
+          "stream-failed",
+          "stream-disconnected",
+          "stream-cancelled",
+          "route-mismatch",
+          "route-unobserved"
+        ]
+      }
+    ],
+    "simUnavailableReason": "SIM cannot bind pre-build registered route dispatch to the real owned PostgreSQL reservation owner or independently inspect stored calls. The CLI reaches those public interfaces with a fixed external HTTP stream."
+  },
+  {
     "id": "AT-hermes-config-50",
     "rung": "CLI",
     "sourceAssertionHash": "2d2e75c4c8e22b94d2f1fc10e237613182ddf8ef5daef01264eef72ed2cf6520",

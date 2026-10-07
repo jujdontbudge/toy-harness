@@ -2,14 +2,25 @@ import { createHash, randomUUID } from "node:crypto";
 import { existsSync, lstatSync, mkdtempSync, readFileSync, readdirSync, realpathSync, rmSync, symlinkSync, unlinkSync, writeFileSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
-import { checkViewSchema, modelRoleSchema, modelRouteSelectionSchema, opsErrorMessages, registeredProbeInputSchema, registeredCliAcceptanceManifestInventory, researchSkillPinSchema, codexDelegationTaskSchema, researchAttentionDecisionSchema, researchAttentionDecisionIdSchema, researchComponentComparisonV3Schema } from "@toy/contracts";
-import type { CheckViewV1, ModelRouteConversationV1, ModelRouteHttpTransport, ModelRouteReceiptV1, ModelRouteSettingsV1, OpsControlContextV1, RegisteredProbeInputV1, RegisteredProbeOperationV1, CodexDelegationExecutor, ModelRouteDelegationInputV1, ResearchSkillResourceReader, ResearchAttentionDecisionV1, ResearchComponentComparisonCheckV2, ResearchComponentInspectionV1, ResearchDocumentOverlayV1, ResearchRegisterInspectionV3, Result } from "@toy/contracts";
+import { checkViewSchema, modelAdmissionRequestSchema, modelRoleSchema, modelRouteSelectionSchema, opsErrorMessages, registeredProbeInputSchema, registeredCliAcceptanceManifestInventory, researchSkillPinSchema, codexDelegationTaskSchema, researchAttentionDecisionSchema, researchAttentionDecisionIdSchema, researchComponentComparisonV3Schema } from "@toy/contracts";
+import type { CheckViewV1, ModelAdmissionApi, ModelAdmissionRecordV1, ModelAdmissionRequestV1, ModelRouteConversationV1, ModelRouteHttpTransport, ModelRouteReceiptV1, ModelRouteSelectionV1, ModelRouteSettingsV1, OpsControlContextV1, RegisteredProbeInputV1, RegisteredProbeOperationV1, CodexDelegationExecutor, ModelRouteDelegationInputV1, ResearchSkillResourceReader, ResearchAttentionDecisionV1, ResearchComponentComparisonCheckV2, ResearchComponentInspectionV1, ResearchDocumentOverlayV1, ResearchRegisterInspectionV3, Result } from "@toy/contracts";
 import { OpsTestStack, TestProbeControl, trustedCheckoutRoot } from "@toy/ops/public";
-import { EngineeringControl } from "@toy/self-improvement/public";
+import { EngineeringControl, ModelAdmission } from "@toy/self-improvement/public";
 import { ModelRoute } from "./model-route.js";
 
 const digest = (bytes: string | Uint8Array): string => createHash("sha256").update(bytes).digest("hex");
+const stream40AssertionHash = "c84077f2c8edc141c70f1740cb2ab1cf329616c52f819cb5d6f3e05da4e520d3";
+const stream40Cases = ["stream-interrupted", "stream-failed", "stream-disconnected", "stream-cancelled", "route-mismatch", "route-unobserved"] as const;
+type StreamTransportTrace = { callId: string; transportCallIds: string[]; bodyCloseCount: number; bodyCancelCount: number };
 type FixtureOutcome = "completed" | "interrupted" | "failed" | "disconnected" | "cancelled" | "route-mismatch" | "route-unobserved";
+const stream40Outcomes: Record<typeof stream40Cases[number], FixtureOutcome> = {
+  "stream-interrupted": "interrupted",
+  "stream-failed": "failed",
+  "stream-disconnected": "disconnected",
+  "stream-cancelled": "cancelled",
+  "route-mismatch": "route-mismatch",
+  "route-unobserved": "route-unobserved"
+};
 const conversation: ModelRouteConversationV1 = {
   input: [
     { type: "message", role: "developer", content: "Fixed provider compatibility fixture" },
@@ -21,8 +32,9 @@ const conversation: ModelRouteConversationV1 = {
   ],
   tools: [{ type: "namespace", name: "toy", description: "Fixed Hermes tools", tools: [{ type: "function", name: "read", description: "Read fixed fixture", parameters: { type: "object", properties: {}, required: [], additionalProperties: false }, strict: true }] }]
 };
-const provider = (settings: ModelRouteSettingsV1, outcome: FixtureOutcome, cancellation: AbortController): ModelRouteHttpTransport => request => {
+const provider = (settings: ModelRouteSettingsV1, outcome: FixtureOutcome, cancellation: AbortController, trace?: StreamTransportTrace): ModelRouteHttpTransport => request => {
   if (request.model !== settings.model || request.reasoning.effort !== settings.effort || request.service_tier !== settings.serviceTier || request.store !== false || request.stream !== true || JSON.stringify(request.input) !== JSON.stringify(conversation.input) || JSON.stringify(request.tools) !== JSON.stringify(conversation.tools) || "max_output_tokens" in request || "previous_response_id" in request || "background" in request) throw new Error("FIXTURE_REQUEST_MISMATCH");
+  if (trace) trace.transportCallIds.push(trace.callId);
   const metadata = { id: "fixed-response", model: settings.model, reasoning: { effort: outcome === "route-mismatch" ? "high" : settings.effort }, service_tier: settings.serviceTier };
   const events: unknown[] = [];
   if (outcome !== "route-unobserved") events.push({ type: "response.created", response: metadata });
@@ -35,18 +47,22 @@ const provider = (settings: ModelRouteSettingsV1, outcome: FixtureOutcome, cance
   const body = new ReadableStream<Uint8Array>({ pull(controller) {
     if (outcome === "cancelled" && index === 2) cancellation.abort();
     const event = events[index++];
-    if (event === undefined) { controller.close(); return; }
+    if (event === undefined) { controller.close(); if (trace) trace.bodyCloseCount++; return; }
     controller.enqueue(new TextEncoder().encode("data: " + JSON.stringify(event) + "\r\n\r\n"));
-  } }, { highWaterMark: 0 });
+  }, cancel() { if (trace) trace.bodyCancelCount++; } }, { highWaterMark: 0 });
   return Promise.resolve(new Response(body, { headers: { "content-type": "text/event-stream" } }));
+};
+
+const consumeSelected = async (selection: ModelRouteSelectionV1, outcome: FixtureOutcome, trace?: StreamTransportTrace): Promise<ModelRouteReceiptV1> => {
+  const cancellation = new AbortController();
+  for await (const event of ModelRoute.invoke(selection, conversation, provider(selection.settings, outcome, cancellation, trace), cancellation.signal)) if (event.type === "receipt") return event.receipt;
+  throw new Error("FIXTURE_RECEIPT_MISSING");
 };
 
 const consume = async (input: Parameters<typeof ModelRoute.select>[0], outcome: FixtureOutcome): Promise<ModelRouteReceiptV1> => {
   const selection = ModelRoute.select(input);
   if (!selection.ok) throw new Error("FIXTURE_ROUTE_REFUSED");
-  const cancellation = new AbortController();
-  for await (const event of ModelRoute.invoke(selection.data, conversation, provider(selection.data.settings, outcome, cancellation), cancellation.signal)) if (event.type === "receipt") return event.receipt;
-  throw new Error("FIXTURE_RECEIPT_MISSING");
+  return consumeSelected(selection.data, outcome);
 };
 
 const observation = (id: CheckViewV1["id"], receipts: ModelRouteReceiptV1[], passed: boolean): CheckViewV1 => checkViewSchema.parse({
@@ -66,6 +82,150 @@ const refusedBeforeSend = async (selection: unknown): Promise<boolean> => {
   } catch { return sends === 0; }
 };
 
+type Stream40Result = {
+  caseId: typeof stream40Cases[number];
+  request: ModelAdmissionRequestV1 | null;
+  beforeCount: number | null;
+  reserved: ModelAdmissionRecordV1 | null;
+  claimRecord: ModelAdmissionRecordV1 | null;
+  claimBound: boolean;
+  receipt: ModelRouteReceiptV1 | null;
+  trace: StreamTransportTrace | null;
+  cleanupObserved: boolean;
+  settled: ModelAdmissionRecordV1 | null;
+  afterCount: number | null;
+  replayed: ModelAdmissionRecordV1 | null;
+  reopenedCount: number | null;
+  replayExact: boolean;
+  stopped: boolean;
+  reason: string | null;
+};
+
+const stream40ReceiptMatches = (caseId: Stream40Result["caseId"], receipt: ModelRouteReceiptV1): boolean => {
+  const outputStarted = caseId !== "route-mismatch" && caseId !== "route-unobserved";
+  const terminal = caseId === "stream-failed" || caseId === "route-mismatch" || caseId === "route-unobserved" ? "failed" : "interrupted";
+  const reasonCode = caseId === "stream-failed" ? "quota_exhausted" : caseId === "route-mismatch" ? "route_mismatch" : caseId === "route-unobserved" ? "route_unobserved" : "stream_interrupted";
+  return receipt.outputStarted === outputStarted && receipt.terminal === terminal && receipt.completion === "pending" && receipt.usageState === "uncertain"
+    && receipt.usage === null && receipt.reservationTokens === 4096 && receipt.reasonCode === reasonCode
+    && receipt.requested.outputLimitKind === "estimate" && receipt.requested.providerOutputCap === null && !receipt.paidFallbackAttempted;
+};
+
+const stream40Checks = async (input: RegisteredProbeInputV1, context: OpsControlContextV1, selection: ModelRouteSelectionV1): Promise<CheckViewV1[]> => {
+  const results: Stream40Result[] = stream40Cases.map(caseId => ({ caseId, request: null, beforeCount: null, reserved: null, claimRecord: null, claimBound: false,
+    receipt: null, trace: null, cleanupObserved: false, settled: null, afterCount: null, replayed: null, reopenedCount: null, replayExact: false, stopped: false, reason: null }));
+  const stackId = context.environment.stackId;
+  if (context.environment.kind !== "test" || stackId === null) {
+    for (const result of results) result.reason = "OWNED_TEST_STACK_REQUIRED";
+    return results.map(result => stream40Check(result, selection, false, 0));
+  }
+  const accountRef = `fixture.model-route-stream.${stackId}.${input.requestId}`;
+  const budgetGroupId = randomUUID();
+  const rootContractId = randomUUID();
+  const runId = randomUUID();
+  const run = await ModelAdmission.withTest(context, selection.policyDigest, async (owner: ModelAdmissionApi) => {
+    let stopped = false;
+    for (const result of results) {
+      if (stopped) { result.stopped = true; result.reason = "STOPPED_AFTER_UNOBSERVED_OR_FAILED_OWNER_STEP"; continue; }
+      const request = modelAdmissionRequestSchema.parse({
+        callKey: `model-route-stream:${input.requestId}:${result.caseId}`, budgetGroupId, rootContractId, runId, generation: "1", parentCallId: null, attempt: 1,
+        accountRef, requested: selection, work: { class: "quiet-tick" }, reservedInputTokens: 1, expectedFiveHourUpperPercent: null, expectedWeeklyUpperPercent: null
+      });
+      result.request = request;
+      const before = owner.inspect(accountRef);
+      if (!before.ok) { result.reason = `OWNER_INSPECT_${before.error.code}`; stopped = true; continue; }
+      result.beforeCount = before.data.ledger.fallbackJobsReserved;
+      const reserved = owner.reserve(request);
+      if (!reserved.ok) { result.reason = `RESERVE_${reserved.error.code}`; stopped = true; continue; }
+      result.reserved = reserved.data;
+      if (!reserved.data.decision.eligible || reserved.data.state !== "reserved" || !reserved.data.reservationCharged || !reserved.data.leaseActive || reserved.data.nativeSendCount !== 0
+        || reserved.data.requestHash.length !== 64 || reserved.data.callKey !== request.callKey || reserved.data.budgetGroupId !== request.budgetGroupId
+        || reserved.data.runId !== request.runId || reserved.data.generation !== request.generation || reserved.data.requested.policyDigest !== selection.policyDigest) {
+        result.reason = "RESERVATION_NOT_ELIGIBLE_OR_CHARGED"; stopped = true; continue;
+      }
+      const claim = owner.claimSend(reserved.data.id);
+      if (!claim.ok) { result.reason = `CLAIM_${claim.error.code}`; stopped = true; continue; }
+      result.claimRecord = claim.data.record;
+      if (!claim.data.claimed || claim.data.record.id !== reserved.data.id || claim.data.record.requestHash !== reserved.data.requestHash || claim.data.record.state !== "sending"
+        || claim.data.record.nativeSendCount !== 1 || !claim.data.record.leaseActive
+        || claim.data.providerSendPermitIssued !== false || claim.data.record.decision.providerSendPermitIssued !== false) {
+        result.reason = "CLAIM_NOT_BOUND_OR_PROVIDER_PERMIT_CHANGED"; stopped = true; continue;
+      }
+      const trace: StreamTransportTrace = { callId: claim.data.record.id, transportCallIds: [], bodyCloseCount: 0, bodyCancelCount: 0 };
+      result.trace = trace;
+      try {
+        result.receipt = await consumeSelected(selection, stream40Outcomes[result.caseId], trace);
+        result.claimBound = trace.transportCallIds.length === 1 && trace.transportCallIds[0] === claim.data.record.id;
+      } catch {
+        result.reason = "MODEL_ROUTE_INVOKE_FAILED";
+      }
+      result.cleanupObserved = trace.bodyCloseCount + trace.bodyCancelCount === 1;
+      const settled = owner.settle({ callId: claim.data.record.id, nativeTerminalAcknowledged: result.cleanupObserved, usage: null, reportedTotalTokens: null });
+      if (!settled.ok) { result.reason = `SETTLE_${settled.error.code}`; stopped = true; continue; }
+      result.settled = settled.data;
+      const after = owner.inspect(accountRef);
+      if (!after.ok) { result.reason = `AFTER_INSPECT_${after.error.code}`; stopped = true; continue; }
+      result.afterCount = after.data.ledger.fallbackJobsReserved;
+      if (!result.cleanupObserved) { result.reason = "HTTP_BODY_CLEANUP_UNOBSERVED_ACK_FALSE_STOP"; stopped = true; continue; }
+      if (result.receipt === null || !result.claimBound || !stream40ReceiptMatches(result.caseId, result.receipt)) result.reason ??= "STREAM_RECEIPT_OR_CALL_BINDING_MISMATCH";
+      if (settled.data.state !== "uncertain" || settled.data.requestHash !== reserved.data.requestHash || !settled.data.reservationCharged || settled.data.leaseActive || settled.data.nativeSendCount !== 1
+        || !settled.data.nativeTerminalAcknowledged || settled.data.usage !== null || settled.data.reportedTotalTokens !== null
+        || result.afterCount !== result.beforeCount + 1 || settled.data.id !== claim.data.record.id) result.reason ??= "RETAINED_RESERVATION_READBACK_MISMATCH";
+    }
+    const reopened = ModelAdmission.forTest(context, selection.policyDigest);
+    if (!reopened.ok) {
+      for (const result of results) if (result.settled !== null) result.reason ??= `REOPEN_${reopened.error.code}`;
+      return { ok: true, data: results };
+    }
+    const reopenedBefore = reopened.data.inspect(accountRef);
+    if (!reopenedBefore.ok) {
+      for (const result of results) if (result.settled !== null) result.reason ??= `REOPEN_INSPECT_${reopenedBefore.error.code}`;
+      return { ok: true, data: results };
+    }
+    const reopenedCount = reopenedBefore.data.ledger.fallbackJobsReserved;
+    for (const result of results) {
+      if (result.request === null || result.settled === null) continue;
+      const replay = reopened.data.reserve(result.request);
+      if (!replay.ok) { result.reason ??= `IDEMPOTENT_RESERVE_${replay.error.code}`; continue; }
+      result.replayed = replay.data;
+      const snapshot = reopened.data.inspect(accountRef);
+      if (!snapshot.ok) { result.reason ??= `REOPENED_INSPECT_${snapshot.error.code}`; continue; }
+      result.reopenedCount = snapshot.data.ledger.fallbackJobsReserved;
+      result.replayExact = JSON.stringify(replay.data) === JSON.stringify(result.settled)
+        && result.reopenedCount === reopenedCount;
+      if (!result.replayExact) result.reason ??= "IDEMPOTENT_STORED_CALL_OR_LEDGER_MISMATCH";
+    }
+    return { ok: true, data: results };
+  });
+  const ownerReady = run.ok;
+  if (!run.ok) for (const result of results) result.reason ??= `MODEL_ADMISSION_${run.error.code}`;
+  const ownerResults = run.ok ? run.data : results;
+  const admittedCount = ownerResults.filter(result => result.settled !== null).length;
+  return ownerResults.map(result => stream40Check(result, selection, ownerReady, admittedCount));
+};
+
+const stream40Check = (result: Stream40Result, selection: ModelRouteSelectionV1, ownerReady: boolean, admittedCount: number): CheckViewV1 => {
+  const expectedReceipt = result.receipt !== null && stream40ReceiptMatches(result.caseId, result.receipt);
+  const ownerState = result.settled !== null && result.replayed !== null && result.replayExact && result.settled.state === "uncertain"
+    && result.settled.reservationCharged && result.settled.usage === null && result.settled.reportedTotalTokens === null;
+  const passed = ownerReady && result.reason === null && !result.stopped && expectedReceipt && result.claimBound && result.cleanupObserved && ownerState
+    && result.beforeCount !== null && result.afterCount === result.beforeCount + 1 && result.reopenedCount === admittedCount
+    && result.claimRecord !== null && result.claimRecord.decision.providerSendPermitIssued === false && result.claimRecord.nativeSendCount === 1
+    && result.settled !== null && result.settled.nativeTerminalAcknowledged && !result.settled.leaseActive;
+  const prerequisite = JSON.stringify({ caseId: result.caseId, executed: result.receipt !== null, route: [selection.role, selection.arm, selection.settings.model, selection.settings.effort, selection.settings.serviceTier],
+    receipt: result.receipt === null ? null : [result.receipt.terminal, result.receipt.completion, result.receipt.usageState, result.receipt.outputStarted, result.receipt.usage, result.receipt.reservationTokens, result.receipt.requested.outputLimitKind, result.receipt.requested.providerOutputCap, result.receipt.reasonCode, result.receipt.paidFallbackAttempted],
+    http: result.trace === null ? null : [result.trace.transportCallIds, result.trace.bodyCloseCount, result.trace.bodyCancelCount, result.cleanupObserved],
+    claim: result.claimRecord === null ? null : [result.claimRecord.id, result.claimRecord.nativeSendCount, result.claimRecord.decision.providerSendPermitIssued],
+    stored: result.settled === null ? null : [result.settled.id, result.settled.requestHash, result.settled.state, result.settled.reservationCharged, result.settled.leaseActive, result.settled.nativeSendCount, result.settled.nativeTerminalAcknowledged, result.settled.usage],
+    repeated: result.replayed === null ? null : [result.replayed.id, result.replayed.requestHash, result.replayed.state, result.replayed.reservationCharged, result.replayExact],
+    ledger: [result.beforeCount, result.afterCount, result.reopenedCount, admittedCount], ownerReady, reason: result.reason });
+  const withinLimit = Buffer.byteLength(prerequisite, "utf8") <= 2000;
+  const boundedPass = passed && withinLimit;
+  const boundedPrerequisite = withinLimit ? prerequisite : JSON.stringify({ caseId: result.caseId, executed: result.receipt !== null, evidenceOverLimit: true });
+  return checkViewSchema.parse({ id: "read.model-route-policy", owner: "hermes", state: boundedPass ? "PASS" : "FAIL",
+    checkedAt: new Date().toISOString(), reasonCode: boundedPass ? "STREAM_AND_DURABLE_RESERVATION_READBACK_PASS" : "STREAM_OR_DURABLE_RESERVATION_READBACK_FAIL",
+    prerequisite: boundedPrerequisite, nextCommandId: "probe.show", links: { recordRefs: [], observations: [], artifactDigests: [digest(readFileSync(new URL("./model-route-probe.js", import.meta.url)))] } });
+};
+
 export const ModelRouteProbe = {
   async run(input: RegisteredProbeInputV1, context: OpsControlContextV1): Promise<Result<RegisteredProbeOperationV1>> {
     if (!registeredProbeInputSchema.safeParse(input).success) return { ok: false, error: { module: "ops", code: "INVALID_INPUT", message: opsErrorMessages.INVALID_INPUT, retryable: false } };
@@ -74,7 +234,12 @@ export const ModelRouteProbe = {
     if (input.caseId === undefined && input.probeId === "AT-attention-66") return attentionProbe(input, context);
     if (input.caseId === undefined && registeredCliAcceptanceManifestInventory.some(entry => entry.id === input.probeId && entry.owner === "hermes" && entry.scenarioId === "delegation.route-skill")) return delegationProbe(input, context);
     const policy = input.caseId === "model-route-policy" && ["AT-hermes-config-1", "AT-hermes-config-76", "AT-hermes-config-77"].includes(input.probeId);
-    const stream = input.caseId === "model-route-stream" && ["AT-hermes-config-40", "AT-self-improvement-58"].includes(input.probeId);
+    const streamManifest = registeredCliAcceptanceManifestInventory.find(entry => entry.id === input.probeId);
+    const expectedStreamCases = stream40Cases.map(caseId => ({ id: caseId, publicOperation: "ModelRoute.invoke + ModelAdmission.reserve/claimSend/settle/inspect", phase: caseId }));
+    const unfilteredStream40 = input.probeId === "AT-hermes-config-40" && input.caseId === undefined && streamManifest?.owner === "hermes"
+      && streamManifest.scenarioId === "model-route.stream-recovery" && streamManifest.sourceAssertionHash === stream40AssertionHash
+      && streamManifest.firstRelease === "R0" && streamManifest.kind === "behavioral" && JSON.stringify(streamManifest.mandatoryCases) === JSON.stringify(expectedStreamCases);
+    const stream = (input.caseId === "model-route-stream" && ["AT-hermes-config-40", "AT-self-improvement-58"].includes(input.probeId)) || unfilteredStream40;
     if (!policy && !stream) return { ok: false, error: { module: "ops", code: "INVALID_INPUT", message: opsErrorMessages.INVALID_INPUT, retryable: false } };
     const owned = OpsTestStack.inspect(context);
     if (!owned.ok) return owned;
@@ -110,13 +275,19 @@ export const ModelRouteProbe = {
         }));
       }
       if (stream) {
-        for (const outcome of ["interrupted", "failed", "disconnected", "cancelled"] as const) {
-          const receipt = await consume({ role: "background", arm: "original" }, outcome);
-          checks.push(observation("read.model-route-policy", [receipt], receipt.outputStarted && receipt.completion === "pending" && receipt.usageState === "uncertain" && receipt.usage === null && receipt.reservationTokens === 4096 && receipt.requested.outputLimitKind === "estimate" && receipt.requested.providerOutputCap === null && !receipt.paidFallbackAttempted));
-        }
-        for (const outcome of ["route-mismatch", "route-unobserved"] as const) {
-          const receipt = await consume({ role: "background", arm: "original" }, outcome);
-          checks.push(observation("read.model-route-policy", [receipt], !receipt.outputStarted && receipt.terminal === "failed" && receipt.completion === "pending" && receipt.reservationTokens === 4096 && receipt.reasonCode === outcome.replaceAll("-", "_")));
+        if (input.probeId === "AT-hermes-config-40") {
+          const selection = ModelRoute.select({ role: "background", arm: "original" });
+          if (!selection.ok) checks.push(...stream40Cases.map(caseId => checkViewSchema.parse({ id: "read.model-route-policy", owner: "hermes", state: "FAIL", checkedAt: new Date().toISOString(), reasonCode: "MODEL_ROUTE_SELECTION_REFUSED", prerequisite: JSON.stringify({ caseId, selected: false }), nextCommandId: "probe.show", links: { recordRefs: [], observations: [], artifactDigests: [digest(readFileSync(new URL("./model-route-probe.js", import.meta.url)))] } })));
+          else checks.push(...await stream40Checks(input, context, selection.data));
+        } else {
+          for (const outcome of ["interrupted", "failed", "disconnected", "cancelled"] as const) {
+            const receipt = await consume({ role: "background", arm: "original" }, outcome);
+            checks.push(observation("read.model-route-policy", [receipt], receipt.outputStarted && receipt.completion === "pending" && receipt.usageState === "uncertain" && receipt.usage === null && receipt.reservationTokens === 4096 && receipt.requested.outputLimitKind === "estimate" && receipt.requested.providerOutputCap === null && !receipt.paidFallbackAttempted));
+          }
+          for (const outcome of ["route-mismatch", "route-unobserved"] as const) {
+            const receipt = await consume({ role: "background", arm: "original" }, outcome);
+            checks.push(observation("read.model-route-policy", [receipt], !receipt.outputStarted && receipt.terminal === "failed" && receipt.completion === "pending" && receipt.reservationTokens === 4096 && receipt.reasonCode === outcome.replaceAll("-", "_")));
+          }
         }
       }
       return TestProbeControl.run(input, context, checks);
