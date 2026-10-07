@@ -1,0 +1,335 @@
+{
+  "recordedAt": "2026-10-07T09:24:04.551Z",
+  "card": "R0.06",
+  "assignedAT": "AT-ops-10",
+  "state": "BOUNDED_ACCOUNTING_CORRECTION_VERIFIED_AND_STOPPED",
+  "startedAt": "2026-10-07T09:19:00.000Z",
+  "deadline": "2026-10-07T11:19:00.000Z",
+  "stoppedAt": "2026-10-07T09:24:04.551Z",
+  "rung": "CLI",
+  "unfiltered": true,
+  "nativeAttempts": 2,
+  "failedNativeAttempts": 1,
+  "assignedChecks": 4,
+  "affectedRegressionChecks": 13,
+  "summary": {
+    "path": "build/evidence/R0.06/exhausted-pending-green-summary.json",
+    "sha256": "ed215ad37ec70db1d4fed7c8a9da30645024bc7acbaba7f57b2eb07de9292e38"
+  },
+  "redReview": {
+    "path": "build/evidence/R0.06/exhausted-pending-red-parent-review.json",
+    "sha256": "e402297ab68c0a3271011771a8b1cfcf6eba3a9eac298f63dde49e4fef5ea8e1"
+  },
+  "testPinsUnchanged": true,
+  "maximumPrerequisiteUtf8Bytes": 1790,
+  "scope": "Real PostgreSQL accounting owner retains normalized exhausted/429 and100-percent cron, auxiliary and child denials; readbacks survive owner restart and same-day recovery resumes all9 exact calls once.",
+  "assignedReadbacks": [
+    {
+      "name": "exhausted-known-reset",
+      "evidence": {
+        "normalizedProviderObservation": "429-exhausted",
+        "reason": "QUOTA_EXHAUSTED",
+        "retryAt": "2026-10-12T00:00:00.000Z",
+        "records": [
+          [
+            "quiet-tick",
+            "QUOTA_EXHAUSTED",
+            "2026-10-12T00:00:00.000Z",
+            false,
+            0
+          ],
+          [
+            "auxiliary",
+            "QUOTA_EXHAUSTED",
+            "2026-10-12T00:00:00.000Z",
+            false,
+            0
+          ],
+          [
+            "child",
+            "QUOTA_EXHAUSTED",
+            "2026-10-12T00:00:00.000Z",
+            false,
+            0
+          ]
+        ],
+        "pendingCount": 3,
+        "exactReadback": true,
+        "charged": 0,
+        "lease": false,
+        "physicalProviderCalls": 0,
+        "paidRequests": 0,
+        "wholeATComplete": false
+      }
+    },
+    {
+      "name": "exhausted-unknown-reset",
+      "evidence": {
+        "normalizedProviderObservation": "429-exhausted",
+        "reason": "QUOTA_EXHAUSTED",
+        "retryAt": null,
+        "records": [
+          [
+            "quiet-tick",
+            "QUOTA_EXHAUSTED",
+            null,
+            false,
+            0
+          ],
+          [
+            "auxiliary",
+            "QUOTA_EXHAUSTED",
+            null,
+            false,
+            0
+          ],
+          [
+            "child",
+            "QUOTA_EXHAUSTED",
+            null,
+            false,
+            0
+          ]
+        ],
+        "pendingCount": 3,
+        "exactReadback": true,
+        "charged": 0,
+        "lease": false,
+        "physicalProviderCalls": 0,
+        "paidRequests": 0,
+        "wholeATComplete": false
+      }
+    },
+    {
+      "name": "full-quota-windows",
+      "evidence": {
+        "normalizedProviderObservation": "100-percent",
+        "reason": "FIVE_HOUR_THRESHOLD",
+        "retryAt": "2026-10-05T05:00:00.000Z",
+        "records": [
+          [
+            "quiet-tick",
+            "FIVE_HOUR_THRESHOLD",
+            "2026-10-05T05:00:00.000Z",
+            false,
+            0
+          ],
+          [
+            "auxiliary",
+            "FIVE_HOUR_THRESHOLD",
+            "2026-10-05T05:00:00.000Z",
+            false,
+            0
+          ],
+          [
+            "child",
+            "FIVE_HOUR_THRESHOLD",
+            "2026-10-05T05:00:00.000Z",
+            false,
+            0
+          ]
+        ],
+        "pendingCount": 3,
+        "exactReadback": true,
+        "charged": 0,
+        "lease": false,
+        "physicalProviderCalls": 0,
+        "paidRequests": 0,
+        "wholeATComplete": false
+      }
+    },
+    {
+      "name": "deferred-restart-recovery",
+      "evidence": {
+        "postgresqlRestarted": true,
+        "persisted": true,
+        "refusedWhileExhausted": true,
+        "resumed": 9,
+        "expectedCalls": 9,
+        "duplicateCharge": false,
+        "physicalProviderCalls": 0,
+        "paidRequests": 0,
+        "wholeATComplete": false
+      }
+    }
+  ],
+  "sourceBindings": [
+    {
+      "path": "packages/self-improvement/src/model-admission.ts",
+      "sha256": "44a36ef026d203f9db9437dcf53c1172224420596d0570353bcc564a758439c7"
+    },
+    {
+      "path": "packages/self-improvement/src/accounting-probe.ts",
+      "sha256": "8786034a5fca758b117610a6be9bd403e22793cbcae752764e60b62b34b181fb"
+    },
+    {
+      "path": "packages/self-improvement/src/public.ts",
+      "sha256": "1c3a186cffb3729092d71febe57ab546ef58984703ef013dc30ae15b838182cd"
+    },
+    {
+      "path": "packages/ops/src/fixture-stack.ts",
+      "sha256": "96748348085715a6d97b4d8f1cd459dc373f1b0aab12ab1d4d9162407f4fa4f4"
+    },
+    {
+      "path": "packages/contracts/src/generated-probe-registry.ts",
+      "sha256": "0c11cc39a37732550f36fc8394dd6f664ff855cd5d9d4ad40a420bc7666d97dd"
+    },
+    {
+      "path": "tests/registry.yaml",
+      "sha256": "a1e5f0a4fd9b679124242eb9d7c96b1cc6c5a7152264c7a5654938f7907a4e37"
+    },
+    {
+      "path": "architecture/features.json",
+      "sha256": "3290c276c8783b24b0988f0fa4dddeafb5711840f22e2b13649f7ccab933b4c4"
+    },
+    {
+      "path": "docs/adr/0027-model-admission-accounting.md",
+      "sha256": "2324e65aa65914d27161771c8a2befeded5feea75a7d7db3bf6a5f70ea686893"
+    },
+    {
+      "path": "skills/toy-control/FEATURE-MAP.md",
+      "sha256": "79c2c45ecfec6e7e01c3a09ee4547bbdbf3947db25a3b4f36143211598a7b3ed"
+    },
+    {
+      "path": "packages/self-improvement/dist/model-admission.js",
+      "sha256": "ab60805ea5cde853937ce1cffe7592fc452f0a26256af1f58fbb95b3593e7d63"
+    },
+    {
+      "path": "packages/self-improvement/dist/accounting-probe.js",
+      "sha256": "2c3353672eff95de080812cb5e022f426205a38082d38afe724e1878205e72fb"
+    }
+  ],
+  "receiptBindings": [
+    {
+      "exitCode": 0,
+      "path": "build/evidence/R0.06/exhausted-pending-green-cli/up.json",
+      "sha256": "6f74cd11f33a4edb4086ab2df788fac2084269b4f18d1fb3c41d1f45ff6565f8"
+    },
+    {
+      "exitCode": 0,
+      "path": "build/evidence/R0.06/exhausted-pending-green-cli/AT-ops-10-run.json",
+      "sha256": "ec76860f6ff369eea841f5a662ced3e3b0a879bc52981f97a2a98b9ba4761e32"
+    },
+    {
+      "exitCode": 0,
+      "path": "build/evidence/R0.06/exhausted-pending-green-cli/AT-ops-10-show.json",
+      "sha256": "31f09ebe7c4d0c76573e79244b8d50b12846b7b2d922cf26d227cc55628e5d0b"
+    },
+    {
+      "exitCode": 0,
+      "path": "build/evidence/R0.06/exhausted-pending-green-cli/AT-ops-49-run.json",
+      "sha256": "4cdded12d42fb11e81cb442c8bdd56a9dfeea9b22262184c2f73a3e9a4c7ca0d"
+    },
+    {
+      "exitCode": 0,
+      "path": "build/evidence/R0.06/exhausted-pending-green-cli/AT-ops-49-show.json",
+      "sha256": "8b38ab0f8831de4d44e1c84f896651a8792b59bade9805279c5ea5b1f4b62dd4"
+    },
+    {
+      "exitCode": 0,
+      "path": "build/evidence/R0.06/exhausted-pending-green-cli/AT-ops-50-run.json",
+      "sha256": "01df5db44f8f78fbebe7a4c5134cba0d382316d0733ebd25bad1262b2296539c"
+    },
+    {
+      "exitCode": 0,
+      "path": "build/evidence/R0.06/exhausted-pending-green-cli/AT-ops-50-show.json",
+      "sha256": "f7edbc828f73cbd51a6d3ed3200256c83d0b2d6fc6da4e475219183f046459d4"
+    },
+    {
+      "exitCode": 0,
+      "path": "build/evidence/R0.06/exhausted-pending-green-cli/AT-ops-51-run.json",
+      "sha256": "b1dafb3395147208c5f36dda4d0b6a140cd89d97c3113e3723b3cd4b0156f464"
+    },
+    {
+      "exitCode": 0,
+      "path": "build/evidence/R0.06/exhausted-pending-green-cli/AT-ops-51-show.json",
+      "sha256": "9e561c1ea81f8c9bffa8122c08b166dfb6286ee0d49d1329c317732ae2447fe5"
+    },
+    {
+      "exitCode": 0,
+      "path": "build/evidence/R0.06/exhausted-pending-green-cli/AT-ops-52-run.json",
+      "sha256": "1057b914ac825bccde2d61af729df14a9958e7824920ecd7caeedc66141a39a4"
+    },
+    {
+      "exitCode": 0,
+      "path": "build/evidence/R0.06/exhausted-pending-green-cli/AT-ops-52-show.json",
+      "sha256": "4ddaa0b048a496bc8bcc2816f6b17d57981004f7e260f77161aab121e3780ade"
+    },
+    {
+      "exitCode": 0,
+      "path": "build/evidence/R0.06/exhausted-pending-green-cli/down.json",
+      "sha256": "7de641b7a05be6816937ec2e6689588e676d7fce5bc2c66eaf12a8d9ebcff507"
+    }
+  ],
+  "strict": {
+    "path": "build/evidence/R0.06/exhausted-pending-owner-strict-check.txt",
+    "sha256": "a6bd10507aaf20b23dc3a9bf202cec8c1ee5a643eb04e73dab4c373699cac6c6",
+    "verdict": "PASS",
+    "artifacts": 403,
+    "contracts": 335,
+    "cliManifests": 46,
+    "features": 106,
+    "commands": 55,
+    "indexedATs": 1447,
+    "swiftInvoked": false
+  },
+  "ownedWorld": "f72ba9cd-b20c-4afc-960f-fa2878c3332b",
+  "cleanupComplete": true,
+  "unresolvedResources": 0,
+  "wholeATsPassed": [],
+  "acceptanceComplete": false,
+  "liveProviderSends": 0,
+  "deferred": [
+    "Actual protected service/provider execution and independent dispatch",
+    "HTTP429 wire normalization",
+    "Canonical slot/wake delivery and cross-UTC-day resume",
+    "Full AT/card/release acceptance",
+    "Swift untilR3"
+  ],
+  "rootQueue": {
+    "path": "build/ROOT-REQUESTS.md",
+    "sha256": "6bdca8b36154b5ec87875c5a1fe0e5d5f9a8a0b6d172c26c7d99ad9f2dd6307e",
+    "root02": "PENDING",
+    "root00501": "PENDING"
+  },
+  "goal": "ACTIVE",
+  "frozenBindings": [
+    {
+      "path": "scripts/probe-siwc-control-runtime.mts",
+      "sha256": "96e1fd2d98469772c3d0d203386c3f7aa56af57db025c420fa93f1f4ecd7e70d",
+      "observedSha256": "96e1fd2d98469772c3d0d203386c3f7aa56af57db025c420fa93f1f4ecd7e70d",
+      "matches": true
+    },
+    {
+      "path": "scripts/stage-siwc-control-runtime.mts",
+      "sha256": "13ff53e341ab7670dbed967ce810d5aa2834df7a47ffe1620f037ff1da3ee0d4",
+      "observedSha256": "13ff53e341ab7670dbed967ce810d5aa2834df7a47ffe1620f037ff1da3ee0d4",
+      "matches": true
+    },
+    {
+      "path": "control/dist/bootstrap/siwc-runtime-probe.js",
+      "sha256": "06870b8dd41d2ffc093cc04680ba56c4570f07b4aa0a27a9ab70796cdd8204bd",
+      "observedSha256": "06870b8dd41d2ffc093cc04680ba56c4570f07b4aa0a27a9ab70796cdd8204bd",
+      "matches": true
+    },
+    {
+      "path": "scripts/probe-unfiltered-control-denials.mts",
+      "sha256": "1cb93d375df931a482d946170e31549450d8efb71d6a251f5d2bcea8c5b92529",
+      "observedSha256": "1cb93d375df931a482d946170e31549450d8efb71d6a251f5d2bcea8c5b92529",
+      "matches": true
+    },
+    {
+      "path": "packages/ops/dist/role-control-probe.js",
+      "sha256": "1764a98e5ae45694118007c242320711a7bd9e0d021b7c6d6ee0cbb8cff73ec2",
+      "observedSha256": "1764a98e5ae45694118007c242320711a7bd9e0d021b7c6d6ee0cbb8cff73ec2",
+      "matches": true
+    },
+    {
+      "path": "control/dist/bootstrap/denial-probe.js",
+      "sha256": "7fda1824ec7bc308cac97d07c7c92cadd5527e87e89d79b410d33d95d1b30672",
+      "observedSha256": "7fda1824ec7bc308cac97d07c7c92cadd5527e87e89d79b410d33d95d1b30672",
+      "matches": true
+    }
+  ],
+  "postVerificationMetadata": "ADR status updated to the verified17-check unit; runtime sources and test expectations unchanged."
+}

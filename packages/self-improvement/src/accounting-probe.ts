@@ -41,9 +41,9 @@ const finish = (owner: ModelAdmissionApi, record: ModelAdmissionRecordV1, known:
 };
 
 export const accountingProbe = async (input: RegisteredProbeInputV1, context: OpsControlContextV1): Promise<Result<RegisteredProbeOperationV1>> => {
-  if ((input.caseId !== undefined && input.caseId !== "model-admission") || !["AT-ops-49","AT-ops-50","AT-ops-51","AT-ops-52"].includes(input.probeId))
+  if ((input.caseId !== undefined && input.caseId !== "model-admission") || !["AT-ops-10","AT-ops-49","AT-ops-50","AT-ops-51","AT-ops-52"].includes(input.probeId))
     return {ok:false,error:{module:"ops",code:"INVALID_INPUT",message:opsErrorMessages.INVALID_INPUT,retryable:false,effectState:"none"}};
-  const phases = input.probeId === "AT-ops-49" ? ["named-window-equality-0", "named-window-equality-1", "named-window-equality-2", "foreground-contention-recovery"] : input.probeId === "AT-ops-50" ? ["persist-deferred-work","owner-queue-readback","ordered-resume-under-headroom"] : input.probeId === "AT-ops-51" ? ["eight-durable-background-reservations", "restart-new-goal-ninth-refused-foreground-exempt"] : ["fresh-known-veto-0", "fresh-known-veto-1", "fresh-known-veto-2", "fresh-known-veto-3"];
+  const phases = input.probeId === "AT-ops-10" ? ["exhausted-known-reset","exhausted-unknown-reset","full-quota-windows","deferred-restart-recovery"] : input.probeId === "AT-ops-49" ? ["named-window-equality-0", "named-window-equality-1", "named-window-equality-2", "foreground-contention-recovery"] : input.probeId === "AT-ops-50" ? ["persist-deferred-work","owner-queue-readback","ordered-resume-under-headroom"] : input.probeId === "AT-ops-51" ? ["eight-durable-background-reservations", "restart-new-goal-ninth-refused-foreground-exempt"] : ["fresh-known-veto-0", "fresh-known-veto-1", "fresh-known-veto-2", "fresh-known-veto-3"];
   const manifest = registeredCliAcceptanceManifestInventory.find(entry => entry.id === input.probeId);
   if (!manifest || manifest.scenarioId !== "accounting.model-admission" || JSON.stringify(manifest.mandatoryCases) !== JSON.stringify(phases.map(phase => ({ id: phase, publicOperation: "ReplayEnvironment.runRegisteredProbe", phase })))) return {ok:false,error:{module:"ops",code:"ATTESTATION_INVALID",message:opsErrorMessages.ATTESTATION_INVALID,retryable:false,effectState:"none"}};
   try {
@@ -70,6 +70,70 @@ export const accountingProbe = async (input: RegisteredProbeInputV1, context: Op
       checks.push(check("public-accounting-interface-refused",false,{errorCode:error.code,effectState:error.effectState}));
       return TestProbeControl.run(input,context,checks);
     };
+    if (input.probeId === "AT-ops-10") {
+      const retained: Array<{ accountRef: string; records: ModelAdmissionRecordV1[] }> = [];
+      const variants = [
+        { name: "exhausted-known-reset", status: "exhausted", values: windows(10,20), reason: "QUOTA_EXHAUSTED", retryAt: new Date(Date.parse(now)+604800000).toISOString() },
+        { name: "exhausted-unknown-reset", status: "exhausted", values: [], reason: "QUOTA_EXHAUSTED", retryAt: null },
+        { name: "full-quota-windows", status: "available", values: windows(100,20), reason: "FIVE_HOUR_THRESHOLD", retryAt: new Date(Date.parse(now)+18000000).toISOString() }
+      ] as const;
+      for (const variant of variants) {
+        const accountRef = "fixture.exhausted."+prefix+":"+variant.name;
+        const result = await ModelAdmission.withTest(context,policyDigest,owner=>exercise(()=>{
+          const observation = modelQuotaObservationSchema.parse({ id: identity(accountRef+":quota"), provider: "siwc_responses", accountRef, reportedAt: now, sourceAuthorized: true, schemaValid: true, status: variant.status, windows: variant.values, bodyRef: "fixed-external-quota-fixture:"+variant.name });
+          take(owner.observe(observation));
+          const records = [
+            take(owner.reserve(request(accountRef,accountRef+":cron",{class:"quiet-tick"},"background",true))),
+            take(owner.reserve(request(accountRef,accountRef+":auxiliary",{class:"auxiliary"},"auxiliary",true))),
+            take(owner.reserve(request(accountRef,accountRef+":delegate",{class:"child"},"child",true)))
+          ];
+          retained.push({accountRef,records});
+          const pending = take(owner.inspectPending(accountRef));
+          const readback = take(owner.inspect(accountRef));
+          const persisted = pending.length === records.length && records.every(record=>JSON.stringify(record)===JSON.stringify(pending.find(candidate=>candidate.id===record.id)));
+          const denied = records.every(record=>record.state==="denied"&&!record.decision.eligible&&record.decision.reason===variant.reason&&record.decision.retryAt===variant.retryAt&&!record.reservationCharged&&!record.leaseActive&&record.nativeSendCount===0&&!record.nativeTerminalAcknowledged&&record.endedAt===null&&!record.decision.paidFallbackPermitted&&!record.decision.providerSendPermitIssued);
+          checks.push(check(variant.name,denied&&persisted&&JSON.stringify(readback.observation)===JSON.stringify(observation)&&readback.ledger.fallbackJobsReserved===0&&!readback.ledger.providerLeaseActive,{
+            normalizedProviderObservation: variant.status === "exhausted" ? "429-exhausted" : "100-percent", reason:variant.reason, retryAt:variant.retryAt,
+            records:records.map(record=>[record.work.class,record.decision.reason,record.decision.retryAt,record.reservationCharged,record.nativeSendCount]),
+            pendingCount:pending.length, exactReadback:persisted, charged:readback.ledger.fallbackJobsReserved, lease:readback.ledger.providerLeaseActive, physicalProviderCalls:0, paidRequests:0, wholeATComplete:false
+          }));
+        }),diagnostic);
+        if (!result.ok) return reportFailure(result.error);
+      }
+      const recovery = await ModelAdmission.withTest(context,policyDigest,owner=>exercise(()=>{
+        let persisted = true;
+        let refusedWhileExhausted = true;
+        let resumed = 0;
+        let duplicateCharge = false;
+        for (const fixture of retained) {
+          const pending = take(owner.inspectPending(fixture.accountRef));
+          persisted &&= pending.length === fixture.records.length && fixture.records.every(record=>JSON.stringify(record)===JSON.stringify(pending.find(candidate=>candidate.id===record.id)));
+          const head = pending[0];
+          if (head) {
+            const blocked = take(owner.resumePending(fixture.accountRef,head.callKey));
+            refusedWhileExhausted &&= !blocked.decision.eligible&&!blocked.reservationCharged&&blocked.nativeSendCount===0&&!blocked.decision.paidFallbackPermitted;
+          } else refusedWhileExhausted = false;
+          observe(owner,fixture.accountRef,fixture.accountRef+":recovery",windows(10,20));
+          for (let count=0;count<fixture.records.length;count+=1) {
+            const next = take(owner.inspectPending(fixture.accountRef))[0];
+            if (!next) break;
+            const admitted = take(owner.resumePending(fixture.accountRef,next.callKey));
+            if (!admitted.decision.eligible) continue;
+            const terminal = finish(owner,admitted,true);
+            const before = take(owner.inspect(fixture.accountRef)).ledger.fallbackJobsReserved;
+            const repeated = take(owner.resumePending(fixture.accountRef,next.callKey));
+            const after = take(owner.inspect(fixture.accountRef)).ledger.fallbackJobsReserved;
+            duplicateCharge ||= before!==after||JSON.stringify(repeated)!==JSON.stringify(terminal);
+            if (terminal.nativeSendCount===1&&terminal.nativeTerminalAcknowledged&&terminal.state==="settled") resumed+=1;
+          }
+        }
+        checks.push(check("deferred-restart-recovery",persisted&&refusedWhileExhausted&&resumed===9&&!duplicateCharge&&retained.every(fixture=>take(owner.inspectPending(fixture.accountRef)).length===0),{
+          postgresqlRestarted:true, persisted, refusedWhileExhausted, resumed, expectedCalls:9, duplicateCharge, physicalProviderCalls:0, paidRequests:0, wholeATComplete:false
+        }));
+      }),diagnostic);
+      if (!recovery.ok) return reportFailure(recovery.error);
+      return TestProbeControl.run(input,context,checks);
+    }
     if (input.probeId === "AT-ops-50") {
       const accountRef="fixture.ordered-pause."+prefix;
       const key=prefix+":ordered-pause";

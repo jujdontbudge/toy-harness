@@ -2,9 +2,9 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-07T09:10:17.002Z",
+  "updatedAt": "2026-10-07T09:27:13.179Z",
   "phase": "R0_FEASIBILITY",
-  "activeCard": "R0.12",
+  "activeCard": "R0.06",
   "cardCount": 87,
   "acceptanceCount": 1447,
   "cards": {
@@ -1763,7 +1763,10 @@
         "build/evidence/R0.06/accounting-runtime-verification.json",
         "build/evidence/R0.06/unfiltered-accounting-verification.json",
         "build/evidence/R0.06/swapped-quota-verification.json",
-        "build/evidence/R0.06/foreground-contention-final-verification.json"
+        "build/evidence/R0.06/foreground-contention-final-verification.json",
+        "build/evidence/R0.06/exhausted-pending-final-verification.json",
+        "build/evidence/R0.06/exhausted-pending-source-plan.json",
+        "build/evidence/R0.06/exhausted-pending-red-parent-review.json"
       ],
       "requiredATs": [
         "AT-hermes-config-59",
@@ -1915,6 +1918,29 @@
         "separateReadinessChecks": 1,
         "verificationEvidence": "build/evidence/R0.06/foreground-contention-final-verification.json",
         "sourceReview": "build/evidence/R0.06/foreground-contention-owner-source-review.json"
+      },
+      "exhaustedPendingUnit": {
+        "state": "BOUNDED_ACCOUNTING_CORRECTION_VERIFIED_AND_STOPPED",
+        "assignedAT": "AT-ops-10",
+        "evidence": "build/evidence/R0.06/exhausted-pending-final-verification.json",
+        "startedAt": "2026-10-07T09:19:00.000Z",
+        "stoppedAt": "2026-10-07T09:24:04.551Z",
+        "nativeAttempts": 2,
+        "failedNativeAttempts": 1,
+        "assignedChecks": 4,
+        "affectedRegressionChecks": 13,
+        "testPinsUnchanged": true,
+        "maximumPrerequisiteUtf8Bytes": 1790,
+        "cleanupComplete": true,
+        "wholeATComplete": false,
+        "sourceStopped": true,
+        "deferred": [
+          "Actual protected service/provider execution and independent dispatch",
+          "HTTP429 wire normalization",
+          "Canonical slot/wake delivery and cross-UTC-day resume",
+          "Full AT/card/release acceptance",
+          "Swift untilR3"
+        ]
       }
     },
     "R0.07": {
@@ -2831,7 +2857,9 @@
         "build/evidence/R0.12/result-reference-source-review.json",
         "build/evidence/R0.12/adhd106-final-verification.json",
         "build/evidence/R0.12/adhd106-source-review.json",
-        "build/evidence/R0.12/adhd-compatibility-next-minimum-plan.json"
+        "build/evidence/R0.12/adhd-compatibility-next-minimum-plan.json",
+        "build/evidence/R0.12/adhd66-full-assertion-design.json",
+        "build/evidence/R0.12/adhd66-full-assertion-parent-review.json"
       ],
       "requiredATs": [
         "AT-adhd-features-106",
@@ -3179,6 +3207,13 @@
         "path": "build/evidence/R0.12/adhd66-next-minimum-plan.json",
         "review": "build/evidence/R0.12/adhd66-readonly-parent-review.json",
         "wholeATComplete": false
+      },
+      "adhd66FullAssertionDesign": {
+        "state": "STOP_SOURCE_NOT_ADMITTED",
+        "path": "build/evidence/R0.12/adhd66-full-assertion-design.json",
+        "review": "build/evidence/R0.12/adhd66-full-assertion-parent-review.json",
+        "wholeATComplete": false,
+        "reason": "No real per-feature build consumer; do not substitute aggregate M08 diagnostics."
       }
     },
     "R0.13": {
@@ -11801,7 +11836,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Poll canonical root queue; ROOT02 actualDONE+UID310/nativeKeychainread+exactrestoration prioritizes preparedR001. No new SOURCE from redundant R010/M08-only plans; preserve stopped verified units and R1 PGinit gate. Continue any genuinely independent assigned work.",
+  "nextAction": "Poll canonical root queue; valid ROOT02 DONE with actual UID310/native read and exact restoration immediately prioritizes prepared R0.01. Exhausted-pending correction is VERIFIED and STOPPED; preserve 17 CLI checks and full AT/card deferrals. No SOURCE admitted from ADHD66 inspection-only design; continue genuine independent assigned R0 work without duplicate fixtures or R1 PostgreSQL installation.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -22421,23 +22456,19 @@
     "queuedRootReserveAdmissionGate": false
   },
   "latestStaticVerification": {
-    "path": "build/evidence/R0.03/dashboard90-auth-controller-compat-check.txt",
-    "sha256": "22ef0d02edf2e41d6d40977188b7b6b0c44092746abbcd6293c89b1f11927e6c",
+    "path": "build/evidence/R0.06/exhausted-pending-owner-strict-check.txt",
+    "sha256": "a6bd10507aaf20b23dc3a9bf202cec8c1ee5a643eb04e73dab4c373699cac6c6",
     "exitCode": 0,
     "artifacts": 403,
     "contracts": 335,
-    "cliManifests": 45,
+    "cliManifests": 46,
     "features": 106,
     "commands": 55,
     "indexedATs": 1447,
     "schemaDigest": "ec7a67e32a800c455daac36fa5566d3b786d6f8bb76742a66a72cb79cf267648",
     "swiftInvoked": false,
-    "recordedAt": "2026-10-07T09:03:47.711Z",
-    "command": "npm run check",
-    "featureMapAfterMetadataUpdate": {
-      "path": "build/evidence/R0.03/dashboard-workflow-verified-map-check.json",
-      "sha256": "cff26b4c6f1148e6a0e57fc313bdb33c0877c4de7278de49726f006cf10f747f"
-    }
+    "recordedAt": "2026-10-07T09:27:13.179Z",
+    "command": "npm run check"
   },
   "sourceCheckpointCommit": "752f925",
   "sourceCheckpointPushed": true,
@@ -22479,20 +22510,20 @@
     }
   },
   "resourceAdmission": {
-    "measuredAt": "2026-10-07T08:43:26.187Z",
-    "availableBytes": "2797076480",
+    "measuredAt": "2026-10-07T09:22:46.821Z",
+    "availableBytes": "2742697984",
     "pressure": "normal",
     "strictlyFreeAdmission": false,
     "repairFloorApplied": false,
     "ownedWorldsRunning": 0,
     "helpersRunning": 0,
     "helperNeedBytes": "268435456",
-    "measurementSource": "build/evidence/R0.03/auth-workflow-remaining-final-admission.json",
+    "measurementSource": "build/evidence/R0.06/exhausted-pending-green-admission.json",
     "marginBytes": "536870912",
     "ownedStackId": null,
     "stackAndNativeChildrenNeedBytes": "0",
     "jobNeedBytes": "1073741824",
-    "requiredAvailableBytes": "805306368",
+    "requiredAvailableBytes": "1610612736",
     "secondPhysicalFitGate": false,
     "queuedRootReserveGate": false,
     "rule": "Normal OS pressure and available memory at least the current job declared need plus512MiB; no strictly-free, hypothetical reserve, swap or second physical-fit gate",
@@ -22506,8 +22537,8 @@
   "liveRuntime": {
     "state": "DOWN",
     "worlds": [
-      "5ac20b24-a711-4544-b25d-f9b5f51ba2ce",
-      "02f28832-672f-448b-9736-b296ccc08a64"
+      "40af09c7-7556-488c-9e6b-f7155a46415f",
+      "f72ba9cd-b20c-4afc-960f-fa2878c3332b"
     ],
     "driverSessionId": null,
     "teardownRequired": false

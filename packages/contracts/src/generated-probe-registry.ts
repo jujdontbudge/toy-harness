@@ -5903,6 +5903,84 @@ export const registeredCliAcceptanceManifestInventory = [
     "simUnavailableReason": "SIM cannot check generated pre-build schema artifacts or native queue transaction/worker fault boundaries. The CLI drives the real public queue interface in an owned PostgreSQL fixture."
   },
   {
+    "id": "AT-ops-10",
+    "rung": "CLI",
+    "sourceAssertionHash": "e281f3fe7221d3ddc551bf73c8fc5e0df616060c8d089af9ee4625930d11ee3f",
+    "commandId": "probe.run",
+    "scenarioId": "accounting.model-admission",
+    "owner": "self-improvement",
+    "firstRelease": "R0",
+    "kind": "behavioral",
+    "mandatoryCases": [
+      {
+        "id": "exhausted-known-reset",
+        "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+        "phase": "exhausted-known-reset"
+      },
+      {
+        "id": "exhausted-unknown-reset",
+        "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+        "phase": "exhausted-unknown-reset"
+      },
+      {
+        "id": "full-quota-windows",
+        "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+        "phase": "full-quota-windows"
+      },
+      {
+        "id": "deferred-restart-recovery",
+        "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+        "phase": "deferred-restart-recovery"
+      }
+    ],
+    "trigger": "Normalized exhausted/429 and100-percent external observations deny cron, auxiliary and child calls; exact public pending enumeration survives PostgreSQL restart and same-day recovery charges each retained call once. Protected provider and canonical slot dispatch remain pending.",
+    "faultControls": [
+      {
+        "id": "fixed-quota-observation",
+        "seam": "provider",
+        "affectedPhases": [
+          "exhausted-known-reset",
+          "exhausted-unknown-reset",
+          "full-quota-windows",
+          "deferred-restart-recovery"
+        ]
+      }
+    ],
+    "observations": [
+      {
+        "id": "public-accounting-denials",
+        "independentReader": "ModelAdmission.reserve and inspect: exact external quota binding and zero charges or sends",
+        "caseIds": [
+          "exhausted-known-reset",
+          "exhausted-unknown-reset",
+          "full-quota-windows",
+          "deferred-restart-recovery"
+        ]
+      },
+      {
+        "id": "durable-pending-readback",
+        "independentReader": "ModelAdmission.inspectPending and resumePending after physical PostgreSQL restart",
+        "caseIds": [
+          "exhausted-known-reset",
+          "exhausted-unknown-reset",
+          "full-quota-windows",
+          "deferred-restart-recovery"
+        ]
+      },
+      {
+        "id": "stored-cli-readback",
+        "independentReader": "toy probe.show and stack.down: exact persisted result and complete teardown",
+        "caseIds": [
+          "exhausted-known-reset",
+          "exhausted-unknown-reset",
+          "full-quota-windows",
+          "deferred-restart-recovery"
+        ]
+      }
+    ],
+    "simUnavailableReason": "SIM cannot drive pre-build native PostgreSQL restart or inspect admission records. The CLI reaches the real accounting owner with fixed external quota observations."
+  },
+  {
     "id": "AT-ops-44",
     "rung": "CLI",
     "sourceAssertionHash": "7a7100f87f1e08f4c6aaa35582495f2984c39ba058b27c14962f0157c8f14804",

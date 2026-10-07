@@ -1,0 +1,123 @@
+{
+  "schemaVersion": "toy.r0.12-adhd66-full-assertion-design.v1",
+  "recordedAt": "2026-10-07T09:19:40Z",
+  "status": "SOURCE_NOT_ADMITTED",
+  "decision": "The existing EngineeringControl research inspection can be extended to validate source-derived F00-F16 records, but no existing product/build caller consumes its findings. A new M08 fixture or research-check-only probe cannot prove the required per-feature pre-build veto. Do not claim AT-adhd-features-66 complete or admit source changes until a real existing build consumer is identified and its interface is written.",
+  "assignment": {
+    "acceptanceId": "AT-adhd-features-66",
+    "source": "../personal-assistant-harness/specs/adhd-features.md",
+    "sourceLine": 2365,
+    "sourceAssertion": "- **AT-adhd-features-66 [R0]** Given README's all-spec research requirements and each feature decision, When the pre-build register is checked, Then each entry links requirement/quote/grill IDs, compared proven options, primary evidence, reliability/resource tradeoffs, selection, unresolved facts, release gate and acceptance IDs; a missing or unsupported entry blocks the feature.",
+    "sourceAssertionHash": "1ac96bab8cb10271674619a870cb00e4d92799697832e570ff5fdb7df30a5487",
+    "sourceDigest": "5e85be6346da1a9e8dd4795232c30205a9b9556b00b3cde52ee9788d6b5697ad",
+    "rung": "CLI",
+    "requiredEvidence": "stack, probe:AT-adhd-features-66",
+    "testPlanAssignment": "TEST-PLAN.md:377; CLI / stack / probe"
+  },
+  "existingOwner": {
+    "publicOperation": "EngineeringControl.checkResearch(MapCheckInputV1, OpsControlContextV1, optional ResearchDocumentOverlayV1[])",
+    "publicRoutes": ["toy research check --release R0 --json", "toy probe.run", "toy probe.show"],
+    "inspectionSchema": "ResearchRegisterInspectionV3",
+    "currentDecisionUnit": "RESEARCH-REGISTER.md component inventory row (e.g. M08); not individual ADHD feature rows",
+    "evidence": "build/evidence/R0.02/ops43-scope-baseline-cli/research.json",
+    "evidenceSha256": "aeaa0bbcd8de7bb8acafbc80ba90bb249d0356294a2d4531e49e3833898be73b",
+    "observedM08": {
+      "state": "BLOCKED",
+      "selectedTool": null,
+      "missingRequirementIds": ["0.1", "0.2", "0.10"],
+      "missingSourceIds": ["AF", "PF"],
+      "missingValidationIds": ["G0:R0:M08"],
+      "admission": "BLOCKED",
+      "acceptanceComplete": false,
+      "wholeATsPassed": []
+    },
+    "provenanceLimit": "This is an existing saved readback cited by the rejected plan; no CLI command was run in this audit. It proves aggregate M08 failure only."
+  },
+  "fullAssertionCoverage": {
+    "expectedFeatureIds": ["F00", "F01", "F02", "F03", "F04", "F05", "F06", "F07", "F08", "F09", "F10", "F11", "F12", "F13", "F14", "F15", "F16"],
+    "sourceFeatureTrace": "adhd-features.md feature trace table lines 55-74: F01-F16 requirement/quote/grill links; F00 is a separate final row with an original quote and a coverage-audit G12 reference.",
+    "registerFeatureTrace": "RESEARCH-REGISTER.md §6.1 rows F00-F16 contain report/section, alternatives/reason, and release-tagged behavior evidence as prose; they are not indexed component decisions or typed records.",
+    "requiredFields": ["featureId", "requirementIds", "quoteIds", "grillIds", "indexedReportKeysAndSections", "primaryEvidenceReferences", "comparedOptions", "optionEvidenceSupport", "reliabilityTradeoffs", "maintenanceTradeoffs", "resourceTradeoffs", "selectedOptionId", "unresolvedFacts", "releaseGate", "acceptanceIds"],
+    "gaps": [
+      "The current generic decision componentId contract accepts register IDs shaped like M08 and checks aggregate report keys. It does not derive F00-F16 or verify each feature's requirement/quote/grill linkage.",
+      "ResearchComponentComparisonV4 is Life Store scoped: inspectResearch rejects V4 records outside the derived Life Store component set. Reusing V4 for ADHD is invalid.",
+      "No per-feature acceptance-ID crosswalk is present in the inspected feature trace, register rows, acceptance index, or feature-map entry. Generic membership in acceptance-index would not prove an AT tests that feature.",
+      "F00 explicitly says coverage-audit G12 is not the local grill G12. The separate coverage-audit source/namespace is absent from the inspected spec set; do not collapse the two labels or synthesize its evidence.",
+      "The register's feature rows include differing/composite release labels. The existing G0:<release>:<component> comparison is component scoped and cannot establish the exact feature release gate by itself.",
+      "AT-adhd-features-66 exists in tests/acceptance-index.json and FEATURE-MAP.md but has no tests/registry.yaml CLI probe registration."
+    ],
+    "actualBuildConsumer": {
+      "found": false,
+      "searchResult": "The only production/source caller found for checkResearch findings is the AT-adhd-features-106 diagnostic, which reads M08 and preserves global BLOCKED. EngineeringControl.generate only emits registered connector/tool/skill/migration feasibility scaffolds. No ADHD feature build/generation path or caller that refuses a feature was found.",
+      "consequence": "An inspection result or new check method alone is not a per-feature build veto. A real existing consumer path and its source owner are prerequisites; creating a new feature builder/command would invent infrastructure and exceeds this bounded card."
+    }
+  },
+  "smallestCandidateInterface": {
+    "owner": "Existing Self-Improvement EngineeringControl",
+    "method": "checkAdhdFeatureBuild({ featureId: F00..F16, release }, context) -> Result<AdhdFeatureBuildGateV1>",
+    "resultMinimum": ["featureId", "state", "decisionDigest", "missingRequirementIds", "missingQuoteIds", "missingGrillIds", "missingSourceIds", "missingValidationIds", "selectedOptionId", "releaseGate", "acceptanceIds", "admission"],
+    "boundary": "Resolve only source-derived feature identity and report keys inside the existing safe research reader; accept no caller path, expected IDs, component decision, evidence claim, or evaluator result. Any absent/unsupported required field returns BLOCKED for that feature. Seeded overlays remain synthetic external-document fixtures; report origin and whole-register BLOCKED stay visible.",
+    "integrationCondition": "Candidate only. It becomes an actual veto only when an existing feature build consumer calls it immediately before build output. No suitable consumer file/path exists in the current source inventory, so neither this method nor a new command is admitted by this audit."
+  },
+  "cliAcceptanceDesign": {
+    "route": "Existing toy probe.run / probe.show over the real local stack; owner logic remains EngineeringControl. Keep ordinary toy research check release-only. No M08-only replay.",
+    "cases": [
+      {"id": "feature-inventory-17", "assert": "Source readers derive exactly F00-F16 once from the pinned spec/register; missing, duplicate, extra, or mismatched IDs block."},
+      {"id": "seeded-structure-17", "assert": "A fixed external overlay with 17 explicitly synthetic records exercises field validation and archive binding; it cannot claim real primary research, native attestation, or global admission."},
+      {"id": "missing-feature-veto-F00-through-F16", "assert": "For each feature, omit only its decision and invoke the actual existing pre-build consumer; assert BLOCKED for that feature and no build artifact/effect."},
+      {"id": "unsupported-selection-veto-F00-through-F16", "assert": "For each feature, make only its selected option unsupported/nonviable and invoke the actual consumer; assert BLOCKED for that feature and no build artifact/effect."},
+      {"id": "link-and-gate-negative-matrix", "assert": "At CLI, independently omit requirement, quote, grill, primary evidence, compared proven option, each tradeoff, selection, release gate, and feature-linked acceptance ID; require exact missing IDs/findings and feature-specific refusal."},
+      {"id": "real-archive-readback", "assert": "Read indexed report originals/digests and per-feature decisions through the public owner; preserve unresolved facts, report origin, M08/global BLOCKED, acceptanceComplete=false, wholeATsPassed=[]."}
+    ],
+    "acceptanceBlocker": "The two per-feature veto cases cannot currently be written against an existing consumer. A seeded positive structural case would test predicate mechanics only, not authenticate primary research. AT-adhd-features-67 remains separate and is not implied."
+  },
+  "sourceAdmission": {
+    "admitted": false,
+    "candidatePathsIfConsumerIsIdentified": [
+      "docs/adr/0054-adhd-feature-prebuild-gate.md",
+      "packages/contracts/src/engineering-control.ts",
+      "packages/self-improvement/src/engineering-control.ts",
+      "packages/self-improvement/src/public.ts",
+      "packages/self-improvement/src/component-comparison-probe.ts",
+      "tests/registry.yaml",
+      "packages/contracts/src/generated-probe-registry.ts (generated only)",
+      "packages/contracts/generated/schemas/* (generated only)",
+      "skills/toy-control/FEATURE-MAP.md",
+      "<existing feature build consumer path: not found; cannot be allowlisted>"
+    ],
+    "existingSupportingFilesNotExpectedToChange": ["tests/acceptance-index.json (already has the exact AT-66 assertion/rung/evidence)", "cli/src/main.ts (generic probe.run/show already dispatches registered probes)", "packages/ops/src/fixture-stack.ts (existing external fixture boundary; no new fixture protocol)"],
+    "exclusions": ["No M08 duplicate fixture", "No synthetic primary research presented as fact", "No new product builder or CLI command without an existing owner contract", "No AT-adhd-features-67 route/account/provider work", "No source edits, generation, build, static checks, or live CLI in this audit"]
+  },
+  "feasibility": {
+    "withinTwoHours": false,
+    "reason": "Even the diagnostic contract needs source-derived 17-row/link parsing, an additive public schema, report binding, an AT-66 CLI manifest and feature-map registration. The acceptance's defining proof additionally requires an existing feature build consumer, which is absent, plus an authoritative resolution for F00's separate coverage-audit G12 and feature-to-AT mappings. Implementing a new consumer would be new infrastructure, not a minimum extension."
+  },
+  "sequencingAndResources": {
+    "parentDoctorObservation": "2026-10-07T09:15:22 normal pressure; 2,355,200,000 available bytes; helper need 268,435,456 bytes plus 536,870,912-byte margin fits.",
+    "resourceMeaning": "Capacity fit does not resolve the missing consumer or authorize source mutation.",
+    "rootRequest": "ROOT-R004-20261006-02 remains PENDING per parent dispatch. Preserve R0.01 native UID310/read-and-restore priority if canonical DONE is later recorded.",
+    "rootOrNativeActions": "None performed."
+  },
+  "sourcePins": [
+    {"path": "AGENTS.md", "sha256": "fc4ece59b08e8a302797f86d0865fd8eb3c5a5226792b0dd26cc1c1825555529"},
+    {"path": "../personal-assistant-harness/specs/README.md", "sha256": "2c02bdb4d13abd198231446873eaacfe30177a97f66235158912fd2accd006f4"},
+    {"path": "../personal-assistant-harness/specs/CONTRACTS.md", "sha256": "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d"},
+    {"path": "../personal-assistant-harness/specs/TEST-PLAN.md", "sha256": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2"},
+    {"path": "../personal-assistant-harness/specs/adhd-features.md", "sha256": "5e85be6346da1a9e8dd4795232c30205a9b9556b00b3cde52ee9788d6b5697ad"},
+    {"path": "../personal-assistant-harness/specs/RESEARCH-REGISTER.md", "sha256": "e89b3336e0c2458ac204fb0927da30f4541abfab48a9d55735c4655719a3f10d"},
+    {"path": "build/evidence/R0.12/adhd66-next-minimum-plan.json", "sha256": "2201c0fabcd04692a2175aa8cb023219be531d7df0a486809637f9a07a024396"},
+    {"path": "docs/adr/0020-minimal-k4-engineering-control.md", "sha256": "c55d098885b621aa5b3047c555f54a5c684873f668b49b8e5eed6616c6bf5b76"},
+    {"path": "docs/adr/0037-component-comparison-gate.md", "sha256": "b0ee0533462404a737f9df08c8d3103107c30786e68ec6df460a6040fea82565"},
+    {"path": "docs/adr/0048-lifestore-primary-evidence.md", "sha256": "8866e7351d1c40aaefe5c562528f0c5b31442d7d7258cf93dbcbb3ca4988effe"},
+    {"path": "packages/contracts/src/engineering-control.ts", "sha256": "d95ddc3891ae2b865473c00cb0eb6cb58c16bb9191523ab63f6b26937a88ae30"},
+    {"path": "packages/self-improvement/src/engineering-control.ts", "sha256": "725aa4735e25b86c4c25092e9481580a501025e84f7493ee093060b584b3bbdd"},
+    {"path": "packages/self-improvement/src/component-comparison-probe.ts", "sha256": "e2dc9fc1aec758251f074869da25496e90f6f9cf66a35bf01b1090f977aa04a1"},
+    {"path": "packages/self-improvement/src/public.ts", "sha256": "83fa5e8ad4cedfa535cfcf3b428c0e8101b6d458303191b3a4ac802fd6a44251"},
+    {"path": "cli/src/main.ts", "sha256": "5623125eec41f7dbd1c9874f0778151b1527bca488ba26aa663512c7fefdb97c"},
+    {"path": "packages/ops/src/fixture-stack.ts", "sha256": "55649a763c14b168bfe183385544f128f314de4ded2d313269b8682bf052fbcc"},
+    {"path": "tests/acceptance-index.json", "sha256": "c9b645eab7f55b2ebf35d7db769a534a4837de23ad3dc3d913f3189e781d44fa"},
+    {"path": "tests/registry.yaml", "sha256": "a005f61d09e08510e33805763a49056e26503c3798bba962073e6f40c39bd3c7"},
+    {"path": "skills/toy-control/FEATURE-MAP.md", "sha256": "c9dfdf76a815b1cec3750c4f6b11c4e6e95aad79cae2ba4bae5fabdcf13a0957"}
+  ],
+  "workPerformed": "Read AGENTS.md, the five named planning specs, the rejected R0.12 plan, ADR0020/0037/0048, current EngineeringControl and probe contracts, and source/registry references. Read-only filesystem audit only. Wrote this design artifact only. No CLI, build, generation, static test, live system, browser, network, root, authentication, or native operation was performed."
+}

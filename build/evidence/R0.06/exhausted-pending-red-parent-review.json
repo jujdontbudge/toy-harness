@@ -1,0 +1,161 @@
+{
+  "recordedAt": "2026-10-07T09:21:36.869Z",
+  "decision": "OWNER_REPAIR_ADMITTED_AFTER_REAL_CLI_RED",
+  "summary": {
+    "path": "build/evidence/R0.06/exhausted-pending-red-summary.json",
+    "sha256": "99646f5deea1981a523efecd5bfb9cc46b06e6cf7a007515f7a684a5d34e14d7"
+  },
+  "world": "40af09c7-7556-488c-9e6b-f7155a46415f",
+  "checks": [
+    {
+      "state": "FAIL",
+      "name": "exhausted-known-reset",
+      "evidence": {
+        "normalizedProviderObservation": "429-exhausted",
+        "reason": "QUOTA_EXHAUSTED",
+        "retryAt": "2026-10-12T00:00:00.000Z",
+        "records": [
+          [
+            "quiet-tick",
+            "QUOTA_EXHAUSTED",
+            "2026-10-12T00:00:00.000Z",
+            false,
+            0
+          ],
+          [
+            "auxiliary",
+            "QUOTA_EXHAUSTED",
+            "2026-10-12T00:00:00.000Z",
+            false,
+            0
+          ],
+          [
+            "child",
+            "QUOTA_EXHAUSTED",
+            "2026-10-12T00:00:00.000Z",
+            false,
+            0
+          ]
+        ],
+        "pendingCount": 0,
+        "exactReadback": false,
+        "charged": 0,
+        "lease": false,
+        "physicalProviderCalls": 0,
+        "paidRequests": 0,
+        "wholeATComplete": false
+      }
+    },
+    {
+      "state": "FAIL",
+      "name": "exhausted-unknown-reset",
+      "evidence": {
+        "normalizedProviderObservation": "429-exhausted",
+        "reason": "QUOTA_EXHAUSTED",
+        "retryAt": null,
+        "records": [
+          [
+            "quiet-tick",
+            "QUOTA_EXHAUSTED",
+            null,
+            false,
+            0
+          ],
+          [
+            "auxiliary",
+            "QUOTA_EXHAUSTED",
+            null,
+            false,
+            0
+          ],
+          [
+            "child",
+            "QUOTA_EXHAUSTED",
+            null,
+            false,
+            0
+          ]
+        ],
+        "pendingCount": 0,
+        "exactReadback": false,
+        "charged": 0,
+        "lease": false,
+        "physicalProviderCalls": 0,
+        "paidRequests": 0,
+        "wholeATComplete": false
+      }
+    },
+    {
+      "state": "FAIL",
+      "name": "full-quota-windows",
+      "evidence": {
+        "normalizedProviderObservation": "100-percent",
+        "reason": "FIVE_HOUR_THRESHOLD",
+        "retryAt": "2026-10-05T05:00:00.000Z",
+        "records": [
+          [
+            "quiet-tick",
+            "FIVE_HOUR_THRESHOLD",
+            "2026-10-05T05:00:00.000Z",
+            false,
+            0
+          ],
+          [
+            "auxiliary",
+            "FIVE_HOUR_THRESHOLD",
+            "2026-10-05T05:00:00.000Z",
+            false,
+            0
+          ],
+          [
+            "child",
+            "FIVE_HOUR_THRESHOLD",
+            "2026-10-05T05:00:00.000Z",
+            false,
+            0
+          ]
+        ],
+        "pendingCount": 1,
+        "exactReadback": false,
+        "charged": 0,
+        "lease": false,
+        "physicalProviderCalls": 0,
+        "paidRequests": 0,
+        "wholeATComplete": false
+      }
+    },
+    {
+      "state": "FAIL",
+      "name": "deferred-restart-recovery",
+      "evidence": {
+        "postgresqlRestarted": true,
+        "persisted": false,
+        "refusedWhileExhausted": false,
+        "resumed": 1,
+        "expectedCalls": 9,
+        "duplicateCharge": false,
+        "physicalProviderCalls": 0,
+        "paidRequests": 0,
+        "wholeATComplete": false
+      }
+    }
+  ],
+  "unchangedTestPins": [
+    {
+      "path": "packages/self-improvement/src/accounting-probe.ts",
+      "sha256": "8786034a5fca758b117610a6be9bd403e22793cbcae752764e60b62b34b181fb"
+    },
+    {
+      "path": "tests/registry.yaml",
+      "sha256": "a1e5f0a4fd9b679124242eb9d7c96b1cc6c5a7152264c7a5654938f7907a4e37"
+    }
+  ],
+  "ownerBefore": {
+    "path": "packages/self-improvement/src/model-admission.ts",
+    "sha256": "dd91a7d5b3484bcf0adbba70887695f0ea39d8cca172b8b6f9b4e095f4b0c302"
+  },
+  "repairScope": "Existing pending predicate, autonomous queue classification, nullable reset guard and priority hold only; no public interface or policy change.",
+  "deadline": "2026-10-07T11:19:00.000Z",
+  "wholeATComplete": false,
+  "cleanupVerified": true
+}

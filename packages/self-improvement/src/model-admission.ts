@@ -27,16 +27,16 @@ const recordJson = (alias: string): string => `jsonb_build_object(
     THEN jsonb_build_object('inputTokens', ${alias}.actual_input, 'outputTokens', ${alias}.actual_output, 'reasoningTokens', ${alias}.actual_reasoning) ELSE NULL END,
   'reportedTotalTokens', ${alias}.actual_total::text, 'startedAt', ${stamp(alias + ".started_at")}, 'endedAt', ${stamp(alias + ".ended_at")})`;
 const queuePriority = (workClass: string): number | null => workClass === "event" || workClass === "continuation" ? 1
-  : workClass === "quiet-tick" ? 2 : workClass === "repair" || workClass === "replay" ? 3 : null;
+  : workClass === "quiet-tick" ? 2 : ["repair", "replay", "child", "research", "judge", "auxiliary"].includes(workClass) ? 3 : null;
 const pendingPredicate = (accountRef: string, now: string, alias = "c"): string => `${alias}.account_ref=${sqlText(accountRef)} AND ${alias}.utc_day=${sqlText(now.slice(0,10))}::date
   AND ${alias}.state='denied' AND NOT ${alias}.reservation_charged AND ${alias}.native_send_count=0 AND NOT ${alias}.native_terminal_acknowledged AND ${alias}.ended_at IS NULL
-  AND ${alias}.decision->>'retryAt' IS NOT NULL AND ${alias}.decision->>'mode'='measured'
-  AND (( ${alias}.decision->>'reason' IN ('FIVE_HOUR_THRESHOLD','WEEKLY_THRESHOLD','RESERVATION_THRESHOLD')) OR ${alias}.decision->>'reason'='OPTIONAL_WORK_PAUSED')
-  AND ${alias}.purpose IN ('event','continuation','quiet-tick','repair','replay')`;
+  AND (${alias}.decision->>'retryAt' IS NOT NULL OR ${alias}.decision->>'reason' IN ('QUOTA_EXHAUSTED','OPTIONAL_WORK_PAUSED')) AND ${alias}.decision->>'mode' IN ('measured','fixed-count')
+  AND ${alias}.decision->>'reason' IN ('FIVE_HOUR_THRESHOLD','WEEKLY_THRESHOLD','RESERVATION_THRESHOLD','QUOTA_EXHAUSTED','OPTIONAL_WORK_PAUSED')
+  AND ${alias}.purpose IN ('event','continuation','quiet-tick','repair','replay','child','research','judge','auxiliary')`;
 const pendingOrder = (alias = "c"): string => `CASE WHEN ${alias}.purpose IN ('event','continuation') THEN 1 WHEN ${alias}.purpose='quiet-tick' THEN 2 ELSE 3 END, ${alias}.started_at, ${alias}.id`;
 const pendingHeadCtes = (accountRef: string, now: string, expected: ModelAdmissionRecordV1 | null): string => {
   const match = expected === null ? "NOT EXISTS (SELECT 1 FROM pending_head)"
-    : `EXISTS (SELECT 1 FROM pending_head WHERE id=${sqlText(expected.id)}::uuid AND call_key=${sqlText(expected.callKey)} AND retry_at=${sqlText(expected.decision.retryAt ?? "")})`;
+    : `EXISTS (SELECT 1 FROM pending_head WHERE id=${sqlText(expected.id)}::uuid AND call_key=${sqlText(expected.callKey)} AND retry_at IS NOT DISTINCT FROM ${expected.decision.retryAt === null ? "NULL" : sqlText(expected.decision.retryAt)})`;
   return `pending_head AS (SELECT c.id,c.call_key,c.decision->>'retryAt' AS retry_at FROM toy_si.model_call c WHERE ${pendingPredicate(accountRef,now)} ORDER BY ${pendingOrder("c")} LIMIT 1),
     pending_guard AS (SELECT 1 FROM unchanged WHERE ${match})`;
 };
@@ -108,7 +108,7 @@ const openOwner = (runtime: ModelAdmissionRuntimeV1, clock: () => string, guard:
           const pendingHead = pending[0] ?? null;
           const headPriority = pendingHead === null ? null : queuePriority(pendingHead.work.class);
           const pausedByOwner = baseDecision.eligible && requestPriority !== null && pendingHead !== null && headPriority !== null
-            && requestPriority > headPriority && pendingHead.decision.retryAt !== null;
+            && requestPriority > headPriority;
           const decision = pausedByOwner && pendingHead !== null ? modelAdmissionDecisionSchema.parse({...baseDecision,eligible:false,mode:pendingHead.decision.mode,quotaSnapshotId:pendingHead.decision.quotaSnapshotId,
             reason:"OPTIONAL_WORK_PAUSED",retryAt:pendingHead.decision.retryAt}) : baseDecision;
           const admittedForeground = request.work.class === "foreground"

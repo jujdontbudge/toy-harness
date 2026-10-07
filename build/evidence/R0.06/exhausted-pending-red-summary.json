@@ -1,0 +1,205 @@
+{
+  "recordedAt": "2026-10-07T09:21:01.832Z",
+  "rung": "CLI",
+  "unfiltered": true,
+  "wholeATComplete": false,
+  "liveProviderSends": 0,
+  "nativeAttempt": 1,
+  "admissionEvidence": "build/evidence/R0.06/exhausted-pending-red-admission.json",
+  "probes": [
+    {
+      "probeId": "AT-ops-10",
+      "run": {
+        "exitCode": 1,
+        "path": "build/evidence/R0.06/exhausted-pending-red-cli/AT-ops-10-run.json",
+        "sha256": "0b5f15b74364c60083664b1af5d2c794a40fa88236c1f28cd434be493a15cfc9"
+      },
+      "operationId": "6dfcf29e-b45e-479a-ba1b-af57e22588a6",
+      "show": {
+        "exitCode": 1,
+        "path": "build/evidence/R0.06/exhausted-pending-red-cli/AT-ops-10-show.json",
+        "sha256": "ccab49da76391ec07f21c4c7b8fe60632cfbf0cdec93fe3759a07ed735aac384"
+      },
+      "sameData": true,
+      "sourceRegistration": {
+        "id": "AT-ops-10",
+        "rung": "CLI",
+        "sourceAssertionHash": "e281f3fe7221d3ddc551bf73c8fc5e0df616060c8d089af9ee4625930d11ee3f",
+        "commandId": "probe.run",
+        "scenarioId": "accounting.model-admission",
+        "owner": "self-improvement",
+        "firstRelease": "R0",
+        "kind": "behavioral",
+        "mandatoryCases": [
+          {
+            "id": "exhausted-known-reset",
+            "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+            "phase": "exhausted-known-reset"
+          },
+          {
+            "id": "exhausted-unknown-reset",
+            "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+            "phase": "exhausted-unknown-reset"
+          },
+          {
+            "id": "full-quota-windows",
+            "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+            "phase": "full-quota-windows"
+          },
+          {
+            "id": "deferred-restart-recovery",
+            "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+            "phase": "deferred-restart-recovery"
+          }
+        ],
+        "trigger": "Normalized exhausted/429 and100-percent external observations deny cron, auxiliary and child calls; exact public pending enumeration survives PostgreSQL restart and same-day recovery charges each retained call once. Protected provider and canonical slot dispatch remain pending.",
+        "faultControls": [
+          {
+            "id": "fixed-quota-observation",
+            "seam": "provider",
+            "affectedPhases": [
+              "exhausted-known-reset",
+              "exhausted-unknown-reset",
+              "full-quota-windows",
+              "deferred-restart-recovery"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "public-accounting-denials",
+            "independentReader": "ModelAdmission.reserve and inspect: exact external quota binding and zero charges or sends",
+            "caseIds": [
+              "exhausted-known-reset",
+              "exhausted-unknown-reset",
+              "full-quota-windows",
+              "deferred-restart-recovery"
+            ]
+          },
+          {
+            "id": "durable-pending-readback",
+            "independentReader": "ModelAdmission.inspectPending and resumePending after physical PostgreSQL restart",
+            "caseIds": [
+              "exhausted-known-reset",
+              "exhausted-unknown-reset",
+              "full-quota-windows",
+              "deferred-restart-recovery"
+            ]
+          },
+          {
+            "id": "stored-cli-readback",
+            "independentReader": "toy probe.show and stack.down: exact persisted result and complete teardown",
+            "caseIds": [
+              "exhausted-known-reset",
+              "exhausted-unknown-reset",
+              "full-quota-windows",
+              "deferred-restart-recovery"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot drive pre-build native PostgreSQL restart or inspect admission records. The CLI reaches the real accounting owner with fixed external quota observations."
+      },
+      "registrationExact": true,
+      "cases": [
+        {
+          "id": "accounting.model-admission",
+          "owner": "self-improvement",
+          "state": "FAIL",
+          "checkedAt": "2026-10-07T09:21:03.321Z",
+          "reasonCode": "REAL_ACCOUNTING_FIXTURE_FAIL",
+          "prerequisite": "{\"name\":\"exhausted-known-reset\",\"evidence\":{\"normalizedProviderObservation\":\"429-exhausted\",\"reason\":\"QUOTA_EXHAUSTED\",\"retryAt\":\"2026-10-12T00:00:00.000Z\",\"records\":[[\"quiet-tick\",\"QUOTA_EXHAUSTED\",\"2026-10-12T00:00:00.000Z\",false,0],[\"auxiliary\",\"QUOTA_EXHAUSTED\",\"2026-10-12T00:00:00.000Z\",false,0],[\"child\",\"QUOTA_EXHAUSTED\",\"2026-10-12T00:00:00.000Z\",false,0]],\"pendingCount\":0,\"exactReadback\":false,\"charged\":0,\"lease\":false,\"physicalProviderCalls\":0,\"paidRequests\":0,\"wholeATComplete\":false}}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "2c3353672eff95de080812cb5e022f426205a38082d38afe724e1878205e72fb"
+            ]
+          }
+        },
+        {
+          "id": "accounting.model-admission",
+          "owner": "self-improvement",
+          "state": "FAIL",
+          "checkedAt": "2026-10-07T09:21:03.574Z",
+          "reasonCode": "REAL_ACCOUNTING_FIXTURE_FAIL",
+          "prerequisite": "{\"name\":\"exhausted-unknown-reset\",\"evidence\":{\"normalizedProviderObservation\":\"429-exhausted\",\"reason\":\"QUOTA_EXHAUSTED\",\"retryAt\":null,\"records\":[[\"quiet-tick\",\"QUOTA_EXHAUSTED\",null,false,0],[\"auxiliary\",\"QUOTA_EXHAUSTED\",null,false,0],[\"child\",\"QUOTA_EXHAUSTED\",null,false,0]],\"pendingCount\":0,\"exactReadback\":false,\"charged\":0,\"lease\":false,\"physicalProviderCalls\":0,\"paidRequests\":0,\"wholeATComplete\":false}}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "2c3353672eff95de080812cb5e022f426205a38082d38afe724e1878205e72fb"
+            ]
+          }
+        },
+        {
+          "id": "accounting.model-admission",
+          "owner": "self-improvement",
+          "state": "FAIL",
+          "checkedAt": "2026-10-07T09:21:03.799Z",
+          "reasonCode": "REAL_ACCOUNTING_FIXTURE_FAIL",
+          "prerequisite": "{\"name\":\"full-quota-windows\",\"evidence\":{\"normalizedProviderObservation\":\"100-percent\",\"reason\":\"FIVE_HOUR_THRESHOLD\",\"retryAt\":\"2026-10-05T05:00:00.000Z\",\"records\":[[\"quiet-tick\",\"FIVE_HOUR_THRESHOLD\",\"2026-10-05T05:00:00.000Z\",false,0],[\"auxiliary\",\"FIVE_HOUR_THRESHOLD\",\"2026-10-05T05:00:00.000Z\",false,0],[\"child\",\"FIVE_HOUR_THRESHOLD\",\"2026-10-05T05:00:00.000Z\",false,0]],\"pendingCount\":1,\"exactReadback\":false,\"charged\":0,\"lease\":false,\"physicalProviderCalls\":0,\"paidRequests\":0,\"wholeATComplete\":false}}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "2c3353672eff95de080812cb5e022f426205a38082d38afe724e1878205e72fb"
+            ]
+          }
+        },
+        {
+          "id": "accounting.model-admission",
+          "owner": "self-improvement",
+          "state": "FAIL",
+          "checkedAt": "2026-10-07T09:21:04.278Z",
+          "reasonCode": "REAL_ACCOUNTING_FIXTURE_FAIL",
+          "prerequisite": "{\"name\":\"deferred-restart-recovery\",\"evidence\":{\"postgresqlRestarted\":true,\"persisted\":false,\"refusedWhileExhausted\":false,\"resumed\":1,\"expectedCalls\":9,\"duplicateCharge\":false,\"physicalProviderCalls\":0,\"paidRequests\":0,\"wholeATComplete\":false}}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "2c3353672eff95de080812cb5e022f426205a38082d38afe724e1878205e72fb"
+            ]
+          }
+        }
+      ],
+      "resultState": "NOT_IMPLEMENTED",
+      "complete": false
+    }
+  ],
+  "up": {
+    "exitCode": 0,
+    "path": "build/evidence/R0.06/exhausted-pending-red-cli/up.json",
+    "sha256": "98a2632e6641bf3f361645642dfdb57437887368471b98a5bcc17841f129d17b"
+  },
+  "stackId": "40af09c7-7556-488c-9e6b-f7155a46415f",
+  "down": {
+    "exitCode": 0,
+    "path": "build/evidence/R0.06/exhausted-pending-red-cli/down.json",
+    "sha256": "4427100bf0de65838b8487a7919abffe966ce60bd9d67a6becb0d90c60010a69"
+  },
+  "teardown": {
+    "stackId": "40af09c7-7556-488c-9e6b-f7155a46415f",
+    "checkpointRefs": [],
+    "fenceRefs": [],
+    "stoppedResourceRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "40af09c7-7556-488c-9e6b-f7155a46415f"
+      }
+    ],
+    "retainedArtifactRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "40af09c7-7556-488c-9e6b-f7155a46415f"
+      }
+    ],
+    "unresolvedResourceRefs": [],
+    "complete": true
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "recordedAt": "2026-10-07T09:19:07.581Z",
+  "card": "R0.06",
+  "assignedAT": "AT-ops-10",
+  "sourceAssertion": "- **AT-ops-10 [R0]** Given a 429 or 100% quota observation, When cron/auxiliary/delegate work requests a model call, Then ModelAdmission denies it, records a deferred slot/wake, and makes no paid request. (Requirements: 1.10, 2.4.)",
+  "sourceAssertionHash": "e281f3fe7221d3ddc551bf73c8fc5e0df616060c8d089af9ee4625930d11ee3f",
+  "rung": "CLI",
+  "status": "TEST_SOURCE_ADMITTED_OWNER_UNCHANGED_PENDING_REAL_RED",
+  "deadline": "2026-10-07T11:19:00.000Z",
+  "expectedRed": "Quota-exhausted denials and auxiliary/child threshold denials are absent from the existing public pending query; exact readback and recovery fail.",
+  "sourceScope": [
+    "packages/self-improvement/src/accounting-probe.ts",
+    "packages/self-improvement/src/model-admission.ts",
+    "packages/self-improvement/src/public.ts",
+    "packages/ops/src/fixture-stack.ts",
+    "tests/registry.yaml",
+    "architecture/features.json",
+    "docs/adr/0027-model-admission-accounting.md",
+    "build/ROOT-REQUESTS.md"
+  ],
+  "sourcePins": [
+    {
+      "path": "packages/self-improvement/src/accounting-probe.ts",
+      "sha256": "464e590aebe209904bd59cce38fe135a562b7b45843a3741cacc7803473792d2"
+    },
+    {
+      "path": "packages/self-improvement/src/model-admission.ts",
+      "sha256": "dd91a7d5b3484bcf0adbba70887695f0ea39d8cca172b8b6f9b4e095f4b0c302"
+    },
+    {
+      "path": "packages/self-improvement/src/public.ts",
+      "sha256": "1c3a186cffb3729092d71febe57ab546ef58984703ef013dc30ae15b838182cd"
+    },
+    {
+      "path": "packages/ops/src/fixture-stack.ts",
+      "sha256": "96748348085715a6d97b4d8f1cd459dc373f1b0aab12ab1d4d9162407f4fa4f4"
+    },
+    {
+      "path": "tests/registry.yaml",
+      "sha256": "a1e5f0a4fd9b679124242eb9d7c96b1cc6c5a7152264c7a5654938f7907a4e37"
+    },
+    {
+      "path": "architecture/features.json",
+      "sha256": "3290c276c8783b24b0988f0fa4dddeafb5711840f22e2b13649f7ccab933b4c4"
+    },
+    {
+      "path": "docs/adr/0027-model-admission-accounting.md",
+      "sha256": "05495d3640c48c92ac41556782f018c20b3512cd05a1acdeb5841fe4b07d9da2"
+    },
+    {
+      "path": "build/ROOT-REQUESTS.md",
+      "sha256": "6bdca8b36154b5ec87875c5a1fe0e5d5f9a8a0b6d172c26c7d99ad9f2dd6307e"
+    }
+  ],
+  "maximumActualFailedRuns": 3,
+  "admission": "build/evidence/R0.12/adhd66-full-gate-admission-doctor.json",
+  "deferred": [
+    "Actual protected provider and slot/wake dispatch",
+    "Cross-UTC-day resume contract",
+    "Raw HTTP429 normalization and live subscription evidence",
+    "Swift untilR3"
+  ],
+  "wholeATComplete": false,
+  "root02": "PENDING",
+  "goal": "ACTIVE"
+}
