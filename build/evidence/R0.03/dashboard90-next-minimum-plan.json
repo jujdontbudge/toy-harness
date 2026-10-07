@@ -1,0 +1,207 @@
+{
+  "schemaVersion": "toy.r0.03.dashboard-auth-next-minimum-plan.v1",
+  "scope": "read-only-minimum-plan",
+  "acceptance": {
+    "id": "AT-hermes-config-90",
+    "scenarioId": "auth.dashboard-scope",
+    "rung": "CLI",
+    "source": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/hermes-config.md",
+    "sourceLine": 3054,
+    "sourceDigest": "d3548fde13180bc750660f306caa0041101832e398ccdabd6cfdac0b3de8f4af",
+    "sourceAssertionHash": "451a0ff28c92fc95629eaafd849b62631a258ef632518d9132c64fa09384c07d",
+    "sourceAssertion": "Given real dashboard subprocesses in separate temporary profile scopes and registered OS save failures, When public scoped auth flows run, Then only the active profile changes, fresh-process usability agrees and save failure returns sanitized 400 with no success claim/token.",
+    "acceptanceIndex": "tests/acceptance-index.json",
+    "acceptanceIndexSha256": "c9b645eab7f55b2ebf35d7db769a534a4837de23ad3dc3d913f3189e781d44fa",
+    "requiredEvidence": "stack, probe:AT-hermes-config-90"
+  },
+  "baseline": {
+    "path": "build/evidence/R0.03/dashboard90-baseline.json",
+    "sha256": "aa59b69b0e1312167d9b6458e12bc76304cac1ea40b36f50e113d1e1db3df712",
+    "recordedAt": "2026-10-07T01:07:33.671Z",
+    "result": "NOT_IMPLEMENTED",
+    "sourceRegistration": null,
+    "registrationExact": false,
+    "run": {
+      "path": "build/evidence/R0.03/dashboard90-baseline-cli/AT-hermes-config-90-run.json",
+      "sha256": "5ee705c4cc77326fa6cd7c15316b02b91ea4ecbd5b0ddff795bccd0577d01006",
+      "exitCode": 5
+    },
+    "show": {
+      "path": "build/evidence/R0.03/dashboard90-baseline-cli/AT-hermes-config-90-show.json",
+      "sha256": "de04a4a59be6a958d9f3483929f6e8231412175e04d3d18eaaaa7ec4829eab49",
+      "exitCode": 5,
+      "sameDataAsRun": true
+    },
+    "blockingCase": {
+      "id": "bootstrap.fixture-runtime",
+      "state": "BLOCKED",
+      "reasonCode": "REGISTERED_CASE_NOT_IMPLEMENTED"
+    },
+    "world": {
+      "stackId": "0efb3625-7a68-4ad6-ae62-0d435b004a88",
+      "downExitCode": 0,
+      "teardownComplete": true,
+      "unresolvedResourceRefs": []
+    },
+    "liveProviderSends": 0,
+    "wholeATComplete": false
+  },
+  "admission": {
+    "path": "build/evidence/R0.03/dashboard90-baseline-doctor.json",
+    "sha256": "615fbd4cfd807928e6c8f1139dc9f614199b52ab3816b410ffa232abf8c48b50",
+    "observedAt": "2026-10-07T01:07:33.546Z",
+    "pressure": "normal",
+    "availableBytes": 2579693568,
+    "ownNeedBytes": 268435456,
+    "marginBytes": 536870912,
+    "admitted": true
+  },
+  "sourceBoundDiagnosis": {
+    "pinnedHermesCommit": "8d5e3e412138342e8bf30443e72bd4e6a9abd057",
+    "existingDashboardPreparation": {
+      "path": "build/evidence/R0.03/dashboard-source-preparation.json",
+      "sha256": "2cb584e922eceaacaec21a9fe570849ea3a3906d922301be016d8e600683bb51",
+      "patchAppliesToPinnedSource": true,
+      "syntaxVerified": true,
+      "runtimeVerified": false,
+      "newInfrastructure": false,
+      "newDependencies": false,
+      "preparedBehavior": "The existing patch sanitizes dashboard OAuth AuthError/OSError failures and maps OS save errors to HTTP 400; it already applies to the pinned source. No runtime or assigned-AT proof exists."
+    },
+    "sourceSupportedRoute": "The pinned public `hermes dashboard` command starts the real server. The existing public POST /api/providers/oauth/openai-codex/start?profile=<name> starts a fixed device-code flow; GET /api/providers/oauth/openai-codex/poll/<session_id>?profile=<name> reads its result. The session captures the selected profile and the worker saves inside that profile scope. A profile-scoped OSError is recorded as an error with status 400 and the poll route returns a fixed sanitized message.",
+    "smallestGap": "AT90 is not registered or dispatched. HermesAuthProbe and runHermesAuthFixture currently drive auth CLI operations only; the external fake dispatches add phases to auth add and its EIO hook targets HERMES_HOME/auth.json. They do not launch a dashboard subprocess, drive its public OAuth routes, or target a profile auth.json.",
+    "minimalSeam": "Extend the existing HermesAuthProbe/auth-fixture owner and external auth fixture only. Apply the already-prepared dashboard patch to the isolated pinned candidate; launch the pinned public dashboard in temporary HOME with loopback host, port 0, no browser, and isolated mode; drive its existing profile-scoped start/poll routes over loopback with a synthetic ephemeral session token. Extend the existing fake OAuth/OS seam to dispatch the dashboard flow and target the one designated temporary profile store for the existing atomic-replace EIO fault. No new server, endpoint, provider, DTO, or product protocol."
+  },
+  "sourceBindings": [
+    {
+      "path": "packages/hermes/src/auth-probe.ts",
+      "sha256": "e2838fb21147b322fead51c04b3c94eefd98c99099b868c90f3bd89e15fab11d",
+      "lineRefs": ["19-20", "32-37", "94-105"],
+      "finding": "Unfiltered auth IDs and fixture dispatch currently stop at AT89; there is no AT90 manifest guard or dashboard-scope dispatch."
+    },
+    {
+      "path": "packages/hermes/src/auth-fixture.ts",
+      "sha256": "a3b0f0ec3ea3159fab666a6030d307b3a021c8207ba71051a4adb1b0e48538d3",
+      "lineRefs": ["182-219", "231-261", "263-313", "528-550"],
+      "finding": "The existing owner pins and patches a disposable candidate, launches fresh public Hermes commands with bounded children, and has reusable process control; it has no dashboard server/HTTP driver."
+    },
+    {
+      "path": "patches/hermes-auth-dashboard.patch",
+      "sha256": "f4509ed92351863f58ee9ea85c6c6473d23b86b75e59a0064db26f5d71e28493",
+      "lineRefs": ["17-47", "49-64", "65-75"],
+      "finding": "Already maps OAuth worker AuthError/OSError to a generic session error status 400 and returns a fixed sanitized 400 from public poll; start also sanitizes AuthError/OSError. No product patch extension is indicated before runtime evidence."
+    },
+    {
+      "path": "build/patches/hermes-auth-dashboard/src/hermes_cli/web_routers/oauth.py",
+      "sha256": "7ae36a921160d598d40f6aa4e654f088d70702977ce259d4a16968c08ca56925",
+      "lineRefs": ["289-343", "798-827", "864-890"],
+      "basePinnedFileSha256": "fe4daead9163157c61a5ee25e81acf250cc603c0eac7239da1695090d06da418",
+      "finding": "The pinned route API accepts a profile query, worker stores the profile with the OAuth session and scopes the token save to it; the prepared patch sanitizes OSError handling."
+    },
+    {
+      "path": "pinned:hermes_cli/subcommands/dashboard.py",
+      "pinnedCommit": "8d5e3e412138342e8bf30443e72bd4e6a9abd057",
+      "sha256": "cf78789c16e5b2e2183671711944cc230bda241726ca3420a4c0b519f7fc4193",
+      "lineRefs": ["17-26", "70-90"],
+      "finding": "The public dashboard CLI accepts loopback host, port 0, --no-open, --isolated and --skip-build, so the test can avoid installed services and browser/build side effects."
+    },
+    {
+      "path": "pinned:hermes_cli/web_server.py",
+      "pinnedCommit": "8d5e3e412138342e8bf30443e72bd4e6a9abd057",
+      "sha256": "4ecf5264dc739dc7781956abb4c9f3702548f990831a1d599a191423a5dfdf57",
+      "lineRefs": ["365-371", "452-475", "478-491"],
+      "finding": "A synthetic HERMES_DASHBOARD_SESSION_TOKEN is accepted through X-Hermes-Session-Token on loopback; only the temporary test token is used and no token is written to evidence."
+    },
+    {
+      "path": "patches/hermes-auth-fixture.patch",
+      "sha256": "1b2c15d4560062990cd01c7fa6d884a583b436815367d2b0a30a2f9f8052d135",
+      "lineRefs": ["20-35", "320-378", "468-510", "727-745"],
+      "finding": "Existing fake returns fixed Codex device-code, poll and token responses and has an EIO os.rename fault after token response; its dispatch targets CLI auth-add and root HERMES_HOME/auth.json only. Extend these same seams to the dashboard process and its selected profile store."
+    },
+    {
+      "path": "packages/contracts/src/ops-registry.ts",
+      "sha256": "618032d8aaa716ffb2d1947428d236dc064e343beced482a19b3ee770c48f7c8",
+      "lineRefs": ["114-143", "192-197"],
+      "finding": "AT84 already registers profile-auth-atomic-replace-eio as an OS fault. Reuse its mechanism for AT90's single save-failure profile and bind the AT90 phase explicitly."
+    },
+    {
+      "path": "docs/adr/0024-profile-auth-persistence.md",
+      "sha256": "dcff183dbc89fc0c0d0ad0fc48a927d4c45ff423baf0114644f6b95a17f8a53d",
+      "finding": "Existing profile persistence ADR establishes scoped temporary profile stores; the AT90 probe should add one written test-owner interface, not a new auth module."
+    }
+  ],
+  "minimumPlan": {
+    "writtenInterfaceFirst": {
+      "proposedPath": "docs/adr/0046-dashboard-auth-scope-probe.md",
+      "decision": "Extend HermesAuthProbe.run and runHermesAuthFixture with a closed dashboard-scope mode. Keep the existing CheckViewV1 evidence, public OAuth HTTP routes, pinned Hermes child, and fixed external fake OAuth/model/OS seams; add no DTO, module, route, endpoint, provider, or runtime."
+    },
+    "temporarySetup": [
+      "Within one new private test home, create `success` and `toy` profiles via pinned public profile commands and set their Codex provider config through the public CLI; take root, success-profile, and toy-profile auth digests after setup.",
+      "Run one pinned `hermes dashboard --host 127.0.0.1 --port 0 --no-open --isolated --skip-build` subprocess per profile scope, sequentially, with the same temporary HERMES_HOME and only loopback HTTP. The public profile query selects the scope; no installed dashboard/service or browser is contacted.",
+      "Use an ephemeral synthetic HERMES_DASHBOARD_SESSION_TOKEN via X-Hermes-Session-Token for the start route. Keep session IDs and token material in process memory; receipts retain only digests and sanitized response facts."
+    ],
+    "mandatoryCases": [
+      {
+        "id": "dashboard-profile-success",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "dashboard-profile-success",
+        "operations": ["POST /api/providers/oauth/openai-codex/start?profile=success", "GET /api/providers/oauth/openai-codex/poll/<session_id>?profile=success"],
+        "oracle": "The fixed fake device flow reaches approved; only profiles/success/auth.json changes, while profiles/toy/auth.json and root auth remain unchanged. Record exact fake request ledger and no denials/token output."
+      },
+      {
+        "id": "dashboard-fresh-profile-use",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "dashboard-fresh-profile-use",
+        "operations": ["Fresh pinned `hermes --profile success auth list openai-codex`", "Fresh pinned `hermes --profile success chat --provider openai-codex --model gpt-6.1-sol --toolsets none -q <fixed prompt>`"],
+        "oracle": "The saved row is readable and a new process obtains the expected fake model response/generation. Root and toy-profile auth digests remain stable. No fallback or denied HTTP request."
+      },
+      {
+        "id": "dashboard-save-failure-400",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "dashboard-save-failure-400",
+        "operations": ["POST /api/providers/oauth/openai-codex/start?profile=toy", "GET /api/providers/oauth/openai-codex/poll/<session_id>?profile=toy", "Fresh pinned `hermes --profile toy auth list openai-codex`"],
+        "oracle": "After the fixed fake token exchange, trigger the existing profile-auth-atomic-replace-eio OS control on profiles/toy/auth.json. Require poll HTTP 400 with the fixed sanitized detail, no success/approved claim, no token or raw exception in response/evidence, and an empty fresh list. Root and success-profile auth digests remain unchanged; the failed profile auth digest remains absent or byte-identical to its pre-flow value."
+      }
+    ],
+    "manifest": {
+      "owner": "hermes",
+      "scenarioId": "auth.dashboard-scope",
+      "kind": "behavioral",
+      "mandatoryCases": [
+        {"id": "dashboard-profile-success", "publicOperation": "HermesAuthProbe.run", "phase": "dashboard-profile-success"},
+        {"id": "dashboard-fresh-profile-use", "publicOperation": "HermesAuthProbe.run", "phase": "dashboard-fresh-profile-use"},
+        {"id": "dashboard-save-failure-400", "publicOperation": "HermesAuthProbe.run", "phase": "dashboard-save-failure-400"}
+      ],
+      "faultControls": [
+        {"id": "profile-auth-atomic-replace-eio", "seam": "os", "affectedPhases": ["dashboard-save-failure-400"]}
+      ]
+    },
+    "largestInterfaceAcceptance": "After exact parent registration, run unfiltered CLI probe.run for AT-hermes-config-90, read back the same operation with probe.show, verify all three mandatory cases, provider/store/process evidence and source/patch/schema digests, then tear down the owned world and record zero unresolved resources and zero live provider sends. Keep wholeATComplete false."
+  },
+  "minimumFilesForImplementation": [
+    "docs/adr/0046-dashboard-auth-scope-probe.md (write first)",
+    "packages/hermes/src/auth-fixture.ts",
+    "packages/hermes/src/auth-probe.ts",
+    "patches/hermes-auth-fixture.patch",
+    "Existing patches/hermes-auth-dashboard.patch remains unchanged unless CLI evidence falsifies its prepared behavior."
+  ],
+  "parentIntegrationAfterSource": [
+    "Register the exact AT90 source assertion, three mandatory cases, and OS fault binding in canonical acceptance/manifest/generated metadata.",
+    "Add AT90 to the existing CLI unfiltered auth guard and dispatch, then feature-map/check it before the unfiltered run."
+  ],
+  "deferredOracles": {
+    "separateCredentialPoolEndpoint": "The prepared patch also sanitizes POST /api/credentials/pool, but AT90's assertion and dashboard matrix can be covered with the public OAuth device-code start/poll route. Pool-add behavior remains outside this minimum subset unless the indexed route is later shown to require it.",
+    "liveIdentity": "Synthetic OAuth/model endpoints only; no real account, token, account authorization, or production login.",
+    "hostServices": "No installed Hermes, gateway, user dashboard, profile, account, or real credential store is involved.",
+    "protectedOrNative": "This CLI fixture does not prove the protected-controller boundary, actual service UID, OS denial under installed identity, or native service behavior.",
+    "root02": "PENDING and untouched."
+  },
+  "limits": {
+    "wholeATComplete": false,
+    "acceptancePassClaimed": false,
+    "sourceRegistration": "null in fresh baseline",
+    "runtimeVerified": false,
+    "rawCredentialsOrStreams": "not read or exported",
+    "installedHermesAndServices": "untouched"
+  }
+}

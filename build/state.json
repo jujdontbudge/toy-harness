@@ -2,7 +2,7 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-07T01:10:29.133098+00:00",
+  "updatedAt": "2026-10-07T01:14:32.092823+00:00",
   "phase": "R0_FEASIBILITY",
   "activeCard": "R0.03",
   "cardCount": 87,
@@ -1193,7 +1193,7 @@
         "task": "/root/r003_per_generation_refresh_plan",
         "card": "R0.03",
         "assignedAT": "AT-hermes-config-90",
-        "state": "READ_ONLY_PLAN_RUNNING",
+        "state": "READ_ONLY_PLAN_REVIEWED_ACCEPTED",
         "deadline": "2026-10-07T01:25:00Z",
         "model": "gpt-6-luna",
         "reasoning": "max",
@@ -1205,7 +1205,25 @@
         "baselineEvidence": "build/evidence/R0.03/dashboard90-baseline.json",
         "sourceCheckpoint": "3ad57fa",
         "wholeATComplete": false,
-        "acceptanceComplete": false
+        "acceptanceComplete": false,
+        "reviewEvidence": "build/evidence/R0.03/dashboard90-plan-review.json"
+      },
+      "dashboardUnit": {
+        "state": "BOUNDED_SOURCE_RUNNING",
+        "assignedAT": "AT-hermes-config-90",
+        "startedAt": "2026-10-07T01:14:32.092823+00:00",
+        "sourceStopAt": "2026-10-07T01:45:00Z",
+        "targetStopAt": "2026-10-07T03:15:00Z",
+        "mandatoryCases": 3,
+        "plan": "build/evidence/R0.03/dashboard90-next-minimum-plan.json",
+        "sourceReview": "build/evidence/R0.03/dashboard90-plan-review.json",
+        "admissionEvidence": "build/evidence/R0.03/dashboard90-source-phase-doctor.json",
+        "nativeAttempts": 0,
+        "nativeFailures": 0,
+        "writtenInterface": "docs/adr/0046-dashboard-auth-scope-probe.md",
+        "wholeATComplete": false,
+        "acceptanceComplete": false,
+        "sourceWorkerStopped": false
       }
     },
     "R0.04": {
@@ -2376,6 +2394,27 @@
           "Protected whole register/controller admission",
           "Remaining assigned R0.12 ATs and actual dependent capabilities"
         ]
+      },
+      "lifestoreResearchPlanUnit": {
+        "task": "/root/r007_minimum_trial_journal",
+        "card": "R0.12",
+        "assignedATs": [
+          "AT-lifestore-45",
+          "AT-lifestore-47",
+          "AT-lifestore-70"
+        ],
+        "state": "READ_ONLY_PLAN_RUNNING",
+        "deadline": "2026-10-07T01:25:00Z",
+        "model": "gpt-6-luna",
+        "reasoning": "max",
+        "ownedPath": "build/evidence/R0.12/lifestore-research-next-minimum-plan.json",
+        "sourceMutationAllowed": false,
+        "admissionEvidence": "build/evidence/R0.12/lifestore-next-helper-doctor.json",
+        "helperNeedBytes": "268435456",
+        "marginBytes": "536870912",
+        "baselineEvidence": "build/evidence/R0.12/lifestore-research-baseline.json",
+        "wholeATComplete": false,
+        "acceptanceComplete": false
       }
     },
     "R0.13": {
@@ -10998,7 +11037,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Review bounded read-only AT-hermes-config-90 and AT-ops-44 plans and exact source bindings; admit only the simplest assigned-CLI source units. Poll both root requests; exact ROOT-R004-20261006-02 DONE immediately prioritizes R0.01 native owner load. Passed AT86/89 and corrected Ops coverage units remain stopped.",
+  "nextAction": "Wait for stopped AT90 source handoff; parent must not implement same auth files or build/probe during source mutation. Review independent read-only AT44 and Life Store plans; integrate only after clear ownership. Poll root requests; exact ROOT-R004-20261006-02 DONE immediately prioritizes R0.01 after safe source/world cleanup.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -21648,15 +21687,15 @@
     }
   },
   "resourceAdmission": {
-    "measuredAt": "2026-10-07T01:07:33.546Z",
-    "availableBytes": "2579693568",
+    "measuredAt": "2026-10-07T01:13:53.040Z",
+    "availableBytes": "2663563264",
     "pressure": "normal",
     "strictlyFreeAdmission": false,
     "repairFloorApplied": false,
     "ownedWorldsRunning": 0,
-    "helpersRunning": 2,
+    "helpersRunning": 3,
     "helperNeedBytes": "268435456",
-    "measurementSource": "build/evidence/R0.03/dashboard90-baseline-doctor.json",
+    "measurementSource": "build/evidence/R0.03/dashboard90-source-phase-doctor.json",
     "marginBytes": "536870912",
     "ownedStackId": null,
     "stackAndNativeChildrenNeedBytes": "0",
@@ -21671,15 +21710,22 @@
       "task": "/root/r003_per_generation_refresh_plan",
       "card": "R0.03",
       "assignedAT": "AT-hermes-config-90",
-      "state": "READ_ONLY_PLAN_RUNNING",
-      "deadline": "2026-10-07T01:25:00Z",
+      "state": "SOURCE_RUNNING",
+      "deadline": "2026-10-07T01:45:00Z",
       "model": "gpt-6-luna",
       "reasoning": "max",
       "ownedPath": "build/evidence/R0.03/dashboard90-next-minimum-plan.json",
-      "sourceMutationAllowed": false,
-      "admissionEvidence": "build/evidence/R0.03/dashboard90-baseline-doctor.json",
+      "sourceMutationAllowed": true,
+      "admissionEvidence": "build/evidence/R0.03/dashboard90-source-phase-doctor.json",
       "helperNeedBytes": "268435456",
-      "marginBytes": "536870912"
+      "marginBytes": "536870912",
+      "ownedPaths": [
+        "docs/adr/0046-dashboard-auth-scope-probe.md",
+        "packages/hermes/src/auth-fixture.ts",
+        "packages/hermes/src/auth-probe.ts",
+        "patches/hermes-auth-fixture.patch",
+        "build/evidence/R0.03/dashboard90-source-handoff.json"
+      ]
     },
     {
       "task": "/root/r005_control_probe_review",
@@ -21692,6 +21738,24 @@
       "ownedPath": "build/evidence/R0.02/ops44-next-minimum-plan.json",
       "sourceMutationAllowed": false,
       "admissionEvidence": "build/evidence/R0.03/dashboard90-baseline-doctor.json",
+      "helperNeedBytes": "268435456",
+      "marginBytes": "536870912"
+    },
+    {
+      "task": "/root/r007_minimum_trial_journal",
+      "card": "R0.12",
+      "assignedATs": [
+        "AT-lifestore-45",
+        "AT-lifestore-47",
+        "AT-lifestore-70"
+      ],
+      "state": "READ_ONLY_PLAN_RUNNING",
+      "deadline": "2026-10-07T01:25:00Z",
+      "model": "gpt-6-luna",
+      "reasoning": "max",
+      "ownedPath": "build/evidence/R0.12/lifestore-research-next-minimum-plan.json",
+      "sourceMutationAllowed": false,
+      "admissionEvidence": "build/evidence/R0.12/lifestore-next-helper-doctor.json",
       "helperNeedBytes": "268435456",
       "marginBytes": "536870912"
     }
