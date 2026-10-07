@@ -1,0 +1,163 @@
+{
+  "schemaVersion": "toy.r0.04.pg-native-minimum-owner-plan.v1",
+  "card": "R0.04",
+  "state": "plan_only",
+  "recordedAt": "2026-10-07T07:24:05Z",
+  "scope": {
+    "operation": "Prepare one new Toy-owned PostgreSQL 17 cluster under the canonical _toy_pg identity.",
+    "explicitlyExcluded": [
+      "Starting the PostgreSQL LaunchDaemon or any persistent database server",
+      "Creating a socket or TCP listener",
+      "Applying application migrations or creating pg-boss schema",
+      "Changing an existing PostgreSQL cluster, service, Homebrew service, or active path",
+      "Installing PostgreSQL or resolving a live executable from the installed-service manifest",
+      "Appending or executing any root request"
+    ],
+    "queueConstraint": "Do not prepare ROOT-R00403 until ROOT-R00402 reaches terminal state. This artifact appends no request and changes none of ROOT-R00401, ROOT-R00402, or ROOT-R00501."
+  },
+  "decision": {
+    "minimumNativeOperation": "Run the pinned PostgreSQL 17.11 initdb once, as _toy_pg, into an absent and empty Toy-only data path. initdb may run its private bootstrap subprocess; the owner must not invoke pg_ctl, a persistent postgres server, launchctl, brew services, or any listener setup.",
+    "targetDataPath": "/Library/Application Support/Toy/data/postgres/17",
+    "targetRuntimeSocketPath": "/Library/Application Support/Toy/run/postgres",
+    "runtimeSocketPathCreatedByPreparation": false,
+    "oldPostgresChangeRequired": false,
+    "activePathChangeRequired": false,
+    "schema44ProofReuse": "Reuse build/evidence/R0.10/unfiltered-queue-verification.json as the existing temporary-fixture pg-boss schema-44 proof; do not rerun it. Its caller scope is an ordinary owned fixture and it does not prove _toy_pg filesystem ownership or native service readiness."
+  },
+  "pinsAndEvidence": {
+    "latestAdmittedDoctor": {
+      "path": "build/evidence/R0.03/auth87-owner-source-admission-doctor.json",
+      "generatedAt": "2026-10-07T07:18:41.208Z",
+      "roleObservations": {
+        "_toy_pg": { "uid": 314, "gid": 314, "adminGroupObserved": false },
+        "_toy_ops": { "uid": 316, "gid": 316, "adminGroupObserved": false }
+      },
+      "allExpectedIdentitiesObserved": true,
+      "identityGateVerified": false,
+      "maintenanceIdentityVerified": false,
+      "servicePostgres": {
+        "state": "NOT_IMPLEMENTED",
+        "reasonCode": "OWNER_TRANSPORT_NOT_IMPLEMENTED",
+        "prerequisite": "Verified installed-service manifest and authenticated public owner transport are required."
+      }
+    },
+    "numericIdentityRule": "Treat 314/314 for _toy_pg and 316/316 for _toy_ops as observations only. Resolve the role through the generated canonical role registry and a verified RoleIdentityBootstrap receipt. The operation must accept no caller-supplied UID, GID, role name, data path, executable path, or initdb arguments.",
+    "postgresVersion": "17.11",
+    "versionSource": "specs/CONTRACTS.md and specs/ops.md; runtime binary path and bottle digest remain manifest-bound prerequisites and were not inspected in this read-only task.",
+    "priorSchemaProof": {
+      "path": "build/evidence/R0.10/unfiltered-queue-verification.json",
+      "schemaVersion": 44,
+      "wholeAcceptance": "PENDING",
+      "protectedNativeRoleProof": "pending",
+      "reuseOnly": true
+    }
+  },
+  "currentOwnerReview": {
+    "existingInterface": "RoleIdentityBootstrap.run(input, context) in packages/ops/src/identity-bootstrap.ts, exported by packages/ops/src/public.ts and dispatched by the registered bootstrap.identities CLI command.",
+    "existingReadOnlyRootRoute": "sudo -n toy bootstrap identities --verify --request-id <UUID> --json",
+    "existingRoutePurpose": "Verify the protected role-identity receipt and identity-owned bootstrap directories. The current CLI adapter forwards to RoleIdentityBootstrap; this interface does not initialize PostgreSQL.",
+    "currentBootstrapDirectorySet": [
+      "/Library/Application Support/Toy",
+      "/Library/Application Support/Toy/control",
+      "/Library/Application Support/Toy/state",
+      "/Library/Application Support/Toy/state/homes",
+      "/Library/Application Support/Toy/run",
+      "one state/homes/<service-role> directory for each generated service role"
+    ],
+    "missingFromCurrentOwner": [
+      "/Library/Application Support/Toy/data/postgres/17",
+      "manifest-bound PostgreSQL 17.11 initdb invocation under the verified _toy_pg identity",
+      "PostgreSQL cluster preparation receipt and public readback"
+    ],
+    "receiptStatus": "The admitted doctor establishes observed identities but leaves identityGateVerified and maintenanceIdentityVerified false. A current successful RoleIdentityBootstrap verify receipt is a required owner-side precondition; this plan does not claim one."
+  },
+  "minimumOwnerInterface": {
+    "placement": "One new deep Ops owner interface, PostgresClusterBootstrap.prepare(input, context), exposed through @toy/ops/public and one registered toy CLI command. Do not add a daemon, generic privileged-command runner, shell API, or separate service manager.",
+    "input": {
+      "requestId": "UUID",
+      "mode": "plan | apply | verify",
+      "expectedSnapshotDigest": "SHA256 or null for plan/verify"
+    },
+    "resolutionOwnedByModule": [
+      "Validate Ops production context and effective root caller for apply/verify.",
+      "Verify the existing RoleIdentityBootstrap receipt and resolve _toy_pg from generated contracts; bind observed UID/GID from that receipt.",
+      "Resolve the exact PostgreSQL 17.11 initdb executable and digest from a verified installed-service/runtime manifest.",
+      "Use only the canonical data path in the specification; reject symlinked parents, path replacement, nonempty targets, version mismatch, manifest mismatch, or changed preflight digest."
+    ],
+    "fixedInitdbBehavior": {
+      "program": "Manifest-resolved PostgreSQL 17.11 initdb only",
+      "runAs": "Verified _toy_pg UID/GID from the identity receipt",
+      "dataDirectory": "/Library/Application Support/Toy/data/postgres/17",
+      "fixedOptionsFromSpec": ["--encoding=UTF8", "--locale=en_US.UTF-8", "--data-checksums"],
+      "callerControlledArguments": false,
+      "listenerOrDaemonStart": false
+    },
+    "result": "A content-free prepared/verified receipt binding request ID, role identity receipt digest, PostgreSQL executable digest/version, canonical data path, observed owner/mode, PG_VERSION, checksum setting, and effectState. Do not emit user data, database contents, or secret values.",
+    "deletionTest": "If this owner is deleted, the CLI or root caller must resolve protected paths and role identity, select a pinned executable, enforce empty-target/no-symlink and snapshot guards, drop privileges, run initdb with fixed flags, and verify/persist a receipt. That moves privileged policy and failure reconciliation into callers, so this single-operation owner earns its place."
+  },
+  "rootCommandPreparation": {
+    "status": "DRAFT_ONLY_NOT_REGISTERED_OR_SUBMITTED",
+    "preflight": "sudo -n toy postgres prepare --plan --request-id <UUID> --json",
+    "applyAfterPlanAndQueueGate": "sudo -n toy postgres prepare --request-id <UUID> --expected-snapshot <SHA256> --json",
+    "readback": "sudo -n toy postgres prepare --verify --request-id <UUID> --json",
+    "registrationRequirement": "These are the exact proposed argv shapes for the one new registered CLI route; they are not currently executable. Add the command through the repository CLI/contracts paved path and FEATURE-MAP before any root request is prepared. The current registered bootstrap.identities route is a prerequisite receipt verifier, not a substitute PG initializer.",
+    "applyPreconditions": [
+      "ROOT-R00402 is terminal and the parent authorizes a new request",
+      "current RoleIdentityBootstrap receipt verifies successfully",
+      "verified installed-service manifest binds PostgreSQL 17.11 executable path and digest",
+      "target and every parent pass lstat/ownership/mode checks; target is absent or safely empty under the owner contract",
+      "planned snapshot digest still matches"
+    ],
+    "neverDo": [
+      "Never accept UID/GID/path/binary/options from CLI input.",
+      "Never remove, rename, chown, overwrite, or reinitialize an existing cluster.",
+      "Never call launchctl, pg_ctl, brew services, or a long-running postgres process.",
+      "Never change the installed-service manifest, active pointer, old service, or canonical active path."
+    ]
+  },
+  "targetPathsAndSpecBindings": [
+    {
+      "path": "/Library/Application Support/Toy",
+      "ownerAndMode": "root:root, 0711 per current identity bootstrap owner",
+      "binding": "specs/ops.md TOY_ROOT; control/bootstrap/main.ts current root boundary"
+    },
+    {
+      "path": "/Library/Application Support/Toy/data/postgres/17",
+      "ownerAndMode": "_toy_pg UID/GID from verified receipt; private cluster directory, 0700",
+      "binding": "specs/ops.md PostgreSQL installation section; specs/authority.md _toy_pg identity"
+    },
+    {
+      "path": "/Library/Application Support/Toy/run/postgres",
+      "ownerAndMode": "Future socket directory; socket-only, port 5432, socket mode 0770 per specs/ops.md",
+      "binding": "Create only in a later service-install/start card; not created by this preparation."
+    },
+    {
+      "path": "system/toy.postgres",
+      "ownerAndMode": "Future LaunchDaemon running as uid(_toy_pg)",
+      "binding": "specs/ops.md canonical process/UID/runtime manifest and specs/authority.md service topology; not installed or activated here."
+    }
+  ],
+  "publicVerification": {
+    "ownerReadback": "The registered prepare --verify mode must independently read the receipt and cluster metadata, verify executable version 17.11, PG_VERSION 17, checksums, _toy_pg ownership, private mode, canonical path, and unchanged service/active-path fields.",
+    "externalReadback": "After preparation, toy doctor --deep --json may be retained as public evidence, but its current service.postgres NOT_IMPLEMENTED result remains expected until the installed-service manifest and authenticated owner transport exist. Do not claim PostgreSQL readiness from initdb success.",
+    "evidence": "Persist plan/apply/verify JSON under build/evidence/R0.04 only after a separately authorized implementation and root request; this planning artifact is the only write in this task."
+  },
+  "acceptanceBindings": [
+    {
+      "id": "AT-ops-30",
+      "binding": "The root-only preparation CLI must remain unreachable from model-controlled terminal/plugin/browser/GUI paths and accept only its fixed registered operation; no sudo capability or arbitrary privileged command is added. This AT protects the invocation boundary, not cluster initialization itself."
+    },
+    {
+      "id": "AT-authority-34",
+      "binding": "Keep preparation as a registered maintenance CLI command, not an MCP tool declared read-only. If a future MCP surface is proposed, its contract must be registered and Authority must block an unregistered read-only claim."
+    }
+  ],
+  "actualDependencyRisks": [
+    "The saved doctor says the PostgreSQL service owner transport and verified installed-service manifest are not implemented, so the 17.11 executable path/digest cannot be bound from allowed evidence and apply is not ready.",
+    "The saved doctor leaves identity and maintenance enforcement gates false; observed UID/GID alone do not prove protected path enforcement or establish a verified role receipt.",
+    "The required en_US.UTF-8 locale and exact 17.11 native artifact must be verified by the future owner; absent prerequisites must block rather than fall back or install implicitly.",
+    "initdb can leave a partial target after interruption. The owner must record uncertain effects, never delete or overwrite the path, and require explicit read-only reconciliation before retry.",
+    "The existing pg-boss schema-44 proof is a temporary fixture and does not prove native service identity, cluster ownership, or daemon readiness. Reuse it without rerunning."
+  ],
+  "builderOwnedNextAction": "Register and specify the single PostgresClusterBootstrap.prepare owner plus CLI/feature-map contract, with the identity receipt, manifest binding, path guards, fixed initdb flags, and receipt verification above. Keep the new root request unsubmitted until ROOT-R00402 is terminal. The separate Toy data path means this work need not alter the old PostgreSQL service or any active path."
+}

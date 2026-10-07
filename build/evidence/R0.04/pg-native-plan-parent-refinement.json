@@ -1,0 +1,96 @@
+{
+  "schemaVersion": "toy.r0.04.pg-native-plan-parent-refinement.v1",
+  "card": "R0.04",
+  "recordedAt": "2026-10-07T07:28:30Z",
+  "state": "read_only_refinement",
+  "supersedes": "build/evidence/R0.04/pg-native-minimum-owner-plan.json",
+  "scope": {
+    "sourceOnly": true,
+    "machineProbesRun": false,
+    "cliCommandsRun": false,
+    "rootRequestsReadOrChanged": false,
+    "sourceAdmissionRun": false,
+    "filesWrittenByThisRefinement": ["build/evidence/R0.04/pg-native-plan-parent-refinement.json"]
+  },
+  "existingOpsSeam": {
+    "publicEntryPoint": {
+      "file": "packages/ops/src/public.ts",
+      "interface": "OpsControlRead.doctor(input, context, ownerReads)",
+      "readMode": "deep doctor already adds Ops-owned CheckViewV1 results to the public DoctorReport. No new CLI command is needed to carry a read-only descriptor."
+    },
+    "registeredInventorySlot": {
+      "file": "packages/contracts/src/ops-registry.ts",
+      "line": 205,
+      "entry": "service.postgres is already present because opsControlReadInventory maps every serviceIdSchema value to a service.<id> Ops check.",
+      "use": "Replace the generic service.postgres unavailable view in deep doctor only when the native artifact can be verified. Keep its state BLOCKED for service readiness while publishing the artifact descriptor in its existing CheckViewV1 prerequisite and artifactDigests fields."
+    },
+    "currentFallback": {
+      "file": "packages/ops/src/public.ts",
+      "lines": "48-53",
+      "behavior": "unavailableSnapshot currently marks every service check NOT_IMPLEMENTED with OWNER_TRANSPORT_NOT_IMPLEMENTED. The deep doctor path later adds private Ops reads, so the narrow change is one internal inspector replacing only service.postgres in that report."
+    },
+    "existingReadOnlyPattern": {
+      "file": "packages/ops/src/public.ts",
+      "lines": "32-44",
+      "behavior": "inspectCodexRuntime already resolves an executable, hashes its bytes, runs a bounded --version read, parses the exact expected version, and returns a CheckViewV1 containing a descriptor and digest. Use this shape for initdb; do not copy its Codex-specific schema or path."
+    },
+    "ownerReadsBoundary": "Do not broaden the caller-supplied ownerReads injection, which currently accepts only the registered Hermes model-route-policy read. Add the PostgreSQL artifact read inside the Ops-owned deep-doctor implementation."
+  },
+  "minimumMissingDescriptorStep": {
+    "builderOwnedChange": "Add one private read-only inspectPostgresArtifact helper on the existing Ops deep-doctor path and use the already registered service.postgres CheckViewV1 slot.",
+    "descriptorFields": [
+      "resolved absolute initdb path",
+      "exact observed output version, required to equal PostgreSQL 17.11",
+      "SHA-256 of the exact initdb executable bytes",
+      "pinned package/bottle identity when the acquisition metadata provides it",
+      "observedAt and an explicit status showing this proves the native artifact only, not an installed or running service"
+    ],
+    "artifactResolution": "Resolve the selected postgresql@17 artifact from the already acquired, pinned native package location; realpath the executable once and record that absolute path. Do not require control/installed-services.json, use PATH/aliases, follow a mutable Homebrew opt path at runtime, install a package, or start a service. If the pinned package artifact is absent or not exactly 17.11, return BLOCKED with a precise reason and no descriptor.",
+    "readOnlyEvidenceMethod": "Use bounded file hashing and a sanitized, bounded initdb --version invocation against the exact resolved executable. On match, return the descriptor through the existing CheckViewV1 prerequisite JSON and put the binary SHA-256 in links.artifactDigests. The doctor check remains BLOCKED for service readiness until the later service install/owner gates pass.",
+    "currentMeasuredValues": null,
+    "measurementStatus": "No actual binary, OS, CLI, runtime, or service-manifest reads were performed for this plan. The host executable path, version output, digest, and bottle identity remain unmeasured."
+  },
+  "minimumPreparationOperation": {
+    "fixedRepositoryRootWrapper": "One fixed repository-owned root entry point under control/bootstrap, invoked by the already-root R004 workflow after its queue dependency is terminal. It may call the existing Ops public RoleIdentityBootstrap owner to verify the protected identity receipt, then use a private PostgreSQL bootstrap implementation. Do not add a generic command runner, 3-mode interface, generic snapshot protocol, or sudo invocation.",
+    "preconditions": [
+      "The Ops doctor has emitted a verified descriptor for the pinned PostgreSQL 17.11 initdb executable.",
+      "RoleIdentityBootstrap.verify returns a valid verified receipt; resolve _toy_pg by generated role name and take UID/GID only from that verified report.",
+      "The receipt and executable descriptor are revalidated immediately before use; a digest mismatch blocks without effects."
+    ],
+    "fixedEffect": "Create only the canonical Toy data subtree needed for /Library/Application Support/Toy/data/postgres/17, with root-owned protected parent directories and a private 0700 _toy_pg-owned cluster leaf; run this fixed argument vector as the verified _toy_pg UID/GID: [resolved initdb path, -D, /Library/Application Support/Toy/data/postgres/17, --encoding=UTF8, --locale=en_US.UTF-8, --data-checksums, --username=_toy_pg].",
+    "rootEntryPointTemplate": "From the repository checkout, the already-root R004 request invokes the one fixed repository helper as `node control/dist/bootstrap/postgres-main.js 30000` and sends a strict request containing only the request ID and expected initdb SHA-256 on stdin. This helper is proposed, not present or executed.",
+    "inputBoundary": "The outer root request may bind the expected initdb SHA-256. It supplies no UID, GID, path, executable path, options, SQL, credentials, or secret. The wrapper obtains and verifies the identity receipt itself.",
+    "notIncluded": [
+      "No generic plan/apply/verify CLI or generic preflight snapshot digest",
+      "No new public DTO unless an acceptance contract requires a typed preparation receipt",
+      "No new toy CLI command unless an assigned AT requires user-facing access",
+      "No installed-services manifest prerequisite for preparing the data leaf",
+      "No launchd plist, daemon, listener, runtime socket directory, SQL migrations, pg-boss startup, or active-path update"
+    ],
+    "oldServicePreservation": "The canonical data path is separate from any existing PostgreSQL cluster. If the Toy target or a parent conflicts, stop with a read-only refusal and leave it untouched; do not retarget or alter the existing/active service."
+  },
+  "identityAndVersionPins": {
+    "role": "_toy_pg",
+    "observedUidGid": "314/314 from build/evidence/R0.03/auth87-owner-source-admission-doctor.json; observation only, never caller input or a hard-coded runtime identity",
+    "differentObservedRole": "_toy_ops remains 316/316; do not exchange or rewrite the role assignments.",
+    "verifiedIdentitySource": "RoleIdentityBootstrap.run in packages/ops/src/identity-bootstrap.ts plus its protected receipt; current doctor evidence says identityGateVerified=false and maintenanceIdentityVerified=false, so the receipt/enforcement state must be resolved by the existing owner before any preparation request.",
+    "postgresVersion": "17.11 from specs/CONTRACTS.md and specs/ops.md; must be observed from initdb before preparation."
+  },
+  "publicOutputAndEvidence": {
+    "preparationReadback": "The existing deep doctor service.postgres check can include a content-free prepared-cluster receipt in CheckViewV1.prerequisite and link its binary/receipt digests. Add a new DTO only if an assigned AT requires a stable public receipt schema.",
+    "serviceReadiness": "Artifact descriptor or successful initdb does not mean the PostgreSQL service is installed, listening, ready, or cut over. Keep those states separately BLOCKED until their own owner and acceptance gates are complete.",
+    "schema44Proof": "Reuse build/evidence/R0.10/unfiltered-queue-verification.json; do not repeat the temporary pg-boss schema-44 proof. It does not prove native _toy_pg cluster ownership."
+  },
+  "acceptanceBoundary": {
+    "AT-ops-30": "Keep root preparation inaccessible to model-controlled terminal/plugin/browser/GUI paths and do not add sudo or arbitrary privileged-command capability. This acceptance protects the boundary; it does not require a new CLI.",
+    "AT-authority-34": "Do not expose the preparation operation as an unregistered MCP tool or claim it is read-only. The existing doctor descriptor is read-only Ops output; the fixed root wrapper remains an internal maintenance operation.",
+    "newAcceptance": "No new AT is established by this refinement. If future acceptance requires a user-invoked preparation command or typed receipt, then add that contract and feature-map entry through the paved path."
+  },
+  "dependencyRisks": [
+    "The pinned native PostgreSQL package artifact may not be staged yet. In that case doctor returns BLOCKED; the builder-owned next action is artifact acquisition/descriptor work after its existing feasibility gate, not a daemon start or manifest workaround.",
+    "The observed _toy_pg UID/GID does not establish a verified receipt or OS enforcement. Resolve both through the existing identity owner before root preparation.",
+    "initdb may leave partial contents after interruption. Never delete, overwrite, or reinitialize automatically; preserve the target and require a read-only owner reconciliation.",
+    "The descriptor check proves only the exact executable bytes/version. It does not prove service installation, runtime identity enforcement, database schema, socket ownership, or readiness."
+  ],
+  "nextBuilderOwnedAction": "Implement only the deep-doctor native artifact descriptor at the existing service.postgres inventory slot, then make one fixed root repository wrapper consume that descriptor and a verified RoleIdentityBootstrap receipt to initialize the new canonical Toy data leaf. Keep the root request unsubmitted until ROOT-R00402 is terminal. No current missing manifest is a prerequisite for the descriptor or the data-directory preparation."
+}

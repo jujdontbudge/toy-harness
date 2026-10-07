@@ -1,0 +1,95 @@
+{
+  "schema": "toy.r0.04.pg-init-auth-flags-review.v1",
+  "reviewedAt": "2026-10-07",
+  "scope": "read-only planning review; no PostgreSQL binary, host artifact, account, runtime, or authentication store inspected",
+  "decision": "The repo has separable patterns for a pre-install executable descriptor and a root-to-service identity drop, but no PostgreSQL descriptor or initdb owner operation exists yet. A single fixed preparation owner can use both patterns without a daemon or service cutover.",
+  "requiredInitialization": {
+    "dataDirectory": "/Library/Application Support/Toy/data/postgres/17",
+    "processRole": "_toy_pg",
+    "databaseSuperuser": "maintenance-identity-mapped cluster administrator; exact database role name is not specified by the planning contract and must be fixed before execution",
+    "fixedFlags": [
+      "--pgdata=/Library/Application Support/Toy/data/postgres/17",
+      "--encoding=UTF8",
+      "--locale=en_US.UTF-8",
+      "--data-checksums",
+      "--auth-local=reject",
+      "--auth-host=reject",
+      "--username=<fixed maintenance-mapped cluster administrator>"
+    ],
+    "authWindow": "Both local and host authentication are explicitly reject during initialization, avoiding initdb's permissive default-auth risk. Do not start the server. Install the spec's explicit local peer plus pg_ident mappings and keep host access rejected in a later protected configuration action before any start.",
+    "flagValidation": "The option spelling and support for both reject methods have not been checked against the pinned PostgreSQL 17.11 executable. The normal-user descriptor step must bound and parse that exact executable's --version and --help output before any root action; a missing or mismatched option blocks, with no fallback to initdb defaults."
+  },
+  "existingPatterns": {
+    "readOnlyArtifactDescriptor": "packages/ops/src/public.ts:27-44 resolves a fixed executable path, hashes its bytes, runs a bounded --version subprocess, parses an exact version, and returns a CheckView with the digest. This supports the shape of a pre-installed PostgreSQL initdb descriptor, but no PostgreSQL descriptor is implemented.",
+    "registeredReadSeam": "packages/contracts/src/ops-registry.ts:205-207 registers service.<id> checks, including service.postgres. packages/ops/src/public.ts:47-54 currently leaves these NOT_IMPLEMENTED; doctor deep reads are private in packages/ops/src/public.ts:96-116, while supplied owner reads are restricted to Hermes at lines 86-91. Add the PostgreSQL descriptor as a private Ops doctor read, not a new generic owner-read API or installed-manifest prerequisite.",
+    "rootIdentityDrop": "control/bootstrap/denial-probe.ts:5-15 and control/bootstrap/siwc-runtime-probe.ts:6-16 are existing root-only patterns: setgroups([gid]), setgid(gid), setuid(uid), then read back real/effective IDs and require getgroups() to contain exactly the primary gid. This removes inherited group memberships but retains the primary gid as the sole supplementary group; it is not a literally empty supplementary list.",
+    "identitySourceConstraint": "The probes accept numeric UID/GID arguments and therefore are examples only, not reusable input contracts. The new owner must resolve _toy_pg through the generated canonical role registry and a verified RoleIdentityBootstrap receipt; no caller UID/GID or numeric shorthand. The current RoleIdentityBootstrap root path and report checks are in packages/ops/src/identity-bootstrap.ts:12-26."
+  },
+  "boundedBuilderChange": [
+    "Add one private read-only Ops doctor inspector for the pinned PostgreSQL 17.11 initdb artifact, modeled on inspectCodexRuntime: fixed/root-protected resolved path, bounded version/help reads, expected-version and executable SHA-256 descriptor. It runs without privilege and produces a digest-bound descriptor before a service manifest exists.",
+    "Add one narrow repository root preparation owner. It accepts only a fixed request shape and the descriptor plus a verified RoleIdentityBootstrap receipt; re-resolves and hashes the exact executable, rejects any path/version/digest/target mismatch, and refuses to proceed unless the canonical new data leaf is absent. Resolve _toy_pg IDs from the receipt and canonical registry, then clear inherited groups, set the service primary group and UID, and verify IDs/groups before executing the fixed initdb argv.",
+    "The helper may create and initialize only /Library/Application Support/Toy/data/postgres/17 as _toy_pg. It must not replace a non-empty/pre-existing target, alter Homebrew's default cluster or old service, create a listener/socket, start a daemon, perform migrations, or cut over a service. Preserve the generated reject authentication configuration until a later protected step writes explicit peer/pg_ident configuration.",
+    "Return a non-secret preparation receipt with the fixed target, descriptor digest/version, verified canonical role name, initialization result, and fixed auth mode. Public Ops verification may report that receipt and descriptor as BLOCKED for service readiness; it must not claim a running or usable database. Keep the whole AT/card false. ROOT-R00403 remains unqueued until ROOT-R00402 is terminal."
+  ],
+  "openDependenciesAndRisks": [
+    "The planning spec requires the cluster administration role to be accessible only through the maintenance identity but does not name that PostgreSQL role. Do not default the cluster superuser to _toy_pg or the root caller; assign and pin the maintenance-only role name before initdb.",
+    "The exact initdb 17.11 command-line and reject-auth option support remain unverified until the permitted descriptor reads the pinned artifact. A mismatch is a hard block.",
+    "The existing group-drop examples retain the role's primary GID in getgroups(). If the required policy means an empty supplementary-group list, the current pattern does not satisfy it; specify and verify setgroups([]) plus the primary effective GID instead. In either case, verify the resulting group set before exec.",
+    "Hash-then-exec by pathname has a time-of-check/use window unless executable and parent path are protected by root/maintenance ownership and cannot be replaced. Bind the descriptor to that protected path and recheck immediately before privilege drop/exec.",
+    "No PostgreSQL native artifact/version/digest was observed in this review. Artifact availability remains an external prerequisite to the bounded builder step, not evidence of feasibility or card completion."
+  ],
+  "sources": [
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/ops.md",
+      "lines": "453-468",
+      "supports": "Pinned native postgresql@17 acquisition is gated; separate canonical data path; UTF-8, en_US.UTF-8, checksums, exact executable path and bottle identity; launchd runs resolved 17.11."
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/ops.md",
+      "lines": "472-500",
+      "supports": "No TCP listener; socket is a later service configuration and restricted to the installer-created client group."
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/ops.md",
+      "lines": "504-517",
+      "supports": "Maintenance-only cluster administration, explicit peer plus pg_ident service mappings, runtime role separation, controlled deployment owns schema installation."
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/ops.md",
+      "lines": "245-268",
+      "supports": "_toy_pg owns PostgreSQL process and cluster files; maintenance identity and protected parent/executable paths; preserve old account and privileges."
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/toy-harness/packages/ops/src/public.ts",
+      "lines": "27-44, 47-54, 81-116",
+      "supports": "Existing fixed-path/hash/version CheckView pattern, current service checks remain NOT_IMPLEMENTED, doctor provides private deep reads and restricts supplied owner reads."
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/toy-harness/control/bootstrap/denial-probe.ts",
+      "lines": "5-15",
+      "supports": "Root-only group/UID/GID drop followed by identity and group readback; numeric argv is probe-only."
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/toy-harness/control/bootstrap/siwc-runtime-probe.ts",
+      "lines": "6-16",
+      "supports": "Second root-only group/UID/GID drop pattern with exact resulting group-set check; numeric argv is probe-only."
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/toy-harness/packages/ops/src/identity-bootstrap.ts",
+      "lines": "12-26",
+      "supports": "Existing root bootstrap boundary/report validation to build on; it does not itself perform PostgreSQL initdb or the service identity drop."
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/toy-harness/packages/contracts/src/ops-registry.ts",
+      "lines": "205-207",
+      "supports": "Registered Ops service inventory includes a service.postgres read seam."
+    }
+  ],
+  "completion": {
+    "wholeAtOrCard": false,
+    "nativeOperationPerformed": false,
+    "rootQueueChanged": false,
+    "nextRootRequestAppended": false,
+    "scopeSolelyThisEvidenceArtifact": true
+  }
+}
