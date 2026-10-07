@@ -1,0 +1,117 @@
+{
+  "schemaVersion": "toy.r003-catalog-oracle-source-admission.v1",
+  "recordedAt": "2026-10-07T15:00:49.835225+00:00",
+  "sourceDeadline": "2026-10-07T15:15:49.835225+00:00",
+  "card": "R0.03",
+  "assignedAT": "AT-hermes-config-35",
+  "rung": "CLI",
+  "sourceOwner": "/root",
+  "state": "SEPARATE_MINIMAL_CATALOG_ORACLE_SOURCE_ADMITTED",
+  "causalBaseline": {
+    "path": "build/evidence/R0.03/manual-lineage35-shape-stopped-verification.json",
+    "sha256": "73138618a37279fd9705acff944dd4c03d942efa9078751937b238bff782df5e"
+  },
+  "actualObserved": "Native independent manual profile chat exits0 CHAT_RESPONSE_OK using added grant; models1/catalogue0/generationnull, root/profile stores unchanged. Existing two catalogue predicates reject it.",
+  "catalogueIsNotRequiredByAssignedAssertion": true,
+  "changes": [
+    "Reuse the actual external HTTP catalogue count under the existing maximum of one; all non-Anthropic behavior is identical",
+    "For Anthropic-only optional catalogue use, zero requests requires null catalogue generation, one request requires the exact expected grant generation. Keep the mandatory model request and actual access generation plus every auth/root/copy/hygiene/identity check",
+    "Document this existing external-provider observation boundary before code; no new case/protocol/public interface"
+  ],
+  "ownedSourcePaths": [
+    {
+      "path": "packages/hermes/src/auth-fixture.ts",
+      "sha256": "9784f44a4add85a59c8381a404f65cace9aa8f91c8c58bb1cdc03abc01253b3d"
+    },
+    {
+      "path": "docs/adr/0045-mixed-auth-lineage-probe.md",
+      "sha256": "88f4cad52b1334b6bac1a693b21198f3e620ed048a754a5b6a2a6c3c5bac54ce"
+    }
+  ],
+  "frozenSourcePins": [
+    {
+      "path": "patches/hermes-profile-auth.patch",
+      "sha256": "814f13752d5132dbc175fb1864229dead2988f9eaa8f76af1481457f2b406b30"
+    },
+    {
+      "path": "packages/hermes/src/auth-probe.ts",
+      "sha256": "b26c56b0841953b9b071db8940f7efdbbce6ee44be3a922b940e2b235e151226"
+    },
+    {
+      "path": "packages/self-improvement/src/model-admission.ts",
+      "sha256": "e938ae2c18bbf34af9c863283dd853c2aff109c3eac0fc08962979458c39a630"
+    },
+    {
+      "path": "packages/self-improvement/src/accounting-probe.ts",
+      "sha256": "559ad8006265c63b87d7e9dd2e8f7fdfaaaf4b0d8d06f1433e7f1e6ec3f57a71"
+    },
+    {
+      "path": "packages/hermes/src/model-route-probe.ts",
+      "sha256": "820862303d2471517e4474440d697dc0bf3f043a4960dff680ea0fee6b605489"
+    },
+    {
+      "path": "packages/hermes/src/model-route.ts",
+      "sha256": "7c56f64981df351db6b8cd72237334369a86ffe9cb6d721c37c9dd2e2be945dc"
+    },
+    {
+      "path": "tests/registry.yaml",
+      "sha256": "2952c2a7bc3b66752de58360f3525957aa18fe6701d900427cf8f5df643f4004"
+    },
+    {
+      "path": "cli/src/main.ts",
+      "sha256": "2186840498e12e39156877da9e3e3431d86045af87108cbf2fd236105a1f2db5"
+    },
+    {
+      "path": "packages/ops/src/fixture-stack.ts",
+      "sha256": "4311ee0309bfa3dbc2a9c6eff3c07b55bdaca4e1e2ad41ff1e2334595560dda6"
+    }
+  ],
+  "frozenRootPins": [
+    {
+      "path": "scripts/probe-siwc-control-runtime.mts",
+      "sha256": "96e1fd2d98469772c3d0d203386c3f7aa56af57db025c420fa93f1f4ecd7e70d",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/stage-siwc-control-runtime.mts",
+      "sha256": "13ff53e341ab7670dbed967ce810d5aa2834df7a47ffe1620f037ff1da3ee0d4",
+      "unchanged": true
+    },
+    {
+      "path": "control/dist/bootstrap/siwc-runtime-probe.js",
+      "sha256": "06870b8dd41d2ffc093cc04680ba56c4570f07b4aa0a27a9ab70796cdd8204bd",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/probe-unfiltered-control-denials.mts",
+      "sha256": "1cb93d375df931a482d946170e31549450d8efb71d6a251f5d2bcea8c5b92529",
+      "unchanged": true
+    },
+    {
+      "path": "packages/ops/dist/role-control-probe.js",
+      "sha256": "1764a98e5ae45694118007c242320711a7bd9e0d021b7c6d6ee0cbb8cff73ec2",
+      "unchanged": true
+    },
+    {
+      "path": "control/dist/bootstrap/denial-probe.js",
+      "sha256": "7fda1824ec7bc308cac97d07c7c92cadd5527e87e89d79b410d33d95d1b30672",
+      "unchanged": true
+    }
+  ],
+  "memory": {
+    "path": "build/evidence/R0.03/manual-lineage35-catalog-source-memory.json",
+    "sha256": "097933c8f8a100cc2ac2b171e3e387ed8a66f50f0a1d5daea95b606b56b6ed99"
+  },
+  "availableBytes": "2245984256",
+  "normalPressure": true,
+  "ownRequiredBytes": 805306368,
+  "historicalAT35AssignedAttemptsUsedBeforeUnit": 4,
+  "priorShapeUnitRemainsStopped": true,
+  "maximumNewDiagnosticRuns": 1,
+  "firstCompleteTwelveCasePassStop": true,
+  "anyNewFailOrBlockedStop": true,
+  "noUnchangedRerun": true,
+  "registryOrDTOOrPatchOrCLIOrInfrastructureChangeAllowed": false,
+  "actualNativeAccountProtectedAcceptance": false,
+  "goalStatus": "active"
+}

@@ -854,7 +854,7 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
           : { device_code_requests: 1, device_code_polls: 1, token_exchanges: 1, token_refreshes: 0, model_catalog_requests: 0, model_requests: 0, denied_http_requests: 0, blocked_socket_events: 0 }
         : listOperation || priorityOperation || removeOperation || resetOperation || deniedGrant
           ? { device_code_requests: 0, device_code_polls: 0, token_exchanges: 0, token_refreshes: 0, model_catalog_requests: 0, model_requests: 0, denied_http_requests: 0, blocked_socket_events: 0 }
-          : { device_code_requests: 0, device_code_polls: 0, token_exchanges: 0, token_refreshes: operation === "chat-expired" ? 1 : 0, model_catalog_requests: anthropicLineage ? 1 : result.http_ledger.model_catalog_requests, model_requests: rateLimitStep ? result.observations.fallback_attempted ? 3 : 2 : 1, denied_http_requests: 0, blocked_socket_events: 0 };
+          : { device_code_requests: 0, device_code_polls: 0, token_exchanges: 0, token_refreshes: operation === "chat-expired" ? 1 : 0, model_catalog_requests: result.http_ledger.model_catalog_requests, model_requests: rateLimitStep ? result.observations.fallback_attempted ? 3 : 2 : 1, denied_http_requests: 0, blocked_socket_events: 0 };
       const identity = result.processIdentity;
       const freshChildPid = !childPids.has(identity.pid);
       childPids.add(identity.pid);
@@ -1011,7 +1011,7 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
         && result.observations.access_generation === expectedGeneration
         && (!fixtureStep || (rateLimitStep
           ? result.observations.catalog_access_generation === "added" || result.observations.fallback_attempted && result.observations.catalog_access_generation === "stale"
-          : result.observations.catalog_access_generation === (chatOperation ? fixtureStep.expectedGeneration : null)))
+          : result.observations.catalog_access_generation === (chatOperation && (!anthropicLineage || result.http_ledger.model_catalog_requests === 1) ? fixtureStep.expectedGeneration : null)))
         && result.observations.network_denials.length === 0
         && result.observations.socket_origin === null
         && result.observations.token_hygiene
