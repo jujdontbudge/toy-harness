@@ -1,0 +1,86 @@
+{
+  "schemaVersion": "toy.r006.unknown-reset-next-minimum.v1",
+  "recordedAt": "2026-10-07T13:09:57.970Z",
+  "card": "R0.06",
+  "AT": "AT-ops-10",
+  "rung": "CLI",
+  "state": "READ_ONLY_SOURCE_GAP_PREDICTED_NOT_RUNTIME_VERIFIED",
+  "sourceAdmitted": false,
+  "priority": "After current AT35 SOURCE STOP/verification; verified ROOT00402 native read gives R0.01 priority.",
+  "basis": {
+    "spec": "ops section13 requires durable quota-denied work and resume only after a fresh successful usage/admission check; a reset timestamp can be unknown.",
+    "source": "The old-day resumePending branch returns the original denied row unconditionally whenever target.decision.retryAt is null, before examining a later authorized available observation.",
+    "observedScope": "Known-reset rollover passed18 public CLI checks in cross-day-final-verification.json. Unknown-reset rollover remains explicitly deferred there.",
+    "limit": "This is a source prediction, not a reproduced runtime defect or acceptance passage."
+  },
+  "minimum": {
+    "interface": "Existing registered toy probe run AT-ops-10, mandatory model-admission/deferred-restart-recovery case, public ModelAdmission + existing real PostgreSQL fixture + fake external quota/clock.",
+    "phase1": "Keep ModelAdmission owner unchanged. Extend the existing mandatory recovery case with a second fixed account: persist actual denied/exhausted observation at23:59 with no windows/reset; reopen the owner at00:02; verify exact old pending row and zero charge. Show midnight/stale or unauthorized data cannot admit. Observe fresh authorized schema-valid available windows at00:06; expect one immutable current-day retry, unchanged original, same budget/run/generation/work/route, repeat idempotence, root-rebind conflict and no-send terminal lease cleanup.",
+    "redGate": "Parent runs actual unfiltered assigned CLI run/show and complete teardown before any owner edit. A source prediction alone is insufficient. Stop on unexpected baseline or three assigned failed attempts.",
+    "phase2": "Only after reproduced RED, adjust the existing old-day branch to accept recovery evidence after the original denial when retryAt is unknown; when retryAt exists require it elapsed and observation at/after it. Keep authorization/schema/account/freshness/measured eligibility, queue-head, snapshot, cumulative budget and immutable retry guards. No calendar-only or fixed-count recovery permission.",
+    "greenGate": "First implemented PASS stops the unit. Verify exact canonical source registration, run/show data, affected AT11/49/50/51/52 and zero-resource stack teardown. Preserve the existing9 same-day recoveries and known-reset rollover.",
+    "projection": "Use bounded booleans/counts within the existing <=2000-byte CheckView projection; do not publish raw streams or expand DTOs to expose private stored parent/attempt fields."
+  },
+  "ownedPathsForFutureAdmission": [
+    "docs/adr/0061-cross-day-model-admission.md",
+    "packages/self-improvement/src/accounting-probe.ts",
+    "packages/self-improvement/src/model-admission.ts",
+    "architecture/features.json"
+  ],
+  "phase1OwnerFrozen": {
+    "path": "packages/self-improvement/src/model-admission.ts",
+    "sha256": "2afd5174b7b3edae3cb2398811acadd6bbc9268072faaf9bbaa49823f157a237"
+  },
+  "sourcePins": [
+    {
+      "path": "packages/self-improvement/src/accounting-probe.ts",
+      "sha256": "d89489f84a16f2d6ac078e11cae3b21de33b9b63158f9b230d34ee16c9e63164"
+    },
+    {
+      "path": "packages/contracts/src/model-admission.ts",
+      "sha256": "8803164cb2d4e3b5fe764870f8409f020be0841f2367a86c7cdd062fa3c6262e"
+    },
+    {
+      "path": "docs/adr/0061-cross-day-model-admission.md",
+      "sha256": "0cd558de9d047f2574dea2883719d9ebe0ed59f00424fccac2b496321457a852"
+    }
+  ],
+  "specPins": [
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/ops.md",
+      "sha256": "f07aab65088c82e4ff21e4d63edb2f279e2324e6d7e2bbb801e0fd7494104b0b"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/TEST-PLAN.md",
+      "sha256": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/CONTRACTS.md",
+      "sha256": "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d"
+    }
+  ],
+  "priorProof": {
+    "path": "build/evidence/R0.06/cross-day-final-verification.json",
+    "sha256": "8196774b713ad4e14b7f80ca86b826553a2a05b6252691d7f5ea8a5ea162fd8b"
+  },
+  "admissionPrerequisites": [
+    "No other SOURCE or LIVE owner; exact affected source/spec bindings rechecked.",
+    "Fresh registered doctor admission using normal pressure and own declared need+512MiB; no strictly-free or aggregate veto.",
+    "Fresh bounded time box ~2h, max3 assigned attempts, baseline RED before owner mutation."
+  ],
+  "forbidden": [
+    "New API/DTO/DB field/table/module/protocol/command/case selector/infrastructure",
+    "Private SQL or helper tests",
+    "Provider send permit or actual account/auth activation",
+    "Additional runtime run of stopped AT34",
+    "Source or runtime mutation during current AT35 SOURCE"
+  ],
+  "deferred": [
+    "Raw HTTP429 normalization and canonical cadence slot/wake dispatch",
+    "Native protected provider/account/no-spend enforcement and trial activation",
+    "Direct private parentCallId/attempt/rootContractId readback",
+    "Whole AT/card/release certification"
+  ],
+  "rootPendingNeverBlocksGoal": true,
+  "wholeATComplete": false
+}
