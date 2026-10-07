@@ -1,0 +1,117 @@
+{
+  "handoffVersion": "toy.r0.12.lifestore47-source-handoff.v1",
+  "recordedAt": "2026-10-07T05:00:18Z",
+  "state": "SOURCE_CHANGED_RUNTIME_UNVERIFIED",
+  "acceptedPlan": {
+    "path": "build/evidence/R0.12/next-unimplemented-assigned-cli-plan.json",
+    "sha256": "27de5da4a117f9473b5384a54cd96dc63bb27f2d5dbe0abb41aa4e0696d82f66",
+    "acceptanceId": "AT-lifestore-47",
+    "assertionSource": "../personal-assistant-harness/specs/lifestore.md:2398",
+    "assertionSha256": "1b0e1d8308c1a668671c6ab529ab9633b3936ce147abf4641f145adba87249b1",
+    "specSha256": "044e33ba76d512c0fcae478f8d4923d2f33c028b8dae94bbdb69d6d4111c1117",
+    "rung": "CLI"
+  },
+  "ownedSource": {
+    "changed": [
+      {
+        "path": "packages/hermes/src/model-route-probe.ts",
+        "sha256": "381fd715fe89972b1b9abca8237bcc37eb156c0577022ac2905f17c098cc0ebc",
+        "originalSha256": "4e13e8c70cd4a1560ff98b009196110133fbaf0b06f740e3b63f923cd518508f"
+      }
+    ],
+    "unchangedOwner": [
+      {
+        "path": "packages/hermes/src/model-route.ts",
+        "sha256": "75bad754c537c53a920762b259d30ee6f89149a8d60d40678214cf5e2dec3962"
+      }
+    ],
+    "filesWrittenByThisAgent": [
+      "packages/hermes/src/model-route-probe.ts",
+      "build/evidence/R0.12/lifestore47-source-handoff.json"
+    ],
+    "newPublicApi": false,
+    "newModule": false,
+    "newDtoOrSchema": false
+  },
+  "interface": {
+    "dispatch": "Existing public ModelRouteProbe delegation.route-skill path; the same nine registered case IDs and read.model-route-policy CheckViews are retained.",
+    "receiptProducer": "ModelRoute.delegationReceipt(ModelRouteDelegationInputV1, OpsControlContextV1, CodexDelegationExecutor, ResearchSkillResourceReader)",
+    "ownerReadback": "For AT-lifestore-47 only, each receipt is placed in a ResearchComponentComparisonV3 overlay bound to one A01 report key from the public baseline's component.reportKeys. The overlay preserves that report's originalDigest, hashes its markdown as contentDigest, and reads the A01 component decision and returned report binding through EngineeringControl.checkResearch(MapCheckInputV1, OpsControlContextV1, readonly ResearchDocumentOverlayV1[]).",
+    "baseline": "One public read-only checkResearch baseline is taken per AT-lifestore-47 probe. It is used only for A01 report keys, original indexed archive digest/path, and A01 missing-requirement count; the first matching original-digest archive is used (reviewer confirmed A01 report keys resolve to HI/SI).",
+    "scope": "The seeded V3 record is intentionally incomplete. Assertions cover only A01 ROUTE:R0:A01 and SKILL:R0:A01 missingValidationIds, indexed archive binding and comparison digest. Other comparison findings are retained as diagnostic readback and are not repaired or asserted as passing. Research admission stays BLOCKED, acceptanceComplete stays false, and wholeATsPassed stays empty.",
+    "prerequisiteLimit": 2000
+  },
+  "casesInOrder": [
+    {
+      "id": "research-route-observed",
+      "expectedReceipt": "Observed research Sol / medium / priority (Fast) receipt with pinned mattpocock skill and loaded digest.",
+      "expectedA01MissingValidationIds": []
+    },
+    {
+      "id": "research-route-missing",
+      "expectedReceipt": "Refused route observation; valid pinned skill remains loaded.",
+      "expectedA01MissingValidationIds": ["ROUTE:R0:A01"]
+    },
+    {
+      "id": "research-route-luna",
+      "expectedReceipt": "Refused Luna research route; valid pinned skill remains loaded.",
+      "expectedA01MissingValidationIds": ["ROUTE:R0:A01"]
+    },
+    {
+      "id": "research-route-wrong-effort",
+      "expectedReceipt": "Refused wrong-effort research route; valid pinned skill remains loaded.",
+      "expectedA01MissingValidationIds": ["ROUTE:R0:A01"]
+    },
+    {
+      "id": "research-route-wrong-tier",
+      "expectedReceipt": "Refused wrong-tier research route; valid pinned skill remains loaded.",
+      "expectedA01MissingValidationIds": ["ROUTE:R0:A01"]
+    },
+    {
+      "id": "research-skill-missing",
+      "expectedReceipt": "Refused before external executor; no skill or invocation receipt.",
+      "expectedA01MissingValidationIds": ["ROUTE:R0:A01", "SKILL:R0:A01"]
+    },
+    {
+      "id": "research-skill-wrong-bytes",
+      "expectedReceipt": "Refused before external executor; no skill or invocation receipt.",
+      "expectedA01MissingValidationIds": ["ROUTE:R0:A01", "SKILL:R0:A01"]
+    },
+    {
+      "id": "ordinary-implementation-luna",
+      "expectedReceipt": "Valid observed ordinary child Luna / max / priority receipt, with no research skill; its ordinary delegation remains intact.",
+      "expectedA01MissingValidationIds": ["ROUTE:R0:A01", "SKILL:R0:A01"]
+    },
+    {
+      "id": "module-local-override-refused",
+      "expectedReceipt": "Invalid module-local route override refused before executor; no receipt.",
+      "expectedA01MissingValidationIds": ["ROUTE:R0:A01", "SKILL:R0:A01"]
+    }
+  ],
+  "verification": {
+    "sourceReview": "Read-only diff/source inspection completed; no generated files were touched.",
+    "buildOrTypecheck": "NOT_RUN; parent owns integration and verification.",
+    "testsOrCliOrWorld": "NOT_RUN; explicitly prohibited for this source agent.",
+    "runtimeBehavior": "UNVERIFIED",
+    "fixtureLimits": [
+      "Receipt producer uses the existing fake external Codex executor and pinned local skill bytes; this does not attest live inference, paid account access, or authenticated external research.",
+      "TEST-PLAN requires device/account evidence for AT-lifestore-47; this handoff does not satisfy that evidence."
+    ],
+    "baselineAttemptCountsAsFirstUnsupportedRun": true,
+    "remainingFailedNativeAttemptsBeforeStop": 2
+  },
+  "deferredOwnership": {
+    "parentOwns": [
+      "tests/registry.yaml registration and canonical architecture/features entry",
+      "generated probe registry and derived feature map",
+      "build/typecheck/runtime proof and public CLI evidence"
+    ],
+    "rootQueueAtAcceptedPlan": {
+      "ROOT-R004-20261006-01": "DONE",
+      "ROOT-R004-20261006-02": "PENDING",
+      "ROOT-R005-20261006-01": "PENDING"
+    },
+    "rootQueueOrGoalStateChanged": false,
+    "releaseClosureClaimed": false
+  }
+}

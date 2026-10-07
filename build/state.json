@@ -2,9 +2,9 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-07T04:49:08.331513+00:00",
+  "updatedAt": "2026-10-07T05:08:51.425359+00:00",
   "phase": "R0_FEASIBILITY",
-  "activeCard": "R0.11",
+  "activeCard": "R0.12",
   "cardCount": 87,
   "acceptanceCount": 1447,
   "cards": {
@@ -2504,7 +2504,9 @@
         "build/evidence/R0.12/attention66-baseline.json",
         "build/evidence/R0.12/attention66-preparation.json",
         "build/evidence/R0.12/attention66-verification.json",
-        "build/evidence/R0.12/attention66-check-result.json"
+        "build/evidence/R0.12/attention66-check-result.json",
+        "build/evidence/R0.12/lifestore47-final-verification.json",
+        "build/evidence/R0.12/lifestore47-source-review.json"
       ],
       "requiredATs": [
         "AT-adhd-features-106",
@@ -2724,6 +2726,33 @@
         ],
         "wholeATsPassed": [],
         "acceptanceComplete": false
+      },
+      "lifestore47Unit": {
+        "state": "BOUNDED_CLI_UNIT_VERIFIED_AND_STOPPED",
+        "assignedAT": "AT-lifestore-47",
+        "plan": "build/evidence/R0.12/next-unimplemented-assigned-cli-plan.json",
+        "planReview": "build/evidence/R0.12/lifestore47-plan-parent-review.json",
+        "admission": "build/evidence/R0.12/lifestore47-source-admission.json",
+        "startedAt": "2026-10-07T04:51:46Z",
+        "deadlineUtc": "2026-10-07T06:51:46Z",
+        "sourceStopAt": "2026-10-07T05:15:00Z",
+        "nativeRuns": 2,
+        "nativeFailures": 1,
+        "wholeATComplete": false,
+        "interfaceReview": "build/evidence/R0.12/lifestore47-interface-review.json",
+        "reviewClosure": "build/evidence/R0.12/lifestore47-interface-review-closure.json",
+        "sourceStoppedAt": "2026-10-07T05:00:18Z",
+        "stoppedAt": "2026-10-07T05:08:51.425359+00:00",
+        "verification": "build/evidence/R0.12/lifestore47-final-verification.json",
+        "sourceReview": "build/evidence/R0.12/lifestore47-source-review.json",
+        "assignedChecks": 9,
+        "affectedRegressionChecks": 9,
+        "separateReadinessChecks": 1,
+        "nativeUnsupportedBaselines": 1,
+        "nativeAcceptanceAttempts": 1,
+        "nativeAcceptanceFailures": 0,
+        "teardownComplete": true,
+        "worldId": "60d91493-9b7a-40d3-a24b-bf4df16b2639"
       }
     },
     "R0.13": {
@@ -11346,7 +11375,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Curated R0.11 commit/push/PR update. Root02 actual UID310 native read and exact restoration DONE takes immediate R0.01 priority; while pending, finite R0.12 read-only plan selects a remaining assigned CLI owner gap. No R00403 until02 retired.",
+  "nextAction": "CuratedLife47commit/push/PR update; finite read-only next-ownerplan stops05:13Z. ActualRoot02 UID310native+exactrestorationDONE takes immediateR001priority, noR00403until02retired. No repeatimplementation/probes of passedLife47unit.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -21877,12 +21906,12 @@
   },
   "pullRequest": "https://github.com/JohanSardar/toy-harness/pull/1",
   "lastWorker": {
-    "task": "/root/foreground_contention_source",
-    "card": "R0.11",
+    "task": "/root/r012_next_assigned_gate",
+    "card": "R0.12",
     "model": "gpt-6-luna",
     "reasoning": "max",
     "state": "SOURCE_STOPPED_HANDOFF_INTEGRATED_AND_VERIFIED",
-    "evidence": "build/evidence/R0.11/ordered-pause-source-handoff.json"
+    "evidence": "build/evidence/R0.12/lifestore47-source-handoff.json"
   },
   "continuationAssessment": {
     "observedAt": "2026-10-07T02:56:07.783Z",
@@ -21918,7 +21947,7 @@
       "pendingRootDoesNotBlockGoal": true,
       "pollWhileIndependentWork": true,
       "exactRegisteredCommandOrRepoScriptRequired": true,
-      "lastPollAt": "2026-10-07T04:49:08.331513+00:00",
+      "lastPollAt": "2026-10-07T05:08:51.425359+00:00",
       "pendingRequests": [
         "ROOT-R004-20261006-02",
         "ROOT-R005-20261006-01"
@@ -21929,21 +21958,21 @@
     "queuedRootReserveAdmissionGate": false
   },
   "latestStaticVerification": {
-    "log": "build/evidence/R0.11/ordered-pause-strict-check.txt",
-    "sha256": "9547e072f8502c31edde5361e32466e68bc39272c1a3a1102cc5b080b69ec9fb",
+    "log": "build/evidence/R0.12/lifestore47-strict-check.txt",
+    "sha256": "83128ad14bc1f38f538457711527b2e2fcec132fbce2599c2af23b7b834b3a7c",
     "artifacts": 402,
     "contracts": 334,
-    "cliManifests": 38,
+    "cliManifests": 39,
     "features": 103,
     "commands": 55,
     "indexedATs": 1447,
     "schemaDigest": "c3d3d925c494b9d4f7b475f98c2146cb57160fe19557d57497d54f999351947d",
     "exitCode": 0,
     "swiftInvoked": false,
-    "recordedAt": "2026-10-07T04:49:08.331513+00:00",
+    "recordedAt": "2026-10-07T05:08:51.425359+00:00",
     "command": "npm run check"
   },
-  "sourceCheckpointCommit": "af840f5",
+  "sourceCheckpointCommit": "3a1a75c",
   "sourceCheckpointPushed": true,
   "rootRequests": {
     "ROOT-R004-20261006-01": {
@@ -21983,15 +22012,15 @@
     }
   },
   "resourceAdmission": {
-    "measuredAt": "2026-10-07T04:46:32.050Z",
-    "availableBytes": "2693709824",
+    "measuredAt": "2026-10-07T05:07:11.731Z",
+    "availableBytes": "2249228288",
     "pressure": "normal",
     "strictlyFreeAdmission": false,
     "repairFloorApplied": false,
     "ownedWorldsRunning": 0,
     "helpersRunning": 1,
     "helperNeedBytes": "268435456",
-    "measurementSource": "build/evidence/R0.11/ordered-pause-pre-native-doctor.json",
+    "measurementSource": "build/evidence/R0.12/lifestore47-next-helper-doctor.json",
     "marginBytes": "536870912",
     "ownedStackId": null,
     "stackAndNativeChildrenNeedBytes": "0",
@@ -22003,15 +22032,15 @@
     "measurementHistorical": true
   },
   "activeWorkers": [],
-  "pullRequestUpdatedAt": "2026-10-07T04:24:46.019Z",
+  "pullRequestUpdatedAt": "2026-10-07T04:50:15.713329+00:00",
   "continuationCheckpoint": "build/checkpoints/2026-10-07-ops44-verified-dashboard90-deferred",
   "readOnlyWorkers": [
     {
       "agent": "/root/r012_next_assigned_gate",
+      "phase": "READ_ONLY_NEXT_OWNER_PLAN",
       "card": "R0.12",
-      "phase": "READ_ONLY_PLAN",
       "sourceMutationAllowed": false,
-      "deadline": "2026-10-07T04:54:00Z"
+      "deadline": "2026-10-07T05:13:00Z"
     }
   ]
 }

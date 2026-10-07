@@ -1,0 +1,62 @@
+{
+  "reviewVersion": "toy.r0.12.lifestore47-interface-review.v1",
+  "reviewedAtUtc": "2026-10-07T04:58:31Z",
+  "reviewScope": "Read-only review of the accepted minimum plan and stable public contracts/implementations for AT-lifestore-47. The active model-route-probe.ts source diff was not inspected as frozen source. No tests, builds, CLI, generation, or world operations were run.",
+  "planSha256": "27de5da4a117f9473b5384a54cd96dc63bb27f2d5dbe0abb41aa4e0696d82f66",
+  "parentReviewSha256": "a9045faa3f979c4d9ec31f53683cb5602143ca80d6b683ee0847319e4d0e7ace",
+  "assignedAssertion": {
+    "id": "AT-lifestore-47",
+    "source": "../personal-assistant-harness/specs/lifestore.md:2398",
+    "sourceAssertionHash": "1b0e1d8308c1a668671c6ab529ab9633b3936ce147abf4641f145adba87249b1",
+    "sourceDigest": "044e33ba76d512c0fcae478f8d4923d2f33c028b8dae94bbdb69d6d4111c1117",
+    "rung": "CLI"
+  },
+  "verdict": "INTERFACE_SUFFICIENT_WITH_TWO_PROBE_ASSERTIONS_TO_MAKE_EXPLICIT",
+  "findings": [
+    {
+      "kind": "probe-binding-assertion",
+      "severity": "precision",
+      "detail": "The plan names ResearchDocumentOverlayV1 and an indexed A01 decision, but its acceptance bullets do not explicitly require the selected overlay reportKey to come from A01's public reportKeys readback or assert the overlay digest bindings. EngineeringControl.checkResearch verifies originalDigest against the archived report and contentDigest against markdown; the decision parser rejects records whose report key is not mapped to that component. A01's register reference currently maps to HI and SI, so the probe should select one of those from the public A01 reportKeys, obtain its originalDigest from checkResearch's report readback, compute contentDigest from the exact markdown, and assert the A01 decision/readback binding. This keeps the test from passing on a detached record or fixture-created component sort.",
+      "sourceReferences": [
+        "packages/contracts/src/engineering-control.ts:11",
+        "packages/self-improvement/src/engineering-control.ts:883-886",
+        "packages/self-improvement/src/engineering-control.ts:895-904",
+        "packages/self-improvement/src/engineering-control.ts:700-740",
+        "../personal-assistant-harness/specs/RESEARCH-REGISTER.md:84"
+      ]
+    },
+    {
+      "kind": "assertion-scope",
+      "severity": "precision",
+      "detail": "The route/skill subgate is returned through A01's missingValidationIds as ROUTE:R0:A01 and SKILL:R0:A01. ResearchComponentComparisonV3 extends the full V2 decision, and the component-level state also depends on options, evidence, mapped requirements, release gate, and other validation fields. Therefore the positive route case should assert that the two route/skill IDs are absent (and each negative case has the expected IDs); it should only assert the entire component state is PASS if the seeded V3 record independently satisfies every other component validator. A receipt alone does not establish that full state.",
+      "sourceReferences": [
+        "packages/contracts/src/engineering-control.ts:34-51",
+        "packages/self-improvement/src/engineering-control.ts:744-829"
+      ]
+    }
+  ],
+  "verifiedInterfaceFacts": [
+    "The existing nine route/skill cases can use ModelRoute.delegationReceipt, which selects the canonical original route from behavior/models.yaml and produces a receipt by normalizing the injected external Codex executor events. Research skill resources are digest-checked against the pinned skill before an observed research receipt is returned.",
+    "EngineeringControl.checkResearch is a public CLI-reachable entrypoint accepting the existing ResearchDocumentOverlayV1. It parses ResearchComponentComparisonV3 and checks an attached research receipt against the current canonical model policy and skill pin, emitting A01 route/skill validation IDs.",
+    "The ordinary implementation case remains distinguishable: implementation purpose selects the child route and carries no research skill. Preserve its observed Luna receipt as ordinary implementation evidence, then assert that attaching that same receipt as A01 research input fails the A01 research route/skill subgate.",
+    "The plan correctly retains the nine existing route/skill cases, introduces no DTO/API or module, and explicitly leaves research admission BLOCKED, acceptanceComplete false, and wholeATsPassed empty. Its fake executor and pinned local skill prove the local gate only, not live inference or authenticated research provenance."
+  ],
+  "sourceHashes": {
+    "build/evidence/R0.12/next-unimplemented-assigned-cli-plan.json": "27de5da4a117f9473b5384a54cd96dc63bb27f2d5dbe0abb41aa4e0696d82f66",
+    "build/evidence/R0.12/lifestore47-plan-parent-review.json": "a9045faa3f979c4d9ec31f53683cb5602143ca80d6b683ee0847319e4d0e7ace",
+    "packages/contracts/src/engineering-control.ts": "d95ddc3891ae2b865473c00cb0eb6cb58c16bb9191523ab63f6b26937a88ae30",
+    "packages/contracts/src/model-route.ts": "e95a854b188b67d37aa4b518626428e4de7eb28e1fcb35edc74bdc8a4235dd0d",
+    "packages/hermes/src/model-route.ts": "75bad754c537c53a920762b259d30ee6f89149a8d60d40678214cf5e2dec3962",
+    "packages/self-improvement/src/engineering-control.ts": "ceb19efea43d7b0600e605b6fc27258382e41cdb9540f979ab712c2941b682f6",
+    "packages/hermes/src/public.ts": "ccabd122931e9c879e9be4084cdfae31a6d112490936b2a48bf695293ecdfc86",
+    "packages/self-improvement/src/public.ts": "e307551e2f2e8bb368b606c816ad49ff0693b6d01142578a1c0083ee1137cc87",
+    "cli/src/main.ts": "e206e722c5a9159626ffd609f822739cf3b3cfb6b7a5c45095a4f3bd0c550ebe",
+    "packages/ops/src/fixture-stack.ts": "339dbca30ec0fe8d761df5be0490a52f40e6780079ad04adff12eb29d5e50a19",
+    "../personal-assistant-harness/specs/RESEARCH-REGISTER.md": "e89b3336e0c2458ac204fb0927da30f4541abfab48a9d55735c4655719a3f10d",
+    "../personal-assistant-harness/research/hermes.md": "42a5d146c6f317339d5757fa26062716e06762adc7587a9b0f84b5394dee602c",
+    "../personal-assistant-harness/research/v3/selfimprove-harnesses.md": "148786c9813e819f52c31ea5c8529d2d47308a845dad0840daa965691f5308b5"
+  },
+  "notReviewedAsFinal": ["packages/hermes/src/model-route-probe.ts"],
+  "acceptanceStatus": "PENDING; this review does not certify AT-lifestore-47 runtime evidence, device/account evidence, or R0.12 closure.",
+  "writeScope": ["build/evidence/R0.12/lifestore47-interface-review.json"]
+}

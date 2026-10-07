@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { checkViewSchema, modelRoleSchema, modelRouteSelectionSchema, opsErrorMessages, registeredProbeInputSchema, registeredCliAcceptanceManifestInventory, researchSkillPinSchema, codexDelegationTaskSchema, researchAttentionDecisionSchema, researchAttentionDecisionIdSchema, researchComponentComparisonV3Schema } from "@toy/contracts";
-import type { CheckViewV1, ModelRouteConversationV1, ModelRouteHttpTransport, ModelRouteReceiptV1, ModelRouteSettingsV1, OpsControlContextV1, RegisteredProbeInputV1, RegisteredProbeOperationV1, CodexDelegationExecutor, ModelRouteDelegationInputV1, ResearchSkillResourceReader, ResearchAttentionDecisionV1, Result } from "@toy/contracts";
+import type { CheckViewV1, ModelRouteConversationV1, ModelRouteHttpTransport, ModelRouteReceiptV1, ModelRouteSettingsV1, OpsControlContextV1, RegisteredProbeInputV1, RegisteredProbeOperationV1, CodexDelegationExecutor, ModelRouteDelegationInputV1, ResearchSkillResourceReader, ResearchAttentionDecisionV1, ResearchComponentComparisonCheckV2, ResearchComponentInspectionV1, ResearchDocumentOverlayV1, ResearchRegisterInspectionV3, Result } from "@toy/contracts";
 import { OpsTestStack, TestProbeControl, trustedCheckoutRoot } from "@toy/ops/public";
 import { EngineeringControl } from "@toy/self-improvement/public";
 import { ModelRoute } from "./model-route.js";
@@ -153,15 +153,55 @@ const delegationFixture = async (caseId: string, purpose: ModelRouteDelegationIn
   return { result, sends, exportReadback, nativeArgumentsMatched };
 };
 
+type LifeStoreSource = {
+  component: ResearchComponentInspectionV1;
+  archive: ResearchRegisterInspectionV3["reports"][number];
+  originalDigest: string;
+  required: ResearchComponentComparisonCheckV2;
+};
+
+type LifeStoreGateReadback = {
+  scope: "route-skill-subgate-only";
+  decisionState: "PASS" | "BLOCKED";
+  findings: string[];
+  missingValidationIds: string[];
+  comparisonDigest: string | null;
+  reportKey: string;
+  originalDigest: string;
+  contentDigest: string;
+  baselineMissingRequirementCount: number;
+  archiveBound: boolean;
+  registerAdmission: "BLOCKED";
+  acceptanceComplete: false;
+  wholeATsPassedCount: number;
+  expectedRouteSkillMissingIds: string[];
+  routeSkillSubgatePassed: boolean;
+};
+
 const delegationProbe = async (input: RegisteredProbeInputV1, context: OpsControlContextV1): Promise<Result<RegisteredProbeOperationV1>> => {
   const cases = ["research-route-observed", "research-route-missing", "research-route-luna", "research-route-wrong-effort", "research-route-wrong-tier", "research-skill-missing", "research-skill-wrong-bytes", "ordinary-implementation-luna", "module-local-override-refused"];
   const manifest = registeredCliAcceptanceManifestInventory.find(entry => entry.id === input.probeId);
   if (!manifest || manifest.scenarioId !== "delegation.route-skill" || JSON.stringify(manifest.mandatoryCases.map(entry => entry.id)) !== JSON.stringify(cases)) return { ok: false, error: { module: "ops", code: "ATTESTATION_INVALID", message: opsErrorMessages.ATTESTATION_INVALID, retryable: false } };
+  const isLifeStore = input.probeId === "AT-lifestore-47";
+  const lifeStoreObjective = "Compare only the seeded Life Store A01 decision and primary evidence; produce no live research or adoption.";
+  let lifeStoreSource: LifeStoreSource | null = null;
+  if (isLifeStore) {
+    const baseline = EngineeringControl.checkResearch({ release: "R0" }, context);
+    if (!baseline.ok) return baseline;
+    const component = baseline.data.components.find(entry => entry.id === "A01");
+    const archive = baseline.data.reports.find(entry => component?.reportKeys.includes(entry.key) === true && entry.originalDigest !== null);
+    const required = baseline.data.componentDecisions.find(entry => entry.componentId === "A01");
+    if (!component || !archive || archive.originalDigest === null || !required || required.comparisonDigest !== null || !component.reportKeys.includes(archive.key)) return { ok: false, error: { module: "ops", code: "ARTIFACT_MISMATCH", message: opsErrorMessages.ARTIFACT_MISMATCH, retryable: false } };
+    lifeStoreSource = { component, archive, originalDigest: archive.originalDigest, required };
+  }
   const pin = researchSkillPinSchema.parse(JSON.parse(readFileSync(join(trustedCheckoutRoot(), "behavior/research-skill.json"), "utf8")));
   const checks: CheckViewV1[] = [];
   for (const caseId of cases) {
     const purpose = caseId === "ordinary-implementation-luna" ? "implementation" : "research";
-    const { result, sends, exportReadback, nativeArgumentsMatched } = await delegationFixture(caseId, purpose, context);
+    const fixture = isLifeStore
+      ? await delegationFixture(caseId, purpose, context, lifeStoreObjective)
+      : await delegationFixture(caseId, purpose, context);
+    const { result, sends, exportReadback, nativeArgumentsMatched } = fixture;
     const successful = caseId === "research-route-observed" || caseId === "ordinary-implementation-luna";
     const missingSkill = caseId === "research-skill-missing";
     const wrongSkill = caseId === "research-skill-wrong-bytes";
@@ -176,7 +216,64 @@ const delegationProbe = async (input: RegisteredProbeInputV1, context: OpsContro
           : receipt.state === "refused" && sends === 1 && receipt.invocation?.completion === "pending" && receipt.invocation.outputStarted === false && receipt.invocation.reasonCode === (caseId === "research-route-missing" ? "route_unobserved" : "route_mismatch"));
     }
     const receipt = result.ok ? result.data : null;
-    checks.push(checkViewSchema.parse({ id: "read.model-route-policy", owner: "hermes", state: passed ? "PASS" : "FAIL", checkedAt: new Date().toISOString(), reasonCode: passed ? "DELEGATION_ROUTE_SKILL_DIAGNOSTIC_PASS" : "DELEGATION_ROUTE_SKILL_DIAGNOSTIC_FAIL", nextCommandId: "probe.show", prerequisite: JSON.stringify({ caseId, actualUid: process.getuid?.() ?? null, externalCliSends: sends, exportReadback, nativeArgumentsMatched, receipt, errorCode: result.ok ? null : result.error.code, fakeExternalCli: true, liveProviderSends: 0, wholeATComplete: false }), links: { recordRefs: [], observations: [], artifactDigests: [pin.contentDigest, digest(readFileSync(new URL("./model-route.js", import.meta.url))), digest(readFileSync(new URL("./model-route-probe.js", import.meta.url)))] } }));
+    if (isLifeStore && caseId === "ordinary-implementation-luna") passed = passed && receipt?.purpose === "implementation" && receipt.invocation?.requested.role === "child" && receipt.invocation.requested.settings.model === "gpt-6-luna" && receipt.invocation.requested.settings.effort === "max" && receipt.invocation.requested.settings.serviceTier === "priority" && receipt.skill === null;
+    let lifeStoreGate: LifeStoreGateReadback | null = null;
+    if (lifeStoreSource) {
+      const report = researchComponentComparisonV3Schema.parse({
+        scope: "required-research-component",
+        componentId: "A01",
+        executionReceipt: receipt,
+        mappedRequirements: [],
+        options: [],
+        evidence: [],
+        selectedOptionId: "unselected-fixture",
+        unresolvedFacts: [],
+        acceptanceIds: [],
+        validationPlan: "",
+        releaseGate: lifeStoreSource.component.releaseGate,
+        validations: []
+      });
+      const markdown = "# Incomplete seeded Life Store A01 route and skill diagnostic\n\n```ResearchComponentComparisonV3\n" + JSON.stringify(report) + "\n```\n";
+      const contentDigest = digest(markdown);
+      const overlay: ResearchDocumentOverlayV1 = { reportKey: lifeStoreSource.archive.key, originalDigest: lifeStoreSource.originalDigest, contentDigest, markdown };
+      const inspection = EngineeringControl.checkResearch({ release: "R0" }, context, [overlay]);
+      if (!inspection.ok) return inspection;
+      const decision = inspection.data.componentDecisions.find(entry => entry.componentId === "A01");
+      const bound = inspection.data.reports.find(entry => entry.key === lifeStoreSource.archive.key);
+      if (!decision || !bound) return { ok: false, error: { module: "ops", code: "ARTIFACT_MISMATCH", message: opsErrorMessages.ARTIFACT_MISMATCH, retryable: false } };
+      const archiveBound = bound.origin === "seeded_document" && bound.path === lifeStoreSource.archive.path && bound.originalDigest === lifeStoreSource.originalDigest && bound.digest === contentDigest;
+      const routeOnly = ["research-route-missing", "research-route-luna", "research-route-wrong-effort", "research-route-wrong-tier"].includes(caseId);
+      const expectedRouteSkillMissingIds = caseId === "research-route-observed" ? [] : routeOnly ? ["ROUTE:R0:A01"] : ["ROUTE:R0:A01", "SKILL:R0:A01"];
+      const actualRouteSkillMissingIds = decision.missingValidationIds.filter(id => id === "ROUTE:R0:A01" || id === "SKILL:R0:A01");
+      const routeSkillMatches = JSON.stringify([...actualRouteSkillMissingIds].sort()) === JSON.stringify([...expectedRouteSkillMissingIds].sort());
+      const registerBlocked = inspection.data.admission === "BLOCKED" && !inspection.data.acceptanceComplete && inspection.data.wholeATsPassed.length === 0;
+      const routeSkillSubgatePassed = archiveBound && decision.comparisonDigest === digest(JSON.stringify(report)) && routeSkillMatches && registerBlocked;
+      lifeStoreGate = {
+        scope: "route-skill-subgate-only",
+        decisionState: decision.state,
+        findings: decision.findings,
+        missingValidationIds: decision.missingValidationIds,
+        comparisonDigest: decision.comparisonDigest,
+        reportKey: bound.key,
+        originalDigest: lifeStoreSource.originalDigest,
+        contentDigest,
+        baselineMissingRequirementCount: lifeStoreSource.required.missingRequirementIds.length,
+        archiveBound,
+        registerAdmission: inspection.data.admission,
+        acceptanceComplete: inspection.data.acceptanceComplete,
+        wholeATsPassedCount: inspection.data.wholeATsPassed.length,
+        expectedRouteSkillMissingIds,
+        routeSkillSubgatePassed
+      };
+      passed = passed && routeSkillSubgatePassed;
+    }
+    if (isLifeStore && (!lifeStoreSource || !lifeStoreGate)) return { ok: false, error: { module: "ops", code: "ARTIFACT_MISMATCH", message: opsErrorMessages.ARTIFACT_MISMATCH, retryable: false } };
+    const prerequisite = isLifeStore && lifeStoreSource && lifeStoreGate
+      ? JSON.stringify({ caseId, actualUid: process.getuid?.() ?? null, objective: lifeStoreObjective, externalCliSends: sends, exportReadback, nativeArgumentsMatched, receiptDigest: receipt ? digest(JSON.stringify(receipt)) : null, receiptReadback: receipt ? { purpose: receipt.purpose, state: receipt.state, requestedRole: receipt.invocation?.requested.role ?? null, requestedArm: receipt.invocation?.requested.arm ?? null, requestedModel: receipt.invocation?.requested.settings.model ?? null, requestedEffort: receipt.invocation?.requested.settings.effort ?? null, requestedTier: receipt.invocation?.requested.settings.serviceTier ?? null, observedModel: receipt.invocation?.observed?.model ?? null, observedEffort: receipt.invocation?.observed?.effort ?? null, observedTier: receipt.invocation?.observed?.serviceTier ?? null, completion: receipt.invocation?.completion ?? null, skillSourceCommit: receipt.skill?.sourceCommit ?? null, skillContentDigest: receipt.skill?.contentDigest ?? null, skillLoadedDigest: receipt.skill?.loadedDigest ?? null, skillResourceCount: receipt.skill?.resources.length ?? 0, nativeExecutionVerified: receipt.nativeExecutionVerified, acceptanceComplete: receipt.acceptanceComplete } : null, errorCode: result.ok ? null : result.error.code, a01: lifeStoreGate, fakeExternalCli: true, liveProviderSends: 0, wholeATComplete: false })
+      : JSON.stringify({ caseId, actualUid: process.getuid?.() ?? null, externalCliSends: sends, exportReadback, nativeArgumentsMatched, receipt, errorCode: result.ok ? null : result.error.code, fakeExternalCli: true, liveProviderSends: 0, wholeATComplete: false });
+    if (isLifeStore && prerequisite.length > 2000) return { ok: false, error: { module: "ops", code: "ATTESTATION_INVALID", message: opsErrorMessages.ATTESTATION_INVALID, retryable: false } };
+    const artifactDigests = [pin.contentDigest, ...(lifeStoreGate ? [lifeStoreGate.contentDigest, lifeStoreGate.originalDigest] : []), digest(readFileSync(new URL("./model-route.js", import.meta.url))), digest(readFileSync(new URL("./model-route-probe.js", import.meta.url)))];
+    checks.push(checkViewSchema.parse({ id: "read.model-route-policy", owner: "hermes", state: passed ? "PASS" : "FAIL", checkedAt: new Date().toISOString(), reasonCode: passed ? "DELEGATION_ROUTE_SKILL_DIAGNOSTIC_PASS" : "DELEGATION_ROUTE_SKILL_DIAGNOSTIC_FAIL", nextCommandId: "probe.show", prerequisite, links: { recordRefs: [], observations: [], artifactDigests } }));
   }
   return TestProbeControl.run(input, context, checks);
 };

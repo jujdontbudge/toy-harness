@@ -1,0 +1,150 @@
+{
+  "planVersion": "toy.r0.12.next-assigned-cli-plan.v1",
+  "recordedAt": "2026-10-07T04:53:35Z",
+  "scope": "Read-only finite plan for one unimplemented R0.12 assigned CLI gate. This plan is the only file written by this planner.",
+  "selection": {
+    "id": "AT-lifestore-47",
+    "source": "../personal-assistant-harness/specs/lifestore.md:2398",
+    "sourceAssertionHash": "1b0e1d8308c1a668671c6ab529ab9633b3936ce147abf4641f145adba87249b1",
+    "sourceDigest": "044e33ba76d512c0fcae478f8d4923d2f33c028b8dae94bbdb69d6d4111c1117",
+    "rung": "CLI",
+    "requiredEvidence": ["stack", "device/account", "probe:AT-lifestore-47"],
+    "assertion": "Given a Life Store research delegation receipt. When its role/model/reasoning/tier/skill hash are validated. Then only the Sol/medium/Fast research route with the resolved mattpocock skill satisfies the gate; Luna or missing-skill receipts fail without altering ordinary delegation. (0.10; G5)",
+    "whySelected": "The AT-lifestore-45 quote probe now has fresh owner evidence, but its positive case deliberately records missing route and skill validation for all 118 Life Store decisions. The existing Hermes delegationProbe already exercises the real ModelRoute receipt producer through nine route/skill/ordinary-Luna cases; binding those same cases to one Life Store decision is smaller than a new case matrix. AT-lifestore-70 would require a new R0-R5 builder-scope owner; AT-ops-43 is only the Ops research-register completeness gate."
+  },
+  "currentGap": {
+    "baselineRun": "build/evidence/R0.12/lifestore47-baseline-cli/AT-lifestore-47-run.json",
+    "baselineShow": "build/evidence/R0.12/lifestore47-baseline-cli/AT-lifestore-47-show.json",
+    "baselineState": "NOT_IMPLEMENTED",
+    "baselineEvidence": {
+      "summaryPath": "build/evidence/R0.12/lifestore47-baseline-cli.json",
+      "recordedAt": "2026-10-07T04:51:46.981Z",
+      "atCli4": "PASS",
+      "runAndShowExitCode": 5,
+      "unfiltered": true,
+      "blockedCase": "REGISTERED_CASE_NOT_IMPLEMENTED",
+      "worldId": "427b8510-6918-4639-8cce-2f044697a6c1",
+      "worldDown": true,
+      "unresolvedResources": 0,
+      "liveProviderSends": 0
+    },
+    "baselineReason": "The fresh unfiltered run/show are NOT_IMPLEMENTED with one REGISTERED_CASE_NOT_IMPLEMENTED case; there is no AT-lifestore-47 row in tests/registry.yaml or Life Store gate readback branch in the current Hermes delegationProbe owner.",
+    "lifeStoreQuoteReadback": {
+      "evidence": "build/evidence/R0.12/lifestore45-binding-repaired-cli/AT-lifestore-45-run.json",
+      "case": "positive-all-required-quotes",
+      "diagnostic": "LIFESTORE_QUOTE_DIAGNOSTIC_PASS",
+      "routeMissingCount": 118,
+      "skillMissingCount": 118,
+      "finding": "VALIDATION_ID_MISSING",
+      "meaning": "Quote validation is independently exercised; its fixture deliberately supplies no ModelRoute receipt, so it does not prove AT-lifestore-47."
+    },
+    "existingOwnerBehavior": {
+      "producer": "ModelRoute.delegationReceipt(ModelRouteDelegationInputV1, OpsControlContextV1, CodexDelegationExecutor, ResearchSkillResourceReader?) in packages/hermes/src/model-route.ts",
+      "probeOwner": "ModelRouteProbe.run(RegisteredProbeInputV1, OpsControlContextV1) and its delegationProbe in packages/hermes/src/model-route-probe.ts; delegationProbe already uses ModelRoute.delegationReceipt and can call EngineeringControl.checkResearch for the Life Store binding.",
+      "validator": "EngineeringControl.checkResearch(MapCheckInputV1, OpsControlContextV1, readonly ResearchDocumentOverlayV1[]) in packages/self-improvement/src/engineering-control.ts already validates required-research-component route role, arm, policy digest, observed model/effort/tier, skill pin and loaded digest.",
+    "lifeStoreBindingGap": "The existing delegationProbe has the correct real receipt producer and route/skill cases, but no AT-lifestore-47 registration or A01 Life Store gate readback. The central validator applies to A01 required-research-component records; the current AT-lifestore-45 quote fixture does not attach a receipt."
+    }
+  },
+  "minimalInterfaceAndProbe": {
+    "registeredRoute": "Reuse scenarioId delegation.route-skill and owner hermes so cli/src/main.ts dispatches the existing public ModelRouteProbe.delegationProbe. Register AT-lifestore-47 with the same nine source-bound case IDs as AT-obligations-75; do not add a CLI command, scenario protocol, or duplicate route case matrix.",
+    "inputAndReadback": "Use existing @toy/contracts types ResearchComponentComparisonV3, ModelRouteDelegationInputV1, ModelRouteDelegationReceiptV1 and ResearchDocumentOverlayV1. Through the existing ModelRoute.delegationReceipt fake Codex executor/resource-reader seam, attach each generated receipt to one indexed Life Store component decision (A01), then call public EngineeringControl.checkResearch and assert exact state plus ROUTE:R0:A01 / SKILL:R0:A01 findings. No DTO or schema version change is needed.",
+    "ownerScope": "Extend the existing Hermes delegationProbe only for AT-lifestore-47: reuse delegationFixture and the nine existing route/skill cases, add one A01-bound ResearchComponentComparisonV3 overlay/readback per receipt, and keep ordinary implementation receipts observed as Luna/max/Fast with no skill while rejecting their use as a Life Store research receipt. Leave AT-obligations-75 behavior intact. Keep research admission BLOCKED and wholeATsPassed empty.",
+    "reusedCaseSet": [
+      "research-route-observed",
+      "research-route-missing",
+      "research-route-luna",
+      "research-route-wrong-effort",
+      "research-route-wrong-tier",
+      "research-skill-missing",
+      "research-skill-wrong-bytes",
+      "ordinary-implementation-luna",
+      "module-local-override-refused"
+    ],
+    "caseReadback": "The existing nine cases keep their current owner behavior. AT-lifestore-47 adds the A01 public checkResearch readback: only the observed Sol/medium/Fast receipt with the resolved skill passes; missing/mismatched research receipts block with the exact route or skill ID; the ordinary Luna receipt stays valid for implementation and is rejected only when used as a Life Store research receipt.",
+    "cliEvidence": [
+      "toy --env test stack up --release R0 --request-id <UUID> --json",
+      "toy --env test --stack <STACK_UUID> probe run AT-lifestore-47 --request-id <UUID> --json",
+      "toy --env test --stack <STACK_UUID> probe show <OPERATION_UUID> --json",
+      "toy --env test --stack <STACK_UUID> stack down --request-id <UUID> --json"
+    ],
+    "evidenceArtifacts": [
+      "build/evidence/R0.12/lifestore47-cli/up.json",
+      "build/evidence/R0.12/lifestore47-cli/AT-lifestore-47-run.json",
+      "build/evidence/R0.12/lifestore47-cli/AT-lifestore-47-show.json",
+      "build/evidence/R0.12/lifestore47-cli/down.json"
+    ]
+  },
+  "disjointFiles": [
+    "packages/hermes/src/model-route-probe.ts",
+    "tests/registry.yaml",
+    "skills/toy-control/FEATURE-MAP.md"
+  ],
+  "generatedFiles": [
+    "packages/contracts/src/generated-probe-registry.ts"
+  ],
+  "filesNotNeeded": [
+    "packages/contracts/src/model-route.ts: existing receipt DTOs already carry the required role, route, skill revision, hashes and resource digests.",
+    "packages/self-improvement/src/engineering-control.ts: the central required-research-component validator already checks the route/skill receipt.",
+    "packages/self-improvement/src/component-comparison-probe.ts: its AT-lifestore-45 quote matrix is a separate settled unit; do not reimplement or alter it.",
+    "Route/skill case production: delegationProbe already owns the nine reused behaviors; extend its Life Store readback path instead of copying those cases."
+  ],
+  "verificationLimitsAndDeferredGates": {
+    "fixtureLimits": [
+      "The CLI probe proves receipt production and the Life Store public gate against a fake Codex executor, pinned local skill bytes and a seeded indexed report. It does not attest live inference, a paid account, or externally authenticated research sources.",
+      "TEST-PLAN also requires device/account evidence for this AT; collect that only through its assigned public CLI evidence path. Do not expose credentials or claim this plan satisfies that evidence.",
+      "The diagnostic result must leave ResearchRegisterInspectionV3.admission BLOCKED, acceptanceComplete false, and wholeATsPassed empty. This single AT cannot certify R0.12 closure."
+    ],
+    "wholeATComplete": false,
+    "r012State": "PENDING; R0.08, R0.09 and R0.10 prerequisites and other assigned gates remain open.",
+    "otherOutstandingR012": [
+      "AT-lifestore-45 external/authenticated primary provenance remains pending after its quote unit.",
+      "R0.12 assigned ATs beyond the already captured diagnostics remain individually pending; no global closure is implied."
+    ],
+    "deferredRootWork": [
+      "Root02 native UID310 read/restoration is complete and retains immediate R0.01 priority.",
+      "Parent is integrating the R0.11 commit concurrently; this plan makes no source or acceptance-state edits.",
+      "Preserve the frozen scripts/child and do not request R00403."
+    ],
+    "rootQueueWorkflow": "Retain; no root ownership or goal state changes."
+  },
+  "resourceAdmission": {
+    "evidencePath": "build/evidence/R0.12/lifestore47-baseline-doctor.json",
+    "observedAt": "2026-10-07T04:51:46.855Z",
+    "pressure": "normal",
+    "availableBytes": 2345402368,
+    "helperNeedBytes": 268435456,
+    "marginBytes": 536870912,
+    "requiredBytes": 805306368,
+    "admitted": true
+  },
+  "implementationBudget": {
+    "startsAt": "2026-10-07T04:51:46Z",
+    "hardDeadline": "2026-10-07T06:51:46Z",
+    "baselineCountsAsFirstUnsupportedRun": true,
+    "remainingFailedNativeAttemptsBeforeStop": 2
+  },
+  "sourceHashes": {
+    "../personal-assistant-harness/specs/BUILD-PLAN.md": "aa84eb600e53bc65e6c6b1ed4fce45870ead861e0d18bf00d81613ff2595f49a",
+    "../personal-assistant-harness/specs/TEST-PLAN.md": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2",
+    "../personal-assistant-harness/specs/lifestore.md": "044e33ba76d512c0fcae478f8d4923d2f33c028b8dae94bbdb69d6d4111c1117",
+    "tests/acceptance-index.json": "c9b645eab7f55b2ebf35d7db769a534a4837de23ad3dc3d913f3189e781d44fa",
+    "tests/registry.yaml": "9166be4bcefc4836c8d50cc458e3109a95a1f22b83ee291ae41420584b11966b",
+    "packages/contracts/src/engineering-control.ts": "d95ddc3891ae2b865473c00cb0eb6cb58c16bb9191523ab63f6b26937a88ae30",
+    "packages/contracts/src/model-route.ts": "e95a854b188b67d37aa4b518626428e4de7eb28e1fcb35edc74bdc8a4235dd0d",
+    "packages/self-improvement/src/engineering-control.ts": "ceb19efea43d7b0600e605b6fc27258382e41cdb9540f979ab712c2941b682f6",
+    "packages/self-improvement/src/component-comparison-probe.ts": "bc601b87340ed6612e8555469cd863ccea22575a851f22e0f041aab5ef8dd0d0",
+    "packages/self-improvement/src/public.ts": "e307551e2f2e8bb368b606c816ad49ff0693b6d01142578a1c0083ee1137cc87",
+    "packages/hermes/src/model-route.ts": "75bad754c537c53a920762b259d30ee6f89149a8d60d40678214cf5e2dec3962",
+    "packages/hermes/src/model-route-probe.ts": "4e13e8c70cd4a1560ff98b009196110133fbaf0b06f740e3b63f923cd518508f",
+    "packages/hermes/src/public.ts": "ccabd122931e9c879e9be4084cdfae31a6d112490936b2a48bf695293ecdfc86",
+    "cli/src/main.ts": "e206e722c5a9159626ffd609f822739cf3b3cfb6b7a5c45095a4f3bd0c550ebe",
+    "skills/toy-control/FEATURE-MAP.md": "6b05e8696cb2e82ff0c3ab12f15f2c4a5df6e98c08b2a6226b55bca3842d8357"
+  },
+  "baselineEvidenceHashes": {
+    "build/evidence/R0.12/lifestore47-baseline-cli.json": "d3ccf70ad56f8e8ef4e21bccb00df0c356d9f3610d4e213a9384af79f3295413",
+    "build/evidence/R0.12/lifestore47-baseline-cli/AT-lifestore-47-run.json": "f8ba1a80a1acd520af0e5c24713760dc14428ab1a382e4b6fd399e02d9a92797",
+    "build/evidence/R0.12/lifestore47-baseline-cli/AT-lifestore-47-show.json": "252dd0d3f7688cdba045daeeb17f133fe32b677899d1256c233216dd93cf7392",
+    "build/evidence/R0.12/lifestore47-baseline-doctor.json": "7afb91149634aee46c7dfc9d63973c41a63d564bb3f784bf663ec7b81c926343",
+    "build/evidence/R0.12/lifestore45-binding-repaired-cli/AT-lifestore-45-run.json": "354bb2dd004a8779cf0c8708008f75ab6c29398084807f87810ccb7063c235d7"
+  }
+}

@@ -1241,6 +1241,131 @@
     "simUnavailableReason": "SIM cannot inspect administrative pre-build delegation settings and published skill bytes. CLI exercises the public owner with external CLI/OS fakes and real isolated exports."
   },
   {
+    "id": "AT-lifestore-47",
+    "rung": "CLI",
+    "sourceAssertionHash": "1b0e1d8308c1a668671c6ab529ab9633b3936ce147abf4641f145adba87249b1",
+    "commandId": "probe.run",
+    "scenarioId": "delegation.route-skill",
+    "owner": "hermes",
+    "firstRelease": "R0",
+    "kind": "behavioral",
+    "mandatoryCases": [
+      {
+        "id": "research-route-observed",
+        "publicOperation": "ModelRoute.delegationReceipt",
+        "phase": "research-route-observed"
+      },
+      {
+        "id": "research-route-missing",
+        "publicOperation": "ModelRoute.delegationReceipt",
+        "phase": "research-route-missing"
+      },
+      {
+        "id": "research-route-luna",
+        "publicOperation": "ModelRoute.delegationReceipt",
+        "phase": "research-route-luna"
+      },
+      {
+        "id": "research-route-wrong-effort",
+        "publicOperation": "ModelRoute.delegationReceipt",
+        "phase": "research-route-wrong-effort"
+      },
+      {
+        "id": "research-route-wrong-tier",
+        "publicOperation": "ModelRoute.delegationReceipt",
+        "phase": "research-route-wrong-tier"
+      },
+      {
+        "id": "research-skill-missing",
+        "publicOperation": "ModelRoute.delegationReceipt",
+        "phase": "research-skill-missing"
+      },
+      {
+        "id": "research-skill-wrong-bytes",
+        "publicOperation": "ModelRoute.delegationReceipt",
+        "phase": "research-skill-wrong-bytes"
+      },
+      {
+        "id": "ordinary-implementation-luna",
+        "publicOperation": "ModelRoute.delegationReceipt",
+        "phase": "ordinary-implementation-luna"
+      },
+      {
+        "id": "module-local-override-refused",
+        "publicOperation": "ModelRoute.delegationReceipt",
+        "phase": "module-local-override-refused"
+      }
+    ],
+    "trigger": "Produce seeded LifeStore and ordinary delegation receipts with fixed external Codex/skill readers; validate A01 through the central research owner and retain ordinary Luna use.",
+    "faultControls": [
+      {
+        "id": "external-cli-route-observations",
+        "seam": "provider",
+        "affectedPhases": [
+          "research-route-missing",
+          "research-route-luna",
+          "research-route-wrong-effort",
+          "research-route-wrong-tier"
+        ]
+      },
+      {
+        "id": "published-research-artifact-faults",
+        "seam": "os",
+        "affectedPhases": [
+          "research-skill-missing",
+          "research-skill-wrong-bytes"
+        ]
+      }
+    ],
+    "observations": [
+      {
+        "id": "native-role-request-and-receipt",
+        "independentReader": "Fixed external Codex CLI: argument/task/skill readback and actual emitted settings",
+        "caseIds": [
+          "research-route-observed",
+          "research-route-missing",
+          "research-route-luna",
+          "research-route-wrong-effort",
+          "research-route-wrong-tier",
+          "research-skill-missing",
+          "research-skill-wrong-bytes",
+          "ordinary-implementation-luna",
+          "module-local-override-refused"
+        ]
+      },
+      {
+        "id": "public-lifestore-gate",
+        "independentReader": "Public EngineeringControl.checkResearch: bound A01 state, route/skill IDs and archived overlay hashes",
+        "caseIds": [
+          "research-route-observed",
+          "research-route-missing",
+          "research-route-luna",
+          "research-route-wrong-effort",
+          "research-route-wrong-tier",
+          "research-skill-missing",
+          "research-skill-wrong-bytes",
+          "ordinary-implementation-luna"
+        ]
+      },
+      {
+        "id": "persisted-cli-evidence",
+        "independentReader": "toy probe.show: source-bound exact route/skill receipt and no-send refusal readback",
+        "caseIds": [
+          "research-route-observed",
+          "research-route-missing",
+          "research-route-luna",
+          "research-route-wrong-effort",
+          "research-route-wrong-tier",
+          "research-skill-missing",
+          "research-skill-wrong-bytes",
+          "ordinary-implementation-luna",
+          "module-local-override-refused"
+        ]
+      }
+    ],
+    "simUnavailableReason": "Assigned CLI rung validates administrative research receipts and a pre-build gate through real owners with external Codex/document/OS fakes."
+  },
+  {
     "id": "AT-sources-190",
     "rung": "CLI",
     "sourceAssertionHash": "dfc4c143354044cd88c82c6868b2f0b3fc6ab39a9fe45aa595692bf881f9831a",

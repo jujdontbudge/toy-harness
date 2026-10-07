@@ -1,0 +1,36 @@
+{
+  "reviewVersion": "toy.r0.12.lifestore47-source-review.v1",
+  "reviewedAtUtc": "2026-10-07T05:04:16Z",
+  "scope": "Finite read-only review of the stopped AT-lifestore-47 probe source diff against its handoff and prior interface review. No source edits, generation, builds, static checks, tests, CLI, or world operations were performed.",
+  "handoff": {
+    "path": "build/evidence/R0.12/lifestore47-source-handoff.json",
+    "sha256": "219d149063dbfb2c8daffebd520828901713eb3b2427ead905bc3f5689ecc985",
+    "probeSourceSha256": "381fd715fe89972b1b9abca8237bcc37eb156c0577022ac2905f17c098cc0ebc"
+  },
+  "priorInterfaceReview": {
+    "path": "build/evidence/R0.12/lifestore47-interface-review.json",
+    "sha256": "a16c5ce9e298323119a711a541e0e2f5e1c504634591804da6622f8ec30a1225"
+  },
+  "verdict": "NO_SOURCE_ADEQUACY_FINDINGS",
+  "findings": [],
+  "verified": [
+    "The baseline calls public EngineeringControl.checkResearch, requires an A01 component, selects an archive from A01.reportKeys, requires its originalDigest, and rejects an existing A01 comparison digest. Each seeded overlay uses that report key and original archive digest, hashes its exact markdown, then verifies the returned seeded_document path, originalDigest and content digest. The returned A01 comparisonDigest is compared to the hash of the exact generated ResearchComponentComparisonV3 record.",
+    "All nine registered route-skill case IDs remain in the same order. The source asserts the exact A01 route/skill missingValidationIds for each: only the observed Sol/medium/Fast research receipt with the pinned loaded skill has neither ID; route-only failures have ROUTE; missing/mismatched skill, ordinary implementation used as research, and module-local override refusal have ROUTE and SKILL.",
+    "The ordinary implementation case must first produce an observed child Luna/max/Fast receipt with no research skill. That receipt remains an ordinary successful delegation, while the separate A01 research check blocks its use as a research receipt.",
+    "The seeded V3 decision intentionally has empty options, evidence, acceptance IDs, validation plan and validations. Its findings and decision state are diagnostic readback; pass/fail is scoped to archive binding, comparison digest, route/skill IDs, and the always-blocked register status. It does not assert or imply a complete component decision, source provenance, or whole AT pass.",
+    "The real ModelRoute.delegationReceipt producer and EngineeringControl.checkResearch validator are unchanged from the prior review hashes. The diff uses their existing generated contract input/output types. LifeStoreSource and LifeStoreGateReadback are file-local evidence aggregates serialized only into the existing CheckView prerequisite string; they are not exported or passed as an API contract, so no boundary leak or hand-copied public DTO was found.",
+    "The prerequisite is compact evidence rather than full report content or full component aggregates, and the source rejects a serialized prerequisite above the existing 2,000-character CheckView limit. Actual per-case size and CLI behavior remain unverified here."
+  ],
+  "currentHashes": {
+    "packages/hermes/src/model-route-probe.ts": "381fd715fe89972b1b9abca8237bcc37eb156c0577022ac2905f17c098cc0ebc",
+    "packages/hermes/src/model-route.ts": "75bad754c537c53a920762b259d30ee6f89149a8d60d40678214cf5e2dec3962",
+    "packages/self-improvement/src/engineering-control.ts": "ceb19efea43d7b0600e605b6fc27258382e41cdb9540f979ab712c2941b682f6",
+    "packages/contracts/src/model-route.ts": "e95a854b188b67d37aa4b518626428e4de7eb28e1fcb35edc74bdc8a4235dd0d",
+    "packages/contracts/src/engineering-control.ts": "d95ddc3891ae2b865473c00cb0eb6cb58c16bb9191523ab63f6b26937a88ae30",
+    "packages/contracts/src/control-evidence.ts": "9ac6be73041a36e1f569c7fd54018c42eba29b386078711925c9845aba61c76e",
+    "packages/hermes/src/public.ts": "ccabd122931e9c879e9be4084cdfae31a6d112490936b2a48bf695293ecdfc86",
+    "packages/self-improvement/src/public.ts": "e307551e2f2e8bb368b606c816ad49ff0693b6d01142578a1c0083ee1137cc87"
+  },
+  "acceptance": "RUNTIME_UNVERIFIED; parent integration, CLI proof, required device/account evidence, and protected-root gates remain pending.",
+  "writeScope": ["build/evidence/R0.12/lifestore47-source-review.json"]
+}
