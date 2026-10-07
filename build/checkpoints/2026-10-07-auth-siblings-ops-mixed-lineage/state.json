@@ -2,7 +2,7 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-07T01:14:32.092823+00:00",
+  "updatedAt": "2026-10-07T01:18:57.122524+00:00",
   "phase": "R0_FEASIBILITY",
   "activeCard": "R0.03",
   "cardCount": 87,
@@ -626,7 +626,7 @@
         "task": "/root/r005_control_probe_review",
         "card": "R0.02",
         "assignedAT": "AT-ops-44",
-        "state": "READ_ONLY_PLAN_RUNNING",
+        "state": "READ_ONLY_PLAN_REVIEWED_ACCEPTED",
         "deadline": "2026-10-07T01:25:00Z",
         "model": "gpt-6-luna",
         "reasoning": "max",
@@ -638,7 +638,28 @@
         "baselineEvidence": "build/evidence/R0.03/dashboard90-baseline.json",
         "sourceCheckpoint": "3ad57fa",
         "wholeATComplete": false,
-        "acceptanceComplete": false
+        "acceptanceComplete": false,
+        "reviewEvidence": "build/evidence/R0.02/ops44-plan-review.json"
+      },
+      "ops44Unit": {
+        "state": "BOUNDED_SOURCE_RUNNING",
+        "assignedAT": "AT-ops-44",
+        "startedAt": "2026-10-07T01:18:20.766464+00:00",
+        "sourceStopAt": "2026-10-07T01:50:00Z",
+        "targetStopAt": "2026-10-07T03:20:00Z",
+        "plan": "build/evidence/R0.02/ops44-next-minimum-plan.json",
+        "sourceReview": "build/evidence/R0.02/ops44-plan-review.json",
+        "admissionEvidence": "build/evidence/R0.02/ops44-source-phase-doctor.json",
+        "mandatoryCases": 4,
+        "fixtureComponent": "A14",
+        "writtenInterface": "docs/adr/0047-ops-outside-research-probe.md",
+        "sourceWorkerStopped": false,
+        "wholeATComplete": false,
+        "acceptanceComplete": false,
+        "nativeAttempts": 0,
+        "nativeFailures": 0,
+        "newDto": false,
+        "hostPolicyEnforcementClaimed": false
       }
     },
     "R0.03": {
@@ -2403,7 +2424,7 @@
           "AT-lifestore-47",
           "AT-lifestore-70"
         ],
-        "state": "READ_ONLY_PLAN_RUNNING",
+        "state": "READ_ONLY_PLAN_REVIEWED_STOPPED",
         "deadline": "2026-10-07T01:25:00Z",
         "model": "gpt-6-luna",
         "reasoning": "max",
@@ -2414,7 +2435,16 @@
         "marginBytes": "536870912",
         "baselineEvidence": "build/evidence/R0.12/lifestore-research-baseline.json",
         "wholeATComplete": false,
-        "acceptanceComplete": false
+        "acceptanceComplete": false,
+        "selectedAT": "AT-lifestore-45",
+        "fullAssertionReachableWithCurrentContracts": false,
+        "missingOracle": "Versioned primary-source evidence and exact requirement-to-quote/source-locator mapping in canonical comparison schema and owner check",
+        "newUserPermissionRequired": false,
+        "sourceExecutionStarted": false,
+        "reviewEvidence": "build/evidence/R0.12/lifestore-research-plan-review.json",
+        "sourceBindingsVerified": 15,
+        "workerStopped": true,
+        "planSha256": "b1de63a1cd3c6d619894d2536afe056bf958182541ea874a1363e816a945ca42"
       }
     },
     "R0.13": {
@@ -11037,7 +11067,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Wait for stopped AT90 source handoff; parent must not implement same auth files or build/probe during source mutation. Review independent read-only AT44 and Life Store plans; integrate only after clear ownership. Poll root requests; exact ROOT-R004-20261006-02 DONE immediately prioritizes R0.01 after safe source/world cleanup.",
+  "nextAction": "Wait for stopped disjoint AT90 auth and AT44 model-route source handoffs; parent must not edit those owners or build/generate/probe during mutations. Review Life Store plan hash correction and retain quote/versioned evidence prerequisite without user permission escalation. Poll root requests; exact ROOT-R004-20261006-02 DONE immediately prioritizes R0.01 after safe cleanup.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -21687,15 +21717,15 @@
     }
   },
   "resourceAdmission": {
-    "measuredAt": "2026-10-07T01:13:53.040Z",
-    "availableBytes": "2663563264",
+    "measuredAt": "2026-10-07T01:17:13.918Z",
+    "availableBytes": "2665250816",
     "pressure": "normal",
     "strictlyFreeAdmission": false,
     "repairFloorApplied": false,
     "ownedWorldsRunning": 0,
-    "helpersRunning": 3,
+    "helpersRunning": 2,
     "helperNeedBytes": "268435456",
-    "measurementSource": "build/evidence/R0.03/dashboard90-source-phase-doctor.json",
+    "measurementSource": "build/evidence/R0.02/ops44-source-phase-doctor.json",
     "marginBytes": "536870912",
     "ownedStackId": null,
     "stackAndNativeChildrenNeedBytes": "0",
@@ -21731,33 +21761,20 @@
       "task": "/root/r005_control_probe_review",
       "card": "R0.02",
       "assignedAT": "AT-ops-44",
-      "state": "READ_ONLY_PLAN_RUNNING",
-      "deadline": "2026-10-07T01:25:00Z",
+      "state": "SOURCE_RUNNING",
+      "deadline": "2026-10-07T01:50:00Z",
       "model": "gpt-6-luna",
       "reasoning": "max",
       "ownedPath": "build/evidence/R0.02/ops44-next-minimum-plan.json",
-      "sourceMutationAllowed": false,
-      "admissionEvidence": "build/evidence/R0.03/dashboard90-baseline-doctor.json",
+      "sourceMutationAllowed": true,
+      "admissionEvidence": "build/evidence/R0.02/ops44-source-phase-doctor.json",
       "helperNeedBytes": "268435456",
-      "marginBytes": "536870912"
-    },
-    {
-      "task": "/root/r007_minimum_trial_journal",
-      "card": "R0.12",
-      "assignedATs": [
-        "AT-lifestore-45",
-        "AT-lifestore-47",
-        "AT-lifestore-70"
-      ],
-      "state": "READ_ONLY_PLAN_RUNNING",
-      "deadline": "2026-10-07T01:25:00Z",
-      "model": "gpt-6-luna",
-      "reasoning": "max",
-      "ownedPath": "build/evidence/R0.12/lifestore-research-next-minimum-plan.json",
-      "sourceMutationAllowed": false,
-      "admissionEvidence": "build/evidence/R0.12/lifestore-next-helper-doctor.json",
-      "helperNeedBytes": "268435456",
-      "marginBytes": "536870912"
+      "marginBytes": "536870912",
+      "ownedPaths": [
+        "docs/adr/0047-ops-outside-research-probe.md",
+        "packages/hermes/src/model-route-probe.ts",
+        "build/evidence/R0.02/ops44-source-handoff.json"
+      ]
     }
   ],
   "pullRequestUpdatedAt": "2026-10-06T23:56:58.550592+00:00",
