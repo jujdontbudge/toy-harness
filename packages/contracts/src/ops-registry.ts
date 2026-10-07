@@ -210,7 +210,16 @@ export const opsControlReadInventory = [
   declaration("read.attention", "attention", "attention.snapshot"), declaration("read.quota", "ops", "status"),
   declaration("read.cadence", "self-improvement", "review.slots"), declaration("read.release", "ops", "release.status")
 ];
+export const durableCadenceCheckInventory = [
+  declaration("cadence.contract-enum", "self-improvement", "probe.run"),
+  declaration("cadence.owner-run-pending", "self-improvement", "probe.run"),
+  declaration("cadence.obligations-readonly-projection", "self-improvement", "probe.run"),
+  declaration("cadence.reader-write-denials", "self-improvement", "probe.run"),
+  declaration("cadence.source-gate", "self-improvement", "probe.run"),
+  declaration("cadence.coverage-distinction", "self-improvement", "probe.run")
+] as const;
 export const testStackCheckInventory = [
+  ...durableCadenceCheckInventory,
   declaration("contracts.dto-roundtrip", "contracts", "probe.run"),
   declaration("engineering.map", "self-improvement", "feature-map.check"), declaration("engineering.static", "self-improvement", "gardener.run"),
   declaration("accounting.model-admission", "self-improvement", "probe.run"),

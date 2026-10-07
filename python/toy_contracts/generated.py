@@ -800,6 +800,12 @@ RegisteredCheckIdV1 = Literal[
     "read.quota",
     "read.cadence",
     "read.release",
+    "cadence.contract-enum",
+    "cadence.owner-run-pending",
+    "cadence.obligations-readonly-projection",
+    "cadence.reader-write-denials",
+    "cadence.source-gate",
+    "cadence.coverage-distinction",
     "contracts.dto-roundtrip",
     "engineering.map",
     "engineering.static",
@@ -3360,6 +3366,7 @@ RegisteredTestCaseV1 = Literal[
     "control-filesystem-denial",
     "queue-transaction-faults",
     "capacity-trial",
+    "durable-cadence-owner-floor",
 ]
 
 ElapsedDurationV1 = NewType("ElapsedDurationV1", str)
@@ -6367,8 +6374,243 @@ CapacityTrialReportV1FullCadenceVerdict = Literal[
     "NOT_EVALUATED",
 ]
 
+class CadenceSlotRefV1(TypedDict):
+    jobKey: str
+    slotAt: "Instant"
+
+class ExperimentalSlotSweepV1(TypedDict):
+    armId: "UUID"
+    index: int
+
+class CadenceSlotV1(TypedDict):
+    jobKey: str
+    slotAt: "Instant"
+    state: "CadenceSlotState"
+    runId: Optional["UUID"]
+    reviewId: Optional["UUID"]
+    reason: Optional[str]
+    startedAt: Optional["Instant"]
+    inferenceDoneAt: Optional["Instant"]
+    reviewedAt: Optional["Instant"]
+    updatedAt: "Instant"
+
+CadenceProjectionQueryV1 = TypedDict(
+    "CadenceProjectionQueryV1",
+    {
+        "jobKey": Optional[str],
+        "from": "Instant",
+        "to": "Instant",
+    },
+)
+
+class CadenceProjectionV1(TypedDict):
+    slots: list["CadenceSlotV1"]
+    counts: "CadencePeriodV1Counts"
+    acceptedAiReviewed: "UInt64String"
+    swept: "UInt64String"
+
+class RunRefV1(TypedDict):
+    runId: "UUID"
+    principalId: "UUID"
+    profile: "RunRefV1Profile"
+    sessionId: str
+    taskId: Optional[str]
+    turnId: Optional[str]
+    contractId: "UUID"
+    contractVersion: int
+    generation: "Revision"
+
+RunRefV1Profile = Literal[
+    "toy",
+]
+
+class AdmissionInputV1(TypedDict):
+    principalId: "UUID"
+    profile: "RunRefV1Profile"
+    surface: str
+    admissionKey: str
+    payloadHash: "Digest"
+    sessionId: str
+    taskId: Optional[str]
+    turnId: Optional[str]
+    contractId: "UUID"
+    contractVersion: int
+    generation: "Revision"
+    releaseHash: "Digest"
+    budgetGroupId: "UUID"
+    scheduledSlot: "CadenceSlotRefV1"
+
+class CriterionResultV1(TypedDict):
+    criterionId: str
+    state: "CriterionResultV1State"
+    evidenceIds: list["UUID"]
+    explanation: str
+
+CriterionResultV1State = Literal[
+    "passed",
+    "failed",
+    "unknown",
+    "not_applicable",
+]
+
+class RemainingActionV1(TypedDict):
+    id: str
+    criterionIds: list[str]
+    description: str
+    capabilityId: Optional[str]
+    authorityClass: str
+    executableNow: bool
+    dependencyId: Optional["UUID"]
+
+class ReviewV1(TypedDict):
+    id: "UUID"
+    run: "RunRefV1"
+    processingState: "ReviewV1ProcessingState"
+    verdict: "ReviewV1Verdict"
+    criterionResults: list["CriterionResultV1"]
+    remainingActions: list["RemainingActionV1"]
+    dependencyIds: list["UUID"]
+    incidentIds: list["UUID"]
+    evidenceHighWater: "Revision"
+    rubricHash: "Digest"
+    judgePromptHash: "Digest"
+    releaseHash: "Digest"
+    reason: str
+    stopDisposition: "ReviewV1StopDisposition"
+    humanReason: Optional["ReviewV1HumanReasonValue"]
+    patternMatches: list[str]
+    lookupAuditRef: "RecordRef"
+    conversationSnapshotHash: "Digest"
+    judgeCallId: Optional["UUID"]
+    noProgressCount: int
+    reviewedAt: "Instant"
+
+ReviewV1ProcessingState = Literal[
+    "reviewed",
+]
+
+ReviewV1Verdict = Literal[
+    "complete",
+    "continue",
+    "waiting",
+    "blocked",
+    "failed",
+]
+
+ReviewV1StopDisposition = Literal[
+    "finish",
+    "continue",
+    "human_step",
+    "wait",
+    "recover",
+    "cancelled",
+]
+
+ReviewV1HumanReasonValue = Literal[
+    "physical_interaction",
+    "authority_approval",
+    "costly_ambiguity",
+]
+
+ReviewResultV1 = Union[
+    "ReviewResultV1Variant0",
+    "ReviewResultV1Variant1",
+]
+
+class ReviewResultV1Variant0(TypedDict):
+    state: "ReviewV1ProcessingState"
+    review: "ReviewV1"
+
+class ReviewResultV1Variant1(TypedDict):
+    state: "ReviewResultV1Variant1State"
+    run: "RunRefV1"
+    reason: "ReviewResultV1Variant1Reason"
+    retryAt: Optional["Instant"]
+
+ReviewResultV1Variant1State = Literal[
+    "pending",
+]
+
+ReviewResultV1Variant1Reason = Literal[
+    "awaiting_terminal",
+    "awaiting_evidence",
+    "judge_unavailable",
+    "judge_invalid",
+    "quota",
+    "superseded",
+    "control_unavailable",
+]
+
+class AdmissionReadbackV1(TypedDict):
+    run: "RunRefV1"
+    payloadHash: "Digest"
+    scheduledSlot: Optional["CadenceSlotRefV1"]
+    slotState: Optional["CadenceSlotState"]
+    pendingWork: bool
+
+class CadenceRoleProofV1(TypedDict):
+    ownerEffectiveRole: str
+    readerEffectiveRole: str
+    readerCanSelectProjection: bool
+    ownerPrivileges: "CadenceRoleProofV1OwnerPrivileges"
+    readerPrivileges: "CadenceRoleProofV1OwnerPrivileges"
+    readerWriteDenials: list["CadenceRoleProofV1ReaderWriteDenialsItem"]
+
+class CadenceRoleProofV1OwnerPrivileges(TypedDict):
+    cadence_slot: "CadenceRoleProofV1OwnerPrivilegesCadenceslot"
+    run: "CadenceRoleProofV1OwnerPrivilegesCadenceslot"
+    review: "CadenceRoleProofV1OwnerPrivilegesCadenceslot"
+
+class CadenceRoleProofV1OwnerPrivilegesCadenceslot(TypedDict):
+    select: bool
+    insert: bool
+    update: bool
+    delete: bool
+
+class CadenceRoleProofV1ReaderWriteDenialsItem(TypedDict):
+    table: "CadenceRoleProofV1ReaderWriteDenialsItemTable"
+    operation: "CadenceRoleProofV1ReaderWriteDenialsItemOperation"
+    sqlState: "CadenceRoleProofV1ReaderWriteDenialsItemSqlState"
+
+CadenceRoleProofV1ReaderWriteDenialsItemTable = Literal[
+    "cadence_slot",
+    "run",
+    "review",
+]
+
+CadenceRoleProofV1ReaderWriteDenialsItemOperation = Literal[
+    "INSERT",
+    "UPDATE",
+    "DELETE",
+]
+
+CadenceRoleProofV1ReaderWriteDenialsItemSqlState = Literal[
+    "42501",
+]
+
+class CadenceSourceFileV1(TypedDict):
+    path: str
+    contents: str
+
+class CadenceSourceGateInputV1(TypedDict):
+    files: list["CadenceSourceFileV1"]
+
+class CadenceSourceGateResultV1(TypedDict):
+    accepted: bool
+    reasonCodes: list["CadenceSourceGateResultV1ReasonCodesItem"]
+    writerFiles: list[str]
+    expectedStates: list[str]
+    sqlStates: list[str]
+
+CadenceSourceGateResultV1ReasonCodesItem = Literal[
+    "CADENCE_ENUM_MISMATCH",
+    "CADENCE_OWNER_WRITE_MISSING",
+    "CADENCE_COMPETING_WRITER",
+    "SOURCE_INVENTORY_EMPTY",
+]
+
 class RunContext(TypedDict):
-    profile: "RunContextProfile"
+    profile: "RunRefV1Profile"
     runId: "UUID"
     parentRunId: Optional["UUID"]
     actorId: "UUID"
@@ -6381,10 +6623,6 @@ class RunContext(TypedDict):
     generation: "Revision"
     source: "RunContextSource"
     permissionRefs: list["UUID"]
-
-RunContextProfile = Literal[
-    "toy",
-]
 
 RunContextWireSchemaVersion = Literal[
     "toy-agent/v1",

@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "toy.cadence-owner.provisional-source-review.v1",
+  "recordedAt": "2026-10-07T03:06:35.156Z",
+  "reviewer": "/root/auth91_quota_readonly_review",
+  "reviewScope": "worker-owned source only; mutable snapshot, not acceptance",
+  "reviewedOwnerSnapshot": "a87b4b091ff5e7609c36ba08e36d53eb2d83d738fe177c6a87bfcd66438a7a04",
+  "ownerCurrentHashAtRecord": "a87b4b091ff5e7609c36ba08e36d53eb2d83d738fe177c6a87bfcd66438a7a04",
+  "findings": [
+    {
+      "id": "concurrent-identical-admission-conflict",
+      "originalSnapshot": "71e82bfde1be2d89a586032c371fc488899c06c983a8271a466812dc95177fd7",
+      "status": "STATIC_FIX_INSPECTED",
+      "fix": "transaction advisory lock on exact profile/surface/admissionKey tuple before lookup"
+    }
+  ],
+  "otherConcreteFindings": [],
+  "observed": [
+    "arm metadata and3360 slot inserts in one owner transaction",
+    "scheduled slot/run/pending review_work in one transaction",
+    "reader role selected in each SQL read",
+    "CapacityTrialJournal delegates to one owner"
+  ],
+  "excludedParentIntegration": [
+    "contracts public exports and inventory",
+    "SI public route",
+    "registry and finite generator integration"
+  ],
+  "buildsRun": 0,
+  "testsRun": 0,
+  "probesRun": 0,
+  "acceptanceComplete": false,
+  "sourceWorkerStopped": false,
+  "reviewerStopped": true,
+  "stableSourceReviewRequired": true
+}

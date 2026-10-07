@@ -1,0 +1,112 @@
+{
+  "schemaVersion": "toy.r0.10-cadence-owner-floor-source-handoff.v1",
+  "status": "SOURCE_STOPPED_NO_RUNTIME_PROOF",
+  "sourceStoppedAt": "2026-10-07T03:14:11Z",
+  "scope": {
+    "acceptanceIds": ["AT-hermes-config-69", "AT-activity-focus-86"],
+    "oneUnitOnly": true,
+    "prohibitedActionsObserved": ["no build", "no generation", "no checks", "no CLI", "no probe", "no runtime", "no network", "no private calls"]
+  },
+  "adr": {
+    "path": "docs/adr/0050-durable-cadence-owner-floor.md",
+    "sha256": "d082d7a70f831ef7f833e6e46a7ff0f67d03cd83745ff5434bd8f51b543cc766",
+    "status": "accepted for bounded implementation"
+  },
+  "sourceFiles": [
+    { "path": "packages/contracts/src/durable-cadence.ts", "sha256": "650bd484bb42310e1a358f79a1ede9d4328d6b9d95fd5d84d4afffe326e9288e" },
+    { "path": "packages/self-improvement/src/durable-cadence-migration.ts", "sha256": "2a9bc089dd9231a1e4ad50847ab6df59b780ce6968f3a47ccf683ca47688b858" },
+    { "path": "packages/self-improvement/src/durable-cadence.ts", "sha256": "e6f9a02961410b8364a50fd2e548a34777b29e3b150dc2866be2d73b1d88a064" },
+    { "path": "packages/self-improvement/src/durable-cadence-probe.ts", "sha256": "a11db7129c4312d5a02e91dba03da9a8629091c09b479f562279402eab67a188" },
+    { "path": "packages/self-improvement/src/capacity-trial.ts", "sha256": "df1789b277e45876bc7cde8d77c1d0c2963a6cae046a39884bfbba862044c1d7" },
+    { "path": "packages/obligations/src/public.ts", "sha256": "873580812146f71ff96741ab219b47eea7dbebcf4eaf2cbf3aa73708ed086b63" }
+  ],
+  "capacityTrialMigrationUnchanged": [
+    "packages/self-improvement/src/capacity-trial-migration.ts",
+    "packages/self-improvement/migrations/capacity-trial.sql",
+    "packages/self-improvement/migrations/capacity-trial.json"
+  ],
+  "contractFloor": {
+    "generatedSchemaSource": "packages/contracts/src/durable-cadence.ts",
+    "expectedDtos": [
+      "CadenceSlotRefV1", "ExperimentalSlotSweepV1", "CadenceSlotV1", "CadenceProjectionQueryV1", "CadenceProjectionV1",
+      "RunRefV1", "AdmissionInputV1", "CriterionResultV1", "RemainingActionV1", "ReviewV1", "ReviewResultV1",
+      "AdmissionReadbackV1", "CadenceRoleProofV1", "CadenceSourceFileV1", "CadenceSourceGateInputV1", "CadenceSourceGateResultV1"
+    ],
+    "runRefFieldOrder": ["runId", "principalId", "profile", "sessionId", "taskId", "turnId", "contractId", "contractVersion", "generation"],
+    "slotStates": ["scheduled", "running", "swept", "reviewed", "deferred_quota", "deferred_auth", "deferred_network", "deferred_busy", "maintenance", "failed", "missed", "coalesced_after_outage"],
+    "generatedArtifactsNotAuthored": true
+  },
+  "ownerSurface": {
+    "source": "packages/self-improvement/src/durable-cadence.ts",
+    "methods": [
+      "DurableCadenceOwner.withTest(context, run)", "startArm(input)", "sweepExperimentalSlot(input)", "deferSlot(input)",
+      "reconcileArm(armId)", "reportArm(armId)", "slot(armId, index)", "admitScheduled(input)", "reviewResult(runId)",
+      "readSlots(query)", "readProjection(query)", "roleProof()", "sourceSnapshot()", "sourceGate(input?)"
+    ],
+    "admissionAtomicEffects": ["ensure scheduled unbound slot", "insert run with root_run_id equal to generated run id", "bind cadence slot as running", "insert review_work pending"],
+    "sameKeyConcurrency": "transaction advisory lock on JSON tuple (profile,surface,admissionKey) precedes lookup and slot mutation; post-lock existing row is read back; changed payload or slot conflicts without mutation",
+    "review": "no accepted-review insert caller or public store; review_work pending is real; canonical immutable review table remains unwritten by this unit",
+    "capacityTrialJournal": "compatibility wrapper routes existing operations through the same owner; no cadence-slot SQL remains in the wrapper"
+  },
+  "databaseFloor": {
+    "database": "toy",
+    "schema": "toy_si",
+    "migrationSource": "packages/self-improvement/src/durable-cadence-migration.ts",
+    "migrationConstant": "durableCadenceMigration",
+    "generatedSqlPath": "packages/self-improvement/migrations/durable-cadence.sql",
+    "migrationOrder": ["existing capacity-trial migration unchanged", "generated durable-cadence migration"],
+    "objectOwner": "existing disposable fixture migration administrator; excluded from operational-role claim",
+    "operationalRoles": {
+      "toy_si_durable_owner": { "login": false, "cadence_slot": ["SELECT", "INSERT", "UPDATE"], "run": ["SELECT", "INSERT"], "review": ["SELECT", "INSERT"], "review_work": ["SELECT", "INSERT", "UPDATE"], "capacity_trial_arm": ["SELECT", "INSERT"] },
+      "toy_si_obligations_reader": { "login": false, "projectionView": ["SELECT"], "baseTables": [] }
+    },
+    "nativeRoleEvidenceRequired": "SET LOCAL ROLE and SQL/readback in each accountingQuery transaction; assert current_user and effective has_table_privilege; perform all 9 reader-role INSERT/UPDATE/DELETE attempts across cadence_slot, run, review and observe SQLSTATE 42501",
+    "guards": "preserve the existing arm binding and trial-slot identity/outcome triggers; additive DDL replaces only the arm-bound outcome check, adds run/review FKs and shapes, and a trigger permits swept only for a persisted experimental fake-model arm index that does not require AI; original and AI-required indices reject; fake arms retain zero run/review/inference/reviewed references"
+  },
+  "obligationsProjection": {
+    "source": "packages/obligations/src/public.ts",
+    "api": "CadenceProjection.readSlots(query, reader)",
+    "reader": "real owner adapter selects the SQL view under toy_si_obligations_reader; no Self-Improvement import or SQL in Obligations",
+    "coverage": "all 12 state counts; swept separate; reviewed accepted coverage only when reviewId is non-null; source table FKs bind reviewId to canonical review"
+  },
+  "cliProbe": {
+    "source": "packages/self-improvement/src/durable-cadence-probe.ts",
+    "scenarioId": "cadence.owner-floor",
+    "sharedCaseId": "durable-cadence-owner-floor",
+    "phase": "durable-cadence-owner-floor",
+    "manifestOwner": "self-improvement",
+    "mandatoryCase": { "publicOperation": "ReplayEnvironment.runRegisteredProbe", "id": "durable-cadence-owner-floor", "phase": "durable-cadence-owner-floor" },
+    "proposedFaultControl": { "id": "source-tree-candidate-snapshot", "seam": "os", "affectedPhases": ["durable-cadence-owner-floor"] },
+    "checkIds": ["cadence.contract-enum", "cadence.owner-run-pending", "cadence.obligations-readonly-projection", "cadence.reader-write-denials", "cadence.source-gate", "cadence.coverage-distinction"],
+    "sourceMutations": "actual checkout snapshot baseline; in-memory competing writer plus missing and extra SQL state candidates passed through the public sourceGate method; no source file writes",
+    "expectedReadback": { "swept": "1", "acceptedAiReviewed": "0", "reviewed": "0", "running": "1", "pendingReason": "awaiting_terminal" },
+    "acceptedReviewInserted": false,
+    "providerNetworkSends": 0
+  },
+  "sharedIntegrationRequiredAfterStop": [
+    "Export durableCadenceSchemaInventory and schemas/types from packages/contracts/src/public.ts and include it in SchemaInventory; generate contracts using the existing paved path.",
+    "Extend the existing finite migration-name allowlist with durable-cadence, mapping only to the migration source constant, then run toy new migration to generate the SQL and descriptor; never hand-author generated SQL and do not alter the capacity-trial artifacts.",
+    "Add the durable cadence probe route to packages/self-improvement/src/public.ts and TestProbeControl registration; add durable-cadence-owner-floor to the registered case schema/runner checks.",
+    "Register exactly AT-hermes-config-69 and AT-activity-focus-86 with scenario cadence.owner-floor, one shared case/phase, and the six source check IDs; retain AT-hermes-config-69 stack evidence and current source assertion hashes.",
+    "Add the bounded R0.10 feature/fact-map entry linking requirement 0.10, the shared CLI case, Self-Improvement owner, Obligations projection, and both assigned ATs."
+  ],
+  "verificationHandoff": {
+    "sourceInspection": "manual only; no source build, typecheck, lint, generation, CLI, probe, database execution, or runtime proof was run",
+    "firstAcceptanceOrder": [
+      "generate contracts and durable-cadence migration through paved generators",
+      "run unfiltered AT-hermes-config-69 CLI manifest on ready disposable fake stack",
+      "run unfiltered AT-activity-focus-86 CLI manifest on ready disposable fake stack",
+      "run AT-ops-47, AT-self-improvement-59, AT-self-improvement-60, AT-RESEARCH-REGISTER-6",
+      "run required source checks after the owner and parent integrations are final"
+    ],
+    "neverClaimed": ["assigned AT pass", "production role mapping", "production native schedule anchor", "identity.principals FK", "full canonical run schema", "Hermes runtime lifecycle", "terminal/heartbeat", "trusted Turn Review acceptance", "seven-day original-policy cadence acceptance"]
+  },
+  "explicitDeferrals": [
+    "identity.principals schema and run principal FK remain owned by the real identity schema",
+    "full canonical §5.2 run schema, budget-group FK, run_event, Hermes execution lifecycle, heartbeat and terminal operations",
+    "protected TurnReview judge and immutable accepted-review insert path; review table receives no synthetic or test verdict",
+    "production role credential mapping and persisted native cadence anchor",
+    "actual seven-day original-policy cadence acceptance"
+  ],
+  "affectedRegressionIds": ["AT-ops-47", "AT-self-improvement-59", "AT-self-improvement-60", "AT-RESEARCH-REGISTER-6"]
+}

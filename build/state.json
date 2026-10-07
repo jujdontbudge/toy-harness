@@ -2,9 +2,9 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-07T02:07:28.617613+00:00",
+  "updatedAt": "2026-10-07T03:41:21.399Z",
   "phase": "R0_FEASIBILITY",
-  "activeCard": "R0.12",
+  "activeCard": "R0.10",
   "cardCount": 87,
   "acceptanceCount": 1447,
   "cards": {
@@ -2025,7 +2025,10 @@
         "build/evidence/R0.10/mcp81-root-pins-final.json",
         "build/evidence/R0.10/dto50-final-verification.json",
         "build/evidence/R0.10/dto50-source-review.json",
-        "build/evidence/R0.10/dto-roundtrip-next-minimum-plan.json"
+        "build/evidence/R0.10/dto-roundtrip-next-minimum-plan.json",
+        "build/evidence/R0.10/cadence-owner-final-verification.json",
+        "build/evidence/R0.10/cadence-owner-independent-receipt-review.json",
+        "build/evidence/R0.10/cadence-owner-final-root-pins.json"
       ],
       "requiredATs": [
         "AT-activity-focus-86",
@@ -2077,9 +2080,11 @@
         }
       },
       "lastVerification": {
-        "evidence": "build/evidence/R0.10/dto50-final-verification.json",
-        "verdict": "PASS_EIGHT_CANONICAL_TS_PYTHON_DTO_WIRE_DIAGNOSTICS",
-        "checks": 8,
+        "evidence": "build/evidence/R0.10/cadence-owner-final-verification.json",
+        "verdict": "STOPPED_AFTER_TWELVE_ASSIGNED_FLOOR_CASES_AND_FIFTY_SIX_TRIAL_REGRESSIONS_PASS",
+        "checks": 12,
+        "affectedRegressionChecks": 56,
+        "separateReadinessChecks": 5,
         "runShowExact": true,
         "cleanupPassed": true,
         "ownedWorldsDown": true,
@@ -2342,6 +2347,43 @@
           }
         ],
         "SwiftDeferredTo": "R3"
+      },
+      "cadenceOwnerFloorUnit": {
+        "state": "STOPPED_AFTER_BOUNDED_FLOOR_AND_REGRESSION_PASS",
+        "assignedATs": [
+          "AT-hermes-config-69",
+          "AT-activity-focus-86"
+        ],
+        "startedAt": "2026-10-07T02:43:34.031Z",
+        "fullUnitStopAt": "2026-10-07T04:43:00Z",
+        "interfaceStopAt": "2026-10-07T03:00:00Z",
+        "sourceStopAt": "2026-10-07T03:35:00Z",
+        "worker": "/root/cadence_owner_floor_design",
+        "admission": "build/evidence/R0.10/cadence-owner-floor-source-admission.json",
+        "wholeATsPassed": [],
+        "acceptanceComplete": false,
+        "interface": {
+          "path": "docs/adr/0050-durable-cadence-owner-floor.md",
+          "sha256": "d082d7a70f831ef7f833e6e46a7ff0f67d03cd83745ff5434bd8f51b543cc766"
+        },
+        "parentReview": "build/evidence/R0.10/cadence-owner-interface-parent-review.json",
+        "independentReview": "build/evidence/R0.10/cadence-owner-interface-final-independent-review.json",
+        "sourceStartedAt": "2026-10-07T02:56:07.783Z",
+        "provisionalSourceReview": "build/evidence/R0.10/cadence-owner-provisional-source-review.json",
+        "sourceStoppedAt": "2026-10-07T03:14:11Z",
+        "sourceHandoff": "build/evidence/R0.10/cadence-owner-floor-source-handoff.json",
+        "nativeFailures": 2,
+        "nativeAttempts": 3,
+        "latestRepair": "build/evidence/R0.10/cadence-owner-check-registry-repair.json",
+        "floorReadback": "build/evidence/R0.10/cadence-owner-native-third-readback.json",
+        "stoppedAt": "2026-10-07T03:41:21.399Z",
+        "verification": "build/evidence/R0.10/cadence-owner-final-verification.json",
+        "independentReceiptReview": "build/evidence/R0.10/cadence-owner-independent-receipt-review.json",
+        "diagnosticPasses": 12,
+        "regressionPasses": 56,
+        "readinessPasses": 5,
+        "sourceMutationStopped": true,
+        "sourceHashesStillMatch": true
       }
     },
     "R0.11": {
@@ -11228,7 +11270,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Review R0.10 bounded owner-floor plan while two independent Life45/auth91 source workers implement. No generation/build/static/CLI probes until all source mutators STOP. Exact root02 DONE prioritizes R0.01 after safe handoff; pending root never blocks the active goal.",
+  "nextAction": "Curated commit/push of verified cadence unit; poll ROOT-REQUESTS. Exact ROOT-R004-20261006-02 DONE with native310 read and restoration takes priority: safe cleanup then R0.01. Otherwise next independent bounded R0 work; no expansion of passed cadence source.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -21776,8 +21818,8 @@
     "deadline": "2026-10-07T00:25:00Z"
   },
   "continuationAssessment": {
-    "observedAt": "2026-10-07T02:41:54.949Z",
-    "reason": "Life45 quote unit verified/stopped56checks; auth91 public lifecycle verified/stopped17+74regressions, exactregistrations/readbacks/teardown. Root02/R00501 freshlyPENDING; independent cadenceownership implementation floor next. No wholeAT/card promotion; goalACTIVE.",
+    "observedAt": "2026-10-07T02:56:07.783Z",
+    "reason": "OneLuna cadenceSOURCE owner admitted afterwritteninterface andindependent+parentreview; preserveoldcapacityartifacts/rootpins. Parentgeneration/build/probes waitSTOP. Rootqueue pending, exact02DONEprioritizesR001. GoalACTIVE.",
     "goalStatus": "active"
   },
   "executionPolicy": {
@@ -21820,18 +21862,18 @@
     "queuedRootReserveAdmissionGate": false
   },
   "latestStaticVerification": {
-    "recordedAt": "2026-10-07T02:41:54.949Z",
+    "recordedAt": "2026-10-07T03:33:42Z",
     "command": "npm run check",
     "exitCode": 0,
-    "log": "build/evidence/R0.03/lifecycle91-root-title-repair-strict.txt",
-    "sha256": "23b5b8dab7a674e54b51d321d453484fb10c6aa81b04740f2264090af06244ac",
-    "artifacts": 386,
-    "contracts": 318,
-    "cliManifests": 35,
-    "features": 100,
+    "log": "build/evidence/R0.10/cadence-owner-mts-source-strict.txt",
+    "sha256": "f630d0f3c8c955e105bd5cf260d0f4052547d87b6b86acde4682cb0c822b1319",
+    "artifacts": 402,
+    "contracts": 334,
+    "cliManifests": 37,
+    "features": 103,
     "commands": 55,
     "indexedATs": 1447,
-    "schemaDigest": "a9798dc39646fb2fe7b9c5c13d4f673095ce31c3e04f8c048f91556a1c354d9a",
+    "schemaDigest": "ef613a23dd214c75e0976648883a9ecb891146604fbc295c08b71c609002b3dd",
     "swiftInvoked": false
   },
   "sourceCheckpointCommit": "f8e7116",
@@ -21874,27 +21916,33 @@
     }
   },
   "resourceAdmission": {
-    "measuredAt": "2026-10-07T02:35:58.896Z",
-    "availableBytes": "2748399616",
+    "measuredAt": "2026-10-07T03:14:32.606Z",
+    "availableBytes": "2738356224",
     "pressure": "normal",
     "strictlyFreeAdmission": false,
     "repairFloorApplied": false,
     "ownedWorldsRunning": 0,
     "helpersRunning": 0,
     "helperNeedBytes": "268435456",
-    "measurementSource": "build/evidence/R0.03/lifecycle91-regression-doctor.json",
+    "measurementSource": "build/evidence/R0.10/cadence-owner-stable-review-doctor.json",
     "marginBytes": "536870912",
     "ownedStackId": null,
     "stackAndNativeChildrenNeedBytes": "0",
-    "jobNeedBytes": "1073741824",
-    "requiredAvailableBytes": "1610612736",
+    "jobNeedBytes": "268435456",
+    "requiredAvailableBytes": "805306368",
     "secondPhysicalFitGate": false,
     "queuedRootReserveGate": false,
     "rule": "Normal OS pressure and available memory at least the current job declared need plus512MiB; no strictly-free, hypothetical reserve, swap or second physical-fit gate",
-    "measurementHistorical": true
+    "measurementHistorical": false
   },
   "activeWorkers": [],
   "pullRequestUpdatedAt": "2026-10-07T01:55:47.779462+00:00",
   "continuationCheckpoint": "build/checkpoints/2026-10-07-ops44-verified-dashboard90-deferred",
-  "readOnlyWorkers": []
+  "readOnlyWorkers": [
+    {
+      "agent": "/root/r010_local_gate_audit",
+      "scope": "Smallest next independent R0.10 action; no edits or runtime",
+      "state": "READ_ONLY_RUNNING"
+    }
+  ]
 }

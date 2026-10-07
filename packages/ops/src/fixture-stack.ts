@@ -8,7 +8,7 @@ import { DatabaseSync } from "node:sqlite";
 import { setTimeout as delay } from "node:timers/promises";
 import { fileURLToPath } from "node:url";
 import {
-  bootstrapUpRequestSchema, fixtureStackRecordSchema, fixtureWorkerStateSchema, opsErrorMessages,
+  bootstrapUpRequestSchema, durableCadenceCheckInventory, fixtureStackRecordSchema, fixtureWorkerStateSchema, opsErrorMessages,
   schemaBundleDigest, testClockReceiptSchema, testClockStateSchema, testStackOperationSchema,
   registeredProbeOperationSchema, registeredCliProbeInventory, registeredCliAcceptanceManifestInventory, clockAdvanceOperationSchema, checkViewSchema, roleBootstrapRoot
 } from "@toy/contracts";
@@ -315,12 +315,13 @@ export const FixtureProbe = {
       const componentComparison = ["AT-authority-60", "AT-attention-66", "AT-obligations-74", "AT-self-improvement-54", "AT-sources-188", "AT-sources-190", "AT-ops-44", "AT-lifestore-45"].includes(input.probeId) && input.caseId === undefined;
       const dtoRoundtrip = input.probeId === "AT-hermes-config-50" && input.caseId === undefined && sourceRegistration?.owner === "contracts" && sourceRegistration.scenarioId === "contracts.dto-roundtrip";
       const capacityTrial = (input.caseId === undefined || input.caseId === "capacity-trial") && ["AT-ops-47", "AT-self-improvement-59", "AT-self-improvement-60", "AT-RESEARCH-REGISTER-6"].includes(input.probeId);
+      const durableCadence = (input.caseId === undefined || input.caseId === "durable-cadence-owner-floor") && ["AT-hermes-config-69", "AT-activity-focus-86"].includes(input.probeId) && sourceRegistration?.owner === "self-improvement" && sourceRegistration.scenarioId === "cadence.owner-floor";
       const nativeEligibility = ["AT-ops-81", "AT-client-apps-49", "AT-activity-focus-64"].includes(input.probeId) && (input.caseId === "native-release-eligibility" || (input.caseId === undefined && sourceRegistration?.owner === "ops" && sourceRegistration.scenarioId === "native-release-eligibility"));
       const nativeAuth = (["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-86", "AT-hermes-config-87", "AT-hermes-config-88", "AT-hermes-config-89", "AT-hermes-config-91"].includes(input.probeId) && input.caseId === undefined) || (input.caseId === "native-auth-cli" && ["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-86", "AT-hermes-config-87", "AT-hermes-config-88", "AT-hermes-config-89", "AT-hermes-config-91", "AT-hermes-config-78", "AT-ops-55"].includes(input.probeId));
       const roleDenials = (input.caseId === undefined || input.caseId === "control-filesystem-denial") && input.probeId === "AT-authority-35";
       const queueFaults = input.probeId === "AT-obligations-76" && (input.caseId === undefined || input.caseId === "queue-transaction-faults");
       const backupCapacity = ["AT-ops-62", "AT-lifestore-63", "AT-sources-216"].includes(input.probeId) && (input.caseId === "backup-capacity" || (input.caseId === undefined && sourceRegistration?.owner === "ops" && sourceRegistration.scenarioId === "backup-capacity"));
-      if (checks.length > 0 && !reference && !(modelPolicy || modelStream || profileConsumers || mcpHttp || accounting || componentComparison || dtoRoundtrip || capacityTrial || nativeEligibility || nativeAuth || backupCapacity || roleDenials || queueFaults)) refuse("INVALID_INPUT");
+      if (checks.length > 0 && !reference && !(modelPolicy || modelStream || profileConsumers || mcpHttp || accounting || componentComparison || dtoRoundtrip || capacityTrial || durableCadence || nativeEligibility || nativeAuth || backupCapacity || roleDenials || queueFaults)) refuse("INVALID_INPUT");
       if (dtoRoundtrip && checks.some(check => check.id !== "contracts.dto-roundtrip" || check.owner !== "contracts")) refuse("INVALID_INPUT");
       if (profileConsumers && checks.some(check => check.id !== "profile.native-gateway" || check.owner !== "hermes")) refuse("INVALID_INPUT");
       if (mcpHttp && checks.some(check => check.id !== "profile.native-mcp-http" || check.owner !== "hermes")) refuse("INVALID_INPUT");
@@ -328,6 +329,7 @@ export const FixtureProbe = {
       if (accounting && checks.some(check => check.id !== "accounting.model-admission" || check.owner !== "self-improvement")) refuse("INVALID_INPUT");
       if (componentComparison && checks.some(check => check.id !== "research.component-comparison" || check.owner !== "self-improvement")) refuse("INVALID_INPUT");
       if (capacityTrial && checks.some(check => check.id !== "capacity.trial-journal" || check.owner !== "self-improvement")) refuse("INVALID_INPUT");
+      if (durableCadence && (checks.length !== durableCadenceCheckInventory.length || new Set(checks.map(check => check.id)).size !== durableCadenceCheckInventory.length || checks.some(check => !durableCadenceCheckInventory.some(declaration => declaration.id === check.id && declaration.owner === check.owner)))) refuse("INVALID_INPUT");
       if (nativeEligibility && checks.some(check => check.id !== "release.native-eligibility" || check.owner !== "ops")) refuse("INVALID_INPUT");
       if (nativeAuth && checks.some(check => !["auth.native-runtime", "auth.native-fixture"].includes(check.id) || check.owner !== "hermes")) refuse("INVALID_INPUT");
       if (roleDenials && checks.some(check => check.id !== "bootstrap.role-control-denials" || check.owner !== "ops")) refuse("INVALID_INPUT");

@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "accepted": {
+      "type": "boolean"
+    },
+    "reasonCodes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "CADENCE_ENUM_MISMATCH",
+          "CADENCE_OWNER_WRITE_MISSING",
+          "CADENCE_COMPETING_WRITER",
+          "SOURCE_INVENTORY_EMPTY"
+        ]
+      }
+    },
+    "writerFiles": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "expectedStates": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "sqlStates": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "accepted",
+    "reasonCodes",
+    "writerFiles",
+    "expectedStates",
+    "sqlStates"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:CadenceSourceGateResultV1"
+}

@@ -1,0 +1,297 @@
+{
+  "recordedAt": "2026-10-07T03:31:52.298Z",
+  "rung": "CLI",
+  "unfiltered": true,
+  "wholeATComplete": false,
+  "liveProviderSends": 0,
+  "nativeAttempt": 2,
+  "admissionEvidence": "build/evidence/R0.10/cadence-owner-native-second-doctor.json",
+  "probes": [
+    {
+      "probeId": "AT-cli-4",
+      "run": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.10/cadence-owner-second-cli/AT-cli-4-run.json",
+        "sha256": "252c33c338299152c09a22b78b53ab5839cc7af2ec0799d540ed075ce3bac712"
+      },
+      "operationId": "7c8456b8-c2bc-48af-a978-67d80195ee71",
+      "show": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.10/cadence-owner-second-cli/AT-cli-4-show.json",
+        "sha256": "6cefe419150165bc610faa0bb76516ed69ea701f11b7383fec1d3fe20fc12322"
+      },
+      "sameData": true,
+      "sourceRegistration": null,
+      "registrationExact": false,
+      "cases": [
+        {
+          "id": "bootstrap.fixture-runtime",
+          "owner": "ops",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T03:31:52.717Z",
+          "reasonCode": "TRUSTED_FIXTURE_LIFECYCLE_SUBSET",
+          "prerequisite": "{\"stackId\":\"fffc80ae-6bd1-4487-a110-39554b66c7ca\",\"nonce\":\"086cca8b-1593-46a7-b2c9-1bb86bbe5dc2\",\"pid\":40989,\"state\":\"running\",\"checkedAt\":\"2026-10-07T03:31:52.653Z\",\"heartbeatCount\":\"2\"}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": []
+          }
+        }
+      ],
+      "resultState": "NOT_IMPLEMENTED",
+      "complete": false
+    },
+    {
+      "probeId": "AT-hermes-config-69",
+      "run": {
+        "exitCode": 1,
+        "path": "build/evidence/R0.10/cadence-owner-second-cli/AT-hermes-config-69-run.json",
+        "sha256": "0e67a0019be27262603c204f84fcc1686ac3bd382024e27a1241c2dee9bdf06f"
+      },
+      "operationId": "51745c41-692c-434f-ac7c-b75ed461f7fa",
+      "show": {
+        "exitCode": 1,
+        "path": "build/evidence/R0.10/cadence-owner-second-cli/AT-hermes-config-69-show.json",
+        "sha256": "d2b1f3ef3352430c910add8f2876db7417580029daa4f03211c804555537c7bb"
+      },
+      "sameData": true,
+      "sourceRegistration": {
+        "id": "AT-hermes-config-69",
+        "rung": "CLI",
+        "sourceAssertionHash": "965ebd8c120f65c939ac3dce6fb45aeda90dc34f5bbf08ea5e7db257c8f83ba4",
+        "commandId": "probe.run",
+        "scenarioId": "cadence.owner-floor",
+        "owner": "self-improvement",
+        "firstRelease": "R0",
+        "kind": "mixed",
+        "mandatoryCases": [
+          {
+            "id": "durable-cadence-owner-floor",
+            "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+            "phase": "durable-cadence-owner-floor"
+          }
+        ],
+        "trigger": "Exercise the real PostgreSQL cadence owner, generated state contract, native role denials and read-only Obligations projection; production lifecycle and protected dispatch remain pending.",
+        "faultControls": [
+          {
+            "id": "source-tree-candidate-snapshot",
+            "seam": "os",
+            "affectedPhases": [
+              "durable-cadence-owner-floor"
+            ]
+          },
+          {
+            "id": "native-postgresql-roles",
+            "seam": "os",
+            "affectedPhases": [
+              "durable-cadence-owner-floor"
+            ]
+          },
+          {
+            "id": "seeded-fake-clock",
+            "seam": "clock",
+            "affectedPhases": [
+              "durable-cadence-owner-floor"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "canonical-state-and-writer-gate",
+            "independentReader": "DurableCadenceOwner.sourceSnapshot/sourceGate: actual source and in-memory OS candidates",
+            "caseIds": [
+              "durable-cadence-owner-floor"
+            ]
+          },
+          {
+            "id": "native-owner-and-pending-readback",
+            "independentReader": "DurableCadenceOwner.admitScheduled/reviewResult: real slot/run and pending review_work",
+            "caseIds": [
+              "durable-cadence-owner-floor"
+            ]
+          },
+          {
+            "id": "native-role-write-denials",
+            "independentReader": "DurableCadenceOwner.roleProof: current_user, effective privileges and nine SQLSTATE 42501 denials",
+            "caseIds": [
+              "durable-cadence-owner-floor"
+            ]
+          },
+          {
+            "id": "obligations-projection-readback",
+            "independentReader": "CadenceProjection.readSlots: actual reader role, canonical counts, distinct swept and reviewed coverage",
+            "caseIds": [
+              "durable-cadence-owner-floor"
+            ]
+          },
+          {
+            "id": "stored-cli-readback",
+            "independentReader": "toy probe.show and stack.down: exact persisted result and complete owned-world teardown",
+            "caseIds": [
+              "durable-cadence-owner-floor"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot inspect the R0 pre-build schema/caller ownership gate or native PostgreSQL privileges. The registered CLI reaches the real owner with fake external clock and source-tree candidates."
+      },
+      "registrationExact": true,
+      "cases": [
+        {
+          "id": "cadence.source-gate",
+          "owner": "self-improvement",
+          "state": "FAIL",
+          "checkedAt": "2026-10-07T03:31:53.785Z",
+          "reasonCode": "DURABLE_CADENCE_OWNER_FLOOR_FAIL",
+          "prerequisite": "{\"caseId\":\"durable-cadence-owner-floor\",\"phase\":\"durable-cadence-owner-floor\",\"evidence\":{\"baselineAccepted\":true,\"baselineWriterFiles\":[\"packages/self-improvement/src/durable-cadence.ts\"],\"missingStateRejected\":true,\"extraStateRejected\":true,\"competingWriterRejected\":true,\"competingMjsWriterRejected\":true,\"baselineIncludesMjs\":false,\"sourceMutationsAreInMemory\":true},\"actualUid\":501,\"liveProviderSends\":0,\"acceptedReviewInserted\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "b9c67125775d98a8633e1386d8d331a81b2931d8900dcd87f8341964d4ef4b70",
+              "d7ec96d6ac8073ffbbd1b42635ec2655a4924b79e474fe5120634c884b1060b3",
+              "2a9bc089dd9231a1e4ad50847ab6df59b780ce6968f3a47ccf683ca47688b858",
+              "f77baa2044aed171ee617da4a47d267894f917db148ff2b494cf00d672601f27",
+              "7954862a19f39a8c230fdace11fddb651b221ef7c996da3d7255310719517e63"
+            ]
+          }
+        },
+        {
+          "id": "cadence.contract-enum",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T03:31:53.785Z",
+          "reasonCode": "DURABLE_CADENCE_OWNER_FLOOR_PASS",
+          "prerequisite": "{\"caseId\":\"durable-cadence-owner-floor\",\"phase\":\"durable-cadence-owner-floor\",\"evidence\":{\"expectedStates\":[\"scheduled\",\"running\",\"swept\",\"reviewed\",\"deferred_quota\",\"deferred_auth\",\"deferred_network\",\"deferred_busy\",\"maintenance\",\"failed\",\"missed\",\"coalesced_after_outage\"],\"sqlStates\":[\"scheduled\",\"running\",\"swept\",\"reviewed\",\"deferred_quota\",\"deferred_auth\",\"deferred_network\",\"deferred_busy\",\"maintenance\",\"failed\",\"missed\",\"coalesced_after_outage\"]},\"actualUid\":501,\"liveProviderSends\":0,\"acceptedReviewInserted\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "b9c67125775d98a8633e1386d8d331a81b2931d8900dcd87f8341964d4ef4b70",
+              "d7ec96d6ac8073ffbbd1b42635ec2655a4924b79e474fe5120634c884b1060b3",
+              "2a9bc089dd9231a1e4ad50847ab6df59b780ce6968f3a47ccf683ca47688b858",
+              "f77baa2044aed171ee617da4a47d267894f917db148ff2b494cf00d672601f27",
+              "7954862a19f39a8c230fdace11fddb651b221ef7c996da3d7255310719517e63"
+            ]
+          }
+        },
+        {
+          "id": "cadence.reader-write-denials",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T03:31:54.108Z",
+          "reasonCode": "DURABLE_CADENCE_OWNER_FLOOR_PASS",
+          "prerequisite": "{\"caseId\":\"durable-cadence-owner-floor\",\"phase\":\"durable-cadence-owner-floor\",\"evidence\":{\"ownerEffectiveRole\":\"toy_si_durable_owner\",\"readerEffectiveRole\":\"toy_si_obligations_reader\",\"readerCanSelectProjection\":true,\"ownerPrivileges\":{\"cadence_slot\":{\"select\":true,\"insert\":true,\"update\":true,\"delete\":false},\"run\":{\"select\":true,\"insert\":true,\"update\":false,\"delete\":false},\"review\":{\"select\":true,\"insert\":true,\"update\":false,\"delete\":false}},\"readerPrivileges\":{\"cadence_slot\":{\"select\":false,\"insert\":false,\"update\":false,\"delete\":false},\"run\":{\"select\":false,\"insert\":false,\"update\":false,\"delete\":false},\"review\":{\"select\":false,\"insert\":false,\"update\":false,\"delete\":false}},\"readerWriteDenials\":[{\"table\":\"cadence_slot\",\"operation\":\"INSERT\",\"sqlState\":\"42501\"},{\"table\":\"cadence_slot\",\"operation\":\"UPDATE\",\"sqlState\":\"42501\"},{\"table\":\"cadence_slot\",\"operation\":\"DELETE\",\"sqlState\":\"42501\"},{\"table\":\"run\",\"operation\":\"INSERT\",\"sqlState\":\"42501\"},{\"table\":\"run\",\"operation\":\"UPDATE\",\"sqlState\":\"42501\"},{\"table\":\"run\",\"operation\":\"DELETE\",\"sqlState\":\"42501\"},{\"table\":\"review\",\"operation\":\"INSERT\",\"sqlState\":\"42501\"},{\"table\":\"review\",\"operation\":\"UPDATE\",\"sqlState\":\"42501\"},{\"table\":\"review\",\"operation\":\"DELETE\",\"sqlState\":\"42501\"}]},\"actualUid\":501,\"liveProviderSends\":0,\"acceptedReviewInserted\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "b9c67125775d98a8633e1386d8d331a81b2931d8900dcd87f8341964d4ef4b70",
+              "d7ec96d6ac8073ffbbd1b42635ec2655a4924b79e474fe5120634c884b1060b3",
+              "2a9bc089dd9231a1e4ad50847ab6df59b780ce6968f3a47ccf683ca47688b858",
+              "f77baa2044aed171ee617da4a47d267894f917db148ff2b494cf00d672601f27",
+              "7954862a19f39a8c230fdace11fddb651b221ef7c996da3d7255310719517e63"
+            ]
+          }
+        },
+        {
+          "id": "cadence.owner-run-pending",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T03:31:54.145Z",
+          "reasonCode": "DURABLE_CADENCE_OWNER_FLOOR_PASS",
+          "prerequisite": "{\"caseId\":\"durable-cadence-owner-floor\",\"phase\":\"durable-cadence-owner-floor\",\"evidence\":{\"runRef\":{\"runId\":\"e6d64a1e-dd77-4615-be43-95b30a6b85e5\",\"principalId\":\"154b6a66-a9df-438c-bf28-72e23d54559e\",\"profile\":\"toy\",\"sessionId\":\"afd44206-938a-4f0a-84d2-5ae5c9940f2d\",\"taskId\":null,\"turnId\":null,\"contractId\":\"71f13f0c-6c57-4245-bf0b-941ef1c87489\",\"contractVersion\":1,\"generation\":\"1\"},\"pendingResult\":{\"state\":\"pending\",\"run\":{\"runId\":\"e6d64a1e-dd77-4615-be43-95b30a6b85e5\",\"principalId\":\"154b6a66-a9df-438c-bf28-72e23d54559e\",\"profile\":\"toy\",\"sessionId\":\"afd44206-938a-4f0a-84d2-5ae5c9940f2d\",\"taskId\":null,\"turnId\":null,\"contractId\":\"71f13f0c-6c57-4245-bf0b-941ef1c87489\",\"contractVersion\":1,\"generation\":\"1\"},\"reason\":\"awaiting_terminal\",\"retryAt\":null},\"originalArmSlots\":3360,\"experimentalArmSlots\":3360,\"originalSweepRejected\":true,\"aiRequiredSweepRejected\":true,\"sweptState\":\"swept\",\"fakeArmProjectionRowsUnlinked\":true},\"actualUid\":501,\"liveProviderSends\":0,\"acceptedReviewInserted\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "b9c67125775d98a8633e1386d8d331a81b2931d8900dcd87f8341964d4ef4b70",
+              "d7ec96d6ac8073ffbbd1b42635ec2655a4924b79e474fe5120634c884b1060b3",
+              "2a9bc089dd9231a1e4ad50847ab6df59b780ce6968f3a47ccf683ca47688b858",
+              "f77baa2044aed171ee617da4a47d267894f917db148ff2b494cf00d672601f27",
+              "7954862a19f39a8c230fdace11fddb651b221ef7c996da3d7255310719517e63"
+            ]
+          }
+        },
+        {
+          "id": "cadence.obligations-readonly-projection",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T03:31:54.145Z",
+          "reasonCode": "DURABLE_CADENCE_OWNER_FLOOR_PASS",
+          "prerequisite": "{\"caseId\":\"durable-cadence-owner-floor\",\"phase\":\"durable-cadence-owner-floor\",\"evidence\":{\"counts\":{\"scheduled\":\"1\",\"running\":\"1\",\"swept\":\"1\",\"reviewed\":\"0\",\"deferred_quota\":\"0\",\"deferred_auth\":\"0\",\"deferred_network\":\"0\",\"deferred_busy\":\"0\",\"maintenance\":\"0\",\"failed\":\"0\",\"missed\":\"0\",\"coalesced_after_outage\":\"0\"},\"acceptedAiReviewed\":\"0\",\"swept\":\"1\",\"rows\":[{\"jobKey\":\"capacity.full-review\",\"slotAt\":\"2026-10-19T00:00:00.000Z\",\"state\":\"scheduled\",\"runId\":null,\"reviewId\":null,\"startedAt\":null,\"inferenceDoneAt\":null,\"reviewedAt\":null},{\"jobKey\":\"gate.owner-floor.517aa9f0-bd8d-48ce-8419-a3f3b714aa1b\",\"slotAt\":\"2026-10-19T00:00:00.000Z\",\"state\":\"running\",\"runId\":\"e6d64a1e-dd77-4615-be43-95b30a6b85e5\",\"reviewId\":null,\"startedAt\":\"2026-10-19T00:00:00.000Z\",\"inferenceDoneAt\":null,\"reviewedAt\":null},{\"jobKey\":\"capacity.full-review\",\"slotAt\":\"2026-10-19T00:03:00.000Z\",\"state\":\"swept\",\"runId\":null,\"reviewId\":null,\"startedAt\":null,\"inferenceDoneAt\":null,\"reviewedAt\":null},{\"jobKey\":\"capacity.full-review\",\"slotAt\":\"2026-10-12T00:00:00.000Z\",\"state\":\"scheduled\",\"runId\":null,\"reviewId\":null,\"startedAt\":null,\"inferenceDoneAt\":null,\"reviewedAt\":null},{\"jobKey\":\"capacity.full-review\",\"slotAt\":\"2026-10-12T00:03:00.000Z\",\"state\":\"scheduled\",\"runId\":null,\"reviewId\":null,\"startedAt\":null,\"inferenceDoneAt\":null,\"reviewedAt\":null}],\"role\":\"toy_si_obligations_reader\",\"readThroughProjectionView\":true},\"actualUid\":501,\"liveProviderSends\":0,\"acceptedReviewInserted\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "b9c67125775d98a8633e1386d8d331a81b2931d8900dcd87f8341964d4ef4b70",
+              "d7ec96d6ac8073ffbbd1b42635ec2655a4924b79e474fe5120634c884b1060b3",
+              "2a9bc089dd9231a1e4ad50847ab6df59b780ce6968f3a47ccf683ca47688b858",
+              "f77baa2044aed171ee617da4a47d267894f917db148ff2b494cf00d672601f27",
+              "7954862a19f39a8c230fdace11fddb651b221ef7c996da3d7255310719517e63"
+            ]
+          }
+        },
+        {
+          "id": "cadence.coverage-distinction",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T03:31:54.157Z",
+          "reasonCode": "DURABLE_CADENCE_OWNER_FLOOR_PASS",
+          "prerequisite": "{\"caseId\":\"durable-cadence-owner-floor\",\"phase\":\"durable-cadence-owner-floor\",\"evidence\":{\"swept\":\"1\",\"acceptedAiReviewed\":\"0\",\"reviewed\":\"0\",\"pendingReview\":true,\"acceptedReviewRowsBefore\":\"0\",\"acceptedReviewRowsAfter\":\"0\",\"trialWindowClosed\":true},\"actualUid\":501,\"liveProviderSends\":0,\"acceptedReviewInserted\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "b9c67125775d98a8633e1386d8d331a81b2931d8900dcd87f8341964d4ef4b70",
+              "d7ec96d6ac8073ffbbd1b42635ec2655a4924b79e474fe5120634c884b1060b3",
+              "2a9bc089dd9231a1e4ad50847ab6df59b780ce6968f3a47ccf683ca47688b858",
+              "f77baa2044aed171ee617da4a47d267894f917db148ff2b494cf00d672601f27",
+              "7954862a19f39a8c230fdace11fddb651b221ef7c996da3d7255310719517e63"
+            ]
+          }
+        }
+      ],
+      "resultState": "NOT_IMPLEMENTED",
+      "complete": false
+    }
+  ],
+  "up": {
+    "exitCode": 0,
+    "path": "build/evidence/R0.10/cadence-owner-second-cli/up.json",
+    "sha256": "0c3020fd501c827549b23c7e7a181f2c428e2f3e22d83e7b13f7d78e80d36772"
+  },
+  "stackId": "fffc80ae-6bd1-4487-a110-39554b66c7ca",
+  "down": {
+    "exitCode": 0,
+    "path": "build/evidence/R0.10/cadence-owner-second-cli/down.json",
+    "sha256": "854de6219b6cf94345c0c5b3f634a6711f4cf91647b7b27a41eb7860d94c1719"
+  },
+  "teardown": {
+    "stackId": "fffc80ae-6bd1-4487-a110-39554b66c7ca",
+    "checkpointRefs": [],
+    "fenceRefs": [],
+    "stoppedResourceRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "fffc80ae-6bd1-4487-a110-39554b66c7ca"
+      }
+    ],
+    "retainedArtifactRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "fffc80ae-6bd1-4487-a110-39554b66c7ca"
+      }
+    ],
+    "unresolvedResourceRefs": [],
+    "complete": true
+  }
+}

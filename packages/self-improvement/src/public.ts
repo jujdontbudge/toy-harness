@@ -2,6 +2,7 @@ export type { ModuleId } from "@toy/contracts";
 export { EngineeringControl } from "./engineering-control.js";
 export { ModelAdmission } from "./model-admission.js";
 export { CapacityTrialJournal } from "./capacity-trial.js";
+export { DurableCadenceOwner } from "./durable-cadence.js";
 import { opsErrorMessages, registeredProbeInputSchema } from "@toy/contracts";
 import type { OpsControlContextV1, RegisteredProbeInputV1, RegisteredProbeOperationV1, RegisteredProbeShowInputV1, Result } from "@toy/contracts";
 import { OpsTestStack, QueueFaultProbe, TestProbeControl } from "@toy/ops/public";
@@ -9,6 +10,7 @@ import { referenceCheck } from "./reference-check.js";
 import { accountingProbe } from "./accounting-probe.js";
 import { componentComparisonProbe } from "./component-comparison-probe.js";
 import { capacityTrialProbe } from "./capacity-trial-probe.js";
+import { durableCadenceProbe } from "./durable-cadence-probe.js";
 import { dtoRoundtripProbe } from "./dto-roundtrip-probe.js";
 import { accountingTestConnection, withAccountingFixture } from "./accounting-postgres.js";
 
@@ -18,6 +20,7 @@ export const ReplayEnvironment = {
     if (!owned.ok) return owned;
     if (!registeredProbeInputSchema.safeParse(input).success) return { ok: false, error: { module: "ops", code: "INVALID_INPUT", message: opsErrorMessages.INVALID_INPUT, retryable: false } };
     if (input.probeId === "AT-hermes-config-50") return dtoRoundtripProbe(input, context);
+    if (["AT-hermes-config-69", "AT-activity-focus-86"].includes(input.probeId)) return durableCadenceProbe(input, context);
     if (["AT-obligations-74", "AT-self-improvement-54", "AT-sources-188", "AT-sources-190", "AT-lifestore-45"].includes(input.probeId)) return componentComparisonProbe(input, context);
     if (input.caseId === "model-admission" || (input.caseId === undefined && ["AT-ops-49", "AT-ops-51", "AT-ops-52"].includes(input.probeId))) return accountingProbe(input, context);
     if (input.caseId === "capacity-trial" || (input.caseId === undefined && ["AT-ops-47", "AT-self-improvement-59", "AT-self-improvement-60", "AT-RESEARCH-REGISTER-6"].includes(input.probeId))) return capacityTrialProbe(input, context);

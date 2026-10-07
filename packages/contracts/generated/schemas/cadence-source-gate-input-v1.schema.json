@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "files": {
+      "minItems": 1,
+      "maxItems": 1000,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "contents": {
+            "type": "string",
+            "maxLength": 2000000
+          }
+        },
+        "required": [
+          "path",
+          "contents"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "files"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:CadenceSourceGateInputV1"
+}

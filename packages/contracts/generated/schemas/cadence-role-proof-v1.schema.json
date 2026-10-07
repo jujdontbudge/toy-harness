@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "ownerEffectiveRole": {
+      "type": "string"
+    },
+    "readerEffectiveRole": {
+      "type": "string"
+    },
+    "readerCanSelectProjection": {
+      "type": "boolean"
+    },
+    "ownerPrivileges": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "enum": [
+          "cadence_slot",
+          "run",
+          "review"
+        ]
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "select": {
+            "type": "boolean"
+          },
+          "insert": {
+            "type": "boolean"
+          },
+          "update": {
+            "type": "boolean"
+          },
+          "delete": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "select",
+          "insert",
+          "update",
+          "delete"
+        ],
+        "additionalProperties": false
+      },
+      "required": [
+        "cadence_slot",
+        "run",
+        "review"
+      ]
+    },
+    "readerPrivileges": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "enum": [
+          "cadence_slot",
+          "run",
+          "review"
+        ]
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "select": {
+            "type": "boolean"
+          },
+          "insert": {
+            "type": "boolean"
+          },
+          "update": {
+            "type": "boolean"
+          },
+          "delete": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "select",
+          "insert",
+          "update",
+          "delete"
+        ],
+        "additionalProperties": false
+      },
+      "required": [
+        "cadence_slot",
+        "run",
+        "review"
+      ]
+    },
+    "readerWriteDenials": {
+      "minItems": 9,
+      "maxItems": 9,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "table": {
+            "type": "string",
+            "enum": [
+              "cadence_slot",
+              "run",
+              "review"
+            ]
+          },
+          "operation": {
+            "type": "string",
+            "enum": [
+              "INSERT",
+              "UPDATE",
+              "DELETE"
+            ]
+          },
+          "sqlState": {
+            "type": "string",
+            "const": "42501"
+          }
+        },
+        "required": [
+          "table",
+          "operation",
+          "sqlState"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "ownerEffectiveRole",
+    "readerEffectiveRole",
+    "readerCanSelectProjection",
+    "ownerPrivileges",
+    "readerPrivileges",
+    "readerWriteDenials"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:CadenceRoleProofV1"
+}

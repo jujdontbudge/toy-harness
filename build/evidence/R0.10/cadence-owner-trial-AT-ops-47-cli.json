@@ -1,0 +1,380 @@
+{
+  "recordedAt": "2026-10-07T03:38:44.703Z",
+  "rung": "CLI",
+  "unfiltered": true,
+  "wholeATComplete": false,
+  "liveProviderSends": 0,
+  "nativeAttempt": null,
+  "admissionEvidence": "build/evidence/R0.10/cadence-owner-trial-AT-ops-47-doctor.json",
+  "probes": [
+    {
+      "probeId": "AT-cli-4",
+      "run": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.10/cadence-owner-trial-AT-ops-47-cli/AT-cli-4-run.json",
+        "sha256": "deb9cd4e4623f3965dfb36c74008e2875aea2f66db6c784aaf02f7bda9f4fc16"
+      },
+      "operationId": "24dcf095-edbe-40a3-9872-2382544798c9",
+      "show": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.10/cadence-owner-trial-AT-ops-47-cli/AT-cli-4-show.json",
+        "sha256": "8b8bdb709a0edf15b7fd84fdcd54f9cb169595b5f173a01cf18c36326355a66c"
+      },
+      "sameData": true,
+      "sourceRegistration": null,
+      "registrationExact": false,
+      "cases": [
+        {
+          "id": "bootstrap.fixture-runtime",
+          "owner": "ops",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T03:38:45.127Z",
+          "reasonCode": "TRUSTED_FIXTURE_LIFECYCLE_SUBSET",
+          "prerequisite": "{\"stackId\":\"74a7d15e-8f59-4d1a-bf17-bdd9f0435097\",\"nonce\":\"431cc164-1e7d-4bfa-a388-4b08e3265a29\",\"pid\":41710,\"state\":\"running\",\"checkedAt\":\"2026-10-07T03:38:45.060Z\",\"heartbeatCount\":\"2\"}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": []
+          }
+        }
+      ],
+      "resultState": "NOT_IMPLEMENTED",
+      "complete": false
+    },
+    {
+      "probeId": "AT-ops-47",
+      "run": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.10/cadence-owner-trial-AT-ops-47-cli/AT-ops-47-run.json",
+        "sha256": "202402e9060faf8d09846a31e4996820c517379ede769af94260263684dabb4a"
+      },
+      "operationId": "49a265d6-821f-490f-bc46-bcfd5418da5a",
+      "show": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.10/cadence-owner-trial-AT-ops-47-cli/AT-ops-47-show.json",
+        "sha256": "cb6dc84c5b63fc29959a67d72b9b1fdb0f2fef8ba531c3d6c3e3aac75da919ed"
+      },
+      "sameData": true,
+      "sourceRegistration": {
+        "id": "AT-ops-47",
+        "rung": "CLI",
+        "sourceAssertionHash": "a5197df8ac45e7cc1e660210288ad85e534204870ede21d629ca12fa19e4e799",
+        "commandId": "probe.run",
+        "scenarioId": "capacity-trial",
+        "owner": "self-improvement",
+        "firstRelease": "R0",
+        "kind": "behavioral",
+        "mandatoryCases": [
+          {
+            "id": "capacity-trial",
+            "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+            "phase": "capacity-trial"
+          }
+        ],
+        "trigger": "Run the existing fourteen fixture-only journal diagnostics through the real public owner and PostgreSQL; elapsed native and whole acceptance remain incomplete.",
+        "faultControls": [
+          {
+            "id": "seeded-fake-clock",
+            "seam": "clock",
+            "affectedPhases": [
+              "capacity-trial"
+            ]
+          },
+          {
+            "id": "native-postgresql-restart",
+            "seam": "os",
+            "affectedPhases": [
+              "capacity-trial"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "public-journal-readbacks",
+            "independentReader": "capacityTrialProbe: immutable 3360-slot arm bindings, public reports, conflict refusals and retained outcomes",
+            "caseIds": [
+              "capacity-trial"
+            ]
+          },
+          {
+            "id": "restart-and-independent-arm-readbacks",
+            "independentReader": "CapacityTrialJournal.withTest: real PostgreSQL restart and separate original/experimental arm reports",
+            "caseIds": [
+              "capacity-trial"
+            ]
+          },
+          {
+            "id": "stored-cli-readback",
+            "independentReader": "toy probe.show and stack.down: exact persisted operation and complete owned-world teardown",
+            "caseIds": [
+              "capacity-trial"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot inspect pre-build immutable journal identities or drive the native PostgreSQL restart boundary. The CLI reaches the real journal owner with a fixed external fake clock; no elapsed native trial is certified."
+      },
+      "registrationExact": true,
+      "cases": [
+        {
+          "id": "capacity.trial-journal",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T03:38:46.217Z",
+          "reasonCode": "REAL_TRIAL_JOURNAL_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"name\":\"complete-anchored-original-denominator\",\"evidence\":{\"report\":{\"arm\":{\"armId\":\"9a580ef0-edac-4867-a8d6-eaefa614f76e\",\"requestId\":\"50215c8d-4d2c-4947-bd7a-8fd5a289d65e\",\"jobKey\":\"capacity.full-review\",\"anchor\":\"2026-10-05T00:00:00.000Z\",\"designation\":\"original\",\"aiEverySeconds\":180,\"clock\":\"fake_model\",\"policyDigest\":\"547c192157c78e7d20296793c224f1514ab8fade5a8633b43b5b0699e0ff2c46\",\"configurationDigest\":\"843ee083dbba1f6e320f67e7f7e7f44bd8eebcfc5623138c16c77be6d0ae4170\",\"routeDigest\":\"b9349f6afade57d7b86de23322baaeeb21f1c3956f5be32222d660566afc6ad8\",\"hostDigest\":\"f66caaf36ac1a87532d76fd6bc503cad2c54b4b41d6c660ace1ee44a48a10e32\",\"workloadDigest\":\"81d596bf2066f0eb843f22dfae55e39dad3c72d7645873a1cefc5f5eaf76a9fe\"},\"endsAt\":\"2026-10-12T00:00:00.000Z\",\"denominator\":3360,\"cadenceSeconds\":180,\"totalSlots\":3360,\"sequenceIntact\":true,\"firstSlotAt\":\"2026-10-05T00:00:00.000Z\",\"lastSlotAt\":\"2026-10-11T23:57:00.000Z\",\"counts\":{\"scheduled\":3360,\"running\":0,\"swept\":0,\"reviewed\":0,\"deferred_quota\":0,\"deferred_auth\":0,\"deferred_network\":0,\"deferred_busy\":0,\"maintenance\":0,\"failed\":0,\"missed\":0,\"coalesced_after_outage\":0},\"reasons\":[],\"acceptanceComplete\":false,\"fullCadenceVerdict\":\"NOT_EVALUATED\"},\"firstSlot\":{\"armId\":\"9a580ef0-edac-4867-a8d6-eaefa614f76e\",\"index\":0,\"slotAt\":\"2026-10-05T00:00:00.000Z\",\"state\":\"scheduled\",\"reason\":null,\"updatedAt\":\"2026-10-05T00:00:00.000Z\"},\"lastSlot\":{\"armId\":\"9a580ef0-edac-4867-a8d6-eaefa614f76e\",\"index\":3359,\"slotAt\":\"2026-10-11T23:57:00.000Z\",\"state\":\"scheduled\",\"reason\":null,\"updatedAt\":\"2026-10-05T00:00:00.000Z\"}},\"clock\":\"fake_model\",\"actualUid\":501,\"liveProviderSends\":0,\"liveTrialStarted\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "57ec71ae9f7a28501bc74234bd110c9306ce1eb67a9482be92bbd1a940e8d165"
+            ]
+          }
+        },
+        {
+          "id": "capacity.trial-journal",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T03:38:46.245Z",
+          "reasonCode": "REAL_TRIAL_JOURNAL_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"name\":\"same-bindings-idempotent\",\"evidence\":{\"arm\":{\"armId\":\"9a580ef0-edac-4867-a8d6-eaefa614f76e\",\"requestId\":\"50215c8d-4d2c-4947-bd7a-8fd5a289d65e\",\"jobKey\":\"capacity.full-review\",\"anchor\":\"2026-10-05T00:00:00.000Z\",\"designation\":\"original\",\"aiEverySeconds\":180,\"clock\":\"fake_model\",\"policyDigest\":\"547c192157c78e7d20296793c224f1514ab8fade5a8633b43b5b0699e0ff2c46\",\"configurationDigest\":\"843ee083dbba1f6e320f67e7f7e7f44bd8eebcfc5623138c16c77be6d0ae4170\",\"routeDigest\":\"b9349f6afade57d7b86de23322baaeeb21f1c3956f5be32222d660566afc6ad8\",\"hostDigest\":\"f66caaf36ac1a87532d76fd6bc503cad2c54b4b41d6c660ace1ee44a48a10e32\",\"workloadDigest\":\"81d596bf2066f0eb843f22dfae55e39dad3c72d7645873a1cefc5f5eaf76a9fe\"},\"endsAt\":\"2026-10-12T00:00:00.000Z\",\"denominator\":3360,\"cadenceSeconds\":180,\"totalSlots\":3360,\"sequenceIntact\":true,\"firstSlotAt\":\"2026-10-05T00:00:00.000Z\",\"lastSlotAt\":\"2026-10-11T23:57:00.000Z\",\"counts\":{\"scheduled\":3360,\"running\":0,\"swept\":0,\"reviewed\":0,\"deferred_quota\":0,\"deferred_auth\":0,\"deferred_network\":0,\"deferred_busy\":0,\"maintenance\":0,\"failed\":0,\"missed\":0,\"coalesced_after_outage\":0},\"reasons\":[],\"acceptanceComplete\":false,\"fullCadenceVerdict\":\"NOT_EVALUATED\"},\"clock\":\"fake_model\",\"actualUid\":501,\"liveProviderSends\":0,\"liveTrialStarted\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "57ec71ae9f7a28501bc74234bd110c9306ce1eb67a9482be92bbd1a940e8d165"
+            ]
+          }
+        },
+        {
+          "id": "capacity.trial-journal",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T03:38:46.274Z",
+          "reasonCode": "REAL_TRIAL_JOURNAL_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"name\":\"arm-rebinding-refused\",\"evidence\":{\"refused\":true},\"clock\":\"fake_model\",\"actualUid\":501,\"liveProviderSends\":0,\"liveTrialStarted\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "57ec71ae9f7a28501bc74234bd110c9306ce1eb67a9482be92bbd1a940e8d165"
+            ]
+          }
+        },
+        {
+          "id": "capacity.trial-journal",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T03:38:46.285Z",
+          "reasonCode": "REAL_TRIAL_JOURNAL_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"name\":\"request-rebinding-refused\",\"evidence\":{\"refused\":true},\"clock\":\"fake_model\",\"actualUid\":501,\"liveProviderSends\":0,\"liveTrialStarted\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "57ec71ae9f7a28501bc74234bd110c9306ce1eb67a9482be92bbd1a940e8d165"
+            ]
+          }
+        },
+        {
+          "id": "capacity.trial-journal",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T03:38:46.323Z",
+          "reasonCode": "REAL_TRIAL_JOURNAL_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"name\":\"overlapping-arm-refused\",\"evidence\":{\"refused\":true},\"clock\":\"fake_model\",\"actualUid\":501,\"liveProviderSends\":0,\"liveTrialStarted\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "57ec71ae9f7a28501bc74234bd110c9306ce1eb67a9482be92bbd1a940e8d165"
+            ]
+          }
+        },
+        {
+          "id": "capacity.trial-journal",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T03:38:46.323Z",
+          "reasonCode": "REAL_TRIAL_JOURNAL_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"name\":\"original-cadence-cannot-be-reduced\",\"evidence\":{\"refused\":true},\"clock\":\"fake_model\",\"actualUid\":501,\"liveProviderSends\":0,\"liveTrialStarted\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "57ec71ae9f7a28501bc74234bd110c9306ce1eb67a9482be92bbd1a940e8d165"
+            ]
+          }
+        },
+        {
+          "id": "capacity.trial-journal",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T03:38:46.375Z",
+          "reasonCode": "REAL_TRIAL_JOURNAL_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"name\":\"quota-deferral-retained\",\"evidence\":{\"armId\":\"9a580ef0-edac-4867-a8d6-eaefa614f76e\",\"index\":0,\"slotAt\":\"2026-10-05T00:00:00.000Z\",\"state\":\"deferred_quota\",\"reason\":\"WEEKLY_THRESHOLD\",\"updatedAt\":\"2026-10-05T00:00:00.000Z\"},\"clock\":\"fake_model\",\"actualUid\":501,\"liveProviderSends\":0,\"liveTrialStarted\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "57ec71ae9f7a28501bc74234bd110c9306ce1eb67a9482be92bbd1a940e8d165"
+            ]
+          }
+        },
+        {
+          "id": "capacity.trial-journal",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T03:38:46.477Z",
+          "reasonCode": "REAL_TRIAL_JOURNAL_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"name\":\"expired-opportunity-remains-missed\",\"evidence\":{\"report\":{\"arm\":{\"armId\":\"9a580ef0-edac-4867-a8d6-eaefa614f76e\",\"requestId\":\"50215c8d-4d2c-4947-bd7a-8fd5a289d65e\",\"jobKey\":\"capacity.full-review\",\"anchor\":\"2026-10-05T00:00:00.000Z\",\"designation\":\"original\",\"aiEverySeconds\":180,\"clock\":\"fake_model\",\"policyDigest\":\"547c192157c78e7d20296793c224f1514ab8fade5a8633b43b5b0699e0ff2c46\",\"configurationDigest\":\"843ee083dbba1f6e320f67e7f7e7f44bd8eebcfc5623138c16c77be6d0ae4170\",\"routeDigest\":\"b9349f6afade57d7b86de23322baaeeb21f1c3956f5be32222d660566afc6ad8\",\"hostDigest\":\"f66caaf36ac1a87532d76fd6bc503cad2c54b4b41d6c660ace1ee44a48a10e32\",\"workloadDigest\":\"81d596bf2066f0eb843f22dfae55e39dad3c72d7645873a1cefc5f5eaf76a9fe\"},\"endsAt\":\"2026-10-12T00:00:00.000Z\",\"denominator\":3360,\"cadenceSeconds\":180,\"totalSlots\":3360,\"sequenceIntact\":true,\"firstSlotAt\":\"2026-10-05T00:00:00.000Z\",\"lastSlotAt\":\"2026-10-11T23:57:00.000Z\",\"counts\":{\"scheduled\":3357,\"running\":0,\"swept\":0,\"reviewed\":0,\"deferred_quota\":1,\"deferred_auth\":0,\"deferred_network\":0,\"deferred_busy\":0,\"maintenance\":0,\"failed\":1,\"missed\":1,\"coalesced_after_outage\":0},\"reasons\":[{\"reason\":\"MODEL_UNAVAILABLE\",\"count\":1},{\"reason\":\"SLOT_BOUNDARY_PASSED\",\"count\":1},{\"reason\":\"WEEKLY_THRESHOLD\",\"count\":1}],\"acceptanceComplete\":false,\"fullCadenceVerdict\":\"NOT_EVALUATED\"},\"missed\":{\"armId\":\"9a580ef0-edac-4867-a8d6-eaefa614f76e\",\"index\":2,\"slotAt\":\"2026-10-05T00:06:00.000Z\",\"state\":\"missed\",\"reason\":\"SLOT_BOUNDARY_PASSED\",\"updatedAt\":\"2026-10-05T00:09:00.000Z\"}},\"clock\":\"fake_model\",\"actualUid\":501,\"liveProviderSends\":0,\"liveTrialStarted\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "57ec71ae9f7a28501bc74234bd110c9306ce1eb67a9482be92bbd1a940e8d165"
+            ]
+          }
+        },
+        {
+          "id": "capacity.trial-journal",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T03:38:46.503Z",
+          "reasonCode": "REAL_TRIAL_JOURNAL_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"name\":\"past-outcome-replacement-refused\",\"evidence\":{\"refused\":true},\"clock\":\"fake_model\",\"actualUid\":501,\"liveProviderSends\":0,\"liveTrialStarted\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "57ec71ae9f7a28501bc74234bd110c9306ce1eb67a9482be92bbd1a940e8d165"
+            ]
+          }
+        },
+        {
+          "id": "capacity.trial-journal",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T03:38:46.549Z",
+          "reasonCode": "REAL_TRIAL_JOURNAL_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"name\":\"reconciliation-idempotent\",\"evidence\":{\"arm\":{\"armId\":\"9a580ef0-edac-4867-a8d6-eaefa614f76e\",\"requestId\":\"50215c8d-4d2c-4947-bd7a-8fd5a289d65e\",\"jobKey\":\"capacity.full-review\",\"anchor\":\"2026-10-05T00:00:00.000Z\",\"designation\":\"original\",\"aiEverySeconds\":180,\"clock\":\"fake_model\",\"policyDigest\":\"547c192157c78e7d20296793c224f1514ab8fade5a8633b43b5b0699e0ff2c46\",\"configurationDigest\":\"843ee083dbba1f6e320f67e7f7e7f44bd8eebcfc5623138c16c77be6d0ae4170\",\"routeDigest\":\"b9349f6afade57d7b86de23322baaeeb21f1c3956f5be32222d660566afc6ad8\",\"hostDigest\":\"f66caaf36ac1a87532d76fd6bc503cad2c54b4b41d6c660ace1ee44a48a10e32\",\"workloadDigest\":\"81d596bf2066f0eb843f22dfae55e39dad3c72d7645873a1cefc5f5eaf76a9fe\"},\"endsAt\":\"2026-10-12T00:00:00.000Z\",\"denominator\":3360,\"cadenceSeconds\":180,\"totalSlots\":3360,\"sequenceIntact\":true,\"firstSlotAt\":\"2026-10-05T00:00:00.000Z\",\"lastSlotAt\":\"2026-10-11T23:57:00.000Z\",\"counts\":{\"scheduled\":3357,\"running\":0,\"swept\":0,\"reviewed\":0,\"deferred_quota\":1,\"deferred_auth\":0,\"deferred_network\":0,\"deferred_busy\":0,\"maintenance\":0,\"failed\":1,\"missed\":1,\"coalesced_after_outage\":0},\"reasons\":[{\"reason\":\"MODEL_UNAVAILABLE\",\"count\":1},{\"reason\":\"SLOT_BOUNDARY_PASSED\",\"count\":1},{\"reason\":\"WEEKLY_THRESHOLD\",\"count\":1}],\"acceptanceComplete\":false,\"fullCadenceVerdict\":\"NOT_EVALUATED\"},\"clock\":\"fake_model\",\"actualUid\":501,\"liveProviderSends\":0,\"liveTrialStarted\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "57ec71ae9f7a28501bc74234bd110c9306ce1eb67a9482be92bbd1a940e8d165"
+            ]
+          }
+        },
+        {
+          "id": "capacity.trial-journal",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T03:38:46.721Z",
+          "reasonCode": "REAL_TRIAL_JOURNAL_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"name\":\"real-postgres-restart-preserves-slots\",\"evidence\":{\"arm\":{\"armId\":\"9a580ef0-edac-4867-a8d6-eaefa614f76e\",\"requestId\":\"50215c8d-4d2c-4947-bd7a-8fd5a289d65e\",\"jobKey\":\"capacity.full-review\",\"anchor\":\"2026-10-05T00:00:00.000Z\",\"designation\":\"original\",\"aiEverySeconds\":180,\"clock\":\"fake_model\",\"policyDigest\":\"547c192157c78e7d20296793c224f1514ab8fade5a8633b43b5b0699e0ff2c46\",\"configurationDigest\":\"843ee083dbba1f6e320f67e7f7e7f44bd8eebcfc5623138c16c77be6d0ae4170\",\"routeDigest\":\"b9349f6afade57d7b86de23322baaeeb21f1c3956f5be32222d660566afc6ad8\",\"hostDigest\":\"f66caaf36ac1a87532d76fd6bc503cad2c54b4b41d6c660ace1ee44a48a10e32\",\"workloadDigest\":\"81d596bf2066f0eb843f22dfae55e39dad3c72d7645873a1cefc5f5eaf76a9fe\"},\"endsAt\":\"2026-10-12T00:00:00.000Z\",\"denominator\":3360,\"cadenceSeconds\":180,\"totalSlots\":3360,\"sequenceIntact\":true,\"firstSlotAt\":\"2026-10-05T00:00:00.000Z\",\"lastSlotAt\":\"2026-10-11T23:57:00.000Z\",\"counts\":{\"scheduled\":3357,\"running\":0,\"swept\":0,\"reviewed\":0,\"deferred_quota\":1,\"deferred_auth\":0,\"deferred_network\":0,\"deferred_busy\":0,\"maintenance\":0,\"failed\":1,\"missed\":1,\"coalesced_after_outage\":0},\"reasons\":[{\"reason\":\"MODEL_UNAVAILABLE\",\"count\":1},{\"reason\":\"SLOT_BOUNDARY_PASSED\",\"count\":1},{\"reason\":\"WEEKLY_THRESHOLD\",\"count\":1}],\"acceptanceComplete\":false,\"fullCadenceVerdict\":\"NOT_EVALUATED\"},\"clock\":\"fake_model\",\"actualUid\":501,\"liveProviderSends\":0,\"liveTrialStarted\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "57ec71ae9f7a28501bc74234bd110c9306ce1eb67a9482be92bbd1a940e8d165"
+            ]
+          }
+        },
+        {
+          "id": "capacity.trial-journal",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T03:38:46.799Z",
+          "reasonCode": "REAL_TRIAL_JOURNAL_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"name\":\"simulated-week-does-not-prove-ai-coverage\",\"evidence\":{\"arm\":{\"armId\":\"9a580ef0-edac-4867-a8d6-eaefa614f76e\",\"requestId\":\"50215c8d-4d2c-4947-bd7a-8fd5a289d65e\",\"jobKey\":\"capacity.full-review\",\"anchor\":\"2026-10-05T00:00:00.000Z\",\"designation\":\"original\",\"aiEverySeconds\":180,\"clock\":\"fake_model\",\"policyDigest\":\"547c192157c78e7d20296793c224f1514ab8fade5a8633b43b5b0699e0ff2c46\",\"configurationDigest\":\"843ee083dbba1f6e320f67e7f7e7f44bd8eebcfc5623138c16c77be6d0ae4170\",\"routeDigest\":\"b9349f6afade57d7b86de23322baaeeb21f1c3956f5be32222d660566afc6ad8\",\"hostDigest\":\"f66caaf36ac1a87532d76fd6bc503cad2c54b4b41d6c660ace1ee44a48a10e32\",\"workloadDigest\":\"81d596bf2066f0eb843f22dfae55e39dad3c72d7645873a1cefc5f5eaf76a9fe\"},\"endsAt\":\"2026-10-12T00:00:00.000Z\",\"denominator\":3360,\"cadenceSeconds\":180,\"totalSlots\":3360,\"sequenceIntact\":true,\"firstSlotAt\":\"2026-10-05T00:00:00.000Z\",\"lastSlotAt\":\"2026-10-11T23:57:00.000Z\",\"counts\":{\"scheduled\":0,\"running\":0,\"swept\":0,\"reviewed\":0,\"deferred_quota\":1,\"deferred_auth\":0,\"deferred_network\":0,\"deferred_busy\":0,\"maintenance\":0,\"failed\":1,\"missed\":3358,\"coalesced_after_outage\":0},\"reasons\":[{\"reason\":\"MODEL_UNAVAILABLE\",\"count\":1},{\"reason\":\"SLOT_BOUNDARY_PASSED\",\"count\":3358},{\"reason\":\"WEEKLY_THRESHOLD\",\"count\":1}],\"acceptanceComplete\":false,\"fullCadenceVerdict\":\"NOT_EVALUATED\"},\"clock\":\"fake_model\",\"actualUid\":501,\"liveProviderSends\":0,\"liveTrialStarted\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "57ec71ae9f7a28501bc74234bd110c9306ce1eb67a9482be92bbd1a940e8d165"
+            ]
+          }
+        },
+        {
+          "id": "capacity.trial-journal",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T03:38:46.884Z",
+          "reasonCode": "REAL_TRIAL_JOURNAL_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"name\":\"experimental-arm-has-separate-denominator\",\"evidence\":{\"arm\":{\"armId\":\"4e4dbc56-2899-4654-9d21-4725e9743768\",\"requestId\":\"e88f862a-3037-4ea9-8039-84d1c382f311\",\"jobKey\":\"capacity.full-review\",\"anchor\":\"2026-10-12T00:00:00.000Z\",\"designation\":\"experimental\",\"aiEverySeconds\":900,\"clock\":\"fake_model\",\"policyDigest\":\"547c192157c78e7d20296793c224f1514ab8fade5a8633b43b5b0699e0ff2c46\",\"configurationDigest\":\"97fed04225f3c74a98d8e684c58c2842cf11f6501553294a090fa24d0977106f\",\"routeDigest\":\"b9349f6afade57d7b86de23322baaeeb21f1c3956f5be32222d660566afc6ad8\",\"hostDigest\":\"f66caaf36ac1a87532d76fd6bc503cad2c54b4b41d6c660ace1ee44a48a10e32\",\"workloadDigest\":\"81d596bf2066f0eb843f22dfae55e39dad3c72d7645873a1cefc5f5eaf76a9fe\"},\"endsAt\":\"2026-10-19T00:00:00.000Z\",\"denominator\":3360,\"cadenceSeconds\":180,\"totalSlots\":3360,\"sequenceIntact\":true,\"firstSlotAt\":\"2026-10-12T00:00:00.000Z\",\"lastSlotAt\":\"2026-10-18T23:57:00.000Z\",\"counts\":{\"scheduled\":3360,\"running\":0,\"swept\":0,\"reviewed\":0,\"deferred_quota\":0,\"deferred_auth\":0,\"deferred_network\":0,\"deferred_busy\":0,\"maintenance\":0,\"failed\":0,\"missed\":0,\"coalesced_after_outage\":0},\"reasons\":[],\"acceptanceComplete\":false,\"fullCadenceVerdict\":\"NOT_EVALUATED\"},\"clock\":\"fake_model\",\"actualUid\":501,\"liveProviderSends\":0,\"liveTrialStarted\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "57ec71ae9f7a28501bc74234bd110c9306ce1eb67a9482be92bbd1a940e8d165"
+            ]
+          }
+        },
+        {
+          "id": "capacity.trial-journal",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T03:38:46.902Z",
+          "reasonCode": "REAL_TRIAL_JOURNAL_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"name\":\"original-arm-unchanged-after-experimental-start\",\"evidence\":{\"arm\":{\"armId\":\"9a580ef0-edac-4867-a8d6-eaefa614f76e\",\"requestId\":\"50215c8d-4d2c-4947-bd7a-8fd5a289d65e\",\"jobKey\":\"capacity.full-review\",\"anchor\":\"2026-10-05T00:00:00.000Z\",\"designation\":\"original\",\"aiEverySeconds\":180,\"clock\":\"fake_model\",\"policyDigest\":\"547c192157c78e7d20296793c224f1514ab8fade5a8633b43b5b0699e0ff2c46\",\"configurationDigest\":\"843ee083dbba1f6e320f67e7f7e7f44bd8eebcfc5623138c16c77be6d0ae4170\",\"routeDigest\":\"b9349f6afade57d7b86de23322baaeeb21f1c3956f5be32222d660566afc6ad8\",\"hostDigest\":\"f66caaf36ac1a87532d76fd6bc503cad2c54b4b41d6c660ace1ee44a48a10e32\",\"workloadDigest\":\"81d596bf2066f0eb843f22dfae55e39dad3c72d7645873a1cefc5f5eaf76a9fe\"},\"endsAt\":\"2026-10-12T00:00:00.000Z\",\"denominator\":3360,\"cadenceSeconds\":180,\"totalSlots\":3360,\"sequenceIntact\":true,\"firstSlotAt\":\"2026-10-05T00:00:00.000Z\",\"lastSlotAt\":\"2026-10-11T23:57:00.000Z\",\"counts\":{\"scheduled\":0,\"running\":0,\"swept\":0,\"reviewed\":0,\"deferred_quota\":1,\"deferred_auth\":0,\"deferred_network\":0,\"deferred_busy\":0,\"maintenance\":0,\"failed\":1,\"missed\":3358,\"coalesced_after_outage\":0},\"reasons\":[{\"reason\":\"MODEL_UNAVAILABLE\",\"count\":1},{\"reason\":\"SLOT_BOUNDARY_PASSED\",\"count\":3358},{\"reason\":\"WEEKLY_THRESHOLD\",\"count\":1}],\"acceptanceComplete\":false,\"fullCadenceVerdict\":\"NOT_EVALUATED\"},\"clock\":\"fake_model\",\"actualUid\":501,\"liveProviderSends\":0,\"liveTrialStarted\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "57ec71ae9f7a28501bc74234bd110c9306ce1eb67a9482be92bbd1a940e8d165"
+            ]
+          }
+        }
+      ],
+      "resultState": "NOT_IMPLEMENTED",
+      "complete": false
+    }
+  ],
+  "up": {
+    "exitCode": 0,
+    "path": "build/evidence/R0.10/cadence-owner-trial-AT-ops-47-cli/up.json",
+    "sha256": "2d7546a5167fc55d1e1956133495435437fa6fec388f84c289667d32246da4c9"
+  },
+  "stackId": "74a7d15e-8f59-4d1a-bf17-bdd9f0435097",
+  "down": {
+    "exitCode": 0,
+    "path": "build/evidence/R0.10/cadence-owner-trial-AT-ops-47-cli/down.json",
+    "sha256": "5ce2a6849b37fceda8de7fd53307ee3871ed777ef08695256c1cb26a5ff792f0"
+  },
+  "teardown": {
+    "stackId": "74a7d15e-8f59-4d1a-bf17-bdd9f0435097",
+    "checkpointRefs": [],
+    "fenceRefs": [],
+    "stoppedResourceRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "74a7d15e-8f59-4d1a-bf17-bdd9f0435097"
+      }
+    ],
+    "retainedArtifactRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "74a7d15e-8f59-4d1a-bf17-bdd9f0435097"
+      }
+    ],
+    "unresolvedResourceRefs": [],
+    "complete": true
+  }
+}

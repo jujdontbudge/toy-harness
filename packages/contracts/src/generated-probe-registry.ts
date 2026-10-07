@@ -3409,6 +3409,85 @@ export const registeredCliAcceptanceManifestInventory = [
     "simUnavailableReason": "The assigned acceptance rung requires a CLI stack, device/account evidence and a registered probe. This manifest exercises only fixed external test projections through the public CLI; it does not inspect actual membership, licence or device state."
   },
   {
+    "id": "AT-activity-focus-86",
+    "rung": "CLI",
+    "sourceAssertionHash": "52ae93648c59baf2fd8a323afcd7d905d2818120da90106346b6d33c332b883f",
+    "commandId": "probe.run",
+    "scenarioId": "cadence.owner-floor",
+    "owner": "self-improvement",
+    "firstRelease": "R0",
+    "kind": "mixed",
+    "mandatoryCases": [
+      {
+        "id": "durable-cadence-owner-floor",
+        "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+        "phase": "durable-cadence-owner-floor"
+      }
+    ],
+    "trigger": "Exercise the real PostgreSQL cadence owner, generated state contract, native role denials and read-only Obligations projection; production lifecycle and protected dispatch remain pending.",
+    "faultControls": [
+      {
+        "id": "source-tree-candidate-snapshot",
+        "seam": "os",
+        "affectedPhases": [
+          "durable-cadence-owner-floor"
+        ]
+      },
+      {
+        "id": "native-postgresql-roles",
+        "seam": "os",
+        "affectedPhases": [
+          "durable-cadence-owner-floor"
+        ]
+      },
+      {
+        "id": "seeded-fake-clock",
+        "seam": "clock",
+        "affectedPhases": [
+          "durable-cadence-owner-floor"
+        ]
+      }
+    ],
+    "observations": [
+      {
+        "id": "canonical-state-and-writer-gate",
+        "independentReader": "DurableCadenceOwner.sourceSnapshot/sourceGate: actual source and in-memory OS candidates",
+        "caseIds": [
+          "durable-cadence-owner-floor"
+        ]
+      },
+      {
+        "id": "native-owner-and-pending-readback",
+        "independentReader": "DurableCadenceOwner.admitScheduled/reviewResult: real slot/run and pending review_work",
+        "caseIds": [
+          "durable-cadence-owner-floor"
+        ]
+      },
+      {
+        "id": "native-role-write-denials",
+        "independentReader": "DurableCadenceOwner.roleProof: current_user, effective privileges and nine SQLSTATE 42501 denials",
+        "caseIds": [
+          "durable-cadence-owner-floor"
+        ]
+      },
+      {
+        "id": "obligations-projection-readback",
+        "independentReader": "CadenceProjection.readSlots: actual reader role, canonical counts, distinct swept and reviewed coverage",
+        "caseIds": [
+          "durable-cadence-owner-floor"
+        ]
+      },
+      {
+        "id": "stored-cli-readback",
+        "independentReader": "toy probe.show and stack.down: exact persisted result and complete owned-world teardown",
+        "caseIds": [
+          "durable-cadence-owner-floor"
+        ]
+      }
+    ],
+    "simUnavailableReason": "SIM cannot inspect the R0 pre-build schema/caller ownership gate or native PostgreSQL privileges. The registered CLI reaches the real owner with fake external clock and source-tree candidates."
+  },
+  {
     "id": "AT-attention-66",
     "rung": "CLI",
     "sourceAssertionHash": "19bd2c265bd8baa95cbb780ca34b0ad5f53ba75f1bde7891147eb2838d4842f9",
@@ -4006,6 +4085,85 @@ export const registeredCliAcceptanceManifestInventory = [
       }
     ],
     "simUnavailableReason": "The assigned R0 CLI probe reaches the canonical schemas and real Python serializer; no simulated-Johan ingress exists at this release."
+  },
+  {
+    "id": "AT-hermes-config-69",
+    "rung": "CLI",
+    "sourceAssertionHash": "965ebd8c120f65c939ac3dce6fb45aeda90dc34f5bbf08ea5e7db257c8f83ba4",
+    "commandId": "probe.run",
+    "scenarioId": "cadence.owner-floor",
+    "owner": "self-improvement",
+    "firstRelease": "R0",
+    "kind": "mixed",
+    "mandatoryCases": [
+      {
+        "id": "durable-cadence-owner-floor",
+        "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+        "phase": "durable-cadence-owner-floor"
+      }
+    ],
+    "trigger": "Exercise the real PostgreSQL cadence owner, generated state contract, native role denials and read-only Obligations projection; production lifecycle and protected dispatch remain pending.",
+    "faultControls": [
+      {
+        "id": "source-tree-candidate-snapshot",
+        "seam": "os",
+        "affectedPhases": [
+          "durable-cadence-owner-floor"
+        ]
+      },
+      {
+        "id": "native-postgresql-roles",
+        "seam": "os",
+        "affectedPhases": [
+          "durable-cadence-owner-floor"
+        ]
+      },
+      {
+        "id": "seeded-fake-clock",
+        "seam": "clock",
+        "affectedPhases": [
+          "durable-cadence-owner-floor"
+        ]
+      }
+    ],
+    "observations": [
+      {
+        "id": "canonical-state-and-writer-gate",
+        "independentReader": "DurableCadenceOwner.sourceSnapshot/sourceGate: actual source and in-memory OS candidates",
+        "caseIds": [
+          "durable-cadence-owner-floor"
+        ]
+      },
+      {
+        "id": "native-owner-and-pending-readback",
+        "independentReader": "DurableCadenceOwner.admitScheduled/reviewResult: real slot/run and pending review_work",
+        "caseIds": [
+          "durable-cadence-owner-floor"
+        ]
+      },
+      {
+        "id": "native-role-write-denials",
+        "independentReader": "DurableCadenceOwner.roleProof: current_user, effective privileges and nine SQLSTATE 42501 denials",
+        "caseIds": [
+          "durable-cadence-owner-floor"
+        ]
+      },
+      {
+        "id": "obligations-projection-readback",
+        "independentReader": "CadenceProjection.readSlots: actual reader role, canonical counts, distinct swept and reviewed coverage",
+        "caseIds": [
+          "durable-cadence-owner-floor"
+        ]
+      },
+      {
+        "id": "stored-cli-readback",
+        "independentReader": "toy probe.show and stack.down: exact persisted result and complete owned-world teardown",
+        "caseIds": [
+          "durable-cadence-owner-floor"
+        ]
+      }
+    ],
+    "simUnavailableReason": "SIM cannot inspect the R0 pre-build schema/caller ownership gate or native PostgreSQL privileges. The registered CLI reaches the real owner with fake external clock and source-tree candidates."
   },
   {
     "id": "AT-hermes-config-75",

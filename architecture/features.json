@@ -3961,6 +3961,95 @@
       "atIds": [
         "AT-hermes-config-50"
       ]
+    },
+    {
+      "id": "self-improvement.durable-cadence-floor",
+      "description": "One fixture PostgreSQL cadence writer owns arm slots, gate-floor admission and pending review work; native operational/reader roles and source-state mutations are exercised through source-bound CLI manifests. Full run lifecycle, trusted Review, identity FK and native schedule anchor remain pending.",
+      "implementation": "built",
+      "requirementIds": [
+        "spec:self-improvement",
+        "spec:hermes-config",
+        "spec:activity-focus"
+      ],
+      "entry": "docs/adr/0050-durable-cadence-owner-floor.md",
+      "owner": "self-improvement",
+      "publicInterface": "DurableCadenceOwner.withTest",
+      "paths": [
+        "packages/contracts/src/durable-cadence.ts",
+        "packages/contracts/src/public.ts",
+        "packages/contracts/src/test-control.ts",
+        "packages/self-improvement/src/durable-cadence.ts",
+        "packages/self-improvement/src/durable-cadence-probe.ts",
+        "packages/self-improvement/src/durable-cadence-migration.ts",
+        "packages/self-improvement/src/capacity-trial.ts",
+        "packages/self-improvement/src/public.ts",
+        "packages/self-improvement/src/engineering-control.ts",
+        "tests/registry.yaml",
+        "docs/adr/0050-durable-cadence-owner-floor.md",
+        "packages/contracts/src/ops-registry.ts",
+        "packages/ops/src/fixture-stack.ts"
+      ],
+      "firstRelease": "R0",
+      "commands": [
+        "probe.run",
+        "probe.show"
+      ],
+      "atIds": [
+        "AT-hermes-config-69",
+        "AT-activity-focus-86"
+      ]
+    },
+    {
+      "id": "obligations.cadence-projection-floor",
+      "description": "Read canonical cadence slots through the real reader-role view and derive filtered state counts with swept separate from accepted AI-reviewed coverage; no projection write path.",
+      "implementation": "built",
+      "requirementIds": [
+        "spec:obligations",
+        "spec:activity-focus"
+      ],
+      "entry": "packages/obligations/src/public.ts",
+      "owner": "obligations",
+      "publicInterface": "CadenceProjection.readSlots",
+      "paths": [
+        "packages/obligations/src/public.ts",
+        "packages/contracts/src/durable-cadence.ts",
+        "docs/adr/0050-durable-cadence-owner-floor.md"
+      ],
+      "firstRelease": "R0",
+      "commands": [
+        "probe.run",
+        "probe.show"
+      ],
+      "atIds": [
+        "AT-hermes-config-69",
+        "AT-activity-focus-86"
+      ]
+    },
+    {
+      "id": "generated.migration.durable-cadence",
+      "description": "Generated feasibility-only migration; production activation remains pending assigned owner acceptance",
+      "implementation": "specified",
+      "requirementIds": [
+        "spec:ops",
+        "spec:self-improvement"
+      ],
+      "entry": "packages/self-improvement/migrations/durable-cadence.sql",
+      "owner": "self-improvement",
+      "publicInterface": "DurableCadenceOwner migrations",
+      "paths": [
+        "packages/self-improvement/migrations/durable-cadence.sql",
+        "packages/self-improvement/migrations/durable-cadence.json"
+      ],
+      "firstRelease": "R0",
+      "commands": [
+        "new.migration"
+      ],
+      "atIds": [
+        "AT-hermes-config-101",
+        "AT-cli-25",
+        "AT-hermes-config-69",
+        "AT-activity-focus-86"
+      ]
     }
   ],
   "requirements": [
@@ -4503,6 +4592,21 @@
       "id": "HermesProfile.consumeMcpHttp; HermesProfileProbe.run",
       "owner": "hermes",
       "path": "packages/hermes/src/public.ts"
+    },
+    {
+      "id": "DurableCadenceOwner.withTest",
+      "owner": "self-improvement",
+      "path": "docs/adr/0050-durable-cadence-owner-floor.md"
+    },
+    {
+      "id": "DurableCadenceOwner migrations",
+      "owner": "self-improvement",
+      "path": "packages/self-improvement/src/durable-cadence-migration.ts"
+    },
+    {
+      "id": "CadenceProjection.readSlots",
+      "owner": "obligations",
+      "path": "docs/adr/0050-durable-cadence-owner-floor.md"
     }
   ],
   "commands": [
