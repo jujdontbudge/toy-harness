@@ -1,6 +1,6 @@
 --- /dev/null
 +++ b/tests/fixtures/toy_auth_httpx_fixture.py
-@@ -0,0 +1,726 @@
+@@ -0,0 +1,747 @@
 +from __future__ import annotations
 +
 +import base64
@@ -72,6 +72,13 @@
 +
 +def _expected_access_generations() -> tuple[str, ...]:
 +    actor = os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR", "")
++    sibling_generations = {
++        "sibling-profile-one": "stale",
++        "sibling-profile-two": "added",
++        "sibling-profile-new": "added-rotated",
++    }
++    if actor in sibling_generations:
++        return (sibling_generations[actor],)
 +    if actor == "fresh-add-reload":
 +        return ("added-rotated",)
 +    if actor == "fresh-refresh-reload":
@@ -323,8 +330,16 @@
 +    if host == "auth.openai.com" and method == "POST" and path == "/oauth/token":
 +        if _PHASE in _ADD_PHASES:
 +            _COUNTS["token_exchanges"] += 1
-+            generation = "added" if os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR") == "auth-add" else "initial"
-+            if os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR") == "auth-add":
++            actor = os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR", "")
++            sibling_generations = {
++                "sibling-root-one": "initial",
++                "sibling-root-two": "rotated",
++                "sibling-profile-one": "stale",
++                "sibling-profile-two": "added",
++                "sibling-profile-new": "added-rotated",
++            }
++            generation = sibling_generations.get(actor, "added" if actor == "auth-add" else "initial")
++            if actor == "auth-add":
 +                if not _signal_barrier("add-response-pending"):
 +                    return _deny_request("unregistered-http")
 +                _CONCURRENCY_BARRIER_STATE = "reached"
@@ -492,13 +507,19 @@
 +
 +
 +def _fixture_label() -> str:
-+    return "toy-fixture-storage-cut" if os.environ.get("TOY_AUTH_STORAGE_CONTEXT") == "1" else "toy-fixture-added-" + os.environ.get("TOY_AUTH_CONCURRENCY_ORDER", "")
++    if os.environ.get("TOY_AUTH_STORAGE_CONTEXT") == "1":
++        return "toy-fixture-storage-cut"
++    actor = os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR", "")
++    if actor.startswith("sibling-"):
++        return "toy-fixture-" + actor
++    return "toy-fixture-added-" + os.environ.get("TOY_AUTH_CONCURRENCY_ORDER", "")
 +
 +
 +def _public_argv(operation: str) -> list[str]:
 +    prefix = ["hermes"] if os.environ.get("TOY_AUTH_STORE_SCOPE") == "root" else ["hermes", "--profile", "toy"]
 +    if operation == "add":
-+        label = ["--label", _fixture_label()] if os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR") == "auth-add" else []
++        actor = os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR", "")
++        label = ["--label", _fixture_label()] if actor == "auth-add" or actor.startswith("sibling-") else []
 +        return [*prefix, "auth", "add", "openai-codex", "--type", "oauth", "--no-browser", *label]
 +    if operation == "list":
 +        return [*prefix, "auth", "list", "openai-codex"]
@@ -617,7 +638,7 @@
 +                    count = int(raw)
 +                    break
 +        observations["credential_count"] = count
-+        if os.environ.get("TOY_AUTH_STORAGE_CONTEXT") == "1":
++        if os.environ.get("TOY_AUTH_STORAGE_CONTEXT") == "1" or os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR", "").startswith("sibling-"):
 +            observations["target_label_present"] = _fixture_label() in stdout
 +        markers.append("AUTH_LIST_READBACK_OK" if count > 0 else "AUTH_LIST_EMPTY")
 +    else:

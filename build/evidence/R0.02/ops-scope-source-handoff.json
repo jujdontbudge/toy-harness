@@ -1,0 +1,80 @@
+{
+  "recordedAt": "2026-10-07T00:04:50Z",
+  "card": "R0.02",
+  "unit": "source-derived Ops requirement scope",
+  "disposition": "IMPLEMENTED_SOURCE_ONLY",
+  "acceptedScope": [
+    "docs/adr/0043-ops-research-scope.md",
+    "packages/contracts/src/engineering-control.ts",
+    "packages/self-improvement/src/engineering-control.ts",
+    "build/evidence/R0.02/ops-scope-source-handoff.json"
+  ],
+  "sourceHashesBefore": {
+    "docs/adr/0043-ops-research-scope.md": null,
+    "packages/contracts/src/engineering-control.ts": "f04b91f3ee915526ed5f5706d18e39b3842cbfa51498ddccb9c230218c8a889c",
+    "packages/self-improvement/src/engineering-control.ts": "0e26b0540dc02fe29cefaa02778cbb90579c98870764c2b005aaf295f03f0925"
+  },
+  "sourceHashesAfter": {
+    "docs/adr/0043-ops-research-scope.md": "3fd2edbec2eacf9f9767d42b025eeac2b9e47fbaf48ec34b4e28ade7120f5631",
+    "packages/contracts/src/engineering-control.ts": "76149151b63bb10c88a28f5e716c7809873720e6067755967c2f570bd5ee428f",
+    "packages/self-improvement/src/engineering-control.ts": "154df3c2c05eff4856163caff33af191c4296758fdfdbcebc8234a0acaa65564"
+  },
+  "canonicalSourceHashes": {
+    "../personal-assistant-harness/specs/README.md": "2c02bdb4d13abd198231446873eaacfe30177a97f66235158912fd2accd006f4",
+    "../personal-assistant-harness/specs/ops.md": "f07aab65088c82e4ff21e4d63edb2f279e2324e6d7e2bbb801e0fd7494104b0b",
+    "../personal-assistant-harness/specs/RESEARCH-REGISTER.md": "e89b3336e0c2458ac204fb0927da30f4541abfab48a9d55735c4655719a3f10d"
+  },
+  "workAdmission": {
+    "evidence": "build/evidence/R0.02/ops43-scope-baseline-cli/down.json",
+    "measuredAt": "2026-10-06T23:55:44.884Z",
+    "pressure": "normal",
+    "availableBytes": "2098069504",
+    "helperNeedBytes": "268435456",
+    "marginBytes": "536870912",
+    "requiredBytes": "805306368",
+    "admitted": true
+  },
+  "interface": {
+    "adr": "ADR 0043 specifies the derived source-scope value before implementation.",
+    "typedValue": "ResearchOpsRequirementScopeV1 contains the canonical README/Ops paths and digests, each joined component ID and its Ops source lines, and the Ops-mapped requirement IDs. It is validated by the canonical contracts schema and remains internal to EngineeringControl.",
+    "publicCompatibility": "EngineeringControl.checkResearch keeps its existing public signature, V1-V3 schemas, ResearchRegisterInspectionV3 result, CLI route and report payload formats. No V4 schema or output property was added."
+  },
+  "behavior": {
+    "scopeDerivation": "Use the existing readResearchSpecs result for specs/ops.md component references, join those IDs to parsed RESEARCH-REGISTER components, and retain the joined IDs/source lines. Read canonical specs/README.md and recognize the Req/Spec(s) table. Require each AT-ops-43 requirement (0.1, 0.2, 0.10, 2.4, 5.10) to occur once and map to ops or all; missing/duplicate/malformed target mappings fail closed.",
+    "comparator": "Every joined Ops component adds those five source-derived IDs to its prior expected comparison requirements. Existing non-Ops comparisons retain their prior requirements; Sources continues to add 0.9. Dedicated Attention comparisons still call compareDecision without Ops additions. Authority's existing generic comparison predicates remain in place for shared Ops component M03.",
+    "currentSourceDerivedOpsComponentIds": ["B01", "B02", "B03", "B04", "B05", "B06", "B07", "B08", "B09", "M01", "M02", "M03", "M04", "M05", "M06", "M07", "M08", "M09", "M10", "M11", "M12", "M13", "M14", "M15", "M16", "M17", "M18", "M19", "N01"],
+    "currentJoinedCount": 29,
+    "scopeSource": "Saved real research.check V3 readback lists these 29 refs in specs/ops.md and has 165 register components/decisions. IDs are derived per inspection; the list above is this checkout's source snapshot, not a hard-coded allowlist."
+  },
+  "existingFixtureImpact": {
+    "M02": "M02 is referenced by ops.md, so its generic componentDecisions entry now additionally requires 2.4 and 5.10. Its dedicated attentionDecisions remain on the previous global-mapping path and are unchanged.",
+    "M03": "M03 is referenced by ops.md, so its generic componentDecisions entry now additionally requires 2.4 and 5.10. The required-research-component route/skill, outside-option and Authority acceptance checks remain unchanged.",
+    "selfImprovement54Fixture": "The existing requiredComponentProbe builds its M02 record's mappedRequirements from baseline.data.componentDecisions[M02].missingRequirementIds (component-comparison-probe.ts:73,79; unchanged SHA-256 f9d5b8ba69f44b07b58a9a203d92c83d4028a47d22496daf87c36aa9e1ddc713). It should therefore pick up the new 2.4/5.10 IDs dynamically in its complete case; no fixed fixture correction was made. Parent verification should confirm this behavior. No source-bound positive report was added.",
+    "sources": "No D-component IDs occur in the present Ops source references, so the Sources scope did not change; its existing 0.9 and account/region/route/skill requirements remain.",
+    "generatedContracts": "The new schema is included in engineeringSchemaInventory. Generated TypeScript/Python outputs are intentionally untouched and remain parent-owned integration work."
+  },
+  "priorReadback": {
+    "baselineEvidence": "build/evidence/R0.02/ops43-scope-baseline.json",
+    "baselineEvidenceSha256": "3e602afde222c8ee3c01bdac04962d0e1104cf5c7c0b18cba9f6346a1e1a63ed",
+    "unfilteredAT43": "The saved probe.run for AT-ops-43 returned NOT_IMPLEMENTED, complete=false, sourceRegistration=null, and REGISTERED_CASE_NOT_IMPLEMENTED; exact probe.show repeated it. The owned test world c5042432-df98-492e-bfba-e9931cb4bd4a was DOWN with complete teardown.",
+    "runSha256": "57f85f93a63f4a497a0df720ecea41efdd60ee5eea42498acc43ab40fb270de8",
+    "showSha256": "edea52e3d84030672c4514f44e179062fcadd913652cef7c94c35ae68726685d",
+    "downSha256": "335d0ee6ce7a20818b4285a05ec8a8a5d6c8905d77812e7405ba2b9f38753aa7",
+    "researchCheckV3Sha256": "aeaa0bbcd8de7bb8acafbc80ba90bb249d0356294a2d4531e49e3833898be73b",
+    "researchCheckState": "The saved V3 readback has admission BLOCKED, acceptanceComplete=false, dependencyClosureVerified=false and wholeATsPassed=[]. Before this mutation, M02/M03 missingRequirementIds were 0.1, 0.2, 0.10."
+  },
+  "verificationAndLimits": {
+    "performed": "Read-only source review and SHA-256 collection; handoff JSON parsed and its card/status/hash fields checked with jq.",
+    "notRunByAssignment": ["build", "typecheck", "tests", "CLI", "runtime", "stack", "provider", "protected research route/account"],
+    "parentVerification": "Parent owns generation and integration verification after source workers stop; verify generated contracts, the unfiltered research.check readback, Ops component missingRequirementIds including M02/M03, and the existing AT-self-improvement-54 complete fixture.",
+    "acceptance": {
+      "AT-ops-43": "NOT_IMPLEMENTED; source scope behavior is implemented but registered CLI manifest/cases, complete source-bound Ops decisions, isolated missing-decision/evidence/validation-plan cases, and actual build-start denial are pending.",
+      "AT-ops-44": "NOT_IMPLEMENTED; no genuine source-bound unlisted-candidate research fixture or protected route/account receipt is supplied or claimed.",
+      "wholeResult": "NOT_IMPLEMENTED",
+      "complete": false,
+      "wholeATsPassed": [],
+      "acceptanceComplete": false
+    },
+    "protectedAndLive": "No root step, protected role, authenticated research route/account, provider, service, or live capability was exercised. Existing pending root queue and all external acceptance gates remain pending."
+  }
+}

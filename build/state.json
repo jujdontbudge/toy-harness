@@ -2,7 +2,7 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-06T23:56:58.550592+00:00",
+  "updatedAt": "2026-10-07T00:38:02.752118+00:00",
   "phase": "R0_FEASIBILITY",
   "activeCard": "R0.02",
   "cardCount": 87,
@@ -429,7 +429,14 @@
         "build/evidence/R0.02/catalog-coverage-verification.json",
         "build/evidence/R0.02/research-skill-pin.json",
         "build/evidence/R0.02/research-skill-register-update.json",
-        "build/evidence/R0.02/route-verification.json"
+        "build/evidence/R0.02/route-verification.json",
+        "build/evidence/R0.02/ops-scope-source-handoff.json",
+        "build/evidence/R0.02/ops-scope-source-review.json",
+        "build/evidence/R0.02/ops-scope-research-readback.json",
+        "build/evidence/R0.02/ops-scope-verification.json",
+        "build/evidence/R0.02/ops-scope-rejected-source.diff",
+        "build/evidence/R0.02/ops-scope-rejected-adr.md",
+        "build/evidence/R0.02/ops-scope-rejected.schema.json"
       ],
       "requiredATs": [
         "AT-RESEARCH-REGISTER-1",
@@ -547,7 +554,7 @@
         "wholeATComplete": false
       },
       "opsScopeUnit": {
-        "status": "LUNA_SOURCE_PHASE_IN_PROGRESS",
+        "status": "STOPPED_REJECTED_AUDIT_NAMESPACE_CONFLATION_OWNER_RESTORED",
         "startedAt": "2026-10-06T23:57:00Z",
         "targetStopAt": "2026-10-07T01:57:00Z",
         "helperStopAt": "2026-10-07T00:25:00Z",
@@ -555,7 +562,27 @@
         "planEvidence": "build/evidence/R0.02/ops43-44-next-minimum-plan.json",
         "scope": "Enforce the canonical per-spec Ops requirement mapping for the full source-derived Ops component set; no AT44 or positive primary evidence invention",
         "acceptanceComplete": false,
-        "wholeATsPassed": []
+        "wholeATsPassed": [],
+        "state": "STOPPED_REJECTED_AUDIT_NAMESPACE_CONFLATION_OWNER_RESTORED",
+        "stoppedAt": "2026-10-07T00:20:27.629464+00:00",
+        "evidence": "build/evidence/R0.02/ops-scope-verification.json",
+        "scopeReferences": 29,
+        "genericRegressionCases": 4,
+        "sourceUnitStopped": true,
+        "wholeATComplete": false,
+        "deferrals": [
+          "Correct canonical requirement/group scope implementation from reviewed replan",
+          "Complete source-bound Ops decision reports and missing-decision/evidence/validation cases",
+          "Protected research route/account receipt",
+          "Observed component build-gate refusal"
+        ],
+        "sourceScopeUnitComplete": false,
+        "rejectedEvidence": "build/evidence/R0.02/ops-scope-verification.json",
+        "rejectedSource": "build/evidence/R0.02/ops-scope-rejected-source.diff",
+        "rejectedInterface": "build/evidence/R0.02/ops-scope-rejected-adr.md",
+        "currentSourceRestoredTo": "01c9d15",
+        "replan": "build/evidence/R0.02/ops-scope-replan.json",
+        "scopeReferencesMeaning": "29 audit finding labels; not register component identity"
       }
     },
     "R0.03": {
@@ -597,7 +624,14 @@
         "build/evidence/R0.03/borrowed88-regression-verification.json",
         "build/evidence/R0.03/borrowed88-source-review.json",
         "build/evidence/R0.03/borrowed88-strict-result.json",
-        "build/evidence/R0.03/borrowed88-root-pins.json"
+        "build/evidence/R0.03/borrowed88-root-pins.json",
+        "docs/adr/0044-profile-sibling-auth-probe.md",
+        "build/evidence/R0.03/siblings86-final-verification.json",
+        "build/evidence/R0.03/siblings86-regression-verification.json",
+        "build/evidence/R0.03/siblings86-source-review.json",
+        "build/evidence/R0.03/siblings86-auth-bindings-final.json",
+        "build/evidence/R0.03/siblings86-final-strict-result.json",
+        "build/evidence/R0.03/siblings86-root-pins.json"
       ],
       "requiredATs": [
         "AT-hermes-config-34",
@@ -955,6 +989,58 @@
         "SwiftDeferredTo": "R3",
         "sourceCommit": "43970a8",
         "sourcePushed": true
+      },
+      "siblingsUnit": {
+        "status": "STOPPED_UNFILTERED_NATIVE_CLI_SIBLINGS_VERIFIED_PROTECTED_PENDING",
+        "startedAt": "2026-10-07T00:01:06.057530+00:00",
+        "targetStopAt": "2026-10-07T01:59:00Z",
+        "helperStopAt": "2026-10-07T00:30:00Z",
+        "writtenInterface": "docs/adr/0044-profile-sibling-auth-probe.md",
+        "scope": "Actual root/profile siblings and independent add, exact public priority and fresh usability readbacks; preserve passed borrowed/concurrent/default fixtures",
+        "wholeATComplete": false,
+        "acceptanceComplete": false,
+        "state": "STOPPED_UNFILTERED_NATIVE_CLI_SIBLINGS_VERIFIED_PROTECTED_PENDING",
+        "sourceWorkerStopped": true,
+        "handoff": "build/evidence/R0.03/siblings86-source-handoff.json",
+        "nativeAttempts": 2,
+        "nativeFailures": 1,
+        "firstEvidence": "build/evidence/R0.03/siblings86-first-verification.json",
+        "diagnosis": "build/evidence/R0.03/siblings86-first-diagnosis.json",
+        "ownedWorldsLive": 0,
+        "lastWorldDown": "ca81013d-6524-4aae-87a0-e84a2d530a26",
+        "sourceCorrections": [
+          "Allow public priority/use to update profile metadata while enforcing root preservation",
+          "Keep sibling receipts under the canonical bound without duplicated store/profile summaries",
+          "Configure profile model.provider through the public CLI before pooled-grant fresh use"
+        ],
+        "sourceUnitStopped": true,
+        "stoppedAt": "2026-10-07T00:35:47.528691+00:00",
+        "evidence": "build/evidence/R0.03/siblings86-final-verification.json",
+        "sourceReview": "build/evidence/R0.03/siblings86-source-review.json",
+        "authBindings": "build/evidence/R0.03/siblings86-auth-bindings-final.json",
+        "mandatoryCases": 16,
+        "nativeCases": 17,
+        "authRegressionCases": 46,
+        "authRegressionEvidence": "build/evidence/R0.03/siblings86-regression-verification.json",
+        "freshProfileGrantsVerified": 3,
+        "rootGrantsVerified": 2,
+        "rootBytesPreserved": true,
+        "showDataExact": true,
+        "sourceRegistrationExact": true,
+        "staticEvidence": "build/evidence/R0.03/siblings86-final-strict.txt",
+        "protectedControllerIdentityVerified": false
+      },
+      "mixedLineagePlanUnit": {
+        "state": "READ_ONLY_MINIMUM_PLAN_RUNNING",
+        "assignedAT": "AT-hermes-config-89",
+        "startedAt": "2026-10-07T00:35:47.528691+00:00",
+        "deadline": "2026-10-07T00:50:00Z",
+        "baseline": "build/evidence/R0.03/mixed89-baseline.json",
+        "sourceRegistration": null,
+        "baselineShowExact": true,
+        "baselineWorldDown": "f4976012-5a0b-4a49-899a-19552a32d757",
+        "plan": "build/evidence/R0.03/mixed89-next-minimum-plan.json",
+        "wholeATComplete": false
       }
     },
     "R0.04": {
@@ -10747,7 +10833,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Poll ROOT-REQUESTS and review the independent Luna R0.02 source handoff when ready. Exact root02 DONE immediately prioritizes R0.01 native owner load. No parent same-card implementation or builds/probes while the worker is mutating its owned source. R0.03 source43970a8 is pushed and stopped after six borrowed-root cells plus32 shared regressions pass. Pending root work never blocks the goal.",
+  "nextAction": "Commit/push the immutable verified AT86 source unit; review the two bounded read-only plans. No new source mutation until the corrected canonical Ops scope is checked. Poll both root requests; exact ROOT-R004-20261006-02 DONE immediately prioritizes R0.01 native owner load.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -21328,7 +21414,7 @@
       "pendingRootDoesNotBlockGoal": true,
       "pollWhileIndependentWork": true,
       "exactRegisteredCommandOrRepoScriptRequired": true,
-      "lastPollAt": "2026-10-06T23:56:58.550592+00:00",
+      "lastPollAt": "2026-10-07T00:35:47.528691+00:00",
       "pendingRequests": [
         "ROOT-R004-20261006-02",
         "ROOT-R005-20261006-01"
@@ -21339,10 +21425,11 @@
     "queuedRootReserveAdmissionGate": false
   },
   "latestStaticVerification": {
+    "command": "npm run check",
     "exitCode": 0,
     "artifacts": 385,
     "contracts": 317,
-    "cliManifests": 30,
+    "cliManifests": 31,
     "features": 100,
     "commands": 55,
     "indexedATs": 1447,
@@ -21353,10 +21440,9 @@
       "Python"
     ],
     "SwiftDeferredTo": "R3",
-    "evidence": "build/evidence/R0.03/borrowed88-provider-config-strict.txt",
-    "recordedAt": "2026-10-06T23:55:04.828886+00:00",
-    "command": "npm run check; toy feature-map update/check after metadata-only refresh",
-    "featureMapEvidence": "build/evidence/R0.03/borrowed88-map-check-final.json"
+    "evidence": "build/evidence/R0.03/siblings86-final-strict.txt",
+    "recordedAt": "2026-10-07T00:34:46.495Z",
+    "bundleInventoryArtifacts": 380
   },
   "sourceCheckpointCommit": "43970a8",
   "sourceCheckpointPushed": true,
@@ -21398,15 +21484,15 @@
     }
   },
   "resourceAdmission": {
-    "measuredAt": "2026-10-06T23:55:44.884Z",
-    "availableBytes": "2098069504",
+    "measuredAt": "2026-10-06T23:58:48.079Z",
+    "availableBytes": "2183168000",
     "pressure": "normal",
     "strictlyFreeAdmission": false,
     "repairFloorApplied": false,
     "ownedWorldsRunning": 0,
-    "helpersRunning": 1,
+    "helpersRunning": 2,
     "helperNeedBytes": "268435456",
-    "measurementSource": "build/evidence/R0.02/ops43-scope-baseline-cli/up.json",
+    "measurementSource": "build/evidence/R0.03/siblings86-source-doctor.json",
     "marginBytes": "536870912",
     "ownedStackId": null,
     "stackAndNativeChildrenNeedBytes": "0",
@@ -21422,17 +21508,28 @@
       "card": "R0.02",
       "model": "gpt-6-luna",
       "reasoning": "max",
-      "state": "running_source_only",
+      "state": "read_only_scope_replan_revision",
       "ownedScope": [
-        "docs/adr/0043-ops-research-scope.md",
-        "packages/contracts/src/engineering-control.ts",
-        "packages/self-improvement/src/engineering-control.ts",
-        "build/evidence/R0.02/ops-scope-source-handoff.json"
+        "build/evidence/R0.02/ops-scope-replan.json"
       ],
-      "admissionEvidence": "build/evidence/R0.02/ops43-scope-baseline-cli/up.json",
+      "admissionEvidence": "build/evidence/R0.02/ops-scope-replan-doctor.json",
       "ownNeedBytes": "268435456",
       "marginBytes": "536870912",
-      "deadline": "2026-10-07T00:25:00Z"
+      "deadline": "2026-10-07T00:45:00Z"
+    },
+    {
+      "task": "r003_per_generation_refresh_plan",
+      "card": "R0.03",
+      "model": "gpt-6-luna",
+      "reasoning": "max",
+      "state": "read_only_mixed_lineage_plan",
+      "ownedScope": [
+        "build/evidence/R0.03/mixed89-next-minimum-plan.json"
+      ],
+      "admissionEvidence": "build/evidence/R0.03/mixed89-source-doctor.json",
+      "ownNeedBytes": "268435456",
+      "marginBytes": "536870912",
+      "deadline": "2026-10-07T00:50:00Z"
     }
   ],
   "pullRequestUpdatedAt": "2026-10-06T23:56:58.550592+00:00"

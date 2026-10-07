@@ -1,0 +1,140 @@
+diff --git a/packages/contracts/src/engineering-control.ts b/packages/contracts/src/engineering-control.ts
+index b007db3..ff892c1 100644
+--- a/packages/contracts/src/engineering-control.ts
++++ b/packages/contracts/src/engineering-control.ts
+@@ -51,6 +51,7 @@ export const researchAttentionDecisionSchema = researchComponentComparisonV2Sche
+ export const researchComponentComparisonV3Schema = researchComponentComparisonV2Schema.extend({ scope: z.literal("required-research-component"), executionReceipt: modelRouteDelegationReceiptSchema.nullable() });
+ export const researchAttentionDecisionCheckSchema = researchComponentComparisonCheckV2Schema.extend({ decisionId: researchAttentionDecisionIdSchema });
+ export const researchRegisterInspectionV3Schema = researchRegisterInspectionV2Schema.extend({ attentionDecisions: z.array(researchAttentionDecisionCheckSchema).max(4) });
++export const researchOpsRequirementScopeSchema = z.strictObject({ readmePath: checkoutPathSchema, readmeDigest: digestSchema, opsSpecPath: checkoutPathSchema, opsSpecDigest: digestSchema, components: z.array(z.strictObject({ componentId: researchComponentInspectionSchema.shape.id, sourceLines: z.array(z.int().positive()).min(1).max(16000), requirementIds: z.array(z.string().regex(/^[0-9]+\.[0-9]+(?![\s\S])/)).min(1).max(100) })).min(1).max(1000) });
+ export const mapUpdateInputSchema = z.strictObject({ plan: z.boolean() });
+ export const featureMapCheckSchema = z.strictObject({ sourceDigest: digestSchema, actualMapDigest: digestSchema, expectedMapDigest: digestSchema, featureCount: uint64Schema, commandCount: uint64Schema, atCount: uint64Schema, findings: z.array(checkViewSchema), state: acceptanceStateSchema });
+ export const featureMapUpdateSchema = z.strictObject({ check: featureMapCheckSchema, patches: z.array(filePatchSchema), changedFeatureIds: z.array(z.string()), applied: z.boolean() });
+@@ -81,6 +82,7 @@ export type ResearchAttentionDecisionV1 = z.infer<typeof researchAttentionDecisi
+ export type ResearchComponentComparisonV3 = z.infer<typeof researchComponentComparisonV3Schema>;
+ export type ResearchAttentionDecisionCheckV1 = z.infer<typeof researchAttentionDecisionCheckSchema>;
+ export type ResearchRegisterInspectionV3 = z.infer<typeof researchRegisterInspectionV3Schema>;
++export type ResearchOpsRequirementScopeV1 = z.infer<typeof researchOpsRequirementScopeSchema>;
+ export type ResearchSpecReferencesV1 = z.infer<typeof researchSpecReferencesSchema>;
+ export type ResearchCatalogSectionV1 = z.infer<typeof researchCatalogSectionSchema>;
+ export type ResearchCatalogMemberV1 = z.infer<typeof researchCatalogMemberSchema>;
+@@ -92,4 +94,4 @@ export type GardenerInputV1 = z.infer<typeof gardenerInputSchema>;
+ export type GardenerReportV1 = z.infer<typeof gardenerReportSchema>;
+ export type FeatureFactsV1 = z.infer<typeof featureFactsSchema>;
+ export type EngineeringFeatureV1 = z.infer<typeof engineeringFeatureSchema>;
+-export const engineeringSchemaInventory = { ResearchDocumentOverlayV1: researchDocumentOverlaySchema, ResearchComponentComparisonV1: researchComponentComparisonSchema, ResearchComponentComparisonCheckV1: researchComponentComparisonCheckSchema, ResearchInspectionFindingV1: researchInspectionFindingSchema, ResearchComponentInspectionV1: researchComponentInspectionSchema, ResearchSpecReferencesV1: researchSpecReferencesSchema, ResearchCatalogSectionV1: researchCatalogSectionSchema, ResearchCatalogMemberV1: researchCatalogMemberSchema, ResearchCatalogCoverageV1: researchCatalogCoverageSchema, ResearchCatalogCoverageFindingV1: researchCatalogCoverageFindingSchema, ResearchRegisterInspectionV1: researchRegisterInspectionSchema, FilePatchV1: filePatchSchema, GeneratorInputV1: generatorInputSchema, GeneratorPlanV1: generatorPlanSchema, MapCheckInputV1: mapCheckInputSchema, MapUpdateInputV1: mapUpdateInputSchema, FeatureMapCheckV1: featureMapCheckSchema, FeatureMapUpdateV1: featureMapUpdateSchema, GardenerInputV1: gardenerInputSchema, GardenerFindingV1: gardenerFindingSchema, GardenerReportV1: gardenerReportSchema, FeatureFactsV1: featureFactsSchema, EngineeringFeatureV1: engineeringFeatureSchema, AcceptanceIndexV1: acceptanceIndexSchema, KitchenGateSummaryV1: kitchenGateSummarySchema, ReferenceAdmissionEvidenceV1: referenceAdmissionEvidenceSchema, ResearchComponentComparisonV2: researchComponentComparisonV2Schema, ResearchComponentComparisonCheckV2: researchComponentComparisonCheckV2Schema, ResearchRegisterInspectionV2: researchRegisterInspectionV2Schema, ResearchSourcesComponentComparisonV1: researchSourcesComponentComparisonSchema, ResearchSourcesComponentComparisonV2: researchSourcesComponentComparisonV2Schema, ResearchComponentComparisonV3: researchComponentComparisonV3Schema, ResearchAttentionDecisionV1: researchAttentionDecisionSchema, ResearchAttentionDecisionCheckV1: researchAttentionDecisionCheckSchema, ResearchRegisterInspectionV3: researchRegisterInspectionV3Schema };
++export const engineeringSchemaInventory = { ResearchDocumentOverlayV1: researchDocumentOverlaySchema, ResearchComponentComparisonV1: researchComponentComparisonSchema, ResearchComponentComparisonCheckV1: researchComponentComparisonCheckSchema, ResearchInspectionFindingV1: researchInspectionFindingSchema, ResearchComponentInspectionV1: researchComponentInspectionSchema, ResearchSpecReferencesV1: researchSpecReferencesSchema, ResearchCatalogSectionV1: researchCatalogSectionSchema, ResearchCatalogMemberV1: researchCatalogMemberSchema, ResearchCatalogCoverageV1: researchCatalogCoverageSchema, ResearchCatalogCoverageFindingV1: researchCatalogCoverageFindingSchema, ResearchRegisterInspectionV1: researchRegisterInspectionSchema, FilePatchV1: filePatchSchema, GeneratorInputV1: generatorInputSchema, GeneratorPlanV1: generatorPlanSchema, MapCheckInputV1: mapCheckInputSchema, MapUpdateInputV1: mapUpdateInputSchema, FeatureMapCheckV1: featureMapCheckSchema, FeatureMapUpdateV1: featureMapUpdateSchema, GardenerInputV1: gardenerInputSchema, GardenerFindingV1: gardenerFindingSchema, GardenerReportV1: gardenerReportSchema, FeatureFactsV1: featureFactsSchema, EngineeringFeatureV1: engineeringFeatureSchema, AcceptanceIndexV1: acceptanceIndexSchema, KitchenGateSummaryV1: kitchenGateSummarySchema, ReferenceAdmissionEvidenceV1: referenceAdmissionEvidenceSchema, ResearchComponentComparisonV2: researchComponentComparisonV2Schema, ResearchComponentComparisonCheckV2: researchComponentComparisonCheckV2Schema, ResearchRegisterInspectionV2: researchRegisterInspectionV2Schema, ResearchSourcesComponentComparisonV1: researchSourcesComponentComparisonSchema, ResearchSourcesComponentComparisonV2: researchSourcesComponentComparisonV2Schema, ResearchComponentComparisonV3: researchComponentComparisonV3Schema, ResearchAttentionDecisionV1: researchAttentionDecisionSchema, ResearchAttentionDecisionCheckV1: researchAttentionDecisionCheckSchema, ResearchRegisterInspectionV3: researchRegisterInspectionV3Schema, ResearchOpsRequirementScopeV1: researchOpsRequirementScopeSchema };
+diff --git a/packages/self-improvement/src/engineering-control.ts b/packages/self-improvement/src/engineering-control.ts
+index 794af79..aa547ee 100644
+--- a/packages/self-improvement/src/engineering-control.ts
++++ b/packages/self-improvement/src/engineering-control.ts
+@@ -2,8 +2,8 @@ import { createHash, randomUUID } from "node:crypto";
+ import { spawnSync } from "node:child_process";
+ import { existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, realpathSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
+ import { dirname, join, relative, resolve } from "node:path";
+-import { acceptanceIndexSchema, checkoutPathSchema, cliDeclarations, featureFactsSchema, featureMapCheckSchema, featureMapUpdateSchema, generatorInputSchema, generatorPlanSchema, gardenerInputSchema, gardenerReportSchema, kitchenGateSummarySchema, mapCheckInputSchema, mapUpdateInputSchema, opsControlContextSchema, opsErrorMessages, referenceAdmissionEvidenceSchema, researchCatalogCoverageSchema, researchComponentComparisonSchema, researchComponentComparisonCheckSchema, researchDocumentOverlaySchema, researchRegisterInspectionV3Schema, researchAttentionDecisionSchema, researchAttentionDecisionCheckSchema, researchAttentionDecisionIdSchema, researchComponentComparisonV2Schema, researchComponentComparisonV3Schema, researchComponentComparisonCheckV2Schema, researchSourcesComponentComparisonSchema, researchSourcesComponentComparisonV2Schema, researchSkillPinSchema, modelRoutePolicySchema } from "@toy/contracts";
+-import type { CheckViewV1, FeatureFactsV1, FilePatchV1, GeneratorInputV1, GeneratorPlanV1, FeatureMapCheckV1, FeatureMapUpdateV1, MapCheckInputV1, MapUpdateInputV1, GardenerInputV1, GardenerReportV1, OpsControlContextV1, ResearchCatalogCoverageFindingV1, ResearchCatalogMemberV1, ResearchCatalogSectionV1, ResearchInspectionFindingV1, ResearchComponentComparisonV1, ResearchComponentComparisonCheckV1, ResearchDocumentOverlayV1, ResearchRegisterInspectionV1, ResearchComponentComparisonV2, ResearchComponentComparisonV3, ResearchComponentComparisonCheckV2, ResearchSourcesComponentComparisonV1, ResearchSourcesComponentComparisonV2, ResearchAttentionDecisionV1, ResearchAttentionDecisionCheckV1, ResearchRegisterInspectionV3, Result } from "@toy/contracts";
++import { acceptanceIndexSchema, checkoutPathSchema, cliDeclarations, featureFactsSchema, featureMapCheckSchema, featureMapUpdateSchema, generatorInputSchema, generatorPlanSchema, gardenerInputSchema, gardenerReportSchema, kitchenGateSummarySchema, mapCheckInputSchema, mapUpdateInputSchema, opsControlContextSchema, opsErrorMessages, referenceAdmissionEvidenceSchema, researchCatalogCoverageSchema, researchComponentComparisonSchema, researchComponentComparisonCheckSchema, researchDocumentOverlaySchema, researchRegisterInspectionV3Schema, researchAttentionDecisionSchema, researchAttentionDecisionCheckSchema, researchAttentionDecisionIdSchema, researchComponentComparisonV2Schema, researchComponentComparisonV3Schema, researchComponentComparisonCheckV2Schema, researchSourcesComponentComparisonSchema, researchSourcesComponentComparisonV2Schema, researchSkillPinSchema, modelRoutePolicySchema, researchOpsRequirementScopeSchema } from "@toy/contracts";
++import type { CheckViewV1, FeatureFactsV1, FilePatchV1, GeneratorInputV1, GeneratorPlanV1, FeatureMapCheckV1, FeatureMapUpdateV1, MapCheckInputV1, MapUpdateInputV1, GardenerInputV1, GardenerReportV1, OpsControlContextV1, ResearchCatalogCoverageFindingV1, ResearchCatalogMemberV1, ResearchCatalogSectionV1, ResearchInspectionFindingV1, ResearchComponentComparisonV1, ResearchComponentComparisonCheckV1, ResearchDocumentOverlayV1, ResearchRegisterInspectionV1, ResearchComponentComparisonV2, ResearchComponentComparisonV3, ResearchComponentComparisonCheckV2, ResearchSourcesComponentComparisonV1, ResearchSourcesComponentComparisonV2, ResearchAttentionDecisionV1, ResearchAttentionDecisionCheckV1, ResearchRegisterInspectionV3, ResearchOpsRequirementScopeV1, Result } from "@toy/contracts";
+ import { OpsTestStack, trustedCheckoutRoot, trustedToolEnvironment } from "@toy/ops/public";
+ import { modelAdmissionMigration } from "./model-admission-migration.js";
+ import { capacityTrialMigration } from "./capacity-trial-migration.js";
+@@ -225,6 +225,56 @@ const inspectResearchSpecs = (components: ResearchRegisterInspectionV1["componen
+     return { path, digest: hash(raw), componentReferences, requirementMappingRows };
+   });
+ };
++const opsRequirementIds = ["0.1", "0.2", "0.10", "2.4", "5.10"] as const;
++const inspectOpsRequirementScope = (components: ResearchRegisterInspectionV1["components"], specReferences: ResearchRegisterInspectionV1["specReferences"]): ResearchOpsRequirementScopeV1 => {
++  const readmePath = "specs/README.md";
++  const opsSpecPath = "specs/ops.md";
++  const readme = readResearchFile(readmePath);
++  const lines = readme.split(/\r?\n/);
++  let headerIndex = -1;
++  let requirementIndex = -1;
++  let specIndex = -1;
++  for (let lineIndex = 0; lineIndex < lines.length; lineIndex += 1) {
++    const header = markdownTableCells(lines[lineIndex] ?? "");
++    const separator = markdownTableCells(lines[lineIndex + 1] ?? "");
++    if (!header || !separator || header.length !== separator.length || !isMarkdownTableSeparator(separator)) continue;
++    const normalized = header.map(cell => cell.replace(/[*_~`]/g, "").trim().toLowerCase());
++    const nextRequirementIndex = normalized.findIndex(cell => cell === "req" || cell === "requirement");
++    const nextSpecIndex = normalized.findIndex(cell => cell === "spec(s)" || cell === "specs");
++    if (nextRequirementIndex < 0 || nextSpecIndex < 0) continue;
++    if (headerIndex >= 0) throw new Error("OPS_REQUIREMENT_TABLE_DUPLICATE");
++    headerIndex = lineIndex;
++    requirementIndex = nextRequirementIndex;
++    specIndex = nextSpecIndex;
++  }
++  if (headerIndex < 0 || requirementIndex < 0 || specIndex < 0) throw new Error("OPS_REQUIREMENT_TABLE_MISSING");
++  const mapped = new Set<string>();
++  const requiredOpsIds = new Set<string>(opsRequirementIds);
++  for (let lineIndex = headerIndex + 2; lineIndex < lines.length; lineIndex += 1) {
++    const cells = markdownTableCells(lines[lineIndex] ?? "");
++    if (!cells || cells.length !== (markdownTableCells(lines[headerIndex] ?? "")?.length ?? 0) || isMarkdownTableSeparator(cells)) break;
++    const requirementCell = cells[requirementIndex];
++    const specCell = cells[specIndex];
++    if (requirementCell === undefined || specCell === undefined) throw new Error("OPS_REQUIREMENT_ROW_INVALID");
++    const requirement = /\b([0-9]+\.[0-9]+)\b/.exec(requirementCell)?.[1];
++    if (!requirement || !requiredOpsIds.has(requirement)) continue;
++    if (mapped.has(requirement)) throw new Error("OPS_REQUIREMENT_MAPPING_DUPLICATE");
++    const specs = specCell.split(",").map(spec => spec.trim().toLowerCase()).filter(spec => spec.length > 0);
++    if (!specs.includes("ops") && !specs.includes("all")) throw new Error("OPS_REQUIREMENT_MAPPING_MISSING");
++    mapped.add(requirement);
++  }
++  if (opsRequirementIds.some(requirement => !mapped.has(requirement))) throw new Error("OPS_REQUIREMENT_MAPPING_INCOMPLETE");
++  const opsSpec = specReferences.find(reference => reference.path === opsSpecPath);
++  if (!opsSpec) throw new Error("OPS_SPEC_REFERENCE_MISSING");
++  const componentsById = new Map(components.map(component => [component.id, component]));
++  const scopedComponents: ResearchOpsRequirementScopeV1["components"] = [];
++  for (const reference of opsSpec.componentReferences) {
++    if (!componentsById.has(reference.id)) continue;
++    scopedComponents.push({ componentId: reference.id, sourceLines: reference.sourceLines, requirementIds: [...opsRequirementIds] });
++  }
++  if (scopedComponents.length === 0) throw new Error("OPS_COMPONENT_SCOPE_EMPTY");
++  return researchOpsRequirementScopeSchema.parse({ readmePath, readmeDigest: hash(readme), opsSpecPath, opsSpecDigest: opsSpec.digest, components: scopedComponents });
++};
+ type CatalogRouteState = ResearchCatalogMemberV1["routeState"];
+ type CatalogCrosswalkEntry = { memberName: string; componentId: string; registerTerm: string; routeState: CatalogRouteState };
+ type CatalogSectionSource = ResearchCatalogSectionV1 & { bodyLines: { text: string; lineNumber: number }[] };
+@@ -481,7 +531,7 @@ const inspectComponentComparisons = (reports: ResearchRegisterInspectionV1["repo
+   }
+   return [...comparisons.values()];
+ };
+-const inspectComponentDecisions = (reports: ResearchRegisterInspectionV1["reports"], components: ResearchRegisterInspectionV1["components"], findings: ResearchInspectionFindingV1[], documents: ReadonlyMap<string, ResearchDocumentOverlayV1>, requirementIds: readonly string[], release: string): ResearchComponentComparisonCheckV2[] => {
++const inspectComponentDecisions = (reports: ResearchRegisterInspectionV1["reports"], components: ResearchRegisterInspectionV1["components"], findings: ResearchInspectionFindingV1[], documents: ReadonlyMap<string, ResearchDocumentOverlayV1>, requirementIds: readonly string[], release: string, opsScope: ResearchOpsRequirementScopeV1): ResearchComponentComparisonCheckV2[] => {
+   const decisions = new Map<string, ResearchComponentComparisonV2 | ResearchComponentComparisonV3 | ResearchSourcesComponentComparisonV1 | ResearchSourcesComponentComparisonV2>();
+   for (const report of reports) {
+     if (report.digest === null) continue;
+@@ -499,9 +549,10 @@ const inspectComponentDecisions = (reports: ResearchRegisterInspectionV1["report
+     }
+   }
+   const acceptanceIds = new Set(acceptanceIndexSchema.parse(JSON.parse(read("tests/acceptance-index.json"))).acceptance.map(entry => entry.id));
+-  return components.map(component => compareDecision(decisions.get(component.id), component, findings, requirementIds, release, acceptanceIds));
++  const opsRequirements = new Map(opsScope.components.map(component => [component.componentId, component.requirementIds]));
++  return components.map(component => compareDecision(decisions.get(component.id), component, findings, requirementIds, release, acceptanceIds, opsRequirements.get(component.id) ?? []));
+ };
+-const compareDecision = (record: ResearchComponentComparisonV2 | ResearchComponentComparisonV3 | ResearchSourcesComponentComparisonV1 | ResearchSourcesComponentComparisonV2 | ResearchAttentionDecisionV1 | undefined, component: ResearchRegisterInspectionV1["components"][number], findings: ResearchInspectionFindingV1[], requirementIds: readonly string[], release: string, acceptanceIds: ReadonlySet<string>): ResearchComponentComparisonCheckV2 => {
++const compareDecision = (record: ResearchComponentComparisonV2 | ResearchComponentComparisonV3 | ResearchSourcesComponentComparisonV1 | ResearchSourcesComponentComparisonV2 | ResearchAttentionDecisionV1 | undefined, component: ResearchRegisterInspectionV1["components"][number], findings: ResearchInspectionFindingV1[], requirementIds: readonly string[], release: string, acceptanceIds: ReadonlySet<string>, opsRequirementIds: readonly string[] = []): ResearchComponentComparisonCheckV2 => {
+   const codes: ResearchComponentComparisonCheckV2["findings"] = [];
+   const add = (code: ResearchComponentComparisonCheckV2["findings"][number]): void => { if (!codes.includes(code)) codes.push(code); };
+   const validationId = "G0:" + release + ":" + component.id + (record?.scope === "attention-research-decision" ? ":" + record.decisionId : "");
+@@ -513,7 +564,8 @@ const compareDecision = (record: ResearchComponentComparisonV2 | ResearchCompone
+     return source?.kind === "primary" && source.supportedOptionIds.includes(optionId);
+   };
+   const sourcesComponent = component.id.startsWith("D");
+-  const expectedRequirements = sourcesComponent ? [...new Set([...requirementIds, "0.9"])] : requirementIds;
++  const baselineRequirements = sourcesComponent ? [...requirementIds, "0.9"] : [...requirementIds];
++  const expectedRequirements = [...new Set([...baselineRequirements, ...opsRequirementIds])];
+   const missingRequirementIds = expectedRequirements.filter(id => !record?.mappedRequirements.includes(id));
+   const missingSourceIds = new Set(component.reportKeys.filter(id => !selected || !sourceSupports(id, selected.id)));
+   if (component.reportKeys.length === 0) missingSourceIds.add("REGISTER:" + component.id);
+@@ -669,7 +721,8 @@ const inspectResearch = (input: MapCheckInputV1, testDocuments: readonly Researc
+   const globalMapping = /README maps ([^\n]+?) to all specs/.exec(raw)?.[1];
+   const requirementIds = [...new Set(globalMapping?.match(/\b[0-9]+\.[0-9]+\b/g) ?? [])];
+   if (requirementIds.length === 0) throw new Error("REGISTER_GLOBAL_REQUIREMENTS_MISSING");
+-  const componentDecisions = inspectComponentDecisions(reports, components, findings, documents, requirementIds, input.release ?? "R0");
++  const opsScope = inspectOpsRequirementScope(components, specReferences);
++  const componentDecisions = inspectComponentDecisions(reports, components, findings, documents, requirementIds, input.release ?? "R0", opsScope);
+   const attentionDecisions = inspectAttentionDecisions(reports, components, findings, documents, requirementIds, input.release ?? "R0");
+   return researchRegisterInspectionV3Schema.parse({ attentionDecisions, componentDecisions, requestedRelease: input.release, registerPath, registerDigest: hash(raw), components, componentComparisons, reports, specReferences, sourcesCatalogCoverage, dependencyClosureVerified: false, findings, wholeATsPassed: [], scope: "register_inventory", admission: "BLOCKED", acceptanceComplete: false });
+ };

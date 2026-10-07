@@ -1,0 +1,42 @@
+{
+  "recordedAt": "2026-10-07T00:07:29.659468+00:00",
+  "card": "R0.02",
+  "sourceReview": "REJECTED_AUDIT_NAMESPACE_CONFLATION",
+  "sourceHashes": {
+    "docs/adr/0043-ops-research-scope.md": "3fd2edbec2eacf9f9767d42b025eeac2b9e47fbaf48ec34b4e28ade7120f5631",
+    "packages/contracts/src/engineering-control.ts": "76149151b63bb10c88a28f5e716c7809873720e6067755967c2f570bd5ee428f",
+    "packages/self-improvement/src/engineering-control.ts": "154df3c2c05eff4856163caff33af191c4296758fdfdbcebc8234a0acaa65564"
+  },
+  "writtenInterface": "docs/adr/0043-ops-research-scope.md",
+  "publicCompatibility": "Existing EngineeringControl.checkResearch signature and ResearchRegisterInspectionV1-V3 result preserved",
+  "reviewedBehaviors": [
+    "Derive Ops references and join them to present canonical register rows; CLI observes 29 references, 22 joined components and seven explicit unmapped findings",
+    "Require unique README mappings for 0.1/0.2/0.10/2.4/5.10 to Ops or all",
+    "Apply mapped IDs to every scoped generic decision including M02/M03",
+    "Preserve non-Ops comparisons, Sources 0.9 and dedicated Attention path"
+  ],
+  "findings": [],
+  "runtimePending": false,
+  "assignedATs": [
+    "AT-ops-43"
+  ],
+  "wholeATsPassed": [],
+  "acceptanceComplete": false,
+  "next": "Generate TypeScript/Python only after both source workers stop, read real toy research check, rerun unfiltered AT-self-improvement-54 and exact show, tear down owned world",
+  "readbackCorrection": {
+    "reportedJoinedCount": 29,
+    "observedJoinedCount": 22,
+    "reason": "The handoff counted all Ops references before intersecting with actual register rows. The implemented owner joins only present rows; existing source-reference findings expose all seven missing rows."
+  },
+  "verification": "build/evidence/R0.02/ops-scope-verification.json",
+  "sourceUnitStopped": true,
+  "supersededByScopeRejection": true,
+  "sourceScopeUnitComplete": false,
+  "rejection": {
+    "recordedAt": "2026-10-07T00:27:45.477143+00:00",
+    "evidence": "specs/ops.md:2068\u20132088 labels these raw references as Consistency audit finding IDs, not register component IDs.",
+    "preservedSource": "build/evidence/R0.02/ops-scope-rejected-source.diff",
+    "restoredTo": "01c9d15",
+    "next": "Derive component scope from canonical register P/ops legend, actual consuming-spec rows and requirement component groups before any new source mutation."
+  }
+}

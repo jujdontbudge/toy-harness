@@ -1,0 +1,46 @@
+{
+  "recordedAt": "2026-10-07T00:19:35.173832+00:00",
+  "card": "R0.03",
+  "nativeAttempt": 1,
+  "nativeFailures": 1,
+  "caseId": "profile-use-one",
+  "observedExit": 1,
+  "providerRequests": 0,
+  "reason": "Pinned public chat startup checks configured model/provider or singleton auth before the pooled-grant resolution path; the sibling fixture had not configured model.provider.",
+  "primarySource": {
+    "repository": "/Users/johansardar/.hermes/hermes-agent",
+    "commit": "8d5e3e412138342e8bf30443e72bd4e6a9abd057",
+    "path": "hermes_cli/main.py",
+    "lines": [
+      1092,
+      1146,
+      1848
+    ]
+  },
+  "fix": "Use the public profile config command to set model.provider=openai-codex, as the existing borrowed-root fixture does. No runtime or private-helper bypass.",
+  "rootBytesPreserved": true,
+  "receiptMaxLength": 1695,
+  "worldDown": {
+    "stackId": "e0b61704-0662-423c-ace0-1974fcd5b2c2",
+    "checkpointRefs": [],
+    "fenceRefs": [],
+    "stoppedResourceRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "e0b61704-0662-423c-ace0-1974fcd5b2c2"
+      }
+    ],
+    "retainedArtifactRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "e0b61704-0662-423c-ace0-1974fcd5b2c2"
+      }
+    ],
+    "unresolvedResourceRefs": [],
+    "complete": true
+  },
+  "wholeATComplete": false,
+  "next": "Rebuild, run full strict gates, fresh native-pressure admission, then unfiltered AT86 and exact show."
+}

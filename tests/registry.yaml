@@ -2455,5 +2455,156 @@
       }
     ],
     "simUnavailableReason": "SIM cannot create or reload temporary root ownership lineage or invoke administrative auth-add. CLI drives the public native auth/chat entries with fake external providers and clock."
+  },
+  {
+    "id": "AT-hermes-config-86",
+    "rung": "CLI",
+    "sourceAssertionHash": "b90fe8a1790499442d9052465aa54ac50d5d880ce806dfef3979ff450b422725",
+    "commandId": "probe.run",
+    "scenarioId": "auth.siblings",
+    "owner": "hermes",
+    "firstRelease": "R0",
+    "kind": "behavioral",
+    "mandatoryCases": [
+      {
+        "id": "root-add-one",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "root-add-one"
+      },
+      {
+        "id": "root-add-two",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "root-add-two"
+      },
+      {
+        "id": "root-readback-one",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "root-readback-one"
+      },
+      {
+        "id": "root-readback-two",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "root-readback-two"
+      },
+      {
+        "id": "profile-add-one",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "profile-add-one"
+      },
+      {
+        "id": "profile-add-two",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "profile-add-two"
+      },
+      {
+        "id": "profile-add-new",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "profile-add-new"
+      },
+      {
+        "id": "profile-readback-one",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "profile-readback-one"
+      },
+      {
+        "id": "profile-readback-two",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "profile-readback-two"
+      },
+      {
+        "id": "profile-readback-new",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "profile-readback-new"
+      },
+      {
+        "id": "profile-priority-one",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "profile-priority-one"
+      },
+      {
+        "id": "profile-use-one",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "profile-use-one"
+      },
+      {
+        "id": "profile-priority-two",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "profile-priority-two"
+      },
+      {
+        "id": "profile-use-two",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "profile-use-two"
+      },
+      {
+        "id": "profile-priority-new",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "profile-priority-new"
+      },
+      {
+        "id": "profile-use-new",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "profile-use-new"
+      }
+    ],
+    "trigger": "Create two synthetic root grants, two existing profile grants and one new independent profile grant through public auth-add; list each row, select and use each profile grant in a fresh process while preserving root bytes.",
+    "faultControls": [],
+    "observations": [
+      {
+        "id": "public-row-readback",
+        "independentReader": "HermesAuthProbe.run: public list labels/counts and separate child receipts",
+        "caseIds": [
+          "root-readback-one",
+          "root-readback-two",
+          "profile-readback-one",
+          "profile-readback-two",
+          "profile-readback-new"
+        ]
+      },
+      {
+        "id": "profile-grant-selection",
+        "independentReader": "HermesAuthProbe.run: public priority, fresh child identity and independent provider generations/ledger",
+        "caseIds": [
+          "profile-priority-one",
+          "profile-use-one",
+          "profile-priority-two",
+          "profile-use-two",
+          "profile-priority-new",
+          "profile-use-new"
+        ]
+      },
+      {
+        "id": "root-store-preservation",
+        "independentReader": "HermesAuthProbe.run: independent root auth/environment digests after each profile command",
+        "caseIds": [
+          "root-readback-one",
+          "root-readback-two",
+          "profile-add-one",
+          "profile-add-two",
+          "profile-add-new",
+          "profile-readback-one",
+          "profile-readback-two",
+          "profile-readback-new",
+          "profile-priority-one",
+          "profile-use-one",
+          "profile-priority-two",
+          "profile-use-two",
+          "profile-priority-new",
+          "profile-use-new"
+        ]
+      },
+      {
+        "id": "scope-specific-persistence",
+        "independentReader": "HermesAuthProbe.run: independent root/profile digest changes and opposite-scope preservation",
+        "caseIds": [
+          "root-add-one",
+          "root-add-two",
+          "profile-add-one",
+          "profile-add-two",
+          "profile-add-new"
+        ]
+      }
+    ],
+    "simUnavailableReason": "SIM cannot enumerate the scoped auth ownership matrix or select each profile-owned grant through the pinned administrative auth CLI."
   }
 ]

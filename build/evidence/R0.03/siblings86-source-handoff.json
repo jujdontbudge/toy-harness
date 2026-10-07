@@ -1,0 +1,106 @@
+{
+  "schemaVersion": "toy.r0.03.siblings86-source-handoff.v1",
+  "status": "source-ready-unverified",
+  "recordedAt": "2026-10-07T00:14:00Z",
+  "acceptance": {
+    "id": "AT-hermes-config-86",
+    "rung": "CLI",
+    "commandId": "probe.run",
+    "scenarioId": "auth.siblings",
+    "owner": "hermes",
+    "sourceAssertionHash": "b90fe8a1790499442d9052465aa54ac50d5d880ce806dfef3979ff450b422725",
+    "source": {
+      "path": "../personal-assistant-harness/specs/hermes-config.md",
+      "line": 3050,
+      "sha256": "d3548fde13180bc750660f306caa0041101832e398ccdabd6cfdac0b3de8f4af"
+    },
+    "assertion": "Given root rows and profile-owned siblings, When real auth-add and fresh-process usability probes run, Then root bytes remain identical and every sibling plus the new grant remains usable."
+  },
+  "interface": {
+    "path": "docs/adr/0044-profile-sibling-auth-probe.md",
+    "sha256": "bb5208a29abccfe01d8cec8b2cfd3e344e3d8a4843f629e401b4f3b373495720",
+    "decision": "Reuse HermesAuthProbe.run, the pinned public Hermes auth CLI, and HermesAuthFixtureResultV1; no contract, DTO, module, or protocol change."
+  },
+  "sourceBindings": [
+    {
+      "path": "packages/hermes/src/auth-fixture.ts",
+      "sha256": "ba5ae5b5d82ebfdb8e979d8089477c19518bfa5e7f2a482bf11b8606b41eb8e1",
+      "locations": ["14-55", "168-189", "297-445"],
+      "role": "Fixed sibling cases, scoped public auth operations, independent process/result checks, and synthetic root/profile store digests."
+    },
+    {
+      "path": "packages/hermes/src/auth-probe.ts",
+      "sha256": "1ae1287cc4c88a6f6621b738e67aee093218efb9c7d36c4128439963f1e7767f",
+      "locations": ["19-26", "88-93"],
+      "role": "Accept unfiltered AT86, bind exact mandatory cases to auth.siblings, and dispatch the existing fixture owner."
+    },
+    {
+      "path": "patches/hermes-auth-fixture.patch",
+      "sha256": "454c998f5b5f61dc6b4ee788c8dfd995d4eba2915f889246fd3203ab8825cc76",
+      "locations": ["73-90", "330-353", "507-530", "638-642"],
+      "role": "Assign fixed distinct synthetic OAuth identities, labels, target-label readback, and model authorization to profile sibling actors."
+    },
+    {
+      "path": "tests/acceptance-index.json",
+      "sha256": "c9b645eab7f55b2ebf35d7db769a534a4837de23ad3dc3d913f3189e781d44fa",
+      "role": "AT86 acceptance source index row."
+    }
+  ],
+  "grants": [
+    {"scope": "root", "label": "toy-fixture-sibling-root-one", "fakeGeneration": "initial"},
+    {"scope": "root", "label": "toy-fixture-sibling-root-two", "fakeGeneration": "rotated"},
+    {"scope": "profile", "label": "toy-fixture-sibling-profile-one", "fakeGeneration": "stale"},
+    {"scope": "profile", "label": "toy-fixture-sibling-profile-two", "fakeGeneration": "added"},
+    {"scope": "profile", "label": "toy-fixture-sibling-profile-new", "fakeGeneration": "added-rotated"}
+  ],
+  "mandatoryCases": [
+    {"id": "root-add-one", "publicOperation": "HermesAuthProbe.run", "phase": "root-add-one", "command": "hermes auth add openai-codex --type oauth --no-browser --label toy-fixture-sibling-root-one"},
+    {"id": "root-add-two", "publicOperation": "HermesAuthProbe.run", "phase": "root-add-two", "command": "hermes auth add openai-codex --type oauth --no-browser --label toy-fixture-sibling-root-two"},
+    {"id": "root-readback-one", "publicOperation": "HermesAuthProbe.run", "phase": "root-readback-one", "command": "hermes auth list openai-codex", "count": 2, "labelPresent": true},
+    {"id": "root-readback-two", "publicOperation": "HermesAuthProbe.run", "phase": "root-readback-two", "command": "hermes auth list openai-codex", "count": 2, "labelPresent": true},
+    {"id": "profile-add-one", "publicOperation": "HermesAuthProbe.run", "phase": "profile-add-one", "command": "hermes --profile toy auth add openai-codex --type oauth --no-browser --label toy-fixture-sibling-profile-one"},
+    {"id": "profile-add-two", "publicOperation": "HermesAuthProbe.run", "phase": "profile-add-two", "command": "hermes --profile toy auth add openai-codex --type oauth --no-browser --label toy-fixture-sibling-profile-two"},
+    {"id": "profile-add-new", "publicOperation": "HermesAuthProbe.run", "phase": "profile-add-new", "command": "hermes --profile toy auth add openai-codex --type oauth --no-browser --label toy-fixture-sibling-profile-new"},
+    {"id": "profile-readback-one", "publicOperation": "HermesAuthProbe.run", "phase": "profile-readback-one", "command": "hermes --profile toy auth list openai-codex", "count": 3, "labelPresent": true},
+    {"id": "profile-readback-two", "publicOperation": "HermesAuthProbe.run", "phase": "profile-readback-two", "command": "hermes --profile toy auth list openai-codex", "count": 3, "labelPresent": true},
+    {"id": "profile-readback-new", "publicOperation": "HermesAuthProbe.run", "phase": "profile-readback-new", "command": "hermes --profile toy auth list openai-codex", "count": 3, "labelPresent": true},
+    {"id": "profile-priority-one", "publicOperation": "HermesAuthProbe.run", "phase": "profile-priority-one", "command": "hermes --profile toy auth priority openai-codex toy-fixture-sibling-profile-one 0"},
+    {"id": "profile-use-one", "publicOperation": "HermesAuthProbe.run", "phase": "profile-use-one", "command": "hermes --profile toy chat --provider openai-codex --model gpt-6.1-sol --toolsets none -q \"Return the fixed fixture marker.\"", "generation": "stale"},
+    {"id": "profile-priority-two", "publicOperation": "HermesAuthProbe.run", "phase": "profile-priority-two", "command": "hermes --profile toy auth priority openai-codex toy-fixture-sibling-profile-two 0"},
+    {"id": "profile-use-two", "publicOperation": "HermesAuthProbe.run", "phase": "profile-use-two", "command": "hermes --profile toy chat --provider openai-codex --model gpt-6.1-sol --toolsets none -q \"Return the fixed fixture marker.\"", "generation": "added"},
+    {"id": "profile-priority-new", "publicOperation": "HermesAuthProbe.run", "phase": "profile-priority-new", "command": "hermes --profile toy auth priority openai-codex toy-fixture-sibling-profile-new 0"},
+    {"id": "profile-use-new", "publicOperation": "HermesAuthProbe.run", "phase": "profile-use-new", "command": "hermes --profile toy chat --provider openai-codex --model gpt-6.1-sol --toolsets none -q \"Return the fixed fixture marker.\"", "generation": "added-rotated"}
+  ],
+  "manifest": {
+    "rung": "CLI",
+    "commandId": "probe.run",
+    "scenarioId": "auth.siblings",
+    "owner": "hermes",
+    "firstRelease": "R0",
+    "kind": "behavioral",
+    "faultControls": [],
+    "observationBindings": [
+      {"id": "public-row-readback", "caseIds": ["root-readback-one", "root-readback-two", "profile-readback-one", "profile-readback-two", "profile-readback-new"], "reader": "HermesAuthProbe.run: public_argv, AUTH_LIST_READBACK_OK, credential_count, target_label_present."},
+      {"id": "profile-grant-selection", "caseIds": ["profile-priority-one", "profile-use-one", "profile-priority-two", "profile-use-two", "profile-priority-new", "profile-use-new"], "reader": "HermesAuthProbe.run: fixed-label public priority, fresh process identity, markers, access_generation, catalog_access_generation, and HTTP ledger."},
+      {"id": "root-store-preservation", "caseIds": ["root-readback-one", "root-readback-two", "profile-add-one", "profile-add-two", "profile-add-new", "profile-readback-one", "profile-readback-two", "profile-readback-new", "profile-priority-one", "profile-use-one", "profile-priority-two", "profile-use-two", "profile-priority-new", "profile-use-new"], "reader": "HermesAuthProbe.run: root auth/environment digests equal the post-seed baseline throughout profile operations."},
+      {"id": "scope-specific-persistence", "caseIds": ["root-add-one", "root-add-two", "profile-add-one", "profile-add-two", "profile-add-new"], "reader": "HermesAuthProbe.run: independent root/profile auth digest changes and opposite-scope store stability."}
+    ],
+    "simUnavailableReason": "SIM cannot enumerate the scoped auth ownership matrix or select each profile-owned grant through the pinned administrative auth CLI."
+  },
+  "parentIntegration": {
+    "required": [
+      "Add AT-hermes-config-86 source registration with the exact scenario and 16 mandatory cases above, plus Then-observation bindings and source hash.",
+      "Add AT86 to the existing native-auth FixtureProbe dispatch and CLI accepted-probe inventory; regenerate the canonical generated probe inventory and refresh the feature map.",
+      "Run the assigned toy --env test --stack <stack-id> probe run AT-hermes-config-86 --request-id <UUID> --json command after source workers stop, then read back and tear down through the existing CLI."
+    ],
+    "sourceFilesOutsideThisCard": ["tests/registry.yaml", "packages/contracts/src/generated-probe-registry.ts", "packages/ops/src/fixture-stack.ts", "skills/toy-control/FEATURE-MAP.md"]
+  },
+  "verification": {
+    "sourceReview": "Diff and source hashes recorded; patch-added line count matches its self-declared 747-line hunk.",
+    "buildsTestsStacksAndRuntime": "not run by this source worker, per parent gate",
+    "wholeATComplete": false,
+    "pendingGates": ["parent registry/dispatcher/map integration", "unfiltered AT86 CLI proof and sanitized receipt readback", "protected controller/native service identity and full AT scope remain separate gates"],
+    "identityLimit": "Reported child UID/GID identifies this fixture runner only and is not a service identity.",
+    "preservation": "Installed Hermes, profiles, services, accounts, frozen roots, and root requests were not operated by this source worker."
+  }
+}

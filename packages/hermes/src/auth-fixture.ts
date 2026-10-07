@@ -12,6 +12,37 @@ const maxArchiveBytes = 268435456;
 const maxChildBytes = 65536;
 const fixtureModule = "tests.fixtures.toy_auth_httpx_fixture";
 type FixtureOperation = HermesAuthFixtureResultV1["observations"]["phase"];
+type AuthFixtureMode = "standard" | "borrowed-root" | "profile-siblings";
+type FixtureStoreDigest = { exists: boolean; digest: string | null };
+type ProfileSiblingStep = {
+  caseId: string;
+  operation: FixtureOperation;
+  scope: "root" | "profile";
+  actor: string;
+  label: string;
+  expectedCount?: number;
+  expectedLabelPresent?: boolean;
+  expectedGeneration?: Exclude<HermesAuthFixtureResultV1["observations"]["access_generation"], null>;
+};
+
+const profileSiblingSteps: readonly ProfileSiblingStep[] = [
+  { caseId: "root-add-one", operation: "add", scope: "root", actor: "sibling-root-one", label: "toy-fixture-sibling-root-one" },
+  { caseId: "root-add-two", operation: "add", scope: "root", actor: "sibling-root-two", label: "toy-fixture-sibling-root-two" },
+  { caseId: "root-readback-one", operation: "list", scope: "root", actor: "sibling-root-one", label: "toy-fixture-sibling-root-one", expectedCount: 2, expectedLabelPresent: true },
+  { caseId: "root-readback-two", operation: "list", scope: "root", actor: "sibling-root-two", label: "toy-fixture-sibling-root-two", expectedCount: 2, expectedLabelPresent: true },
+  { caseId: "profile-add-one", operation: "add", scope: "profile", actor: "sibling-profile-one", label: "toy-fixture-sibling-profile-one" },
+  { caseId: "profile-add-two", operation: "add", scope: "profile", actor: "sibling-profile-two", label: "toy-fixture-sibling-profile-two" },
+  { caseId: "profile-add-new", operation: "add", scope: "profile", actor: "sibling-profile-new", label: "toy-fixture-sibling-profile-new" },
+  { caseId: "profile-readback-one", operation: "list", scope: "profile", actor: "sibling-profile-one", label: "toy-fixture-sibling-profile-one", expectedCount: 3, expectedLabelPresent: true },
+  { caseId: "profile-readback-two", operation: "list", scope: "profile", actor: "sibling-profile-two", label: "toy-fixture-sibling-profile-two", expectedCount: 3, expectedLabelPresent: true },
+  { caseId: "profile-readback-new", operation: "list", scope: "profile", actor: "sibling-profile-new", label: "toy-fixture-sibling-profile-new", expectedCount: 3, expectedLabelPresent: true },
+  { caseId: "profile-priority-one", operation: "priority-added", scope: "profile", actor: "sibling-profile-one", label: "toy-fixture-sibling-profile-one" },
+  { caseId: "profile-use-one", operation: "chat", scope: "profile", actor: "sibling-profile-one", label: "toy-fixture-sibling-profile-one", expectedGeneration: "stale" },
+  { caseId: "profile-priority-two", operation: "priority-added", scope: "profile", actor: "sibling-profile-two", label: "toy-fixture-sibling-profile-two" },
+  { caseId: "profile-use-two", operation: "chat", scope: "profile", actor: "sibling-profile-two", label: "toy-fixture-sibling-profile-two", expectedGeneration: "added" },
+  { caseId: "profile-priority-new", operation: "priority-added", scope: "profile", actor: "sibling-profile-new", label: "toy-fixture-sibling-profile-new" },
+  { caseId: "profile-use-new", operation: "chat", scope: "profile", actor: "sibling-profile-new", label: "toy-fixture-sibling-profile-new", expectedGeneration: "added-rotated" }
+];
 
 const digest = (value: string | Buffer): string => createHash("sha256").update(value).digest("hex");
 const isWithin = (base: string, target: string): boolean => {
@@ -19,10 +50,10 @@ const isWithin = (base: string, target: string): boolean => {
   return path === "" || (!isAbsolute(path) && path !== ".." && !path.startsWith(`..${sep}`));
 };
 
-const publicArgv = (operation: FixtureOperation, order?: HermesAuthConcurrencyObservationV1["order"], storageContext = false, rootScope = false): string[] => {
+const publicArgv = (operation: FixtureOperation, order?: HermesAuthConcurrencyObservationV1["order"], storageContext = false, rootScope = false, labelOverride?: string): string[] => {
   const prefix = rootScope ? ["hermes"] : ["hermes", "--profile", "toy"];
-  const label = storageContext ? "toy-fixture-storage-cut" : `toy-fixture-added-${order}`;
-  if (operation.startsWith("add")) return [...prefix, "auth", "add", "openai-codex", "--type", "oauth", "--no-browser", ...(order === undefined ? [] : ["--label", label])];
+  const label = labelOverride ?? (storageContext ? "toy-fixture-storage-cut" : `toy-fixture-added-${order}`);
+  if (operation.startsWith("add")) return [...prefix, "auth", "add", "openai-codex", "--type", "oauth", "--no-browser", ...(order === undefined && labelOverride === undefined ? [] : ["--label", label])];
   if (operation.startsWith("list")) return [...prefix, "auth", "list", "openai-codex"];
   if (operation === "priority-added" || operation === "priority-restored") return [...prefix, "auth", "priority", "openai-codex", operation === "priority-added" ? label : "2", "0"];
   return [...prefix, "chat", "--provider", operation === "siwc-unbound" ? "siwc_responses" : "openai-codex", "--model", "gpt-6.1-sol", "--toolsets", "none", "-q", "Return the fixed fixture marker."];
@@ -135,7 +166,7 @@ const check = (state: CheckViewV1["state"], reasonCode: string, prerequisite: un
   links: { recordRefs: [], observations: [], artifactDigests: [...new Set(artifactDigests)] }
 });
 
-export const runHermesAuthFixture = async (interpreter: string, home: string, hermesHome: string, timeoutMs: number, firstOperation: FixtureOperation = "add", borrowedRoot = false): Promise<CheckViewV1[]> => {
+export const runHermesAuthFixture = async (interpreter: string, home: string, hermesHome: string, timeoutMs: number, firstOperation: FixtureOperation = "add", mode: AuthFixtureMode = "standard"): Promise<CheckViewV1[]> => {
   const started = process.hrtime.bigint();
   const remainingMs = (): number => timeoutMs - Number((process.hrtime.bigint() - started) / 1000000n);
   const evidence: Record<string, unknown> = { wholeATComplete: false, fixtureSubsetComplete: false };
@@ -151,8 +182,11 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
     const concurrentRun = firstOperation === "concurrent-refresh-add";
     const saveFault = firstOperation === "add-enospc" || firstOperation === "add-replace-fault";
     const deniedGrant = saveFault || siwcUnbound;
+    const borrowedRoot = mode === "borrowed-root";
+    const profileSiblings = mode === "profile-siblings";
     if (borrowedRoot && firstOperation !== "add") return fail("BLOCKED", "NATIVE_AUTH_FIXTURE_OPERATION_INVALID");
-    const operations: readonly FixtureOperation[] = borrowedRoot ? ["add", "list", "chat", "chat-expired", "chat-reloaded", "chat-reloaded"] : siwcUnbound ? [firstOperation] : saveFault ? [firstOperation, "list-after-fault", "chat-after-fault"] : concurrentRun ? ["add", "list"] : ["add", "list", "chat", "chat-expired", "chat-reloaded"];
+    if (profileSiblings && firstOperation !== "add") return fail("BLOCKED", "NATIVE_AUTH_FIXTURE_OPERATION_INVALID");
+    const operations: readonly FixtureOperation[] = borrowedRoot ? ["add", "list", "chat", "chat-expired", "chat-reloaded", "chat-reloaded"] : profileSiblings ? profileSiblingSteps.map(step => step.operation) : siwcUnbound ? [firstOperation] : saveFault ? [firstOperation, "list-after-fault", "chat-after-fault"] : concurrentRun ? ["add", "list"] : ["add", "list", "chat", "chat-expired", "chat-reloaded"];
     if (!Number.isInteger(timeoutMs) || timeoutMs < 1 || timeoutMs > 120000) return fail("BLOCKED", "NATIVE_AUTH_FIXTURE_TIMEOUT_INVALID");
     const homeRoot = realpathSync(home);
     const hermesRoot = realpathSync(hermesHome);
@@ -238,7 +272,8 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
     const profileAuthAfterCreate = privateStoreDigests(hermesRoot).profileAuth;
     const fallback = [{ provider: "openai", model: "gpt-6.1-sol" }];
     const profileConfigCommands = [["--profile", "toy", "config", "set", "auxiliary.title_generation.enabled", "false"]];
-    if (borrowedRoot) profileConfigCommands.push(["config", "set", "auxiliary.title_generation.enabled", "false"], ["--profile", "toy", "config", "set", "model.provider", "openai-codex"]);
+    if (borrowedRoot) profileConfigCommands.push(["config", "set", "auxiliary.title_generation.enabled", "false"]);
+    if (borrowedRoot || profileSiblings) profileConfigCommands.push(["--profile", "toy", "config", "set", "model.provider", "openai-codex"]);
     if (siwcUnbound) profileConfigCommands.push(["--profile", "toy", "config", "set", "fallback_model", JSON.stringify(fallback)], ["--profile", "toy", "config", "get", "fallback_model", "--json"]);
     for (const profileConfigArgs of profileConfigCommands) {
       const profileConfigRequest = bounded(interpreter, ["-B", "-I", candidateStore, "--print-runtime-command", "--module", "hermes_cli.main", "--", ...profileConfigArgs], maxChildBytes, 5000);
@@ -263,10 +298,14 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
     }
     let profileAuthAfterAdd: { exists: boolean; digest: string | null } | null = null;
     let previousRootAuth = storesBefore.rootAuth;
+    let profileSiblingRootBaseline: { rootAuth: FixtureStoreDigest; rootEnv: FixtureStoreDigest } | null = null;
     const childPids = new Set<number>();
     for (const [operationIndex, operation] of operations.entries()) {
-      const rootScope = borrowedRoot && (operationIndex === 0 || operationIndex === 5);
+      const siblingStep = profileSiblings ? profileSiblingSteps[operationIndex] : undefined;
+      if (profileSiblings && !siblingStep) return fail("FAIL", "NATIVE_AUTH_FIXTURE_SIBLING_STEP_MISSING", { operationIndex });
+      const rootScope = siblingStep ? siblingStep.scope === "root" : borrowedRoot && (operationIndex === 0 || operationIndex === 5);
       const borrowedCase = ["root-add", "borrowed-list", "borrowed-use", "borrowed-refresh", "profile-reload", "root-reload"][operationIndex];
+      const storesBeforeOperation = privateStoreDigests(hermesRoot);
       const commandRequest = bounded(interpreter, ["-B", "-I", candidateStore, "--print-runtime-command", "--module", fixtureModule, "--", operation], maxChildBytes, 5000);
       if (commandRequest.timedOut || !commandRequest.result || commandRequest.result.error || commandRequest.result.status !== 0) return fail("BLOCKED", "NATIVE_AUTH_FIXTURE_PUBLIC_COMMAND_UNAVAILABLE", { installedCommit, archiveDigest, operation });
       const rawPublicCommand: unknown = JSON.parse(commandRequest.result.stdout.toString("utf8"));
@@ -277,8 +316,12 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
       const commandInterpreter = realpathSync(commandInterpreterValue);
       if (commandInterpreter !== expectedInterpreter || !bootstrap.includes(fixtureModule) || !bootstrap.includes(candidateRoot)) return fail("FAIL", "NATIVE_AUTH_FIXTURE_PUBLIC_COMMAND_INVALID", { installedCommit, archiveDigest, operation });
       const commandDigest = digest(JSON.stringify(publicCommand));
-      const scopedEnvironment = { ...environment, TOY_AUTH_STORE_SCOPE: rootScope ? "root" : "profile" };
-      const child = bounded(interpreter, ["-B", ...publicCommand.slice(1)], maxChildBytes, 30000, undefined, homeRoot, borrowedRoot ? scopedEnvironment : environment);
+      const scopedEnvironment = {
+        ...environment,
+        TOY_AUTH_STORE_SCOPE: rootScope ? "root" : "profile",
+        ...(siblingStep ? { TOY_AUTH_CONCURRENCY_ACTOR: siblingStep.actor } : {})
+      };
+      const child = bounded(interpreter, ["-B", ...publicCommand.slice(1)], maxChildBytes, 30000, undefined, homeRoot, borrowedRoot || profileSiblings ? scopedEnvironment : environment);
       if (child.timedOut || !child.result || child.result.error || child.result.status === null) return fail("BLOCKED", "NATIVE_AUTH_FIXTURE_CHILD_UNAVAILABLE", { installedCommit, archiveDigest, operation, commandDigest, childExitCode: child.result?.status ?? null, childSignal: child.result?.signal ?? null, childError: child.result?.error?.message.includes("ETIMEDOUT") ? "TIMEOUT" : child.result?.error ? "EXECUTION_UNAVAILABLE" : null, stdoutDigest: digest(child.result?.stdout ?? ""), stderrDigest: digest(child.result?.stderr ?? "") });
       const stdout = child.result.stdout.toString("utf8");
       const stderrDigest = digest(child.result.stderr);
@@ -291,14 +334,15 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
       const parsedResult = hermesAuthFixtureResultSchema.safeParse(rawResult);
       if (!parsedResult.success) return fail("FAIL", "NATIVE_AUTH_FIXTURE_RESULT_INVALID", { installedCommit, archiveDigest, operation, commandDigest, stdoutDigest: digest(child.result.stdout), stderrDigest });
       const result: HermesAuthFixtureResultV1 = parsedResult.data;
-      const expectedArgv = publicArgv(operation, undefined, false, rootScope);
+      const expectedArgv = publicArgv(operation, undefined, false, rootScope, siblingStep?.label);
       const addOperation = operation.startsWith("add");
       const listOperation = operation.startsWith("list");
-      const resultMarker = siwcUnbound ? "SIWC_AUTHORIZATION_REQUIRED" : addOperation ? saveFault ? "AUTH_SAVE_DENIED" : "AUTH_ADD_OK" : listOperation ? saveFault ? "AUTH_LIST_EMPTY" : "AUTH_LIST_READBACK_OK" : saveFault ? "CHAT_GRANT_UNUSABLE" : "CHAT_RESPONSE_OK";
+      const priorityOperation = operation === "priority-added" || operation === "priority-restored";
+      const resultMarker = siwcUnbound ? "SIWC_AUTHORIZATION_REQUIRED" : addOperation ? saveFault ? "AUTH_SAVE_DENIED" : "AUTH_ADD_OK" : listOperation ? saveFault ? "AUTH_LIST_EMPTY" : "AUTH_LIST_READBACK_OK" : priorityOperation ? "AUTH_PRIORITY_OK" : saveFault ? "CHAT_GRANT_UNUSABLE" : "CHAT_RESPONSE_OK";
       const chatOperation = operation.startsWith("chat") || siwcUnbound;
       const expectedLedger = addOperation
         ? { device_code_requests: 1, device_code_polls: 1, token_exchanges: 1, token_refreshes: 0, model_catalog_requests: 0, model_requests: 0, denied_http_requests: 0, blocked_socket_events: 0 }
-        : listOperation || deniedGrant
+        : listOperation || priorityOperation || deniedGrant
           ? { device_code_requests: 0, device_code_polls: 0, token_exchanges: 0, token_refreshes: 0, model_catalog_requests: 0, model_requests: 0, denied_http_requests: 0, blocked_socket_events: 0 }
           : { device_code_requests: 0, device_code_polls: 0, token_exchanges: 0, token_refreshes: operation === "chat-expired" ? 1 : 0, model_catalog_requests: result.http_ledger.model_catalog_requests, model_requests: 1, denied_http_requests: 0, blocked_socket_events: 0 };
       const identity = result.processIdentity;
@@ -310,25 +354,39 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
         && typeof process.getuid === "function" && identity.uid === process.getuid()
         && typeof process.getgid === "function" && identity.gid === process.getgid();
       const markerMatches = deniedGrant ? result.markers.includes(resultMarker) && !result.markers.includes("AUTH_ADD_OK") && !result.markers.includes("CHAT_RESPONSE_OK") : result.markers.length === 1 && result.markers[0] === resultMarker;
-      const countMatches = !listOperation || result.observations.credential_count === (saveFault ? 0 : 1);
+      const countMatches = !listOperation || result.observations.credential_count === (siblingStep?.expectedCount ?? (saveFault ? 0 : 1));
       const ledgerMatches = result.http_ledger.model_catalog_requests <= 1 && JSON.stringify(result.http_ledger) === JSON.stringify(expectedLedger);
       const storesAfterOperation = privateStoreDigests(hermesRoot);
       const rootStoreUnchanged = JSON.stringify(storesBefore.rootAuth) === JSON.stringify(storesAfterOperation.rootAuth)
         && JSON.stringify(storesBefore.rootEnv) === JSON.stringify(storesAfterOperation.rootEnv);
-      const profileStoreVerified = borrowedRoot ? !profileAuthAfterCreate.exists && !storesAfterOperation.profileAuth.exists : deniedGrant ? !storesAfterOperation.profileAuth.exists : storesAfterOperation.profileAuth.exists
-        && (operation !== "add" || storesAfterOperation.profileAuth.digest !== profileAuthAfterCreate.digest)
-        && (operation !== "chat-expired" || storesAfterOperation.profileAuth.digest !== profileAuthAfterAdd?.digest);
+      const siblingRootStoreUnchanged = profileSiblingRootBaseline !== null
+        && JSON.stringify(profileSiblingRootBaseline.rootAuth) === JSON.stringify(storesAfterOperation.rootAuth)
+        && JSON.stringify(profileSiblingRootBaseline.rootEnv) === JSON.stringify(storesAfterOperation.rootEnv);
+      const siblingRootAddPersisted = siblingStep?.scope === "root" && addOperation
+        && storesAfterOperation.rootAuth.exists
+        && storesAfterOperation.rootAuth.digest !== storesBeforeOperation.rootAuth.digest
+        && JSON.stringify(storesAfterOperation.rootEnv) === JSON.stringify(storesBeforeOperation.rootEnv);
+      const siblingProfileStoreUnchanged = JSON.stringify(storesBeforeOperation.profileAuth) === JSON.stringify(storesAfterOperation.profileAuth);
+      const siblingProfileAddPersisted = siblingStep?.scope === "profile" && addOperation
+        && storesAfterOperation.profileAuth.exists
+        && storesAfterOperation.profileAuth.digest !== storesBeforeOperation.profileAuth.digest;
+      const profileStoreVerified = siblingStep
+        ? siblingStep.scope === "root" ? siblingProfileStoreUnchanged : storesAfterOperation.profileAuth.exists
+        : borrowedRoot ? !profileAuthAfterCreate.exists && !storesAfterOperation.profileAuth.exists : deniedGrant ? !storesAfterOperation.profileAuth.exists : storesAfterOperation.profileAuth.exists
+          && (operation !== "add" || storesAfterOperation.profileAuth.digest !== profileAuthAfterCreate.digest)
+          && (operation !== "chat-expired" || storesAfterOperation.profileAuth.digest !== profileAuthAfterAdd?.digest);
       const borrowedRootStoreVerified = storesAfterOperation.rootAuth.exists
         && JSON.stringify(storesBefore.rootEnv) === JSON.stringify(storesAfterOperation.rootEnv)
         && (operation === "add" || operation === "chat-expired"
           ? storesAfterOperation.rootAuth.digest !== previousRootAuth.digest
           : storesAfterOperation.rootAuth.digest === previousRootAuth.digest);
-      const expectedGeneration = deniedGrant ? null : chatOperation ? operation === "chat" ? "initial" : "rotated" : null;
+      const expectedGeneration = deniedGrant ? null : chatOperation ? siblingStep?.expectedGeneration ?? (operation === "chat" ? "initial" : "rotated") : null;
       const exitMatches = result.exit_code === child.result.status && (deniedGrant && (addOperation || chatOperation) ? result.exit_code !== 0 : result.exit_code === 0);
-      const operationPassed = result.operation === (chatOperation ? "chat" : addOperation ? "add" : "list")
+      const operationPassed = result.operation === (chatOperation ? "chat" : addOperation ? "add" : priorityOperation ? "priority" : "list")
         && result.observations.phase === operation
         && result.observations.provider === (siwcUnbound ? "openai-chatgpt" : "openai-codex")
         && result.observations.access_generation === expectedGeneration
+        && (!siblingStep || result.observations.catalog_access_generation === (chatOperation ? siblingStep.expectedGeneration : null))
         && result.observations.network_denials.length === 0
         && result.observations.socket_origin === null
         && result.observations.token_hygiene
@@ -340,10 +398,13 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
         && exitMatches
         && markerMatches
         && countMatches
+        && (!siblingStep || priorityOperation || !listOperation || result.observations.target_label_present === siblingStep.expectedLabelPresent)
         && result.network_audit === "socket-audit-hook-installed"
         && ledgerMatches
         && profileStoreVerified
-        && (borrowedRoot ? borrowedRootStoreVerified : rootStoreUnchanged)
+        && (borrowedRoot ? borrowedRootStoreVerified : profileSiblings ? true : rootStoreUnchanged)
+        && (!siblingStep || (rootScope ? siblingRootAddPersisted || siblingRootStoreUnchanged : siblingRootStoreUnchanged))
+        && (!siblingStep || (rootScope ? siblingProfileStoreUnchanged : !addOperation || siblingProfileAddPersisted))
         && identityMatches;
       if (addOperation) profileAuthAfterAdd = storesAfterOperation.profileAuth;
       const storeEvidence = addOperation
@@ -355,7 +416,7 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
         operationPassed ? "PASS" : "FAIL",
         operationPassed ? `NATIVE_AUTH_FIXTURE_${operation.toUpperCase().replaceAll("-", "_")}_OBSERVED` : "NATIVE_AUTH_FIXTURE_OPERATION_FAILED",
         {
-          ...(operation === firstOperation ? { profileCreate: {
+          ...(operation === firstOperation && !profileSiblings ? { profileCreate: {
             publicArgv: ["hermes", ...profileCreateArgs],
             exitCode: profileCreate.result.status,
             profileCreated: true,
@@ -372,8 +433,9 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
           gidMatches: typeof process.getgid === "function" && identity.gid === process.getgid(),
           childStdoutDigest: digest(child.result.stdout),
           childStderrDigest: stderrDigest,
-          ...storeEvidence,
+          ...(!profileSiblings ? storeEvidence : {}),
           ...(borrowedRoot ? { caseId: borrowedCase, storeScope: rootScope ? "root" : "profile", borrowedRootStoreVerified, profileCopyAbsent: profileStoreVerified } : {}),
+          ...(siblingStep ? { caseId: siblingStep.caseId, storeScope: siblingStep.scope, label: siblingStep.label, expectedCount: siblingStep.expectedCount ?? null, expectedGeneration: siblingStep.expectedGeneration ?? null, rootAuth: storesAfterOperation.rootAuth, rootEnv: storesAfterOperation.rootEnv, profileAuth: storesAfterOperation.profileAuth, rootStoreUnchanged: siblingRootStoreUnchanged, rootAddPersisted: siblingRootAddPersisted, profileStoreUnchanged: siblingProfileStoreUnchanged, profileAddPersisted: siblingProfileAddPersisted } : {}),
           wholeATComplete: false
         },
         [...artifacts, archiveDigest, profileCreateDigest, commandDigest]
@@ -381,6 +443,7 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
       operationChecks.push(operationCheck);
       if (!operationPassed) return operationChecks;
       previousRootAuth = storesAfterOperation.rootAuth;
+      if (siblingStep?.scope === "root" && addOperation && operationIndex === 1) profileSiblingRootBaseline = { rootAuth: storesAfterOperation.rootAuth, rootEnv: storesAfterOperation.rootEnv };
     }
     if (concurrentRun) {
       const launchFixture = (operation: FixtureOperation, order: HermesAuthConcurrencyObservationV1["order"], actor: HermesAuthConcurrencyObservationV1["actor"], barrierDirectory: string, crashCut: HermesAuthConcurrencyObservationV1["crashCut"], holdAfterResult: boolean, storage?: { cut?: "before-replace" | "after-replace" }): ConcurrentChildHandle | null => {
