@@ -28,11 +28,18 @@ const recordJson = (alias: string): string => `jsonb_build_object(
   'reportedTotalTokens', ${alias}.actual_total::text, 'startedAt', ${stamp(alias + ".started_at")}, 'endedAt', ${stamp(alias + ".ended_at")})`;
 const queuePriority = (workClass: string): number | null => workClass === "event" || workClass === "continuation" ? 1
   : workClass === "quiet-tick" ? 2 : ["repair", "replay", "child", "research", "judge", "auxiliary"].includes(workClass) ? 3 : null;
-const pendingPredicate = (accountRef: string, now: string, alias = "c"): string => `${alias}.account_ref=${sqlText(accountRef)} AND ${alias}.utc_day=${sqlText(now.slice(0,10))}::date
+const pendingPredicate = (accountRef: string, _now: string, alias = "c"): string => `${alias}.account_ref=${sqlText(accountRef)}
   AND ${alias}.state='denied' AND NOT ${alias}.reservation_charged AND ${alias}.native_send_count=0 AND NOT ${alias}.native_terminal_acknowledged AND ${alias}.ended_at IS NULL
   AND (${alias}.decision->>'retryAt' IS NOT NULL OR ${alias}.decision->>'reason' IN ('QUOTA_EXHAUSTED','OPTIONAL_WORK_PAUSED')) AND ${alias}.decision->>'mode' IN ('measured','fixed-count')
   AND ${alias}.decision->>'reason' IN ('FIVE_HOUR_THRESHOLD','WEEKLY_THRESHOLD','RESERVATION_THRESHOLD','QUOTA_EXHAUSTED','OPTIONAL_WORK_PAUSED')
-  AND ${alias}.purpose IN ('event','continuation','quiet-tick','repair','replay','child','research','judge','auxiliary')`;
+  AND ${alias}.purpose IN ('event','continuation','quiet-tick','repair','replay','child','research','judge','auxiliary')
+  AND NOT EXISTS (SELECT 1 FROM toy_si.model_call retry WHERE retry.parent_call_id=${alias}.id
+    AND retry.reservation_charged AND retry.state<>'denied'
+    AND retry.call_key='toy-model-admission-retry:' || ${alias}.id::text || ':' || retry.utc_day::text
+    AND retry.account_ref=${alias}.account_ref AND retry.budget_group_id=${alias}.budget_group_id
+    AND retry.run_id IS NOT DISTINCT FROM ${alias}.run_id AND retry.generation=${alias}.generation
+    AND retry.purpose=${alias}.purpose AND retry.requested_route=${alias}.requested_route AND retry.work=${alias}.work
+    AND ${alias}.attempt<2147483647 AND retry.attempt=${alias}.attempt+1 AND retry.utc_day>${alias}.utc_day)`;
 const pendingOrder = (alias = "c"): string => `CASE WHEN ${alias}.purpose IN ('event','continuation') THEN 1 WHEN ${alias}.purpose='quiet-tick' THEN 2 ELSE 3 END, ${alias}.started_at, ${alias}.id`;
 const pendingHeadCtes = (accountRef: string, now: string, expected: ModelAdmissionRecordV1 | null): string => {
   const match = expected === null ? "NOT EXISTS (SELECT 1 FROM pending_head)"
@@ -71,6 +78,16 @@ const openOwner = (runtime: ModelAdmissionRuntimeV1, clock: () => string, guard:
   };
   const readCallByKey = (accountRef: string, callKey: string): ModelAdmissionRecordV1 | null => {
     const raw = query(`SELECT COALESCE((SELECT ${recordJson("c")} FROM toy_si.model_call c WHERE c.account_ref=${sqlText(accountRef)} AND c.call_key=${sqlText(callKey)}),'null'::jsonb);`);
+    return raw === null ? null : modelAdmissionRecordSchema.parse(raw);
+  };
+  const readRetry = (parentCallId: string): ModelAdmissionRecordV1 | null => {
+    const raw = query(`SELECT COALESCE((SELECT ${recordJson("c")} FROM toy_si.model_call c WHERE c.parent_call_id=${sqlText(parentCallId)}::uuid
+      AND c.reservation_charged AND c.state<>'denied'
+      AND c.call_key='toy-model-admission-retry:' || ${sqlText(parentCallId)} || ':' || c.utc_day::text
+      AND EXISTS (SELECT 1 FROM toy_si.model_call p WHERE p.id=${sqlText(parentCallId)}::uuid AND c.account_ref=p.account_ref
+        AND c.budget_group_id=p.budget_group_id AND c.run_id IS NOT DISTINCT FROM p.run_id AND c.generation=p.generation
+        AND c.purpose=p.purpose AND c.requested_route=p.requested_route AND c.work=p.work
+        AND p.attempt<2147483647 AND c.attempt=p.attempt+1 AND c.utc_day>p.utc_day) ORDER BY c.started_at,c.id LIMIT 1),'null'::jsonb);`);
     return raw === null ? null : modelAdmissionRecordSchema.parse(raw);
   };
   const readPending = (accountRef: string, now: string): readonly ModelAdmissionRecordV1[] => modelAdmissionRecordSchema.array().parse(query(pendingRowsSql(accountRef,now) + ";"));
@@ -226,9 +243,63 @@ const openOwner = (runtime: ModelAdmissionRuntimeV1, clock: () => string, guard:
         for (let attempt=0;attempt<3;attempt+=1) {
           const target=readCallByKey(accountRef,callKey);
           if (target===null) return denied("INVALID_INPUT");
+          const retry=readRetry(target.id);
+          if (retry!==null) return {ok:true,data:retry};
           if (target.state!=="denied" || target.reservationCharged || target.nativeSendCount!==0 || target.nativeTerminalAcknowledged || target.endedAt!==null) return {ok:true,data:target};
           const now=clock();
-          if (target.utcDay!==now.slice(0,10) || queuePriority(target.work.class)===null) return denied("CONFLICT");
+          if (queuePriority(target.work.class)===null) return denied("CONFLICT");
+          if (target.utcDay!==now.slice(0,10)) {
+            if (target.decision.retryAt===null || Date.parse(now)<Date.parse(target.decision.retryAt)) return {ok:true,data:target};
+            const predicate="account_ref="+sqlText(accountRef)+" AND call_key="+sqlText(callKey);
+            const state=readSnapshot(accountRef,now,predicate,target.budgetGroupId);
+            const binding=state.budgetBinding;
+            if (binding===null || binding.accountRef!==accountRef || binding.policyDigest!==target.requested.policyDigest
+              || binding.policyDigest!==runtime.policyDigest || binding.state!=="open") return denied("CONFLICT");
+            const pending=readPending(accountRef,now);
+            const head=pending[0]??null;
+            if (head===null || head.id!==target.id || head.callKey!==target.callKey) return denied("CONFLICT");
+            const observation=state.observation;
+            const verifiedAvailable=observation!==null && observation.sourceAuthorized && observation.schemaValid && observation.status==="available"
+              && observation.accountRef===accountRef && Date.parse(observation.reportedAt)>=Date.parse(target.decision.retryAt)
+              && Date.parse(observation.reportedAt)<=Date.parse(now);
+            const decision=ModelAdmissionPolicy.evaluate(modelAdmissionInputSchema.parse({now,accountRef,requested:target.requested,work:target.work,ledger:state.ledger,observation,
+              expectedFiveHourUpperPercent:target.expectedFiveHourUpperPercent,expectedWeeklyUpperPercent:target.expectedWeeklyUpperPercent}));
+            if (!verifiedAvailable || !decision.eligible || decision.mode!=="measured") return {ok:true,data:target};
+            const metadata=query(`SELECT COALESCE((SELECT jsonb_build_object('attempt',c.attempt,'reservedInputTokens',c.reserved_input)
+              FROM toy_si.model_call c WHERE c.id=${sqlText(target.id)}::uuid AND c.account_ref=${sqlText(accountRef)} AND c.call_key=${sqlText(callKey)}),'null'::jsonb);`);
+            if (metadata===null || typeof metadata!=="object" || Array.isArray(metadata) || !("attempt" in metadata) || !("reservedInputTokens" in metadata)) return denied("CONFLICT");
+            const storedAttempt=metadata.attempt;
+            const reservedInputTokens=metadata.reservedInputTokens;
+            if (typeof storedAttempt!=="number" || !Number.isSafeInteger(storedAttempt) || storedAttempt<1 || storedAttempt>=2147483647
+              || typeof reservedInputTokens!=="number" || !Number.isSafeInteger(reservedInputTokens) || reservedInputTokens<0) return denied("CONFLICT");
+            const retryCallKey=`toy-model-admission-retry:${target.id}:${now.slice(0,10)}`;
+            if (retryCallKey.length>240) return denied("CONFLICT");
+            const existingByRetryKey=readCallByKey(accountRef,retryCallKey);
+            if (existingByRetryKey!==null) return denied("CONFLICT");
+            const retryRequest=modelAdmissionRequestSchema.parse({callKey:retryCallKey,budgetGroupId:target.budgetGroupId,rootContractId:binding.rootContractId,
+              runId:target.runId,generation:target.generation,parentCallId:target.id,attempt:storedAttempt+1,accountRef,requested:target.requested,work:target.work,
+              reservedInputTokens,expectedFiveHourUpperPercent:target.expectedFiveHourUpperPercent,expectedWeeklyUpperPercent:target.expectedWeeklyUpperPercent});
+            const retryHash=hash(retryRequest);
+            const retryId=randomUUID();
+            const encodedRequest=sqlJson(retryRequest);
+            const encodedDecision=sqlJson(decision);
+            const guardCtes=`${pendingHeadCtes(accountRef,now,head)},
+              budget_guard AS (SELECT 1 FROM toy_si.budget_group b CROSS JOIN unchanged WHERE b.id=${sqlText(target.budgetGroupId)}::uuid
+                AND b.root_contract_id=${sqlText(binding.rootContractId)}::uuid AND b.account_ref=${sqlText(accountRef)} AND b.policy_hash=${sqlText(runtime.policyDigest)} AND b.state='open')`;
+            const data=compare(snapshotSql(accountRef,now,runtime.policyDigest,predicate,target.budgetGroupId),state,`
+              ${guardCtes},
+              pending_budget_guard AS (SELECT 1 FROM pending_guard JOIN budget_guard ON TRUE),
+              retry_row AS (INSERT INTO toy_si.model_call (id,run_id,budget_group_id,call_key,parent_call_id,purpose,requested_route,attempt,state,reserved_input,reserved_output,quota_snapshot_id,started_at,account_ref,policy_hash,generation,utc_day,request_hash,work,decision,reservation_charged,send_lease_active,expected_five_hour_upper_percent,expected_weekly_upper_percent)
+                SELECT ${sqlText(retryId)}::uuid,(${encodedRequest}->>'runId')::uuid,${sqlText(target.budgetGroupId)}::uuid,${sqlText(retryCallKey)},(${encodedRequest}->>'parentCallId')::uuid,${sqlText(target.work.class)},${sqlJson(target.requested)},${storedAttempt+1},'reserved',${reservedInputTokens},4096,
+                  (${encodedDecision}->>'quotaSnapshotId')::uuid,${sqlText(now)}::timestamptz,${sqlText(accountRef)},${sqlText(runtime.policyDigest)},${sqlText(target.generation)}::bigint,${sqlText(now.slice(0,10))}::date,${sqlText(retryHash)},${sqlJson(target.work)},${encodedDecision},true,true,
+                  (${encodedRequest}->>'expectedFiveHourUpperPercent')::numeric,(${encodedRequest}->>'expectedWeeklyUpperPercent')::numeric FROM pending_budget_guard ON CONFLICT (call_key) DO NOTHING RETURNING *),
+              budget_charge AS (UPDATE toy_si.budget_group b SET model_iterations=b.model_iterations+1,unreported_calls=b.unreported_calls+1,
+                started_at=COALESCE(b.started_at,${sqlText(now)}::timestamptz),updated_at=${sqlText(now)}::timestamptz FROM retry_row r
+                WHERE b.id=r.budget_group_id AND b.root_contract_id=${sqlText(binding.rootContractId)}::uuid AND r.state='reserved' AND r.reservation_charged RETURNING b.id)
+              SELECT COALESCE((SELECT ${recordJson("c")} FROM retry_row c WHERE EXISTS (SELECT 1 FROM budget_charge)),'null'::jsonb);`);
+            if (data!==null) return {ok:true,data:modelAdmissionRecordSchema.parse(data)};
+            continue;
+          }
           const predicate="account_ref="+sqlText(accountRef)+" AND call_key="+sqlText(callKey);
           const state=readSnapshot(accountRef,now,predicate,target.budgetGroupId);
           const binding=state.budgetBinding;

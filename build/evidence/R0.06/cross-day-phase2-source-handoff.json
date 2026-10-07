@@ -1,0 +1,90 @@
+{
+  "schemaVersion": "toy.r0.06.source-handoff.v2",
+  "recordedAt": "2026-10-07T12:52:42Z",
+  "card": "R0.06",
+  "assignedAT": "AT-ops-10",
+  "rung": "CLI",
+  "phase": "cross-day-deferred-restart-recovery",
+  "phaseState": "SOURCE_STOP",
+  "sourceOwner": "/root/r006_cross_day_minimum",
+  "sourceStoppedAt": "2026-10-07T12:52:42Z",
+  "deadline": "2026-10-07T13:10:00Z",
+  "admission": {
+    "path": "build/evidence/R0.06/cross-day-phase2-source-admission.json",
+    "sha256": "f3f609e1a46b328a2061588062a6b6619ad414e8e3d3ed23ab4fd23e85f4f075",
+    "state": "PHASE2_SOLE_SOURCE_ADMITTED_AFTER_GENUINE_CLI_RED"
+  },
+  "redEvidence": {
+    "path": "build/evidence/R0.06/cross-day-red-verification.json",
+    "sha256": "24de6168a9b5d1a7608143f5ab06fe5b9e2eaff81612c09f8f9dad5661c60982",
+    "assignedAttempt": 1,
+    "runShowExact": true,
+    "worldId": "f445b49a-5b13-49ba-a0fa-7f2d2371c335",
+    "teardownComplete": true,
+    "failure": "At 00:02 UTC the old pending row was invisible; at 00:06 UTC a fresh available observation still produced CONFLICT and zero charge."
+  },
+  "acceptedPlan": {
+    "path": "build/evidence/R0.06/cross-day-next-minimum-20261007.json",
+    "sha256": "00c2952dd8d1a63530b633c4b5ec6e42c3117d0e59094d459e15eb552cc1c934"
+  },
+  "ownedPaths": [
+    "packages/self-improvement/src/model-admission.ts",
+    "docs/adr/0061-cross-day-model-admission.md",
+    "build/evidence/R0.06/cross-day-phase2-source-handoff.json"
+  ],
+  "sourcePins": {
+    "packages/self-improvement/src/model-admission.ts": "0f7c0352084d8c2236ac9bd6681f4b5eab25c78b666f359c2312aec7aabe064f",
+    "docs/adr/0061-cross-day-model-admission.md": "bf75811ad3c481d0d4a54af3be45b05783fc8e072a3c69265253580b72ad4d12"
+  },
+  "assertionPreservation": {
+    "sourceAssertionHash": "e281f3fe7221d3ddc551bf73c8fc5e0df616060c8d089af9ee4625930d11ee3f",
+    "mandatoryCaseIds": [
+      "exhausted-known-reset",
+      "exhausted-unknown-reset",
+      "full-quota-windows",
+      "deferred-restart-recovery"
+    ],
+    "unchanged": true,
+    "sameDayNineCallProofPreserved": true
+  },
+  "frozenReproducerPins": {
+    "packages/self-improvement/src/accounting-probe.ts": "d89489f84a16f2d6ac078e11cae3b21de33b9b63158f9b230d34ee16c9e63164",
+    "tests/registry.yaml": "647243cb0414e483d59d9bf4eed5c967d6c0d30cb0ed9d5dc393a6d50b43506e",
+    "architecture/features.json": "ce5c117cf86ed84e5f63c0c0eda85707f95b1cd5802900b7e49d547ff09b5884"
+  },
+  "frozenGeneratedAndMapPins": {
+    "packages/contracts/src/generated-probe-registry.ts": "dff6f091a2cef6103cbe0225d2a32432aa3ff9907ea53c29e88a795762e75ded",
+    "packages/contracts/src/generated-bundle.ts": "d086b83a29fecafc5471e3ef6e670b45dd05805fac949cc04fb469331bbe0ab2",
+    "skills/toy-control/FEATURE-MAP.md": "8bf786df0b3f2c4e949e4888bf22e3b0a20441ecaef2a86dfc946ee987124651"
+  },
+  "forbiddenOwnerBaseline": {
+    "path": "packages/self-improvement/src/model-admission.ts",
+    "sha256BeforeSource": "44a36ef026d203f9db9437dcf53c1172224420596d0570353bcc564a758439c7",
+    "changedOnlyAfterGenuineCliRed": true
+  },
+  "behaviorAuthored": {
+    "queue": "Eligible denied work remains visible across UTC days. A completed retry child removes its superseded original from runnable pending while preserving original-key reserve idempotency.",
+    "hold": "Before the recorded reset, or without a fresh authorized schema-valid available observation reported at or after reset and measured eligibility, resume returns the unchanged original without charge.",
+    "retry": "The owner atomically creates one bounded current-day retry with canonical request hash, existing parent/attempt linkage, same budget-group/root binding, account, run, generation, route and work; head and budget guards protect a single charge.",
+    "idempotency": "Repeated resume by the original key returns the existing retry row; no public API, DTO, database field, table, migration, protocol, provider permit or native execution was added.",
+    "readbackLimit": "Public records do not expose stored parentCallId, attempt or rootContractId value; no direct readback claim is made."
+  },
+  "verification": {
+    "assignedCliRunAfterSource": "NOT_RUN_BY_SOURCE",
+    "build": "NOT_RUN",
+    "generation": "NOT_RUN",
+    "staticChecks": "NOT_RUN",
+    "tests": "NOT_RUN",
+    "providerOrNativeExecution": "NOT_RUN",
+    "rootOrOsProbe": "NOT_RUN",
+    "browserProbe": "NOT_RUN",
+    "noBackgroundProcessesStartedBySource": true,
+    "parentDrivingStoppedDuringSource": true,
+    "attemptsUsedBeforeSource": 1,
+    "maximumAssignedAttempts": 3,
+    "firstImplementationPassStop": true,
+    "wholeATComplete": false,
+    "goalStatus": "active"
+  },
+  "nextOwner": "Parent owns all verification after SOURCE_STOP. Run the frozen assigned AT-ops-10 CLI case, preserve exact run/show evidence, and stop on the first implementation PASS."
+}

@@ -1,0 +1,632 @@
+{
+  "schema": "toy.read-only-next-minimum-plan.v1",
+  "recordedAt": "2026-10-07T12:51:10.152863Z",
+  "card": "R0.03",
+  "acceptanceId": "AT-hermes-config-35",
+  "decision": "BOUNDED_NON_DUPLICATING_NEXT_UNIT_USING_PUBLIC_ROOT_GRANT_AND_OWNED_SINGLETON_ARRANGEMENT",
+  "reviewOnly": true,
+  "sourceOwner": null,
+  "sourceStop": true,
+  "runtimeExecuted": false,
+  "reviewDeadline": "2026-10-07T12:54:00Z",
+  "scope": "Only root Anthropic singleton plus independent manual profile PKCE lineage, paired genuine copied-lineage healing. AT34 is stopped after three failed assigned attempts. AT36 and the twenty-cell matrix are outside this unit.",
+  "binding": {
+    "canonicalSource": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/hermes-config.md",
+    "sourceLine": 3388,
+    "sourceAssertion": "- **AT-hermes-config-35 [R0]** Given root’s Anthropic singleton and a fresh manual profile login, When real login exits and fresh profile chat subprocesses reload/refresh against fake provider endpoints through the registered CLI probe, Then the independent profile grant remains usable and root digest is unchanged; genuine copied lineage still heals to its root owner.",
+    "sourceAssertionHash": "7e69a039d367ed6ffa27c762c76cad43ad78a65c3ca5c91552a1f7adef47c2aa",
+    "rung": "CLI",
+    "requiredEvidence": "stack, device/account, probe:AT-hermes-config-35",
+    "testPlanSource": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/TEST-PLAN.md",
+    "testPlanRowLine": 412,
+    "scenarioId": "auth.manual-lineage",
+    "owner": "hermes",
+    "publicOperation": "HermesAuthProbe.run",
+    "largestInterfaceReason": "SIM cannot select raw auth-store lineage, invoke administrative PKCE login, or force independent process reload/expiry boundaries; use the assigned registered CLI probe with real Hermes public subprocesses and only external provider/clock/OS fakes.",
+    "minimumByAcceptanceSource": "build/evidence/R0.03/auth34-36-next-minimum-plan.json",
+    "existingMixedLineageContract": "docs/adr/0045-mixed-auth-lineage-probe.md",
+    "installedCommitExpected": "8d5e3e412138342e8bf30443e72bd4e6a9abd057",
+    "installedCandidateInspectedInThisReview": false
+  },
+  "actualFailureEvidence": {
+    "path": "build/evidence/R0.03/first-add34-green/AT-hermes-config-34-run.json",
+    "operationId": "6776bb2f-2937-4999-bf28-dc1061d159c0",
+    "exitCode": 1,
+    "wholeResultState": "NOT_IMPLEMENTED",
+    "wholeResultComplete": false,
+    "anthropicCase": {
+      "failedOperation": "chat",
+      "caseId": "missing-anthropic-pkce",
+      "source": "anthropic-pkce",
+      "rootShape": "missing",
+      "phases": [
+        {
+          "operation": "add",
+          "publicArgv": [
+            "hermes",
+            "--profile",
+            "toy",
+            "auth",
+            "add",
+            "anthropic",
+            "--type",
+            "oauth",
+            "--no-browser"
+          ],
+          "processIdentity": {
+            "pid": 2951,
+            "parentPid": 2768,
+            "uid": 501,
+            "gid": 20
+          },
+          "childExitCode": 0,
+          "markers": [
+            "AUTH_ADD_OK"
+          ],
+          "provider": "anthropic",
+          "accessGeneration": null,
+          "tokenHygiene": true,
+          "httpLedger": {
+            "device_code_requests": 0,
+            "device_code_polls": 0,
+            "token_exchanges": 1,
+            "token_refreshes": 0,
+            "model_catalog_requests": 0,
+            "model_requests": 0,
+            "denied_http_requests": 0,
+            "blocked_socket_events": 0
+          },
+          "rootStoreUnchanged": true,
+          "profileStoreVerified": true
+        },
+        {
+          "operation": "chat",
+          "publicArgv": [
+            "hermes",
+            "--profile",
+            "toy",
+            "chat",
+            "--provider",
+            "anthropic",
+            "--model",
+            "claude-sonnet-4-5",
+            "--toolsets",
+            "none",
+            "-q",
+            "Return the fixed fixture marker."
+          ],
+          "processIdentity": {
+            "pid": 2955,
+            "parentPid": 2768,
+            "uid": 501,
+            "gid": 20
+          },
+          "childExitCode": 1,
+          "markers": [
+            "CHAT_RESPONSE_NOT_CONFIRMED",
+            "CLI_EXIT_NONZERO"
+          ],
+          "provider": "anthropic",
+          "accessGeneration": null,
+          "tokenHygiene": true,
+          "httpLedger": {
+            "device_code_requests": 0,
+            "device_code_polls": 0,
+            "token_exchanges": 0,
+            "token_refreshes": 0,
+            "model_catalog_requests": 0,
+            "model_requests": 0,
+            "denied_http_requests": 1,
+            "blocked_socket_events": 0
+          },
+          "rootStoreUnchanged": true,
+          "profileStoreVerified": true
+        }
+      ],
+      "wholeATComplete": false
+    },
+    "observableBoundary": "Actual auth-add exited zero, exchanged once and wrote the profile store. The subsequent fresh Anthropic chat exited one, accepted no catalog/model call and recorded one denied HTTP request. The receipt does not identify the denied route or prove a lineage bug.",
+    "underlyingAnthropicCause": "UNPROVEN_FROM_SANITIZED_RECEIPT",
+    "currentCorrections": "Current catalog and streaming fake formats and canonical first-add case admission were corrected after this receipt but have no positive runtime proof. This review does not infer an Anthropic PASS.",
+    "attemptStop": "build/evidence/R0.03/first-add34-three-attempt-stop.json",
+    "at34AssignedAttempts": 3,
+    "at34FourthRunAllowed": false,
+    "matrixReopened": false
+  },
+  "currentSourceGaps": [
+    {
+      "path": "packages/hermes/src/auth-fixture.ts",
+      "gap": "mixedLineageSteps and publicArgv are Codex-only. Independent lineage has one fresh pre-expiry chat, not the two required by AT35. The existing owner copy is only byte-for-byte root auth.json to profile auth.json."
+    },
+    {
+      "path": "packages/hermes/src/auth-fixture.ts",
+      "gap": "privateStoreDigests includes root auth.json, root .env and profile auth.json, but omits root and profile .anthropic_oauth.json. Existing root/profile owner-change predicates therefore cannot establish Anthropic singleton preservation or owner-only refresh."
+    },
+    {
+      "path": "patches/hermes-auth-fixture.patch",
+      "gap": "Anthropic first-add uses one fixed access/refresh pair. Its urllib fake counts every allowed token POST as an exchange and does not bind refresh grant identity or rotation. Its model fake rejects chat-expired/chat-reloaded; its Anthropic catalog branch does not observe accepted generation. Nullable generation is currently accepted for first-add Anthropic."
+    },
+    {
+      "path": "patches/hermes-auth-fixture.patch",
+      "gap": "Public list argv and list-count parser are fixed to openai-codex. Merely setting TOY_AUTH_FIRST_ADD_SOURCE on mixed actors would not produce valid mixed-lineage argv, list, expiry or identity proof."
+    },
+    {
+      "path": "packages/hermes/src/auth-probe.ts and cli/src/main.ts",
+      "gap": "AT35 has no Hermes route or registered auth.manual-lineage behavioral manifest. The Hermes owner currently rejects AT35; unfiltered CLI dispatch currently falls through to the generic replay owner."
+    },
+    {
+      "path": "patches/hermes-profile-auth.patch",
+      "gap": "The product patch already preserves a manual: row when root has only an Anthropic singleton and no root OAuth pool row. Its preceding proven-counterpart healing branch remains intact. No allowed current evidence exercises this exact singleton/manual branch; product failure is not established."
+    },
+    {
+      "path": "packages/ops/src/fixture-stack.ts",
+      "gap": "No new gap: unfiltered behavioral Hermes auth.* registrations already receive native-auth publication admission from the manifest, with the existing check id/owner restrictions. Do not add another literal AT allowlist or edit Ops for this unit."
+    }
+  ],
+  "typeAndResultReuse": {
+    "existingGeneratedResult": "HermesAuthFixtureResultV1",
+    "existingProvider": "anthropic",
+    "existingOperations": [
+      "add",
+      "list",
+      "chat"
+    ],
+    "existingPhases": [
+      "add",
+      "list",
+      "chat",
+      "chat-expired",
+      "chat-reloaded"
+    ],
+    "existingGenerations": [
+      "initial",
+      "rotated",
+      "added",
+      "added-rotated"
+    ],
+    "existingDenialCategories": [
+      "grant-mismatch",
+      "authorization-mismatch",
+      "unregistered-http"
+    ],
+    "newHermesDtoRequired": false,
+    "newHermesEnumRequired": false,
+    "newCliCaseEnumRequired": false,
+    "caseSelection": "Use the existing unfiltered AT35 command and its mandatory manifest cases. Do not add new --case selectors or change the registeredTestCase finite enum.",
+    "internalParameterization": "Add one closed Anthropic variant of the existing mixed-lineage fixture scheduling/provider mapping. Keep the current Codex mode and defaults unchanged. Use generated provider/generation/phase types, not copied DTOs, any, or unchecked casts.",
+    "receiptDiscipline": "Keep exact generated-schema validation and the existing auth.native-fixture/hermes CheckView. Project fixed bounded fields into phase evidence; split a necessary store-digest observation into a second existing CheckView for the same case/state instead of dumping a whole DTO. Keep the 2000-character prerequisite cap and wholeATComplete=false.",
+    "receiptFields": "Case/arm/profile fixed identifiers; actual child pid/parent/uid/gid and owned termination result; provider/phase; accepted access and catalog generation; exact HTTP counters/denials; hygiene/fallback booleans; owned store existence/digests and verified copy equality; command/stream digests. No raw streams, tokens, credential row JSON, arbitrary keys or exception messages."
+  },
+  "singletonPrecondition": {
+    "status": "SINGLETON_READER_AND_GENUINE_SEEDER_PINNED_PUBLIC_ROOT_ADD_SINGLETON_WRITE_UNPROVEN",
+    "savedSourceFacts": [
+      {
+        "path": "build/patches/hermes-profile-auth/src/hermes_cli/auth_oauth_grants.py",
+        "lines": "470-480",
+        "fact": "The singleton reader accepts .anthropic_oauth.json with accessToken and maps refreshToken/expiresAt to pool-shaped access_token/refresh_token/expires_at_ms. No helper is invoked by this review or proposed as an assertion."
+      },
+      {
+        "path": "build/patches/hermes-profile-auth/src/agent/credential_pool.py",
+        "lines": "2672-2688",
+        "fact": "The real singleton seeder reads Hermes OAuth credentials as source hermes_pkce and seeds its actual material into the pool. This allows a public root auth-list after the manual arm to create a genuine non-manual root row, rather than inventing a copied row/source."
+      },
+      {
+        "path": "build/patches/hermes-profile-auth/src/agent/credential_pool.py",
+        "lines": "1697-1723",
+        "fact": "Anthropic rotation commits hermes_pkce to its owning singleton, with borrowed rows targeting root. manual:hermes_pkce is explicitly pool-owned and must not create a second singleton authority."
+      },
+      {
+        "path": "build/patches/hermes-profile-auth/src/hermes_cli/auth_oauth_grants.py",
+        "lines": "432-451 and 601-631",
+        "fact": "Genuine counterpart healing requires copied row ID or shared token material; independent identity/principal is insufficient. The singleton fallback preserves manual: rows and no-root-counterpart rows."
+      }
+    ],
+    "publicRootAuthAddAssessment": "The existing known public auth-add grammar can mint the synthetic Anthropic root grant using the same external captured-state PKCE input and HTTP fake as the actual AT34 profile add. The available saved product files do not contain the public auth-add login writer, so this review does not assert that root auth-add itself writes .anthropic_oauth.json.",
+    "preferredConstruction": "First run real root hermes auth add anthropic --type oauth --no-browser and require its actual exit/provider exchange. If it writes a valid owned singleton, retain those exact bytes. If it only writes the root pool, the existing registered fake-OS seam may arrange the required singleton representation from that actually minted synthetic root pair, using the three pinned reader keys. Do not fabricate a pool row, new token material or a source label.",
+    "singletonOnlyArrangement": "Confine the transformation to the verified temporary Hermes home. Validate the actual synthetic root Anthropic row and its fixed fake-grant identity in memory; retain/copy its material into accessToken/refreshToken/expiresAt only if needed, then remove only that owned Anthropic pool entry so no r_oauth counterpart exists during the manual arm. Preserve other root bytes/fields or explicitly record the fixed setup delta before freezing the manual baseline. Record only existence/digests/construction equality, never row/token bytes.",
+    "publicReadbackOrdering": "Before the manual arm, do not root-list/chat a singleton-only store: that can seed a root pool and bypass the intended branch. Use actual independent profile auth-list and fresh chats as public readbacks while root singleton/auth/environment stay stable. After the entire manual arm passes, a fresh public root auth-list may seed its real hermes_pkce root pool. The paired copied arm then byte-copies that actual root auth.json into its new profile and heals against the proven matching root ID/material.",
+    "copyRule": "The paired copy is an exact owned byte-copy of the publicly generated Anthropic root store, including its genuine singleton-seeded row. No Codex store, independent manual row relabeling, or guessed row ID is used. This paired arm proves preserved genuine-counterpart healing; it is not claimed to isolate the non-manual singleton-fallback branch without a root pool.",
+    "sourceFreshnessLimit": "These are hash-pinned saved product source files, not the installed host tree or a claim that the saved credential_pool.py includes later auth87 resync. At implementation, confirm the cited Anthropic sections match the admitted current candidate; keep all later current auth87 source/patch behavior intact.",
+    "unresolvedStop": "Within the initial 15-minute construction review, if root auth-add material/expiry mapping or the public singleton seeder does not match the pinned candidate, return NO_NEW_SOURCE or explicit compatibility BLOCKED. No hidden auth calls, host-store read, invented serialization or helper protocol."
+  },
+  "minimumUnit": {
+    "maximumDurationMinutes": 120,
+    "scope": "One AT35 CLI fixture unit; no AT34 rerun and no AT36 work.",
+    "reuse": "One extraction of the pinned candidate, one owned temporary Hermes home and two fixed disposable profiles created through the real public profile CLI: toy for the independent manual arm and a fixed copied-lineage profile for the paired arm. Reuse the existing subprocess runner, provider HTTP/PKCE input seams, fake clock, OS path validation, schema parser and CLI publication/readback.",
+    "profileReason": "Run the independent arm first and freeze its root baseline after seed/profile creation. Keep the genuine copy in a second fresh owned profile so copied refresh cannot contaminate the manual arm premise or retain a competing copied grant there. No profile name/path control is exposed to callers.",
+    "seedPremise": "Use real public root Anthropic auth-add to mint the synthetic root grant, followed only by the registered owned fake-OS singleton-only arrangement described above. Freeze manual root auth.json/.anthropic_oauth.json/.env baseline after this setup. Following the manual arm, public root auth-list generates the genuine singleton-seeded root row for exact-copy healing.",
+    "mandatoryManualCases": [
+      "independent-manual-add",
+      "independent-profile-readback",
+      "independent-profile-use",
+      "independent-profile-reload-before-expiry",
+      "independent-profile-refresh",
+      "independent-profile-reload"
+    ],
+    "mandatoryCopiedCases": [
+      "copied-lineage-heal",
+      "copied-lineage-use",
+      "copied-lineage-refresh",
+      "copied-lineage-reload"
+    ],
+    "manualSequence": [
+      "Public hermes --profile toy auth add anthropic --type oauth --no-browser, with existing captured-state PKCE input fake; require actual child exit before any readback/chat.",
+      "Fresh public profile auth list anthropic readback using the provider-aware parser and source-pinned expected bounded count/label facts; root auth.json/.anthropic_oauth.json/.env existence and bytes remain unchanged.",
+      "First fresh tools-disabled chat for anthropic / claude-sonnet-4-5 accepts only manual generation added.",
+      "Second independently launched pre-expiry chat/reload accepts the same manual generation added, with zero refreshes.",
+      "A new fake-expired chat process must refresh only the manual refresh grant to added-rotated, then use that generation.",
+      "A final fresh process reload must use added-rotated without another exchange/refresh. Root singleton/auth/environment remain identical to the manual-arm baseline throughout."
+    ],
+    "copiedSequence": [
+      "After public root-lineage-readback, byte-copy its actual synthetic Anthropic root auth.json into only the fresh copied profile by the existing registered OS control. Verify equal digests and containment before public profile auth-list/load heals the copied root ID/material. No copied singleton or invented profile pool row is needed.",
+      "Fresh copied-profile chat accepts only root initial generation, with no profile manual exchange.",
+      "Fake expiry in a fresh copied-profile chat rotates the root grant initial to rotated; only source-pinned owning root stores may change, while the healed profile stores retain their verified state.",
+      "A final new copied-profile chat reloads rotated, with no competing profile grant or extra refresh. Require public readback plus independent provider identity/owner-store changes; digest change alone never proves healing."
+    ],
+    "strictExternalProvider": {
+      "grantIdentity": "Map synthetic root initial/rotated and independent manual added/added-rotated identities to existing generation enums. Inspect only the fake endpoint request credential in memory; export only fixed generations or nonsecret digests. Both catalog and model calls must observe the expected identity, including after reload.",
+      "tokenProtocol": "Bind authorization-code exchange to the manual PKCE add actor, and refresh grant to the exact expected owning refresh identity and expired phase. Count exchange and refresh separately, rotate to the next fixed pair, reject wrong/stale/unregistered grants with existing denial categories.",
+      "fallback": "During each independent cell reject all root/copied grant identities. During copied cells reject all independent manual identities. Preserve all unregistered network/socket denials, exact endpoints/models and the no-paid-fallback rule.",
+      "formatReuse": "Reuse the corrected Anthropic catalog/messages response formats already present, without declaring them verified. Extend only generation binding, phase support and refresh needed by AT35; no xAI/Nous changes or broader resolver/network permit.",
+      "hygiene": "Scan both child streams for all synthetic root/manual/rotated sentinels inside the existing fixture. Persist no tokens, headers, row payloads or streams."
+    },
+    "registeredControls": [
+      "Existing OS seam: arrange singleton-only root Anthropic storage from the actually public-minted synthetic grant, between root-add and independent-manual-add; no root OAuth pool counterpart during all manual phases.",
+      "Existing OS seam: exact publicly generated Anthropic root auth.json copy into only the fresh copied profile after root-lineage-readback and before copied-lineage-heal.",
+      "Existing clock seam: expire only the expected active access generation for independent-profile-refresh and copied-lineage-refresh."
+    ],
+    "sourcePaths": [
+      {
+        "path": "docs/adr/0045-mixed-auth-lineage-probe.md",
+        "change": "Describe the closed Anthropic variant, pinned singleton premise, manual/copy identities, owned profiles, store readbacks and stop gates before implementation."
+      },
+      {
+        "path": "packages/hermes/src/auth-fixture.ts",
+        "change": "Parameterize existing mixed scheduling/public argv/provider and fixed profile/store readers. Add the second pre-expiry independent fresh chat, root/profile singleton digests and owner-specific predicates. Preserve existing mode defaults and auth87 concurrency behavior. Keep actual public root add and post-manual public root list; arrange only the owned synthetic singleton shape via the existing OS seam."
+      },
+      {
+        "path": "patches/hermes-auth-fixture.patch",
+        "change": "Minimally parameterize existing external PKCE/HTTP/model/catalog/list fake behavior for Anthropic lineage identities and strict refresh/phase validation; follow upstream patch conventions."
+      },
+      {
+        "path": "packages/hermes/src/auth-probe.ts",
+        "change": "Admit exact AT35 scenario/mandatory cases/controls and call the existing mixed runner variant; keep original manifests and routing intact."
+      },
+      {
+        "path": "cli/src/main.ts",
+        "change": "Route only the newly registered unfiltered AT35 to existing HermesAuthProbe.run. No new command or privilege."
+      },
+      {
+        "path": "tests/registry.yaml",
+        "change": "Register original source-bound AT35/auth.manual-lineage CLI owner, exact twelve mandatory case IDs including the two public root setup/readback phases, independent readers and external OS/clock controls; do not mint a diagnostic AT."
+      },
+      {
+        "path": "architecture/features.json",
+        "change": "Bind the existing AT35 feature/scenario to the registered CLI/public owner so the paved feature-map generator has a canonical source."
+      }
+    ],
+    "pathsNotNeeded": [
+      "packages/contracts/src/hermes-runtime.ts",
+      "packages/contracts/src/test-control.ts",
+      "packages/ops/src/fixture-stack.ts",
+      "patches/hermes-profile-auth.patch",
+      "patches/hermes-auth-dashboard.patch"
+    ],
+    "noNewSurface": [
+      "module",
+      "CLI command",
+      "caller-controlled fixture path/provider",
+      "DTO",
+      "observer protocol",
+      "provider service",
+      "independent CLI grant owner",
+      "private test/helper assertion"
+    ],
+    "parentGeneration": "After source STOP and review, parent owns canonical contract/registration generation and feature-map generation from existing sources, paved build/static checks and any registered CLI runtime. Worker in this review runs none.",
+    "mandatorySetupCases": [
+      "root-add",
+      "root-lineage-readback"
+    ],
+    "mandatoryCaseOrder": [
+      "root-add",
+      "independent-manual-add",
+      "independent-profile-readback",
+      "independent-profile-use",
+      "independent-profile-reload-before-expiry",
+      "independent-profile-refresh",
+      "independent-profile-reload",
+      "root-lineage-readback",
+      "copied-lineage-heal",
+      "copied-lineage-use",
+      "copied-lineage-refresh",
+      "copied-lineage-reload"
+    ],
+    "rootSetupSequence": [
+      "Real root hermes auth add anthropic --type oauth --no-browser mints initial root grant and exits; require actual provider exchange and schema-valid sanitized public receipt.",
+      "Registered owned fake-OS control arranges singleton-only root storage from that real synthetic grant and records only digests/equality. Profile creation preserves this root setup; no pre-manual root list/chat is allowed to create a pool counterpart.",
+      "Run all six manual-arm public phases and freeze their final independent evidence.",
+      "Real fresh root hermes auth list anthropic generates its genuine hermes_pkce singleton-seeded row, with sanitized list/count and recorded setup store deltas. This deliberate post-manual root change is not part of the independent unchanged-root window."
+    ],
+    "timeAllocationMinutes": {
+      "candidateSectionAndSingletonConstructionReview": 15,
+      "boundedSourceImplementation": 45,
+      "parentGenerationBuildStaticReview": 20,
+      "registeredCliBaselineImplementationAndConditionalEvidenceReview": 35,
+      "teardownAndStopHandoff": 5
+    }
+  },
+  "verificationPlan": {
+    "performedHere": false,
+    "expectedBaselineRed": "Current source has no AT35 behavioral manifest/Hermes dispatch. A newly admitted baseline should produce public unsupported/unimplemented evidence, not an inferred auth-lineage failure. If forced through the current Hermes owner it returns INVALID_INPUT by source inspection. Record the actual unfiltered CLI classification; no command was executed in this review.",
+    "baselineCommand": "toy --env test --stack <owned-UUID> probe run AT-hermes-config-35 --request-id <UUID> --json",
+    "readbackCommand": "toy --env test --stack <owned-UUID> probe show <operation-id> --json",
+    "implementedRun": "After exact source/schema/manifest review and parent generation/build/checks, run the same unfiltered AT35 command once in a fresh owned fake-clock/fake-model world. This exercises the corrected Anthropic catalog/streaming seam as part of the original AT35, not a fourth AT34 attempt.",
+    "passGate": "All twelve registered mandatory cases have actual real fresh-child evidence and PASS state; manual grant added then added-rotated accepted after all reloads; manual-root singleton/auth/environment digests unchanged; genuine copied lineage resolves to root and root-only rotation survives reload; no fallback/denials/token leak; schema-valid bounded run/show observations match exactly; owned teardown is complete with zero unresolved resources.",
+    "stop": "Stop on the first passing implemented CLI fixture unit. If failed, preserve actual phase, generation, bounded HTTP denial categories, owned process termination facts and store digests, then review before any change/run. At most three newly assigned AT35 attempts total, including its unsupported baseline, and two hours from future source admission. No fourth unchanged run, widened timeout or source loop.",
+    "commandTimeoutMs": 120000,
+    "compatibility": "Unsupported public argv, unavailable singleton/copy representation, unexplained HTTP denial, oversized prerequisite or timeout is FAIL/BLOCKED evidence and STOP/review; it is never replaced by copied-grant fallback, private invocation or guessed PASS.",
+    "wholeState": "Even if every synthetic CLI case passes, keep the registered outer result NOT_IMPLEMENTED/complete=false until the assigned native/account/protected evidence exists. First passing fixture unit is not whole AT/card acceptance."
+  },
+  "resourceAdmission": {
+    "source": "build/evidence/R0.06/cross-day-red-memory.json",
+    "measuredAt": "2026-10-07T12:39:27.258Z",
+    "pressure": "normal",
+    "availableBytes": "2332770304",
+    "ownNeedBytes": "268435456",
+    "ownMarginBytes": "536870912",
+    "ownRequiredAvailableBytes": "805306368",
+    "independentlyAdmittedByParent": true,
+    "newResourceProbeRun": false,
+    "aggregateOrHypotheticalVetoApplied": false
+  },
+  "preservation": {
+    "rootQueueStatus": "PENDING",
+    "rootPending": [
+      {
+        "requestId": "ROOT-R004-20261006-02",
+        "status": "PENDING"
+      },
+      {
+        "requestId": "ROOT-R005-20261006-01",
+        "status": "PENDING"
+      }
+    ],
+    "queueProvenance": "Literal PENDING supplied in current parent assignment; saved source handoff records the same two pending requests. This review did not inspect or mutate the live/root queue.",
+    "frozenInputPins": [
+      {
+        "path": "scripts/probe-siwc-control-runtime.mts",
+        "sha256": "96e1fd2d98469772c3d0d203386c3f7aa56af57db025c420fa93f1f4ecd7e70d",
+        "expectedSha256": "96e1fd2d98469772c3d0d203386c3f7aa56af57db025c420fa93f1f4ecd7e70d",
+        "unchanged": true
+      },
+      {
+        "path": "scripts/stage-siwc-control-runtime.mts",
+        "sha256": "13ff53e341ab7670dbed967ce810d5aa2834df7a47ffe1620f037ff1da3ee0d4",
+        "expectedSha256": "13ff53e341ab7670dbed967ce810d5aa2834df7a47ffe1620f037ff1da3ee0d4",
+        "unchanged": true
+      },
+      {
+        "path": "control/dist/bootstrap/siwc-runtime-probe.js",
+        "sha256": "06870b8dd41d2ffc093cc04680ba56c4570f07b4aa0a27a9ab70796cdd8204bd",
+        "expectedSha256": "06870b8dd41d2ffc093cc04680ba56c4570f07b4aa0a27a9ab70796cdd8204bd",
+        "unchanged": true
+      },
+      {
+        "path": "scripts/probe-unfiltered-control-denials.mts",
+        "sha256": "1cb93d375df931a482d946170e31549450d8efb71d6a251f5d2bcea8c5b92529",
+        "expectedSha256": "1cb93d375df931a482d946170e31549450d8efb71d6a251f5d2bcea8c5b92529",
+        "unchanged": true
+      },
+      {
+        "path": "packages/ops/dist/role-control-probe.js",
+        "sha256": "1764a98e5ae45694118007c242320711a7bd9e0d021b7c6d6ee0cbb8cff73ec2",
+        "expectedSha256": "1764a98e5ae45694118007c242320711a7bd9e0d021b7c6d6ee0cbb8cff73ec2",
+        "unchanged": true
+      },
+      {
+        "path": "control/dist/bootstrap/denial-probe.js",
+        "sha256": "7fda1824ec7bc308cac97d07c7c92cadd5527e87e89d79b410d33d95d1b30672",
+        "expectedSha256": "7fda1824ec7bc308cac97d07c7c92cadd5527e87e89d79b410d33d95d1b30672",
+        "unchanged": true
+      }
+    ],
+    "frozenPinProvenance": "Saved first-add34-final-source-stop.json verified all six unchanged; this read-only review did not re-read or change those frozen inputs. Parent current assignment requires all remain unchanged.",
+    "auth87": "Existing manual exact pool-row resync, required refreshDispositions and concurrency facts remain frozen. No profile-auth/dashboard product patch edits are proposed without a new actual AT35 product failure and parent review.",
+    "installedProfilesServicesAccountsPreserved": true,
+    "hostAuthOrAccountRead": false,
+    "liveProviderSends": 0,
+    "nativeAcceptance": false,
+    "accountAcceptance": false,
+    "protectedAcceptance": false,
+    "wholeATComplete": false,
+    "cardComplete": false,
+    "separateParentOwner": "Parent owns R0.06 phase1 source/generation/check/CLI RED. This helper owns only this review artifact."
+  },
+  "limitations": [
+    "This is a source/spec/evidence review, not implementation admission or runtime verification.",
+    "The singleton reader and genuine seeder representations are now pinned in saved product source. Public root auth-add singleton writing remains unproven; prefer actual public grant generation plus only the registered owned OS arrangement, and confirm the cited sections against the admitted candidate before source work.",
+    "Saved candidate source pins are source evidence, not physically protected or immutable native release proof.",
+    "Current corrected Anthropic/xAI/Nous formats and first-add case admission remain runtime-unverified; no AT34 acceptance is promoted."
+  ],
+  "sourcePins": [
+    {
+      "path": "packages/hermes/src/auth-fixture.ts",
+      "sha256": "e2cd074bd5c6199fa7b46423b1279e5d0e661069e49ad3960988ae0e508d59f3",
+      "kind": "source",
+      "observedAt": "2026-10-07T12:51:10.152863Z"
+    },
+    {
+      "path": "packages/hermes/src/auth-probe.ts",
+      "sha256": "5da06482c0f25849a44795cecb54bfdad0dcd96f945e09676242f0cdc886778f",
+      "kind": "source",
+      "observedAt": "2026-10-07T12:51:10.152863Z"
+    },
+    {
+      "path": "patches/hermes-auth-fixture.patch",
+      "sha256": "a863d3286de67d8f3de1d895cd81cb0c74e029200be6fc2b6787eaeac34776a4",
+      "kind": "source",
+      "observedAt": "2026-10-07T12:51:10.152863Z"
+    },
+    {
+      "path": "patches/hermes-profile-auth.patch",
+      "sha256": "814f13752d5132dbc175fb1864229dead2988f9eaa8f76af1481457f2b406b30",
+      "kind": "source",
+      "observedAt": "2026-10-07T12:51:10.152863Z"
+    },
+    {
+      "path": "patches/hermes-auth-dashboard.patch",
+      "sha256": "f4509ed92351863f58ee9ea85c6c6473d23b86b75e59a0064db26f5d71e28493",
+      "kind": "source",
+      "observedAt": "2026-10-07T12:51:10.152863Z"
+    },
+    {
+      "path": "cli/src/main.ts",
+      "sha256": "7f4943455d6d23a58e0aa40cb27c9bfe128ca17a029b52cb2b8650e8e41924e9",
+      "kind": "source",
+      "observedAt": "2026-10-07T12:51:10.152863Z"
+    },
+    {
+      "path": "packages/ops/src/fixture-stack.ts",
+      "sha256": "c570617d868f0a36d4c5984fa406c3358fb3cfecf393cb8cf12989f5a5f569aa",
+      "kind": "source",
+      "observedAt": "2026-10-07T12:51:10.152863Z"
+    },
+    {
+      "path": "packages/contracts/src/hermes-runtime.ts",
+      "sha256": "1a52f19c34504ab9a0de80035e9dec445a46edf372a54392e7913056b0df1384",
+      "kind": "source",
+      "observedAt": "2026-10-07T12:51:10.152863Z"
+    },
+    {
+      "path": "packages/contracts/src/test-control.ts",
+      "sha256": "119dd9d1823a3a64a255e78cc0129378e1e4768af9aec41f4b2480d73d70ee79",
+      "kind": "source",
+      "observedAt": "2026-10-07T12:51:10.152863Z"
+    },
+    {
+      "path": "tests/registry.yaml",
+      "sha256": "647243cb0414e483d59d9bf4eed5c967d6c0d30cb0ed9d5dc393a6d50b43506e",
+      "kind": "source",
+      "observedAt": "2026-10-07T12:51:10.152863Z"
+    },
+    {
+      "path": "tests/acceptance-index.json",
+      "sha256": "c9b645eab7f55b2ebf35d7db769a534a4837de23ad3dc3d913f3189e781d44fa",
+      "kind": "source",
+      "observedAt": "2026-10-07T12:51:10.152863Z"
+    },
+    {
+      "path": "architecture/features.json",
+      "sha256": "ce5c117cf86ed84e5f63c0c0eda85707f95b1cd5802900b7e49d547ff09b5884",
+      "kind": "source",
+      "observedAt": "2026-10-07T12:51:10.152863Z"
+    },
+    {
+      "path": "docs/adr/0045-mixed-auth-lineage-probe.md",
+      "sha256": "3385c3d4e38f39d8bcd413773cf489ec22589821b4257885e97a627092d166ac",
+      "kind": "source",
+      "observedAt": "2026-10-07T12:51:10.152863Z"
+    },
+    {
+      "path": "docs/adr/0060-first-add-auth-root-matrix.md",
+      "sha256": "c61763c86a3568a61c401f4eb8e1ff4ebeb26b0eb99ddbfd1f38ea6169eac8bf",
+      "kind": "source",
+      "observedAt": "2026-10-07T12:51:10.152863Z"
+    },
+    {
+      "path": "build/patches/hermes-profile-auth/src/hermes_cli/auth_oauth_grants.py",
+      "sha256": "b134f821629ffc260a3524b915a56483e27bfcabffcd82acbf08bbaf9bbc1457",
+      "kind": "saved-product-source",
+      "nativeReleaseProof": false,
+      "observedAt": "2026-10-07T12:51:10.152863Z"
+    },
+    {
+      "path": "build/patches/hermes-profile-auth/src/agent/credential_pool.py",
+      "sha256": "d8fc0ec72c81cdcee82fc874f6334eee1edd44a908df10f5815f36675eecf22b",
+      "kind": "saved-product-source",
+      "nativeReleaseProof": false,
+      "observedAt": "2026-10-07T12:51:10.152863Z"
+    },
+    {
+      "path": "build/patches/hermes-profile-auth/src/agent/credential_pool_admin.py",
+      "sha256": "d91f4a309328ef63b3b42174c97b1cb0172dbb33bf569d906b35a301544c4509",
+      "kind": "saved-product-source",
+      "nativeReleaseProof": false,
+      "observedAt": "2026-10-07T12:51:10.152863Z"
+    }
+  ],
+  "specPins": [
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/hermes-config.md",
+      "sha256": "d3548fde13180bc750660f306caa0041101832e398ccdabd6cfdac0b3de8f4af",
+      "kind": "spec"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/TEST-PLAN.md",
+      "sha256": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2",
+      "kind": "spec"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/PRINCIPLES.md",
+      "sha256": "828bd798692b9f0c2acf3f7d51d5a244ee54dfe5c3bd3e88488788c77e53368b",
+      "kind": "spec"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/CONTRACTS.md",
+      "sha256": "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d",
+      "kind": "spec"
+    }
+  ],
+  "evidencePins": [
+    {
+      "path": "build/evidence/R0.03/auth34-36-next-minimum-plan.json",
+      "sha256": "0d4334963856a0891286bcaf620faeb18424da4e4c158a93392edf8b1a2a9ee0",
+      "kind": "evidence"
+    },
+    {
+      "path": "build/evidence/R0.03/auth34-36-parent-review.json",
+      "sha256": "95eca117c6fa5d97c1bb7bdffcbf0dd671c9cefc90bbffef0f450b7e349d09dc",
+      "kind": "evidence"
+    },
+    {
+      "path": "build/evidence/R0.03/first-add34-green/AT-hermes-config-34-run.json",
+      "sha256": "f3c108db3757177975011f826fa2382c1a1cdc45f946ab2d915488fd4cb41eee",
+      "kind": "evidence"
+    },
+    {
+      "path": "build/evidence/R0.03/first-add34-attempt2-review.json",
+      "sha256": "fc5c8860b7f1372a37d28c636c197e7720fb37a016b46c34ed17a0533fb60c79",
+      "kind": "evidence"
+    },
+    {
+      "path": "build/evidence/R0.03/first-add34-three-attempt-stop.json",
+      "sha256": "16506444565299a6269eb84955317140d76621ad7da2f69d130433550cd3f428",
+      "kind": "evidence"
+    },
+    {
+      "path": "build/evidence/R0.03/first-add34-final-source-stop.json",
+      "sha256": "bba9c135d5352eac167416350ad86249654e2ca9b44df2d71b23f3635be5a300",
+      "kind": "evidence"
+    },
+    {
+      "path": "build/evidence/R0.03/dashboard90-root-pins.json",
+      "sha256": "e4c7a07e31ec001a2083ea1e6a2d70e90c0de050146d9f877e01c3c05776d876",
+      "kind": "evidence"
+    },
+    {
+      "path": "build/evidence/R0.03/dashboard90-observation-repair-source-handoff.json",
+      "sha256": "f4fa55ac98458d394455865baadc4670d5156d8305d09c922abb49cf9a14f65f",
+      "kind": "evidence"
+    },
+    {
+      "path": "build/evidence/R0.06/cross-day-red-memory.json",
+      "sha256": "83547e5b7676e6f34a2d39b45a9db27d8de1363cebc9e25b3ecb937d6e56582b",
+      "kind": "evidence"
+    }
+  ],
+  "writeScope": "Only build/evidence/R0.03/manual-lineage35-next-minimum-20261007.json",
+  "stopStatement": "READ_ONLY_REVIEW_STOP: no source/state/registry/generated/map mutations, generation/build/static checks, CLI/testworld/native/root/provider/OS/browser probes, installed-auth reads, external research, children or commits were performed.",
+  "parentSteering": "After the first artifact draft, parent asked to assess existing public root auth-add as synthetic singleton producer; no source/runtime action was authorized or performed. This revision uses that public minting path and the existing owned OS seam instead of speculative row seeding.",
+  "sourcePinFreshness": "Repository source pins are static byte-read snapshots at this revision. Parent R0.06 phase2 owns concurrent source changes; revalidate these exact pins before any future AT35 admission. No build, generated inventory or installed/native proof is implied.",
+  "stopRecordedAt": "2026-10-07T12:51:10.152863Z"
+}
