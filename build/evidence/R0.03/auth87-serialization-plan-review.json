@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "reviewId": "auth87-serialization-plan-review",
+  "recordedAt": "2026-10-07T06:56:20Z",
+  "scope": "Read-only review of the proposed refresh-first contender against the assigned AT-hermes-config-87 assertion, current registered cases, and existing public auth fixture/parser. No source, build, generation, check, CLI, world, provider, or observer operation was performed.",
+  "inputs": [
+    {
+      "path": "build/evidence/R0.03/auth87-stale-response-minimum-plan.json",
+      "sha256": "9c7d9039304a593f08d36521a313af9e435b6748f6238bdd45607bf8b4634a56"
+    },
+    {
+      "path": "build/evidence/R0.03/auth87-required-observable-coverage-review.json",
+      "sha256": "af487547f2b08373863e924b611e80bc90f2c2645bc9b46f9ee9dacc169eeebc"
+    },
+    {
+      "path": "../personal-assistant-harness/specs/hermes-config.md",
+      "sha256": "d3548fde13180bc750660f306caa0041101832e398ccdabd6cfdac0b3de8f4af",
+      "assertionLine": 3051
+    },
+    {
+      "path": "../personal-assistant-harness/specs/TEST-PLAN.md",
+      "sha256": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2",
+      "assignedRung": "CLI"
+    },
+    {
+      "path": "tests/registry.yaml",
+      "currentSha256": "bf3f1d894e39881c1314f953a1e090dbaf80a96e8effb5cc51c48057559ab843",
+      "planSha256": "2663144fc449981d21d35f08fefd22c6b93bae39f45b8b302a2dab585332457c",
+      "mandatoryCasesStillPresent": ["add-first", "refresh-first", "before-replace", "after-replace"]
+    },
+    {
+      "path": "tests/acceptance-index.json",
+      "sha256": "c9b645eab7f55b2ebf35d7db769a534a4837de23ad3dc3d913f3189e781d44fa"
+    },
+    {
+      "path": "build/evidence/R0.03/lifecycle91-regression-cli/AT-hermes-config-87-run.json",
+      "sha256": "89c9864eb708ea32c7c0297d6b44e738abebde99ff8e407ade3b25867a90ae0f",
+      "state": "NOT_IMPLEMENTED",
+      "complete": false
+    },
+    {
+      "path": "build/evidence/R0.03/lifecycle91-regression-cli/AT-hermes-config-87-show.json",
+      "sha256": "b060665e102ea64d0cac095268e02ad1e5527707416d0f8a28dd392a92658854",
+      "state": "NOT_IMPLEMENTED",
+      "complete": false
+    }
+  ],
+  "sourcePins": [
+    {
+      "path": "packages/hermes/src/auth-fixture.ts",
+      "sha256": "a4b7739da7b909ca8fe854bb460a12b4a590dd8cab5545bab69f2cd793fd4898"
+    },
+    {
+      "path": "packages/hermes/src/auth-probe.ts",
+      "sha256": "58b2df70f3cba853b1993be85fb6e2c4732301c841e0edbe1ae78331c5335d0d"
+    },
+    {
+      "path": "packages/contracts/src/hermes-runtime.ts",
+      "sha256": "698774355295d8bc9f090205f4b49fbb43f6745be6b837bd9fced3497c42b7a5"
+    },
+    {
+      "path": "patches/hermes-auth-fixture.patch",
+      "sha256": "edcdcf963730b74aba7e77bb544119bff55829f48204e138aedbbd06af965e96"
+    }
+  ],
+  "assignment": {
+    "acceptanceId": "AT-hermes-config-87",
+    "assertion": "Given concurrent real subprocess refresh/add with fake-provider barriers and OS/storage crash cuts, when both orders persist and fresh processes reload, the newest accepted refresh generation and added grant survive without a lost update.",
+    "scenarioRequirements": "Two real subprocesses perform expired-grant chat refresh and independent auth-add; provider barriers exercise both orders and stale rotation responses; storage/crash cuts and fresh public reloads verify latest generation, added-grant usability, no lost update or duplicate rotation, and unchanged independent root.",
+    "mandatoryCases": ["add-first", "refresh-first", "before-replace", "after-replace"],
+    "coverageBoundary": "The proposed extra child applies only to the existing refresh-first case; it cannot replace the other three mandatory cases or independently certify the whole AT."
+  },
+  "verdict": {
+    "serialization": "conditionally-demonstrable",
+    "condition": "The contender must be known to have entered its public expired-chat invocation while the primary refresh response is still held. As written, spawn/PID-before-release proves process lifetime overlap, but not that the contender reached the chat or the contested refresh path before release.",
+    "staleResponseRejection": "not-demonstrated",
+    "summary": "A same-profile contender can expose a duplicate refresh if it actually runs against the expired rotated grant while the primary response is held. Its zero-refresh/stale-generation result after primary release is consistent with correct serialized reload, but can also pass if the OS schedules the child only after release. Even a true contention run cannot prove stale-response rejection/order safety with the current deterministic rotated-to-stale fake-provider response."
+  },
+  "sourceReview": {
+    "permittedBoundedSourceChange": {
+      "path": "packages/hermes/src/auth-fixture.ts",
+      "change": "Extend only the registered refresh-first branch: launch one additional real child using operation chat-expired, actor fresh-refresh-reload, the same hermes profile and temporary home, and its own barrier directory; parse its public result with the existing parseConcurrentChild; include its safe result and the primary-plus-contender refresh count in the existing refresh-first CheckView prerequisite. Keep the add token withheld until the contender result is collected. Preserve all existing four registrations, contracts, generated files, feature map, and add-first/storage-cut sequences.",
+      "existingParserFit": "The current result schema accepts actor fresh-refresh-reload and phase chat-expired. The parser expects the refresh-first generation stale, no refresh effects or token_refreshes, one successful model request, freshProcessUse usable, exact public argv and child identity; no contract or CLI DTO change is needed.",
+      "fixtureClockAndTokenFacts": "The fixture patch sets chat-expired refresh-first time to 4102448400; the stored rotated access expires at 4102444800, while stale expires at 4102531200. Thus a contender that runs before primary persistence encounters an expired rotated token; after it reloads the primary's stale generation it can use that token without refreshing.",
+      "entryEvidenceLimit": "Current launchFixture returns a spawned PID; there is no existing contender pre-command/refresh-entry marker. Ledger and result parsing occur after process completion. They cannot distinguish a child that blocked after entering the operation from one that was not scheduled until after the primary release. Do not label the current PID-only observation as proof of lock acquisition or active refresh contention. A command-entry handshake would require expanding beyond the plan's sole permitted source file into the fixture patch; no flock/syscall observer is needed or assigned."
+    },
+    "independentReadbacksRequired": [
+      "Primary child: exact public argv and fresh child identity; successful chat; exactly one token_refreshes; refreshEffects contains only rotated-to-stale with primary-released; access and catalog generation stale.",
+      "Contender: independently parsed real child identity/argv and successful chat; zero token_refreshes and empty refreshEffects; access and catalog generation stale; freshProcessUse usable; no denied network, fallback, or socket events.",
+      "Record primary and contender send counts separately and require their same-grant sum to equal one. Keep auth-add token_exchanges=1/token_refreshes=0 and any later added-to-added-rotated refresh outside this sum.",
+      "Retain existing fresh public auth list count 3, fresh primary-grant chat at stale, added-grant chat at added-rotated, final list, and unchanged independent root readbacks. Preserve before-replace and after-replace cuts."
+    ],
+    "failureCriterion": "Fail the new contention assertion if the contender was not spawned before the primary release, its command-entry timing is unestablished but the report claims active contention, it fails/times out/is oversized, its exact child identity/argv or chat marker does not match, it observes a generation other than stale, sends any refresh request/effect, the same-grant aggregate is not exactly one, or any existing fresh list/add-grant/root/cut readback fails. A no-contention child with zero sends must not count as proof of serialization.",
+    "staleResponseLimit": "The fake provider maps each given refresh-token generation deterministically: rotated always returns stale. Each child has a separate ledger, so duplicate sends can be counted, but identical stale-labeled responses do not reveal which response was newer or whether a stale response was rejected. Existing result fields staleRefreshTokenRejected and staleRefreshResponse remain not-exercised; do not set them to rejected or claim response-order safety."
+  },
+  "planPinFinding": "The plan's registry hash is stale: current tests/registry.yaml hashes to bf3f1d894e39881c1314f953a1e090dbaf80a96e8effb5cc51c48057559ab843 rather than its pinned 2663144fc449981d21d35f08fefd22c6b93bae39f45b8b302a2dab585332457c. The current file still contains the exact four required IDs and the acceptance-index source pin remains current; refresh the registry pin before parent source admission.",
+  "acceptanceBoundary": {
+    "wholeATClaimed": false,
+    "reason": "Saved run/show evidence reports NOT_IMPLEMENTED and complete=false despite 26 PASS checks. Full protected dispatcher/identity and overall AT87 acceptance remain pending. This review is design coverage only and did not execute the probe or any system operation.",
+    "rootRequestStatusObserved": "R004-02 PENDING; R005-01 PENDING"
+  }
+}

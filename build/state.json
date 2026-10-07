@@ -2,7 +2,7 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-07T06:55:44.569Z",
+  "updatedAt": "2026-10-07T07:03:01.655Z",
   "phase": "R0_FEASIBILITY",
   "activeCard": "R0.10",
   "cardCount": 87,
@@ -788,7 +788,8 @@
         "build/evidence/R0.03/mixed89-regression-verification.json",
         "build/evidence/R0.03/mixed89-parent-verification.json",
         "build/evidence/R0.03/lifecycle91-final-verification.json",
-        "build/evidence/R0.03/auth87-stale-response-minimum-plan.json"
+        "build/evidence/R0.03/auth87-stale-response-minimum-plan.json",
+        "build/evidence/R0.03/auth87-serialization-plan-review.json"
       ],
       "requiredATs": [
         "AT-hermes-config-34",
@@ -1369,13 +1370,14 @@
         "evidenceSha256": "e2e8505c513cbafbb152ab1a3cd5141c6b03b27618168ab0d8845b5c4d106861"
       },
       "auth87SerializationPlan": {
-        "state": "READ_ONLY_MINIMUM_PLAN_AVAILABLE_REVIEW_RUNNING",
+        "state": "SOURCE_NOT_ADMITTED_ENTRY_AND_STALE_ORACLE_INCOMPLETE",
         "path": "build/evidence/R0.03/auth87-stale-response-minimum-plan.json",
         "sha256": "9c7d9039304a593f08d36521a313af9e435b6748f6238bdd45607bf8b4634a56",
         "oldObserverFailuresPreserved": 3,
         "privateObserverRequired": false,
         "sourceExecutionStarted": false,
-        "wholeATComplete": false
+        "wholeATComplete": false,
+        "review": "build/evidence/R0.03/auth87-serialization-plan-review.json"
       }
     },
     "R0.04": {
@@ -2115,7 +2117,8 @@
         "build/evidence/R0.10/authority61-required-owner-interface-plan.json",
         "build/evidence/R0.10/authority61-final-verification.json",
         "build/evidence/R0.10/authority61-source-review.json",
-        "build/evidence/R0.10/authority61-source-admission.json"
+        "build/evidence/R0.10/authority61-source-admission.json",
+        "build/evidence/R0.10/auth-artifact-gate-decision.json"
       ],
       "requiredATs": [
         "AT-activity-focus-86",
@@ -2548,6 +2551,15 @@
           "Genuine protected installed-service manifest, identity/maintenance enforcement, protected runtime import mode and startup behavior proof",
           "Complete AT-authority-61 and R0.10 acceptance; passing source cells do not admit a protected release"
         ]
+      },
+      "authArtifactGate": {
+        "state": "EXACT_PROPOSED_AUTH_ARTIFACT_GATE_FAILED_BROWSER_PIN_UNAVAILABLE",
+        "evidence": "build/evidence/R0.10/auth-artifact-gate-decision.json",
+        "availableArtifacts": 3,
+        "unavailableArtifact": "@simplewebauthn/browser@14.0.3",
+        "sourceExecutionStarted": false,
+        "wholeATComplete": false,
+        "deferralOwner": "Builder R0.10 dependency gate and authenticated protected research for any revised proposed module pin"
       }
     },
     "R0.11": {
@@ -11601,7 +11613,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Commit/push R0.10 source inventory and update PR1; review the finite R0.03 serialization plan, then execute that public normative gap without restoring failed flock observers. Valid ROOT-R004-20261006-02 DONE immediately prioritizes R0.01 after cleanup.",
+  "nextAction": "Poll build/ROOT-REQUESTS.md; valid ROOT-R004-20261006-02 native read and restoration DONE triggers immediate R0.01. Review finite R0.03 public-oracle refinement by07:15UTC; no PID-only contention or stale-label PASS. Exact proposed browser14.0.3 artifact is unavailable; do not silently substitute a version or claim maintained-auth readiness. Continue actual bounded independent R0 owner work, no duplicate PostgreSQL/trial/private-observer probes.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -22209,8 +22221,8 @@
     "command": "npm run check",
     "swiftInvoked": false
   },
-  "sourceCheckpointCommit": "126b330",
-  "sourceCheckpointPushed": false,
+  "sourceCheckpointCommit": "5cd31ec",
+  "sourceCheckpointPushed": true,
   "rootRequests": {
     "ROOT-R004-20261006-01": {
       "requestId": "ae742735-1693-4322-81f9-8767c0074179",
@@ -22269,10 +22281,10 @@
     "measurementHistorical": true
   },
   "activeWorkers": [],
-  "pullRequestUpdatedAt": "2026-10-07T06:45:33.126Z",
+  "pullRequestUpdatedAt": "2026-10-07T06:59:14.756Z",
   "continuationCheckpoint": {
-    "recordedAt": "2026-10-07T06:55:44.569Z",
-    "state": "AUTHORITY61_BOUNDED_SOURCE_VERIFIED_CHECKPOINT_PENDING",
+    "recordedAt": "2026-10-07T07:03:01.655Z",
+    "state": "SOURCE_INVENTORY_PUSHED_AUTH_ARTIFACT_GATE_REAL_E404_AUTH_PUBLIC_ORACLE_REFINING",
     "wholeGoal": "ACTIVE",
     "sourceMutator": null,
     "ownedWorldsRunning": 0,
@@ -22286,14 +22298,14 @@
   },
   "readOnlyWorkers": [
     {
-      "task": "/root/r010_local_gate_audit",
+      "task": "/root/r012_next_assigned_gate",
       "card": "R0.03",
-      "state": "READ_ONLY_SERIALIZATION_PLAN_REVIEW_RUNNING",
+      "state": "READ_ONLY_PUBLIC_ORACLE_REFINEMENT_RUNNING",
+      "sourceMutationAllowed": false,
       "model": "gpt-6-luna",
       "reasoning": "max",
-      "sourceMutationAllowed": false,
-      "ownedPath": "build/evidence/R0.03/auth87-serialization-plan-review.json",
-      "deadline": "2026-10-07T07:05:00Z"
+      "ownedPath": "build/evidence/R0.03/auth87-public-oracle-refined-plan.json",
+      "deadline": "2026-10-07T07:15:00Z"
     }
   ]
 }
