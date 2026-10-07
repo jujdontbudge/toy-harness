@@ -1,6 +1,6 @@
 # ADR 0045: mixed copied-root and independent-profile auth probe
 
-Status: interface accepted before implementation, 2026-10-07. The bounded AT-hermes-config-89 native CLI unit is verified and stopped; evidence is `build/evidence/R0.03/mixed89-first-verification.json`. Protected identity and whole acceptance remain pending.
+Status: interface accepted before implementation, 2026-10-07. The bounded AT-hermes-config-89 native CLI unit is verified and stopped; evidence is `build/evidence/R0.03/mixed89-first-verification.json`. The AT-hermes-config-35 source extension stopped after three assigned attempts. Its final CLI run stops at the unsupported public root-grant shape before the twelve auth phases; see `build/evidence/R0.03/manual-lineage35-stopped-verification.json`. No fourth run is admitted. Protected identity and whole acceptance remain pending.
 
 ## Decision
 
@@ -11,6 +11,18 @@ The fixture creates one synthetic Codex grant in the temporary root through publ
 Fresh profile chat processes then use, expire/refresh, and reload the healed root lineage through the root fallback. The root generation must advance from `initial` to `rotated`; only the root auth digest may change during that refresh, and the profile store remains at its healed digest. After the root reload, public profile auth-add creates a distinct synthetic manual grant with the fixed independent label. Public list must show exactly that one profile row. Fresh profile chat processes use, expire/refresh, and reload the independent `added` to `added-rotated` generation while the root auth and environment digests stay unchanged.
 
 The ordered mandatory phases are `root-add`, `copied-lineage-heal`, `copied-lineage-use`, `copied-lineage-refresh`, `copied-lineage-reload`, `independent-manual-add`, `independent-profile-readback`, `independent-profile-use`, `independent-profile-refresh`, and `independent-profile-reload`. Each phase is a `HermesAuthProbe.run` case. Register OS control `mixed-root-auth-store-copy` on `copied-lineage-heal`.
+
+## AT-hermes-config-35 extension
+
+The same owner and receipt also cover the assigned root-Anthropic-singleton/manual-profile case. Use the pinned public Hermes CLI and the existing external provider, child-clock, and OS fixture seams. Keep the AT89 Codex case order and defaults unchanged. The closed Anthropic variant uses these mandatory cases in order: `root-add`, `independent-manual-add`, `independent-profile-readback`, `independent-profile-use`, `independent-profile-reload-before-expiry`, `independent-profile-refresh`, `independent-profile-reload`, `root-lineage-readback`, `copied-lineage-heal`, `copied-lineage-use`, `copied-lineage-refresh`, and `copied-lineage-reload`.
+
+`root-add` is the public `hermes auth add anthropic --type oauth --no-browser` operation. The fixture may retain a valid root `.anthropic_oauth.json` written by that operation. If the public operation instead writes its real synthetic grant only to the root `hermes_pkce` pool, the existing OS fixture seam may project exactly one matching, actual grant into the singleton schema (`accessToken`, `refreshToken`, `expiresAt`) and remove only that exact pool counterpart, preserving all other root store data. The seam must refuse with a bounded receipt if the public grant is missing, malformed, expired, duplicated, or ambiguous. It must never invent a token, row, id, or source label. This arrangement is setup for the fixture's root singleton precondition; it does not claim that public auth-add itself writes the singleton.
+
+After this root-only arrangement, create profile `toy` and snapshot the root auth JSON, root `.env`, and root singleton. The manual login runs through the public profile-scoped auth-add operation. Two separate fresh profile chat processes must use the independent `added` generation before expiry without refreshing. Then advance only the child fake clock and require refresh to `added-rotated`; the root auth JSON, `.env`, and singleton digests stay unchanged throughout all manual phases. A fresh reload must use `added-rotated` without another refresh.
+
+Next, a public root `auth list anthropic` must materialize a genuine root `hermes_pkce` pool row from the singleton. Create a second fixed profile, copy that actual root auth JSON byte-for-byte into its auth store, and use public profile `auth list anthropic` to heal the copied lineage to root ownership. Fresh copied-profile chats must use `initial`, refresh the root singleton owner to `rotated`, and reload `rotated`; the copied profile store remains at its healed digest. The root generation and refresh state must not be accepted by the independent manual lineage.
+
+The existing fixed V1 receipt records only bounded public argv, child identity, accepted provider/catalog generations, HTTP counts, sanitized markers, token hygiene, and store digests. Include the root and profile singleton digests in lineage preservation and owner-change checks. Do not put auth rows or credential bytes in receipts. The root pool's public row is evidenced by public list behavior; this fixture does not claim access to private stored parent identifiers beyond existing public observations.
 
 ## Boundaries
 

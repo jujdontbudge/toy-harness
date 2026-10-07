@@ -1,0 +1,218 @@
+{
+  "recordedAt": "2026-10-07T13:41:14.409Z",
+  "rung": "CLI",
+  "unfiltered": true,
+  "wholeATComplete": false,
+  "liveProviderSends": 0,
+  "nativeAttempt": 3,
+  "admissionEvidence": "build/evidence/R0.03/manual-lineage35-final-runtime-memory.json",
+  "probes": [
+    {
+      "probeId": "AT-hermes-config-35",
+      "run": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.03/manual-lineage35-final-cli/AT-hermes-config-35-run.json",
+        "sha256": "78143443e4712eab71ffb271a3ba08e83c3543817d3f64912f00cfcb5d25d0ae"
+      },
+      "operationId": "e9d08375-8798-41ed-a406-01ee118d7038",
+      "show": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.03/manual-lineage35-final-cli/AT-hermes-config-35-show.json",
+        "sha256": "d4bb3059caa679162503afe2c19ae84ad94e6706ba8a2d80035de2048f37ee7b"
+      },
+      "sameData": true,
+      "sourceRegistration": {
+        "id": "AT-hermes-config-35",
+        "rung": "CLI",
+        "sourceAssertionHash": "7e69a039d367ed6ffa27c762c76cad43ad78a65c3ca5c91552a1f7adef47c2aa",
+        "commandId": "probe.run",
+        "scenarioId": "auth.manual-lineage",
+        "owner": "hermes",
+        "firstRelease": "R0",
+        "kind": "behavioral",
+        "mandatoryCases": [
+          {
+            "id": "root-add",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "root-add"
+          },
+          {
+            "id": "independent-manual-add",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "independent-manual-add"
+          },
+          {
+            "id": "independent-profile-readback",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "independent-profile-readback"
+          },
+          {
+            "id": "independent-profile-use",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "independent-profile-use"
+          },
+          {
+            "id": "independent-profile-reload-before-expiry",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "independent-profile-reload-before-expiry"
+          },
+          {
+            "id": "independent-profile-refresh",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "independent-profile-refresh"
+          },
+          {
+            "id": "independent-profile-reload",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "independent-profile-reload"
+          },
+          {
+            "id": "root-lineage-readback",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "root-lineage-readback"
+          },
+          {
+            "id": "copied-lineage-heal",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "copied-lineage-heal"
+          },
+          {
+            "id": "copied-lineage-use",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "copied-lineage-use"
+          },
+          {
+            "id": "copied-lineage-refresh",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "copied-lineage-refresh"
+          },
+          {
+            "id": "copied-lineage-reload",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "copied-lineage-reload"
+          }
+        ],
+        "trigger": "Create the root Anthropic grant through public auth-add, arrange only its exact synthetic grant into the root singleton when needed, preserve that root owner through fresh independent manual profile use and refresh, then create a public profile, byte-copy root auth.json, and verify genuine copied lineage heals to root ownership.",
+        "faultControls": [
+          {
+            "id": "mixed-root-auth-store-copy",
+            "seam": "os",
+            "affectedPhases": [
+              "root-add",
+              "copied-lineage-heal"
+            ]
+          },
+          {
+            "id": "mixed-access-token-expiry",
+            "seam": "clock",
+            "affectedPhases": [
+              "independent-profile-refresh",
+              "copied-lineage-refresh"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "independent-manual-lineage",
+            "independentReader": "HermesAuthProbe.run: fresh manual generations and unchanged root auth, environment and singleton digests",
+            "caseIds": [
+              "root-add",
+              "independent-manual-add",
+              "independent-profile-readback",
+              "independent-profile-use",
+              "independent-profile-reload-before-expiry",
+              "independent-profile-refresh",
+              "independent-profile-reload"
+            ]
+          },
+          {
+            "id": "copied-anthropic-lineage",
+            "independentReader": "HermesAuthProbe.run: exact copy, public healing, root refresh generations and stable copied profile store",
+            "caseIds": [
+              "root-lineage-readback",
+              "copied-lineage-heal",
+              "copied-lineage-use",
+              "copied-lineage-refresh",
+              "copied-lineage-reload"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot select raw auth-store lineage, invoke administrative PKCE login or force independent process reload and expiry boundaries. The assigned CLI probe uses real public Hermes subprocesses with only external provider, clock and OS seams."
+      },
+      "registrationExact": true,
+      "cases": [
+        {
+          "id": "auth.native-runtime",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T13:41:15.649Z",
+          "reasonCode": "NATIVE_PUBLIC_CLI_READY_AUTH_PENDING",
+          "prerequisite": "{\"interface\":\"hermes --help\",\"installedCommit\":\"8d5e3e412138342e8bf30443e72bd4e6a9abd057\",\"launcherDigest\":\"307ef6a7792a42083f6e4f71e9500543efd9c707e211068f80b138db76975397\",\"interpreterSource\":\"existing-committed-venv\",\"interpreterDigest\":\"e046691799a36090b5946d8910084f982bf819ed4dfaf27a4bfa5bdf9c8360ee\",\"publicRuntimeCommandDigest\":\"e99338b03dfdad1b660705657d5e8c4273cc8e1b53f2fe6cf995d9cb36e05403\",\"bytecodeWritesDisabled\":true,\"isolatedHome\":true,\"inheritedProviderEnvironment\":false,\"publicHelpObserved\":true,\"childExitCode\":0,\"childSignal\":null,\"outputDigest\":\"1b74616851009c28894dd94adf51fc3064e3d353021e1b37b716a4904b3881e3\",\"errorOutputDigest\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"dependencyEnvironmentUnavailable\":false,\"missingModule\":false,\"repairSuggested\":false,\"sourceUpdateIncomplete\":false,\"authExecuted\":false,\"credentialInspected\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "307ef6a7792a42083f6e4f71e9500543efd9c707e211068f80b138db76975397",
+              "e046691799a36090b5946d8910084f982bf819ed4dfaf27a4bfa5bdf9c8360ee",
+              "db00cd73209ec5a3bef079e1a60a20798810eac668ea6752c6616ca6644f0fe1"
+            ]
+          }
+        },
+        {
+          "id": "auth.native-fixture",
+          "owner": "hermes",
+          "state": "BLOCKED",
+          "checkedAt": "2026-10-07T13:41:23.770Z",
+          "reasonCode": "NATIVE_AUTH_ANTHROPIC_ROOT_GRANT_UNAVAILABLE",
+          "prerequisite": "{\"wholeATComplete\":false,\"fixtureSubsetComplete\":false,\"caseId\":\"root-add\",\"setupReason\":\"PUBLIC_ROOT_ANTHROPIC_GRANT_SHAPE_UNSUPPORTED\",\"rootAuth\":{\"exists\":true,\"digest\":\"567dcaa163532793ddb84e30a5a221933f8409876db5d5925829bef211ea92a0\"},\"singleton\":{\"exists\":false,\"digest\":null}}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "814f13752d5132dbc175fb1864229dead2988f9eaa8f76af1481457f2b406b30",
+              "f17bd5386e5f12028217bb2f093fc48e04ad313159af4268156b2cf738ea0dfd",
+              "bc7872d76b501bfb0599599752348fc1097e9f5816adde86afdf2e044e248d38",
+              "99cacf5cbafc71e7480f02af79d3f6dbae33c1d8b8f9f7766a253f1aeeab5dc8"
+            ]
+          }
+        }
+      ],
+      "resultState": "NOT_IMPLEMENTED",
+      "complete": false
+    }
+  ],
+  "up": {
+    "exitCode": 0,
+    "path": "build/evidence/R0.03/manual-lineage35-final-cli/up.json",
+    "sha256": "c2bfa65d4b07bede5d473e28ec850185d61f47193363341a46184ee6ec70d767"
+  },
+  "stackId": "6f6a5e76-fa09-46dc-b1a5-0dcc52960632",
+  "down": {
+    "exitCode": 0,
+    "path": "build/evidence/R0.03/manual-lineage35-final-cli/down.json",
+    "sha256": "3005d9d22aa761e187fa060c65e25707c7fe9d1de7e400cf38752bbab6b33251"
+  },
+  "teardown": {
+    "stackId": "6f6a5e76-fa09-46dc-b1a5-0dcc52960632",
+    "checkpointRefs": [],
+    "fenceRefs": [],
+    "stoppedResourceRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "6f6a5e76-fa09-46dc-b1a5-0dcc52960632"
+      }
+    ],
+    "retainedArtifactRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "6f6a5e76-fa09-46dc-b1a5-0dcc52960632"
+      }
+    ],
+    "unresolvedResourceRefs": [],
+    "complete": true
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "toy.r006.unknown-reset-plan-review.v1",
+  "recordedAt": "2026-10-07T13:36:00Z",
+  "card": "R0.06",
+  "AT": "AT-ops-10",
+  "state": "SOURCE_NOT_ADMITTED_RUNTIME_NOT_RUN",
+  "verdict": "SOURCE_GAP_CONFIRMED; existing assigned public CLI case can reproduce it without new API, DTO, database shape, command, acceptance ID, or fixture infrastructure.",
+  "sourceGap": {
+    "path": "packages/self-improvement/src/model-admission.ts",
+    "sha256": "2afd5174b7b3edae3cb2398811acadd6bbc9268072faaf9bbaa49823f157a237",
+    "finding": "In resumePending, when target.utcDay differs from the current virtual UTC day, retryAt === null immediately returns the unchanged denied row. This occurs before reading a later quota snapshot, so unknown-reset work can never recover even after a new authorized available observation."
+  },
+  "smallestCliReproducer": {
+    "fitsExistingCase": true,
+    "existingCase": "AT-ops-10 / deferred-restart-recovery",
+    "existingSurface": "toy probe.run -> accountingProbe -> public ModelAdmission observe/inspect/inspectPending/resumePending, existing TestClockControl, disposable PostgreSQL fixture and owner reopen",
+    "sequence": "Add a separate fixed account in the existing case: persist an exhausted observation with no windows/reset and a denied row at 23:59 UTC; reopen and verify the exact old pending row and zero charge at 00:02; verify clock-only, unavailable, stale, or unauthorized data still returns that unchanged row; at 00:06 observe fresh authorized schema-valid available windows and require one idempotent current-day retry with unchanged original bindings.",
+    "caseBoundary": "Keep the same deferred-restart-recovery check ID and all four AT-ops-10 mandatory IDs; use compact bounded booleans/counts within the existing CheckView projection limit. Do not add a test selector or fixture path."
+  },
+  "smallestFreshnessGuard": {
+    "unknownReset": "Do not synthesize a reset time or treat midnight as a reset. Require the latest observation to be non-null, authorized, schema-valid, available, for the same account, reported strictly after the persisted original denial time (target.startedAt), and no later than the current virtual wall. Preserve ModelAdmissionPolicy's 15-minute freshness check, measured mode, and eligible decision before reserving.",
+    "knownReset": "Preserve the current guard: the virtual wall must reach retryAt and the available observation must be reported at or after retryAt.",
+    "blockedResult": "Until those conditions hold, return the exact original denied row without retry or charge. Keep current queue-head, budget/root binding, snapshot compare, immutable retry, canonical request hash, current-day idempotency, and no-send settlement guards."
+  },
+  "proofPreservation": {
+    "priorKnownResetUnit": "build/evidence/R0.06/cross-day-final-verification.json records 18 passing checks, including the existing known-reset rollover and deferred-restart-recovery.",
+    "sameDayRecovery": "The same proof records all nine existing same-day recoveries with idempotent charges; retain that loop and its readbacks unchanged.",
+    "assignedCases": ["exhausted-known-reset", "exhausted-unknown-reset", "full-quota-windows", "deferred-restart-recovery"],
+    "sourceAssertionHash": "e281f3fe7221d3ddc551bf73c8fc5e0df616060c8d089af9ee4625930d11ee3f"
+  },
+  "pins": {
+    "acceptedPlan": {"path": "build/evidence/R0.06/unknown-reset-cross-day-next-minimum-20261007.json", "sha256": "a333224bef4e2a484c37a8a8c20fae69b0bcdaa12a634d12845ab1ef3069ccc5"},
+    "accountingProbe": {"path": "packages/self-improvement/src/accounting-probe.ts", "sha256": "d89489f84a16f2d6ac078e11cae3b21de33b9b63158f9b230d34ee16c9e63164"},
+    "modelAdmissionPolicy": {"path": "packages/ops/src/model-admission-policy.ts", "sha256": "553eb6805c9779c924d16c3bdb8eeac9a92727086b64a673d317f9dddcbc2c95"},
+    "adr": {"path": "docs/adr/0061-cross-day-model-admission.md", "sha256": "0cd558de9d047f2574dea2883719d9ebe0ed59f00424fccac2b496321457a852"},
+    "opsSpec": {"path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/ops.md", "sha256": "f07aab65088c82e4ff21e4d63edb2f279e2324e6d7e2bbb801e0fd7494104b0b"},
+    "testPlan": {"path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/TEST-PLAN.md", "sha256": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2"},
+    "contracts": {"path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/CONTRACTS.md", "sha256": "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d"},
+    "priorVerification": {"path": "build/evidence/R0.06/cross-day-final-verification.json", "sha256": "8196774b713ad4e14b7f80ca86b826553a2a05b6252691d7f5ea8a5ea162fd8b"},
+    "assignedRun": {"path": "build/evidence/R0.06/cross-day-green-cli/AT-ops-10-run.json", "sha256": "35d0c4df851e636d0f0ae2d59bc2ed884ba305072fe2e61ca4ddd3cf388fc083"},
+    "assignedShow": {"path": "build/evidence/R0.06/cross-day-green-cli/AT-ops-10-show.json", "sha256": "16e7e5ee9bc6f0c4b342856e2a5be12db7224899d434b46ff4118455f77337a1"}
+  },
+  "scope": {
+    "sourceAdmitted": false,
+    "runtimeRun": false,
+    "buildGenerationStaticOrTestsRun": false,
+    "rootBrowserProviderOrOSAction": false,
+    "wholeATComplete": false
+  }
+}

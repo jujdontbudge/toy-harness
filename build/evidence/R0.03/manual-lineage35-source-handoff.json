@@ -1,0 +1,123 @@
+{
+  "schemaVersion": "toy.r0.03.manual-lineage35-source-handoff.v1",
+  "recordedAt": "2026-10-07T13:24:37Z",
+  "card": "R0.03",
+  "assignedAT": "AT-hermes-config-35",
+  "rung": "CLI",
+  "phase": "bounded-12-case-manual-and-copied-anthropic-lineage",
+  "phaseState": "SOURCE_STOP",
+  "sourceOwner": "/root/r006_cross_day_minimum",
+  "sourceStoppedAt": "2026-10-07T13:24:37Z",
+  "deadline": "2026-10-07T13:50:00Z",
+  "admission": {
+    "path": "build/evidence/R0.03/manual-lineage35-source-admission.json",
+    "sha256": "cbe2de6863263ea2f57faa0c6b8d05bf6a1dcdc8cda496255890a71e0fb68b3b",
+    "state": "AT35_SOLE_SOURCE_ADMITTED_AFTER_UNSUPPORTED_PUBLIC_BASELINE"
+  },
+  "acceptedPlan": {
+    "path": "build/evidence/R0.03/manual-lineage35-next-minimum-20261007.json",
+    "sha256": "21e7f9ca5c51fa54392853655cb15d2024101b5e38023c92f29e3d3b7503765c"
+  },
+  "parentReview": {
+    "path": "build/evidence/R0.03/manual-lineage35-parent-review-20261007.json",
+    "sha256": "c88b67e32276f88c22d919a8c578dd344d3c3ff01c258121c29bcda47fd964aa",
+    "representationReviewAccepted": true
+  },
+  "baseline": {
+    "summary": {
+      "path": "build/evidence/R0.03/manual-lineage35-baseline-summary.json",
+      "sha256": "996f9c3b1763c2ec06d382e03d57cca686a9c800a858f196b85938a52e304b26"
+    },
+    "run": {
+      "exitCode": 5,
+      "path": "build/evidence/R0.03/manual-lineage35-baseline-cli/AT-hermes-config-35-run.json",
+      "sha256": "a4046b7ad87324a754e416fda610ecaa83865a9ee25235a62b3a051a7b7339c9"
+    },
+    "show": {
+      "exitCode": 5,
+      "path": "build/evidence/R0.03/manual-lineage35-baseline-cli/AT-hermes-config-35-show.json",
+      "sha256": "3584f707dcc2e3ade191a97c6f3f5eb38899a6f45ad1210b6d6f008ed36da299"
+    },
+    "runShowExact": true,
+    "reasonCode": "REGISTERED_CASE_NOT_IMPLEMENTED",
+    "worldId": "d461e322-5163-4aa2-bb23-d267cbd22ce0",
+    "teardownComplete": true
+  },
+  "acceptance": {
+    "sourceAssertionHash": "7e69a039d367ed6ffa27c762c76cad43ad78a65c3ca5c91552a1f7adef47c2aa",
+    "source": "specs/hermes-config.md",
+    "assignedRung": "CLI",
+    "mandatoryCaseIds": [
+      "root-add",
+      "independent-manual-add",
+      "independent-profile-readback",
+      "independent-profile-use",
+      "independent-profile-reload-before-expiry",
+      "independent-profile-refresh",
+      "independent-profile-reload",
+      "root-lineage-readback",
+      "copied-lineage-heal",
+      "copied-lineage-use",
+      "copied-lineage-refresh",
+      "copied-lineage-reload"
+    ],
+    "wholeATComplete": false
+  },
+  "ownedPaths": [
+    "docs/adr/0045-mixed-auth-lineage-probe.md",
+    "packages/hermes/src/auth-fixture.ts",
+    "patches/hermes-auth-fixture.patch",
+    "packages/hermes/src/auth-probe.ts",
+    "cli/src/main.ts",
+    "tests/registry.yaml",
+    "architecture/features.json",
+    "build/evidence/R0.03/manual-lineage35-source-handoff.json"
+  ],
+  "sourcePins": {
+    "docs/adr/0045-mixed-auth-lineage-probe.md": "08a399567f22d890fcae7802d71e1a3156ab2a0ab6d9b91841382b0d28091900",
+    "packages/hermes/src/auth-fixture.ts": "c44989bd11d3772d226491ebe3fde7dc70fce30806f19722fa5c0070728c16ef",
+    "patches/hermes-auth-fixture.patch": "8d271c397019c4a83c548b74030f2adce889dfd231df4a3a9ca0d9d288bc45aa",
+    "packages/hermes/src/auth-probe.ts": "b26c56b0841953b9b071db8940f7efdbbce6ee44be3a922b940e2b235e151226",
+    "cli/src/main.ts": "59cf325b9a2d6465ea88e36ac9419320878488659c6f9151f22722eda1e8968a",
+    "tests/registry.yaml": "fabd0b36b4870f2d8c72bcfe2f67cd951b2310737dfcf66f48bdcb1b6fe74dad",
+    "architecture/features.json": "67e854d532810e0072b1ca1bff261c1d1b012a0f0fba7185ab1bbbc01b7f6115"
+  },
+  "patchHunk": {
+    "header": "@@ -0,0 +1,1285 @@",
+    "fileLinesIncludingPatchHeaders": 1288,
+    "hunkAddedLineCountMatches": true
+  },
+  "implementation": {
+    "interface": "Extends the existing HermesAuthProbe/runHermesAuthFixture owner and V1 receipt path; no new public DTO, command, selector, module, database field, or protocol.",
+    "rootGrant": "Calls public root Anthropic auth-add. If the real synthetic grant is written only to the root hermes_pkce pool, the existing owned OS seam accepts exactly one valid, unexpired, matching public grant and projects that actual grant to the root singleton schema. Missing, malformed, expired, duplicated, or ambiguous material is a bounded refusal; no grant, token, source label, or ID is fabricated.",
+    "manualLineage": "Creates the independent public profile after root setup; checks two fresh pre-expiry profile chats, then fake-clock expiry, exact refresh generation, and fresh reload while root auth, environment, and Anthropic singleton digests remain unchanged.",
+    "copiedLineage": "Public root auth-list materializes a genuine root hermes_pkce row; a new public profile receives a byte-copy of the actual root auth.json and public profile auth-list heals it. Fresh chats then exercise root-owned use, refresh, and reload while copied profile storage remains stable.",
+    "readbackLimits": "Public observations and digests do not expose private stored parent identifiers or exact internal grant ownership fields; no such readback is claimed.",
+    "fixtureBoundaries": "Uses only fixed external fake OAuth/model, existing fake clock, and existing temporary-home OS seam. Receipt excludes raw tokens, credential rows, and raw streams. Existing AT89 order/defaults and other registered cases are retained."
+  },
+  "frozenRootPins": [
+    {"path": "scripts/probe-siwc-control-runtime.mts", "sha256": "96e1fd2d98469772c3d0d203386c3f7aa56af57db025c420fa93f1f4ecd7e70d"},
+    {"path": "scripts/stage-siwc-control-runtime.mts", "sha256": "13ff53e341ab7670dbed967ce810d5aa2834df7a47ffe1620f037ff1da3ee0d4"},
+    {"path": "control/dist/bootstrap/siwc-runtime-probe.js", "sha256": "06870b8dd41d2ffc093cc04680ba56c4570f07b4aa0a27a9ab70796cdd8204bd"},
+    {"path": "scripts/probe-unfiltered-control-denials.mts", "sha256": "1cb93d375df931a482d946170e31549450d8efb71d6a251f5d2bcea8c5b92529"},
+    {"path": "packages/ops/dist/role-control-probe.js", "sha256": "1764a98e5ae45694118007c242320711a7bd9e0d021b7c6d6ee0cbb8cff73ec2"},
+    {"path": "control/dist/bootstrap/denial-probe.js", "sha256": "7fda1824ec7bc308cac97d07c7c92cadd5527e87e89d79b410d33d95d1b30672"}
+  ],
+  "verification": {
+    "assignedCliRunAfterSource": "NOT_RUN_BY_SOURCE",
+    "tests": "NOT_RUN",
+    "build": "NOT_RUN",
+    "generation": "NOT_RUN",
+    "staticChecks": "NOT_RUN",
+    "nativeProviderOrOSProbes": "NOT_RUN",
+    "browserProbe": "NOT_RUN",
+    "noBackgroundProcessesStartedBySource": true,
+    "parentDrivingStoppedDuringSource": true,
+    "attemptsUsedBeforeSource": 1,
+    "maximumAssignedAttempts": 3,
+    "firstImplementationPassStop": true,
+    "wholeATComplete": false,
+    "goalStatus": "active"
+  },
+  "nextOwner": "Parent owns generated integration, checks and the assigned unfiltered CLI run after SOURCE_STOP. Preserve exact run/show evidence and complete teardown; stop on the first implementation PASS."
+}

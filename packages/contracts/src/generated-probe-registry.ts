@@ -4691,6 +4691,124 @@ export const registeredCliAcceptanceManifestInventory = [
     "simUnavailableReason": "SIM ingress cannot start Hermes's administrative provider-specific auth-add flows or select independent native subprocess exit/restart boundaries. The assigned Toy CLI runs the public auth-add and fresh-chat path in disposable isolated profiles with in-memory external seams; no real grant or account state is read."
   },
   {
+    "id": "AT-hermes-config-35",
+    "rung": "CLI",
+    "sourceAssertionHash": "7e69a039d367ed6ffa27c762c76cad43ad78a65c3ca5c91552a1f7adef47c2aa",
+    "commandId": "probe.run",
+    "scenarioId": "auth.manual-lineage",
+    "owner": "hermes",
+    "firstRelease": "R0",
+    "kind": "behavioral",
+    "mandatoryCases": [
+      {
+        "id": "root-add",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "root-add"
+      },
+      {
+        "id": "independent-manual-add",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "independent-manual-add"
+      },
+      {
+        "id": "independent-profile-readback",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "independent-profile-readback"
+      },
+      {
+        "id": "independent-profile-use",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "independent-profile-use"
+      },
+      {
+        "id": "independent-profile-reload-before-expiry",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "independent-profile-reload-before-expiry"
+      },
+      {
+        "id": "independent-profile-refresh",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "independent-profile-refresh"
+      },
+      {
+        "id": "independent-profile-reload",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "independent-profile-reload"
+      },
+      {
+        "id": "root-lineage-readback",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "root-lineage-readback"
+      },
+      {
+        "id": "copied-lineage-heal",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "copied-lineage-heal"
+      },
+      {
+        "id": "copied-lineage-use",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "copied-lineage-use"
+      },
+      {
+        "id": "copied-lineage-refresh",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "copied-lineage-refresh"
+      },
+      {
+        "id": "copied-lineage-reload",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "copied-lineage-reload"
+      }
+    ],
+    "trigger": "Create the root Anthropic grant through public auth-add, arrange only its exact synthetic grant into the root singleton when needed, preserve that root owner through fresh independent manual profile use and refresh, then create a public profile, byte-copy root auth.json, and verify genuine copied lineage heals to root ownership.",
+    "faultControls": [
+      {
+        "id": "mixed-root-auth-store-copy",
+        "seam": "os",
+        "affectedPhases": [
+          "root-add",
+          "copied-lineage-heal"
+        ]
+      },
+      {
+        "id": "mixed-access-token-expiry",
+        "seam": "clock",
+        "affectedPhases": [
+          "independent-profile-refresh",
+          "copied-lineage-refresh"
+        ]
+      }
+    ],
+    "observations": [
+      {
+        "id": "independent-manual-lineage",
+        "independentReader": "HermesAuthProbe.run: fresh manual generations and unchanged root auth, environment and singleton digests",
+        "caseIds": [
+          "root-add",
+          "independent-manual-add",
+          "independent-profile-readback",
+          "independent-profile-use",
+          "independent-profile-reload-before-expiry",
+          "independent-profile-refresh",
+          "independent-profile-reload"
+        ]
+      },
+      {
+        "id": "copied-anthropic-lineage",
+        "independentReader": "HermesAuthProbe.run: exact copy, public healing, root refresh generations and stable copied profile store",
+        "caseIds": [
+          "root-lineage-readback",
+          "copied-lineage-heal",
+          "copied-lineage-use",
+          "copied-lineage-refresh",
+          "copied-lineage-reload"
+        ]
+      }
+    ],
+    "simUnavailableReason": "SIM cannot select raw auth-store lineage, invoke administrative PKCE login or force independent process reload and expiry boundaries. The assigned CLI probe uses real public Hermes subprocesses with only external provider, clock and OS seams."
+  },
+  {
     "id": "AT-hermes-config-50",
     "rung": "CLI",
     "sourceAssertionHash": "2d2e75c4c8e22b94d2f1fc10e237613182ddf8ef5daef01264eef72ed2cf6520",

@@ -1,0 +1,28 @@
+{
+  "recordedAt": "2026-10-07T13:37:45.429Z",
+  "state": "AT35_IMPLEMENTATION_ATTEMPT2_FAILED_WITH_105_AFFECTED_CHECKS_PASS_DOWN_VERIFIED",
+  "summary": "build/evidence/R0.03/manual-lineage35-implementation-summary.json",
+  "assigned": {
+    "runExit": 1,
+    "showExit": 1,
+    "reason": "NATIVE_AUTH_FIXTURE_RESULT_INVALID",
+    "helpPass": true,
+    "sourceRegistrationExact": true,
+    "runShowExact": true,
+    "attemptsUsed": 2,
+    "maximumAttempts": 3
+  },
+  "affectedChecks": 105,
+  "affectedATs": 8,
+  "maximumProjectionBytes": 1995,
+  "stackId": "a1ded193-4054-40bc-8a68-1445ecd202f5",
+  "teardownComplete": true,
+  "runtimePinsExact": 9,
+  "rootQueuePendingDoesNotBlockGoal": true,
+  "wholeATComplete": false,
+  "actualFailureDiagnosis": {
+    "primary": "Pinned Hermes agent/anthropic_credentials.py:795 uses JSON authorization-code body; refresh:455 supports JSON or URLencoded form.",
+    "fake": "_fixture_urlopen parsed every body with parse_qs and emitted unregistered anthropic-grant-mismatch.",
+    "smallestRepair": "Parse the existing JSON and form request formats and use canonical grant-mismatch; preserve actor/phase/grant binding."
+  }
+}

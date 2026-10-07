@@ -1,0 +1,211 @@
+{
+  "schemaVersion": "toy.r003.manual-lineage-stopped.v1",
+  "recordedAt": "2026-10-07T13:43:25.954553+00:00",
+  "state": "STOPPED_THREE_ASSIGNED_ATTEMPTS_PARTIAL_AUTH_REGRESSION_PROOF",
+  "card": "R0.03",
+  "AT": "AT-hermes-config-35",
+  "rung": "CLI",
+  "sourceAssertionHash": "7e69a039d367ed6ffa27c762c76cad43ad78a65c3ca5c91552a1f7adef47c2aa",
+  "attemptsUsed": 3,
+  "maximumAssignedAttempts": 3,
+  "fourthRunAdmitted": false,
+  "attempts": [
+    {
+      "attempt": 1,
+      "summary": {
+        "path": "build/evidence/R0.03/manual-lineage35-baseline-summary.json",
+        "sha256": "996f9c3b1763c2ec06d382e03d57cca686a9c800a858f196b85938a52e304b26"
+      },
+      "run": {
+        "exitCode": 5,
+        "path": "build/evidence/R0.03/manual-lineage35-baseline-cli/AT-hermes-config-35-run.json",
+        "sha256": "a4046b7ad87324a754e416fda610ecaa83865a9ee25235a62b3a051a7b7339c9"
+      },
+      "show": {
+        "exitCode": 5,
+        "path": "build/evidence/R0.03/manual-lineage35-baseline-cli/AT-hermes-config-35-show.json",
+        "sha256": "3584f707dcc2e3ade191a97c6f3f5eb38899a6f45ad1210b6d6f008ed36da299"
+      },
+      "runShowExact": true,
+      "cases": [
+        {
+          "id": "bootstrap.fixture-runtime",
+          "state": "BLOCKED",
+          "reasonCode": "REGISTERED_CASE_NOT_IMPLEMENTED"
+        }
+      ],
+      "worldId": "d461e322-5163-4aa2-bb23-d267cbd22ce0",
+      "down": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.03/manual-lineage35-baseline-cli/down.json",
+        "sha256": "2562ecdf5a1688a149404bdb0a6114e655caa4aa1ce36fdd89f6ffa71c5267e4"
+      },
+      "teardownComplete": true,
+      "unresolvedResources": 0
+    },
+    {
+      "attempt": 2,
+      "summary": {
+        "path": "build/evidence/R0.03/manual-lineage35-implementation-summary.json",
+        "sha256": "db974c209de1f5f62bcd44a5ba058fd81ae9a9d8cf9fc7dfce1c5537f94bec98"
+      },
+      "run": {
+        "exitCode": 1,
+        "path": "build/evidence/R0.03/manual-lineage35-implementation-cli/AT-hermes-config-35-run.json",
+        "sha256": "a91bb9666f93477ff134f75d7055b03a9b8e13e04c3b95519392e728fdfbdcd8"
+      },
+      "show": {
+        "exitCode": 1,
+        "path": "build/evidence/R0.03/manual-lineage35-implementation-cli/AT-hermes-config-35-show.json",
+        "sha256": "ad5e745e589459929824ac33ecb5696ce5b063839c67c6a9f2edf8251bd2c96f"
+      },
+      "runShowExact": true,
+      "cases": [
+        {
+          "id": "auth.native-runtime",
+          "state": "PASS",
+          "reasonCode": "NATIVE_PUBLIC_CLI_READY_AUTH_PENDING"
+        },
+        {
+          "id": "auth.native-fixture",
+          "state": "FAIL",
+          "reasonCode": "NATIVE_AUTH_FIXTURE_RESULT_INVALID"
+        }
+      ],
+      "worldId": "a1ded193-4054-40bc-8a68-1445ecd202f5",
+      "down": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.03/manual-lineage35-implementation-cli/down.json",
+        "sha256": "8aff86fd8e21b774355506a9bf7ea7cd019061f538cfaa780657e5e62685fe1b"
+      },
+      "teardownComplete": true,
+      "unresolvedResources": 0
+    },
+    {
+      "attempt": 3,
+      "summary": {
+        "path": "build/evidence/R0.03/manual-lineage35-final-summary.json",
+        "sha256": "117375347331b8c82685b207f71c8c004ebd59bc9db010a4d4fc66d7b6d3ad56"
+      },
+      "run": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.03/manual-lineage35-final-cli/AT-hermes-config-35-run.json",
+        "sha256": "78143443e4712eab71ffb271a3ba08e83c3543817d3f64912f00cfcb5d25d0ae"
+      },
+      "show": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.03/manual-lineage35-final-cli/AT-hermes-config-35-show.json",
+        "sha256": "d4bb3059caa679162503afe2c19ae84ad94e6706ba8a2d80035de2048f37ee7b"
+      },
+      "runShowExact": true,
+      "cases": [
+        {
+          "id": "auth.native-runtime",
+          "state": "PASS",
+          "reasonCode": "NATIVE_PUBLIC_CLI_READY_AUTH_PENDING"
+        },
+        {
+          "id": "auth.native-fixture",
+          "state": "BLOCKED",
+          "reasonCode": "NATIVE_AUTH_ANTHROPIC_ROOT_GRANT_UNAVAILABLE"
+        }
+      ],
+      "worldId": "6f6a5e76-fa09-46dc-b1a5-0dcc52960632",
+      "down": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.03/manual-lineage35-final-cli/down.json",
+        "sha256": "3005d9d22aa761e187fa060c65e25707c7fe9d1de7e400cf38752bbab6b33251"
+      },
+      "teardownComplete": true,
+      "unresolvedResources": 0
+    }
+  ],
+  "affectedAuthChecksPassed": 105,
+  "projectionMaximumBytes": 1995,
+  "allOwnedWorldsDown": true,
+  "frozenRootInputsUnchanged": [
+    {
+      "path": "scripts/probe-siwc-control-runtime.mts",
+      "sha256": "96e1fd2d98469772c3d0d203386c3f7aa56af57db025c420fa93f1f4ecd7e70d",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/stage-siwc-control-runtime.mts",
+      "sha256": "13ff53e341ab7670dbed967ce810d5aa2834df7a47ffe1620f037ff1da3ee0d4",
+      "unchanged": true
+    },
+    {
+      "path": "control/dist/bootstrap/siwc-runtime-probe.js",
+      "sha256": "06870b8dd41d2ffc093cc04680ba56c4570f07b4aa0a27a9ab70796cdd8204bd",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/probe-unfiltered-control-denials.mts",
+      "sha256": "1cb93d375df931a482d946170e31549450d8efb71d6a251f5d2bcea8c5b92529",
+      "unchanged": true
+    },
+    {
+      "path": "packages/ops/dist/role-control-probe.js",
+      "sha256": "1764a98e5ae45694118007c242320711a7bd9e0d021b7c6d6ee0cbb8cff73ec2",
+      "unchanged": true
+    },
+    {
+      "path": "control/dist/bootstrap/denial-probe.js",
+      "sha256": "7fda1824ec7bc308cac97d07c7c92cadd5527e87e89d79b410d33d95d1b30672",
+      "unchanged": true
+    }
+  ],
+  "static": {
+    "repairCheck": {
+      "path": "build/evidence/R0.03/manual-lineage35-repair-static-check.txt",
+      "sha256": "fa04033607914e78d0ebf0fd95fed8e7780dd7c5131a0c41cbf71e18e6d83df5"
+    },
+    "preRuntime": {
+      "path": "build/evidence/R0.03/manual-lineage35-repair-static-ready.json",
+      "sha256": "c144ec3c0f40ce320a869f1b9b364871fe2ad85fb516c2edb5d8252f405bb9ea"
+    },
+    "mapCheck": {
+      "path": "build/evidence/R0.03/manual-lineage35-stopped-map-check.json",
+      "sha256": "a4b44fd99f66da9f4ae2ad2b7f3a1ead2c8be46adc29278b9f7edf06e3d02547"
+    },
+    "artifacts": 412,
+    "contracts": 344,
+    "cliManifests": 53,
+    "features": 107,
+    "commands": 55,
+    "ATs": 1447,
+    "swiftInvoked": false
+  },
+  "actualFailure": {
+    "firstImplementation": "NATIVE_AUTH_FIXTURE_RESULT_INVALID: JSON authorization-code body incorrectly parsed as form data and denial enum mismatch. Patch-only canonical repair passed static checks.",
+    "finalAttempt": "NATIVE_AUTH_ANTHROPIC_ROOT_GRANT_UNAVAILABLE / PUBLIC_ROOT_ANTHROPIC_GRANT_SHAPE_UNSUPPORTED before root arrangement. Root auth exists; singleton absent. No twelve-phase auth acceptance proven."
+  },
+  "replan": {
+    "state": "DEFERRED_SOURCE_REPRESENTATION_REPLAN_NOT_ADMITTED",
+    "owner": "Codex",
+    "minimumNextAction": "Inspect only the pinned public auth-add row producer and existing fixture shape gate; explain the actual nonsecret representation mismatch before proposing a separately bounded next unit. No fourth AT35 runtime is admitted in this unit.",
+    "deferred": [
+      "All twelve AT35 auth phases and retained-root evidence",
+      "AT34 fourth runtime and full root/provider cross-product",
+      "Native protected controller, actual account activation, whole AT/card/release acceptance"
+    ]
+  },
+  "sourceOwner": "STOPPED",
+  "liveProviderSends": 0,
+  "actualAccountActivation": false,
+  "wholeATComplete": false,
+  "cardAcceptanceComplete": false,
+  "goalStatus": "active",
+  "rootQueue": {
+    "pollAt": "2026-10-07T13:43:25.954553+00:00",
+    "path": "build/ROOT-REQUESTS.md",
+    "sha256": "6bdca8b36154b5ec87875c5a1fe0e5d5f9a8a0b6d172c26c7d99ad9f2dd6307e",
+    "pending": [
+      "ROOT-R004-20261006-02",
+      "ROOT-R005-20261006-01"
+    ],
+    "pendingRootDoesNotBlockGoal": true
+  },
+  "nextIndependentCard": "R0.06 unknown-reset rollover; actual public CLI reproducer first",
+  "priorityIfValidRoot02Done": "R0.01 native owner load"
+}

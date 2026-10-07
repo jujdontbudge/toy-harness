@@ -1,6 +1,6 @@
 --- /dev/null
 +++ b/tests/fixtures/toy_auth_httpx_fixture.py
-@@ -0,0 +1,1205 @@
+@@ -0,0 +1,1292 @@
 +from __future__ import annotations
 +
 +import base64
@@ -59,9 +59,48 @@
 +_MIXED_LINEAGE_LABELS = {
 +    "mixed-root-add": "toy-fixture-mixed-root",
 +    "mixed-root-readback": "toy-fixture-mixed-root",
++    "mixed-root-use": "toy-fixture-mixed-root",
++    "mixed-root-refresh": "toy-fixture-mixed-root",
++    "mixed-root-reload": "toy-fixture-mixed-root",
 +    "mixed-profile-add": "toy-fixture-mixed-independent",
 +    "mixed-profile-readback": "toy-fixture-mixed-independent",
++    "mixed-profile-use": "toy-fixture-mixed-independent",
++    "mixed-profile-reload-before-expiry": "toy-fixture-mixed-independent",
++    "mixed-profile-refresh": "toy-fixture-mixed-independent",
++    "mixed-profile-reload": "toy-fixture-mixed-independent",
++    "mixed-copy-readback": "toy-fixture-mixed-root",
++    "mixed-copy-use": "toy-fixture-mixed-root",
++    "mixed-copy-refresh": "toy-fixture-mixed-root",
++    "mixed-copy-reload": "toy-fixture-mixed-root",
 +}
++_MIXED_ANTHROPIC_ACCESS = {
++    "initial": "sk-ant-oat01-toy-fixture-anthropic-root-initial",
++    "rotated": "sk-ant-oat01-toy-fixture-anthropic-root-rotated",
++    "added": "sk-ant-oat01-toy-fixture-anthropic-manual-added",
++    "added-rotated": "sk-ant-oat01-toy-fixture-anthropic-manual-added-rotated",
++}
++_MIXED_ANTHROPIC_REFRESH = {
++    "initial": "toy-fixture-anthropic-root-refresh-initial",
++    "rotated": "toy-fixture-anthropic-root-refresh-rotated",
++    "added": "toy-fixture-anthropic-manual-refresh-added",
++    "added-rotated": "toy-fixture-anthropic-manual-refresh-added-rotated",
++}
++_MIXED_ANTHROPIC_ACTOR_GENERATION = {
++    "mixed-root-use": "initial",
++    "mixed-root-refresh": "rotated",
++    "mixed-root-reload": "rotated",
++    "mixed-profile-use": "added",
++    "mixed-profile-reload-before-expiry": "added",
++    "mixed-profile-refresh": "added-rotated",
++    "mixed-profile-reload": "added-rotated",
++    "mixed-copy-use": "initial",
++    "mixed-copy-refresh": "rotated",
++    "mixed-copy-reload": "rotated",
++}
++
++
++def _mixed_anthropic_generation() -> str | None:
++    return _MIXED_ANTHROPIC_ACTOR_GENERATION.get(os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR", ""))
 +
 +
 +class _FixtureAsyncStream(httpx.AsyncByteStream):
@@ -137,6 +176,33 @@
 +        _COUNTS["denied_http_requests"] += 1
 +        _DENIALS.append("unregistered-http")
 +        raise RuntimeError("fixture denied HTTP request")
++    actor = os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR", "")
++    if actor in {"mixed-root-add", "mixed-profile-add"} or actor in {"mixed-root-refresh", "mixed-profile-refresh", "mixed-copy-refresh"}:
++        body = (request.data or b"").decode("utf-8")
++        form = {name: values[0] for name, values in parse_qs(body).items()}
++        if request.get_header("Content-type", "").split(";", 1)[0].lower() == "application/json":
++            try:
++                payload = json.loads(body)
++            except (TypeError, ValueError):
++                payload = {}
++            form = {name: value for name, value in payload.items() if isinstance(value, str)} if isinstance(payload, dict) else {}
++        grant_type = form.get("grant_type", "")
++        if actor in {"mixed-root-add", "mixed-profile-add"} and _OPERATION == "add" and _PHASE == "add" and grant_type == "authorization_code":
++            generation = "initial" if actor == "mixed-root-add" else "added"
++            _COUNTS["token_exchanges"] += 1
++            _TOKEN_RESPONSE_ISSUED = True
++            return _FixtureUrlResponse({"access_token": _MIXED_ANTHROPIC_ACCESS[generation], "refresh_token": _MIXED_ANTHROPIC_REFRESH[generation], "expires_in": 3600, "token_type": "Bearer"})
++        if actor in {"mixed-root-refresh", "mixed-copy-refresh"} and _OPERATION == "chat" and _PHASE == "chat-expired" and grant_type == "refresh_token" and form.get("refresh_token", "") == _MIXED_ANTHROPIC_REFRESH["initial"]:
++            generation = "rotated"
++        elif actor == "mixed-profile-refresh" and _OPERATION == "chat" and _PHASE == "chat-expired" and grant_type == "refresh_token" and form.get("refresh_token", "") == _MIXED_ANTHROPIC_REFRESH["added"]:
++            generation = "added-rotated"
++        else:
++            _COUNTS["denied_http_requests"] += 1
++            _DENIALS.append("grant-mismatch")
++            raise RuntimeError("fixture denied HTTP request")
++        _COUNTS["token_refreshes"] += 1
++        _TOKEN_RESPONSE_ISSUED = True
++        return _FixtureUrlResponse({"access_token": _MIXED_ANTHROPIC_ACCESS[generation], "refresh_token": _MIXED_ANTHROPIC_REFRESH[generation], "expires_in": 3600, "token_type": "Bearer"})
 +    _COUNTS["token_exchanges"] += 1
 +    _TOKEN_RESPONSE_ISSUED = True
 +    return _FixtureUrlResponse({
@@ -193,8 +259,14 @@
 +
 +
 +def _first_add_model_response(request: httpx.Request, asynchronous: bool) -> httpx.Response:
-+    if _OPERATION != "chat" or _PHASE != "chat":
++    global _ACCEPTED_ACCESS_GENERATION
++    actor = os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR", "")
++    mixed_generation = _mixed_anthropic_generation()
++    mixed_actor = actor in _MIXED_LINEAGE_LABELS
++    if _OPERATION != "chat" or (_PHASE not in {"chat", "chat-expired", "chat-reloaded"} and mixed_generation is None):
 +        return _deny_request("model-request-outside-chat")
++    if mixed_actor and mixed_generation is None:
++        return _deny_request("authorization-mismatch")
 +    source = _first_add_source()
 +    host = request.url.host.lower()
 +    path = request.url.path
@@ -213,11 +285,13 @@
 +        payload = {}
 +    if not isinstance(payload, dict) or payload.get("model") != _first_add_model():
 +        return _deny_request("model-mismatch")
-+    expected = _first_add_access_token()
++    expected = _MIXED_ANTHROPIC_ACCESS[mixed_generation] if source == "anthropic-pkce" and mixed_generation is not None else _first_add_access_token()
 +    if request.headers.get("authorization") != "Bearer " + expected and request.headers.get("x-api-key") != expected:
 +        return _deny_request("authorization-mismatch")
 +    _COUNTS["model_requests"] += 1
 +    if source == "anthropic-pkce":
++        if mixed_generation is not None:
++            _ACCEPTED_ACCESS_GENERATION = mixed_generation
 +        if payload.get("stream"):
 +            events = (
 +                ("message_start", {"type": "message_start", "message": {"id": "msg_toy_fixture", "type": "message", "role": "assistant", "content": [], "model": _first_add_model(), "stop_reason": None, "stop_sequence": None, "usage": {"input_tokens": 1, "output_tokens": 0}}}),
@@ -257,7 +331,7 @@
 +
 +
 +def _first_add_http_route(request: httpx.Request, asynchronous: bool) -> httpx.Response | None:
-+    global _TOKEN_RESPONSE_ISSUED
++    global _TOKEN_RESPONSE_ISSUED, _CATALOG_ACCESS_GENERATION
 +    source = _first_add_source()
 +    if not source or source in {"codex-device", "codex-loopback-pkce"}:
 +        return None
@@ -266,6 +340,16 @@
 +    method = request.method.upper()
 +    if source == "anthropic-pkce" and _OPERATION == "chat" and host == "api.anthropic.com" and method == "GET" and path == "/v1/models":
 +        _COUNTS["model_catalog_requests"] += 1
++        actor = os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR", "")
++        generation = _mixed_anthropic_generation()
++        if actor in _MIXED_LINEAGE_LABELS and generation is None:
++            return _deny_request("authorization-mismatch")
++        if generation is not None:
++            access = request.headers.get("authorization", "").removeprefix("Bearer ") or request.headers.get("x-api-key", "")
++            observed = next((name for name, token in _MIXED_ANTHROPIC_ACCESS.items() if token == access), None)
++            if observed != generation:
++                return _deny_request("authorization-mismatch")
++            _CATALOG_ACCESS_GENERATION = observed
 +        return _json_response(request, {"data": [{"id": _first_add_model(), "type": "model", "display_name": _first_add_model(), "created_at": "2026-10-01T00:00:00Z"}], "has_more": False}, asynchronous)
 +    if source == "xai-device" and host == "auth.x.ai" and method == "GET" and path == "/.well-known/openid-configuration":
 +        return _json_response(request, {
@@ -851,12 +935,14 @@
 +            args = ["auth", "add", _first_add_provider(), "--type", "oauth", "--no-browser"]
 +            if source == "codex-loopback-pkce":
 +                args = ["auth", "add", _first_add_provider(), "--type", "oauth", "--browser", "--no-browser", "--timeout", "10"]
-+            return [*prefix, *args]
++            actor = os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR", "")
++            label = ["--label", _fixture_label()] if actor in _MIXED_LINEAGE_LABELS else []
++            return [*prefix, *args, *label]
 +        actor = os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR", "")
 +        label = ["--label", _fixture_label()] if actor == "auth-add" or actor.startswith("sibling-") or actor.startswith("lifecycle-") or actor in _MIXED_LINEAGE_LABELS else []
 +        return [*prefix, "auth", "add", "openai-codex", "--type", "oauth", "--no-browser", *label]
 +    if operation == "list":
-+        return [*prefix, "auth", "list", "openai-codex"]
++        return [*prefix, "auth", "list", _first_add_provider() if _first_add_source() else "openai-codex"]
 +    if operation == "priority":
 +        target = _fixture_label() if _PHASE == "priority-added" else "2"
 +        return [*prefix, "auth", "priority", "openai-codex", target, "0"]
@@ -992,7 +1078,7 @@
 +    tokens = tuple(
 +        _access_token(expiration, generation)
 +        for generation, expiration in _GENERATION_EXPIRATIONS.items()
-+    ) + tuple(_GENERATION_REFRESH_TOKENS.values()) + (_PAID_KEY, "toy-fixture-anthropic-access", "toy-fixture-anthropic-refresh", "toy-fixture-xai-access", "toy-fixture-xai-refresh", "toy-fixture-nous-refresh", "toy-fixture-codex-code", "toy-fixture-xai-id") + ((_first_add_access_token(),) if _first_add_source() else ())
++    ) + tuple(_GENERATION_REFRESH_TOKENS.values()) + tuple(_MIXED_ANTHROPIC_ACCESS.values()) + tuple(_MIXED_ANTHROPIC_REFRESH.values()) + (_PAID_KEY, "toy-fixture-anthropic-access", "toy-fixture-anthropic-refresh", "toy-fixture-xai-access", "toy-fixture-xai-refresh", "toy-fixture-nous-refresh", "toy-fixture-codex-code", "toy-fixture-xai-id") + ((_first_add_access_token(),) if _first_add_source() else ())
 +    token_hygiene = not any(token in combined_output for token in tokens)
 +    lower_output = combined_output.casefold()
 +    fallback_attempted = any(
@@ -1041,9 +1127,10 @@
 +        markers.append("AUTH_PRIORITY_OK" if moved else "AUTH_PRIORITY_NOT_CONFIRMED")
 +    elif operation == "list":
 +        count = 0
++        provider = _first_add_provider() if _first_add_source() else "openai-codex"
 +        for line in stdout.splitlines():
-+            if line.startswith("openai-codex (") and line.endswith(" credentials):"):
-+                raw = line[len("openai-codex (") : -len(" credentials):")]
++            if line.startswith(f"{provider} (") and line.endswith(" credentials):"):
++                raw = line[len(provider) + 2 : -len(" credentials):")]
 +                if raw.isdecimal():
 +                    count = int(raw)
 +                    break
@@ -1051,7 +1138,7 @@
 +        actor = os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR", "")
 +        if os.environ.get("TOY_AUTH_STORAGE_CONTEXT") == "1" or actor.startswith("sibling-") or actor in _MIXED_LINEAGE_LABELS or actor in _LIFECYCLE_LABELS:
 +            observations["target_label_present"] = _fixture_label() in stdout
-+        target_line = next((line for line in stdout.splitlines() if _LIFECYCLE_LABELS.get(actor, _fixture_label()) in line), "")
++        target_line = next((line for line in stdout.splitlines() if _LIFECYCLE_LABELS.get(actor, _MIXED_LINEAGE_LABELS.get(actor, _fixture_label())) in line), "")
 +        sibling_line = next((line for line in stdout.splitlines() if "toy-fixture-lifecycle-sibling" in line), "")
 +        if "rate-limited" in target_line.casefold():
 +            markers.append("AUTH_LIST_TARGET_RATE_LIMITED")
@@ -1155,7 +1242,7 @@
 +    if _PHASE == "chat-expired":
 +        time.time = lambda: 4102448400.0 if os.environ.get("TOY_AUTH_CONCURRENCY_ORDER") == "refresh-first" else 1893463200.0
 +    if os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR") == "fresh-add-reload" and _PHASE == "chat-reloaded":
-+        time.time = lambda: 1893466800.0
++        time.time = lambda: 1893465000.0 if _first_add_source() == "anthropic-pkce" and os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR", "") in _MIXED_LINEAGE_LABELS else 1893466800.0
 +    argv = _public_argv(_OPERATION)
 +    httpx.Client.send = _sync_send
 +    httpx.AsyncClient.send = _async_send
