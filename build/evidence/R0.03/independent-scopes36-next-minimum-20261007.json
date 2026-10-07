@@ -1,0 +1,111 @@
+{
+  "schemaVersion": "toy.r003.independent-scopes36-readiness.v1",
+  "recordedAt": "2026-10-07T14:09:37Z",
+  "card": "R0.03",
+  "ATs": ["AT-hermes-config-36", "AT-ops-14"],
+  "scenarioId": "auth.independent-scopes",
+  "rung": "CLI",
+  "state": "READ_ONLY_SOURCE_NOT_ADMITTED_SUPPORTED_CLI_AUTH_SEAM_MISSING",
+  "wholeATComplete": false,
+  "memoryAdmission": {
+    "path": "build/evidence/R0.03/independent-scopes36-readonly-memory.json",
+    "sha256": "443e4ece0f859d1b407329e21f6f9fb4ee9209eb9c8af63c0c1e7f5dfad72879",
+    "measuredAt": "2026-10-07T14:02:43.817Z",
+    "pressure": "normal",
+    "availableBytes": "2281357312",
+    "ownJobNeedBytes": "268435456",
+    "marginBytes": "536870912",
+    "requiredAvailableBytes": "805306368",
+    "admitted": true
+  },
+  "canonicalAssertions": [
+    {
+      "id": "AT-hermes-config-36",
+      "source": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/hermes-config.md:3390",
+      "sha256": "82431a0723a5b8e807fae31706439434d82e1840127ea704033c4d7cc34ee73f",
+      "assertion": "Given independent Hermes and CLI grants, when both refresh repeatedly, each remains usable; any failure produces secure recovery without token copying."
+    },
+    {
+      "id": "AT-ops-14",
+      "source": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/ops.md:1934",
+      "sha256": "5d117b379e25cda62795806c8f0c626476f849e855f905cb5d88f2c36dc752dd",
+      "assertion": "Given Toy's own ChatGPT login, when builder Codex credentials are unavailable or replaced in a test fixture, Toy refreshes and runs independently without reading the builder store."
+    }
+  ],
+  "assignedRungRequirements": {
+    "testPlan": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/TEST-PLAN.md row 63",
+    "testPlanSha256": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2",
+    "requiredBehavior": "Run separately registered real Hermes auth-add/refresh/chat and supported CLI-route login/use subprocesses, each in its own temporary scope. Exercise independent fake grants, repeated expiry/rotation, dead-grant recovery/reauthentication, and lost-response/restart. Independently read provider identity/generation and recovery state; do not copy tokens. Actual supported-account certification remains a separate protected prerequisite; SIM cannot log in or rotate another application's administrative grant.",
+    "cliRunAndReadback": "Run each original whole AT through toy probe run and independently retrieve its exact operation with probe show. No new AT ID or case selector."
+  },
+  "existingPublicSeams": {
+    "hermesAuth": {
+      "owner": "HermesAuthProbe.run -> runHermesAuthFixture",
+      "currentPublicBehavior": "The owner launches the pinned Hermes executable in temporary HOME/HERMES_HOME scopes and the fixture drives real public Hermes auth-add/list/chat subprocesses against fake OAuth/model endpoints. It already records sanitized process identity, provider ledger, generation, fresh-process usability and store digests; the expired-chat path exercises a refresh and reload.",
+      "scope": "This reaches the Hermes-owned grant only. Current auth-fixture operations do not provide the separate Codex CLI grant store."
+    },
+    "codexCliRoute": {
+      "localRouteInterface": "ModelRoute.delegationReceipt accepts a CodexDelegationExecutor callback returning route/output/usage events.",
+      "fakeProbeBehavior": "model-route-probe supplies a synthetic executor that yields fixture events; it does not spawn a Codex login/use process or persist and refresh a CLI grant.",
+      "opsInspector": "inspectCodexProtocol examines the app-server schema surface with a temporary CODEX_HOME; its receipt sets authorizationInspected=false and inferenceAttested=false. It does not perform login, refresh or model use.",
+      "finding": "No existing local public fake seam was found that runs the selected supported Codex CLI login/use subprocess in an isolated auth home and controls fake auth refresh, expiry and recovery responses. The ModelRoute executor cannot stand in for this assigned subprocess."
+    },
+    "currentOwnerRegistration": {
+      "acceptanceIndex": "Both original AT IDs are indexed at CLI with the assertion hashes above.",
+      "ownerScenario": "The generated owner manifest has existing auth.first-add and auth.manual-lineage scenarios but no auth.independent-scopes scenario.",
+      "dispatch": "cli/src/main.ts and packages/hermes/src/auth-probe.ts dispatch the existing Hermes auth IDs but omit AT-hermes-config-36 and AT-ops-14. The two assigned IDs are therefore not runnable through the existing Hermes owner route."
+    }
+  },
+  "decision": {
+    "smallestExistingPublicSeam": "Use the existing toy probe.run/probe.show boundary and HermesAuthProbe owner for the Hermes grant. Reuse its fake OAuth/model provider and sanitized readbacks; do not make another Hermes auth harness or rerun AT34/AT35.",
+    "sourceReadiness": "Not ready. The assigned second half requires a real supported CLI-route login/use subprocess with its own temporary scope and independently fakeable external auth/model responses. Existing ModelRoute and Ops Codex interfaces do not reach that behavior.",
+    "precisePrerequisiteBeforeSource": "R0.01 must select and pin the supported CLI route and expose its real public login/use subprocess contract for a disposable CODEX_HOME with synthetic external auth/model responses, refresh/rotation controls, and sanitized fresh-process identity/generation/recovery readbacks. If no such supported subprocess seam exists, stop and separately review the minimum test seam needed at that external provider boundary; do not substitute a fake executor, inspect/seed a private store, copy a token, or perform actual account login.",
+    "minimumConditionalSourceScope": [
+      "Register one auth.independent-scopes scenario for the two existing AT IDs and route both through the current public HermesAuthProbe owner; add no AT ID.",
+      "Reuse the existing Hermes fixture for the Hermes auth-add/refresh/chat process in its own temporary scope; invoke the selected supported CLI login/use subprocess in a second temporary scope only after its public fake seam is evidenced.",
+      "Capture repeated rotation, dead-grant secure recovery and reauthentication, lost-response/restart, fresh-process usability, and independent nonsecret provider identity/generation readbacks. Preserve no-token-copy and sanitized-output constraints.",
+      "Use the existing bounded owner result unless it cannot express a required observation; no database, public API, or DTO change is currently justified. Update the existing registry/owner route and feature map from their sources if admitted; do not hand-edit generated output."
+    ],
+    "otherPrerequisites": [
+      "A fresh normal-pressure memory admission at source admission time.",
+      "No concurrent SOURCE/LIVE owner and a current pin review; do not reuse historical pre-AT35 source hashes.",
+      "Actual supported-account consent, Keychain ownership and live account certification remain separately protected and cannot be inferred from synthetic fixtures."
+    ],
+    "priority": "Do not reopen AT34 or AT35. A valid ROOT-R004-20261006-02 DONE remains parent-prioritized for R0.01 after cleanup."
+  },
+  "historicalPlanContext": {
+    "path": "build/evidence/R0.03/auth34-36-next-minimum-plan.json",
+    "recordedAt": "2026-10-07T11:00:40Z",
+    "priorDecision": "SOURCE_READY for AT34 only; AT35 and AT36 deferred.",
+    "note": "That plan predates later AT35 source changes; this review re-read and re-pinned the current auth owner and fixture."
+  },
+  "pins": [
+    { "path": "tests/acceptance-index.json", "sha256": "c9b645eab7f55b2ebf35d7db769a534a4837de23ad3dc3d913f3189e781d44fa", "kind": "acceptance-source" },
+    { "path": "tests/registry.yaml", "sha256": "aba82b88c425775407e858fe6f81d16d21e43eaa3ce68e330561f9511b8fca36", "kind": "registry-source" },
+    { "path": "packages/contracts/src/generated-probe-registry.ts", "sha256": "4e69cdc645727027ff66ecac7318f7534a82c44d12d2440914cf9a1f21306b9a", "kind": "current-generated-owner-and-assertion-inventory" },
+    { "path": "packages/contracts/src/ops-registry.ts", "sha256": "d3561c802167daf325008af504221809457cc4d42ad71d9118042dbcdc574933", "kind": "owner-manifest-source" },
+    { "path": "packages/contracts/src/test-control.ts", "sha256": "119dd9d1823a3a64a255e78cc0129378e1e4768af9aec41f4b2480d73d70ee79", "kind": "owner-case-control-source" },
+    { "path": "cli/src/main.ts", "sha256": "59cf325b9a2d6465ea88e36ac9419320878488659c6f9151f22722eda1e8968a", "kind": "public-probe-dispatch-source" },
+    { "path": "packages/hermes/src/auth-probe.ts", "sha256": "b26c56b0841953b9b071db8940f7efdbbce6ee44be3a922b940e2b235e151226", "kind": "Hermes-public-owner-source" },
+    { "path": "packages/hermes/src/auth-fixture.ts", "sha256": "e9c1893c60e523ea0667854e9dc05da63c3099b440dec996481e730fa08d2597", "kind": "Hermes-public-subprocess-fixture-source" },
+    { "path": "patches/hermes-auth-fixture.patch", "sha256": "f17bd5386e5f12028217bb2f093fc48e04ad313159af4268156b2cf738ea0dfd", "kind": "external-Hermes-test-provider-fixture" },
+    { "path": "packages/contracts/src/hermes-runtime.ts", "sha256": "1a52f19c34504ab9a0de80035e9dec445a46edf372a54392e7913056b0df1384", "kind": "Hermes-fixture-contract" },
+    { "path": "packages/hermes/src/model-route.ts", "sha256": "7c56f64981df351db6b8cd72237334369a86ffe9cb6d721c37c9dd2e2be945dc", "kind": "route-owner-source" },
+    { "path": "packages/hermes/src/model-route-probe.ts", "sha256": "dcecd115c2b28fd39574b454ed9246172204dc295ce01103033a0e4b1492a4a8", "kind": "existing-fake-executor-probe" },
+    { "path": "packages/contracts/src/model-route.ts", "sha256": "ba828e8dde4fb234892c93ad73397f4280c26dd78760f336fe8a0a0a273ec273", "kind": "CLI-executor-contract" },
+    { "path": "packages/ops/src/codex-protocol.ts", "sha256": "3d59506dceba6cc6e6905ac4cdb482ef38255e25d2fd1f08bbf618c26ef22c39", "kind": "Codex-protocol-inspector-source" },
+    { "path": "packages/ops/src/public.ts", "sha256": "546480a3d0e0629088b7dc59aed5bac582272cdb8a4c8feed83d95cdf6b6b2c5", "kind": "Ops-Codex-inspection-source" },
+    { "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/hermes-config.md", "sha256": "d3548fde13180bc750660f306caa0041101832e398ccdabd6cfdac0b3de8f4af", "kind": "canonical-Hermes-assertions-and-route-spec" },
+    { "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/ops.md", "sha256": "f07aab65088c82e4ff21e4d63edb2f279e2324e6d7e2bbb801e0fd7494104b0b", "kind": "canonical-Ops-assertion-and-R0.01-dependency" },
+    { "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/TEST-PLAN.md", "sha256": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2", "kind": "assigned-CLI-rung-and-scenario" },
+    { "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/BUILD-PLAN.md", "sha256": "aa84eb600e53bc65e6c6b1ed4fce45870ead861e0d18bf00d81613ff2595f49a", "kind": "R0.01-before-R0.03-dependency" }
+  ],
+  "actionsNotRun": {
+    "sourceEdits": true,
+    "toyCli": true,
+    "buildGenerationStaticOrTests": true,
+    "runtimeNativeProviderOrOS": true,
+    "browserOrRoot": true,
+    "helperProcessesStarted": false
+  }
+}

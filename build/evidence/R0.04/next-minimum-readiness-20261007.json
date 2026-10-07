@@ -1,0 +1,179 @@
+{
+  "schemaVersion": "toy.r004-next-minimum-readiness.v1",
+  "observedAt": "2026-10-07T14:09:51Z",
+  "scope": "Read-only R0.04 readiness audit. This metadata artifact is the only write.",
+  "admission": {
+    "evidence": "build/evidence/R0.03/independent-scopes36-readonly-memory.json",
+    "evidenceSha256": "443e4ece0f859d1b407329e21f6f9fb4ee9209eb9c8af63c0c1e7f5dfad72879",
+    "measuredAt": "2026-10-07T14:02:43.815Z",
+    "pressure": "normal",
+    "availableBytes": "2281357312",
+    "ownNeedBytes": "268435456",
+    "marginBytes": "536870912",
+    "requiredAvailableBytes": "805306368",
+    "headroomBytes": "1476050944",
+    "admitted": true
+  },
+  "decision": {
+    "state": "NO_INDEPENDENT_R0_04_SOURCE_UNIT_AVAILABLE",
+    "reason": "All existing R0.04 source units are verified and stopped, in a pending root request, or explicitly deferred to R1. No existing plan specifies another unblocked R0.04 source unit.",
+    "sourceMutationRecommended": false,
+    "wholeCardAcceptanceComplete": false,
+    "wholeAcceptanceTestsPassed": []
+  },
+  "cardSnapshot": {
+    "stateFile": "build/state.json",
+    "stateSha256": "efe908e25c30fca4c2f60723fc01fb9759a146c5aa26a1b6c891f8c618cc1697",
+    "card": "R0.04",
+    "implementation": "IN_PROGRESS",
+    "acceptance": "PENDING",
+    "sourceRowHash": "a20d3be6c853a26586d4cfcb495ad2481f04225731118c7c17234320c40a1547",
+    "requiredATs": [
+      "AT-authority-34",
+      "AT-authority-35",
+      "AT-authority-36",
+      "AT-authority-37",
+      "AT-authority-44",
+      "AT-authority-69",
+      "AT-authority-73",
+      "AT-ops-30",
+      "AT-ops-70",
+      "AT-hands-60",
+      "AT-lifestore-41"
+    ],
+    "assignedRung": "CLI",
+    "assignedEvidence": "stack, device/account, and registered probe run/show",
+    "completedOrStoppedUnits": [
+      "Eight canonical service identities are observed and the existing-installation readback verified; no rebootstrap is indicated.",
+      "Frozen SIWC control/runtime artifact ROOT-R004-20261006-01 is DONE and verified.",
+      "Native PostgreSQL artifact inspection and its parser repair are verified and stopped; service readiness remains blocked.",
+      "AT85 source registration is complete under a separate R0.03 prerequisite plan; its protected executable is still incomplete."
+    ]
+  },
+  "smallestExistingPublicSeam": {
+    "interface": "OpsControlRead.doctor",
+    "source": "packages/ops/src/public.ts",
+    "implementation": "packages/ops/src/role-identities.ts",
+    "command": "toy doctor --deep --json",
+    "observation": "The existing deep doctor reads the eight fixed service-role identities. The 2026-10-07 public receipt reports bootstrap.role-identities BLOCKED / IDENTITIES_OBSERVED_ENFORCEMENT_PENDING and bootstrap.resource-admission PASS / MEMORY_ADMITTED.",
+    "limits": [
+      "The observation does not establish the maintenance/recovery identity, immutable installed runtime, complete process/UID/socket/credential manifest, native Keychain read, or actual _toy_agent denial matrix.",
+      "RoleIdentityBootstrap.run is the existing public plan/verify seam; its source and real readback are complete, so identity creation must not be repeated."
+    ]
+  },
+  "pendingPrerequisites": [
+    {
+      "request": "ROOT-R004-20261006-02",
+      "requestId": "049154d9-4ed1-4db0-97e5-69b5a79190d9",
+      "state": "PENDING",
+      "sourceEvidence": "build/evidence/R0.04/control-runtime-probe-preparation.json",
+      "sourceEvidenceSha256": "7d136430bde1dd80d1d47143aab27dc1aefbe6e930b9971c27219dc8297d6740",
+      "purpose": "Execute the already-prepared fixed UID/GID 310 runtime import and read-only Keychain probe, then verify restoration of the two protected parent modes.",
+      "disposition": "Do not prepare a duplicate request or run root operations. Consume the existing sanitized root result when available."
+    },
+    {
+      "request": "ROOT-R005-20261006-01",
+      "requestId": "bd041f4e-8176-46a7-9108-b9c4a89b965e",
+      "state": "PENDING",
+      "purpose": "Existing actual _toy_agent OS-denial diagnostic for AT-authority-35; it is a separate pending request.",
+      "disposition": "Do not duplicate it or open ROOT-R004-20261006-03 before ROOT-R004-20261006-02 is terminal."
+    }
+  ],
+  "priorPlanReuse": [
+    {
+      "plan": "build/evidence/R0.04/control-runtime-probe-preparation.json",
+      "sha256": "7d136430bde1dd80d1d47143aab27dc1aefbe6e930b9971c27219dc8297d6740",
+      "reuse": "This is the sole pending R0.04 root probe. Keep its request, artifact, child and script pins frozen; wait for its existing root receipt."
+    },
+    {
+      "plan": "build/evidence/R0.04/minimum-at85-registration-plan.json",
+      "sha256": "2cb37ceac474d2f70b3a9b864649f6d0ecdd904eb630fce24f1340c980617d94",
+      "reuse": "Source registration is complete and the plan is for R0.03. Protected controller execution remains prerequisite-bound; do not reopen it as an R0.04 source unit."
+    },
+    {
+      "plan": "build/evidence/R0.04/pg-initialization-phase-gate.json",
+      "sha256": "a38b2619d614446d270046e5996a6ce580114ee8c316eb5e11a38543c0fcdca9",
+      "reuse": "This gate supersedes the earlier PostgresClusterBootstrap plan: native installation/initialization is deferred until the R1 installation gate. No R0 initialization owner or ROOT-R004-03 is admitted."
+    },
+    {
+      "plan": "build/evidence/R0.04/pg-artifact-descriptor-final-verification.json",
+      "sha256": "dc34cf015ef25e79a34041822aad326d4ea4dc97774b1a6c715c822d1cd1642b",
+      "reuse": "The bounded version/descriptor inspection already passed and stopped after two public doctor measurements; do not repeat it."
+    }
+  ],
+  "recommendedNextBoundedSourceScope": {
+    "state": "NONE",
+    "reason": "No existing R0.04 plan provides an unblocked source slice. Remaining concrete work requires the pending native root result or the later R1 installation gate. The current state directs valid ROOT-R004-02 completion to prioritize R0.01.",
+    "nextAction": "Keep source stopped. Consume only the existing pending root receipts, then follow the current card priority."
+  },
+  "requiredPublicBaselineBeforeFutureMutation": {
+    "currentReadOnlyBaseline": {
+      "command": "toy doctor --deep --json",
+      "evidence": "build/evidence/R0.03/independent-scopes36-readonly-memory.json",
+      "evidenceSha256": "443e4ece0f859d1b407329e21f6f9fb4ee9209eb9c8af63c0c1e7f5dfad72879",
+      "roleIdentityState": "BLOCKED / IDENTITIES_OBSERVED_ENFORCEMENT_PENDING",
+      "resourceAdmission": "PASS / MEMORY_ADMITTED"
+    },
+    "beforeAnyFutureSourceChange": "After a concrete assigned AT and source owner are selected, capture a fresh unfiltered public doctor read and its exact assigned `toy ... probe run` plus `probe show` baseline before editing; retain any NOT_IMPLEMENTED or BLOCKED result truthfully. No source change is admitted here, so no test run was started."
+  },
+  "specPins": [
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/BUILD-PLAN.md",
+      "sha256": "aa84eb600e53bc65e6c6b1ed4fce45870ead861e0d18bf00d81613ff2595f49a"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/TEST-PLAN.md",
+      "sha256": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/CONTRACTS.md",
+      "sha256": "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/authority.md",
+      "sha256": "0127fd6e992c94bb512af83d507e107431426d2d4a09885d1a420119f2d530be"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/ops.md",
+      "sha256": "f07aab65088c82e4ff21e4d63edb2f279e2324e6d7e2bbb801e0fd7494104b0b"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/hands.md",
+      "sha256": "28793be3912b741116ddcfc4339f42a8ca65219af522198e39d4b367450fe110"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/lifestore.md",
+      "sha256": "044e33ba76d512c0fcae478f8d4923d2f33c028b8dae94bbdb69d6d4111c1117"
+    }
+  ],
+  "sourcePins": [
+    {"path": "build/state.json", "sha256": "efe908e25c30fca4c2f60723fc01fb9759a146c5aa26a1b6c891f8c618cc1697"},
+    {"path": "build/ROOT-REQUESTS.md", "sha256": "6bdca8b36154b5ec87875c5a1fe0e5d5f9a8a0b6d172c26c7d99ad9f2dd6307e"},
+    {"path": "docs/adr/0025-role-identity-inventory.md", "sha256": "81fe435376febd431166cc3be0f4f33db42b48cecba2ea1706ea0f4f5e96fe18"},
+    {"path": "docs/adr/0026-role-identity-bootstrap.md", "sha256": "673adfc4ab4b9354fba8d699539b3df1e3a6c94f8aa0ff91da1787876b3603d7"},
+    {"path": "docs/adr/0031-siwc-control-runtime-staging.md", "sha256": "57b91b127f7b95822d3a2a2417c50bb356ae851580c66ec7db10ce75fbcd533c"},
+    {"path": "docs/adr/0035-source-bound-cli-acceptance-registration.md", "sha256": "7abd6a03a60aa6cd397b2b4dda27865c8fd2b5d47deca1a090e1b436967a9f41"},
+    {"path": "packages/ops/src/public.ts", "sha256": "546480a3d0e0629088b7dc59aed5bac582272cdb8a4c8feed83d95cdf6b6b2c5"},
+    {"path": "packages/ops/src/role-identities.ts", "sha256": "09f951ad9674e49aed30fbef0109c6b8cdbdd82794061a5a9da5d948775536c1"},
+    {"path": "packages/ops/src/identity-bootstrap.ts", "sha256": "4e73de65655701a4669c1bf89404189793bf1c79e115501cdd8403ed687ee4a0"},
+    {"path": "tests/acceptance-index.json", "sha256": "c9b645eab7f55b2ebf35d7db769a534a4837de23ad3dc3d913f3189e781d44fa"},
+    {"path": "tests/registry.yaml", "sha256": "aba82b88c425775407e858fe6f81d16d21e43eaa3ce68e330561f9511b8fca36"},
+    {"path": "build/evidence/R0.04/role-inventory-preparation.json", "sha256": "0d1b1997e0673f61309cc4131434b3db4bd7eacaee8df2d5cf10e6759b781f35"},
+    {"path": "build/evidence/R0.04/identity-bootstrap-preparation.json", "sha256": "15cb02fd65062f1d5904b0978cf1f3bba09b626834c2aa9b30539182f46f4e8f"},
+    {"path": "build/evidence/R0.04/existing-installation-verification.json", "sha256": "0a66d1b70e9ba34fac2243401242d2506203d3c0389067793f794766ba2d57ac"},
+    {"path": "build/evidence/R0.04/root-stage-result.json", "sha256": "338c9fce53dbc9df9e07aee3ff817bfb8407a4c7478b455d9fb09fd029ef50e8"},
+    {"path": "build/evidence/R0.04/control-runtime-probe-preparation.json", "sha256": "7d136430bde1dd80d1d47143aab27dc1aefbe6e930b9971c27219dc8297d6740"},
+    {"path": "build/evidence/R0.04/control-runtime-probe-replan.json", "sha256": "c11f13c8873b90836f6b446ad636aa900ead75ed41c41904a73dd8f41476aa5f"},
+    {"path": "build/evidence/R0.04/minimum-at85-registration-plan.json", "sha256": "2cb37ceac474d2f70b3a9b864649f6d0ecdd904eb630fce24f1340c980617d94"},
+    {"path": "build/evidence/R0.04/pg-initialization-phase-gate.json", "sha256": "a38b2619d614446d270046e5996a6ce580114ee8c316eb5e11a38543c0fcdca9"},
+    {"path": "build/evidence/R0.04/pg-artifact-descriptor-final-verification.json", "sha256": "dc34cf015ef25e79a34041822aad326d4ea4dc97774b1a6c715c822d1cd1642b"}
+  ],
+  "mutationLog": {
+    "sourceFilesChanged": [],
+    "cliInvoked": false,
+    "buildOrGenerationRun": false,
+    "testsOrRuntimeRun": false,
+    "rootActionsRun": false,
+    "onlyArtifactWritten": "build/evidence/R0.04/next-minimum-readiness-20261007.json"
+  }
+}
