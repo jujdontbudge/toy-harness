@@ -2,7 +2,7 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-07T02:00:28.447437+00:00",
+  "updatedAt": "2026-10-07T02:07:28.617613+00:00",
   "phase": "R0_FEASIBILITY",
   "activeCard": "R0.12",
   "cardCount": 87,
@@ -1294,6 +1294,20 @@
         "registrationRemoved": true,
         "deferral": "build/evidence/R0.03/dashboard90-three-failure-deferral.json",
         "noFourthAttempt": true
+      },
+      "lifecycle91Unit": {
+        "state": "SOURCE_PHASE_ADMITTED",
+        "assignedAT": "AT-hermes-config-91",
+        "startedAt": "2026-10-07T02:07:28.617613+00:00",
+        "sourceStopAt": "2026-10-07T02:43:00Z",
+        "fullUnitStopAt": "2026-10-07T04:07:00Z",
+        "mandatoryCells": 16,
+        "plan": "build/evidence/R0.03/lifecycle91-next-minimum-plan.json",
+        "planReview": "build/evidence/R0.03/lifecycle91-plan-parent-review.json",
+        "admission": "build/evidence/R0.03/lifecycle91-source-admission.json",
+        "nativeAttempts": 0,
+        "wholeATComplete": false,
+        "acceptanceComplete": false
       }
     },
     "R0.04": {
@@ -11151,7 +11165,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Await bounded Life45 source handoff while executing independent R0.10 cadence plan. No generation/build/check/probes during source mutation. Exact root02 DONE immediately prioritizes R0.01 after safe worker handoff.",
+  "nextAction": "Review R0.10 bounded owner-floor plan while two independent Life45/auth91 source workers implement. No generation/build/static/CLI probes until all source mutators STOP. Exact root02 DONE prioritizes R0.01 after safe handoff; pending root never blocks the active goal.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -21797,15 +21811,15 @@
     }
   },
   "resourceAdmission": {
-    "measuredAt": "2026-10-07T01:57:13.445Z",
-    "availableBytes": "2881863680",
+    "measuredAt": "2026-10-07T02:04:55.265Z",
+    "availableBytes": "2748825600",
     "pressure": "normal",
     "strictlyFreeAdmission": false,
     "repairFloorApplied": false,
     "ownedWorldsRunning": 0,
-    "helpersRunning": 2,
+    "helpersRunning": 3,
     "helperNeedBytes": "268435456",
-    "measurementSource": "build/evidence/R0.12/lifestore-quote-source-admission-doctor.json",
+    "measurementSource": "build/evidence/R0.03/lifecycle91-source-doctor.json",
     "marginBytes": "536870912",
     "ownedStackId": null,
     "stackAndNativeChildrenNeedBytes": "0",
@@ -21836,8 +21850,8 @@
     {
       "task": "/root/r010_cadence_minimum_plan",
       "card": "R0.10",
-      "kind": "READ_ONLY_MINIMUM_SOURCE_PLAN",
-      "deadline": "2026-10-07T02:08:00Z",
+      "kind": "READ_ONLY_BOUNDED_OWNER_FLOOR_REFINEMENT",
+      "deadline": "2026-10-07T02:13:00Z",
       "model": "gpt-6-luna",
       "reasoning": "max",
       "sourceMutationAllowed": false
@@ -21845,12 +21859,18 @@
     {
       "task": "/root/r003_lifecycle91_minimum_plan",
       "card": "R0.03",
-      "kind": "READ_ONLY_PUBLIC_LIFECYCLE_PLAN",
+      "kind": "SOURCE_NATIVE_AUTH_LIFECYCLE",
       "model": "gpt-6-luna",
       "reasoning": "max",
-      "sourceMutationAllowed": false,
-      "deadline": "2026-10-07T02:12:00Z",
-      "ownedPath": "build/evidence/R0.03/lifecycle91-next-minimum-plan.json"
+      "sourceMutationAllowed": true,
+      "deadline": "2026-10-07T02:43:00Z",
+      "ownedFiles": [
+        "docs/adr/0049-native-auth-lifecycle-probe.md",
+        "packages/hermes/src/auth-fixture.ts",
+        "packages/hermes/src/auth-probe.ts",
+        "patches/hermes-auth-fixture.patch",
+        "build/evidence/R0.03/lifecycle91-source-handoff.json"
+      ]
     }
   ],
   "pullRequestUpdatedAt": "2026-10-07T01:55:47.779462+00:00",

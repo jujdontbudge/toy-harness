@@ -1,0 +1,374 @@
+{
+  "schema": "toy.r0.03.lifecycle91-next-minimum-plan.v1",
+  "scope": "read-only-minimum-plan",
+  "recordedAt": "2026-10-07T02:00:53Z",
+  "goal": {
+    "releaseGoal": "R0-R5",
+    "status": "ACTIVE",
+    "assignedCard": "R0.03",
+    "assignedAcceptance": "AT-hermes-config-91",
+    "rootR004": "ROOT-R004-20261006-02 remains PENDING. Exact DONE plus verified restoration immediately prioritizes R0.01 after safe worker handoff; pending root never blocks independent work."
+  },
+  "acceptance": {
+    "id": "AT-hermes-config-91",
+    "rung": "CLI",
+    "source": "../personal-assistant-harness/specs/hermes-config.md",
+    "sourceLine": 3055,
+    "sourceDigest": "d3548fde13180bc750660f306caa0041101832e398ccdabd6cfdac0b3de8f4af",
+    "assertion": "Given removal/reset/priority-reorder fixtures in temporary homes, When pinned public auth lifecycle subprocesses and fresh reload/refresh probes run, Then ownership/usability/refresh behavior remains valid and no real auth store is accessed.",
+    "sourceAssertionHash": "2e360a60d70a821aac4885911b96da67b582f1799ea2c383071aa786978a5887",
+    "testPlan": "../personal-assistant-harness/specs/TEST-PLAN.md:439",
+    "requiredEvidence": [
+      "stack",
+      "probe:AT-hermes-config-91"
+    ],
+    "simUnavailableReason": "SIM cannot operate this administrative lifecycle matrix; the assigned CLI rung exercises the pinned public subprocesses in temporary homes."
+  },
+  "baseline": {
+    "repositoryCommit": "f8e7116704cdd8655c4440d73115a2e5f43a3c9d",
+    "pinnedHermesCommit": "8d5e3e412138342e8bf30443e72bd4e6a9abd057",
+    "currentProof": "The parent reports 74 source-bound passing cells across AT84/85/86/87-default/88/89. Held-response AT87 and dashboard AT90 remain deferred; neither proves AT91. This plan includes no AT91 run and makes no runtime or acceptance claim.",
+    "restoredAuthBaseline": "The parent reports the auth files restored exactly to 3ad57fa after three failed native AT90 attempts. Do not make a fourth AT90 attempt or repair the dashboard path.",
+    "routeGap": "The source assertion and CLI rung are indexed, but tests/registry.yaml has no AT91 behavioral manifest and HermesAuthProbe.run currently admits only AT84-89 plus its other existing IDs.",
+    "admission": {
+      "parentDoctor": {
+        "path": "build/evidence/R0.03/lifecycle91-plan-doctor.json",
+        "sha256": "49faf3981517d8db6511a48c2def6846a7c9b353f02a7f8732f440d543846ec7",
+        "observedAt": "2026-10-07T01:59:12.987Z",
+        "pressure": "normal",
+        "availableBytes": 2835202048,
+        "needBytes": 268435456,
+        "marginBytes": 536870912,
+        "admitted": true
+      },
+      "independentAgentAdmission": {
+        "needBytes": 268435456,
+        "marginBytes": 536870912,
+        "admitted": true,
+        "basis": "Independent admission reported in the assignment; no additional doctor or resource probe was run."
+      }
+    }
+  },
+  "sourceBindings": [
+    {
+      "path": "tests/acceptance-index.json",
+      "sha256": "c9b645eab7f55b2ebf35d7db769a534a4837de23ad3dc3d913f3189e781d44fa",
+      "finding": "AT91 is indexed at the CLI rung with the assertion hash and pinned spec digest above."
+    },
+    {
+      "path": "tests/registry.yaml",
+      "sha256": "5137175d79ce434de98bf84c1c86600edfab681d1890291f51c812eab87b428a",
+      "finding": "No AT91 behavioral manifest is present; add one exact CLI manifest through the existing generator path."
+    },
+    {
+      "path": "packages/contracts/src/generated-probe-registry.ts",
+      "sha256": "8914593015d2a84efaa090891dde87c3bb968e2ae5a48c1b5ab7e0107ac8ebb4",
+      "finding": "The indexed assertion hash is already generated; the missing lifecycle case manifest is separate."
+    },
+    {
+      "path": "packages/hermes/src/auth-probe.ts",
+      "sha256": "e2838fb21147b322fead51c04b3c94eefd98c99099b868c90f3bd89e15fab11d",
+      "finding": "The existing owner validates exact auth manifests and dispatches to runHermesAuthFixture; AT91 needs one allowlist entry, one strict manifest check, and one lifecycle-mode dispatch."
+    },
+    {
+      "path": "packages/hermes/src/auth-fixture.ts",
+      "sha256": "a3b0f0ec3ea3159fab666a6030d307b3a021c8207ba71051a4adb1b0e48538d3",
+      "finding": "The existing fixture owns temporary Hermes homes, public argv construction, fresh child identities, store digests, sibling fixtures, priority calls, chats, and result checks. Extend this owner with a closed lifecycle sequence rather than cloning its harness."
+    },
+    {
+      "path": "packages/contracts/src/hermes-runtime.ts",
+      "sha256": "a617671900394424c3036cd29f6c36be78abef8ff6497998478e1a7c15a43d38",
+      "finding": "HermesAuthFixtureResultV1 currently types add/list/chat/priority operations and bounded phases; only the lifecycle observations that cannot be expressed by those fields need additive enum values."
+    },
+    {
+      "path": "patches/hermes-auth-fixture.patch",
+      "sha256": "1b2c15d4560062990cd01c7fa6d884a583b436815367d2b0a30a2f9f8052d135",
+      "finding": "The patch supplies the existing external OAuth/model fake and child-local clock. Add one fixed, actor-bound provider 429 response for reset; do not patch private auth persistence code."
+    },
+    {
+      "path": "/Users/johansardar/.hermes/hermes-agent/hermes_cli/subcommands/auth.py",
+      "sha256": "6f8aa71d61b00dcdeffa277035bb558ef9f3210248a80a467f19ceab19707288",
+      "finding": "At the pinned commit, public argv accepts auth remove <provider> <target>, auth reset <provider> [target], and auth priority <provider> <target> <integer>."
+    },
+    {
+      "path": "/Users/johansardar/.hermes/hermes-agent/hermes_cli/auth_commands.py",
+      "sha256": "16c18f21402ac9940815450a41854cfeaadad6a34bffeb98d27de648df749d1a",
+      "finding": "Public handlers resolve the supplied target, remove one row, clear a target's exhaustion status, and renumber a moved priority. This plan exercises them only through public CLI subprocesses."
+    }
+  ],
+  "pinnedPublicArgv": {
+    "rootList": [
+      "hermes",
+      "auth",
+      "list",
+      "openai-codex"
+    ],
+    "profileList": [
+      "hermes",
+      "--profile",
+      "toy",
+      "auth",
+      "list",
+      "openai-codex"
+    ],
+    "profileRemove": [
+      "hermes",
+      "--profile",
+      "toy",
+      "auth",
+      "remove",
+      "openai-codex",
+      "toy-fixture-lifecycle-target"
+    ],
+    "profileReset": [
+      "hermes",
+      "--profile",
+      "toy",
+      "auth",
+      "reset",
+      "openai-codex",
+      "toy-fixture-lifecycle-target"
+    ],
+    "profilePriority": [
+      "hermes",
+      "--profile",
+      "toy",
+      "auth",
+      "priority",
+      "openai-codex",
+      "toy-fixture-lifecycle-target",
+      "0"
+    ],
+    "scopeRule": "Use only these fixed provider/target/scope values; profile is the global --profile option before auth, and root operations omit it."
+  },
+  "decision": "Add one closed lifecycle mode to the current auth fixture. Seed one synthetic root credential and two distinct synthetic profile siblings through public auth-add; move one profile sibling to priority 0; apply one fake-provider rate-limit response to that exact credential; reset only that target; force its access token to expire with the existing fake clock; reload it in a fresh chat; then remove it and prove the other profile sibling and root grant remain usable. Hash only synthetic stores under the disposable Hermes home. The root digest may change only in the explicitly root-owned seed cell and must remain byte-identical throughout every profile-owned cell.",
+  "interfaceFirst": {
+    "document": "docs/adr/0049-native-auth-lifecycle-probe.md",
+    "ownerInterface": "HermesAuthProbe.run -> runHermesAuthFixture with a closed lifecycle mode, fixed case IDs, bounded public argv, the existing HermesAuthFixtureResultV1, and safe CheckView evidence.",
+    "externalSeams": [
+      "existing fake OAuth/model provider",
+      "one actor-bound provider 429",
+      "existing child-local fake clock",
+      "OS operations confined to the disposable temporary Hermes home"
+    ],
+    "forbidden": [
+      "private Hermes auth functions or persistence imports",
+      "internal collaborator mocks",
+      "real HOME or installed auth stores",
+      "real credentials",
+      "arbitrary CLI arguments",
+      "credential bytes in output"
+    ],
+    "newModuleDtoCommandProtocolOrService": false
+  },
+  "minimumFilesForImplementation": [
+    "docs/adr/0049-native-auth-lifecycle-probe.md, written and accepted before implementation",
+    "tests/registry.yaml, add the exact AT91 CLI manifest, mandatory cases, provider and clock controls, observation bindings, and SIM-unavailable reason",
+    "packages/contracts/src/hermes-runtime.ts, add only the required operation/phase/marker/status enum members to HermesAuthFixtureResultV1; generate its schema with the existing generator",
+    "packages/hermes/src/auth-probe.ts, admit AT91, validate its exact manifest, and dispatch the closed lifecycle mode",
+    "packages/hermes/src/auth-fixture.ts, add the fixed root/profile lifecycle steps and assertions using the current temporary-home, priority, list, and fresh-chat owner",
+    "patches/hermes-auth-fixture.patch, add the one fixed provider 429 response and public result markers at the existing fake-provider seam",
+    "skills/toy-control/FEATURE-MAP.md and generated registry/schema outputs only as required by the canonical registration path"
+  ],
+  "disjointOwnership": {
+    "fixtureWorkerFiles": [
+      "docs/adr/0049-native-auth-lifecycle-probe.md",
+      "packages/hermes/src/auth-fixture.ts",
+      "packages/hermes/src/auth-probe.ts",
+      "patches/hermes-auth-fixture.patch",
+      "build/evidence/R0.03/lifecycle91-source-handoff.json"
+    ],
+    "parentIntegrationFiles": [
+      "tests/registry.yaml",
+      "packages/contracts/src/hermes-runtime.ts",
+      "packages/ops/src/fixture-stack.ts",
+      "cli/src/main.ts",
+      "architecture/features.json",
+      "skills/toy-control/FEATURE-MAP.md",
+      "generator-owned outputs"
+    ],
+    "rule": "Worker writes ADR first and owns source only; parent owns later generated contract enums/registry/CLI/Fixture/features and proofs after STOP. No simultaneous same-card source implementation."
+  },
+  "parallelWorkAndStopConditions": {
+    "worlds": "All worlds are DOWN. Keep them DOWN; do not generate, build, or probe during source mutation.",
+    "lifeStore45": "The separate Life45 helper owns only engineering-control contract/owner/component-probe/public files; keep AT91 source ownership disjoint from that set.",
+    "r010": "The separate R0.10 helper is read-only; do not widen this AT91 plan into its scope.",
+    "sourceStop": "Only after source changes are complete and frozen may the parent start the assigned CLI verification; stop at the stated card boundary."
+  },
+  "mandatoryCases": [
+    {
+      "id": "root-add",
+      "publicOperation": "HermesAuthProbe.run",
+      "phase": "add",
+      "scope": "root",
+      "expected": "The sole explicitly root-owned lifecycle cell adds the fixed synthetic root grant through public hermes auth add; root auth digest changes here only."
+    },
+    {
+      "id": "profile-add-target",
+      "publicOperation": "HermesAuthProbe.run",
+      "phase": "add",
+      "scope": "profile",
+      "expected": "Public hermes --profile toy auth add creates a unique synthetic target grant; root auth and environment digests are unchanged."
+    },
+    {
+      "id": "profile-add-sibling",
+      "publicOperation": "HermesAuthProbe.run",
+      "phase": "add",
+      "scope": "profile",
+      "expected": "A distinct public auth-add creates one unaffected profile sibling with an independent fake-provider identity."
+    },
+    {
+      "id": "profile-initial-readback",
+      "publicOperation": "HermesAuthProbe.run",
+      "phase": "list",
+      "scope": "profile",
+      "expected": "A fresh public auth list shows exactly the two registered profile labels; root bytes remain unchanged."
+    },
+    {
+      "id": "priority-reorder-target",
+      "publicOperation": "HermesAuthProbe.run",
+      "phase": "priority-added",
+      "scope": "profile",
+      "expected": "Public auth priority moves the target label to priority 0; the subsequent actor-bound provider effect identifies that selected target."
+    },
+    {
+      "id": "priority-target-rate-limit",
+      "publicOperation": "HermesAuthProbe.run",
+      "phase": "chat",
+      "scope": "profile",
+      "expected": "A fresh chat reaches the fake model/provider as the selected target and receives exactly one registered 429 rate-limit response; no live provider request occurs."
+    },
+    {
+      "id": "reset-exhausted-readback",
+      "publicOperation": "HermesAuthProbe.run",
+      "phase": "list",
+      "scope": "profile",
+      "expected": "A fresh public list reports the target as rate-limited/exhausted, the sibling as unaffected, and the same profile/root ownership digests."
+    },
+    {
+      "id": "reset-target",
+      "publicOperation": "HermesAuthProbe.run",
+      "phase": "reset",
+      "scope": "profile",
+      "expected": "Public auth reset names only the exact target label; it cannot clear the sibling or change root data."
+    },
+    {
+      "id": "reset-target-readback",
+      "publicOperation": "HermesAuthProbe.run",
+      "phase": "list",
+      "scope": "profile",
+      "expected": "A new public list reports target status active and sibling unchanged after reset; retain priority and refresh-generation expectations."
+    },
+    {
+      "id": "reset-target-refresh",
+      "publicOperation": "HermesAuthProbe.run",
+      "phase": "chat-expired",
+      "scope": "profile",
+      "faultControl": "expired-access-after-target-reset",
+      "expected": "A fresh chat after reset selects the same target and refreshes its synthetic initial generation to rotated; the sibling and root digests remain unchanged. This is the behavioral reset readback."
+    },
+    {
+      "id": "reset-target-reload",
+      "publicOperation": "HermesAuthProbe.run",
+      "phase": "chat-reloaded",
+      "scope": "profile",
+      "expected": "A new process uses the reset target's rotated generation; priority and profile ownership remain intact."
+    },
+    {
+      "id": "remove-target",
+      "publicOperation": "HermesAuthProbe.run",
+      "phase": "remove",
+      "scope": "profile",
+      "expected": "Public auth remove names only the target label and removes that profile row."
+    },
+    {
+      "id": "remove-fresh-readback",
+      "publicOperation": "HermesAuthProbe.run",
+      "phase": "list",
+      "scope": "profile",
+      "expected": "Fresh public list reports the target missing and exactly the unaffected sibling present; no target token material is read or emitted."
+    },
+    {
+      "id": "remove-sibling-fresh-use",
+      "publicOperation": "HermesAuthProbe.run",
+      "phase": "chat",
+      "scope": "profile",
+      "expected": "Fresh tools-disabled chat succeeds only through the surviving sibling's fake identity; the removed target has no provider/model effect, demonstrating the removal negative and sibling usability."
+    },
+    {
+      "id": "root-final-readback",
+      "publicOperation": "HermesAuthProbe.run",
+      "phase": "list",
+      "scope": "root",
+      "expected": "Fresh public root list still shows the seeded root grant, and root auth/environment digests equal their post-root-add values."
+    },
+    {
+      "id": "root-fresh-use",
+      "publicOperation": "HermesAuthProbe.run",
+      "phase": "chat",
+      "scope": "root",
+      "expected": "Fresh root-scope chat uses the root-owned synthetic grant after all profile lifecycle operations; no profile child mutates the root store."
+    }
+  ],
+  "faultControls": [
+    {
+      "id": "lifecycle-target-rate-limit",
+      "seam": "provider",
+      "affectedCases": [
+        "priority-target-rate-limit",
+        "reset-exhausted-readback"
+      ],
+      "control": "Return one fixed HTTP 429 rate-limit response only for the synthetic target identity in its registered phase; the same external fake returns success after reset. Record status/effect counts, never response bodies or token values."
+    },
+    {
+      "id": "expired-access-after-target-reset",
+      "seam": "clock",
+      "affectedCases": [
+        "reset-target-refresh"
+      ],
+      "control": "Use the already registered child-local fake clock to expire only the target access token; observe its public refresh and new-process use."
+    },
+    {
+      "id": "temporary-store-boundary",
+      "seam": "os",
+      "affectedCases": [
+        "root-add",
+        "profile-add-target",
+        "profile-add-sibling",
+        "remove-target"
+      ],
+      "control": "Use only the existing isolated HOME/HERMES_HOME and temporary root/profile paths; the owner may hash those synthetic files but does not parse/export credential rows."
+    }
+  ],
+  "minimalSchemaChanges": {
+    "reuse": "HermesAuthFixtureResultV1 and CheckViewV1; no new DTO or result protocol.",
+    "reason": "The current receipt cannot identify public remove/reset outcomes, confirm that the external 429 was observed, or distinguish a rate-limited/missing target in public list readback. Keep all other fields and generation enums unchanged.",
+    "receiptBudget": "Each child result stays below 2000 serialized characters: fixed argv and labels, process identity, bounded markers/status/generation, store digests and ledger counts only; omit raw stdout/stderr, bodies, tokens, account identifiers and row data.",
+    "requiredEnumsOnly": [
+      "operation adds remove/reset; phase adds remove/reset and only unavoidable provider-rate-limit phase",
+      "markers add fixed public remove/reset/rate-limit-status confirmations only if existing markers cannot encode them",
+      "No target_status field initially; use exact public-list markers plus existing target_label_present/credential_count and provider ledger fields. Propose a generated observation only if unavoidable."
+    ]
+  },
+  "largestInterfaceVerificationAfterImplementation": {
+    "boundary": "Only after interface acceptance, source freeze and parent confirmation that no source mutation is active; execute the assigned CLI rung through the existing toy probe route on its disposable fake stack.",
+    "proof": "Bind current spec/index/registry/fixture/patch/schema/executable hashes; run AT-hermes-config-91 and inspect public subprocess argv, exits/identities, exact case manifest, target rate-limit/reset status, fresh expiry/refresh/reload, post-remove target absence, surviving sibling/root usability, scope-specific digests, bounded receipts, and owned-stack teardown. Keep acceptanceComplete=false unless the registered AT itself and separate protected gates say otherwise.",
+    "thisPlanExecuted": false
+  },
+  "twoHourUnits": [
+    {
+      "unit": 1,
+      "durationHours": 2,
+      "work": "Written interface, minimal fixture/manifest/schema integration and assigned CLI proof in one bounded unit; stop after pass/three failures/timebox and log any remaining scope. No six-hour subdivision."
+    }
+  ],
+  "limitsAndPreservation": [
+    "This artifact is a plan only. No source, build, test, CLI, runtime, network, or helper operation was performed for it.",
+    "No private-function tests, internal mocks, direct credential-row seeding, or tests below the assigned CLI rung.",
+    "No host auth store, real account, installed credential, browser session, or service is read or changed; all credentials are fixed synthetic fixture values in disposable homes.",
+    "Do not retry AT90, repair the dashboard path, or disturb the restored auth files. Preserve the pinned upstream and source/evidence base; no kernel, ABI, research, protocol, or infrastructure work is part of this card.",
+    "Do not edit frozen root02 evidence or its queue status. ROOT-R004-20261006-02 is PENDING; the actual file is normative. Exact verified DONE overrides with R0.01 priority."
+  ],
+  "wholeATComplete": false,
+  "acceptanceComplete": false
+}

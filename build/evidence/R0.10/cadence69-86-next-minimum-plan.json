@@ -1,0 +1,169 @@
+{
+  "card": "R0.10",
+  "head": "f8e7116",
+  "status": "PLAN_ONLY_OWNER_IMPLEMENTATION_REQUIRED",
+  "acceptanceBindings": [
+    {
+      "id": "AT-hermes-config-69",
+      "source": "specs/hermes-config.md",
+      "line": 3458,
+      "sourceAssertion": "- **AT-hermes-config-69 [R0]** Given the amended cadence registry and generated contracts, When schema/role cutover validation runs, Then `toy_si.cadence_slot`, `toy_si.run`, and `toy_si.review` have one Durable admission/Turn Review owner, Obligations reads a read-only projection, all canonical states including swept agree, and duplicate writers or noncanonical slot enums fail the gate.",
+      "sourceAssertionSha256": "965ebd8c120f65c939ac3dce6fb45aeda90dc34f5bbf08ea5e7db257c8f83ba4",
+      "sourceDigest": "d3548fde13180bc750660f306caa0041101832e398ccdabd6cfdac0b3de8f4af",
+      "rung": "CLI",
+      "requiredEvidence": ["static", "stack", "probe:AT-hermes-config-69"]
+    },
+    {
+      "id": "AT-activity-focus-86",
+      "source": "specs/activity-focus.md",
+      "line": 2269,
+      "sourceAssertion": "- **AT-activity-focus-86 [R0]** Given amended generated cadence contracts, When the pre-build schema/caller gate exercises Activity-Focus and Obligations projections, Then only Durable admission/Turn Review writes `toy_si.cadence_slot`, `toy_si.run`, and `toy_si.review`, projection writes and alternative owners fail, and swept is distinct from accepted AI-reviewed coverage.",
+      "sourceAssertionSha256": "52ae93648c59baf2fd8a323afcd7d905d2818120da90106346b6d33c332b883f",
+      "sourceDigest": "95419ee43fbc5c4367e2109efc17eb0c08527b1355fea71fd170650adf4afa81",
+      "rung": "CLI",
+      "requiredEvidence": ["static", "probe:AT-activity-focus-86"]
+    }
+  ],
+  "canonicalContract": {
+    "contracts": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/CONTRACTS.md §§6, cadence table, Amendments B08",
+    "owner": "Durable admission/Turn Review owns toy_si.cadence_slot, toy_si.run, and toy_si.review; Obligations reads a reconstructible read-only projection.",
+    "states": ["scheduled", "running", "swept", "reviewed", "deferred_quota", "deferred_auth", "deferred_network", "deferred_busy", "maintenance", "failed", "missed", "coalesced_after_outage"],
+    "reviewRule": "A required-AI slot is reviewed only by accepted Turn Review evidence. A sweep is not an accepted AI review; swept is valid only for an explicitly selected no-AI policy.",
+    "writtenOwnerInterfaces": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/self-improvement.md §2 defines RunAdmission.admit/heartbeat/terminal and TurnReview.checkStop/review/get; §5 and §5.4 define table and write ownership.",
+    "projectionContract": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/obligations.md §13.6 requires read-only cadence projection and duplicate-writer rejection but does not currently name a projection method. Write that public method contract before implementing callers; do not invent it in a test fixture."
+  },
+  "currentSourceFindings": [
+    {
+      "finding": "The generated contract source already defines the exact twelve-state CadenceSlotState and CadenceCoverageV1/CadencePeriodV1 shapes. The generated slot-state schema and coverage count keys contain swept separately from reviewed.",
+      "sources": ["packages/contracts/src/primitives.ts", "packages/contracts/src/ops.ts", "packages/contracts/generated/schemas/cadence-slot-state.schema.json", "packages/contracts/generated/schemas/cadence-period-v1.schema.json", "packages/contracts/generated/schemas/cadence-coverage-v1.schema.json"]
+    },
+    {
+      "finding": "The only current toy_si.cadence_slot DDL and direct insert/update path is the capacity-trial migration/journal. It is a capacity-trial writer, not an implemented RunAdmission/TurnReview API; no canonical run/review owner migration is present. The package public surface exports CapacityTrialJournal but not RunAdmission or TurnReview.",
+      "sources": ["packages/self-improvement/migrations/capacity-trial.sql", "packages/self-improvement/src/capacity-trial-migration.ts", "packages/self-improvement/src/capacity-trial.ts", "packages/self-improvement/src/public.ts"]
+    },
+    {
+      "finding": "Obligations currently has no projection implementation or table migration. Its public surface exports only ModuleId. Activity-Focus has no package owner source for cadence state.",
+      "sources": ["packages/obligations/src/public.ts", "packages/sources/src/public.ts"]
+    },
+    {
+      "finding": "Both IDs and assertion hashes are present in the generated acceptance index/probe ID inventory, but neither AT has an authored CLI acceptance manifest in tests/registry.yaml. The check registry also has no cadence ownership gate. A generated AT ID alone does not make a public probe runnable.",
+      "sources": ["tests/acceptance-index.json", "tests/registry.yaml", "packages/contracts/src/generated-probe-registry.ts", "packages/contracts/src/ops-registry.ts"]
+    },
+    {
+      "finding": "The existing largest-interface seam is toy stack up/down plus probe.run/probe.show, routed through the public Self-Improvement ReplayEnvironment. It can host these static pre-build checks without activating R1 schedules or semantic runs.",
+      "sources": ["packages/self-improvement/src/public.ts", "packages/ops/src/fixture-stack.ts", "packages/contracts/src/test-control.ts", "cli/src/main.ts"]
+    }
+  ],
+  "minimumReachableUnit": {
+    "status": "CANONICAL_OWNER_SOURCE_PREREQUISITE",
+    "smallestBoundedUnit": "Use the existing Self-Improvement ownership boundary and generic registered CLI probe to add one cadence schema/caller gate. Before that gate can pass, materialize the spec-defined RunAdmission and TurnReview write boundary in the existing Self-Improvement package, one owner migration for cadence_slot/run/review with actual write constraints, and the written Obligations read-only projection interface. Route the capacity-trial writer through that canonical owner. Reuse the current generated state/coverage contract; do not add another cadence table or owner label registry.",
+    "whyCurrentSourceCannotPass": "The checker cannot prove sole ownership while a capacity-trial path directly creates and writes cadence_slot and no canonical RunAdmission/TurnReview implementation, owner migration, or Obligations projection API exists. This is missing implementation source, not an external service, login, resource, or permission blocker.",
+    "publicProbeRoute": "ReplayEnvironment.runRegisteredProbe in @toy/self-improvement/public, driven by the existing toy probe.run/probe.show commands and a registered fake stack. No new product CLI command or module is needed.",
+    "writtenInterfaceFirst": [
+      "Use the already-written Self-Improvement §2 RunAdmission and TurnReview signatures as the only writer API. Publish their generated contracts before implementation; do not copy DTOs into modules.",
+      "Write the missing Obligations projection method contract into its existing owner interface/spec before adding callers. It must expose reads only and must not admit runs, accept reviews, or mutate slot state.",
+      "Keep the test gate on the existing Self-Improvement public acceptance route. It reads actual generated schemas, owner migration/API sources, and caller boundaries; it does not infer ownership from a free-form owner string."
+    ],
+    "boundedSteps": [
+      {
+        "step": 1,
+        "files": ["packages/self-improvement/src/public.ts", "packages/self-improvement/src/capacity-trial.ts", "packages/self-improvement/src/capacity-trial-migration.ts", "packages/self-improvement/migrations/capacity-trial.sql", "packages/obligations/src/public.ts"],
+        "action": "Expose the canonical RunAdmission/TurnReview owner API and the read-only Obligations projection contract in existing modules. Make the capacity-trial journal use that owner boundary so it is not an alternate cadence writer. Retain only one canonical table migration; include concrete owner grants/revokes and required uniqueness/state constraints in that migration."
+      },
+      {
+        "step": 2,
+        "files": ["packages/self-improvement/src/cadence-ownership-probe.ts", "packages/self-improvement/src/public.ts", "packages/contracts/src/ops-registry.ts", "packages/ops/src/fixture-stack.ts", "tests/registry.yaml", "skills/toy-control/FEATURE-MAP.md"],
+        "action": "Add one static gate check and the two exact acceptance manifests to the existing CLI probe flow. The gate verifies generated enum equality, one actual table/API write boundary for all three tables, read-only Obligations access, and the canonical reviewed/swept distinction. Update the existing Hermes-config and Activity-Focus feature-map rows to name this route."
+      },
+      {
+        "step": 3,
+        "files": ["tests/fixtures/cadence-ownership/", "packages/self-improvement/src/cadence-ownership-probe.ts"],
+        "action": "Use private temporary source-tree copies through the probe's OS filesystem seam for negative fixtures; never mutate checkout sources or a database. The probe inspects these copies through the same public checker used for the canonical source tree."
+      }
+    ],
+    "explicitlyOutsideThisUnit": ["R1 cron activation", "live scheduler or Hermes runs", "R1 PostgreSQL lifecycle/actual-role execution", "Swift", "new package/module", "new cadence ledger", "R0.01 Ops implementation files"]
+  },
+  "mandatoryCases": [
+    {
+      "id": "canonical-owner-and-generated-enum",
+      "mutation": "No mutation. Read the committed canonical migration/API/caller sources and generated contract artifacts through the CLI owner gate.",
+      "expected": "Exactly one Durable admission/Turn Review write path owns cadence_slot, run, and review; the generated and SQL-enforced state set equals all twelve CONTRACTS states, including swept; Obligations has a read-only projection path."
+    },
+    {
+      "id": "duplicate-projection-writer",
+      "mutation": "In a disposable OS-backed fixture copy, add an Obligations-owned CREATE TABLE or DML writer for toy_si.cadence_slot.",
+      "expected": "The real source gate fails and identifies the additional writable owner; no product database or checkout file changes."
+    },
+    {
+      "id": "projection-write-privilege",
+      "mutation": "In a disposable OS-backed fixture copy, change the projection's declared database privilege/API from read-only to a cadence_slot write capability.",
+      "expected": "The real source gate fails based on the concrete migration/API constraint, not an owner-name annotation. Effective installed PostgreSQL privileges remain outside this static result."
+    },
+    {
+      "id": "missing-swept-state",
+      "mutation": "In a disposable copy of the generated/schema input, remove swept from the slot enum or coverage keys.",
+      "expected": "The generated-contract/owner-migration agreement check fails."
+    },
+    {
+      "id": "noncanonical-legacy-state",
+      "mutation": "In a disposable copy, add pending as an accepted slot state or replace a canonical state with a legacy alias.",
+      "expected": "The exact-enum check fails; no legacy alias is accepted as a current slot state."
+    },
+    {
+      "id": "swept-is-not-accepted-ai-review",
+      "mutation": "Use the owner projection fixture with a required-AI 180-second policy, one swept slot, and no accepted review for that slot.",
+      "expected": "The projection preserves swept separately and reports zero accepted AI-reviewed coverage for that slot; only a current accepted Turn Review can supply reviewed."
+    }
+  ],
+  "assignedCliCommands": {
+    "stackUp": "toy stack up --release R0 --world registered --clock fake --model fake --request-id <uuid> --json",
+    "AThermesConfig69": "toy --env test --stack <stack-id> probe run AT-hermes-config-69 --request-id <uuid> --json",
+    "ATActivityFocus86": "toy --env test --stack <stack-id> probe run AT-activity-focus-86 --request-id <uuid> --json",
+    "show": "toy --env test --stack <stack-id> probe show <returned-operation-id> --json",
+    "stackDown": "toy --env test --stack <stack-id> stack down --request-id <uuid> --json",
+    "runMode": "Omit --case to execute each registered manifest's full mandatory case set. AT-hermes-config-69 retains its explicit stack evidence; AT-activity-focus-86 still uses the same public CLI stack seam."
+  },
+  "candidateDisjointOwnership": {
+    "parentR001Lane": ["packages/ops/**", "control/**", "packages/hermes/**", "tests/cli/identity-bootstrap.cli.test.ts"],
+    "cadenceLane": ["packages/contracts/src/primitives.ts", "packages/contracts/src/ops.ts", "packages/contracts/src/ops-registry.ts", "packages/contracts/src/test-control.ts", "packages/self-improvement/src/public.ts", "packages/self-improvement/src/capacity-trial.ts", "packages/self-improvement/src/capacity-trial-migration.ts", "packages/self-improvement/migrations/capacity-trial.sql", "packages/self-improvement/src/cadence-ownership-probe.ts", "packages/obligations/src/public.ts", "tests/registry.yaml", "tests/fixtures/cadence-ownership/**", "skills/toy-control/FEATURE-MAP.md"],
+    "integrationOwner": "No cadence-lane file overlaps the parent's Ops/control/Hermes lane. Keep packages/self-improvement/src/engineering-control.ts outside this lane while the Life45 helper owns it. If the generic fixture-stack check guard needs a change, it belongs to the parent Ops owner after handoff. If parent R0.01 work expands into any cadence-lane file, execute serially under one owner rather than overlap. No generated outputs until all source mutators stop."
+  },
+  "acceptanceLimits": {
+    "wholeAT69": "PENDING. This plan supplies no source implementation, CLI receipt, stack evidence, or actual privilege readback.",
+    "wholeAT86": "PENDING. This plan supplies no source implementation or CLI receipt.",
+    "staticScope": "The R0 gate may prove generated schema, migration, and caller-source restrictions. It cannot claim that PostgreSQL has installed those grants. Effective disposable-role proof is required at the separately assigned database rung, including AT-obligations-82.",
+    "capacityTrial": "The present capacity-trial writer is a real unresolved source conflict; matching the package name or adding a string owner field does not discharge it.",
+    "execution": "Read-only source/spec review only. No source code, generated output, tests, builds, CLI, runtime, database, provider, credential, OS configuration, or network operation was performed."
+  },
+  "sourceHashes": [
+    {"path": "tests/acceptance-index.json", "sha256": "c9b645eab7f55b2ebf35d7db769a534a4837de23ad3dc3d913f3189e781d44fa"},
+    {"path": "tests/registry.yaml", "sha256": "5137175d79ce434de98bf84c1c86600edfab681d1890291f51c812eab87b428a"},
+    {"path": "packages/contracts/src/primitives.ts", "sha256": "ab5e75b50f170ea4ecd8c6144b5d7f2a489e89a360651cc9f703b2e74d3afa58"},
+    {"path": "packages/contracts/src/ops.ts", "sha256": "f99adefbea806be7fe4a4ddd50e37bde156d4edbae55b8d68f80b08678dddf1d"},
+    {"path": "packages/contracts/generated/schemas/cadence-slot-state.schema.json", "sha256": "0b576ab7eb7305d4f1859fe29ba812e1bdb523357f4f610914c463f368a76d54"},
+    {"path": "packages/contracts/generated/schemas/cadence-period-v1.schema.json", "sha256": "7c8f6b0fe0ef5cc83fcca6ad7de17c92ea10989ea19befd24e0cbf229f145b94"},
+    {"path": "packages/contracts/generated/schemas/cadence-coverage-v1.schema.json", "sha256": "07ed7092814325fac3ceb39448f4a0a8add8e3f39144e66d5ea77dea13bd2062"},
+    {"path": "packages/contracts/src/ops-registry.ts", "sha256": "618032d8aaa716ffb2d1947428d236dc064e343beced482a19b3ee770c48f7c8"},
+    {"path": "packages/contracts/src/test-control.ts", "sha256": "0af0d0e4349cae05bfdc06a77592e32c5171f0dc5d0e5964f2ef87faeaa4111c"},
+    {"path": "packages/contracts/src/generated-probe-registry.ts", "sha256": "8914593015d2a84efaa090891dde87c3bb968e2ae5a48c1b5ab7e0107ac8ebb4"},
+    {"path": "packages/self-improvement/src/public.ts", "sha256": "bd1b1d81adff008150902aa6174f5df7e8cc3b615fbf9408a035aa8a6146a9a3"},
+    {"path": "packages/self-improvement/src/capacity-trial.ts", "sha256": "dab2b52588bd6f905690551101aeb916bcca6db7afd0afe7068520575171f82b"},
+    {"path": "packages/self-improvement/src/capacity-trial-migration.ts", "sha256": "6673e1acab2f5853df7d208ce1e377a2f9e23fe56416d6164e2c3000f2f01bbe"},
+    {"path": "packages/self-improvement/migrations/capacity-trial.sql", "sha256": "c4ee9357ea602ed4c3848362082ee3d6b2a13069b8b892e64e94e410bbe5e41e"},
+    {"path": "packages/obligations/src/public.ts", "sha256": "526a993a0f22b2d2176444178c414f42c768f462b82b16554caba0490f539d62"},
+    {"path": "packages/ops/src/fixture-stack.ts", "sha256": "f1cef4e77af709588b0ad2bf56b211f10992742f19f0ea54479d2b9b9bf7632c"},
+    {"path": "cli/src/main.ts", "sha256": "214ba16bc8b851f470b4e92837d9abddfcec0984028f9afc64fc8a43283187fc"},
+    {"path": "scripts/generate-contracts.mjs", "sha256": "5d0d1c72d2cd7c9253241e7dd1ab057a0c1a15e47ad9cfb39dfdf67b182a44c2"},
+    {"path": "skills/toy-control/FEATURE-MAP.md", "sha256": "3a612b323cffccadace984adbdc6667b91203d59b2003361942281bdd1937dbe"}
+  ],
+  "authoritativeSpecHashes": [
+    {"path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/CONTRACTS.md", "sha256": "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d"},
+    {"path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/TEST-PLAN.md", "sha256": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2"},
+    {"path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/cli.md", "sha256": "30d03260c42bbfd15c1986b6012806f2320646de84f7a2d0b1eeb6db48e464d6"},
+    {"path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/hermes-config.md", "sha256": "d3548fde13180bc750660f306caa0041101832e398ccdabd6cfdac0b3de8f4af"},
+    {"path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/activity-focus.md", "sha256": "95419ee43fbc5c4367e2109efc17eb0c08527b1355fea71fd170650adf4afa81"},
+    {"path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/self-improvement.md", "sha256": "23e69b258189148328f029acd3ec7c4c125544bf49d670757eee2bf071ab7014"},
+    {"path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/obligations.md", "sha256": "5379f943578b4248dc21379a029acead930047c091316deb796fae0d49f4eb0f"}
+  ],
+  "scopeStatement": "Plan-only evidence artifact. No source implementation, generated output, acceptance result, owner admission, protected role proof, or runtime capability is asserted."
+}
