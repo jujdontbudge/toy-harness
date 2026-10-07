@@ -112,6 +112,34 @@
         ],
         "additionalProperties": false
       }
+    },
+    "refreshDispositions": {
+      "maxItems": 16,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "expiredBeforeLock": {
+            "type": "boolean"
+          },
+          "pairChangedAfterLock": {
+            "type": "boolean"
+          },
+          "disposition": {
+            "type": "string",
+            "enum": [
+              "refresh-invoked",
+              "reloaded-after-serialization"
+            ]
+          }
+        },
+        "required": [
+          "expiredBeforeLock",
+          "pairChangedAfterLock",
+          "disposition"
+        ],
+        "additionalProperties": false
+      }
     }
   },
   "required": [
@@ -123,7 +151,8 @@
     "staleRefreshResponse",
     "freshProcessUse",
     "refreshGeneration",
-    "refreshEffects"
+    "refreshEffects",
+    "refreshDispositions"
   ],
   "additionalProperties": false,
   "$id": "urn:toy:contracts:v1:HermesAuthConcurrencyObservationV1"

@@ -1,0 +1,159 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-07T07:20:00Z",
+  "reviewId": "auth87-public-owner-minimum-interface",
+  "status": "BOUNDED_ACTIONABLE_OWNER_FIX_AND_PUBLIC_ORACLE_PLAN",
+  "scope": {
+    "acceptanceId": "AT-hermes-config-87",
+    "rung": "CLI",
+    "specScenarioLine": 3040,
+    "specAssertionLine": 3051,
+    "wholeATClaimed": false,
+    "executionPerformed": false,
+    "sourceBuildGenerationCheckCliWorldProviderAccountRootOperations": 0,
+    "onlyWrittenArtifact": "build/evidence/R0.03/auth87-public-owner-minimum-interface.json",
+    "liveHermesModified": false,
+    "privateObserverRetried": false,
+    "childAgentsSpawned": 0,
+    "resourceAdmission": "Existing auth87-owner-design-doctor.json admits normal operation with 2540208128 available bytes; this read-only task remains within its own 256 MiB plus 512 MiB allocation. No new aggregate or free-floor gate was applied."
+  },
+  "binding": {
+    "sourceAssertionHash": "b8ba9587534e2983742157a3ab9ae8911da4928e48e3ab0894944914bb91e6bb",
+    "mandatoryCases": ["add-first", "refresh-first", "before-replace", "after-replace"],
+    "scenarioPredicate": "Concurrent real expired-grant chat refresh and independent auth-add; provider ordering and stale rotation response controls; OS/storage crash cuts; latest accepted generation and added grant usable after fresh reload, with no lost update or duplicate rotation and an unchanged independent root.",
+    "currentEvidence": "Prior saved run/show report 26 PASS checks, NOT_IMPLEMENTED and complete=false. Their staleRefreshResponse and staleRefreshTokenRejected remain not-exercised. This packet is design evidence, not a new acceptance run.",
+    "protectedState": "R004-02 and R005-01 remain PENDING; all six frozen parent pins remain untouched."
+  },
+  "sourcePins": {
+    "../personal-assistant-harness/specs/hermes-config.md": "d3548fde13180bc750660f306caa0041101832e398ccdabd6cfdac0b3de8f4af",
+    "../personal-assistant-harness/specs/TEST-PLAN.md": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2",
+    "packages/hermes/src/auth-fixture.ts": "a4b7739da7b909ca8fe854bb460a12b4a590dd8cab5545bab69f2cd793fd4898",
+    "packages/hermes/src/auth-probe.ts": "58b2df70f3cba853b1993be85fb6e2c4732301c841e0edbe1ae78331c5335d0d",
+    "packages/contracts/src/hermes-runtime.ts": "698774355295d8bc9f090205f4b49fbb43f6745be6b837bd9fced3497c42b7a5",
+    "patches/hermes-profile-auth.patch": "60554c067d107b149109b33741c6a4032a13c42a879d132ef5d0cba0c4954447",
+    "patches/hermes-auth-fixture.patch": "edcdcf963730b74aba7e77bb544119bff55829f48204e138aedbbd06af965e96",
+    "auth87-required-observable-coverage-review.json": "af487547f2b08373863e924b611e80bc90f2c2645bc9b46f9ee9dacc169eeebc",
+    "auth87-stale-response-minimum-plan.json": "9c7d9039304a593f08d36521a313af9e435b6748f6238bdd45607bf8b4634a56",
+    "auth87-serialization-plan-review.json": "3f75d753c8cfdbcf48eae554e46ec77207d5ccfadbf7c96b2ca748dd61d401a3",
+    "auth87-public-oracle-refined-plan.json": "f81f4eec728ea9b8bff19099af965dd4831135f327f254ef7ef65aa26546ea79"
+  },
+  "pinnedSourceRead": {
+    "root": "/Users/johansardar/.hermes/hermes-agent",
+    "assignedCommit": "8d5e3e412138342e8bf30443e72bd4e6a9abd057",
+    "credentialPoolSha256": "111d8e0d990630341a42dc2fa4a740f16746d5963e8d6900cfd25c54d109da66",
+    "runtimeProviderSha256": "6fa7cf555a6924fabac01212fdc38a88d1bae951b6a3a7be2ee85b9418020dda",
+    "authCommandsSha256": "16c18f21402ac9940815450a41854cfeaadad6a34bffeb98d27de648df749d1a",
+    "agentSetupSha256": "9ff6c24a94b3a89ee8f12b5ef7d42584ddb37f38cd2a5c073dd213c0eda2189e",
+    "singleQuerySha256": "3b51e5de968686f1209fe53717d0ecae128699c0c9bf8a0913c3f9953ead5472",
+    "streamJsonSha256": "e9229445739e6755ee1f088b0f6eb000a9761b47a8a56e932a9922e778c5d31a",
+    "boundary": "Read source files only. No installed auth stores, credentials, model invocation, public command or root dispatcher was opened or run. Runtime reachability below is source-grounded, not a measured new execution."
+  },
+  "actualPublicPath": [
+    "HermesAuthProbe.run -> runHermesAuthFixture -> pinned archive plus existing hermes-profile-auth.patch and single-file hermes-auth-fixture.patch in a disposable candidate.",
+    "Fixture _run_cli invokes hermes_cli.main.main with the real public hermes --profile toy chat --provider openai-codex --model gpt-6.1-sol --toolsets none -q invocation.",
+    "hermes_cli/main.py:cmd_chat -> cli.py:main -> hermes_cli/cli_single_query.py:_run_single_query_mode -> CLIAgentSetupMixin._ensure_runtime_credentials.",
+    "hermes_cli/runtime_provider.py:_resolve_from_pool (635-659) -> agent/credential_pool.py:load_pool (3070) -> CredentialPool.select. The existing profile patch changes select to defer selection until pending refreshes finish.",
+    "CredentialPool._available_entries (2073-2141) identifies expired entries; _refresh_pending_entries -> _refresh_entry (1530) -> auth-store lock -> in-lock synchronization -> _refresh_entry_impl -> _post_tokens_refresh -> refresh_codex_oauth_pure -> external HTTP provider.",
+    "_refresh_entry_impl persists the pool and singleton as applicable before the enclosing refresh lock is released. Correct synchronization therefore prevents a second response producer for the same consumed generation."
+  ],
+  "actionableDefect": {
+    "finding": "Independent Codex auth-add rows have source manual:device_code or manual:loopback_pkce and own their pool row. The pinned openai-codex _refresh_entry branch synchronizes only providers.openai-codex.tokens. _sync_entry_from_pool_store excludes openai-codex. A preloaded manual row can therefore remain stale after waiting for the auth-store lock and POST the already consumed refresh token.",
+    "references": [
+      "hermes_cli/auth_commands.py:_codex_pool_source, 239-243; _add_credential, 414-438",
+      "agent/credential_pool.py:_sync_entry_from_pool_store, 1297-1338",
+      "agent/credential_pool.py:_sync_entry_from_auth_store, 1344-1423",
+      "agent/credential_pool.py:_refresh_entry, 1530-1556",
+      "agent/credential_pool.py:_refresh_entry_impl, 1710-1758",
+      "agent/credential_pool.py:_sync_device_code_entry_to_auth_store, 1460-1484"
+    ],
+    "confidence": "Source-grounded defect prediction; the deterministic public regression below must produce runtime evidence before claiming the defect is reproduced or fixed.",
+    "minimumFix": [
+      "In existing patches/hermes-profile-auth.patch, add an upstream agent/credential_pool.py hunk allowing _sync_entry_from_pool_store to reload locally owned manual openai-codex rows. Retain the existing exclusions for external/reference-only rows; a profile-borrowed ID is not a locally owned manual row.",
+      "At the start of _sync_entry_from_auth_store, route openai-codex manual rows whose ID is not in self._borrowed_root_ids to _sync_entry_from_pool_store(entry). Keep existing singleton behavior for device_code rows and existing borrowed behavior. Both current pre-POST call sites now use the same authoritative pool-row path.",
+      "Reuse the current _refresh_entry shortcut: if the in-lock synchronized row changed and is no longer expired, return it without POST. Do not weaken lock coverage, force-refresh semantics, persistence merging or root write ownership."
+    ],
+    "notNeeded": "No new auth module, token-generation protocol, kernel/ABI mechanism, provider service, shared response sequencer or installed-package change. Apply the patch only to the existing disposable candidate; never edit the frozen installed Hermes root."
+  },
+  "writtenMinimumInterface": {
+    "owner": "CredentialPool, populated during its actual _refresh_entry decision; read-only public refresh_dispositions() accessor.",
+    "record": {
+      "expiredBeforeLock": "Boolean computed with the owner's real _entry_needs_refresh(entry) before taking the refresh lock.",
+      "pairChangedAfterLock": "Boolean comparison of the input access/refresh pair with the synchronized pair after acquiring the real auth-store lock. Pair bytes never leave the owner.",
+      "disposition": ["provider-requested", "reloaded-after-serialization"]
+    },
+    "population": [
+      "Initialize a bounded per-pool list in CredentialPool.__init__. Capture the real pre-lock expiry result and retain the input pair only within the current owner call.",
+      "On the actual changed-and-now-valid in-lock early-return branch, append the two observed booleans with reloaded-after-serialization.",
+      "For the successful provider path, append the observed booleans with provider-requested after the real refresher is invoked. The independent HTTP ledger, not this field alone, proves that an HTTP request occurred.",
+      "Return a copy of the records from the public accessor. Do not emit a pending record, synthetic generation, token digest, token claims, credentials or store data. Empty list means no observed refresh decision, not serialized success."
+    ],
+    "canonicalField": "Add required refreshDispositions: array(max 16) of strict {expiredBeforeLock:boolean, pairChangedAfterLock:boolean, disposition:enum(provider-requested,reloaded-after-serialization)} to the existing hermesAuthConcurrencyObservationSchema in packages/contracts/src/hermes-runtime.ts. Non-refresh operations provide an empty array. No new command, AT, top-level DTO or protocol is required."
+  },
+  "publicOutputTransport": {
+    "existingCapability": "hermes chat -q ... --format stream-json already exists at this pin. Its StreamJsonEmitter emits one terminal result envelope.",
+    "minimumUpstreamTransportHunks": [
+      "In hermes_cli/stream_json.py:StreamJsonEmitter.attach, retain the real agent's existing credential pool reference. In emit_result, add the whitelisted public refresh_dispositions() records as auth_refresh in the existing result envelope. Emit only the three fields above.",
+      "No CLI-wide collector is required at this pin: _resolve_turn_agent_config snapshots the originally selected pool into turn_route.runtime; _init_agent receives that runtime_override and passes its pool into AIAgent. agent/agent_init.py:2465 keeps that exact pool, so the second _ensure_runtime_credentials call cannot erase its original decision records. This source-grounded carrier must be checked in the real receipt; an empty/missing record is never a pass."
+    ],
+    "fixtureHunks": [
+      "In patches/hermes-auth-fixture.patch:_public_argv, append --format stream-json for the registered concurrency chat invocations, and update auth-fixture.ts:publicArgv's exact expected argv accordingly.",
+      "In fixture _safe_result, parse the existing captured public stdout as JSONL, require exactly one terminal result, and copy its auth_refresh value into concurrency.refreshDispositions unchanged. Preserve the existing token-hygiene scan and fixed chat-response checks. Do not derive expiry or disposition from actor, PID, barriers, clock configuration or missing HTTP requests.",
+      "Keep hermes-auth-fixture.patch a single added fixture file: auth-fixture.ts:242-260 validates that format. Owner and emitter source hunks belong in the already-applied hermes-profile-auth.patch."
+    ],
+    "noSideChannel": "The only owner observation exits through the already supported public chat result, then the existing fixture result and toy probe CheckView. No new logger, marker carrying owner data, private helper import, method monkeypatch or separate event type is introduced."
+  },
+  "deterministicRegression": {
+    "placement": "One isolated single-grant subcell contributing to the existing registered refresh-first case. Keep the existing add-first, refresh-first, before-replace and after-replace scopes and expected readbacks intact; do not re-run the entire matrix inside the subcell.",
+    "setup": "Create one additional temporary fixture home/profile through the existing public profile-create/auth-add/list staging. Require exactly one profile-owned grant. For this sealed subcell only, the existing fake OAuth add response issues the already defined rotated generation, which is expired at the existing refresh-first fake clock; its single refresh yields the already defined stale generation, which is valid. This is an external-provider response choice, not an owner observation. No auth-store row is hand-seeded or modified through a helper.",
+    "existingOSSeam": "Reuse _hold_refresh_lock's ordinary BEFORE-acquire external OS barrier, rather than adding an observer of successful or failed flock calls. Scope the new subcell's gate to the fixed temporary profile auth.lock using fstat/stat identity; other OS locks delegate immediately. After release, delegate the original fcntl.flock with its original descriptor/flags. No stack inspection, Hermes private helper callback, lock-state claim or changed kernel result is permitted.",
+    "sequence": [
+      "Complete the public auth list before launching either chat. Besides proving the one-grant precondition, load_pool's existing public list path records the persisted heal-clean fingerprint. While the profile/root files remain unchanged, fresh processes can skip the pre-selection healing lock.",
+      "Launch two real chat-expired processes against this same one-grant profile and refresh-first clock, using expired-chat for the winner and fresh-refresh-reload for the contender, each with its own existing barrier directory. In this sealed subcell extend the existing BEFORE-acquire gate to both actors.",
+      "Wait for BOTH refresh-lock-pending markers before releasing either process. These are scheduling acknowledgements only; they are not graded as proof of expiry. Both processes are paused at the fixed OS lock boundary before the winner can POST or persist a new pair.",
+      "Release only the winner's release-refresh-lock gate. Require its real provider refresh-response-pending marker before proceeding. The provider ledger proves it spent rotated and is holding the response.",
+      "Release the contender's release-refresh-lock gate, then the winner's release-refresh-token response. No timing sleep or duplicate-send absence is used as the expiry oracle. Even if the OS schedules the contender later, its old row is already in memory if it reached the actual refresh gate.",
+      "Wait for the winner's existing refresh-catalog-observed marker and for the contender's public result. Assert owner receipt and independent ledgers below. Release the winner's release-refresh-model marker and collect its public result without adding another crash cut.",
+      "Run a fresh public chat-reloaded process and public list in this subhome. Require valid newest generation stale and exactly one retained grant, plus unchanged independent root digest. Continue/preserve the original four-case matrix and its added-grant readbacks in its original home."
+    ],
+    "whyLateSchedulingCannotPassFalsely": "The pass predicate requires the contender's real owner to report expiredBeforeLock=true and pairChangedAfterLock=true on reloaded-after-serialization. A child that first loads the already persisted fresh grant produces no such record. A gate accidentally encountered during earlier loading cannot be promoted to expiry proof; its eventual owner record must still satisfy the actual old-row-to-new-row decision.",
+    "pinSpecificSchedulingCondition": "The public list's persisted heal-clean mark and absence of pool changes make the fixed profile lock gate reachable after selection at this pin. This is source-grounded, not yet runtime-verified. If a pre-selection lock or seeding write makes that assumption false, the owner receipt exposes an unexercised branch and the new check fails. Do not respond by accepting the marker, adding a private lock observer or repeating an unchanged failed observer.",
+    "finiteBudget": "Keep the actual outer probe/world deadline at 120000 ms. Reuse remainingMs for setup and every gate/readback; child ceiling remains at most 30000 ms, gate waits at most 15000 ms and at most remainingMs. Reuse existing finally child cleanup. No wait may extend the world deadline or outlive the owner. The extra scope runs only seed add/list, two chats and a fresh chat/list."
+  },
+  "beforeAfterCLIOracle": {
+    "commands": [
+      "toy --env test --stack <stack-id> probe run AT-hermes-config-87 --request-id <UUID> --json",
+      "toy --env test --stack <stack-id> probe show <operation-id> --json"
+    ],
+    "beforeOwnerFix": "After adding only the truthful public receipt and isolated scheduling cell, a genuinely preloaded manual contender is predicted to report provider-requested or duplicate rotated-to-stale HTTP effects. That is a FAIL even if both chats eventually return stale and all existing 26 checks pass. Missing owner output or no pre-lock expired decision is also a FAIL/unexercised, never serialized success.",
+    "afterOwnerFix": [
+      "Winner: exactly one owner record {expiredBeforeLock:true,pairChangedAfterLock:false,disposition:provider-requested}; exactly one token_refreshes and refreshEffects=[rotated->stale].",
+      "Contender: exactly one owner record {expiredBeforeLock:true,pairChangedAfterLock:true,disposition:reloaded-after-serialization}; zero token_refreshes and empty refreshEffects; its model catalog and model request use stale.",
+      "Winner plus contender send count for the sole grant equals one. Independent add token exchanges and the original matrix's later added->added-rotated refreshes remain separate.",
+      "Fresh single-grant chat/list agree on the accepted generation and retained count. All existing four-case latest-generation, added-grant, root-digest and crash-cut checks still pass in their original scope.",
+      "Probe run/show archive actual child identities, exact public argv, canonical owner records, source/patch/executable/schema/fixture digests, independent provider effects and fresh readbacks. No wrapper-produced assertion can replace these receipts."
+    ]
+  },
+  "staleResponseBoundary": {
+    "serializedOutcome": "The owner fix plus truthful contention oracle proves prevention: both real owners had an expired old row, but only the winner produced a refresh response and the contender adopted the stored winner pair. No delayed second response exists to overwrite the accepted pair in this serialized path.",
+    "mustRemainTruthful": "Keep staleRefreshResponse and staleRefreshTokenRejected at not-exercised in this path. The fake generation named stale is the newly accepted valid generation; its name is not a rejected old response.",
+    "literalDeliveryLimitation": "This subcell does not deliver an out-of-order successful response after a newer same-row rotation. If the final normative oracle requires literal stale-response delivery in addition to demonstrated prevention, that predicate remains open. Do not claim the whole AT based on this prevention proof or relabel the existing fixture values. A separate reachable owner stale-response/CAS behavior would be actionable internal implementation work, not an external blocker; it is not specified or added speculatively by this bounded card."
+  },
+  "boundedSourceAdmissionPacket": {
+    "files": [
+      "patches/hermes-profile-auth.patch: minimum owner sync, decision records/accessor and StreamJsonEmitter forwarding hunks",
+      "patches/hermes-auth-fixture.patch: public structured output parsing and isolated subcell's existing OS/provider scheduling choices",
+      "packages/contracts/src/hermes-runtime.ts: additive existing concurrency result field",
+      "packages/hermes/src/auth-fixture.ts: exact argv, isolated helper subhome/cell, owner-record and ledger checks",
+      "packages/hermes/src/auth-probe.ts: only if the existing owner needs a separate isolated-home staging call; no new public dispatch or command",
+      "skills/toy-control/FEATURE-MAP.md: strengthen the existing AT87 proof entry for the new public owner result"
+    ],
+    "derivedOnly": "Regenerate existing canonical contract outputs through the paved generator after source admission; never hand-copy DTOs. No new registry case or acceptance ID is proposed.",
+    "acceptanceBoundary": "Current NOT_IMPLEMENTED/complete=false remains authoritative until a fresh source-bound public run/show verifies the new subcell and all assigned cases, including protected identity/dispatcher requirements. This read-only packet does not advance R0-R5 goal state, root requests or frozen pins.",
+    "sourceExecutionPhases": [
+      "Phase 1, only after parent review and source admission: implement the owner-produced nonsecret disposition, existing stream-json transport and isolated deterministic real-CLI regression. Leave the authoritative manual-row synchronization defect unchanged. Source worker stops; parent alone performs paved generation/build/strict checks and one fresh unfiltered CLI RED run/show within the actual deadline.",
+      "Phase 2, only after parent reviews the RED receipts and admits the fix: add the two small authoritative-row synchronization hunks to hermes-profile-auth.patch. Source worker stops; parent alone generates/builds/checks and performs the fresh unfiltered CLI GREEN run/show."
+    ],
+    "attemptBudget": "At most three assigned new native attempts across this bounded unit and approximately two hours total; never repeat the old failed private observer. A missing expired owner receipt is a scheduling diagnosis, not proof that the manual-row defect was reproduced.",
+    "recommendedNextAction": "Parent reviews this packet and admits Phase 1. Inspect the owner receipt in the real RED before diagnosing any further scheduling issue; only admit Phase 2 when the public evidence identifies the predicted duplicate old-row refresh."
+  }
+}

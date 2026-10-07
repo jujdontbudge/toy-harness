@@ -4886,7 +4886,7 @@ export const registeredCliAcceptanceManifestInventory = [
         "phase": "after-replace"
       }
     ],
-    "trigger": "Run real public expired-grant chat and independent auth-add subprocesses in both persistence orders, then kill disposable auth-add immediately before and after atomic replace and inspect fresh public list, priority and chat.",
+    "trigger": "Run real public expired-grant chat and independent auth-add subprocesses in both persistence orders, then kill disposable auth-add immediately before and after atomic replace and inspect fresh public list, priority and chat. In an isolated single-grant subhome, preload both expired chats at the external before-acquire OS gate and inspect their owner-produced public refresh dispositions plus independent HTTP sends.",
     "faultControls": [
       {
         "id": "persistence-order",
@@ -4910,6 +4910,13 @@ export const registeredCliAcceptanceManifestInventory = [
         "affectedPhases": [
           "before-replace",
           "after-replace"
+        ]
+      },
+      {
+        "id": "single-grant-refresh-before-acquire",
+        "seam": "os",
+        "affectedPhases": [
+          "refresh-first"
         ]
       }
     ],
@@ -4952,6 +4959,13 @@ export const registeredCliAcceptanceManifestInventory = [
           "refresh-first",
           "before-replace",
           "after-replace"
+        ]
+      },
+      {
+        "id": "real-owner-refresh-disposition",
+        "independentReader": "HermesAuthProbe.run: public owner refreshDispositions, independent HTTP ledger and fresh public chat/list",
+        "caseIds": [
+          "refresh-first"
         ]
       }
     ],

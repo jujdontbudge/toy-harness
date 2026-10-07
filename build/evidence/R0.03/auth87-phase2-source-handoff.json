@@ -1,0 +1,232 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-07T07:53:14.267154+00:00",
+  "card": "R0.03",
+  "acceptanceId": "AT-hermes-config-87",
+  "rung": "CLI",
+  "state": "PHASE2_SOURCE_STOP_READY_FOR_PARENT_FINAL_GREEN",
+  "sourceOwner": "/root/auth87_public_owner_design",
+  "admission": {
+    "parentReviewPath": "build/evidence/R0.03/auth87-causal-red-parent-review.json",
+    "parentReviewSha256": "6c79599d58b5c8abbfb7e3f4dc7beaa6f7c1f7b72fae86617879de410ec86b8a",
+    "doctorPath": "build/evidence/R0.03/auth87-phase2-source-admission-doctor.json",
+    "doctorSha256": "3394824423ebaab92c19aaaec97f4c4742949b175eaefa4f14da435cb9bed2e6",
+    "normalPressure": true,
+    "availableBytes": "2580905984",
+    "sourceDeadline": "2026-10-07T08:00:00Z"
+  },
+  "causalRed": {
+    "parentReviewed": true,
+    "summaryPath": "build/evidence/R0.03/auth87-owner-second-red-summary.json",
+    "summarySha256": "fe09e46653ce74d0dc81d7a3406047b886881eb231064b5306b598ed42908005",
+    "showPath": "build/evidence/R0.03/auth87-owner-second-red-cli/AT-hermes-config-87-show.json",
+    "showSha256": "4ba48a37145480acedf49f0c55cd70c869db6a7e4fe260523c3fb8e151e3d432",
+    "runShowExact": true,
+    "registrationExact": true,
+    "originalFourCasesPass": true,
+    "passChecks": 32,
+    "failChecks": 2,
+    "winnerPid": 74014,
+    "contenderPid": 74016,
+    "bothBeforeAcquire": true,
+    "bothActualOwnerExpiredBeforeLock": true,
+    "bothOwnerPairChangedAfterLock": false,
+    "bothOwnerDisposition": "refresh-invoked",
+    "ownerRecordCountEach": 1,
+    "actualRefreshSendsEach": 1,
+    "actualRefreshTransitionEach": "rotated -> stale",
+    "actualCLIExitEach": 0,
+    "tokenHygieneEach": true,
+    "meaningfulPredictedRed": true,
+    "ownedWorldsRunning": 0,
+    "cleanupComplete": true
+  },
+  "implementation": {
+    "sourcePatch": "patches/hermes-profile-auth.patch",
+    "onlyChangedHermesSourceFile": "agent/credential_pool.py",
+    "onlyChangedMethods": [
+      "CredentialPool._sync_entry_from_pool_store",
+      "CredentialPool._sync_entry_from_auth_store"
+    ],
+    "poolReaderEligibility": "Allow openai-codex manual: rows whose exact ID is not in this pool borrowed_root_ids, while retaining existing Anthropic/xAI/plugin eligibility and exclusion rules.",
+    "authStoreRouting": "Route the same locally owned manual Codex rows to the existing exact-ID persisted pool-row reader before the previous singleton path. Both existing pre-POST sync call sites therefore read the authoritative pool row.",
+    "serializationBehavior": "Reuse the unchanged existing in-lock changed-and-now-valid early return; after winner persistence, a preloaded contender adopts that row without entering the refresher.",
+    "borrowedRows": "A manual row whose ID is in borrowed_root_ids does not receive the new eligibility/early route; its previous root/singleton behavior is unchanged.",
+    "externalReferences": "Nonmanual Codex sources retain their existing singleton/external behavior; no reference-only token authority is relaxed.",
+    "forceSemanticsUnchanged": true,
+    "ownerReceiptAndPublicTransportUnchanged": true,
+    "providerRefresherUnchanged": true,
+    "persistenceAndRootMergingUnchanged": true,
+    "clockOSGateOracleAndFixtureUnchanged": true
+  },
+  "sourceFiles": [
+    {
+      "path": "patches/hermes-profile-auth.patch",
+      "bytes": 14887,
+      "sha256": "814f13752d5132dbc175fb1864229dead2988f9eaa8f76af1481457f2b406b30"
+    },
+    {
+      "path": "docs/adr/0056-manual-codex-refresh-serialization.md",
+      "bytes": 5189,
+      "sha256": "50abdbef45f805d9748ffe75adf3bd43cfdacbeaeae57c0098fae7e966a124ef"
+    },
+    {
+      "path": "architecture/features.json",
+      "bytes": 174742,
+      "sha256": "b6192967d82673ceef64c28919edcabf49b223a0db28e6ac99a3137fbb8769f4"
+    }
+  ],
+  "causalRedOracleBindingsUnchanged": [
+    {
+      "path": "patches/hermes-auth-fixture.patch",
+      "causalRedSha256": "b5f17d9daa362019be4dd2bee0ad7f31633b1104887737e11f09f588550f0387",
+      "phase2Sha256": "b5f17d9daa362019be4dd2bee0ad7f31633b1104887737e11f09f588550f0387",
+      "matches": true
+    },
+    {
+      "path": "packages/contracts/src/hermes-runtime.ts",
+      "causalRedSha256": "a525d41df7079e2e2d603111cf65ba68315b73b5a0f73ad27be5ff17884907fd",
+      "phase2Sha256": "a525d41df7079e2e2d603111cf65ba68315b73b5a0f73ad27be5ff17884907fd",
+      "matches": true
+    },
+    {
+      "path": "packages/hermes/src/auth-fixture.ts",
+      "causalRedSha256": "f5bf2fd160be71e428f311952f7ff661b23401e704400ee20d28f54bcd62cf51",
+      "phase2Sha256": "f5bf2fd160be71e428f311952f7ff661b23401e704400ee20d28f54bcd62cf51",
+      "matches": true
+    },
+    {
+      "path": "packages/hermes/src/auth-probe.ts",
+      "causalRedSha256": "56ab48a0a9b0d75ae54df93cec16cc72473d54ec8e8d66b1ef0a003c22b3fbf1",
+      "phase2Sha256": "56ab48a0a9b0d75ae54df93cec16cc72473d54ec8e8d66b1ef0a003c22b3fbf1",
+      "matches": true
+    },
+    {
+      "path": "tests/registry.yaml",
+      "causalRedSha256": "92d031df4181852d4709fe01a460727d7b61d473d2f11d69380a95da9b0f9fe5",
+      "phase2Sha256": "92d031df4181852d4709fe01a460727d7b61d473d2f11d69380a95da9b0f9fe5",
+      "matches": true
+    }
+  ],
+  "frozenBindings": [
+    {
+      "path": "scripts/probe-siwc-control-runtime.mts",
+      "expectedSha256": "96e1fd2d98469772c3d0d203386c3f7aa56af57db025c420fa93f1f4ecd7e70d",
+      "observedSha256": "96e1fd2d98469772c3d0d203386c3f7aa56af57db025c420fa93f1f4ecd7e70d",
+      "matches": true
+    },
+    {
+      "path": "scripts/stage-siwc-control-runtime.mts",
+      "expectedSha256": "13ff53e341ab7670dbed967ce810d5aa2834df7a47ffe1620f037ff1da3ee0d4",
+      "observedSha256": "13ff53e341ab7670dbed967ce810d5aa2834df7a47ffe1620f037ff1da3ee0d4",
+      "matches": true
+    },
+    {
+      "path": "control/dist/bootstrap/siwc-runtime-probe.js",
+      "expectedSha256": "06870b8dd41d2ffc093cc04680ba56c4570f07b4aa0a27a9ab70796cdd8204bd",
+      "observedSha256": "06870b8dd41d2ffc093cc04680ba56c4570f07b4aa0a27a9ab70796cdd8204bd",
+      "matches": true
+    },
+    {
+      "path": "scripts/probe-unfiltered-control-denials.mts",
+      "expectedSha256": "1cb93d375df931a482d946170e31549450d8efb71d6a251f5d2bcea8c5b92529",
+      "observedSha256": "1cb93d375df931a482d946170e31549450d8efb71d6a251f5d2bcea8c5b92529",
+      "matches": true
+    },
+    {
+      "path": "packages/ops/dist/role-control-probe.js",
+      "expectedSha256": "1764a98e5ae45694118007c242320711a7bd9e0d021b7c6d6ee0cbb8cff73ec2",
+      "observedSha256": "1764a98e5ae45694118007c242320711a7bd9e0d021b7c6d6ee0cbb8cff73ec2",
+      "matches": true
+    },
+    {
+      "path": "control/dist/bootstrap/denial-probe.js",
+      "expectedSha256": "7fda1824ec7bc308cac97d07c7c92cadd5527e87e89d79b410d33d95d1b30672",
+      "observedSha256": "7fda1824ec7bc308cac97d07c7c92cadd5527e87e89d79b410d33d95d1b30672",
+      "matches": true
+    }
+  ],
+  "sourceOnlySanity": {
+    "pureInMemoryUnifiedDiffApplicability": true,
+    "patchFiles": [
+      {
+        "path": "agent/credential_pool.py",
+        "baseSha256": "111d8e0d990630341a42dc2fa4a740f16746d5963e8d6900cfd25c54d109da66",
+        "patchedSha256": "4467a8e82462c58ff575e8fe5f34f682c8387f461c98af0deb3ef1d2312479e0",
+        "hunks": 9
+      },
+      {
+        "path": "agent/credential_pool_admin.py",
+        "baseSha256": "7bee61006914d539aa0e8e28289d3fdf0621d8f109d15164a1203fd8e2ebf8e1",
+        "patchedSha256": "d91f4a309328ef63b3b42174c97b1cb0172dbb33bf569d906b35a301544c4509",
+        "hunks": 1
+      },
+      {
+        "path": "hermes_cli/auth_oauth_grants.py",
+        "baseSha256": "7100477ebe886e6a833168373f77092c7dec10eeec90b3befb88965a268a65c0",
+        "patchedSha256": "b134f821629ffc260a3524b915a56483e27bfcabffcd82acbf08bbaf9bbc1457",
+        "hunks": 1
+      },
+      {
+        "path": "hermes_cli/stream_json.py",
+        "baseSha256": "e9229445739e6755ee1f088b0f6eb000a9761b47a8a56e932a9922e778c5d31a",
+        "patchedSha256": "48554832b63d641e1e225ace3d2fe17152e594cdaf513886bfeff3e2feb3777c",
+        "hunks": 2
+      }
+    ],
+    "phase1CandidateReconstructedByRemovingOnlyTwoChangesSha256": "44afae54199eff2cb176bc2b0dca4a0ef4d9b253851c6837639aaf8c369f779a",
+    "matchesCausalRedCandidate": true,
+    "phase2CandidateCredentialPoolSha256": "4467a8e82462c58ff575e8fe5f34f682c8387f461c98af0deb3ef1d2312479e0",
+    "fixturePatchAnd889LineReadbackUnchanged": true,
+    "allSixFrozenPinsMatch": true,
+    "installedHermesModified": false,
+    "generationBuildStaticRuntimeTestsExecuted": false,
+    "sourceSanityDoesNotClaimGreen": true
+  },
+  "writtenInterface": "docs/adr/0056-manual-codex-refresh-serialization.md",
+  "featureFactsSource": "architecture/features.json:hermes.native-auth-probe",
+  "derivedFeatureMapNotEdited": true,
+  "expectedGreen": {
+    "winnerOwnerRecord": {
+      "expiredBeforeLock": true,
+      "pairChangedAfterLock": false,
+      "disposition": "refresh-invoked"
+    },
+    "winnerHTTPRefreshes": 1,
+    "contenderOwnerRecord": {
+      "expiredBeforeLock": true,
+      "pairChangedAfterLock": true,
+      "disposition": "reloaded-after-serialization"
+    },
+    "contenderHTTPRefreshes": 0,
+    "combinedCheck": "NATIVE_AUTH_SERIALIZATION_DECISION_OBSERVED",
+    "freshPublicChatCatalogModel": "stale with no additional refresh and no owner decision",
+    "freshPublicListCount": 1,
+    "originalFourCasesMustStillPass": true,
+    "runtimeGreenClaimed": false
+  },
+  "parentNextActions": [
+    "After SOURCE STOP, regenerate derived feature facts through the paved path if needed, build, and run required strict/static checks.",
+    "Collect the final assigned fresh unfiltered CLI AT87 GREEN with exact source manifest, probe.run/probe.show readback and complete world teardown.",
+    "Collect affected AT84/85/86/88/89/91 public CLI evidence for save-fault, reload, sibling, borrowed-root, mixed-lineage and lifecycle behavior.",
+    "Retain literal stale-response delivery/rejection and protected/whole acceptance gaps as open; do not convert serialized prevention into a fake stale-response-rejection label."
+  ],
+  "limits": {
+    "newAssignedNativeAttempts": 2,
+    "maxNewAssignedNativeAttempts": 3,
+    "remainingAssignedNativeAttempts": 1,
+    "fullUnitDeadline": "2026-10-07T09:22:00Z",
+    "ownedWorldsRunning": 0,
+    "childAgentsSpawned": 0,
+    "installedSourceMutations": 0,
+    "credentialStoreReads": 0,
+    "accountOperations": 0,
+    "rootDispatcherOperations": 0,
+    "rootQueueOrFrozenInputsModified": false
+  },
+  "wholeATComplete": false,
+  "acceptanceComplete": false,
+  "staleRefreshResponse": "not-exercised",
+  "staleRefreshTokenRejected": "not-exercised",
+  "STOP": true
+}

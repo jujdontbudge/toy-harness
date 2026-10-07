@@ -1,0 +1,270 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-07T07:46:08.948256+00:00",
+  "card": "R0.03",
+  "acceptanceId": "AT-hermes-config-87",
+  "rung": "CLI",
+  "state": "PHASE1_OBSERVATION_REPAIR_SOURCE_STOP_READY_FOR_PARENT_PROOF",
+  "sourceOwner": "/root/auth87_public_owner_design",
+  "repairAdmission": {
+    "reviewPath": "build/evidence/R0.03/auth87-first-run-observation-gap-review.json",
+    "reviewSha256": "2e178263e8978fd4ae2c0eb42f323879ac128af5d402652bae8864f622f97f45",
+    "doctorPath": "build/evidence/R0.03/auth87-phase1-repair-admission-doctor.json",
+    "doctorSha256": "9962ec1294a6ce0bbd08fb9df524cfd5711dfad8822bf9a04d145f8f1424e69c",
+    "measuredAvailableBytes": "2531524608",
+    "pressure": "normal",
+    "sourceDeadline": "2026-10-07T07:58:00Z"
+  },
+  "actualFirstRun": {
+    "summaryPath": "build/evidence/R0.03/auth87-owner-red-summary.json",
+    "summarySha256": "d9a787889595b84044282728e751fdbc5ccfb53d4511ed17786ee13813f898ac",
+    "runPath": "build/evidence/R0.03/auth87-owner-red-cli/AT-hermes-config-87-run.json",
+    "runSha256": "0ea1bcfa77a64c50eaac4bb45f2f1e2dcfeb74e64be41ae244236bc705f3af07",
+    "showPath": "build/evidence/R0.03/auth87-owner-red-cli/AT-hermes-config-87-show.json",
+    "showSha256": "1f1489bc992f779d563a43d362aee5b153d966d37f2f1bb12c72df3d72d85ad7",
+    "runShowExact": true,
+    "registrationExact": true,
+    "cleanupComplete": true,
+    "ownedWorldsRunning": 0,
+    "meaningfulPredictedRed": false,
+    "duplicateRefreshBugProven": false,
+    "originalFailure": "add-first actual catalog/model rotated and token_refreshes=2, but stream parse/capture yielded empty owner records and CLI_EXCEPTION; no serialization receipt was emitted. Single-grant seed passed, then the broad catch hid the remaining exception."
+  },
+  "findings": [
+    {
+      "cause": "Combined proof exceeds existing canonical CheckView prerequisite limit",
+      "confidence": "source-confirmed bound violation; actual caught exception category was not previously retained",
+      "evidence": "CheckView.prerequisite max is 2000. Two actual first-run result shapes alone serialize to 2686 characters before combined metadata; the new original combined proof added both full results, model summaries and four digests.",
+      "fix": "Emit bounded per-child canonical nonsecret projections and a compact combined predicate. Put full-stream digests in existing artifact links. No schema size expansion."
+    },
+    {
+      "cause": "Fixture classified its own public-stream parse rejection as a real CLI exception",
+      "confidence": "source-confirmed classification bug; the first saved receipt cannot distinguish incidental stdout from an actual CLI exception",
+      "evidence": "_safe_result previously set failure=CLI_EXCEPTION when _public_refresh_dispositions returned None, even though _run_cli could have returned success after real model/catalog requests.",
+      "fix": "PUBLIC_STREAM_RESULT_INVALID is a distinct fixed canonical marker. CLI_EXCEPTION is reserved for the actual public command raising; an existing real failure is preserved."
+    },
+    {
+      "cause": "Strict whole-stdout parser rejected any incidental non-JSON public output",
+      "confidence": "source-confirmed overstrict parser; incidental first-run line content was not retained or claimed",
+      "evidence": "Pinned cmd_chat has startup/config/agent paths before the emitter, while StreamJsonEmitter writes the terminal result directly into fixture-captured stdout. The initial reader returned None on any nonblank non-JSON line.",
+      "fix": "Read exactly one real terminal result from public captured stdout, tolerate non-JSON diagnostic lines, reject malformed JSON record lines, require exact terminal exit status and exact bounded owner records. Scan both complete captured streams for fake credential leakage."
+    },
+    {
+      "cause": "Generic catch discarded the fixed execution stage and safe exception category",
+      "confidence": "source-confirmed diagnostic gap",
+      "fix": "Return only a fixed stage and allowlisted category via existing CheckView; never raw messages, stacks, stdout or stderr."
+    }
+  ],
+  "mutatedPathsThisRepair": [
+    "docs/adr/0056-manual-codex-refresh-serialization.md",
+    "packages/hermes/src/auth-fixture.ts",
+    "packages/contracts/src/hermes-runtime.ts",
+    "patches/hermes-auth-fixture.patch",
+    "build/evidence/R0.03/auth87-phase1-observation-repair-handoff.json"
+  ],
+  "sourceFiles": [
+    {
+      "path": "docs/adr/0056-manual-codex-refresh-serialization.md",
+      "bytes": 4736,
+      "sha256": "37e7c6a06c3030c36378a1feebcaf39e789b24ed09c11c1182fa63688efdc357"
+    },
+    {
+      "path": "patches/hermes-profile-auth.patch",
+      "bytes": 13651,
+      "sha256": "9c1ddde34682ef3036043c0907226a1d5c052b497521de7875215e1d021d8db7"
+    },
+    {
+      "path": "patches/hermes-auth-fixture.patch",
+      "bytes": 41687,
+      "sha256": "b5f17d9daa362019be4dd2bee0ad7f31633b1104887737e11f09f588550f0387"
+    },
+    {
+      "path": "packages/contracts/src/hermes-runtime.ts",
+      "bytes": 9548,
+      "sha256": "a525d41df7079e2e2d603111cf65ba68315b73b5a0f73ad27be5ff17884907fd"
+    },
+    {
+      "path": "packages/hermes/src/auth-fixture.ts",
+      "bytes": 95849,
+      "sha256": "f5bf2fd160be71e428f311952f7ff661b23401e704400ee20d28f54bcd62cf51"
+    },
+    {
+      "path": "packages/hermes/src/auth-probe.ts",
+      "bytes": 17425,
+      "sha256": "56ab48a0a9b0d75ae54df93cec16cc72473d54ec8e8d66b1ef0a003c22b3fbf1"
+    },
+    {
+      "path": "tests/registry.yaml",
+      "bytes": 141313,
+      "sha256": "92d031df4181852d4709fe01a460727d7b61d473d2f11d69380a95da9b0f9fe5"
+    },
+    {
+      "path": "architecture/features.json",
+      "bytes": 174647,
+      "sha256": "c3ba6460d610bfbcf2c8b9ad052f85b8616f76740d9a115fcdf7a3caa1e922cb"
+    }
+  ],
+  "frozenBindings": [
+    {
+      "path": "scripts/probe-siwc-control-runtime.mts",
+      "expectedSha256": "96e1fd2d98469772c3d0d203386c3f7aa56af57db025c420fa93f1f4ecd7e70d",
+      "observedSha256": "96e1fd2d98469772c3d0d203386c3f7aa56af57db025c420fa93f1f4ecd7e70d",
+      "matches": true
+    },
+    {
+      "path": "scripts/stage-siwc-control-runtime.mts",
+      "expectedSha256": "13ff53e341ab7670dbed967ce810d5aa2834df7a47ffe1620f037ff1da3ee0d4",
+      "observedSha256": "13ff53e341ab7670dbed967ce810d5aa2834df7a47ffe1620f037ff1da3ee0d4",
+      "matches": true
+    },
+    {
+      "path": "control/dist/bootstrap/siwc-runtime-probe.js",
+      "expectedSha256": "06870b8dd41d2ffc093cc04680ba56c4570f07b4aa0a27a9ab70796cdd8204bd",
+      "observedSha256": "06870b8dd41d2ffc093cc04680ba56c4570f07b4aa0a27a9ab70796cdd8204bd",
+      "matches": true
+    },
+    {
+      "path": "scripts/probe-unfiltered-control-denials.mts",
+      "expectedSha256": "1cb93d375df931a482d946170e31549450d8efb71d6a251f5d2bcea8c5b92529",
+      "observedSha256": "1cb93d375df931a482d946170e31549450d8efb71d6a251f5d2bcea8c5b92529",
+      "matches": true
+    },
+    {
+      "path": "packages/ops/dist/role-control-probe.js",
+      "expectedSha256": "1764a98e5ae45694118007c242320711a7bd9e0d021b7c6d6ee0cbb8cff73ec2",
+      "observedSha256": "1764a98e5ae45694118007c242320711a7bd9e0d021b7c6d6ee0cbb8cff73ec2",
+      "matches": true
+    },
+    {
+      "path": "control/dist/bootstrap/denial-probe.js",
+      "expectedSha256": "7fda1824ec7bc308cac97d07c7c92cadd5527e87e89d79b410d33d95d1b30672",
+      "observedSha256": "7fda1824ec7bc308cac97d07c7c92cadd5527e87e89d79b410d33d95d1b30672",
+      "matches": true
+    }
+  ],
+  "interface": {
+    "writtenADR": "docs/adr/0056-manual-codex-refresh-serialization.md",
+    "ownerFieldsUnchanged": [
+      "expiredBeforeLock",
+      "pairChangedAfterLock",
+      "disposition"
+    ],
+    "ownerDispositionEnumUnchanged": [
+      "refresh-invoked",
+      "reloaded-after-serialization"
+    ],
+    "ownerSourceAndTransportPatchUnchanged": "patches/hermes-profile-auth.patch",
+    "transport": "Existing public hermes chat --format stream-json terminal auth_refresh result, used by isolated single-grant cell only.",
+    "parserTerminalCount": 1,
+    "terminalExitMatchesActualCLIExit": true,
+    "ownerRecordBound": 16,
+    "ownerRecordsExactThreeFields": true,
+    "ownerSnapshotCopiedUnchanged": true,
+    "perChildProjectionRecordBound": 2,
+    "perChildProjectionIncludesFullRecordCount": true,
+    "acceptanceStillRequiresExactlyOneOwnerRecordPerChild": true,
+    "fullCapturedStreamsHygieneRetained": true,
+    "newPublicCommandModuleDTOProtocolLoggerSideChannel": false
+  },
+  "canonicalChanges": {
+    "existingMarkerAdded": "PUBLIC_STREAM_RESULT_INVALID",
+    "parentRegenerationRequired": true,
+    "noUnboundedSchema": true,
+    "CheckView2000LimitUnchanged": true
+  },
+  "exceptionDiagnosis": {
+    "stages": [
+      "setup",
+      "original-concurrency",
+      "single-grant-seed",
+      "single-grant-before-acquire",
+      "single-grant-response",
+      "single-grant-child-results",
+      "single-grant-owner-receipts",
+      "single-grant-fresh-readback"
+    ],
+    "categories": [
+      "canonical-check-rejected",
+      "public-command-json-invalid",
+      "barrier-marker-already-exists",
+      "owned-path-missing",
+      "owned-path-permission-denied",
+      "bounded-command-timeout",
+      "unexpected-exception"
+    ],
+    "rawMessageOrStackExposed": false
+  },
+  "originalMatrix": {
+    "mandatoryCases": [
+      "add-first",
+      "refresh-first",
+      "before-replace",
+      "after-replace"
+    ],
+    "unchangedBehaviorAndOSProviderControls": true,
+    "publicTextOutputRestored": true,
+    "structuredReadOnlyInIsolatedSingleGrantCell": true,
+    "registryReaderWithin120Chars": true
+  },
+  "deterministicGate": {
+    "beforeAcquireOSGateUnchangedThisRepair": true,
+    "fixedProfileAuthLockStatFstatScopeUnchanged": true,
+    "healCleanWarmPublicListUnchanged": true,
+    "bothSchedulingMarkersBeforeReleaseStillRequired": true,
+    "onlyOwnerExpiryProvesLoadedExpiredPath": true,
+    "privateSuccessfulFlockObserverRetried": false,
+    "earlyLoadingGateWouldFailOwnerReceiptPredicate": true,
+    "actualExpiredPathProofStillPending": true
+  },
+  "unfixedOwnerBug": {
+    "phase2NotAdmitted": true,
+    "manualPoolEligibilityResyncFixAbsent": true,
+    "manualAuthStoreRoutingResyncFixAbsent": true,
+    "pureSourceMethodsByteUnchanged": [
+      "CredentialPool._sync_entry_from_pool_store",
+      "CredentialPool._sync_entry_from_auth_store",
+      "CredentialPool._refresh_entry_impl",
+      "CredentialPool._post_tokens_refresh"
+    ],
+    "installedHermesModified": false
+  },
+  "sourceOnlySanity": {
+    "pureInMemoryExistingProfilePatchApplication": true,
+    "profilePatchBaseCredentialPoolSha256": "111d8e0d990630341a42dc2fa4a740f16746d5963e8d6900cfd25c54d109da66",
+    "fixturePatchSingleAddedFile": true,
+    "fixturePatchTarget": "tests/fixtures/toy_auth_httpx_fixture.py",
+    "fixtureLineCount": 889,
+    "fixtureSourceSha256": "e591ef63ba3db923f4e5212a96eddf9ee618c4140b9c1d96c676cdd9b3d1e892",
+    "legacyTwoActualResultMinimumChars": 2686,
+    "sampleBoundedChildProjectionChars": 1149,
+    "allSixFrozenPinsMatch": true,
+    "internalFunctionsOrHelpersExecuted": false,
+    "generationBuildCompilerStaticTestsRuntimeCommandsExecuted": false
+  },
+  "parentNextActions": [
+    "After SOURCE STOP, regenerate existing canonical contracts/registry and feature map if needed, build, and run required strict/static checks.",
+    "Use the second assigned fresh unfiltered CLI attempt to inspect the restored four-case matrix and isolated real owner receipts; collect exact run/show and stop the world.",
+    "Meaningful RED still requires both expiredBeforeLock=true owner records plus actual duplicate provider refresh effect/ledger under the unfixed path. Missing/false expiry, parser rejection or a stage/category exception remains an observation failure.",
+    "Only after causal actual CLI RED may Phase2 implement the two small authoritative manual-row sync fixes and use the final assigned CLI attempt for GREEN."
+  ],
+  "limits": {
+    "newAssignedNativeAttempts": 1,
+    "newAssignedNativeFailures": 1,
+    "maxNewAssignedNativeAttempts": 3,
+    "remainingNewAssignedNativeAttempts": 2,
+    "oldPrivateObserverFailures": 3,
+    "oldObserverRetried": false,
+    "fullUnitDeadline": "2026-10-07T09:22:00Z",
+    "ownedWorldsRunning": 0,
+    "childAgentsSpawned": 0,
+    "sourceHermesInstallMutations": 0,
+    "accountOperations": 0,
+    "credentialStoreReads": 0,
+    "rootDispatcherOperations": 0
+  },
+  "wholeATComplete": false,
+  "acceptanceComplete": false,
+  "staleRefreshResponse": "not-exercised",
+  "staleRefreshTokenRejected": "not-exercised",
+  "STOP": true
+}

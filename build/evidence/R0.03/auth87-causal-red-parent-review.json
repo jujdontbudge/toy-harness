@@ -1,0 +1,310 @@
+{
+  "recordedAt": "2026-10-07T07:50:07.302Z",
+  "card": "R0.03",
+  "assignedAT": "AT-hermes-config-87",
+  "rung": "CLI",
+  "decision": "ADMIT_PHASE2_MINIMAL_AUTHORITATIVE_MANUAL_ROW_RESYNCHRONIZATION",
+  "meaningfulPredictedRed": true,
+  "sourceRegistrationExact": true,
+  "runShowExact": true,
+  "summaryPath": "build/evidence/R0.03/auth87-owner-second-red-summary.json",
+  "summarySha256": "fe09e46653ce74d0dc81d7a3406047b886881eb231064b5306b598ed42908005",
+  "showPath": "build/evidence/R0.03/auth87-owner-second-red-cli/AT-hermes-config-87-show.json",
+  "showSha256": "4ba48a37145480acedf49f0c55cd70c869db6a7e4fe260523c3fb8e151e3d432",
+  "actualOwnerReceipts": [
+    {
+      "caseId": "refresh-first",
+      "actor": "expired-chat",
+      "public_argv": [
+        "hermes",
+        "--profile",
+        "toy",
+        "chat",
+        "--provider",
+        "openai-codex",
+        "--model",
+        "gpt-6.1-sol",
+        "--toolsets",
+        "none",
+        "-q",
+        "Return the fixed fixture marker.",
+        "--format",
+        "stream-json"
+      ],
+      "processIdentity": {
+        "pid": 74014,
+        "parentPid": 73872,
+        "uid": 501,
+        "gid": 20
+      },
+      "exitCode": 0,
+      "markers": [
+        "CHAT_RESPONSE_OK"
+      ],
+      "childChecksPassed": true,
+      "ownerRecordCount": 1,
+      "refreshDispositions": [
+        {
+          "expiredBeforeLock": true,
+          "pairChangedAfterLock": false,
+          "disposition": "refresh-invoked"
+        }
+      ],
+      "refreshEffects": [
+        {
+          "from": "rotated",
+          "to": "stale",
+          "barrier": "primary-released"
+        }
+      ],
+      "ledger": {
+        "device_code_requests": 0,
+        "device_code_polls": 0,
+        "token_exchanges": 0,
+        "token_refreshes": 1,
+        "model_catalog_requests": 1,
+        "model_requests": 1,
+        "denied_http_requests": 0,
+        "blocked_socket_events": 0
+      },
+      "accessGeneration": "stale",
+      "catalogGeneration": "stale",
+      "tokenHygiene": true,
+      "childExitCode": 0,
+      "childSignal": null,
+      "timedOut": false,
+      "oversized": false,
+      "spawnError": false,
+      "wholeATComplete": false
+    },
+    {
+      "caseId": "refresh-first",
+      "actor": "fresh-refresh-reload",
+      "public_argv": [
+        "hermes",
+        "--profile",
+        "toy",
+        "chat",
+        "--provider",
+        "openai-codex",
+        "--model",
+        "gpt-6.1-sol",
+        "--toolsets",
+        "none",
+        "-q",
+        "Return the fixed fixture marker.",
+        "--format",
+        "stream-json"
+      ],
+      "processIdentity": {
+        "pid": 74016,
+        "parentPid": 73872,
+        "uid": 501,
+        "gid": 20
+      },
+      "exitCode": 0,
+      "markers": [
+        "CHAT_RESPONSE_OK"
+      ],
+      "childChecksPassed": false,
+      "ownerRecordCount": 1,
+      "refreshDispositions": [
+        {
+          "expiredBeforeLock": true,
+          "pairChangedAfterLock": false,
+          "disposition": "refresh-invoked"
+        }
+      ],
+      "refreshEffects": [
+        {
+          "from": "rotated",
+          "to": "stale",
+          "barrier": "not-used"
+        }
+      ],
+      "ledger": {
+        "device_code_requests": 0,
+        "device_code_polls": 0,
+        "token_exchanges": 0,
+        "token_refreshes": 1,
+        "model_catalog_requests": 1,
+        "model_requests": 1,
+        "denied_http_requests": 0,
+        "blocked_socket_events": 0
+      },
+      "accessGeneration": "stale",
+      "catalogGeneration": "stale",
+      "tokenHygiene": true,
+      "childExitCode": 0,
+      "childSignal": null,
+      "timedOut": false,
+      "oversized": false,
+      "spawnError": false,
+      "wholeATComplete": false
+    }
+  ],
+  "combinedDecision": {
+    "caseId": "refresh-first",
+    "isolatedSingleGrant": true,
+    "bothBeforeAcquire": true,
+    "expiredPathEntered": true,
+    "winnerDecisionMatches": true,
+    "contenderDecisionMatches": false,
+    "oneProviderRefresh": false,
+    "winnerRefreshes": 1,
+    "contenderRefreshes": 1,
+    "winnerProcessChecksPassed": true,
+    "contenderProcessChecksPassed": false,
+    "winnerModel": {
+      "modelRequestGenerations": [
+        "stale"
+      ],
+      "modelUnknownGeneration": false,
+      "modelAuthorizationDenied": false,
+      "modelPayloadDenied": false
+    },
+    "contenderModel": {
+      "modelRequestGenerations": [
+        "stale"
+      ],
+      "modelUnknownGeneration": false,
+      "modelAuthorizationDenied": false,
+      "modelPayloadDenied": false
+    },
+    "wholeATComplete": false
+  },
+  "sourceBindings": [
+    {
+      "path": "docs/adr/0056-manual-codex-refresh-serialization.md",
+      "sha256": "37e7c6a06c3030c36378a1feebcaf39e789b24ed09c11c1182fa63688efdc357",
+      "matches": true
+    },
+    {
+      "path": "patches/hermes-profile-auth.patch",
+      "sha256": "9c1ddde34682ef3036043c0907226a1d5c052b497521de7875215e1d021d8db7",
+      "matches": true
+    },
+    {
+      "path": "patches/hermes-auth-fixture.patch",
+      "sha256": "b5f17d9daa362019be4dd2bee0ad7f31633b1104887737e11f09f588550f0387",
+      "matches": true
+    },
+    {
+      "path": "packages/contracts/src/hermes-runtime.ts",
+      "sha256": "a525d41df7079e2e2d603111cf65ba68315b73b5a0f73ad27be5ff17884907fd",
+      "matches": true
+    },
+    {
+      "path": "packages/hermes/src/auth-fixture.ts",
+      "sha256": "f5bf2fd160be71e428f311952f7ff661b23401e704400ee20d28f54bcd62cf51",
+      "matches": true
+    },
+    {
+      "path": "packages/hermes/src/auth-probe.ts",
+      "sha256": "56ab48a0a9b0d75ae54df93cec16cc72473d54ec8e8d66b1ef0a003c22b3fbf1",
+      "matches": true
+    },
+    {
+      "path": "tests/registry.yaml",
+      "sha256": "92d031df4181852d4709fe01a460727d7b61d473d2f11d69380a95da9b0f9fe5",
+      "matches": true
+    },
+    {
+      "path": "architecture/features.json",
+      "sha256": "c3ba6460d610bfbcf2c8b9ad052f85b8616f76740d9a115fcdf7a3caa1e922cb",
+      "matches": true
+    }
+  ],
+  "frozenBindings": [
+    {
+      "path": "scripts/probe-siwc-control-runtime.mts",
+      "expectedSha256": "96e1fd2d98469772c3d0d203386c3f7aa56af57db025c420fa93f1f4ecd7e70d",
+      "observedSha256": "96e1fd2d98469772c3d0d203386c3f7aa56af57db025c420fa93f1f4ecd7e70d",
+      "matches": true
+    },
+    {
+      "path": "scripts/stage-siwc-control-runtime.mts",
+      "expectedSha256": "13ff53e341ab7670dbed967ce810d5aa2834df7a47ffe1620f037ff1da3ee0d4",
+      "observedSha256": "13ff53e341ab7670dbed967ce810d5aa2834df7a47ffe1620f037ff1da3ee0d4",
+      "matches": true
+    },
+    {
+      "path": "control/dist/bootstrap/siwc-runtime-probe.js",
+      "expectedSha256": "06870b8dd41d2ffc093cc04680ba56c4570f07b4aa0a27a9ab70796cdd8204bd",
+      "observedSha256": "06870b8dd41d2ffc093cc04680ba56c4570f07b4aa0a27a9ab70796cdd8204bd",
+      "matches": true
+    },
+    {
+      "path": "scripts/probe-unfiltered-control-denials.mts",
+      "expectedSha256": "1cb93d375df931a482d946170e31549450d8efb71d6a251f5d2bcea8c5b92529",
+      "observedSha256": "1cb93d375df931a482d946170e31549450d8efb71d6a251f5d2bcea8c5b92529",
+      "matches": true
+    },
+    {
+      "path": "packages/ops/dist/role-control-probe.js",
+      "expectedSha256": "1764a98e5ae45694118007c242320711a7bd9e0d021b7c6d6ee0cbb8cff73ec2",
+      "observedSha256": "1764a98e5ae45694118007c242320711a7bd9e0d021b7c6d6ee0cbb8cff73ec2",
+      "matches": true
+    },
+    {
+      "path": "control/dist/bootstrap/denial-probe.js",
+      "expectedSha256": "7fda1824ec7bc308cac97d07c7c92cadd5527e87e89d79b410d33d95d1b30672",
+      "observedSha256": "7fda1824ec7bc308cac97d07c7c92cadd5527e87e89d79b410d33d95d1b30672",
+      "matches": true
+    }
+  ],
+  "ownedWorldsRunning": 0,
+  "cleanupComplete": true,
+  "sourceOwner": "/root/auth87_public_owner_design",
+  "sourceDeadline": "2026-10-07T08:00:00Z",
+  "fullUnitDeadline": "2026-10-07T09:22:00Z",
+  "sourceScope": [
+    "patches/hermes-profile-auth.patch: existing _sync_entry_from_pool_store and _sync_entry_from_auth_store only",
+    "docs/adr/0056-manual-codex-refresh-serialization.md source status",
+    "architecture/features.json existing auth feature fact",
+    "build/evidence/R0.03/auth87-phase2-source-handoff.json"
+  ],
+  "forbidden": [
+    "No fixture/oracle/scheduling/test changes to turn RED green",
+    "No borrowed-root/external ownership relaxation",
+    "No provider request, grant write, persistence or root merge change",
+    "No SOURCE install/root inputs/protocol/module/DTO changes"
+  ],
+  "nativeAttempts": 2,
+  "maxNewNativeAttempts": 3,
+  "remainingAssignedNativeAttempts": 1,
+  "doctorPath": "build/evidence/R0.03/auth87-phase2-source-admission-doctor.json",
+  "measurement": {
+    "schemaVersion": "toy.bootstrap-resource-preflight.v2",
+    "measuredAt": "2026-10-07T07:49:21.218Z",
+    "samples": [
+      {
+        "observedAt": "2026-10-07T07:49:21.218Z",
+        "monotonicNanoseconds": "228652990138166",
+        "physicalBytes": "8589934592",
+        "pageSizeBytes": "16384",
+        "freeBytes": "796409856",
+        "inactiveBytes": "1400258560",
+        "purgeableBytes": "36192256",
+        "speculativeBytes": "348045312",
+        "availableBytes": "2580905984",
+        "pressure": "normal",
+        "pressureSource": "os",
+        "pressureQueryOutput": "1\n"
+      }
+    ],
+    "completeMeasurements": true,
+    "jobNeedBytes": "1073741824",
+    "marginBytes": "536870912",
+    "requiredAvailableBytes": "1610612736",
+    "minimumAvailableBytes": "2580905984",
+    "normalPressureObserved": true,
+    "headroomSatisfied": true,
+    "reasons": [],
+    "resourcePermitIssued": false,
+    "admissionState": "admitted"
+  },
+  "wholeATComplete": false,
+  "staleRefreshResponse": "not-exercised",
+  "staleRefreshTokenRejected": "not-exercised"
+}

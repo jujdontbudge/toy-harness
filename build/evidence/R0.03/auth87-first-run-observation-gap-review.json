@@ -1,0 +1,154 @@
+{
+  "recordedAt": "2026-10-07T07:39:42.881Z",
+  "card": "R0.03",
+  "assignedAT": "AT-hermes-config-87",
+  "decision": "PHASE1_OBSERVATION_REPAIR_ONLY_PHASE2_NOT_ADMITTED",
+  "meaningfulPredictedRed": false,
+  "predictedDuplicateRefreshProven": false,
+  "sourceRegistrationExact": true,
+  "runShowExact": true,
+  "actualFailures": [
+    {
+      "reasonCode": "NATIVE_AUTH_CONCURRENCY_CHAT_CRASH_CUT_FAILED",
+      "prerequisite": {
+        "order": "add-first",
+        "result": {
+          "schema": "toy.hermes-httpx-auth-fixture.v1",
+          "operation": "chat",
+          "public_argv": [
+            "hermes",
+            "--profile",
+            "toy",
+            "chat",
+            "--provider",
+            "openai-codex",
+            "--model",
+            "gpt-6.1-sol",
+            "--toolsets",
+            "none",
+            "-q",
+            "Return the fixed fixture marker.",
+            "--format",
+            "stream-json"
+          ],
+          "exit_code": 1,
+          "markers": [
+            "CHAT_RESPONSE_NOT_CONFIRMED",
+            "CLI_EXCEPTION"
+          ],
+          "processIdentity": {
+            "pid": 72676,
+            "parentPid": 72624,
+            "uid": 501,
+            "gid": 20
+          },
+          "observations": {
+            "provider": "openai-codex",
+            "phase": "chat-expired",
+            "access_generation": "rotated",
+            "catalog_access_generation": "rotated",
+            "storage_fault_triggered": false,
+            "token_hygiene": true,
+            "success_claim_absent": true,
+            "fallback_attempted": false,
+            "network_denials": [],
+            "socket_origin": null
+          },
+          "concurrency": {
+            "order": "add-first",
+            "actor": "expired-chat",
+            "barrier": "released",
+            "crashCut": "none",
+            "staleRefreshTokenRejected": "not-exercised",
+            "staleRefreshResponse": "not-exercised",
+            "freshProcessUse": "not-checked",
+            "refreshGeneration": "rotated",
+            "refreshEffects": [
+              {
+                "from": "initial",
+                "to": "rotated",
+                "barrier": "primary-released"
+              },
+              {
+                "from": "added",
+                "to": "added-rotated",
+                "barrier": "not-used"
+              }
+            ],
+            "refreshDispositions": []
+          },
+          "http_ledger": {
+            "device_code_requests": 0,
+            "device_code_polls": 0,
+            "token_exchanges": 0,
+            "token_refreshes": 2,
+            "model_catalog_requests": 1,
+            "model_requests": 1,
+            "denied_http_requests": 0,
+            "blocked_socket_events": 0
+          },
+          "network_audit": "socket-audit-hook-installed"
+        },
+        "childSignal": null,
+        "primaryChildCount": 2,
+        "childProcessesStartedBeforeFirstRelease": true,
+        "bothPrePersistenceBarriersReached": true,
+        "refreshBarrierKind": "os-lock-acquisition",
+        "commandOrderObserved": false,
+        "crashCut": "after-add-public-command-before-wrapper-exit",
+        "wholeATComplete": false
+      }
+    },
+    {
+      "reasonCode": "NATIVE_AUTH_FIXTURE_SETUP_UNAVAILABLE",
+      "prerequisite": {
+        "wholeATComplete": false,
+        "fixtureSubsetComplete": false
+      }
+    }
+  ],
+  "summaryPath": "build/evidence/R0.03/auth87-owner-red-summary.json",
+  "summarySha256": "d9a787889595b84044282728e751fdbc5ccfb53d4511ed17786ee13813f898ac",
+  "showPath": "build/evidence/R0.03/auth87-owner-red-cli/AT-hermes-config-87-show.json",
+  "showSha256": "1f1489bc992f779d563a43d362aee5b153d966d37f2f1bb12c72df3d72d85ad7",
+  "cleanupComplete": true,
+  "ownedWorldsRunning": 0,
+  "nativeAttempts": 1,
+  "maxNewNativeAttempts": 3,
+  "phase2RefreshResyncChangeAllowed": false,
+  "repairSourceOwner": "/root/auth87_public_owner_design",
+  "repairSourceDeadline": "2026-10-07T07:58:00Z",
+  "fullUnitDeadline": "2026-10-07T09:22:00Z",
+  "admissionPath": "build/evidence/R0.03/auth87-phase1-repair-admission-doctor.json",
+  "measurement": {
+    "schemaVersion": "toy.bootstrap-resource-preflight.v2",
+    "measuredAt": "2026-10-07T07:39:15.744Z",
+    "samples": [
+      {
+        "observedAt": "2026-10-07T07:39:15.744Z",
+        "monotonicNanoseconds": "228047513877250",
+        "physicalBytes": "8589934592",
+        "pageSizeBytes": "16384",
+        "freeBytes": "723517440",
+        "inactiveBytes": "1511931904",
+        "purgeableBytes": "41385984",
+        "speculativeBytes": "254689280",
+        "availableBytes": "2531524608",
+        "pressure": "normal",
+        "pressureSource": "os",
+        "pressureQueryOutput": "1\n"
+      }
+    ],
+    "completeMeasurements": true,
+    "jobNeedBytes": "1073741824",
+    "marginBytes": "536870912",
+    "requiredAvailableBytes": "1610612736",
+    "minimumAvailableBytes": "2531524608",
+    "normalPressureObserved": true,
+    "headroomSatisfied": true,
+    "reasons": [],
+    "resourcePermitIssued": false,
+    "admissionState": "admitted"
+  },
+  "wholeATComplete": false
+}

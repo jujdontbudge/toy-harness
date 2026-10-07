@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-07T07:03:35Z",
+  "decision": "CURRENT_FIXTURE_SEAMS_CANNOT_TRUTHFULLY_PROVE_THE_SERIALIZATION_BRANCH",
+  "assignedAssertion": {
+    "id": "AT-hermes-config-87",
+    "rung": "CLI",
+    "source": "../personal-assistant-harness/specs/hermes-config.md:3040-3051",
+    "sourceAssertionHash": "b8ba9587534e2983742157a3ab9ae8911da4928e48e3ab0894944914bb91e6bb",
+    "requiredObservable": "Concurrent real subprocess refresh and independent auth-add, both orders, stale rotation responses and OS/storage crash cuts; fresh processes retain the newest accepted refresh generation and added grant without lost updates or duplicate rotation."
+  },
+  "sourcePins": {
+    "testPlan": "specs/TEST-PLAN.md#AT-hermes-config-87; sha256:366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2",
+    "acceptanceIndex": "tests/acceptance-index.json; sha256:c9b645eab7f55b2ebf35d7db769a534a4837de23ad3dc3d913f3189e781d44fa",
+    "registry": "tests/registry.yaml; sha256:bf3f1d894e39881c1314f953a1e090dbaf80a96e8effb5cc51c48057559ab843",
+    "authFixture": "packages/hermes/src/auth-fixture.ts; sha256:a4b7739da7b909ca8fe854bb460a12b4a590dd8cab5545bab69f2cd793fd4898",
+    "authProbe": "packages/hermes/src/auth-probe.ts; sha256:58b2df70f3cba853b1993be85fb6e2c4732301c841e0edbe1ae78331c5335d0d",
+    "fixturePatch": "patches/hermes-auth-fixture.patch; sha256:edcdcf963730b74aba7e77bb544119bff55829f48204e138aedbbd06af965e96",
+    "canonicalContract": "packages/contracts/src/hermes-runtime.ts; sha256:698774355295d8bc9f090205f4b49fbb43f6745be6b837bd9fced3497c42b7a5",
+    "parentReview": "build/evidence/R0.03/auth87-serialization-plan-review.json; sha256:3f75d753c8cfdbcf48eae554e46ec77207d5ccfadbf7c96b2ca748dd61d401a3",
+    "priorPlan": "build/evidence/R0.03/auth87-stale-response-minimum-plan.json; sha256:9c7d9039304a593f08d36521a313af9e435b6748f6238bdd45607bf8b4634a56",
+    "currentRun": "build/evidence/R0.03/auth87 run; sha256:89c9864eb708ea32c7c0297d6b44e738abebde99ff8e407ade3b25867a90ae0f; status NOT_IMPLEMENTED, complete false",
+    "currentShow": "build/evidence/R0.03/auth87 show; sha256:b060665e102ea64d0cac095268e02ad1e5527707416d0f8a28dd392a92658854; status NOT_IMPLEMENTED, complete false"
+  },
+  "whyCurrentEvidenceIsInsufficient": [
+    "The primary expired-chat provider barrier proves that the primary child reached the refresh endpoint. PID overlap or launching a second child while it is held does not prove that the contender read the same grant as expired or entered the refresh arbitration path.",
+    "The contender has no provider barrier acknowledgement when correct serialization prevents a second request. Its absent provider request is therefore compatible with it running only after release.",
+    "The fake provider deterministically maps rotated to stale for each child. Child-local HTTP ledgers and identical effects provide no unique response ordering and cannot prove stale-response rejection.",
+    "Existing staleRefreshResponse and staleRefreshTokenRejected values are not-exercised. The current receipt correctly does not claim rejection."
+  ],
+  "minimalRequiredPublicCapability": {
+    "owner": "The real Hermes auth refresh/persistence owner reached through the existing public chat command, at the point it observes an expired credential and arbitrates refresh or reloads after serialization.",
+    "existingOutput": "Add an optional refreshPathDisposition field to the existing HermesAuthConcurrencyObservationV1 in the canonical @toy/contracts source; expose it through the existing CLI probe result and CheckView. Do not add a command, endpoint, side channel, private mock, or new protocol.",
+    "minimumFields": {
+      "expiredGrantObserved": "Boolean set only by the real owner after it has read the seeded grant and found that grant expired.",
+      "sourceGeneration": "The existing non-secret synthetic generation label read from that same grant.",
+      "refreshPathDisposition": [
+        "provider-requested",
+        "joined-in-flight",
+        "reloaded-after-serialization",
+        "stale-response-discarded",
+        "not-applicable"
+      ]
+    },
+    "privacy": "Report only synthetic generation and disposition; never credential or refresh-token bytes. For this case, run the contender before auth-add creates another grant, so the seeded profile has one refreshable grant and sourceGeneration identifies the same row."
+  },
+  "boundedOwnerPlan": {
+    "filesForLaterSourceAdmission": [
+      "packages/contracts/src/hermes-runtime.ts",
+      "the pinned Hermes auth refresh/persistence owner source reached by the existing public chat path",
+      "patches/hermes-auth-fixture.patch",
+      "packages/hermes/src/auth-fixture.ts"
+    ],
+    "writtenInterface": "An additive field on the existing auth concurrency result, populated at the real owner decision boundary and asserted by the existing refresh-first case. The patch may transport that owner-produced value through the current result; the fixture wrapper may not synthesize it from PID, actor, barrier state, or response absence.",
+    "case": "Extend only the existing refresh-first case. Keep the existing add-first and before/after-replace cases and all current crash-cut coverage. Do not add an acceptance ID or registry row.",
+    "sequence": [
+      "Start the real expired-chat child against the single seeded primary grant and hold its existing fake-provider response at refresh-response-pending.",
+      "While that response is held, start a second real public chat child against the same profile. Require its owner-produced receipt to say expiredGrantObserved=true, sourceGeneration=rotated, and refreshPathDisposition=joined-in-flight or reloaded-after-serialization.",
+      "Require exactly one refresh request for that same grant in the combined provider ledger while the primary response is held. A second provider request is a duplicate-refresh failure; a missing owner receipt is unsupported, not a pass.",
+      "Release the primary response, then use fresh public auth-list and chat readbacks to confirm the accepted generation remains usable, the independent added grant survives its existing add path, and the independent root remains unchanged. Keep auth-add's token exchange distinct from primary-grant refresh accounting."
+    ],
+    "staleResponseSemantics": "On the serialized branch, no second response exists, so staleRefreshResponse remains not-exercised. Do not relabel rotated-to-stale as rejected. If a future source path actually receives a superseded response, it may report stale-response-discarded only after the real owner discards that response and the fresh readback confirms the newer stored generation.",
+    "falsification": [
+      "No expiredGrantObserved owner receipt for the contender: the test did not prove it reached the required path.",
+      "Contender reports provider-requested or the same-grant ledger records a second refresh while the first is held: duplicate-rotation predicate fails.",
+      "Contender sourceGeneration differs from the held primary grant: this is not same-grant contention.",
+      "After release, a fresh process does not use the single accepted primary generation or the independently added grant is lost: lost-update predicate fails."
+    ]
+  },
+  "verificationBoundary": {
+    "currentTurn": "Read-only planning only. No source, generated contract, build, check, CLI, world, provider, or test operation performed.",
+    "futureProof": "A fresh registered AT-hermes-config-87 CLI run/show must demonstrate the new owner-produced receipt and all existing assigned cases. The current NOT_IMPLEMENTED run is not acceptance proof.",
+    "deferred": "Protected-device/identity behavior and whole-AT acceptance remain pending; this plan cannot claim them or claim stale-response rejection on the serialized branch."
+  },
+  "ownership": "Plan artifact only; no source admission or mutation authorized by this task."
+}

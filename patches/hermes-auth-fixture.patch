@@ -1,6 +1,6 @@
 --- /dev/null
 +++ b/tests/fixtures/toy_auth_httpx_fixture.py
-@@ -0,0 +1,833 @@
+@@ -0,0 +1,889 @@
 +from __future__ import annotations
 +
 +import base64
@@ -179,7 +179,7 @@
 +    return marker.exists() and marker.is_file() and not marker.is_symlink()
 +
 +
-+def _concurrency_result(operation: str) -> dict[str, object] | None:
++def _concurrency_result(operation: str, refresh_dispositions: list[dict[str, object]]) -> dict[str, object] | None:
 +    order = os.environ.get("TOY_AUTH_CONCURRENCY_ORDER", "")
 +    actor = os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR", "")
 +    if order not in {"refresh-first", "add-first"} or actor not in {"auth-add", "expired-chat", "fresh-list-reload", "fresh-add-reload", "fresh-refresh-reload"}:
@@ -197,6 +197,7 @@
 +        "freshProcessUse": fresh_use,
 +        "refreshGeneration": _ACCEPTED_ACCESS_GENERATION,
 +        "refreshEffects": list(_REFRESH_EFFECTS),
++        "refreshDispositions": refresh_dispositions,
 +    }
 +
 +
@@ -387,6 +388,8 @@
 +                "lifecycle-sibling": "stale",
 +            }
 +            generation = sibling_generations.get(actor, "added" if actor == "auth-add" else "initial")
++            if os.environ.get("TOY_AUTH_SINGLE_GRANT_CONTENTION") == "1":
++                generation = "rotated"
 +            if actor == "auth-add":
 +                if not _signal_barrier("add-response-pending"):
 +                    return _deny_request("unregistered-http")
@@ -588,7 +591,8 @@
 +    if operation in {"remove", "reset"}:
 +        return [*prefix, "auth", operation, "openai-codex", _fixture_label()]
 +    provider = "siwc_responses" if _PHASE == "siwc-unbound" else "openai-codex"
-+    return [*prefix, "chat", "--provider", provider, "--model", _EXPECTED_MODEL, "--toolsets", "none", "-q", _PROMPT]
++    structured = ["--format", "stream-json"] if os.environ.get("TOY_AUTH_SINGLE_GRANT_CONTENTION") == "1" else []
++    return [*prefix, "chat", "--provider", provider, "--model", _EXPECTED_MODEL, "--toolsets", "none", "-q", _PROMPT, *structured]
 +
 +
 +def _run_cli(argv: list[str]) -> tuple[int, str, str, str]:
@@ -620,20 +624,63 @@
 +
 +
 +def _hold_refresh_lock() -> None:
-+    if os.environ.get("TOY_AUTH_CONCURRENCY_ORDER") != "add-first" or os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR") != "expired-chat":
++    actor = os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR")
++    single_grant = os.environ.get("TOY_AUTH_SINGLE_GRANT_CONTENTION") == "1"
++    preload = single_grant and _PHASE == "chat-expired" and actor in {"expired-chat", "fresh-refresh-reload"}
++    if not preload and (os.environ.get("TOY_AUTH_CONCURRENCY_ORDER") != "add-first" or actor != "expired-chat"):
 +        return
 +    original_flock = fcntl.flock
++    lock_path = Path(os.environ["HERMES_HOME"]) / "profiles" / "toy" / "auth.lock"
 +    held = False
 +
 +    def flock(fd: int, operation: int) -> None:
 +        nonlocal held
-+        if not held and operation & fcntl.LOCK_EX:
++        target_matches = not preload
++        if preload and not lock_path.is_symlink():
++            try:
++                target = lock_path.stat()
++                descriptor = os.fstat(fd)
++                target_matches = (target.st_dev, target.st_ino) == (descriptor.st_dev, descriptor.st_ino)
++            except OSError:
++                target_matches = False
++        if not held and target_matches and operation & fcntl.LOCK_EX:
 +            held = True
 +            if not _signal_barrier("refresh-lock-pending") or not _wait_barrier("release-refresh-lock"):
 +                raise TimeoutError("Fixture OS lock barrier was not released.")
 +        original_flock(fd, operation)
 +
 +    fcntl.flock = flock
++
++
++def _public_refresh_dispositions(stdout: str, exit_code: int) -> list[dict[str, object]] | None:
++    results = []
++    for line in stdout.splitlines():
++        if not line.strip():
++            continue
++        try:
++            event = json.loads(line)
++        except (TypeError, ValueError):
++            if line.lstrip().startswith("{"):
++                return None
++            continue
++        if isinstance(event, dict) and event.get("type") == "result":
++            results.append(event)
++    if len(results) != 1:
++        return None
++    terminal_exit_code = results[0].get("exit_code")
++    if type(terminal_exit_code) is not int or terminal_exit_code != exit_code:
++        return None
++    records = results[0].get("auth_refresh")
++    if not isinstance(records, list) or len(records) > 16:
++        return None
++    for record in records:
++        if not isinstance(record, dict) or set(record) != {"expiredBeforeLock", "pairChangedAfterLock", "disposition"}:
++            return None
++        if not isinstance(record["expiredBeforeLock"], bool) or not isinstance(record["pairChangedAfterLock"], bool):
++            return None
++        if not isinstance(record["disposition"], str) or record["disposition"] not in {"refresh-invoked", "reloaded-after-serialization"}:
++            return None
++    return [dict(record) for record in records]
 +
 +
 +def _safe_result(
@@ -645,6 +692,15 @@
 +    failure: str,
 +) -> dict[str, object]:
 +    markers: list[str] = []
++    refresh_dispositions: list[dict[str, object]] = []
++    if "stream-json" in argv:
++        parsed_dispositions = _public_refresh_dispositions(stdout, exit_code)
++        if parsed_dispositions is None:
++            exit_code = 1
++            if not failure:
++                failure = "PUBLIC_STREAM_RESULT_INVALID"
++        else:
++            refresh_dispositions = parsed_dispositions
 +    combined_output = stdout + "\n" + stderr
 +    tokens = tuple(
 +        _access_token(expiration, generation)
@@ -769,7 +825,7 @@
 +        "http_ledger": dict(_COUNTS),
 +        "network_audit": "socket-audit-hook-installed",
 +    }
-+    concurrency = _concurrency_result(operation)
++    concurrency = _concurrency_result(operation, refresh_dispositions)
 +    if concurrency is not None:
 +        result["concurrency"] = concurrency
 +    return result

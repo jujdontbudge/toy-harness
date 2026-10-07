@@ -5723,6 +5723,7 @@ class HermesAuthConcurrencyObservationV1(TypedDict):
     freshProcessUse: "HermesAuthConcurrencyObservationV1FreshProcessUse"
     refreshGeneration: Optional["HermesAuthConcurrencyObservationV1RefreshGenerationValue"]
     refreshEffects: list["HermesAuthRefreshEffectV1"]
+    refreshDispositions: list["HermesAuthConcurrencyObservationV1RefreshDispositionsItem"]
 
 HermesAuthConcurrencyObservationV1Order = Literal[
     "refresh-first",
@@ -5795,6 +5796,16 @@ HermesAuthRefreshEffectV1Barrier = Literal[
     "not-used",
 ]
 
+class HermesAuthConcurrencyObservationV1RefreshDispositionsItem(TypedDict):
+    expiredBeforeLock: bool
+    pairChangedAfterLock: bool
+    disposition: "HermesAuthConcurrencyObservationV1RefreshDispositionsItemDisposition"
+
+HermesAuthConcurrencyObservationV1RefreshDispositionsItemDisposition = Literal[
+    "refresh-invoked",
+    "reloaded-after-serialization",
+]
+
 class HermesAuthFixtureResultV1(TypedDict):
     schema: "HermesAuthFixtureResultV1Schema"
     operation: "HermesAuthFixtureResultV1Operation"
@@ -5838,6 +5849,7 @@ HermesAuthFixtureResultV1MarkersItem = Literal[
     "SIWC_AUTHORIZATION_NOT_CONFIRMED",
     "CLI_EXIT_NONZERO",
     "CLI_EXCEPTION",
+    "PUBLIC_STREAM_RESULT_INVALID",
     "AUTH_REMOVE_OK",
     "AUTH_RESET_OK",
     "AUTH_LIST_TARGET_RATE_LIMITED",

@@ -109,7 +109,18 @@ export const HermesAuthProbe = {
       if (publicHelpObserved && fixtureBudgetMs > 0 && input.probeId === "AT-hermes-config-88") checks.push(...await runHermesAuthFixture(interpreter, home, hermesHome, fixtureBudgetMs, "add", "borrowed-root"));
       if (publicHelpObserved && fixtureBudgetMs > 0 && input.probeId === "AT-hermes-config-89") checks.push(...await runHermesAuthFixture(interpreter, home, hermesHome, fixtureBudgetMs, "add", "mixed-lineage"));
       if (publicHelpObserved && fixtureBudgetMs > 0 && input.probeId === "AT-hermes-config-91") checks.push(...await runHermesAuthFixture(interpreter, home, hermesHome, fixtureBudgetMs, "add", "lifecycle"));
-      if (publicHelpObserved && fixtureBudgetMs > 0 && input.probeId === "AT-hermes-config-87") checks.push(...await runHermesAuthFixture(interpreter, home, hermesHome, fixtureBudgetMs, "concurrent-refresh-add"));
+      if (publicHelpObserved && fixtureBudgetMs > 0 && input.probeId === "AT-hermes-config-87") {
+        checks.push(...await runHermesAuthFixture(interpreter, home, hermesHome, fixtureBudgetMs, "concurrent-refresh-add"));
+        const contentionBudgetMs = context.timeoutMs - Number((process.hrtime.bigint() - started) / 1000000n);
+        if (contentionBudgetMs > 0) {
+          const contentionHome = mkdtempSync(join(home, "single-grant-contention-"));
+          const contentionHermesHome = join(contentionHome, "hermes");
+          mkdirSync(contentionHermesHome, { mode: 0o700 });
+          checks.push(...await runHermesAuthFixture(interpreter, contentionHome, contentionHermesHome, contentionBudgetMs, "concurrent-refresh-add", "single-grant-concurrency"));
+        } else {
+          checks.push(checkViewSchema.parse({ id: "auth.native-fixture", owner: "hermes", state: "FAIL", checkedAt: new Date().toISOString(), reasonCode: "NATIVE_AUTH_SINGLE_GRANT_DEADLINE_EXCEEDED", nextCommandId: "probe.show", prerequisite: JSON.stringify({ caseId: "refresh-first", isolatedSingleGrant: true, expiredPathEntered: false, wholeATComplete: false }), links: { recordRefs: [], observations: [], artifactDigests: [] } }));
+        }
+      }
       if (publicHelpObserved && fixtureBudgetMs > 0 && ["AT-hermes-config-78", "AT-ops-55"].includes(input.probeId)) checks.push(...await runHermesAuthFixture(interpreter, home, hermesHome, fixtureBudgetMs, "siwc-unbound"));
       if (publicHelpObserved && input.probeId === "AT-hermes-config-84") {
         for (const phase of ["add-enospc", "add-replace-fault"] as const) {

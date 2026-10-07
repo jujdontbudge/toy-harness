@@ -71,12 +71,16 @@ export const hermesAuthConcurrencyObservationSchema = z.strictObject({
   staleRefreshResponse: z.enum(["not-exercised", "rejected"]),
   freshProcessUse: z.enum(["not-checked", "usable", "unusable"]),
   refreshGeneration: z.enum(["initial", "rotated", "added", "added-rotated", "stale"]).nullable(),
-  refreshEffects: z.array(hermesAuthRefreshEffectSchema).max(16)
+  refreshEffects: z.array(hermesAuthRefreshEffectSchema).max(16),
+  refreshDispositions: z.array(z.strictObject({
+    expiredBeforeLock: z.boolean(), pairChangedAfterLock: z.boolean(),
+    disposition: z.enum(["refresh-invoked", "reloaded-after-serialization"])
+  })).max(16)
 });
 export const hermesAuthFixtureResultSchema = z.strictObject({
   schema: z.literal("toy.hermes-httpx-auth-fixture.v1"), operation: z.enum(["add", "list", "chat", "priority", "remove", "reset"]),
   public_argv: z.array(z.string().min(1).max(200)).min(2).max(16), exit_code: z.int().min(0).max(255),
-  markers: z.array(z.enum(["AUTH_ADD_OK", "AUTH_ADD_NOT_CONFIRMED", "AUTH_SAVE_DENIED", "AUTH_SAVE_FAULT_NOT_CONFIRMED", "AUTH_LIST_READBACK_OK", "AUTH_LIST_EMPTY", "AUTH_LIST_NOT_CONFIRMED", "AUTH_PRIORITY_OK", "AUTH_PRIORITY_NOT_CONFIRMED", "CHAT_RESPONSE_OK", "CHAT_RESPONSE_NOT_CONFIRMED", "CHAT_GRANT_UNUSABLE", "CHAT_GRANT_USABILITY_NOT_CONFIRMED", "SIWC_AUTHORIZATION_REQUIRED", "SIWC_AUTHORIZATION_NOT_CONFIRMED", "CLI_EXIT_NONZERO", "CLI_EXCEPTION", "AUTH_REMOVE_OK", "AUTH_RESET_OK", "AUTH_LIST_TARGET_RATE_LIMITED", "AUTH_PROVIDER_RATE_LIMIT_OBSERVED"])).max(8),
+  markers: z.array(z.enum(["AUTH_ADD_OK", "AUTH_ADD_NOT_CONFIRMED", "AUTH_SAVE_DENIED", "AUTH_SAVE_FAULT_NOT_CONFIRMED", "AUTH_LIST_READBACK_OK", "AUTH_LIST_EMPTY", "AUTH_LIST_NOT_CONFIRMED", "AUTH_PRIORITY_OK", "AUTH_PRIORITY_NOT_CONFIRMED", "CHAT_RESPONSE_OK", "CHAT_RESPONSE_NOT_CONFIRMED", "CHAT_GRANT_UNUSABLE", "CHAT_GRANT_USABILITY_NOT_CONFIRMED", "SIWC_AUTHORIZATION_REQUIRED", "SIWC_AUTHORIZATION_NOT_CONFIRMED", "CLI_EXIT_NONZERO", "CLI_EXCEPTION", "PUBLIC_STREAM_RESULT_INVALID", "AUTH_REMOVE_OK", "AUTH_RESET_OK", "AUTH_LIST_TARGET_RATE_LIMITED", "AUTH_PROVIDER_RATE_LIMIT_OBSERVED"])).max(8),
   processIdentity: z.strictObject({ pid: z.int().positive(), parentPid: z.int().positive(), uid: z.int().nonnegative(), gid: z.int().nonnegative() }),
   observations: z.strictObject({ provider: z.enum(["openai-codex", "openai-chatgpt"]), phase: z.enum(["add", "list", "chat", "chat-expired", "chat-reloaded", "add-enospc", "add-replace-fault", "list-after-fault", "chat-after-fault", "siwc-unbound", "concurrent-refresh-add", "priority-added", "priority-restored", "remove", "reset"]), credential_count: fixtureCounter.optional(), target_label_present: z.boolean().optional(), access_generation: z.enum(["initial", "rotated", "added", "added-rotated", "stale"]).nullable(), catalog_access_generation: z.enum(["initial", "rotated", "added", "added-rotated", "stale"]).nullable(), storage_fault_triggered: z.boolean(), token_hygiene: z.boolean(), success_claim_absent: z.boolean(), fallback_attempted: z.boolean(), network_denials: z.array(z.enum(["model-mismatch", "authorization-mismatch", "grant-mismatch", "paid-model-fallback", "device-grant-outside-add", "device-poll-outside-add", "model-request-outside-chat", "model-catalog-outside-chat", "codex-model-discovery", "openai-model-discovery", "unregistered-http", "tokenizer-download", "unregistered-socket"])).max(16), socket_origin: z.string().max(120).regex(/^[a-z_][a-z0-9_]*(?:\.[a-z_][a-z0-9_]*)*$/i).nullable() }),
   concurrency: hermesAuthConcurrencyObservationSchema.optional(),

@@ -2,9 +2,9 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-07T07:03:01.655Z",
+  "updatedAt": "2026-10-07T08:01:30.048Z",
   "phase": "R0_FEASIBILITY",
-  "activeCard": "R0.10",
+  "activeCard": "R0.04",
   "cardCount": 87,
   "acceptanceCount": 1447,
   "cards": {
@@ -789,7 +789,10 @@
         "build/evidence/R0.03/mixed89-parent-verification.json",
         "build/evidence/R0.03/lifecycle91-final-verification.json",
         "build/evidence/R0.03/auth87-stale-response-minimum-plan.json",
-        "build/evidence/R0.03/auth87-serialization-plan-review.json"
+        "build/evidence/R0.03/auth87-serialization-plan-review.json",
+        "build/evidence/R0.03/auth87-owner-serialization-final-verification.json",
+        "build/evidence/R0.03/auth87-causal-red-parent-review.json",
+        "build/evidence/R0.03/auth87-first-run-observation-gap-review.json"
       ],
       "requiredATs": [
         "AT-hermes-config-34",
@@ -1377,7 +1380,69 @@
         "privateObserverRequired": false,
         "sourceExecutionStarted": false,
         "wholeATComplete": false,
-        "review": "build/evidence/R0.03/auth87-serialization-plan-review.json"
+        "review": "build/evidence/R0.03/auth87-serialization-plan-review.json",
+        "ownerRefinement": "build/evidence/R0.03/auth87-public-oracle-refined-plan.json",
+        "actualOwnerFinding": "Public chat uses CredentialPool; in-lock refresh reload may miss independent manual Codex rows. Exact owner fix and deterministic CLI evidence are under finite read-only review; no source admitted."
+      },
+      "auth87OwnerSerializationUnit": {
+        "state": "BOUNDED_SERIALIZATION_UNIT_VERIFIED_AND_CLOSED_WHOLE_PENDING",
+        "plan": "build/evidence/R0.03/auth87-public-owner-minimum-interface.json",
+        "review": "build/evidence/R0.03/auth87-owner-plan-parent-review.json",
+        "startedAt": "2026-10-07T07:22:00Z",
+        "sourceDeadline": "2026-10-07T08:00:00Z",
+        "fullUnitDeadline": "2026-10-07T09:22:00Z",
+        "sourceOwner": null,
+        "newNativeAttempts": 3,
+        "newNativeFailures": 2,
+        "oldObserverFailuresPreserved": 3,
+        "wholeATComplete": false,
+        "handoff": "build/evidence/R0.03/auth87-phase1-source-handoff.json",
+        "phase1StrictCheck": {
+          "command": "npm run check",
+          "exitCode": 0,
+          "path": "build/evidence/R0.03/auth87-phase1-check.txt",
+          "artifactCount": 403,
+          "contractCount": 335,
+          "cliManifestCount": 43,
+          "featureCount": 105,
+          "commandCount": 55,
+          "indexedATCount": 1447,
+          "swiftInvoked": false
+        },
+        "firstRunReview": "build/evidence/R0.03/auth87-first-run-observation-gap-review.json",
+        "repairHandoff": "build/evidence/R0.03/auth87-phase1-observation-repair-handoff.json",
+        "phase1RepairedCheck": {
+          "path": "build/evidence/R0.03/auth87-phase1-repair-check.txt",
+          "exitCode": 0,
+          "swiftInvoked": false
+        },
+        "causalRedReview": "build/evidence/R0.03/auth87-causal-red-parent-review.json",
+        "phase2Handoff": "build/evidence/R0.03/auth87-phase2-source-handoff.json",
+        "sourceStoppedAt": "2026-10-07T07:53:14.267154Z",
+        "finalStrict": {
+          "path": "build/evidence/R0.03/auth87-phase2-check.txt",
+          "exitCode": 0,
+          "artifactCount": 403,
+          "contracts": 335,
+          "cliManifests": 43,
+          "featureCount": 105,
+          "commandCount": 55,
+          "indexedATCount": 1447,
+          "swiftInvoked": false
+        },
+        "stoppedAt": "2026-10-07T08:01:30.048Z",
+        "finalVerification": "build/evidence/R0.03/auth87-owner-serialization-final-verification.json",
+        "passedChecks": 99,
+        "deferred": [
+          {
+            "owner": "R0.03",
+            "work": "Literal out-of-order stale successful refresh-response delivery/rejection remains not-exercised. Serialized prevention is not its proof."
+          },
+          {
+            "owner": "R0.04/R0.05",
+            "work": "Canonical protected identities/controller/installed-release and source-bound whole dispatch proof."
+          }
+        ]
       }
     },
     "R0.04": {
@@ -2118,7 +2183,9 @@
         "build/evidence/R0.10/authority61-final-verification.json",
         "build/evidence/R0.10/authority61-source-review.json",
         "build/evidence/R0.10/authority61-source-admission.json",
-        "build/evidence/R0.10/auth-artifact-gate-decision.json"
+        "build/evidence/R0.10/auth-artifact-gate-decision.json",
+        "build/evidence/R0.10/auth-browser-compatibility-gate.json",
+        "build/evidence/R0.10/auth-browser-compatibility-parent-review.json"
       ],
       "requiredATs": [
         "AT-activity-focus-86",
@@ -2559,7 +2626,27 @@
         "unavailableArtifact": "@simplewebauthn/browser@14.0.3",
         "sourceExecutionStarted": false,
         "wholeATComplete": false,
-        "deferralOwner": "Builder R0.10 dependency gate and authenticated protected research for any revised proposed module pin"
+        "deferralOwner": "Builder R0.10 dependency gate and authenticated protected research for any revised proposed module pin",
+        "compatibilityReview": {
+          "state": "EXACT_ARTIFACT_DISTINCTION_VERIFIED_PROVISIONAL_SOURCE_GATE_ONLY",
+          "evidence": "build/evidence/R0.10/auth-browser-compatibility-gate.json",
+          "parentReview": "build/evidence/R0.10/auth-browser-compatibility-parent-review.json",
+          "candidateDirectPair": [
+            {
+              "name": "@simplewebauthn/server",
+              "version": "14.0.3",
+              "integrity": "sha512-D39/0fiDiYmGV+nraY9s63D1Ho2AX/waMLy22/9gUadTUuvbAnstfb4bpbHYbwZuV5ZLDYN1SmzDKuiHzKAA4Q=="
+            },
+            {
+              "name": "@simplewebauthn/browser",
+              "version": "14.0.0",
+              "integrity": "sha512-1odWVqeEBTl7lJ9zMKLEsmTlnyrDO5iRcTvfMKKk1WThUnp/i8JJdffdj2icP+tty159s4PgwE3BiMoEW9NFow=="
+            }
+          ],
+          "packageLockChanged": false,
+          "protectedResearchAdmitted": false,
+          "wholeATComplete": false
+        }
       }
     },
     "R0.11": {
@@ -11613,7 +11700,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Poll build/ROOT-REQUESTS.md; valid ROOT-R004-20261006-02 native read and restoration DONE triggers immediate R0.01. Review finite R0.03 public-oracle refinement by07:15UTC; no PID-only contention or stale-label PASS. Exact proposed browser14.0.3 artifact is unavailable; do not silently substitute a version or claim maintained-auth readiness. Continue actual bounded independent R0 owner work, no duplicate PostgreSQL/trial/private-observer probes.",
+  "nextAction": "Await Auth87 phase1 SOURCE STOP; parent then paved generation/build/strict and fresh unfiltered CLI RED. Review actual owner-expired/duplicate-refresh evidence before admitting tiny phase2 manual-pool resync fix. Poll roots; valid ROOT02 DONE prioritizes R0.01 after owned cleanup.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -22261,15 +22348,15 @@
     }
   },
   "resourceAdmission": {
-    "measuredAt": "2026-10-07T06:53:27.198Z",
-    "availableBytes": "2916024320",
+    "measuredAt": "2026-10-07T07:54:31.245Z",
+    "availableBytes": "2924904448",
     "pressure": "normal",
     "strictlyFreeAdmission": false,
     "repairFloorApplied": false,
     "ownedWorldsRunning": 0,
-    "helpersRunning": 1,
+    "helpersRunning": 0,
     "helperNeedBytes": "268435456",
-    "measurementSource": "build/evidence/R0.10/authority61-pre-native-doctor.json",
+    "measurementSource": "build/evidence/R0.03/auth87-owner-green-doctor.json",
     "marginBytes": "536870912",
     "ownedStackId": null,
     "stackAndNativeChildrenNeedBytes": "0",
@@ -22283,8 +22370,8 @@
   "activeWorkers": [],
   "pullRequestUpdatedAt": "2026-10-07T06:59:14.756Z",
   "continuationCheckpoint": {
-    "recordedAt": "2026-10-07T07:03:01.655Z",
-    "state": "SOURCE_INVENTORY_PUSHED_AUTH_ARTIFACT_GATE_REAL_E404_AUTH_PUBLIC_ORACLE_REFINING",
+    "recordedAt": "2026-10-07T08:01:30.048Z",
+    "state": "BOUNDED_SERIALIZATION_UNIT_VERIFIED_AND_CLOSED_WHOLE_PENDING",
     "wholeGoal": "ACTIVE",
     "sourceMutator": null,
     "ownedWorldsRunning": 0,
@@ -22294,18 +22381,7 @@
       "ROOT-R004-20261006-02",
       "ROOT-R005-20261006-01"
     ],
-    "next": "Commit/push R0.10 source inventory and update PR1; review the finite R0.03 serialization plan, then execute that public normative gap without restoring failed flock observers. Valid ROOT-R004-20261006-02 DONE immediately prioritizes R0.01 after cleanup."
+    "next": "Commit verified boundedAuth87 source/evidence. Next R004 existingdoctor nativePGartifact descriptor only; no root03 while02pending. Valid root02DONE immediately prioritizesR001."
   },
-  "readOnlyWorkers": [
-    {
-      "task": "/root/r012_next_assigned_gate",
-      "card": "R0.03",
-      "state": "READ_ONLY_PUBLIC_ORACLE_REFINEMENT_RUNNING",
-      "sourceMutationAllowed": false,
-      "model": "gpt-6-luna",
-      "reasoning": "max",
-      "ownedPath": "build/evidence/R0.03/auth87-public-oracle-refined-plan.json",
-      "deadline": "2026-10-07T07:15:00Z"
-    }
-  ]
+  "readOnlyWorkers": []
 }

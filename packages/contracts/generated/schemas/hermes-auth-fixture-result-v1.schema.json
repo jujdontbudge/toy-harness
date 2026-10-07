@@ -55,6 +55,7 @@
           "SIWC_AUTHORIZATION_NOT_CONFIRMED",
           "CLI_EXIT_NONZERO",
           "CLI_EXCEPTION",
+          "PUBLIC_STREAM_RESULT_INVALID",
           "AUTH_REMOVE_OK",
           "AUTH_RESET_OK",
           "AUTH_LIST_TARGET_RATE_LIMITED",
@@ -340,6 +341,34 @@
             ],
             "additionalProperties": false
           }
+        },
+        "refreshDispositions": {
+          "maxItems": 16,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "expiredBeforeLock": {
+                "type": "boolean"
+              },
+              "pairChangedAfterLock": {
+                "type": "boolean"
+              },
+              "disposition": {
+                "type": "string",
+                "enum": [
+                  "refresh-invoked",
+                  "reloaded-after-serialization"
+                ]
+              }
+            },
+            "required": [
+              "expiredBeforeLock",
+              "pairChangedAfterLock",
+              "disposition"
+            ],
+            "additionalProperties": false
+          }
         }
       },
       "required": [
@@ -351,7 +380,8 @@
         "staleRefreshResponse",
         "freshProcessUse",
         "refreshGeneration",
-        "refreshEffects"
+        "refreshEffects",
+        "refreshDispositions"
       ],
       "additionalProperties": false
     },
