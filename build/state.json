@@ -2,9 +2,9 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-07T08:16:37.227Z",
+  "updatedAt": "2026-10-07T08:18:17.583Z",
   "phase": "R0_FEASIBILITY",
-  "activeCard": "R0.04",
+  "activeCard": "R0.02",
   "cardCount": 87,
   "acceptanceCount": 1447,
   "cards": {
@@ -735,6 +735,17 @@
         "acceptanceComplete": false,
         "deferralOwner": "Builder, R0.02 with R0.01 protected research receipt and dependent build-admission consumer",
         "knownPinDrift": "tests/registry.yaml changed only by current parent Ops45 registration; relevant public owner/source pins remain exact"
+      },
+      "workflowPrerequisitePlan": {
+        "state": "READ_ONLY_LUNA_PLANNING",
+        "startedAt": "2026-10-07T08:18:17.583Z",
+        "deadline": "2026-10-07T08:32:00Z",
+        "sourceAdmission": false,
+        "assignedATs": [
+          "AT-workflows-1",
+          "AT-workflows-2"
+        ],
+        "wholeATComplete": false
       }
     },
     "R0.03": {
@@ -1603,7 +1614,8 @@
         "stoppedAt": "2026-10-07T08:16:37.227Z",
         "verification": "build/evidence/R0.04/pg-artifact-descriptor-final-verification.json",
         "parserRepairHandoff": "build/evidence/R0.04/pg-artifact-descriptor-parser-repair-handoff.json",
-        "sourceMutationAllowed": false
+        "sourceMutationAllowed": false,
+        "initializationPhaseGate": "build/evidence/R0.04/pg-initialization-phase-gate.json"
       }
     },
     "R0.05": {
@@ -11720,7 +11732,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Commit verified PostgreSQL artifact descriptor, then prepare the fixed native initialization operation without root execution or a new request while ROOT02 is pending. Poll root queue; valid ROOT02 DONE immediately prioritizes R0.01 after owned cleanup.",
+  "nextAction": "Review bounded workflow prerequisite plan; implement only a missing public static gate if present, otherwise reuse existing source proof and move to the next independent R0 gap. PostgreSQL init source deferred to the R1 installation gate. Poll roots; valid ROOT02 DONE immediately prioritizes R0.01 after owned cleanup.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -22327,7 +22339,7 @@
     "command": "npm run check",
     "swiftInvoked": false
   },
-  "sourceCheckpointCommit": "5cd31ec",
+  "sourceCheckpointCommit": "1d4fb2b",
   "sourceCheckpointPushed": true,
   "rootRequests": {
     "ROOT-R004-20261006-01": {
@@ -22373,20 +22385,28 @@
     "strictlyFreeAdmission": false,
     "repairFloorApplied": false,
     "ownedWorldsRunning": 0,
-    "helpersRunning": 0,
+    "helpersRunning": 1,
     "helperNeedBytes": "268435456",
     "measurementSource": "build/evidence/R0.04/pg-artifact-descriptor-second-doctor.json",
     "marginBytes": "536870912",
     "ownedStackId": null,
     "stackAndNativeChildrenNeedBytes": "0",
-    "jobNeedBytes": "0",
-    "requiredAvailableBytes": "536870912",
+    "jobNeedBytes": "268435456",
+    "requiredAvailableBytes": "805306368",
     "secondPhysicalFitGate": false,
     "queuedRootReserveGate": false,
     "rule": "Normal OS pressure and available memory at least the current job declared need plus512MiB; no strictly-free, hypothetical reserve, swap or second physical-fit gate",
     "measurementHistorical": true
   },
-  "activeWorkers": [],
+  "activeWorkers": [
+    {
+      "task": "/root/r002_workflow_prerequisite_minimum",
+      "card": "R0.02",
+      "state": "READ_ONLY_PLANNING",
+      "sourceMutationAllowed": false,
+      "deadline": "2026-10-07T08:32:00Z"
+    }
+  ],
   "pullRequestUpdatedAt": "2026-10-07T08:04:41.025Z",
   "continuationCheckpoint": {
     "recordedAt": "2026-10-07T08:11:25.294Z",
