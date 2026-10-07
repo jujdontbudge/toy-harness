@@ -1,0 +1,93 @@
+{
+  "recordType": "r0.12.delegation-result-reference-source-handoff.v1",
+  "createdAt": "2026-10-07T05:34:49Z",
+  "state": "SOURCE_STOPPED_AWAITING_PARENT_INTEGRATION_AND_VERIFICATION",
+  "admission": "build/evidence/R0.12/result-reference-source-admission.json",
+  "approvedPlan": "build/evidence/R0.12/delegation-result-reference-plan.json",
+  "sourceScope": "Only the three admitted owned source files changed. No registry, feature map, generated file, external spec, or other source file was edited.",
+  "changedFiles": [
+    {
+      "path": "packages/contracts/src/model-route.ts",
+      "beforeSha256": "e95a854b188b67d37aa4b518626428e4de7eb28e1fcb35edc74bdc8a4235dd0d",
+      "afterSha256": "a8292e029e4ff65d2852ad045d417c391cb4c25b6498e66c013f5c722400c325",
+      "changes": [
+        "Added canonical DelegationArtifactManifestEntry schema/type and inventory entry.",
+        "The DTO uses reports-relative lexical paths, the five specified media types, bytes 0..2 MiB, digestSchema, and the existing canonical observationRefSchema.",
+        "Added optional ModelRouteDelegationReceiptV1.resultRefs (maximum eight) and DELEGATION_RESULT_REFUSED. Optionality preserves the legacy synthetic receipt constructor."
+      ]
+    },
+    {
+      "path": "packages/hermes/src/model-route.ts",
+      "beforeSha256": "75bad754c537c53a920762b259d30ee6f89149a8d60d40678214cf5e2dec3962",
+      "afterSha256": "72ebaf2ace687d5fab4684a7e2675bb957a11d4e7361e02883905a5cffc0b70b",
+      "changes": [
+        "All new producer receipts include resultRefs: [].",
+        "Research captures only normalized output text events and retains at most 2 MiB measured as UTF-8 bytes; overflow clears the captured chunks and refuses the result.",
+        "Completed research requires non-whitespace output, writes exactly reports/delegation-result.md under the retained export, checks the export/reports directory and symlink boundary, creates the file exclusively with O_NOFOLLOW, rereads persisted bytes, and derives the manifest byte count/digest from those bytes.",
+        "Missing, empty, overlimit, or unsafe/unpersistable output returns DELEGATION_RESULT_REFUSED with no refs. Ordinary implementation remains Luna/max/Fast with no research ref."
+      ]
+    },
+    {
+      "path": "packages/hermes/src/model-route-probe.ts",
+      "beforeSha256": "381fd715fe89972b1b9abca8237bcc37eb156c0577022ac2905f17c098cc0ebc",
+      "afterSha256": "b1fed3002ebe266905a500961e82c9bf66870b7209b24633da3a7713bb2a3497",
+      "changes": [
+        "Existing route-skill ATs retain their exact nine case IDs. AT-self-improvement-56 selects those nine plus its four planned result cases.",
+        "The positive AT-56 case independently reads the retained file through the fake executor's captured workspace and checks fixed path containment, regular-file status, media type, byte count, returned digest, and digest against the fixed synthetic output emitted by the fake.",
+        "Missing, empty, and overlimit cases assert completed valid route plus refusal/no ref/no file. The symlink case uses a disposable outside-export directory and sentinel, asserts unchanged sentinel/no extra file, then cleans the fixture.",
+        "CheckView evidence is compact and includes canonical result refs/readback booleans, not output text or raw OS errors, to fit the existing 2,000-character contract."
+      ]
+    }
+  ],
+  "canonicalObservationReference": {
+    "schema": "observationRefSchema from packages/contracts/src/control-evidence.ts",
+    "reuse": "Imported and reused directly; no copied URI schema or extra source file.",
+    "readOnlyImportGraphCheck": "control-evidence.ts imports primitives, cli-declarations, and ops-registry; those files have no route back to model-route.ts. No source-level cycle was found in inspected imports. This was not compiler-verified."
+  },
+  "publicApi": {
+    "entry": "ModelRoute.delegationReceipt(input, context, execute, readResource)",
+    "receipt": "ModelRouteDelegationReceiptV1 with optional resultRefs: DelegationArtifactManifestEntry[]. The producer emits the field on every returned receipt; old serialized diagnostic receipts may omit it.",
+    "artifact": "One exact retained relative result path, reports/delegation-result.md; sha256 and bytes are derived from reread persisted bytes, not taskDigest/requestDigest.",
+    "acceptanceFlags": {
+      "nativeExecutionVerified": false,
+      "acceptanceComplete": false
+    }
+  },
+  "exactAT56CaseIds": [
+    "research-route-observed",
+    "research-route-missing",
+    "research-route-luna",
+    "research-route-wrong-effort",
+    "research-route-wrong-tier",
+    "research-skill-missing",
+    "research-skill-wrong-bytes",
+    "ordinary-implementation-luna",
+    "module-local-override-refused",
+    "research-result-missing-output",
+    "research-result-empty-output",
+    "research-result-overlimit",
+    "research-result-symlink-path"
+  ],
+  "verification": {
+    "performed": [
+      "Read-only review of the three source diffs and current interfaces/import edges.",
+      "Calculated current SHA-256 values for the three owned files."
+    ],
+    "notPerformedByDesign": [
+      "Build/typecheck/lint/static check",
+      "Contract generation",
+      "CLI probe or test run",
+      "World or service operation"
+    ],
+    "parentNext": [
+      "Integrate the prepared AT-self-improvement-56 registry entry and required generated outputs/features checks.",
+      "Run assigned CLI cases only after generated contracts and registration are current."
+    ]
+  },
+  "limitations": [
+    "This source handoff is not a passing compiler or runtime check; parent verification remains required.",
+    "Registry/features/generated artifacts remain parent-owned and are not included in these source hashes.",
+    "AT-self-improvement-56 whole CLI acceptance and protected/native research acceptance remain pending; this receipt is explicitly not native verification or research acceptance.",
+    "No R1 artifact importer, acceptance rule, or general filesystem inventory was added."
+  ]
+}

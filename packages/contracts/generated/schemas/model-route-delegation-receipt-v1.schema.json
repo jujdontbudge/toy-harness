@@ -30,6 +30,7 @@
       "enum": [
         "DELEGATION_ROUTE_OBSERVED",
         "DELEGATION_ROUTE_REFUSED",
+        "DELEGATION_RESULT_REFUSED",
         "RESEARCH_SKILL_UNAVAILABLE",
         "RESEARCH_SKILL_MISMATCH"
       ]
@@ -965,6 +966,58 @@
           "type": "null"
         }
       ]
+    },
+    "resultRefs": {
+      "maxItems": 8,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "maxLength": 208,
+            "pattern": "^reports\\/[A-Za-z0-9._/-]{1,200}(?![\\s\\S])"
+          },
+          "media_type": {
+            "type": "string",
+            "enum": [
+              "text/markdown",
+              "application/json",
+              "text/csv",
+              "application/pdf",
+              "image/png"
+            ]
+          },
+          "bytes": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2097152
+          },
+          "sha256": {
+            "type": "string",
+            "minLength": 64,
+            "maxLength": 64,
+            "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+          },
+          "input_observations": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 55,
+              "maxLength": 55,
+              "pattern": "^life:\\/\\/observation\\/([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            }
+          }
+        },
+        "required": [
+          "path",
+          "media_type",
+          "bytes",
+          "sha256",
+          "input_observations"
+        ],
+        "additionalProperties": false
+      }
     },
     "nativeExecutionVerified": {
       "type": "boolean",

@@ -1,0 +1,130 @@
+{
+  "planId": "R0.12-build-selection-refined-plan",
+  "createdAt": "2026-10-07T05:20:00Z",
+  "disposition": "DO_NOT_SOURCE_ADMIT_AT-lifestore-70_UNDER_CURRENT_INTERFACE",
+  "reason": "The source names release-tagged work but does not define per-step prerequisite CheckViews or a failure-to-scope decision table. More critically, current public owners do not expose a truthful, composable inference/native/capture prerequisite receipt at the CLI boundary. A new selector accepting caller-supplied CheckViews or readiness flags would merely restate fixture inputs; a new cross-owner evidence transport is a protocol-sized scope beyond the bounded two-hour unit.",
+  "assignedAssertion": {
+    "id": "AT-lifestore-70",
+    "rung": "CLI",
+    "assertionSource": "../personal-assistant-harness/specs/lifestore.md:2444",
+    "assertionHash": "42d442ceb222340d61910ebbc6d7613a4212b44ca2db5926bc81b4c2a39fe471",
+    "assignedEvidence": "../personal-assistant-harness/specs/TEST-PLAN.md:446: static, probe:AT-lifestore-70",
+    "currentBaseline": {
+      "path": "build/evidence/R0.12/build-selection-baseline-summary.json",
+      "sha256": "fd469bbdd00d8a03b331acb10c73b8b5b3a0c63b77e7f4f04e4b1adf53395c93",
+      "observed": "Fresh unfiltered CLI run: AT-cli-4 PASS; AT-lifestore-70 exits 5 with REGISTERED_CASE_NOT_IMPLEMENTED; exact run/show data agree; world 4826f8b8-ed35-4c59-ab68-d9e64b1418cc teardown complete with zero unresolved resources. Counted as native attempt 1; no additional run performed here."
+    }
+  },
+  "sourceStepLabels": {
+    "source": "../personal-assistant-harness/specs/lifestore.md:2477-2496",
+    "canonicalContractIds": "None exist. The source table has ordinal labels 1 through 11 and one Optional pilot row; treating their source labels as future IDs is a proposal, not an existing canonical DTO.",
+    "rows": [
+      {"sourceLabel": "1", "tag": "R0", "exitAcceptance": ["AT-lifestore-41", "AT-lifestore-45", "AT-lifestore-47", "AT-lifestore-63", "AT-lifestore-70"]},
+      {"sourceLabel": "2", "tag": "R1", "exitAcceptance": ["AT-lifestore-29", "AT-lifestore-48", "owner/role checks"]},
+      {"sourceLabel": "3", "tag": "R1", "exitAcceptance": ["AT-lifestore-1", "AT-lifestore-2", "AT-lifestore-3", "AT-lifestore-48"]},
+      {"sourceLabel": "4", "tag": "R2", "exitAcceptance": ["AT-lifestore-24", "AT-lifestore-25", "AT-lifestore-26", "AT-lifestore-27", "AT-lifestore-38", "AT-lifestore-52"]},
+      {"sourceLabel": "5", "tag": "R2", "exitAcceptance": ["AT-lifestore-13", "AT-lifestore-14", "AT-lifestore-55"]},
+      {"sourceLabel": "6", "tag": "R2", "exitAcceptance": ["AT-lifestore-9 through AT-lifestore-21", "AT-lifestore-39", "AT-lifestore-57 through AT-lifestore-59"]},
+      {"sourceLabel": "7", "tag": "R2", "exitAcceptance": ["AT-lifestore-7", "AT-lifestore-8", "AT-lifestore-22", "AT-lifestore-23", "AT-lifestore-49", "AT-lifestore-50", "AT-lifestore-51", "AT-lifestore-72"]},
+      {"sourceLabel": "8", "tag": "R2", "exitAcceptance": ["AT-lifestore-42", "AT-lifestore-44", "AT-lifestore-55", "AT-lifestore-68"]},
+      {"sourceLabel": "9", "tag": "R2", "exitAcceptance": ["AT-lifestore-34 through AT-lifestore-37", "AT-lifestore-56", "AT-lifestore-62", "AT-lifestore-64 through AT-lifestore-67"]},
+      {"sourceLabel": "10", "tag": "R2", "exitAcceptance": ["AT-lifestore-30", "AT-lifestore-43", "AT-lifestore-46", "AT-lifestore-53", "AT-lifestore-54", "AT-lifestore-60", "AT-lifestore-69"]},
+      {"sourceLabel": "11", "tag": "R2", "exitAcceptance": ["AT-lifestore-4", "AT-lifestore-5", "AT-lifestore-6", "AT-lifestore-40", "AT-lifestore-42", "AT-lifestore-49", "AT-lifestore-50", "AT-lifestore-62"]},
+      {"sourceLabel": "optional-pilot", "tag": "R5", "exitAcceptance": ["AT-lifestore-31", "AT-lifestore-32", "AT-lifestore-33", "AT-lifestore-71"]}
+    ],
+    "separateScopes": [
+      {"tag": "R3", "source": "../personal-assistant-harness/specs/lifestore.md:2450,2496", "acceptance": "AT-lifestore-73 full app retrieval/download/cache-policy parity"},
+      {"tag": "R4", "source": "../personal-assistant-harness/specs/lifestore.md:2452,2496", "acceptance": "AT-lifestore-74 live recorder/voice stream; Activity-Focus measured pilot"}
+    ],
+    "stepTagInterpretation": "§1.1 defines deliverables/prerequisites by release: R0 evidence and gates; R1 minimum journal/archive; R2 complete store; R3 full client integration; R4 recorder; R5 optional pilots/repair-generated changes. §20 tags build rows as above. AT-lifestore-70 itself is included in step 1 exit, so it cannot be treated as its own precondition. The spec does not define a persisted current-release value or what outcome a selector returns when an individual prerequisite fails."
+  },
+  "currentReleaseSemantics": {
+    "existingType": "@toy/contracts Release is only the enum R0-R5; it is not a selected/current release record.",
+    "existingInputs": "CLI research.check, status/doctor and stack.up can accept a requested release target; this is a caller-selected query/setup target, not current installed or admitted release state.",
+    "selectorImplication": "If later specified, select from a source-bound step identifier and derive its bracketed release tag from the Life Store build plan. Do not accept a caller release tag, readiness flags, or supplied CheckViews as authority. No such current command/API exists today."
+  },
+  "existingPublicPrerequisitePaths": [
+    {
+      "concern": "inference/model",
+      "paths": ["toy doctor --deep --json -> OpsControlRead.doctor -> read.model-route", "toy --env test --stack <UUID> probe run AT-lifestore-47 --request-id <UUID> --json -> ModelRouteProbe delegation receipt and public EngineeringControl.checkResearch route/skill inspection"],
+      "limits": "Fresh doctor read.model-route PASS only means Codex version matches; its measured inferenceAttested and authorizationInspected are false and reasonCode is CODEX_PIN_MATCH_INFERENCE_PENDING. Model-route policy probe uses fake external transport and the observed route readback explicitly sets liveInferenceAttested=false. Neither is evidence of supported live inference readiness."
+    },
+    {
+      "concern": "resource",
+      "path": "toy doctor --deep --json -> OpsControlRead.doctor -> actual measureBootstrapResources OS observation -> CheckView bootstrap.resource-admission",
+      "limits": "This is a real owner CheckView. No current CLI failure fixture can inject an OS measurement: stack.up accepts only observed-pressure normal. Do not pass a caller boolean as a simulated failing observation."
+    },
+    {
+      "concern": "native prerequisites",
+      "path": "toy --env test --stack <UUID> probe run <registered AT> --request-id <UUID> --json -> NativeReleaseEligibilityProbe -> NativeReleaseEligibilityPolicy",
+      "limits": "Probe cases use fixed synthetic external-prerequisite inventories. They verify policy behavior, not actual OS/hardware/membership/signing/entitlement/permission observations, and their CheckViews are not consumed by a build selector."
+    },
+    {
+      "concern": "capture/incident prerequisite",
+      "path": "No public incident-capture prerequisite read or CheckView/CLI command found. The existing CLI capture operation targets Obligations.capture and is not R1 incident-capture readiness.",
+      "limits": "No external fake capture failure can reach an existing Life Store build owner at CLI. R1 incident capture is stated as already operating in §20 step 8, but the current source has no corresponding owner transport."
+    },
+    {
+      "concern": "aggregate status",
+      "path": "toy status/doctor uses OpsControlRead.status/doctor",
+      "limits": "OpsControlRead.status synthesizes owner checks as NOT_IMPLEMENTED/OWNER_TRANSPORT_NOT_IMPLEMENTED until authenticated installed-service owner transport exists. Deep doctor adds live model-version and resource observations but does not fill inference/native/capture readiness."
+    }
+  ],
+  "interfaceAndCases": {
+    "currentContract": "No LifeStoreBuildStepId or LifeStoreBuildSelection DTO. Existing Release R0-R5 is too broad to identify a step. No existing public owner accepts/returns a source-bound step selection.",
+    "currentCli": "No build.select/build-selection command in cli-declarations.ts or cli/src/main.ts. Existing release.status and release.rollback do not select build work.",
+    "candidateSyntaxOnlyIfTheSpecIsAmended": "toy build select lifestore --step <source-step-id> --json; step ID maps to exactly one source row and its tag is derived from the pinned source. This is not an implementation instruction or currently valid Toy CLI syntax.",
+    "minimumMissingContract": "Before source admission, the spec must define canonical step IDs, source digest binding, exact prerequisite owner CheckView IDs and evidence freshness rules for each step, and deterministic proceed/blocked/deferred results when any required check is failed, missing, or NOT_IMPLEMENTED. A real owner transport must supply those checks; callers cannot submit the checks or outcome flags.",
+    "finiteCasesDerivableToday": "Only the source tag matrix above is derivable. The source lists acceptance exits per row but does not specify their conversion into prerequisite CheckViews or a finite failure-to-scope matrix. The literal AT-70 Given/When/Then therefore cannot be given truthful positive CLI cases using current owners.",
+    "requiredBehaviorOnceSpecified": [
+      "For each source step row, prove selection is bound to the exact current Life Store spec digest and yields only that row's R0/R1/R2/R5 scope.",
+      "For a failed inference prerequisite, prove only the spec-defined allowed scope proceeds and all unsupported inference-dependent work is blocked.",
+      "For failed resource admission, prove the spec-defined scope is blocked while preserving permitted lower-resource work.",
+      "For absent/failed native prerequisite, prove native-dependent scope is deferred without changing the source step tag.",
+      "For failed or absent R1 capture/incident owner, prove R1 capture is retained or the selection blocks exactly as a clarified spec directs; current text does not settle this result.",
+      "Assert R2 full-store activation, R3 app integration, R4 recorder integration, and R5 optional pilot/auto-promotion remain independently gated at their source tags."
+    ]
+  },
+  "sourceAdmissionBoundary": {
+    "sourceFilesToChangeNow": [],
+    "why": "Do not create a DTO, release selector, generic aggregator, or fixture-only inspection probe until the missing source contract and real owner transports are specified. A selector-only patch would satisfy the ordinal-to-tag mapping but not the failed-prerequisite behavior in AT-lifestore-70.",
+    "nextDecision": "Parent should select another independently reachable R0.12 assigned CLI gap or obtain a spec-level clarification of AT-lifestore-70's IDs, prerequisite views, and failure matrix before revisiting this unit."
+  },
+  "resourceAndRuntimeEvidence": {
+    "doctorPath": "build/evidence/R0.12/build-select-planning-doctor.json",
+    "doctorSha256": "eafec6dc490b271c5b2f287253e8d810f1df1e8982d1e88a9d1e65b84917340a",
+    "doctorAt": "2026-10-07T05:15:00.644Z",
+    "resourceObservation": {"pressure": "normal", "availableBytes": 2369798144, "requiredBytes": 1610612736, "state": "admitted"},
+    "helperEnvelope": "Parent admits 256 MiB own work plus 512 MiB margin.",
+    "runtimeWork": "None performed for this plan. Baseline attempt 1 remains the only native AT-70 CLI attempt; the test world was torn down completely."
+  },
+  "rootQueue": {
+    "path": "build/ROOT-REQUESTS.md",
+    "sha256": "6bdca8b36154b5ec87875c5a1fe0e5d5f9a8a0b6d172c26c7d99ad9f2dd6307e",
+    "machineReadStatuses": {
+      "ROOT-R004-20261006-01": "DONE",
+      "ROOT-R004-20261006-02": "PENDING",
+      "ROOT-R005-20261006-01": "PENDING"
+    },
+    "priority": "Root02 remains PENDING. No R004-03 inference and no source/runtime work for this plan."
+  },
+  "sourcePins": {
+    "../personal-assistant-harness/specs/lifestore.md": "044e33ba76d512c0fcae478f8d4923d2f33c028b8dae94bbdb69d6d4111c1117",
+    "../personal-assistant-harness/specs/TEST-PLAN.md": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2",
+    "../personal-assistant-harness/specs/BUILD-PLAN.md": "aa84eb600e53bc65e6c6b1ed4fce45870ead861e0d18bf00d81613ff2595f49a",
+    "tests/acceptance-index.json": "c9b645eab7f55b2ebf35d7db769a534a4837de23ad3dc3d913f3189e781d44fa",
+    "tests/registry.yaml": "11cd48c07d8a0fa274af63fc9702d9c93ec7b783b79d8f8bdcb75e70215e1a9b",
+    "packages/contracts/src/cli-declarations.ts": "b7623e62057d5a1c607db7867a019940478dcefa4c6043498b3af596bca90ee6",
+    "cli/src/main.ts": "e206e722c5a9159626ffd609f822739cf3b3cfb6b7a5c45095a4f3bd0c550ebe",
+    "packages/contracts/src/ops.ts": "f99adefbea806be7fe4a4ddd50e37bde156d4edbae55b8d68f80b08678dddf1d",
+    "packages/contracts/src/ops-registry.ts": "84657b0739b58d22adbffdb40521be0c4be658b19896f5c8702d57a6e2d41035",
+    "packages/contracts/src/control-evidence.ts": "9ac6be73041a36e1f569c7fd54018c42eba29b386078711925c9845aba61c76e",
+    "packages/contracts/src/native-release-eligibility.ts": "d9737f1bb1f525af95448f97a68bd92cbe171998551874fd8204cfdc0d92ca9e",
+    "packages/ops/src/public.ts": "9646f70f89434cf774e66a602eed45f751c353f200b2f3e1a2cf41968e079284",
+    "packages/ops/src/native-release-eligibility.ts": "a3fb90d136a65aa6d35557d0c3badf305a2dec6fd304450b044246d3727dd992",
+    "packages/ops/src/native-release-eligibility-probe.ts": "6d2457569162ec42303216038df5ec20004bd2f7b966a4d8e6a1efaef06ea079",
+    "packages/hermes/src/model-route-probe.ts": "381fd715fe89972b1b9abca8237bcc37eb156c0577022ac2905f17c098cc0ebc",
+    "packages/self-improvement/src/engineering-control.ts": "ceb19efea43d7b0600e605b6fc27258382e41cdb9540f979ab712c2941b682f6",
+    "packages/self-improvement/src/public.ts": "e307551e2f2e8bb368b606c816ad49ff0693b6d01142578a1c0083ee1137cc87"
+  }
+}

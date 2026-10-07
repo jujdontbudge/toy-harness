@@ -4268,6 +4268,7 @@ class ModelRouteDelegationReceiptV1(TypedDict):
     invocation: Optional["ModelRouteReceiptV1"]
     taskDigest: Optional["Digest"]
     requestDigest: Optional["Digest"]
+    resultRefs: NotRequired[list["DelegationArtifactManifestEntry"]]
     nativeExecutionVerified: "RoleBootstrapReportV1IdentityGateVerified"
     acceptanceComplete: "RoleBootstrapReportV1IdentityGateVerified"
 
@@ -4288,6 +4289,7 @@ ModelRouteDelegationReceiptV1State = Literal[
 ModelRouteDelegationReceiptV1ReasonCode = Literal[
     "DELEGATION_ROUTE_OBSERVED",
     "DELEGATION_ROUTE_REFUSED",
+    "DELEGATION_RESULT_REFUSED",
     "RESEARCH_SKILL_UNAVAILABLE",
     "RESEARCH_SKILL_MISMATCH",
 ]
@@ -4597,6 +4599,21 @@ ModelRouteReceiptV1ReasonCodeValue = Literal[
     "route_unobserved",
     "usage_unavailable",
     "stream_interrupted",
+]
+
+class DelegationArtifactManifestEntry(TypedDict):
+    path: str
+    media_type: "DelegationArtifactManifestEntryMediatype"
+    bytes: int
+    sha256: "Digest"
+    input_observations: list["ObservationRef"]
+
+DelegationArtifactManifestEntryMediatype = Literal[
+    "text/markdown",
+    "application/json",
+    "text/csv",
+    "application/pdf",
+    "image/png",
 ]
 
 class ResearchComponentComparisonV3(TypedDict):

@@ -1,8 +1,8 @@
 import { createHash } from "node:crypto";
-import { readFileSync, mkdtempSync, mkdirSync, writeFileSync } from "node:fs";
+import { constants, closeSync, lstatSync, openSync, readFileSync, realpathSync, mkdtempSync, mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { checkViewSchema, modelRoleSchema, modelRoutePolicySchema, modelRouteProviderEventSchema, modelRouteReceiptSchema, modelRouteSelectInputSchema, modelRouteSelectionSchema, opsErrorMessages, modelRouteDelegationInputSchema, modelRouteDelegationReceiptSchema, researchSkillPinSchema, loadedResearchSkillSchema, researchSkillResourcePathSchema, codexDelegationRequestSchema, codexDelegationEventSchema, codexDelegationTaskSchema } from "@toy/contracts";
-import type { CheckViewV1, ModelRouteConversationV1, ModelRouteHttpTransport, ModelRouteProviderEventV1, ModelRouteReceiptV1, ModelRouteSelectInputV1, ModelRouteSelectionV1, ModelRouteSettingsV1, ModelRouteStreamEventV1, ModelRouteUsageV1, ModelRouteDelegationInputV1, ModelRouteDelegationReceiptV1, LoadedResearchSkillV1, ResearchSkillResourcePathV1, ResearchSkillResourceReader, CodexDelegationExecutor, OpsControlContextV1, Result } from "@toy/contracts";
+import { checkViewSchema, modelRoleSchema, modelRoutePolicySchema, modelRouteProviderEventSchema, modelRouteReceiptSchema, modelRouteSelectInputSchema, modelRouteSelectionSchema, opsErrorMessages, modelRouteDelegationInputSchema, modelRouteDelegationReceiptSchema, researchSkillPinSchema, loadedResearchSkillSchema, researchSkillResourcePathSchema, codexDelegationRequestSchema, codexDelegationEventSchema, codexDelegationTaskSchema, delegationArtifactManifestEntrySchema } from "@toy/contracts";
+import type { CheckViewV1, ModelRouteConversationV1, ModelRouteHttpTransport, ModelRouteProviderEventV1, ModelRouteReceiptV1, ModelRouteSelectInputV1, ModelRouteSelectionV1, ModelRouteSettingsV1, ModelRouteStreamEventV1, ModelRouteUsageV1, ModelRouteDelegationInputV1, ModelRouteDelegationReceiptV1, DelegationArtifactManifestEntry, LoadedResearchSkillV1, ResearchSkillResourcePathV1, ResearchSkillResourceReader, CodexDelegationExecutor, OpsControlContextV1, Result } from "@toy/contracts";
 import { trustedCheckoutRoot, OpsTestStack } from "@toy/ops/public";
 import { createResponsesTransport, responsesEvents } from "./responses.js";
 
@@ -69,7 +69,7 @@ export const ModelRoute = {
     if (!world?.ready || world.release !== "R0" || world.clock !== "fake" || world.model !== "fake") return { ok: false, error: { module: "ops", code: "UNAUTHORIZED", message: opsErrorMessages.UNAUTHORIZED, retryable: false } };
     const selection = ModelRoute.select({ role: request.data.purpose === "research" ? "research" : "child", arm: "original" });
     if (!selection.ok) return selection;
-    const receipt = (state: ModelRouteDelegationReceiptV1["state"], reasonCode: ModelRouteDelegationReceiptV1["reasonCode"], skill: LoadedResearchSkillV1 | null, invocation: ModelRouteReceiptV1 | null, taskDigest: string | null, requestDigest: string | null): Result<ModelRouteDelegationReceiptV1> => ({ ok: true, data: modelRouteDelegationReceiptSchema.parse({ requestId: request.data.requestId, purpose: request.data.purpose, executionBackend: "codex_exec", state, reasonCode, skill, invocation, taskDigest, requestDigest, nativeExecutionVerified: false, acceptanceComplete: false }) });
+    const receipt = (state: ModelRouteDelegationReceiptV1["state"], reasonCode: ModelRouteDelegationReceiptV1["reasonCode"], skill: LoadedResearchSkillV1 | null, invocation: ModelRouteReceiptV1 | null, taskDigest: string | null, requestDigest: string | null, resultRefs: DelegationArtifactManifestEntry[] = []): Result<ModelRouteDelegationReceiptV1> => ({ ok: true, data: modelRouteDelegationReceiptSchema.parse({ requestId: request.data.requestId, purpose: request.data.purpose, executionBackend: "codex_exec", state, reasonCode, skill, invocation, taskDigest, requestDigest, resultRefs, nativeExecutionVerified: false, acceptanceComplete: false }) });
     try {
       let skill: LoadedResearchSkillV1 | null = null;
       const resources = new Map<ResearchSkillResourcePathV1, Uint8Array>();
@@ -96,6 +96,35 @@ export const ModelRoute = {
       }
       const execution = codexDelegationRequestSchema.parse({ requestId: request.data.requestId, purpose: request.data.purpose, executionBackend: "codex_exec", workspace, requested: selection.data, taskDigest: createHash("sha256").update(task).digest("hex"), skill,
         arguments: ["exec", "--ignore-user-config", "--ignore-rules", "--skip-git-repo-check", "--model", selection.data.settings.model, "--sandbox", "workspace-write", "--cd", workspace, "--json", "--color", "never", "-c", "model_reasoning_effort=\"" + selection.data.settings.effort + "\"", "-c", "service_tier=\"fast\"", "-c", "features.fast_mode=true", "-c", "approval_policy=\"never\"", "-c", "model_provider=\"openai\"", "-c", "web_search=\"live\"", "-"] });
+      const persistResearchResult = (content: string): DelegationArtifactManifestEntry | null => {
+        const reportDirectory = join(workspace, "reports");
+        const reportPath = join(reportDirectory, "delegation-result.md");
+        const reportBytes = Buffer.from(content, "utf8");
+        let descriptor: number | null = null;
+        try {
+          const workspaceStat = lstatSync(workspace);
+          const reportDirectoryStat = lstatSync(reportDirectory);
+          if (workspaceStat.isSymbolicLink() || !workspaceStat.isDirectory() || reportDirectoryStat.isSymbolicLink() || !reportDirectoryStat.isDirectory()) return null;
+          const workspaceRealPath = realpathSync(workspace);
+          const reportDirectoryRealPath = realpathSync(reportDirectory);
+          if (reportDirectoryRealPath !== join(workspaceRealPath, "reports")) return null;
+          descriptor = openSync(reportPath, constants.O_WRONLY | constants.O_CREAT | constants.O_EXCL | constants.O_NOFOLLOW, 0o600);
+          writeFileSync(descriptor, reportBytes);
+          closeSync(descriptor);
+          descriptor = null;
+          const reportStat = lstatSync(reportPath);
+          if (reportStat.isSymbolicLink() || !reportStat.isFile() || realpathSync(reportPath) !== join(reportDirectoryRealPath, "delegation-result.md")) return null;
+          const persistedBytes = readFileSync(reportPath);
+          if (!persistedBytes.equals(reportBytes)) return null;
+          return delegationArtifactManifestEntrySchema.parse({ path: "reports/delegation-result.md", media_type: "text/markdown", bytes: persistedBytes.length, sha256: createHash("sha256").update(persistedBytes).digest("hex"), input_observations: [] });
+        } catch {
+          return null;
+        } finally {
+          if (descriptor !== null) {
+            try { closeSync(descriptor); } catch {}
+          }
+        }
+      };
       const signal = AbortSignal.timeout(context.timeoutMs);
       async function* observations(): AsyncGenerator<ModelRouteProviderEventV1> {
         for await (const raw of execute(execution, signal)) {
@@ -103,7 +132,33 @@ export const ModelRoute = {
           yield event.type === "route" ? { type: "route", settings: { model: event.model, effort: event.effort, serviceTier: event.serviceTier === "fast" ? "priority" : "default" } } : event;
         }
       }
-      for await (const event of ModelRoute.normalize(selection.data, observations(), signal)) if (event.type === "receipt") return receipt(event.receipt.completion === "complete" ? "observed" : "refused", event.receipt.completion === "complete" ? "DELEGATION_ROUTE_OBSERVED" : "DELEGATION_ROUTE_REFUSED", skill, event.receipt, execution.taskDigest, createHash("sha256").update(JSON.stringify(execution)).digest("hex"));
+      const outputChunks: string[] = [];
+      let outputBytes = 0;
+      let outputExceeded = false;
+      for await (const event of ModelRoute.normalize(selection.data, observations(), signal)) {
+        if (event.type === "output" && request.data.purpose === "research" && !outputExceeded) {
+          const nextBytes = Buffer.byteLength(event.text, "utf8");
+          if (outputBytes + nextBytes > 2 * 1024 * 1024) {
+            outputExceeded = true;
+            outputChunks.length = 0;
+          } else {
+            outputBytes += nextBytes;
+            if (nextBytes > 0) outputChunks.push(event.text);
+          }
+        }
+        if (event.type === "receipt") {
+          const requestDigest = createHash("sha256").update(JSON.stringify(execution)).digest("hex");
+          if (event.receipt.completion !== "complete") return receipt("refused", "DELEGATION_ROUTE_REFUSED", skill, event.receipt, execution.taskDigest, requestDigest);
+          if (request.data.purpose === "research") {
+            const content = outputChunks.join("");
+            if (outputExceeded || outputBytes === 0 || content.trim().length === 0) return receipt("refused", "DELEGATION_RESULT_REFUSED", skill, event.receipt, execution.taskDigest, requestDigest);
+            const resultRef = persistResearchResult(content);
+            if (resultRef === null) return receipt("refused", "DELEGATION_RESULT_REFUSED", skill, event.receipt, execution.taskDigest, requestDigest);
+            return receipt("observed", "DELEGATION_ROUTE_OBSERVED", skill, event.receipt, execution.taskDigest, requestDigest, [resultRef]);
+          }
+          return receipt("observed", "DELEGATION_ROUTE_OBSERVED", skill, event.receipt, execution.taskDigest, requestDigest);
+        }
+      }
       return receipt("refused", "DELEGATION_ROUTE_REFUSED", skill, null, execution.taskDigest, null);
     } catch { return { ok: false, error: { module: "ops", code: "ATTESTATION_INVALID", message: opsErrorMessages.ATTESTATION_INVALID, retryable: false } }; }
   },

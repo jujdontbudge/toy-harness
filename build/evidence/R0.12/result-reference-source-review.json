@@ -1,0 +1,98 @@
+{
+  "recordType": "r0.12.delegation-result-reference-source-review.v1",
+  "reviewedAt": "2026-10-07T05:43:00Z",
+  "verdict": "PASS_SOURCE_ADEQUACY_FOR_R0_FAKE_WORLD_CLI_SCOPE",
+  "findingCount": 0,
+  "reviewScope": "Read-only review of the three source-owned diffs and current parent integration evidence. No source edit, build, generation, lint, CLI run, or world operation was performed by this reviewer.",
+  "assignedBehavior": {
+    "id": "AT-self-improvement-56",
+    "assertionHash": "6b717d4053b7430dd432b82940ced72520f2de8e342a4328997d47dd34d16f86",
+    "rung": "CLI",
+    "registry": "tests/registry.yaml:3458; command probe.run; scenario delegation.route-skill; owner hermes; firstRelease R0.",
+    "cliRoute": "cli/src/main.ts:243 routes registered Hermes delegation.route-skill probes to ModelRouteProbe.run; no command or dispatch change is required."
+  },
+  "reviewChecks": [
+    {
+      "id": "canonical-manifest",
+      "state": "PASS",
+      "evidence": "packages/contracts/src/model-route.ts:156-162 defines the one @toy/contracts DelegationArtifactManifestEntry schema, uses the existing observationRefSchema directly, limits the reports-relative suffix to 200 allowed characters, preserves the five documented media types, bounds integer bytes to 0..2,097,152, and uses digestSchema. Schema/type are in modelRouteSchemaInventory. This matches CONTRACTS.md:310 and hermes-config.md:2723-2812; no copied observation-reference DTO was added."
+    },
+    {
+      "id": "v1-compatibility",
+      "state": "PASS",
+      "evidence": "ModelRouteDelegationReceiptV1 adds optional resultRefs, keeps the V1 shape and adds the fixed DELEGATION_RESULT_REFUSED reason. The existing fixedResearchReceipt() at packages/self-improvement/src/component-comparison-probe.ts:280 parses without resultRefs and is exercised by the parent AT-sources-190 regression. New producer receipts emit [] by default, and observed research in AT-56 requires exactly one result reference."
+    },
+    {
+      "id": "public-producer-and-byte-bound",
+      "state": "PASS",
+      "evidence": "packages/hermes/src/model-route.ts:61-159 adds behavior inside the existing public ModelRoute.delegationReceipt. It captures normalized output only for research, counts UTF-8 bytes before retention, skips zero-byte chunks, clears retained chunks and refuses after the 2 MiB bound, refuses missing/whitespace-only results, writes only reports/delegation-result.md, creates exclusively with O_NOFOLLOW, checks workspace/reports containment, rereads persisted bytes, and derives byte count/SHA-256 from those bytes. Failure returns DELEGATION_RESULT_REFUSED with no refs. No taskDigest/requestDigest is misused as result content evidence."
+    },
+    {
+      "id": "independent-artifact-readback",
+      "state": "PASS",
+      "evidence": "packages/hermes/src/model-route-probe.ts:126-198 and 251-285 use the external Codex executor seam to emit a fixed synthetic Markdown result, then independently read the retained file from the captured fake-executor workspace. The probe checks the exact path, realpath containment, regular-file status, media type, byte count, manifest SHA and SHA against the independently fixed expected report digest. Parent CLI evidence reports a 202-byte result at reports/delegation-result.md with SHA-256 36d75b9502778eeaa01f5f42df01a21332cd877f2c25f7a6ee8bb891df183ca4; path/file/bytes/digest/metadata readbacks are all true."
+    },
+    {
+      "id": "bounded-failure-cases",
+      "state": "PASS",
+      "evidence": "The four AT-56-only cases cover missing output, empty output, 33 x 65,536-byte output events (over 2 MiB), and a pre-planted reports-directory symlink to an outside-export sentinel. Parent run evidence shows each completed route is refused with DELEGATION_RESULT_REFUSED and resultRefs []; missing/empty/overlimit have no result file, and the symlink sentinel remains unchanged. No raw result text or OS error is included in CheckView evidence."
+    },
+    {
+      "id": "ordinary-route-preservation",
+      "state": "PASS",
+      "evidence": "The capture branch is conditioned on purpose === research. The existing ordinary-implementation-luna case still observes Luna/max/Fast, null skill, and resultRefs []; the parent run reports it PASS. Existing non-AT56 route-skill manifests remain the exact nine routeSkillCases. AT-obligations-75, AT-lifestore-47 and AT-RESEARCH-REGISTER-3 each ran nine cases, all PASS, with exact registration in the parent summary."
+    },
+    {
+      "id": "assigned-case-matrix-and-rung",
+      "state": "PASS",
+      "evidence": "The AT-56 manifest has the nine existing route/skill/Luna cases plus exactly four result-reference cases. The parent second summary records 13/13 AT-56 CheckViews PASS, run/show exit 0 with identical data, and exact registration. The owner is reached through the registered CLI probe; no private-function tests or internal collaborator mocks were added. The provider and OS filesystem are the stated external seams."
+    }
+  ],
+  "parentVerificationEvidence": {
+    "sourceHandoff": {"path": "build/evidence/R0.12/result-reference-source-handoff.json", "sha256": "6558b3516fc5682d20562b15ceca5a13eae180455c5829b396d20ce634961407"},
+    "parentIntegration": {"path": "build/evidence/R0.12/result-reference-parent-integration.json", "sha256": "e580f53ff849aca847436905c10e85238da2a8387b8aa64990bad86482f84d8f"},
+    "assignedCliSummary": {
+      "path": "build/evidence/R0.12/result-reference-second-summary.json",
+      "sha256": "16c05180c4dabad6a5e2410805fbd8c4b79226044036a60a40d5edf05b6efc75",
+      "at56Run": {"path": "build/evidence/R0.12/result-reference-second-cli/AT-self-improvement-56-run.json", "sha256": "a039f214adb36d0946e61a96616c1bb657d1dbe47ec4648ced14843b10e6307b", "exitCode": 0},
+      "at56Show": {"path": "build/evidence/R0.12/result-reference-second-cli/AT-self-improvement-56-show.json", "sha256": "eb3b56a310d43c36592c5aaaee23e44fe03a67e749eb8eb40600f274a4e06f52", "exitCode": 0},
+      "caseCount": 13,
+      "caseChecks": "All 13 PASS; run/show data agree. Outer probe operation remains NOT_IMPLEMENTED and complete=false because whole AT / protected/native acceptance is pending.",
+      "worldTeardown": {"stackId": "9319cf4f-1251-4034-b3db-9d3ee8689ba6", "complete": true, "unresolvedResourceRefs": []},
+      "liveProviderSends": 0
+    },
+    "parentReportedFullCheck": "Parent reports full npm check exit 0 after contract/registry integration; this reviewer did not rerun it.",
+    "resourceDoctor": {"path": "build/evidence/R0.12/result-reference-integration-doctor.json", "sha256": "94640904b0179ed3f17192c61c1ab20980d65fb1b2ea2ab1c8bb3c25635d2062", "observedAt": "2026-10-07T05:36:38.342Z", "pressure": "normal", "availableBytes": "2400337920"}
+  },
+  "scopeLimits": {
+    "execution": "Only an R0 fake-world CLI receipt is demonstrated. The synthetic report is not live research or native Codex execution; receipt.nativeExecutionVerified=false and receipt.acceptanceComplete=false.",
+    "acceptance": "Whole AT and protected research acceptance remain pending; the parent summary explicitly reports wholeATComplete=false. The probe's case-level PASS does not promote release admission.",
+    "deferred": "No R1 sealing, artifact importer, Life Store observation import, general filesystem inventory, dirfd protocol, or native-provider verification was reviewed or claimed. The symlink evidence covers a pre-existing reports-directory symlink and its outside sentinel in a disposable export."
+  },
+  "noFindings": "Current source is adequate for its stated bounded R0 fake-world public CLI behavior; no source correction is required by this review.",
+  "sourcePins": {
+    "packages/contracts/src/model-route.ts": "ba828e8dde4fb234892c93ad73397f4280c26dd78760f336fe8a0a0a273ec273",
+    "packages/hermes/src/model-route.ts": "7c56f64981df351db6b8cd72237334369a86ffe9cb6d721c37c9dd2e2be945dc",
+    "packages/hermes/src/model-route-probe.ts": "b1fed3002ebe266905a500961e82c9bf66870b7209b24633da3a7713bb2a3497",
+    "packages/contracts/src/public.ts": "75753dec93f8b822c0b83a8df5216ab5bf34ccaccc4986a78bc993d676ab2d62",
+    "packages/self-improvement/src/component-comparison-probe.ts": "bc601b87340ed6612e8555469cd863ccea22575a851f22e0f041aab5ef8dd0d0",
+    "cli/src/main.ts": "e206e722c5a9159626ffd609f822739cf3b3cfb6b7a5c45095a4f3bd0c550ebe",
+    "tests/registry.yaml": "8eebb76ae4777eb0890f6a2734ebd39e4a8106f7a6ebf1ca231693b3a7f9e54c",
+    "tests/acceptance-index.json": "c9b645eab7f55b2ebf35d7db769a534a4837de23ad3dc3d913f3189e781d44fa",
+    "architecture/features.json": "23df6f6b3e121919458c111d67fe075f79fe7d7b6f4cd2934d5da1df35c73f45",
+    "../personal-assistant-harness/specs/CONTRACTS.md": "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d",
+    "../personal-assistant-harness/specs/hermes-config.md": "d3548fde13180bc750660f306caa0041101832e398ccdabd6cfdac0b3de8f4af",
+    "../personal-assistant-harness/specs/self-improvement.md": "23e69b258189148328f029acd3ec7c4c125544bf49d670757eee2bf071ab7014",
+    "../personal-assistant-harness/specs/TEST-PLAN.md": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2",
+    "../personal-assistant-harness/specs/workflows.md": "977f8c153b93af78470b63424e444da9816c298623bac5b3ccd9da7832b41d8c"
+  },
+  "rootQueue": {
+    "path": "build/ROOT-REQUESTS.md",
+    "sha256": "6bdca8b36154b5ec87875c5a1fe0e5d5f9a8a0b6d172c26c7d99ad9f2dd6307e",
+    "machineReadStatuses": {
+      "ROOT-R004-20261006-01": "DONE",
+      "ROOT-R004-20261006-02": "PENDING",
+      "ROOT-R005-20261006-01": "PENDING"
+    }
+  }
+}

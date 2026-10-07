@@ -1,7 +1,7 @@
 import { createHash, randomUUID } from "node:crypto";
-import { readFileSync } from "node:fs";
+import { existsSync, lstatSync, mkdtempSync, readFileSync, readdirSync, realpathSync, rmSync, symlinkSync, unlinkSync, writeFileSync } from "node:fs";
 import { readFile } from "node:fs/promises";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import { checkViewSchema, modelRoleSchema, modelRouteSelectionSchema, opsErrorMessages, registeredProbeInputSchema, registeredCliAcceptanceManifestInventory, researchSkillPinSchema, codexDelegationTaskSchema, researchAttentionDecisionSchema, researchAttentionDecisionIdSchema, researchComponentComparisonV3Schema } from "@toy/contracts";
 import type { CheckViewV1, ModelRouteConversationV1, ModelRouteHttpTransport, ModelRouteReceiptV1, ModelRouteSettingsV1, OpsControlContextV1, RegisteredProbeInputV1, RegisteredProbeOperationV1, CodexDelegationExecutor, ModelRouteDelegationInputV1, ResearchSkillResourceReader, ResearchAttentionDecisionV1, ResearchComponentComparisonCheckV2, ResearchComponentInspectionV1, ResearchDocumentOverlayV1, ResearchRegisterInspectionV3, Result } from "@toy/contracts";
 import { OpsTestStack, TestProbeControl, trustedCheckoutRoot } from "@toy/ops/public";
@@ -128,8 +128,14 @@ const delegationFixture = async (caseId: string, purpose: ModelRouteDelegationIn
   let sends = 0;
   let exportReadback = false;
   let nativeArgumentsMatched = false;
+  let workspace: string | null = null;
+  let outsideDirectory: string | null = null;
+  let outsideSentinelBytes: Buffer | null = null;
+  const syntheticMarkdown = "# Synthetic R0 fixture result\n\nThis fixed external fake report exists only to verify the bounded result-reference contract; it contains no live research.\n\nSource: https://example.invalid/toy-r0-fixture\n";
+  const expectedResearchResultDigest = digest(syntheticMarkdown);
   const externalCli: CodexDelegationExecutor = async function* (request) {
     sends++;
+    workspace = request.workspace;
     const expectedModel = purpose === "research" ? "gpt-6.1-sol" : "gpt-6-luna";
     const expectedEffort = purpose === "research" ? "medium" : "max";
     const taskBytes = await readFile(join(request.workspace, "task.json"));
@@ -141,8 +147,21 @@ const delegationFixture = async (caseId: string, purpose: ModelRouteDelegationIn
     const argv = request.arguments;
     nativeArgumentsMatched = request.executionBackend === "codex_exec" && argv[0] === "exec" && argv.includes("--ignore-user-config") && argv.includes("--ignore-rules") && argv.includes("--json") && argv[argv.indexOf("--model") + 1] === expectedModel && argv[argv.indexOf("--sandbox") + 1] === "workspace-write" && argv[argv.indexOf("--cd") + 1] === request.workspace && argv.includes("model_reasoning_effort=\"" + expectedEffort + "\"") && argv.includes("service_tier=\"fast\"") && argv.includes("features.fast_mode=true") && argv.includes("approval_policy=\"never\"") && argv.includes("model_provider=\"openai\"") && !argv.some(value => value.startsWith("--dangerously-") || value === "--add-dir" || value === "--approve-for-me");
     if (!exportReadback || !nativeArgumentsMatched) throw new Error("EXTERNAL_CLI_REQUEST_MISMATCH");
+    if (caseId === "research-result-symlink-path") {
+      const reportDirectory = join(request.workspace, "reports");
+      rmSync(reportDirectory, { recursive: true, force: true });
+      outsideDirectory = mkdtempSync(join(dirname(request.workspace), "result-ref-outside-"));
+      outsideSentinelBytes = Buffer.from("fixed outside-export sentinel\n", "utf8");
+      writeFileSync(join(outsideDirectory, "sentinel.md"), outsideSentinelBytes, { mode: 0o600, flag: "wx" });
+      symlinkSync(outsideDirectory, reportDirectory, "dir");
+    }
     if (caseId !== "research-route-missing") yield { type: "route", model: caseId === "research-route-luna" ? "gpt-6-luna" : expectedModel, effort: caseId === "research-route-wrong-effort" ? "max" : expectedEffort, serviceTier: caseId === "research-route-wrong-tier" ? "default" : "fast" };
-    yield { type: "output", text: "Fixed external CLI result" };
+    if (caseId === "research-result-overlimit") {
+      const oversizedChunk = "x".repeat(65536);
+      for (let index = 0; index < 33; index++) yield { type: "output", text: oversizedChunk };
+    } else if (caseId !== "research-result-missing-output") {
+      yield { type: "output", text: caseId === "research-result-empty-output" ? "" : purpose === "research" ? syntheticMarkdown : "Fixed external implementation result" };
+    }
     yield { type: "usage", usage: { inputTokens: 17, outputTokens: 8, reasoningTokens: 3 } };
     yield { type: "completed" };
   };
@@ -150,7 +169,22 @@ const delegationFixture = async (caseId: string, purpose: ModelRouteDelegationIn
   const request: ModelRouteDelegationInputV1 = { requestId: randomUUID(), purpose, objective };
   const overridden = { ...request, settings: { model: "gpt-6-luna", effort: "max", serviceTier: "priority" } };
   const result = await ModelRoute.delegationReceipt(caseId === "module-local-override-refused" ? overridden : request, context, externalCli, resourceReader);
-  return { result, sends, exportReadback, nativeArgumentsMatched };
+  let outsideTargetUnchanged: boolean | null = null;
+  if (outsideDirectory !== null && outsideSentinelBytes !== null) {
+    try {
+      outsideTargetUnchanged = JSON.stringify(readdirSync(outsideDirectory).sort()) === JSON.stringify(["sentinel.md"]) && digest(readFileSync(join(outsideDirectory, "sentinel.md"))) === digest(outsideSentinelBytes);
+    } catch {
+      outsideTargetUnchanged = false;
+    }
+    if (workspace !== null) {
+      try {
+        const reportDirectory = join(workspace, "reports");
+        if (lstatSync(reportDirectory).isSymbolicLink()) unlinkSync(reportDirectory);
+      } catch {}
+    }
+    try { rmSync(outsideDirectory, { recursive: true, force: true }); } catch { outsideTargetUnchanged = false; }
+  }
+  return { result, sends, exportReadback, nativeArgumentsMatched, workspace, outsideTargetUnchanged, expectedResearchResultDigest };
 };
 
 type LifeStoreSource = {
@@ -179,7 +213,10 @@ type LifeStoreGateReadback = {
 };
 
 const delegationProbe = async (input: RegisteredProbeInputV1, context: OpsControlContextV1): Promise<Result<RegisteredProbeOperationV1>> => {
-  const cases = ["research-route-observed", "research-route-missing", "research-route-luna", "research-route-wrong-effort", "research-route-wrong-tier", "research-skill-missing", "research-skill-wrong-bytes", "ordinary-implementation-luna", "module-local-override-refused"];
+  const routeSkillCases = ["research-route-observed", "research-route-missing", "research-route-luna", "research-route-wrong-effort", "research-route-wrong-tier", "research-skill-missing", "research-skill-wrong-bytes", "ordinary-implementation-luna", "module-local-override-refused"];
+  const resultReferenceCases = ["research-result-missing-output", "research-result-empty-output", "research-result-overlimit", "research-result-symlink-path"];
+  const isResultReferenceAt = input.probeId === "AT-self-improvement-56";
+  const cases = isResultReferenceAt ? [...routeSkillCases, ...resultReferenceCases] : routeSkillCases;
   const manifest = registeredCliAcceptanceManifestInventory.find(entry => entry.id === input.probeId);
   if (!manifest || manifest.scenarioId !== "delegation.route-skill" || JSON.stringify(manifest.mandatoryCases.map(entry => entry.id)) !== JSON.stringify(cases)) return { ok: false, error: { module: "ops", code: "ATTESTATION_INVALID", message: opsErrorMessages.ATTESTATION_INVALID, retryable: false } };
   const isLifeStore = input.probeId === "AT-lifestore-47";
@@ -205,17 +242,49 @@ const delegationProbe = async (input: RegisteredProbeInputV1, context: OpsContro
     const successful = caseId === "research-route-observed" || caseId === "ordinary-implementation-luna";
     const missingSkill = caseId === "research-skill-missing";
     const wrongSkill = caseId === "research-skill-wrong-bytes";
+    const missingOutput = caseId === "research-result-missing-output";
+    const emptyOutput = caseId === "research-result-empty-output";
+    const overlimitOutput = caseId === "research-result-overlimit";
+    const symlinkOutput = caseId === "research-result-symlink-path";
     let passed = false;
     if (caseId === "module-local-override-refused") passed = !result.ok && result.error.code === "INVALID_INPUT" && sends === 0;
-    else if (result.ok) {
-      const receipt = result.data;
-      const observed = receipt.invocation?.observed;
-      passed = !receipt.nativeExecutionVerified && !receipt.acceptanceComplete && (successful
-        ? receipt.state === "observed" && sends === 1 && exportReadback && nativeArgumentsMatched && observed?.model === (purpose === "research" ? "gpt-6.1-sol" : "gpt-6-luna") && observed.effort === (purpose === "research" ? "medium" : "max") && observed.serviceTier === "priority" && (purpose === "research" ? receipt.skill?.sourceCommit === pin.sourceCommit && receipt.skill.loadedDigest === pin.contentDigest : receipt.skill === null)
-        : missingSkill || wrongSkill ? receipt.state === "refused" && sends === 0 && receipt.reasonCode === (missingSkill ? "RESEARCH_SKILL_UNAVAILABLE" : "RESEARCH_SKILL_MISMATCH") && receipt.invocation === null
-          : receipt.state === "refused" && sends === 1 && receipt.invocation?.completion === "pending" && receipt.invocation.outputStarted === false && receipt.invocation.reasonCode === (caseId === "research-route-missing" ? "route_unobserved" : "route_mismatch"));
-    }
     const receipt = result.ok ? result.data : null;
+    const resultReadback = { attempted: false, pathMatches: false, filePresent: false, bytesMatch: false, digestMatches: false, metadataMatches: false };
+    if (isResultReferenceAt && caseId === "research-route-observed" && receipt !== null && fixture.workspace !== null) {
+      resultReadback.attempted = true;
+      const resultRef = receipt.resultRefs?.length === 1 ? receipt.resultRefs[0] : undefined;
+      if (resultRef !== undefined && resultRef.path === "reports/delegation-result.md" && resultRef.media_type === "text/markdown" && resultRef.bytes <= 2 * 1024 * 1024 && resultRef.input_observations.length === 0) {
+        try {
+          const workspaceRealPath = realpathSync(fixture.workspace);
+          const reportPath = join(fixture.workspace, resultRef.path);
+          const reportStat = lstatSync(reportPath);
+          const reportRealPath = realpathSync(reportPath);
+          resultReadback.pathMatches = reportRealPath === join(workspaceRealPath, "reports", "delegation-result.md");
+          resultReadback.filePresent = !reportStat.isSymbolicLink() && reportStat.isFile() && resultReadback.pathMatches;
+          if (resultReadback.filePresent) {
+            const persistedBytes = readFileSync(reportPath);
+            resultReadback.bytesMatch = persistedBytes.length === resultRef.bytes;
+            resultReadback.digestMatches = digest(persistedBytes) === resultRef.sha256 && digest(persistedBytes) === fixture.expectedResearchResultDigest;
+            resultReadback.metadataMatches = resultReadback.bytesMatch && resultReadback.digestMatches;
+          }
+        } catch {
+          resultReadback.filePresent = false;
+        }
+      }
+    }
+    const resultFileAbsent = fixture.workspace !== null && !existsSync(join(fixture.workspace, "reports", "delegation-result.md"));
+    if (symlinkOutput) passed = result !== null && result.ok && receipt !== null && receipt.state === "refused" && receipt.reasonCode === "DELEGATION_RESULT_REFUSED" && receipt.resultRefs?.length === 0 && receipt.invocation?.completion === "complete" && receipt.invocation.outputStarted && sends === 1 && exportReadback && nativeArgumentsMatched && fixture.outsideTargetUnchanged === true;
+    else if (missingOutput || emptyOutput || overlimitOutput) passed = result.ok && receipt !== null && receipt.state === "refused" && receipt.reasonCode === "DELEGATION_RESULT_REFUSED" && receipt.resultRefs?.length === 0 && receipt.invocation?.completion === "complete" && receipt.invocation.outputStarted === !missingOutput && sends === 1 && exportReadback && nativeArgumentsMatched && resultFileAbsent;
+    else if (receipt !== null) {
+      const observed = receipt.invocation?.observed;
+      const observedRoute = observed?.model === (purpose === "research" ? "gpt-6.1-sol" : "gpt-6-luna") && observed.effort === (purpose === "research" ? "medium" : "max") && observed.serviceTier === "priority";
+      const observedSkill = purpose === "research" ? receipt.skill !== null && receipt.skill.sourceCommit === pin.sourceCommit && receipt.skill.contentDigest === pin.contentDigest && receipt.skill.loadedDigest === pin.contentDigest : receipt.skill === null;
+      const referencePresent = !isResultReferenceAt || purpose !== "research" || caseId !== "research-route-observed" || receipt.resultRefs?.length === 1 && resultReadback.attempted && resultReadback.pathMatches && resultReadback.filePresent && resultReadback.metadataMatches;
+      passed = !receipt.nativeExecutionVerified && !receipt.acceptanceComplete && (successful
+        ? receipt.state === "observed" && sends === 1 && exportReadback && nativeArgumentsMatched && observedRoute && observedSkill && referencePresent && (purpose !== "implementation" || receipt.resultRefs?.length === 0)
+        : missingSkill || wrongSkill ? receipt.state === "refused" && receipt.resultRefs?.length === 0 && sends === 0 && receipt.reasonCode === (missingSkill ? "RESEARCH_SKILL_UNAVAILABLE" : "RESEARCH_SKILL_MISMATCH") && receipt.invocation === null
+          : receipt.state === "refused" && receipt.resultRefs?.length === 0 && sends === 1 && receipt.invocation?.completion === "pending" && receipt.invocation.outputStarted === false && receipt.invocation.reasonCode === (caseId === "research-route-missing" ? "route_unobserved" : "route_mismatch"));
+    }
     if (isLifeStore && caseId === "ordinary-implementation-luna") passed = passed && receipt?.purpose === "implementation" && receipt.invocation?.requested.role === "child" && receipt.invocation.requested.settings.model === "gpt-6-luna" && receipt.invocation.requested.settings.effort === "max" && receipt.invocation.requested.settings.serviceTier === "priority" && receipt.skill === null;
     let lifeStoreGate: LifeStoreGateReadback | null = null;
     if (lifeStoreSource) {
@@ -268,11 +337,12 @@ const delegationProbe = async (input: RegisteredProbeInputV1, context: OpsContro
       passed = passed && routeSkillSubgatePassed;
     }
     if (isLifeStore && (!lifeStoreSource || !lifeStoreGate)) return { ok: false, error: { module: "ops", code: "ARTIFACT_MISMATCH", message: opsErrorMessages.ARTIFACT_MISMATCH, retryable: false } };
+    const compactReceipt = receipt ? { purpose: receipt.purpose, state: receipt.state, reasonCode: receipt.reasonCode, requestedRole: receipt.invocation?.requested.role ?? null, requestedArm: receipt.invocation?.requested.arm ?? null, requestedModel: receipt.invocation?.requested.settings.model ?? null, requestedEffort: receipt.invocation?.requested.settings.effort ?? null, requestedTier: receipt.invocation?.requested.settings.serviceTier ?? null, observedModel: receipt.invocation?.observed?.model ?? null, observedEffort: receipt.invocation?.observed?.effort ?? null, observedTier: receipt.invocation?.observed?.serviceTier ?? null, terminal: receipt.invocation?.terminal ?? null, completion: receipt.invocation?.completion ?? null, outputStarted: receipt.invocation?.outputStarted ?? null, skillSourceCommit: receipt.skill?.sourceCommit ?? null, skillContentDigest: receipt.skill?.contentDigest ?? null, skillLoadedDigest: receipt.skill?.loadedDigest ?? null, resultRefs: (receipt.resultRefs ?? []).map(ref => ({ path: ref.path, media_type: ref.media_type, bytes: ref.bytes, sha256: ref.sha256, input_observations: ref.input_observations })), nativeExecutionVerified: receipt.nativeExecutionVerified, acceptanceComplete: receipt.acceptanceComplete } : null;
     const prerequisite = isLifeStore && lifeStoreSource && lifeStoreGate
       ? JSON.stringify({ caseId, actualUid: process.getuid?.() ?? null, objective: lifeStoreObjective, externalCliSends: sends, exportReadback, nativeArgumentsMatched, receiptDigest: receipt ? digest(JSON.stringify(receipt)) : null, receiptReadback: receipt ? { purpose: receipt.purpose, state: receipt.state, requestedRole: receipt.invocation?.requested.role ?? null, requestedArm: receipt.invocation?.requested.arm ?? null, requestedModel: receipt.invocation?.requested.settings.model ?? null, requestedEffort: receipt.invocation?.requested.settings.effort ?? null, requestedTier: receipt.invocation?.requested.settings.serviceTier ?? null, observedModel: receipt.invocation?.observed?.model ?? null, observedEffort: receipt.invocation?.observed?.effort ?? null, observedTier: receipt.invocation?.observed?.serviceTier ?? null, completion: receipt.invocation?.completion ?? null, skillSourceCommit: receipt.skill?.sourceCommit ?? null, skillContentDigest: receipt.skill?.contentDigest ?? null, skillLoadedDigest: receipt.skill?.loadedDigest ?? null, skillResourceCount: receipt.skill?.resources.length ?? 0, nativeExecutionVerified: receipt.nativeExecutionVerified, acceptanceComplete: receipt.acceptanceComplete } : null, errorCode: result.ok ? null : result.error.code, a01: lifeStoreGate, fakeExternalCli: true, liveProviderSends: 0, wholeATComplete: false })
-      : JSON.stringify({ caseId, actualUid: process.getuid?.() ?? null, externalCliSends: sends, exportReadback, nativeArgumentsMatched, receipt, errorCode: result.ok ? null : result.error.code, fakeExternalCli: true, liveProviderSends: 0, wholeATComplete: false });
+      : JSON.stringify({ caseId, actualUid: process.getuid?.() ?? null, externalCliSends: sends, exportReadback, nativeArgumentsMatched, receipt: compactReceipt, resultReadback: isResultReferenceAt ? resultReadback : null, outsideTargetUnchanged: symlinkOutput ? fixture.outsideTargetUnchanged : null, resultFileAbsent: isResultReferenceAt ? resultFileAbsent : null, errorCode: result.ok ? null : result.error.code, fakeExternalCli: true, liveProviderSends: 0, wholeATComplete: false });
     if (isLifeStore && prerequisite.length > 2000) return { ok: false, error: { module: "ops", code: "ATTESTATION_INVALID", message: opsErrorMessages.ATTESTATION_INVALID, retryable: false } };
-    const artifactDigests = [pin.contentDigest, ...(lifeStoreGate ? [lifeStoreGate.contentDigest, lifeStoreGate.originalDigest] : []), digest(readFileSync(new URL("./model-route.js", import.meta.url))), digest(readFileSync(new URL("./model-route-probe.js", import.meta.url)))];
+    const artifactDigests = [pin.contentDigest, ...(receipt?.resultRefs ?? []).map(ref => ref.sha256), ...(lifeStoreGate ? [lifeStoreGate.contentDigest, lifeStoreGate.originalDigest] : []), digest(readFileSync(new URL("./model-route.js", import.meta.url))), digest(readFileSync(new URL("./model-route-probe.js", import.meta.url)))];
     checks.push(checkViewSchema.parse({ id: "read.model-route-policy", owner: "hermes", state: passed ? "PASS" : "FAIL", checkedAt: new Date().toISOString(), reasonCode: passed ? "DELEGATION_ROUTE_SKILL_DIAGNOSTIC_PASS" : "DELEGATION_ROUTE_SKILL_DIAGNOSTIC_FAIL", nextCommandId: "probe.show", prerequisite, links: { recordRefs: [], observations: [], artifactDigests } }));
   }
   return TestProbeControl.run(input, context, checks);

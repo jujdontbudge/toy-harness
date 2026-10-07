@@ -1,0 +1,94 @@
+{
+  "planId": "R0.12-next-build-or-result-reference",
+  "createdAt": "2026-10-07T05:12:27Z",
+  "status": "finite-plan-awaiting-parent-review-and-source-admission",
+  "selectedAssertion": {
+    "id": "AT-lifestore-70",
+    "rung": "CLI",
+    "source": "../personal-assistant-harness/specs/lifestore.md:2444",
+    "assertion": "Given the release plan and failed inference/resource/native/capture prerequisites. When the builder selects a Life Store build step. Then only its tagged scope proceeds, R1 retains incident capture, full Life Store waits for R2, recorder integration waits for R4, and optional pilots/auto-promotion stay gated until R5. (Astra 10; FIXES R1)",
+    "assertionHash": "42d442ceb222340d61910ebbc6d7613a4212b44ca2db5926bc81b4c2a39fe471",
+    "assignedRungEvidence": "../personal-assistant-harness/specs/TEST-PLAN.md:446 assigns static, probe:AT-lifestore-70 at CLI."
+  },
+  "actualGap": {
+    "summary": "The assigned public CLI case is unregistered/unimplemented and no reachable public owner selects a release-tagged Life Store build scope. Existing release.status and release.native-eligibility are read/eligibility surfaces; EngineeringControl has no build-step selection operation. Current canonical contracts expose Release R0-R5 and feature firstRelease, but no source-derived step identifier or selection result. A caller-provided tag/boolean would not establish owner behavior.",
+    "evidence": [
+      {"path": "build/evidence/R0.12/lifestore-research-baseline-cli/AT-lifestore-70-run.json", "sha256": "4ea4794f7cc94e75a4fe82591ceddff2dc3c5fef2302c783a933758cf2bbb320", "result": "NOT_IMPLEMENTED / REGISTERED_CASE_NOT_IMPLEMENTED; historical baseline from 2026-10-07T01:11:54Z, not fresh source proof"},
+      {"path": "build/evidence/R0.12/lifestore-research-baseline-cli/AT-lifestore-70-show.json", "sha256": "01ae21e6505c43851bf0a5d7b47e996167676792bea6d92cd18ca9ba61e4cb5b"},
+      {"path": "tests/registry.yaml", "sha256": "11cd48c07d8a0fa274af63fc9702d9c93ec7b783b79d8f8bdcb75e70215e1a9b", "finding": "no AT-lifestore-70 registration"}
+    ]
+  },
+  "minimalWrittenInterface": {
+    "owner": "Existing packages/self-improvement EngineeringControl; no new module or generic release controller.",
+    "caller": "Public Toy CLI build.select operation routed through existing CLI declarations and dispatch.",
+    "input": "A canonical Life Store build-step identifier only. The owner derives its release tag and scope from source-bound Life Store build-plan data; caller cannot supply tags or prerequisite outcomes.",
+    "output": "New minimal canonical @toy/contracts LifeStoreBuildSelectionV1 containing the selected source step, derived tagged scope, proceed/blocked outcome, and public prerequisite CheckView references/results. Missing or failed actual prerequisite views block selection.",
+    "behavior": "Implement only Life Store selection. Bind step-to-scope mapping to the current Life Store spec digest. Preserve R1 incident-capture scope; block full-store activation until R2, recorder integration until R4, and optional pilot/auto-promotion until R5. Do not infer readiness from a step label or caller fixture flags."
+  },
+  "finiteCases": [
+    "Source-derived R0 foundation step can select only its R0 scope when actual prerequisites pass.",
+    "R1 selection retains incident-capture scope; missing/failed capture prerequisite blocks it.",
+    "Full Life Store scope remains blocked before R2 even when an earlier step is selected.",
+    "Recorder integration remains blocked before R4.",
+    "Optional pilot and auto-promotion remain blocked before R5."
+  ],
+  "disjointFiles": {
+    "ownerImplementationAfterAdmission": [
+      "packages/contracts/src/primitives.ts",
+      "packages/contracts/src/engineering-control.ts",
+      "packages/self-improvement/src/engineering-control.ts",
+      "packages/self-improvement/src/public.ts",
+      "packages/contracts/src/cli-declarations.ts",
+      "cli/src/main.ts"
+    ],
+    "parentOwnedAfterHandoff": [
+      "tests/registry.yaml",
+      "architecture/features.json",
+      "generated CLI/probe artifacts",
+      "skills/toy-control/FEATURE-MAP.md",
+      "build/evidence/R0.12 source, CLI, and proof artifacts"
+    ],
+    "ownershipBoundary": "This plan writes no source. Parent owns registration, generation, feature-map changes, build, and assigned CLI proof after separate review/admission."
+  },
+  "budgetAndLimits": {
+    "totalOwnerWorkIncludingIntegrationAndProof": "at most 2 hours",
+    "sourceAdmission": "Requires parent review and fresh admission against current source pins and canonical queue state.",
+    "verification": "At assigned CLI rung only, exercise the real public Toy CLI against the registered case using public owner interfaces and fake external seams. Capture CLI output and owner CheckViews. No synthetic overall-pass assertion; report only the selection result and each prerequisite readback.",
+    "notVerifiedHere": ["current runtime behavior", "fresh CLI baseline", "full AT-lifestore-70 pass", "whole release admission", "R0-R5 implementation readiness"],
+    "deferred": ["full Life Store build execution", "R2 full-store activation", "R4 recorder integration", "R5 optional pilots/auto-promotion", "root-request-dependent work"]
+  },
+  "queueEvidence": {
+    "path": "build/ROOT-REQUESTS.md",
+    "sha256": "6bdca8b36154b5ec87875c5a1fe0e5d5f9a8a0b6d172c26c7d99ad9f2dd6307e",
+    "machineReadStatuses": {
+      "ROOT-R004-20261006-01": "DONE",
+      "ROOT-R004-20261006-02": "PENDING",
+      "ROOT-R005-20261006-01": "PENDING"
+    },
+    "priorityConstraint": "R004-02 remains pending; do not infer it complete or begin R004-03. Root-owned priority sequencing remains with parent."
+  },
+  "sourcePins": {
+    "specs/lifestore.md": "044e33ba76d512c0fcae478f8d4923d2f33c028b8dae94bbdb69d6d4111c1117",
+    "specs/TEST-PLAN.md": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2",
+    "specs/BUILD-PLAN.md": "aa84eb600e53bc65e6c6b1ed4fce45870ead861e0d18bf00d81613ff2595f49a",
+    "specs/acceptance-index.json": "c9b645eab7f55b2ebf35d7db769a534a4837de23ad3dc3d913f3189e781d44fa",
+    "packages/contracts/src/cli-declarations.ts": "b7623e62057d5a1c607db7867a019940478dcefa4c6043498b3af596bca90ee6",
+    "packages/contracts/src/ops-registry.ts": "84657b0739b58d22adbffdb40521be0c4be658b19896f5c8702d57a6e2d41035",
+    "packages/self-improvement/src/engineering-control.ts": "ceb19efea43d7b0600e605b6fc27258382e41cdb9540f979ab712c2941b682f6",
+    "packages/self-improvement/src/public.ts": "e307551e2f2e8bb368b606c816ad49ff0693b6d01142578a1c0083ee1137cc87",
+    "packages/contracts/src/primitives.ts": "ab5e75b50f170ea4ecd8c6144b5d7f2a489e89a360651cc9f703b2e74d3afa58",
+    "packages/contracts/src/engineering-control.ts": "d95ddc3891ae2b865473c00cb0eb6cb58c16bb9191523ab63f6b26937a88ae30",
+    "packages/contracts/src/publisher.ts": "f0b96f0b187e285f7ef2b815c170481287dd8abe87a2e0a29343908ab1eb09f6",
+    "architecture/features.json": "4dce017fab9f7e14e2ed35c672487be50da201749378b80a690af78808d1e28e",
+    "cli/src/main.ts": "e206e722c5a9159626ffd609f822739cf3b3cfb6b7a5c45095a4f3bd0c550ebe",
+    "packages/ops/src/public.ts": "9646f70f89434cf774e66a602eed45f751c353f200b2f3e1a2cf41968e079284",
+    "build/evidence/R0.12/lifestore47-next-helper-doctor.json": "fc193184da33ad3d43641034e05786d6b95ede5df45c9e7acc73927ffec6ed26"
+  },
+  "resourceAdmission": {
+    "doctor": "build/evidence/R0.12/lifestore47-next-helper-doctor.json",
+    "generatedAt": "2026-10-07T05:07:11.733Z",
+    "availableBytes": 2249228288,
+    "pressure": "normal",
+    "permittedHelperEnvelope": "256 MiB own work plus 512 MiB helper as admitted by parent; no build/runtime work performed for this plan"
+  }
+}

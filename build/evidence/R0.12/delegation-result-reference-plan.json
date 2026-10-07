@@ -1,0 +1,243 @@
+{
+  "recordType": "r0.12.delegation-result-reference-minimum-plan.v1",
+  "createdAt": "2026-10-07T05:21:55Z",
+  "scope": "Read-only source/spec planning; no source, build, generation, test, CLI, or world operation performed.",
+  "objective": "Implement the already-assigned AT-self-improvement-56 result-reference behavior through its existing CLI owner, using one real retained bounded synthetic report artifact and no new runner or module.",
+  "assignment": {
+    "atId": "AT-self-improvement-56",
+    "source": "specs/self-improvement.md:1775",
+    "assertionHash": "6b717d4053b7430dd432b82940ced72520f2de8e342a4328997d47dd34d16f86",
+    "rung": "CLI",
+    "requiredEvidence": [
+      "stack",
+      "device/account",
+      "probe:AT-self-improvement-56"
+    ],
+    "assertion": "Research delegation records Sol/medium/Fast, the resolved mattpocock skill hash and result references; ordinary work records Luna/max/Fast; wrong research route or missing skill blocks research acceptance.",
+    "registrationState": "The acceptance index and TEST-PLAN assign the AT, but tests/registry.yaml has no AT-self-improvement-56 entry. Fresh unfiltered baseline run at 2026-10-07T05:18:29Z ended REGISTERED_CASE_NOT_IMPLEMENTED (parent-provided evidence)."
+  },
+  "sourceFindings": [
+    {
+      "path": "packages/hermes/src/model-route.ts",
+      "finding": "ModelRoute.delegationReceipt is the actual public producer. It already owns a disposable per-run export with reports/, sends the request through the external CodexDelegationExecutor seam, normalizes typed output events, and retains the export. It currently discards output text and returns only route/skill/task/request metadata; hashes of task/request are not result references."
+    },
+    {
+      "path": "packages/hermes/src/model-route-probe.ts",
+      "finding": "Existing delegation.route-skill CLI owner invokes that public method with a fake external executor and checks the actual exported task, loaded skill, requested route and terminal receipt. It asserts an exact nine-case manifest and should select the existing nine cases for old ATs and the same nine plus four result-reference cases only for AT-self-improvement-56. The fake executor can retain its public request workspace for real artifact readback."
+    },
+    {
+      "path": "cli/src/main.ts",
+      "finding": "probe.run already dispatches any registered Hermes delegation.route-skill AT to ModelRouteProbe.run. Registering AT-self-improvement-56 requires no CLI command or dispatch change."
+    },
+    {
+      "path": "packages/contracts/src/model-route.ts",
+      "finding": "ModelRouteDelegationReceiptV1 is strict and currently has no artifact field. Its schema inventory drives generated contracts; result event text is capped at 65,536 characters per event, so the producer must cap cumulative UTF-8 bytes, not an individual event."
+    },
+    {
+      "path": "packages/contracts/src/engineering-control.ts",
+      "finding": "ResearchAttentionDecisionV1 embeds ModelRouteDelegationReceiptV1; generated receipt schema changes propagate to comparison/attention schemas and require standard contract regeneration."
+    },
+    {
+      "path": "packages/self-improvement/src/component-comparison-probe.ts",
+      "finding": "fixedResearchReceipt() constructs a synthetic observed V1 receipt without result references. Keep this existing diagnostic fixture parseable; it does not stand for a live ModelRoute producer result."
+    }
+  ],
+  "minimumInterface": {
+    "canonicalContract": "In @toy/contracts' existing packages/contracts/src/model-route.ts, define the one DelegationArtifactManifestEntry schema/type required by specs/CONTRACTS.md. Keep its canonical fields path (relative reports/... path), media_type, bytes (integer 0..2,097,152), sha256 (lowercase digest), and input_observations (life://observation/<UUID>[]). Add optional resultRefs to ModelRouteDelegationReceiptV1 and register both schemas in modelRouteSchemaInventory. Optional preserves old serialized V1 diagnostics; the live owner and AT-56 positive case require a nonempty reference for successful research. Emit [] for new ordinary/refused producer receipts. Do not create a V2 receipt or comparison version cascade.",
+    "ownerBehavior": "ModelRoute.delegationReceipt accumulates only normalized output text events, tracks exact UTF-8 bytes and stops retaining bytes after the 2 MiB bound. On completed, observed research with nonempty output, persist the exact stream bytes to the fixed owner path reports/delegation-result.md inside that run's existing export, then return one resultRefs entry computed from the actual bytes and path. Research with missing/empty output, overflow, or persistence failure is refused with a fixed non-sensitive reason and no references. Never substitute taskDigest/requestDigest for content evidence. Ordinary Luna implementation remains observed with no research artifact/reference.",
+    "pathAndFailureRules": "The owner accepts no caller- or child-selected path: it writes only reports/delegation-result.md. Confirm the reports directory is a real directory under the export (not a symlink), reject an occupied/symlink destination with exclusive creation, and return a safe refusal on write/read/containment failure. Do not follow or read an out-of-export target; do not log raw OS errors, report text, credential bytes, or arbitrary child errors. The CLI positive case independently opens that exact retained file through the workspace captured at the fake external seam and checks path, byte count, digest, and bytes; a missing/unreadable file fails the case without exposing its contents.",
+    "fixtureContent": "The fake external executor emits a fixed small synthetic cited Markdown result marked R0 fixture-only, with no live research. The artifact is actually written and retained in the disposable run export; its digest is computed from those bytes. input_observations is empty for this synthetic CLI result."
+  },
+  "ownedFiles": [
+    {
+      "path": "packages/contracts/src/model-route.ts",
+      "change": "Add canonical artifact-manifest schema/type and optional receipt.resultRefs; add the fixed refusal reason code if needed; update modelRouteSchemaInventory."
+    },
+    {
+      "path": "packages/hermes/src/model-route.ts",
+      "change": "Capture/bound normalized output, persist and hash the fixed research report, return actual references, refuse research results that lack a safely retained nonempty artifact."
+    },
+    {
+      "path": "packages/hermes/src/model-route-probe.ts",
+      "change": "Add AT-56-only extended case handling and CLI evidence/readback assertions while keeping all existing nine-case manifests unchanged for current ATs."
+    },
+    {
+      "path": "tests/registry.yaml",
+      "change": "Register AT-self-improvement-56 at its indexed CLI rung with the exact assertion hash, existing delegation.route-skill scenario and its 13 mandatory cases."
+    },
+    {
+      "path": "generated contract outputs",
+      "change": "Regenerate with the existing contracts generator after source schema and registry updates; do not hand-edit derived outputs."
+    }
+  ],
+  "cliCases": [
+    {
+      "id": "research-route-observed",
+      "required": "Sol/medium/Fast observed; exact pinned/loaded skill digest; exactly one resultRefs entry; actual retained reports/delegation-result.md bytes, length and SHA-256 match the entry; nativeExecutionVerified and acceptanceComplete remain false."
+    },
+    {
+      "id": "research-route-missing",
+      "required": "Missing route observation refuses research; no result reference."
+    },
+    {
+      "id": "research-route-luna",
+      "required": "Wrong model refuses research; no result reference."
+    },
+    {
+      "id": "research-route-wrong-effort",
+      "required": "Wrong effort refuses research; no result reference."
+    },
+    {
+      "id": "research-route-wrong-tier",
+      "required": "Wrong tier refuses research; no result reference."
+    },
+    {
+      "id": "research-skill-missing",
+      "required": "Missing pinned skill refuses before execution; no result reference."
+    },
+    {
+      "id": "research-skill-wrong-bytes",
+      "required": "Skill digest mismatch refuses before execution; no result reference."
+    },
+    {
+      "id": "ordinary-implementation-luna",
+      "required": "Ordinary child stays Luna/max/Fast, skill null, no research result reference."
+    },
+    {
+      "id": "module-local-override-refused",
+      "required": "Invalid module-local override remains rejected before execution."
+    },
+    {
+      "id": "research-result-missing-output",
+      "required": "Valid observed research route but no output event refuses with no artifact/reference."
+    },
+    {
+      "id": "research-result-empty-output",
+      "required": "Valid observed research route with empty output refuses with no artifact/reference."
+    },
+    {
+      "id": "research-result-overlimit",
+      "required": "Cumulative ASCII output just over 2 MiB is refused; no file/reference and accumulation remains bounded."
+    },
+    {
+      "id": "research-result-symlink-path",
+      "required": "Fake external seam replaces reports/ with a symlink to a disposable outside-export sentinel; owner refuses and does not follow, modify, or return a reference to the target."
+    }
+  ],
+  "regressions": [
+    {
+      "atId": "AT-obligations-75",
+      "why": "Same public route-skill owner; keep its exact existing nine cases and old manifest."
+    },
+    {
+      "atId": "AT-lifestore-47",
+      "why": "Same public route-skill owner and ordinary Luna behavior; keep existing Life Store source/route-only gate semantics."
+    },
+    {
+      "atId": "AT-RESEARCH-REGISTER-3",
+      "why": "Same public route-skill owner; preserve its indexed skill and route behavior."
+    },
+    {
+      "atId": "AT-ops-44",
+      "why": "Receipt schema is consumed by the public research component receipt gate."
+    },
+    {
+      "atId": "AT-lifestore-45",
+      "why": "Legacy fixedResearchReceipt() must remain parseable despite absent optional resultRefs."
+    },
+    {
+      "atId": "AT-attention-66",
+      "why": "ResearchAttentionDecisionV1 embeds the changed receipt schema."
+    }
+  ],
+  "generatedAndVerificationWorkAfterImplementation": [
+    "Use the existing contracts generator for both registry and contract schemas; no manual generated-file edits.",
+    "Run the full unfiltered `toy probe run AT-self-improvement-56 --json` at its assigned CLI rung and retain ordinary CLI receipts/readbacks in build/evidence.",
+    "Run the listed shared-owner/schema regressions at their assigned CLI rung; do not use --case subsets to certify AT-56.",
+    "Re-run repo contracts/feature-map consistency checks after registration and generation."
+  ],
+  "boundedEstimate": {
+    "totalMinutes": 110,
+    "sourceImplementation": 55,
+    "probeAndRegistration": 35,
+    "generationAndFocusedVerification": 20,
+    "stopRule": "Stop at 2 hours; do not widen into R1 importer, native execution, generic filesystem inventory, or comparison-version migration."
+  },
+  "compatibilityAndScope": {
+    "receiptVersion": "Keep ModelRouteDelegationReceiptV1 additive with optional resultRefs. The existing fixedResearchReceipt() fixture remains valid without the field; the assigned live CLI producer test checks nonempty references. No comparison schema/version cascade is needed.",
+    "researchComparison": "Do not make EngineeringControl.checkResearch or its historical V1 fixtures globally require resultRefs. AT-56 proves the R0 public route producer's actual result file and metadata. R1's \u00a710.5/\u00a710.5.1 importer remains responsible for validating and accepting research artifacts; this receipt still explicitly says nativeExecutionVerified=false and acceptanceComplete=false.",
+    "ordinaryLuna": "Keep child purpose route, Luna/max/Fast settings, null skill, and no research artifact behavior unchanged.",
+    "currentPrerequisites": "Source and CLI harness work are internal and root-independent. The complete assigned CLI acceptance still needs the stack and device/account evidence listed by TEST-PLAN and the currently pending protected root admission; no acceptance claim is made by this plan."
+  },
+  "sourcePins": [
+    {
+      "path": "tests/acceptance-index.json",
+      "sha256": "c9b645eab7f55b2ebf35d7db769a534a4837de23ad3dc3d913f3189e781d44fa"
+    },
+    {
+      "path": "tests/registry.yaml",
+      "sha256": "11cd48c07d8a0fa274af63fc9702d9c93ec7b783b79d8f8bdcb75e70215e1a9b"
+    },
+    {
+      "path": "architecture/features.json",
+      "sha256": "4dce017fab9f7e14e2ed35c672487be50da201749378b80a690af78808d1e28e"
+    },
+    {
+      "path": "specs/TEST-PLAN.md",
+      "sha256": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2",
+      "sourceRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness"
+    },
+    {
+      "path": "specs/self-improvement.md",
+      "sha256": "23e69b258189148328f029acd3ec7c4c125544bf49d670757eee2bf071ab7014",
+      "sourceRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness"
+    },
+    {
+      "path": "specs/CONTRACTS.md",
+      "sha256": "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d",
+      "sourceRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness"
+    },
+    {
+      "path": "specs/hermes-config.md",
+      "sha256": "d3548fde13180bc750660f306caa0041101832e398ccdabd6cfdac0b3de8f4af",
+      "sourceRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness"
+    },
+    {
+      "path": "specs/workflows.md",
+      "sha256": "977f8c153b93af78470b63424e444da9816c298623bac5b3ccd9da7832b41d8c",
+      "sourceRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness"
+    },
+    {
+      "path": "packages/contracts/src/model-route.ts",
+      "sha256": "e95a854b188b67d37aa4b518626428e4de7eb28e1fcb35edc74bdc8a4235dd0d"
+    },
+    {
+      "path": "packages/contracts/src/engineering-control.ts",
+      "sha256": "d95ddc3891ae2b865473c00cb0eb6cb58c16bb9191523ab63f6b26937a88ae30"
+    },
+    {
+      "path": "packages/hermes/src/model-route.ts",
+      "sha256": "75bad754c537c53a920762b259d30ee6f89149a8d60d40678214cf5e2dec3962"
+    },
+    {
+      "path": "packages/hermes/src/model-route-probe.ts",
+      "sha256": "381fd715fe89972b1b9abca8237bcc37eb156c0577022ac2905f17c098cc0ebc"
+    },
+    {
+      "path": "packages/self-improvement/src/component-comparison-probe.ts",
+      "sha256": "bc601b87340ed6612e8555469cd863ccea22575a851f22e0f041aab5ef8dd0d0"
+    },
+    {
+      "path": "cli/src/main.ts",
+      "sha256": "e206e722c5a9159626ffd609f822739cf3b3cfb6b7a5c45095a4f3bd0c550ebe"
+    },
+    {
+      "path": "scripts/generate-contracts.mjs",
+      "sha256": "5d0d1c72d2cd7c9253241e7dd1ab057a0c1a15e47ad9cfb39dfdf67b182a44c2"
+    },
+    {
+      "path": "package.json",
+      "sha256": "cb940fdd04a1fd8f3ccda07383b59ca279da8ffdacc6da239e501a183ea3fc05"
+    }
+  ]
+}

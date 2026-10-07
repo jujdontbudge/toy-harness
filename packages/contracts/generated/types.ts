@@ -258,6 +258,7 @@ export type LoadedResearchSkillV1 = z.infer<typeof schemaInventory.LoadedResearc
 export type ModelRouteDelegationInputV1 = z.infer<typeof schemaInventory.ModelRouteDelegationInputV1>;
 export type CodexDelegationRequestV1 = z.infer<typeof schemaInventory.CodexDelegationRequestV1>;
 export type CodexDelegationEventV1 = z.infer<typeof schemaInventory.CodexDelegationEventV1>;
+export type DelegationArtifactManifestEntry = z.infer<typeof schemaInventory.DelegationArtifactManifestEntry>;
 export type ModelRouteDelegationReceiptV1 = z.infer<typeof schemaInventory.ModelRouteDelegationReceiptV1>;
 export type CodexDelegationTaskV1 = z.infer<typeof schemaInventory.CodexDelegationTaskV1>;
 export type RoleBootstrapInputV1 = z.infer<typeof schemaInventory.RoleBootstrapInputV1>;

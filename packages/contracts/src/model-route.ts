@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { digestSchema } from "./primitives.js";
+import { observationRefSchema } from "./control-evidence.js";
 
 export const codexProtocolInspectionSchema = z.strictObject({
   state: z.enum(["observed", "unavailable"]), schemaDigest: digestSchema.nullable(), experimentalIncluded: z.boolean(),
@@ -152,6 +153,13 @@ export const codexDelegationTaskSchema = z.strictObject({
   requestId: z.uuid(), objective: modelRouteDelegationInputSchema.shape.objective, role: z.enum(["research", "child"]),
   route: modelRouteSettingsSchema, skill: loadedResearchSkillSchema.nullable(), scope: z.literal("r0-feasibility"), depth: z.literal(1)
 }).refine(task => task.role === "research" ? task.skill !== null : task.skill === null);
+const delegationArtifactPathSchema = z.string().max(208).regex(/^reports\/[A-Za-z0-9._/-]{1,200}(?![\s\S])/).refine(path => path.startsWith("reports/")
+  && path.split("/").every(part => part.length > 0 && part !== "." && part !== "..")
+  && !path.includes("\\") && !/[\u0000-\u001f\u007f]/.test(path));
+export const delegationArtifactManifestEntrySchema = z.strictObject({
+  path: delegationArtifactPathSchema, media_type: z.enum(["text/markdown", "application/json", "text/csv", "application/pdf", "image/png"]),
+  bytes: z.int().min(0).max(2 * 1024 * 1024), sha256: digestSchema, input_observations: z.array(observationRefSchema)
+});
 export const codexDelegationRequestSchema = z.strictObject({
   requestId: z.uuid(), purpose: modelRouteDelegationInputSchema.shape.purpose, executionBackend: z.literal("codex_exec"),
   workspace: z.string().min(2).max(4096), arguments: z.array(z.string().max(4096)).min(1),
@@ -165,9 +173,10 @@ export const codexDelegationEventSchema = z.union([
 ]);
 export const modelRouteDelegationReceiptSchema = z.strictObject({
   requestId: z.uuid(), purpose: modelRouteDelegationInputSchema.shape.purpose, executionBackend: z.literal("codex_exec"),
-  state: z.enum(["observed", "refused"]), reasonCode: z.enum(["DELEGATION_ROUTE_OBSERVED", "DELEGATION_ROUTE_REFUSED", "RESEARCH_SKILL_UNAVAILABLE", "RESEARCH_SKILL_MISMATCH"]),
+  state: z.enum(["observed", "refused"]), reasonCode: z.enum(["DELEGATION_ROUTE_OBSERVED", "DELEGATION_ROUTE_REFUSED", "DELEGATION_RESULT_REFUSED", "RESEARCH_SKILL_UNAVAILABLE", "RESEARCH_SKILL_MISMATCH"]),
   skill: loadedResearchSkillSchema.nullable(), invocation: modelRouteReceiptSchema.nullable(),
-  taskDigest: digestSchema.nullable(), requestDigest: digestSchema.nullable(), nativeExecutionVerified: z.literal(false), acceptanceComplete: z.literal(false)
+  taskDigest: digestSchema.nullable(), requestDigest: digestSchema.nullable(), resultRefs: z.array(delegationArtifactManifestEntrySchema).max(8).optional(),
+  nativeExecutionVerified: z.literal(false), acceptanceComplete: z.literal(false)
 }).refine(receipt => receipt.state !== "observed" || receipt.invocation?.completion === "complete" && receipt.invocation.requested.role === (receipt.purpose === "research" ? "research" : "child") && (receipt.purpose === "research" ? receipt.skill !== null : receipt.skill === null));
 export type ResearchSkillResourcePathV1 = z.infer<typeof researchSkillResourcePathSchema>;
 export type ResearchSkillPinV1 = z.infer<typeof researchSkillPinSchema>;
@@ -177,6 +186,7 @@ export type CodexDelegationTaskV1 = z.infer<typeof codexDelegationTaskSchema>;
 export type CodexDelegationRequestV1 = z.infer<typeof codexDelegationRequestSchema>;
 export type CodexDelegationEventV1 = z.infer<typeof codexDelegationEventSchema>;
 export type ModelRouteDelegationReceiptV1 = z.infer<typeof modelRouteDelegationReceiptSchema>;
+export type DelegationArtifactManifestEntry = z.infer<typeof delegationArtifactManifestEntrySchema>;
 export type CodexDelegationExecutor = (request: CodexDelegationRequestV1, signal: AbortSignal) => AsyncIterable<CodexDelegationEventV1>;
 export type ResearchSkillResourceReader = (path: ResearchSkillResourcePathV1) => Uint8Array | null;
 
@@ -195,5 +205,6 @@ export const modelRouteSchemaInventory = {
   ResearchSkillResourcePathV1: researchSkillResourcePathSchema, ResearchSkillPinV1: researchSkillPinSchema,
   LoadedResearchSkillV1: loadedResearchSkillSchema, ModelRouteDelegationInputV1: modelRouteDelegationInputSchema,
   CodexDelegationRequestV1: codexDelegationRequestSchema, CodexDelegationEventV1: codexDelegationEventSchema,
+  DelegationArtifactManifestEntry: delegationArtifactManifestEntrySchema,
   ModelRouteDelegationReceiptV1: modelRouteDelegationReceiptSchema, CodexDelegationTaskV1: codexDelegationTaskSchema
 };

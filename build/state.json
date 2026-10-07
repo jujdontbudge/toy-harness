@@ -2,7 +2,7 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-07T05:08:51.425359+00:00",
+  "updatedAt": "2026-10-07T05:45:31.935878Z",
   "phase": "R0_FEASIBILITY",
   "activeCard": "R0.12",
   "cardCount": 87,
@@ -2506,7 +2506,9 @@
         "build/evidence/R0.12/attention66-verification.json",
         "build/evidence/R0.12/attention66-check-result.json",
         "build/evidence/R0.12/lifestore47-final-verification.json",
-        "build/evidence/R0.12/lifestore47-source-review.json"
+        "build/evidence/R0.12/lifestore47-source-review.json",
+        "build/evidence/R0.12/result-reference-final-verification.json",
+        "build/evidence/R0.12/result-reference-source-review.json"
       ],
       "requiredATs": [
         "AT-adhd-features-106",
@@ -2753,6 +2755,55 @@
         "nativeAcceptanceFailures": 0,
         "teardownComplete": true,
         "worldId": "60d91493-9b7a-40d3-a24b-bf4df16b2639"
+      },
+      "buildSelectionPlan": {
+        "state": "SOURCE_DEFERRED_MISSING_PUBLIC_PREREQUISITE_TRANSPORT",
+        "assignedAT": "AT-lifestore-70",
+        "baseline": "build/evidence/R0.12/build-selection-baseline-summary.json",
+        "nativeRuns": 1,
+        "baselineUnsupported": true,
+        "worldId": "4826f8b8-ed35-4c59-ab68-d9e64b1418cc",
+        "teardownComplete": true,
+        "unresolvedResourceRefs": 0,
+        "sourceExecutionStarted": false,
+        "wholeATComplete": false,
+        "acceptanceComplete": false,
+        "missingPrerequisites": [
+          "Authenticated supported inference receipt",
+          "Current-release admission state",
+          "R1 incident capture public owner",
+          "Native/recorder capture public owner transport"
+        ],
+        "refinedPlan": "build/evidence/R0.12/build-selection-refined-plan.json",
+        "planSha256": "443ae74ca8dede12f728b4483651356c9bb6ca8b8b4c2f492b1b9dda7ed78893",
+        "deferralOwner": "Builder, R0.12 with R0.01/R0.04/R0.05 and R1 incident/capture owner integration"
+      },
+      "resultReferenceUnit": {
+        "state": "BOUNDED_CLI_UNIT_VERIFIED_AND_STOPPED",
+        "assignedAT": "AT-self-improvement-56",
+        "startedAt": "2026-10-07T05:25:22.365Z",
+        "sourceStopAt": "2026-10-07T05:45:00Z",
+        "fullUnitStopAt": "2026-10-07T07:25:00Z",
+        "admission": "build/evidence/R0.12/result-reference-source-admission.json",
+        "plan": "build/evidence/R0.12/delegation-result-reference-plan.json",
+        "nativeRuns": 2,
+        "nativeUnsupportedBaselines": 1,
+        "nativeAcceptanceAttempts": 1,
+        "wholeATComplete": false,
+        "acceptanceComplete": false,
+        "sourceStoppedAt": "2026-10-07T05:34:49Z",
+        "sourceHandoff": "build/evidence/R0.12/result-reference-source-handoff.json",
+        "parentIntegration": "build/evidence/R0.12/result-reference-parent-integration.json",
+        "stoppedAt": "2026-10-07T05:40:46.867Z",
+        "verification": "build/evidence/R0.12/result-reference-final-verification.json",
+        "assignedChecks": 13,
+        "affectedRegressionChecks": 156,
+        "separateReadinessChecks": 1,
+        "nativeAcceptanceFailures": 0,
+        "worldId": "9319cf4f-1251-4034-b3db-9d3ee8689ba6",
+        "teardownComplete": true,
+        "sourceReview": "build/evidence/R0.12/result-reference-source-review.json",
+        "reviewClosedAt": "2026-10-07T05:45:31.935878Z"
       }
     },
     "R0.13": {
@@ -11375,7 +11426,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "CuratedLife47commit/push/PR update; finite read-only next-ownerplan stops05:13Z. ActualRoot02 UID310native+exactrestorationDONE takes immediateR001priority, noR00403until02retired. No repeatimplementation/probes of passedLife47unit.",
+  "nextAction": "Push reviewed result-reference checkpoint, then review bounded Ops45 public-owner plan. Poll exact root02 native UID310 read/restoration; valid DONE takes immediate R0.01 priority after safe cleanup. Goal remains ACTIVE.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -12536,7 +12587,9 @@
       "rung": "CLI",
       "firstRelease": "R0",
       "sourceAssertionHash": "6b717d4053b7430dd432b82940ced72520f2de8e342a4328997d47dd34d16f86",
-      "evidence": []
+      "evidence": [
+        "build/evidence/R0.12/result-reference-final-verification.json"
+      ]
     },
     "AT-self-improvement-57": {
       "state": "NOT_IMPLEMENTED",
@@ -21972,7 +22025,7 @@
     "recordedAt": "2026-10-07T05:08:51.425359+00:00",
     "command": "npm run check"
   },
-  "sourceCheckpointCommit": "3a1a75c",
+  "sourceCheckpointCommit": "5d3eb1e",
   "sourceCheckpointPushed": true,
   "rootRequests": {
     "ROOT-R004-20261006-01": {
@@ -22032,15 +22085,7 @@
     "measurementHistorical": true
   },
   "activeWorkers": [],
-  "pullRequestUpdatedAt": "2026-10-07T04:50:15.713329+00:00",
+  "pullRequestUpdatedAt": "2026-10-07T05:10:45.269493+00:00",
   "continuationCheckpoint": "build/checkpoints/2026-10-07-ops44-verified-dashboard90-deferred",
-  "readOnlyWorkers": [
-    {
-      "agent": "/root/r012_next_assigned_gate",
-      "phase": "READ_ONLY_NEXT_OWNER_PLAN",
-      "card": "R0.12",
-      "sourceMutationAllowed": false,
-      "deadline": "2026-10-07T05:13:00Z"
-    }
-  ]
+  "readOnlyWorkers": []
 }
