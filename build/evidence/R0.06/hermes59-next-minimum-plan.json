@@ -1,0 +1,175 @@
+{
+  "recordedAt": "2026-10-07T10:07:59Z",
+  "schemaVersion": "toy.r0.06.next-minimum-plan.v1",
+  "card": "R0.06",
+  "assignedAT": "AT-hermes-config-59",
+  "state": "NO_NEW_SOURCE",
+  "assignedRung": "CLI",
+  "finding": "AT-hermes-config-59 consolidates local ModelAdmission behavior already covered through the public accounting owner: named-window vetoes, unavailable/exhausted fallback, repair/quiet/event priority, absolute reservation headroom, the daily eight-job ceiling, and foreground exemption. I found no distinct local assertion that warrants another probe or source change. Protected provider, device/account, and the complete assigned AT59 boundary remain pending.",
+  "acceptanceState": {
+    "wholeATComplete": false,
+    "verdict": "NOT_IMPLEMENTED",
+    "directAT59Run": false,
+    "protectedProviderPending": true,
+    "deviceAccountPending": true,
+    "canonicalDispatchAndFullATPending": true
+  },
+  "admission": {
+    "path": "build/evidence/R0.06/hermes59-next-admission.json",
+    "sha256": "f1c2df4263ac6ca9883d2805a8303a138579c351ecedb0fe54985ba38758199a",
+    "generatedAt": "2026-10-07T10:01:46.394Z",
+    "pressure": "normal",
+    "availableBytes": "2248671232",
+    "jobNeedBytes": "1073741824",
+    "marginBytes": "536870912",
+    "requiredAvailableBytes": "1610612736",
+    "admissionState": "admitted",
+    "resourcePermitIssued": false
+  },
+  "assertionComparison": {
+    "spec": {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/hermes-config.md",
+      "line": 3438,
+      "sha256": "d3548fde13180bc750660f306caa0041101832e398ccdabd6cfdac0b3de8f4af"
+    },
+    "testPlan": {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/TEST-PLAN.md",
+      "line": 421,
+      "sha256": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2",
+      "assignment": "CLI; stack, device/account, probe:AT-hermes-config-59"
+    },
+    "clauses": [
+      {
+        "claim": "Named-window thresholds or the conservative daily cap govern autonomous admission.",
+        "coveredBy": ["AT-ops-10", "AT-ops-49", "AT-ops-51", "AT-ops-52"]
+      },
+      {
+        "claim": "Under missing/unavailable usage, repair and replay pause before ordinary event work; measured work orders repair after quiet and event/continuation.",
+        "coveredBy": ["AT-ops-11", "AT-ops-50"]
+      },
+      {
+        "claim": "Reservation headroom adds current usage, unreflected upper bounds, and expected cost against fixed 60/70 thresholds; it does not scale a reserve by the remaining percentage.",
+        "coveredBy": ["AT-ops-50", "AT-ops-52"]
+      },
+      {
+        "claim": "Toy quota thresholds and the eight-job autonomous ceiling do not reject Johan's foreground input.",
+        "coveredBy": ["AT-ops-49", "AT-ops-51"]
+      }
+    ],
+    "importantOverlap": "AT-ops-50 is an existing registered and exercised case even though it was not in the abbreviated comparison list. It directly covers priority order and non-shrinking additive headroom, so a new combined AT59 fixture would repeat established local behavior."
+  },
+  "existingEvidence": [
+    {
+      "acceptanceId": "AT-ops-10",
+      "path": "build/evidence/R0.06/unavailable-quota11-final-cli/AT-ops-10-show.json",
+      "sha256": "e98556e2074fdc7e7f2f859fb38d7038f8037cb840b30e96d04237b66c533dcc",
+      "observedAt": "2026-10-07T09:44:48.013Z",
+      "localChecks": "PASS",
+      "wholeResult": "NOT_IMPLEMENTED; complete=false",
+      "coverage": "Known/unknown exhausted reset and full-window denial; deferred rows persist through PostgreSQL restart and resume without duplicate charge."
+    },
+    {
+      "acceptanceId": "AT-ops-11",
+      "path": "build/evidence/R0.06/unavailable-quota11-final-cli/AT-ops-11-show.json",
+      "sha256": "e9b88b5573c367f65d8aecc1a33ef6b3da746714b9847abc37015b49de17c7d0",
+      "observedAt": "2026-10-07T09:44:44.353Z",
+      "localChecks": "PASS",
+      "wholeResult": "NOT_IMPLEMENTED; complete=false",
+      "coverage": "Normalized parse failure stays unavailable with no windows; repair/replay are denied and uncharged; one event gets a fixed-count reservation; usage remains null."
+    },
+    {
+      "acceptanceId": "AT-ops-49",
+      "path": "build/evidence/R0.06/exhausted-pending-green-cli/AT-ops-49-show.json",
+      "sha256": "8b38ab0f8831de4d44e1c84f896651a8792b59bade9805279c5ea5b1f4b62dd4",
+      "observedAt": "2026-10-07T09:23:07.382Z",
+      "localChecks": "PASS",
+      "wholeResult": "NOT_IMPLEMENTED; complete=false",
+      "coverage": "All autonomous classes pause at equality thresholds; foreground input is accepted and has priority through lane contention recovery."
+    },
+    {
+      "acceptanceId": "AT-ops-50",
+      "path": "build/evidence/R0.06/exhausted-pending-green-cli/AT-ops-50-show.json",
+      "sha256": "f7edbc828f73cbd51a6d3ed3200256c83d0b2d6fc6da4e475219183f046459d4",
+      "observedAt": "2026-10-07T09:23:09.986Z",
+      "localChecks": "PASS",
+      "wholeResult": "NOT_IMPLEMENTED; complete=false",
+      "coverage": "Durable priority is event/continuation, quiet-tick, repair. Repairs remain held first; fixed additive reservation totals hold quiet then higher work at the exact threshold."
+    },
+    {
+      "acceptanceId": "AT-ops-51",
+      "path": "build/evidence/R0.06/unavailable-quota11-final-cli/AT-ops-51-show.json",
+      "sha256": "f63a51a1cfa66edfae03223974f323ec01965884c262fd86c09985fda7de2d2f",
+      "observedAt": "2026-10-07T09:44:49.878Z",
+      "localChecks": "PASS",
+      "wholeResult": "NOT_IMPLEMENTED; complete=false",
+      "coverage": "Eight autonomous reservations remain charged across restart, the ninth is denied by DAILY_JOB_CEILING, and foreground is eligible while the count stays eight."
+    },
+    {
+      "acceptanceId": "AT-ops-52",
+      "path": "build/evidence/R0.06/exhausted-pending-green-cli/AT-ops-52-show.json",
+      "sha256": "4ddaa0b048a496bc8bcc2816f6b17d57981004f7e260f77161aab121e3780ade",
+      "observedAt": "2026-10-07T09:23:13.062Z",
+      "localChecks": "PASS",
+      "wholeResult": "NOT_IMPLEMENTED; complete=false",
+      "coverage": "Fresh weekly/five-hour vetoes remain keyed to duration across missing, reversed-order, and swapped bucket metadata observations."
+    }
+  ],
+  "evidenceFreshness": {
+    "currentAccountingProbeSha256": "04c6558e19c63ca529888d3ed8887e7e4d1f1d01ea5fa70005ea2b89779dc619",
+    "currentVerifier": {
+      "path": "build/evidence/R0.06/unavailable-quota11-final-verification.json",
+      "sha256": "381d907efdaae0aa83791d635dc5ea7e67af3b92c93a5378771b6cdc6dac31f5",
+      "recordedAt": "2026-10-07T09:46:10.034Z",
+      "sourceBindingMatchesAccountingProbe": true
+    },
+    "caveat": "AT-ops-10/11/51 receipts are from the current source pin. AT-ops-49/50/52 receipts are earlier 09:23 PASS readbacks, before the AT-ops-11 accountingProbe addition; current source still contains those branches, but those three receipts are corroborative rather than fresh post-edit bindings. Parent may refresh these existing CLI cases if current-source regression receipts are required; that is verification only and does not create a new AT59 source gap."
+  },
+  "currentPins": [
+    {
+      "path": "packages/self-improvement/src/accounting-probe.ts",
+      "sha256": "04c6558e19c63ca529888d3ed8887e7e4d1f1d01ea5fa70005ea2b89779dc619"
+    },
+    {
+      "path": "packages/self-improvement/src/model-admission.ts",
+      "sha256": "44a36ef026d203f9db9437dcf53c1172224420596d0570353bcc564a758439c7"
+    },
+    {
+      "path": "packages/ops/src/model-admission-policy.ts",
+      "sha256": "553eb6805c9779c924d16c3bdb8eeac9a92727086b64a673d317f9dddcbc2c95"
+    },
+    {
+      "path": "packages/contracts/src/model-admission.ts",
+      "sha256": "8803164cb2d4e3b5fe764870f8409f020be0841f2367a86c7cdd062fa3c6262e"
+    },
+    {
+      "path": "packages/self-improvement/src/public.ts",
+      "sha256": "aa1fc6d22b23c94bd283e88f08ef20d5ef9b43cb9fe60e88c470fc12e2f089ec"
+    },
+    {
+      "path": "packages/ops/src/fixture-stack.ts",
+      "sha256": "386c849cfd4c28bc8ae00aaabe7efb5a3477a5eac8ee234152d74817fbdfad27"
+    },
+    {
+      "path": "tests/registry.yaml",
+      "sha256": "d320d30120dbfaa16abd027c04b9724840911c2cecded2ae5df9e8bd004c0dc4"
+    },
+    {
+      "path": "architecture/features.json",
+      "sha256": "9ce406b96b0c91bccdad51b1bb374733bb5a036ba7dedfacd4ff4dd87a1ac168"
+    },
+    {
+      "path": "docs/adr/0027-model-admission-accounting.md",
+      "sha256": "4ec9fb14653a689095ea10e3b2350c169d84be6fbb4f61fe4e4969d9a95017f4"
+    }
+  ],
+  "minimumChange": null,
+  "sourceAllowlist": [],
+  "generatedOnly": [],
+  "deferred": [
+    "Direct full AT-hermes-config-59 proof at its assigned CLI/stack/device/account boundary",
+    "Protected subscription identity/provider observations and actual provider send path",
+    "Canonical slot/wake dispatch and release/whole-AT completion"
+  ],
+  "priority": "Parent reports ROOT02 and ROOT005 remain PENDING; this review makes no root priority claim and no root request or priority edits.",
+  "workPerformed": "Read-only comparison of the assigned assertion, test-plan rung, current public ModelAdmission/accountingProbe source, and saved case readbacks. No CLI, build, check, test, source, registry, map, root, process, provider, or credential action was performed."
+}
