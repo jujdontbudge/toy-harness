@@ -2,7 +2,7 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-07T13:55:06.577904+00:00",
+  "updatedAt": "2026-10-07T13:56:29.644417+00:00",
   "phase": "R0_FEASIBILITY",
   "activeCard": "R0.06",
   "cardCount": 87,
@@ -2105,7 +2105,7 @@
       },
       "unknownResetCrossDayUnit": {
         "recordedAt": "2026-10-07T13:44:39.910742+00:00",
-        "state": "ACTUAL_PUBLIC_CLI_UNKNOWN_RESET_RED_OWNER_UNCHANGED_DOWN_VERIFIED",
+        "state": "SOLE_SOURCE_PHASE2_EXISTING_OWNER_CORRECTION_ADMITTED_AFTER_ACTUAL_RED",
         "card": "R0.06",
         "AT": "AT-ops-10",
         "assignedAttemptsUsed": 0,
@@ -2185,7 +2185,10 @@
         "nativeAttemptStarted": false,
         "redVerification": "build/evidence/R0.06/unknown-reset-red-verification.json",
         "worldId": "49afcf0c-ced8-447d-ab76-e12e03bd472b",
-        "worldDown": true
+        "worldDown": true,
+        "phase2Admission": "build/evidence/R0.06/unknown-reset-phase2-source-admission.json",
+        "redCommit": "b38232d",
+        "redPushed": true
       }
     },
     "R0.07": {
@@ -12155,7 +12158,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Fresh own-helper memory admission; sole phase2 existing-owner correction. Reproducer source frozen; first implementation PASS stops.",
+  "nextAction": "Metadata/read-only only until soleR006phase2SOURCESTOP; then parentreview/strictchecks + firstimplementation assignedAT10 and affected11/49/50/51/52. STOPfirstPASS or3failedassignedattempts; validROOT02DONEprioritizesR001aftercleanup.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -22719,7 +22722,7 @@
     "threadId": "01a109d1-2f67-7643-9677-404a83617cf8",
     "lockFile": "build/coordinator.lock",
     "lockKind": "exclusive session marker; not process-liveness evidence",
-    "checkpoint": "build/checkpoints/2026-10-07-manual-lineage-stopped"
+    "checkpoint": "build/checkpoints/2026-10-07-unknown-reset-owner"
   },
   "pullRequest": {
     "number": 1,
@@ -22863,14 +22866,20 @@
     "repairFloorApplied": false,
     "jobOwnDeclaredNeedOnly": true
   },
-  "activeWorkers": [],
+  "activeWorkers": [
+    {
+      "agent": "/root/r006_cross_day_minimum",
+      "card": "R0.06",
+      "phase": "SOURCE_PHASE2_OWNER_FIX",
+      "admission": "build/evidence/R0.06/unknown-reset-phase2-source-admission.json"
+    }
+  ],
   "pullRequestUpdatedAt": "2026-10-07T13:44:39.910742+00:00",
-  "continuationCheckpoint": "build/checkpoints/2026-10-07-manual-lineage-stopped",
+  "continuationCheckpoint": "build/checkpoints/2026-10-07-unknown-reset-owner",
   "readOnlyWorkers": [],
   "liveRuntime": {
     "state": "ALL_OWNED_WORLDS_DOWN",
-    "sourceOwner": "STOPPED",
-    "lastProof": "build/evidence/R0.06/unknown-reset-red-verification.json"
+    "sourceOwner": "/root/r006_cross_day_minimum"
   },
   "goalStatus": "active",
   "latestSourceCandidate": {
