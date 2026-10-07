@@ -3618,6 +3618,77 @@ export const registeredCliAcceptanceManifestInventory = [
     "simUnavailableReason": "TEST-PLAN assigns this prebuild source/lock compatibility check to CLI; a user conversation cannot introduce isolated dependency or OS-source mutations."
   },
   {
+    "id": "AT-adhd-features-66",
+    "rung": "CLI",
+    "sourceAssertionHash": "1ac96bab8cb10271674619a870cb00e4d92799697832e570ff5fdb7df30a5487",
+    "commandId": "probe.run",
+    "scenarioId": "research.component-comparison",
+    "owner": "self-improvement",
+    "firstRelease": "R0",
+    "kind": "behavioral",
+    "mandatoryCases": [
+      {
+        "id": "actual-feature-inventory",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "actual-feature-inventory"
+      },
+      {
+        "id": "linked-proven-all-features",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "linked-proven-all-features"
+      },
+      {
+        "id": "missing-feature",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "missing-feature"
+      },
+      {
+        "id": "unsupported-selection",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "unsupported-selection"
+      },
+      {
+        "id": "broken-links",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "broken-links"
+      },
+      {
+        "id": "duplicate-malformed-decision",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "duplicate-malformed-decision"
+      }
+    ],
+    "trigger": "Read F00-F16 canonical traces and register rows, then check fully linked fixed external research archives, every missing/unsupported feature, broken source/evidence/release/acceptance links and duplicate/malformed records. No native account or feature activation is inferred.",
+    "faultControls": [
+      {
+        "id": "external-feature-research-archive",
+        "seam": "provider",
+        "affectedPhases": [
+          "linked-proven-all-features",
+          "missing-feature",
+          "unsupported-selection",
+          "broken-links",
+          "duplicate-malformed-decision"
+        ]
+      }
+    ],
+    "observations": [
+      {
+        "id": "per-feature-register-gate",
+        "independentReader": "EngineeringControl.checkResearch source-bound F00-F16 results and persisted unfiltered probe.show readback",
+        "caseIds": [
+          "actual-feature-inventory",
+          "linked-proven-all-features",
+          "missing-feature",
+          "unsupported-selection",
+          "broken-links",
+          "duplicate-malformed-decision"
+        ]
+      }
+    ],
+    "simUnavailableReason": "SIM cannot supply a pre-build external research archive or inspect its canonical engineering gate. The CLI checks the real public owner in a seeded owned world."
+  },
+  {
     "id": "AT-attention-66",
     "rung": "CLI",
     "sourceAssertionHash": "19bd2c265bd8baa95cbb780ca34b0ad5f53ba75f1bde7891147eb2838d4842f9",

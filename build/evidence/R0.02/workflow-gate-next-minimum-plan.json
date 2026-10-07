@@ -1,0 +1,268 @@
+{
+  "schemaVersion": "toy.r0.02.workflow-gate-next-minimum-plan.v1",
+  "recordedAt": "2026-10-07T10:20:43Z",
+  "card": "R0.02",
+  "decision": "NO_NEW_SOURCE",
+  "sourceOwner": null,
+  "sourceAdmission": "NOT_REQUESTED",
+  "summary": "No source unit for AT-workflows-10/11 can currently advance R0.02 without either duplicating the existing route/skill diagnostic cases or inventing a workflow commitment, wake, dossier, primary-citation, or authenticated-runtime owner. Keep both assigned ATs pending and revisit after their real consumers exist.",
+  "scope": {
+    "buildPlan": {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/BUILD-PLAN.md",
+      "line": 50,
+      "sha256": "aa84eb600e53bc65e6c6b1ed4fce45870ead861e0d18bf00d81613ff2595f49a"
+    },
+    "assignedAcceptances": [
+      {
+        "id": "AT-workflows-10",
+        "spec": "specs/workflows.md:1012",
+        "sourceAssertionHash": "d62f67d10bcc3f4766ad74eaa1ee4a984d5eb15a65158efc50935a7ef5a64a41",
+        "rung": "CLI",
+        "requiredEvidence": "stack, device/account, probe:AT-workflows-10",
+        "requiredBehavior": "A research commitment dispatches through toy_delegate with requested and observed Sol/medium/Fast, supported ModelRoute, the loaded upstream skill revision/text digest, question, artifacts and primary citations recorded; ordinary delegation retains its canonical route."
+      },
+      {
+        "id": "AT-workflows-11",
+        "spec": "specs/workflows.md:1013",
+        "sourceAssertionHash": "a23b3286c8ae8df3af0e5d40cca4c1412377f19d915c35cd32bf8baede80b2c7",
+        "rung": "CLI",
+        "requiredEvidence": "stack, device/account, probe:AT-workflows-11",
+        "requiredBehavior": "Luna/max, missing skill, unverified tier mapping or paid fallback blocks research acceptance with its exact gap; the research commitment/wake survives, no paid route executes, and no fabricated skill/receipt is recorded."
+      }
+    ],
+    "testPlan": {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/TEST-PLAN.md",
+      "lines": [491, 492],
+      "sha256": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2"
+    },
+    "workflowSpec": {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/workflows.md",
+      "sha256": "977f8c153b93af78470b63424e444da9816c298623bac5b3ccd9da7832b41d8c",
+      "implementationDetail": "§6.2 at line 311 requires toy_delegate role=research, candidate_write, the research commitment UUID and focused question; records supported route, skill source revision/SHA-256, loaded digest, citations and artifact import/readback; it says the provider tier mapping is verified at R0, not guessed."
+    }
+  },
+  "discovery": {
+    "ownerPath": [
+      {
+        "path": "cli/src/main.ts",
+        "line": 243,
+        "fact": "An unfiltered registered Hermes delegation.route-skill probe dispatches to ModelRouteProbe."
+      },
+      {
+        "path": "packages/hermes/src/model-route-probe.ts",
+        "lines": [127, 251, 275, 288, 318],
+        "fact": "The current probe invokes a fixed external Codex executor, exercises route/skill failures and result-file integrity, and persists diagnostic checks through the public probe owner. Its research fixture is synthetic markdown with an example.invalid citation."
+      },
+      {
+        "path": "packages/hermes/src/model-route.ts",
+        "lines": [61, 69, 77, 101, 119],
+        "fact": "ModelRoute.delegationReceipt resolves the pinned skill and requested role route, verifies the observed route, and returns bounded artifact metadata. It only admits a ready R0 test world with fake clock and fake model; receipts hard-code nativeExecutionVerified:false and acceptanceComplete:false."
+      },
+      {
+        "path": "packages/contracts/src/model-route.ts",
+        "lines": [149, 152, 164, 174],
+        "fact": "The current input carries requestId, purpose and objective; its task is limited to scope r0-feasibility/depth 1. The receipt carries hashes and artifact references, not a commitment UUID, candidate_write mode, accepted dossier, or citation records."
+      }
+    ],
+    "toolRegistration": "The bounded repository search found no Toy-owned toy_delegate source registration or execution adapter. The executable delegation path located is the Hermes ModelRouteProbe fixture routed from the control CLI; the toy_delegate name appears in the planning requirements and acceptance text.",
+    "otherRelevantOwner": {
+      "path": "packages/obligations/src/public.ts:11",
+      "sha256": "f77baa2044aed171ee617da4a47d267894f917db148ff2b494cf00d672601f27",
+      "fact": "The current public implementation exports CadenceProjection.readSlots only; it does not implement commitment capture, durable research wakes, or dossier acceptance."
+    },
+    "currentM11Unit": {
+      "path": "build/state.json:743-766",
+      "fact": "The AT-workflows-1 M11 static-source unit is already recorded as AT1_M11_STATIC_SOURCE_UNIT_VERIFIED_STOPPED. It is not whole AT-workflows-1 evidence. This plan adds no M11 comparison or positive case."
+    }
+  },
+  "evidence": {
+    "assignedATLedger": [
+      {
+        "id": "AT-workflows-10",
+        "state": "NOT_IMPLEMENTED",
+        "evidence": [],
+        "ledgerPath": "build/state.json:13198"
+      },
+      {
+        "id": "AT-workflows-11",
+        "state": "NOT_IMPLEMENTED",
+        "evidence": [],
+        "ledgerPath": "build/state.json:13205"
+      }
+    ],
+    "relatedAssignedAcceptance": {
+      "id": "AT-hermes-config-42",
+      "spec": "specs/hermes-config.md:3404",
+      "sourceAssertionHash": "3abe10c152c01291130e1288a4f168d479406d0a3ec96ed28c72d96a10c157e1",
+      "rung": "CLI",
+      "requiredEvidence": "stack, device/account, probe:AT-hermes-config-42",
+      "state": "NOT_IMPLEMENTED",
+      "evidence": [],
+      "registration": "No source-bound tests/registry.yaml manifest found.",
+      "relationship": "Its bounded toy_delegate research launch assertion overlaps the same route/skill/artifact owner family. It is not evidence for AT-workflows-10/11 and is not a reason to add duplicate route cases here."
+    },
+    "registeredOwnerEvidence": [
+      {
+        "id": "AT-ops-45",
+        "registeredManifest": {
+          "path": "tests/registry.yaml",
+          "line": 3682,
+          "rung": "CLI",
+          "caseIds": [
+            "research-route-observed",
+            "research-route-missing",
+            "research-route-luna",
+            "research-route-wrong-effort",
+            "research-route-wrong-tier",
+            "research-skill-missing",
+            "research-skill-wrong-bytes",
+            "ordinary-implementation-luna",
+            "module-local-override-refused"
+          ]
+        },
+        "path": "build/evidence/R0.02/ops45-final-verification.json",
+        "sha256": "fb5ab9ee80a6fe9e06f50f9e02301e29281f35c8025a3f74c2c642831fd07642",
+        "run": {
+          "path": "build/evidence/R0.02/ops45-third-cli/AT-ops-45-run.json",
+          "sha256": "cba6873751253559538153246d80d0f4e4698533726d16ab6eac2d006eae49ea"
+        },
+        "show": {
+          "path": "build/evidence/R0.02/ops45-third-cli/AT-ops-45-show.json",
+          "sha256": "bc15137005d5eacad84fb54c715c42a52db062532a1da74c38e9dc720f22e705"
+        },
+        "measured": "The unfiltered CLI run/show has exact registration and 9/9 diagnostic checks. It binds requested/observed research route, skill commit/content/loaded digests, route-mismatch and skill-missing refusal, and the separate ordinary route. The positive fixture is explicitly fixtureOnly; liveProviderSends=0, nativeExecutionVerified=false, acceptanceComplete=false, wholeATComplete=false. It is a component research receipt gate, not AT-workflows-10/11."
+      },
+      {
+        "id": "AT-obligations-75",
+        "path": "build/evidence/R0.02/route-cli/AT-obligations-75-run.json",
+        "sha256": "a622c57c43fc8e9b636ba3adceb3c64617c73a7d8b41534f2045d6f3ec33fb43",
+        "registeredManifest": {
+          "path": "tests/registry.yaml",
+          "line": 1147,
+          "rung": "CLI",
+          "caseIds": [
+            "research-route-observed",
+            "research-route-missing",
+            "research-route-luna",
+            "research-route-wrong-effort",
+            "research-route-wrong-tier",
+            "research-skill-missing",
+            "research-skill-wrong-bytes",
+            "ordinary-implementation-luna",
+            "module-local-override-refused"
+          ]
+        },
+        "measured": "Its existing delegation.route-skill case set includes route observed/missing/Luna/wrong effort/wrong tier, missing/wrong skill bytes, ordinary implementation Luna, and module-local override refusal. Its successful route receipt is a fake external CLI fixture and keeps nativeExecutionVerified=false and acceptanceComplete=false. These cases overlap the route/skill portion of AT-workflows-10/11 and are not their acceptance results."
+      },
+      {
+        "id": "AT-workflows-1 M11 static unit",
+        "path": "build/evidence/R0.02/workflow-prerequisites-final-verification.json",
+        "sha256": "063c5b7d2f9d0470ba544aad89ba1af3eac78c80f0c923b57f29e9980d29b47d",
+        "fact": "The bounded static-source unit is stopped and whole AT-workflows-1 remains false; it is unrelated to the unique commitment/wake and citation claims here."
+      }
+    ],
+    "baseline": {
+      "registeredCommand": null,
+      "status": "NOT_RUN",
+      "reason": "tests/registry.yaml has no AT-workflows-10 or AT-workflows-11 source-bound manifest; the TEST-PLAN names the probe IDs but no matching CLI case registration exists. The saved AT-workflows-1/2 generic NOT_IMPLEMENTED baseline is not a baseline for these IDs."
+    }
+  },
+  "caseAssessment": [
+    {
+      "id": "AT-workflows-10",
+      "rung": "CLI",
+      "coveredByExistingOwnerCases": [
+        "research-route-observed",
+        "ordinary-implementation-luna"
+      ],
+      "stillUnproved": [
+        "An actual toy_delegate dispatch bound to a durable research commitment UUID and candidate_write workspace.",
+        "An authenticated supported ModelRoute run and externally verified Fast-to-provider-tier mapping.",
+        "Question, real primary citations, and imported artifacts as acceptance-readable records; current fixture records an objective/task digest and artifact digest but its citation is example.invalid."
+      ],
+      "newCaseNow": null
+    },
+    {
+      "id": "AT-workflows-11",
+      "rung": "CLI",
+      "coveredByExistingOwnerCases": [
+        "research-route-luna",
+        "research-route-wrong-effort",
+        "research-route-wrong-tier",
+        "research-skill-missing",
+        "research-skill-wrong-bytes"
+      ],
+      "stillUnproved": [
+        "Dossier admission denial with exact accepted-research gap and a persisted no-acceptance result.",
+        "Durable commitment/wake survival across refusal, which requires the R1 obligation transaction/consumer rather than a fabricated fixture state.",
+        "No actual paid route execution under an authenticated owner, and no fabricated receipt in the accepted dossier store."
+      ],
+      "newCaseNow": null
+    }
+  ],
+  "sourceDecision": {
+    "status": "NO_NEW_SOURCE",
+    "allowableSourcePaths": [],
+    "generatedPaths": [],
+    "testsToAdd": [],
+    "baselineCommand": null,
+    "reason": "A new manifest using the existing nine route/skill cases would repeat current ModelRoute coverage and still leave the workflow-specific acceptance untested. The adjacent AT-hermes-config-42 bounded research-launch AT is also pending and shares this owner family. The distinct missing state belongs to the not-yet-present durable commitment/wake and dossier path or needs the actual account-backed route required by the assignment. Do not add a placeholder consumer or fixture receipt."
+  },
+  "requiredConsumersIfRevisited": [
+    {
+      "owner": "Hermes protected toy_delegate",
+      "interfaceRequirement": "Consume a real research commitment UUID and candidate_write question/workspace; call ModelRoute with verified route/skill; import/read back the result artifact and primary citations.",
+      "specPin": "specs/workflows.md:311; spec digest 977f8c153b93af78470b63424e444da9816c298623bac5b3ccd9da7832b41d8c"
+    },
+    {
+      "owner": "Obligations",
+      "interfaceRequirement": "Durably preserve the open commitment and current research wake when admission refuses; use the written capture/due/transaction owner rather than probe-local state.",
+      "specPin": "specs/CONTRACTS.md:123-124; specs/workflows.md:1017,1019-1020; R1 acceptance"
+    },
+    {
+      "owner": "Workflow dossier validator",
+      "interfaceRequirement": "Accept only a current-generation, independently evidenced research result and expose its denial reason while leaving the obligation open.",
+      "specPin": "AT-workflows-14/15 at specs/workflows.md:1019-1020; R1 acceptance"
+    }
+  ],
+  "deferredFacts": [
+    "The AT-workflows-10/11 required account-backed route and exact Fast tier mapping remain unmeasured; fake executor observations are not substitutes.",
+    "The real upstream research skill load/receipt and primary-citation provenance in the protected runtime remain unproved.",
+    "Durable commitment/wake preservation and accepted-dossier state remain unproved because those consumers are R1 scope and absent from the current source owner.",
+    "Both assigned ATs and the full R0.02 card remain pending; this plan grants no acceptance credit."
+  ],
+  "sourcePins": [
+    {"path": "specs/README.md", "sha256": "2c02bdb4d13abd198231446873eaacfe30177a97f66235158912fd2accd006f4"},
+    {"path": "specs/PRINCIPLES.md", "sha256": "828bd798692b9f0c2acf3f7d51d5a244ee54dfe5c3bd3e88488788c77e53368b"},
+    {"path": "specs/BUILD-PLAN.md", "sha256": "aa84eb600e53bc65e6c6b1ed4fce45870ead861e0d18bf00d81613ff2595f49a"},
+    {"path": "specs/TEST-PLAN.md", "sha256": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2"},
+    {"path": "specs/workflows.md", "sha256": "977f8c153b93af78470b63424e444da9816c298623bac5b3ccd9da7832b41d8c"},
+    {"path": "specs/obligations.md", "sha256": "5379f943578b4248dc21379a029acead930047c091316deb796fae0d49f4eb0f"},
+    {"path": "specs/CONTRACTS.md", "sha256": "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d"},
+    {"path": "specs/hermes-config.md", "sha256": "d3548fde13180bc750660f306caa0041101832e398ccdabd6cfdac0b3de8f4af"},
+    {"path": "tests/acceptance-index.json", "sha256": "c9b645eab7f55b2ebf35d7db769a534a4837de23ad3dc3d913f3189e781d44fa"},
+    {"path": "tests/registry.yaml", "sha256": "d320d30120dbfaa16abd027c04b9724840911c2cecded2ae5df9e8bd004c0dc4"},
+    {"path": "build/state.json", "sha256": "bb2e5c22e7006283e73dffd1e1b0bc2107fa83d79750065797e3ae8c6917881c"},
+    {"path": "packages/hermes/src/model-route.ts", "sha256": "7c56f64981df351db6b8cd72237334369a86ffe9cb6d721c37c9dd2e2be945dc"},
+    {"path": "packages/hermes/src/model-route-probe.ts", "sha256": "dcecd115c2b28fd39574b454ed9246172204dc295ce01103033a0e4b1492a4a8"},
+    {"path": "packages/contracts/src/model-route.ts", "sha256": "ba828e8dde4fb234892c93ad73397f4280c26dd78760f336fe8a0a0a273ec273"},
+    {"path": "cli/src/main.ts", "sha256": "f11beae8458b3d1ec95ae4093fd8164ce96956b90cb988ea1e06280ae0d28363"},
+    {"path": "packages/obligations/src/public.ts", "sha256": "f77baa2044aed171ee617da4a47d267894f917db148ff2b494cf00d672601f27"},
+    {"path": "packages/self-improvement/src/engineering-control.ts", "sha256": "725aa4735e25b86c4c25092e9481580a501025e84f7493ee093060b584b3bbdd"},
+    {"path": "packages/self-improvement/src/component-comparison-probe.ts", "sha256": "e2dc9fc1aec758251f074869da25496e90f6f9cf66a35bf01b1090f977aa04a1"},
+    {"path": "behavior/models.yaml", "sha256": "8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67"},
+    {"path": "behavior/research-skill.json", "sha256": "676190b93eccbee205a5ec7e2609b2f4100a27bac73f808704095fa0229d2f72"},
+    {"path": "skills/toy-control/FEATURE-MAP.md", "sha256": "e4f1924a3145b8a2b827b1fb5fd0a94b071dc23493f7706a6e99916415ef999c"}
+  ],
+  "procedure": {
+    "skillsApplied": [
+      "fable-discover: read-only owner-path and evidence inspection",
+      "fable-plan: bounded decision with an explicit acceptance limit"
+    ],
+    "writes": ["build/evidence/R0.02/workflow-gate-next-minimum-plan.json"],
+    "sourceOrGeneratedMutation": false,
+    "CLIOrRuntimeInvoked": false,
+    "testsOrBuildInvoked": false,
+    "gitCommitCreated": false
+  }
+}

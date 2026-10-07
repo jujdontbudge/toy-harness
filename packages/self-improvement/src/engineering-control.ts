@@ -3,8 +3,8 @@ import { spawnSync } from "node:child_process";
 import { existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, realpathSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import ts from "typescript";
-import { acceptanceIndexSchema, checkoutPathSchema, cliDeclarations, featureFactsSchema, featureMapCheckSchema, featureMapUpdateSchema, generatorInputSchema, generatorPlanSchema, gardenerInputSchema, gardenerReportSchema, kitchenGateSummarySchema, mapCheckInputSchema, mapUpdateInputSchema, opsControlContextSchema, opsErrorMessages, referenceAdmissionEvidenceSchema, researchCatalogCoverageSchema, researchComponentComparisonSchema, researchComponentComparisonCheckSchema, researchDocumentOverlaySchema, researchRegisterInspectionV3Schema, researchAttentionDecisionSchema, researchAttentionDecisionCheckSchema, researchAttentionDecisionIdSchema, researchComponentComparisonV2Schema, researchComponentComparisonV3Schema, researchComponentComparisonV4Schema, researchComponentComparisonCheckV2Schema, researchSourcesComponentComparisonSchema, researchSourcesComponentComparisonV2Schema, researchSkillPinSchema, modelRoutePolicySchema, filePatchSchema, checkViewSchema } from "@toy/contracts";
-import type { CheckViewV1, FeatureFactsV1, FilePatchV1, GeneratorInputV1, GeneratorPlanV1, FeatureMapCheckV1, FeatureMapUpdateV1, MapCheckInputV1, MapUpdateInputV1, GardenerInputV1, GardenerReportV1, OpsControlContextV1, ResearchCatalogCoverageFindingV1, ResearchCatalogMemberV1, ResearchCatalogSectionV1, ResearchInspectionFindingV1, ResearchComponentComparisonV1, ResearchComponentComparisonCheckV1, ResearchDocumentOverlayV1, ResearchRegisterInspectionV1, ResearchComponentComparisonV2, ResearchComponentComparisonV3, ResearchComponentComparisonV4, ResearchComponentComparisonCheckV2, ResearchSourcesComponentComparisonV1, ResearchSourcesComponentComparisonV2, ResearchAttentionDecisionV1, ResearchAttentionDecisionCheckV1, ResearchRegisterInspectionV3, Result } from "@toy/contracts";
+import { acceptanceIndexSchema, checkoutPathSchema, cliDeclarations, featureFactsSchema, featureMapCheckSchema, featureMapUpdateSchema, generatorInputSchema, generatorPlanSchema, gardenerInputSchema, gardenerReportSchema, kitchenGateSummarySchema, mapCheckInputSchema, mapUpdateInputSchema, opsControlContextSchema, opsErrorMessages, referenceAdmissionEvidenceSchema, researchCatalogCoverageSchema, researchComponentComparisonSchema, researchComponentComparisonCheckSchema, researchDocumentOverlaySchema, researchRegisterInspectionV4Schema, researchAdhdFeatureIdSchema, researchAdhdFeatureTraceSchema, researchAdhdFeatureDecisionSchema, researchAdhdFeatureCheckSchema, researchAttentionDecisionSchema, researchAttentionDecisionCheckSchema, researchAttentionDecisionIdSchema, researchComponentComparisonV2Schema, researchComponentComparisonV3Schema, researchComponentComparisonV4Schema, researchComponentComparisonCheckV2Schema, researchSourcesComponentComparisonSchema, researchSourcesComponentComparisonV2Schema, researchSkillPinSchema, modelRoutePolicySchema, filePatchSchema, checkViewSchema } from "@toy/contracts";
+import type { CheckViewV1, FeatureFactsV1, FilePatchV1, GeneratorInputV1, GeneratorPlanV1, FeatureMapCheckV1, FeatureMapUpdateV1, MapCheckInputV1, MapUpdateInputV1, GardenerInputV1, GardenerReportV1, OpsControlContextV1, ResearchCatalogCoverageFindingV1, ResearchCatalogMemberV1, ResearchCatalogSectionV1, ResearchInspectionFindingV1, ResearchComponentComparisonV1, ResearchComponentComparisonCheckV1, ResearchDocumentOverlayV1, ResearchRegisterInspectionV1, ResearchComponentComparisonV2, ResearchComponentComparisonV3, ResearchComponentComparisonV4, ResearchComponentComparisonCheckV2, ResearchSourcesComponentComparisonV1, ResearchSourcesComponentComparisonV2, ResearchAttentionDecisionV1, ResearchAttentionDecisionCheckV1, ResearchRegisterInspectionV4, ResearchAdhdFeatureTraceV1, ResearchAdhdFeatureDecisionV1, ResearchAdhdFeatureCheckV1, Result } from "@toy/contracts";
 import { OpsControlRead, OpsTestStack, trustedCheckoutRoot, trustedToolEnvironment } from "@toy/ops/public";
 import { modelAdmissionMigration } from "./model-admission-migration.js";
 import { capacityTrialMigration } from "./capacity-trial-migration.js";
@@ -162,7 +162,7 @@ const inspect = (): { facts: FeatureFactsV1; check: FeatureMapCheckV1; expected:
 
 const readResearchFile = (path: string): string => {
   checkoutPathSchema.parse(path);
-  if (path !== "REQUIREMENTS.md" && !/^specs\/[^/]+\.md$/.test(path) && !(path.startsWith("research/") && path.endsWith(".md"))) throw new Error("RESEARCH_PATH_REFUSED");
+  if (path !== "REQUIREMENTS.md" && path !== "specs/review/coverage.md" && !/^specs\/[^/]+\.md$/.test(path) && !(path.startsWith("research/") && path.endsWith(".md"))) throw new Error("RESEARCH_PATH_REFUSED");
   let current = realpathSync(planning());
   for (const part of path.split("/")) {
     current = join(current, part);
@@ -742,7 +742,7 @@ const inspectComponentDecisions = (reports: ResearchRegisterInspectionV1["report
   const acceptanceIds = new Set(acceptanceIndexSchema.parse(JSON.parse(read("tests/acceptance-index.json"))).acceptance.map(entry => entry.id));
   return components.map(component => compareDecision(invalidV4Components.has(component.id) ? undefined : decisions.get(component.id), component, findings, requirementIds, release, acceptanceIds, opsRequirementIdsByComponent, lifeStoreRequirementIdsByComponent, lifeStoreComponentIds, canonicalRequirements));
 };
-const compareDecision = (record: ResearchComponentComparisonV2 | ResearchComponentComparisonV3 | ResearchComponentComparisonV4 | ResearchSourcesComponentComparisonV1 | ResearchSourcesComponentComparisonV2 | ResearchAttentionDecisionV1 | undefined, component: ResearchRegisterInspectionV1["components"][number], findings: ResearchInspectionFindingV1[], requirementIds: readonly string[], release: string, acceptanceIds: ReadonlySet<string>, opsRequirementIdsByComponent: ReadonlyMap<string, ReadonlySet<string>> = new Map(), lifeStoreRequirementIdsByComponent: ReadonlyMap<string, ReadonlySet<string>> = new Map(), lifeStoreComponentIds: ReadonlySet<string> = new Set(), canonicalRequirements: ReadonlyMap<string, CanonicalRequirementQuote> = new Map()): ResearchComponentComparisonCheckV2 => {
+const compareDecision = (record: ResearchComponentComparisonV2 | ResearchComponentComparisonV3 | ResearchComponentComparisonV4 | ResearchSourcesComponentComparisonV1 | ResearchSourcesComponentComparisonV2 | ResearchAttentionDecisionV1 | ResearchAdhdFeatureDecisionV1 | undefined, component: ResearchRegisterInspectionV1["components"][number], findings: ResearchInspectionFindingV1[], requirementIds: readonly string[], release: string, acceptanceIds: ReadonlySet<string>, opsRequirementIdsByComponent: ReadonlyMap<string, ReadonlySet<string>> = new Map(), lifeStoreRequirementIdsByComponent: ReadonlyMap<string, ReadonlySet<string>> = new Map(), lifeStoreComponentIds: ReadonlySet<string> = new Set(), canonicalRequirements: ReadonlyMap<string, CanonicalRequirementQuote> = new Map()): ResearchComponentComparisonCheckV2 => {
   const codes: ResearchComponentComparisonCheckV2["findings"] = [];
   const add = (code: ResearchComponentComparisonCheckV2["findings"][number]): void => { if (!codes.includes(code)) codes.push(code); };
   const validationId = "G0:" + release + ":" + component.id + (record?.scope === "attention-research-decision" ? ":" + record.decisionId : "");
@@ -788,7 +788,7 @@ const compareDecision = (record: ResearchComponentComparisonV2 | ResearchCompone
     if (required[record.decisionId].some(example => !record.options.some(option => option.example === example))) add("REQUIRED_OPTIONS_MISSING");
     if (!record.acceptanceIds.some(id => id.startsWith("AT-attention-"))) add("ACCEPTANCE_LINK_MISSING");
   }
-  if (record?.scope === "required-research-component") {
+  if (record?.scope === "required-research-component" || record?.scope === "adhd-feature-decision") {
     if (record.options.filter(option => option.support === "proven" && option.primaryEvidenceIds.length > 0 && option.primaryEvidenceIds.every(id => sourceSupports(id, option.id))).length < 2) add("REQUIRED_OPTIONS_MISSING");
     if (component.id === "M03" && !record.acceptanceIds.some(id => id.startsWith("AT-authority-"))) add("ACCEPTANCE_LINK_MISSING");
   }
@@ -881,7 +881,126 @@ const inspectAttentionDecisions = (reports: ResearchRegisterInspectionV1["report
     return researchAttentionDecisionCheckSchema.parse({ ...checked, decisionId });
   });
 };
-const inspectResearch = (input: MapCheckInputV1, testDocuments: readonly ResearchDocumentOverlayV1[]): ResearchRegisterInspectionV3 => {
+const adhdFeatureTraces = (registerRaw: string, reports: ResearchRegisterInspectionV1["reports"], globalRequirementIds: readonly string[]): ResearchAdhdFeatureTraceV1[] => {
+  const specPath = "specs/adhd-features.md";
+  const specRaw = readResearchFile(specPath);
+  const specLines = specRaw.split(/\r?\n/);
+  const registerLines = registerRaw.split(/\r?\n/);
+  const start = registerLines.findIndex(line => line === "### 6.1 Every ADHD feature");
+  const end = registerLines.findIndex((line, index) => index > start && /^### 6\.2\b/.test(line));
+  if (start < 0 || end < 0) throw new Error("FEATURE_REGISTER_SECTION_MISSING");
+  const reference = (id: string, path: string, raw: string, sourceLine: number): ResearchAdhdFeatureTraceV1["trace"] => {
+    const row = raw.split(/\r?\n/)[sourceLine - 1];
+    if (!row) throw new Error("FEATURE_REFERENCE_MISSING");
+    return { id, path, sourceDigest: hash(raw), sourceLine, rowDigest: hash(row) };
+  };
+  const labels = (cell: string, prefix: "Q" | "G"): string[] => {
+    const result: string[] = [];
+    for (const match of cell.matchAll(new RegExp("\\b" + prefix + "([0-9]+)(?:\\s*[-–—]\\s*" + prefix + "([0-9]+))?\\b", "g"))) {
+      const first = Number(match[1]);
+      const last = match[2] === undefined ? first : Number(match[2]);
+      if (last < first || last > 12) throw new Error("FEATURE_REFERENCE_RANGE_INVALID");
+      for (let number = first; number <= last; number += 1) result.push(prefix + number);
+    }
+    return [...new Set(result)];
+  };
+  const localReferences = (cell: string, prefix: "Q" | "G"): ResearchAdhdFeatureTraceV1["quoteReferences"] => labels(cell, prefix).map(id => {
+    const matches = specLines.flatMap((line, index) => line.startsWith("| " + id + " |") ? [index + 1] : []);
+    if (matches.length !== 1 || matches[0] === undefined) throw new Error("FEATURE_LOCAL_REFERENCE_INVALID");
+    return reference("adhd:" + id, specPath, specRaw, matches[0]);
+  });
+  const featureAcceptanceNumbers = [68, 1, 15, 19, 22, 26, 39, 42, 44, 45, 46, 47, 52, 54, 57, 58, 60];
+  const acceptanceIndex = acceptanceIndexSchema.parse(JSON.parse(read("tests/acceptance-index.json")));
+  return researchAdhdFeatureIdSchema.options.map((featureId, featureIndex) => {
+    const traceMatches = specLines.flatMap((line, index) => line.startsWith("| " + featureId + " ") ? [index] : []);
+    const registerMatches = registerLines.flatMap((line, index) => index > start && index < end && line.startsWith("| **" + featureId + "** ") ? [index] : []);
+    const traceIndex = traceMatches[0];
+    const registerIndex = registerMatches[0];
+    if (traceMatches.length !== 1 || registerMatches.length !== 1 || traceIndex === undefined || registerIndex === undefined) throw new Error("FEATURE_ROW_MISSING_OR_DUPLICATE");
+    const traceRow = specLines[traceIndex] ?? "";
+    const registerRow = registerLines[registerIndex] ?? "";
+    const traceCells = markdownTableCells(traceRow)?.map(cell => cell.trim());
+    const registerCells = markdownTableCells(registerRow)?.map(cell => cell.trim());
+    if (traceCells?.length !== 3 || registerCells?.length !== 4) throw new Error("FEATURE_ROW_INVALID");
+    const requirementCell = traceCells[1] ?? "";
+    const decisionCell = traceCells[2] ?? "";
+    const featureRequirementIds = requirementIdsInCell(requirementCell);
+    if (/(?:^|[,;]\s*)9(?:[,;]|$)/.test(requirementCell)) featureRequirementIds.push("9");
+    let quoteReferences = localReferences(decisionCell, "Q");
+    let grillReferences = localReferences(decisionCell, "G");
+    if (featureId === "F00") {
+      const originalQuote = /original quote “([^”]+)”/.exec(requirementCell)?.[1];
+      const requirementsRaw = readResearchFile("REQUIREMENTS.md");
+      const quoteLines = requirementsRaw.split(/\r?\n/).flatMap((line, index) => originalQuote && line.startsWith("| \"") && line.includes(originalQuote) ? [index + 1] : []);
+      const coverageRaw = readResearchFile("specs/review/coverage.md");
+      const coverageLines = coverageRaw.split(/\r?\n/).flatMap((line, index) => /^\*\*G12 —/.test(line) ? [index + 1] : []);
+      if (!originalQuote || quoteLines.length !== 1 || quoteLines[0] === undefined || coverageLines.length !== 1 || coverageLines[0] === undefined || !decisionCell.includes("Coverage audit G12, not the local grill label G12")) throw new Error("FEATURE_ONBOARDING_REFERENCE_INVALID");
+      quoteReferences = [reference("original:adhd-research", "REQUIREMENTS.md", requirementsRaw, quoteLines[0])];
+      grillReferences = [reference("coverage:G12", "specs/review/coverage.md", coverageRaw, coverageLines[0])];
+    }
+    if (featureId === "F16") {
+      if (!decisionCell.includes("explicit additional user configuration")) throw new Error("FEATURE_CONFIGURATION_REFERENCE_INVALID");
+      grillReferences = [reference("configuration:additional-user-configuration", specPath, specRaw, traceIndex + 1)];
+    }
+    const researchReference = registerCells[1] ?? "";
+    const reportKeys = reports.filter(report => new RegExp("\\b" + report.key + "\\b").test(researchReference)).map(report => report.key);
+    const acceptanceId = "AT-adhd-features-" + featureAcceptanceNumbers[featureIndex];
+    const acceptance = acceptanceIndex.acceptance.find(entry => entry.id === acceptanceId);
+    if (!acceptance || acceptance.source !== specPath || acceptance.sourceDigest !== hash(specRaw) || specLines[acceptance.sourceLine - 1] !== acceptance.sourceAssertion) throw new Error("FEATURE_ACCEPTANCE_BINDING_INVALID");
+    const acceptanceReferences = [reference(acceptanceId, specPath, specRaw, acceptance.sourceLine)];
+    return researchAdhdFeatureTraceSchema.parse({ featureId, acceptanceReferences, trace: reference(featureId, specPath, specRaw, traceIndex + 1), register: reference(featureId, "specs/RESEARCH-REGISTER.md", registerRaw, registerIndex + 1), globalRequirementIds, featureRequirementIds, quoteReferences, grillReferences, reportKeys, researchReference, releaseGate: registerCells[3] ?? "" });
+  });
+};
+const inspectAdhdFeatureDecisions = (registerRaw: string, reports: ResearchRegisterInspectionV1["reports"], documents: ReadonlyMap<string, ResearchDocumentOverlayV1>, requirementIds: readonly string[], release: string, canonicalRequirements: ReadonlyMap<string, CanonicalRequirementQuote>): ResearchRegisterInspectionV4["adhdFeatures"] => {
+  const traces = adhdFeatureTraces(registerRaw, reports, requirementIds);
+  const decisions = new Map<string, ResearchAdhdFeatureDecisionV1>();
+  const invalid = new Set<string>();
+  const duplicate = new Set<string>();
+  const seen = new Set<string>();
+  for (const report of reports) {
+    if (report.digest === null) continue;
+    const raw = documents.get(report.key)?.markdown ?? readResearchFile(report.path);
+    if (hash(raw) !== report.digest) throw new Error("FEATURE_REPORT_CHANGED");
+    for (const match of raw.matchAll(/^```ResearchAdhdFeatureDecisionV1\r?\n([\s\S]*?)^```[ \t]*$/gm)) {
+      let id: string | null = null;
+      try {
+        const parsed: unknown = JSON.parse(match[1] ?? "");
+        if (typeof parsed === "object" && parsed !== null && "componentId" in parsed && typeof parsed.componentId === "string") id = parsed.componentId;
+        const record = researchAdhdFeatureDecisionSchema.parse(parsed);
+        id = record.componentId;
+        if (seen.has(id)) { duplicate.add(id); throw new Error("FEATURE_DECISION_DUPLICATE"); }
+        seen.add(id);
+        if (!traces.find(trace => trace.featureId === id)?.reportKeys.includes(report.key)) throw new Error("FEATURE_REPORT_BINDING_INVALID");
+        decisions.set(id, record);
+      } catch {
+        if (id !== null && traces.some(trace => trace.featureId === id)) { invalid.add(id); seen.add(id); decisions.delete(id); }
+        else traces.forEach(trace => invalid.add(trace.featureId));
+      }
+    }
+  }
+  const acceptanceIds = new Set(acceptanceIndexSchema.parse(JSON.parse(read("tests/acceptance-index.json"))).acceptance.map(entry => entry.id));
+  const exact = (actual: readonly string[], expected: readonly string[]): boolean => actual.length === expected.length && new Set(actual).size === actual.length && [...actual].sort().every((value, index) => value === [...expected].sort()[index]);
+  return traces.map(trace => {
+    const record = invalid.has(trace.featureId) ? undefined : decisions.get(trace.featureId);
+    const component = { id: trace.featureId, sourceLine: trace.register.sourceLine, rowDigest: trace.register.rowDigest, componentAndPin: trace.featureId, consumingSpecs: "adhd-features", researchReference: trace.researchReference, alternativesAndReason: "Registered feature decision", releaseGate: trace.releaseGate, missingPinDeclared: true, reportKeys: trace.reportKeys, certification: "UNVERIFIED" as const };
+    const comparison = compareDecision(record, component, [], requirementIds, release, acceptanceIds, new Map(), new Map(), new Set(), canonicalRequirements);
+    const linkFindings: ResearchAdhdFeatureCheckV1["linkFindings"] = [];
+    if (invalid.has(trace.featureId)) linkFindings.push("DECISION_INVALID");
+    if (duplicate.has(trace.featureId)) linkFindings.push("DECISION_DUPLICATE");
+    if (record) {
+      if (record.traceRowDigest !== trace.trace.rowDigest || record.traceSourceDigest !== trace.trace.sourceDigest || record.registerRowDigest !== trace.register.rowDigest) linkFindings.push("TRACE_BINDING_MISMATCH");
+      if (!exact(record.featureRequirementIds, trace.featureRequirementIds)) linkFindings.push("FEATURE_REQUIREMENTS_MISMATCH");
+      if (!exact(record.quoteReferences.map(reference => JSON.stringify(reference)), trace.quoteReferences.map(reference => JSON.stringify(reference)))) linkFindings.push("QUOTE_LINK_MISMATCH");
+      if (!exact(record.grillReferences.map(reference => JSON.stringify(reference)), trace.grillReferences.map(reference => JSON.stringify(reference)))) linkFindings.push("GRILL_LINK_MISMATCH");
+      if (record.researchReference !== trace.researchReference || trace.reportKeys.some(key => reports.find(report => report.key === key)?.digest == null)) linkFindings.push("REPORT_LINK_MISMATCH");
+      const today = new Date().toISOString().slice(0, 10);
+      if (record.evidence.some(evidence => !Number.isFinite(Date.parse(evidence.verifiedAt + "T00:00:00Z")) || new Date(evidence.verifiedAt + "T00:00:00Z").toISOString().slice(0, 10) !== evidence.verifiedAt || evidence.verifiedAt > today)) linkFindings.push("PRIMARY_DATE_INVALID");
+      if (!trace.acceptanceReferences.every(reference => record.acceptanceIds.includes(reference.id))) linkFindings.push("FEATURE_ACCEPTANCE_MISSING");
+    }
+    return { trace, decision: researchAdhdFeatureCheckSchema.parse({ ...comparison, componentId: trace.featureId, state: comparison.state === "PASS" && linkFindings.length === 0 ? "PASS" : "BLOCKED", linkFindings, activationVerified: false }) };
+  });
+};
+const inspectResearch = (input: MapCheckInputV1, testDocuments: readonly ResearchDocumentOverlayV1[]): ResearchRegisterInspectionV4 => {
   const documents = new Map(testDocuments.map(document => [document.reportKey, document]));
   if (documents.size !== testDocuments.length) throw new Error("RESEARCH_DOCUMENT_DUPLICATE");
   const registerPath = "specs/RESEARCH-REGISTER.md";
@@ -953,7 +1072,8 @@ const inspectResearch = (input: MapCheckInputV1, testDocuments: readonly Researc
   const canonicalRequirements = canonicalRequirementQuotesFrom(readResearchFile("REQUIREMENTS.md"));
   const componentDecisions = inspectComponentDecisions(reports, components, findings, documents, requirementIds, input.release ?? "R0", opsRequirementIdsByComponent, lifeStoreRequirementIdsByComponent, lifeStoreComponentIds, canonicalRequirements);
   const attentionDecisions = inspectAttentionDecisions(reports, components, findings, documents, requirementIds, input.release ?? "R0");
-  return researchRegisterInspectionV3Schema.parse({ attentionDecisions, componentDecisions, requestedRelease: input.release, registerPath, registerDigest: hash(raw), components, componentComparisons, reports, specReferences, sourcesCatalogCoverage, dependencyClosureVerified: false, findings, wholeATsPassed: [], scope: "register_inventory", admission: "BLOCKED", acceptanceComplete: false });
+  const adhdFeatures = inspectAdhdFeatureDecisions(raw, reports, documents, requirementIds, input.release ?? "R0", canonicalRequirements);
+  return researchRegisterInspectionV4Schema.parse({ adhdFeatures, attentionDecisions, componentDecisions, requestedRelease: input.release, registerPath, registerDigest: hash(raw), components, componentComparisons, reports, specReferences, sourcesCatalogCoverage, dependencyClosureVerified: false, findings, wholeATsPassed: [], scope: "register_inventory", admission: "BLOCKED", acceptanceComplete: false });
 };
 
 const isObjectRecord = (value: unknown): value is Record<string, unknown> => value !== null && typeof value === "object" && !Array.isArray(value);
@@ -1081,7 +1201,7 @@ export const EngineeringControl = {
       return { ok: true, data: quotes.filter((quote): quote is CanonicalRequirementQuote => quote !== undefined) };
     } catch { return refused("ARTIFACT_MISMATCH"); }
   },
-  checkResearch(input: MapCheckInputV1, context: OpsControlContextV1, testDocuments: readonly ResearchDocumentOverlayV1[] = []): Result<ResearchRegisterInspectionV3> {
+  checkResearch(input: MapCheckInputV1, context: OpsControlContextV1, testDocuments: readonly ResearchDocumentOverlayV1[] = []): Result<ResearchRegisterInspectionV4> {
     if (!mapCheckInputSchema.safeParse(input).success || !opsControlContextSchema.safeParse(context).success || testDocuments.length > 100 || testDocuments.some(document => !researchDocumentOverlaySchema.safeParse(document).success)) return refused("INVALID_INPUT");
     if (testDocuments.length > 0) {
       const owned = OpsTestStack.inspect(context);

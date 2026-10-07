@@ -1945,6 +1945,520 @@
                 ],
                 "additionalProperties": false
               }
+            },
+            "adhdFeatures": {
+              "minItems": 17,
+              "maxItems": 17,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "trace": {
+                    "type": "object",
+                    "properties": {
+                      "featureId": {
+                        "type": "string",
+                        "enum": [
+                          "F00",
+                          "F01",
+                          "F02",
+                          "F03",
+                          "F04",
+                          "F05",
+                          "F06",
+                          "F07",
+                          "F08",
+                          "F09",
+                          "F10",
+                          "F11",
+                          "F12",
+                          "F13",
+                          "F14",
+                          "F15",
+                          "F16"
+                        ]
+                      },
+                      "trace": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 120
+                          },
+                          "path": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 240,
+                            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._/-]*(?![\\s\\S])"
+                          },
+                          "sourceDigest": {
+                            "type": "string",
+                            "minLength": 64,
+                            "maxLength": 64,
+                            "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+                          },
+                          "sourceLine": {
+                            "type": "integer",
+                            "exclusiveMinimum": 0,
+                            "maximum": 9007199254740991
+                          },
+                          "rowDigest": {
+                            "type": "string",
+                            "minLength": 64,
+                            "maxLength": 64,
+                            "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "path",
+                          "sourceDigest",
+                          "sourceLine",
+                          "rowDigest"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "register": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 120
+                          },
+                          "path": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 240,
+                            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._/-]*(?![\\s\\S])"
+                          },
+                          "sourceDigest": {
+                            "type": "string",
+                            "minLength": 64,
+                            "maxLength": 64,
+                            "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+                          },
+                          "sourceLine": {
+                            "type": "integer",
+                            "exclusiveMinimum": 0,
+                            "maximum": 9007199254740991
+                          },
+                          "rowDigest": {
+                            "type": "string",
+                            "minLength": 64,
+                            "maxLength": 64,
+                            "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "path",
+                          "sourceDigest",
+                          "sourceLine",
+                          "rowDigest"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "globalRequirementIds": {
+                        "minItems": 1,
+                        "maxItems": 100,
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "maxLength": 120
+                        }
+                      },
+                      "featureRequirementIds": {
+                        "minItems": 1,
+                        "maxItems": 100,
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "maxLength": 120
+                        }
+                      },
+                      "quoteReferences": {
+                        "minItems": 1,
+                        "maxItems": 20,
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 120
+                            },
+                            "path": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 240,
+                              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._/-]*(?![\\s\\S])"
+                            },
+                            "sourceDigest": {
+                              "type": "string",
+                              "minLength": 64,
+                              "maxLength": 64,
+                              "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+                            },
+                            "sourceLine": {
+                              "type": "integer",
+                              "exclusiveMinimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "rowDigest": {
+                              "type": "string",
+                              "minLength": 64,
+                              "maxLength": 64,
+                              "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "path",
+                            "sourceDigest",
+                            "sourceLine",
+                            "rowDigest"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "grillReferences": {
+                        "minItems": 1,
+                        "maxItems": 20,
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 120
+                            },
+                            "path": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 240,
+                              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._/-]*(?![\\s\\S])"
+                            },
+                            "sourceDigest": {
+                              "type": "string",
+                              "minLength": 64,
+                              "maxLength": 64,
+                              "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+                            },
+                            "sourceLine": {
+                              "type": "integer",
+                              "exclusiveMinimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "rowDigest": {
+                              "type": "string",
+                              "minLength": 64,
+                              "maxLength": 64,
+                              "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "path",
+                            "sourceDigest",
+                            "sourceLine",
+                            "rowDigest"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "acceptanceReferences": {
+                        "minItems": 1,
+                        "maxItems": 100,
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 120
+                            },
+                            "path": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 240,
+                              "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._/-]*(?![\\s\\S])"
+                            },
+                            "sourceDigest": {
+                              "type": "string",
+                              "minLength": 64,
+                              "maxLength": 64,
+                              "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+                            },
+                            "sourceLine": {
+                              "type": "integer",
+                              "exclusiveMinimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "rowDigest": {
+                              "type": "string",
+                              "minLength": 64,
+                              "maxLength": 64,
+                              "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "path",
+                            "sourceDigest",
+                            "sourceLine",
+                            "rowDigest"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "reportKeys": {
+                        "minItems": 1,
+                        "maxItems": 100,
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "maxLength": 10
+                        }
+                      },
+                      "researchReference": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 16000
+                      },
+                      "releaseGate": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 16000
+                      }
+                    },
+                    "required": [
+                      "featureId",
+                      "trace",
+                      "register",
+                      "globalRequirementIds",
+                      "featureRequirementIds",
+                      "quoteReferences",
+                      "grillReferences",
+                      "acceptanceReferences",
+                      "reportKeys",
+                      "researchReference",
+                      "releaseGate"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "decision": {
+                    "type": "object",
+                    "properties": {
+                      "componentId": {
+                        "type": "string",
+                        "enum": [
+                          "F00",
+                          "F01",
+                          "F02",
+                          "F03",
+                          "F04",
+                          "F05",
+                          "F06",
+                          "F07",
+                          "F08",
+                          "F09",
+                          "F10",
+                          "F11",
+                          "F12",
+                          "F13",
+                          "F14",
+                          "F15",
+                          "F16"
+                        ]
+                      },
+                      "comparisonDigest": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "minLength": 64,
+                            "maxLength": 64,
+                            "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "state": {
+                        "type": "string",
+                        "enum": [
+                          "PASS",
+                          "BLOCKED"
+                        ]
+                      },
+                      "findings": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": [
+                            "MAPPED_REQUIREMENTS_MISSING",
+                            "REQUIRED_OPTIONS_MISSING",
+                            "OUTSIDE_OPTION_MISSING",
+                            "PRIMARY_EVIDENCE_MISSING",
+                            "CHOICE_UNSUPPORTED",
+                            "TRADEOFFS_MISSING",
+                            "ACCEPTANCE_LINK_MISSING",
+                            "VALIDATION_PLAN_MISSING",
+                            "SELECTED_FACT_UNRESOLVED",
+                            "DUPLICATE_REFERENCE",
+                            "DECISION_MISSING",
+                            "RELEASE_GATE_MISSING",
+                            "VALIDATION_ID_MISSING"
+                          ]
+                        }
+                      },
+                      "selectedTool": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "maxLength": 200
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "validationPlan": {
+                        "type": "string",
+                        "maxLength": 4000
+                      },
+                      "unresolvedFacts": {
+                        "maxItems": 100,
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "optionId": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 120
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "fact": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 2000
+                            }
+                          },
+                          "required": [
+                            "optionId",
+                            "fact"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "scope": {
+                        "type": "string",
+                        "const": "component_comparison"
+                      },
+                      "researchAttestationVerified": {
+                        "type": "boolean",
+                        "const": false
+                      },
+                      "acceptanceComplete": {
+                        "type": "boolean",
+                        "const": false
+                      },
+                      "selectedOptionId": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "maxLength": 120
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "missingRequirementIds": {
+                        "maxItems": 100,
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "maxLength": 120
+                        }
+                      },
+                      "missingSourceIds": {
+                        "maxItems": 100,
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "maxLength": 120
+                        }
+                      },
+                      "missingValidationIds": {
+                        "maxItems": 100,
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "maxLength": 120
+                        }
+                      },
+                      "linkFindings": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": [
+                            "TRACE_BINDING_MISMATCH",
+                            "FEATURE_REQUIREMENTS_MISMATCH",
+                            "QUOTE_LINK_MISMATCH",
+                            "GRILL_LINK_MISMATCH",
+                            "REPORT_LINK_MISMATCH",
+                            "PRIMARY_DATE_INVALID",
+                            "FEATURE_ACCEPTANCE_MISSING",
+                            "DECISION_INVALID",
+                            "DECISION_DUPLICATE"
+                          ]
+                        }
+                      },
+                      "activationVerified": {
+                        "type": "boolean",
+                        "const": false
+                      }
+                    },
+                    "required": [
+                      "componentId",
+                      "comparisonDigest",
+                      "state",
+                      "findings",
+                      "selectedTool",
+                      "validationPlan",
+                      "unresolvedFacts",
+                      "scope",
+                      "researchAttestationVerified",
+                      "acceptanceComplete",
+                      "selectedOptionId",
+                      "missingRequirementIds",
+                      "missingSourceIds",
+                      "missingValidationIds",
+                      "linkFindings",
+                      "activationVerified"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "trace",
+                  "decision"
+                ],
+                "additionalProperties": false
+              }
             }
           },
           "required": [
@@ -1963,7 +2477,8 @@
             "admission",
             "acceptanceComplete",
             "componentDecisions",
-            "attentionDecisions"
+            "attentionDecisions",
+            "adhdFeatures"
           ],
           "additionalProperties": false
         }

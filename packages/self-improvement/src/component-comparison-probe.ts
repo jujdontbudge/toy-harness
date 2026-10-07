@@ -1,8 +1,8 @@
 import { createHash, randomUUID } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { checkViewSchema, opsErrorMessages, registeredCliAcceptanceManifestInventory, researchComponentComparisonSchema, researchComponentComparisonV2Schema, researchComponentComparisonV4Schema, researchSourcesComponentComparisonSchema, researchSourcesComponentComparisonV2Schema, modelRouteDelegationReceiptSchema, researchSkillPinSchema } from "@toy/contracts";
-import type { CheckViewV1, OpsControlContextV1, RegisteredProbeInputV1, RegisteredProbeOperationV1, ResearchComponentComparisonV1, ResearchComponentComparisonV4, ResearchDocumentOverlayV1, ResearchRegisterInspectionV3, ResearchComponentInspectionV1, Result } from "@toy/contracts";
+import { checkViewSchema, opsErrorMessages, registeredCliAcceptanceManifestInventory, researchComponentComparisonSchema, researchComponentComparisonV2Schema, researchComponentComparisonV4Schema, researchAdhdFeatureDecisionSchema, researchSourcesComponentComparisonSchema, researchSourcesComponentComparisonV2Schema, modelRouteDelegationReceiptSchema, researchSkillPinSchema } from "@toy/contracts";
+import type { CheckViewV1, OpsControlContextV1, RegisteredProbeInputV1, RegisteredProbeOperationV1, ResearchComponentComparisonV1, ResearchComponentComparisonV4, ResearchDocumentOverlayV1, ResearchRegisterInspectionV3, ResearchRegisterInspectionV4, ResearchAdhdFeatureDecisionV1, ResearchComponentInspectionV1, Result } from "@toy/contracts";
 import { TestProbeControl, trustedCheckoutRoot } from "@toy/ops/public";
 import { EngineeringControl } from "./engineering-control.js";
 
@@ -25,6 +25,7 @@ const completeReport = (): ResearchComponentComparisonV1 => researchComponentCom
   validationPlan: "Run the pinned shared-connection rollback, lost-claim fencing and generated-schema CLI fault probe before component admission."
 });
 export const componentComparisonProbe = (input: RegisteredProbeInputV1, context: OpsControlContextV1): Result<RegisteredProbeOperationV1> => {
+  if (input.probeId === "AT-adhd-features-66") return adhdFeatureResearchProbe(input, context);
   if (input.probeId === "AT-lifestore-45") return lifeStoreQuoteProbe(input, context);
   if (["AT-sources-188", "AT-sources-190"].includes(input.probeId)) return sourcesComponentProbe(input, context);
   if (input.probeId === "AT-self-improvement-54") return requiredComponentProbe(input, context);
@@ -135,7 +136,7 @@ const workflowsPrerequisiteProbe = (input: RegisteredProbeInputV1, context: OpsC
 const lifeStoreCases = ["positive-all-required-quotes", "missing-component", "missing-requirement-quote", "unsupported-choice", "missing-version", "wrong-version", "wrong-digest", "wrong-primary-quote", "wrong-requirement-quote", "missing-validation"] as const;
 type LifeStoreReport = ResearchRegisterInspectionV3["reports"][number];
 const lifeStoreError = (): Result<RegisteredProbeOperationV1> => ({ ok: false, error: { module: "ops", code: "ARTIFACT_MISMATCH", message: opsErrorMessages.ARTIFACT_MISMATCH, retryable: false } });
-const lifeStoreRecord = (component: ResearchComponentInspectionV1, mappedRequirements: readonly string[], requirementQuotes: ResearchComponentComparisonV4["requirementQuotes"]): ResearchComponentComparisonV4 => {
+const sourceDecisionRecord = (component: ResearchComponentInspectionV1, mappedRequirements: readonly string[], requirementQuotes: ResearchComponentComparisonV4["requirementQuotes"]): ResearchComponentComparisonV4 => {
   const sourceIds = component.reportKeys.length > 0 ? component.reportKeys : ["fixture-primary:" + component.id];
   const evidence = sourceIds.map(id => ({ id, url: "https://fixture.invalid/" + id, publisher: "Seeded external primary report", kind: "primary" as const, supportedOptionIds: ["postgres", "outside"] }));
   const sourceContentParts = ["version: v1\n"];
@@ -166,6 +167,109 @@ const lifeStoreRecord = (component: ResearchComponentInspectionV1, mappedRequire
     requirementQuotes: [...requirementQuotes]
   });
 };
+const adhdFeatureCases = ["actual-feature-inventory", "linked-proven-all-features", "missing-feature", "unsupported-selection", "broken-links", "duplicate-malformed-decision"] as const;
+const adhdFeatureResearchProbe = (input: RegisteredProbeInputV1, context: OpsControlContextV1): Result<RegisteredProbeOperationV1> => {
+  if (input.caseId !== undefined) return lifeStoreError();
+  const manifest = registeredCliAcceptanceManifestInventory.find(entry => entry.id === input.probeId);
+  if (!manifest || manifest.scenarioId !== "research.component-comparison" || JSON.stringify(manifest.mandatoryCases.map(entry => entry.id)) !== JSON.stringify(adhdFeatureCases)) return lifeStoreError();
+  const baseline = EngineeringControl.checkResearch({ release: "R0" }, context);
+  if (!baseline.ok) return baseline;
+  const features = baseline.data.adhdFeatures;
+  const first = features[0];
+  if (features.length !== 17 || !first) return lifeStoreError();
+  const quotes = EngineeringControl.canonicalRequirementQuotes(first.trace.globalRequirementIds, context);
+  if (!quotes.ok) return quotes;
+  const records = features.map(feature => {
+    const trace = feature.trace;
+    const component = { id: trace.featureId, sourceLine: trace.register.sourceLine, rowDigest: trace.register.rowDigest, componentAndPin: trace.featureId, consumingSpecs: "adhd-features", researchReference: trace.researchReference, alternativesAndReason: "Seeded feature options", releaseGate: trace.releaseGate, missingPinDeclared: true, reportKeys: trace.reportKeys, certification: "UNVERIFIED" as const };
+    const source = sourceDecisionRecord(component, trace.globalRequirementIds, quotes.data);
+    const acceptanceIds = trace.acceptanceReferences.map(reference => reference.id);
+    return researchAdhdFeatureDecisionSchema.parse({ ...source, scope: "adhd-feature-decision", options: source.options.map(option => ({ ...option, tool: "Seeded " + trace.featureId + " " + option.id + " comparison", example: null })), traceRowDigest: trace.trace.rowDigest, traceSourceDigest: trace.trace.sourceDigest, registerRowDigest: trace.register.rowDigest, featureRequirementIds: trace.featureRequirementIds, quoteReferences: trace.quoteReferences, grillReferences: trace.grillReferences, researchReference: trace.researchReference, evidence: source.evidence.map(evidence => ({ ...evidence, verifiedAt: "2026-10-05" })), acceptanceIds, validations: source.validations.map(validation => ({ ...validation, testIds: acceptanceIds })) });
+  });
+  const reportBytes = new Map<string, string>();
+  for (const report of baseline.data.reports) {
+    if (features.some(feature => feature.trace.reportKeys.includes(report.key)) && report.originalDigest !== null) {
+      const bytes = readFileSync(join(trustedCheckoutRoot(), "..", "personal-assistant-harness", report.path), "utf8");
+      if (digest(bytes) !== report.originalDigest) return lifeStoreError();
+      reportBytes.set(report.key, bytes);
+    }
+  }
+  const documents = (candidates: readonly ResearchAdhdFeatureDecisionV1[], malformed = ""): ResearchDocumentOverlayV1[] => [...reportBytes].map(([key, bytes]) => {
+    const archive = baseline.data.reports.find(report => report.key === key);
+    if (!archive?.originalDigest) throw new Error("FEATURE_ARCHIVE_MISSING");
+    const assigned = candidates.filter(record => features.find(feature => feature.trace.featureId === record.componentId)?.trace.reportKeys.find(reportKey => reportBytes.has(reportKey)) === key);
+    const markdown = bytes + "\n" + assigned.map(record => "```ResearchAdhdFeatureDecisionV1\n" + JSON.stringify(record) + "\n```\n").join("\n") + (key === first.trace.reportKeys.find(reportKey => reportBytes.has(reportKey)) ? malformed : "");
+    return { reportKey: key, originalDigest: archive.originalDigest, contentDigest: digest(markdown), markdown };
+  });
+  const checks: CheckViewV1[] = [];
+  const observe = (caseId: typeof adhdFeatureCases[number], mutation: string, target: string | null, inspection: ResearchRegisterInspectionV4, documentsUsed: readonly ResearchDocumentOverlayV1[], expected: (features: ResearchRegisterInspectionV4["adhdFeatures"]) => boolean): void => {
+    const archiveBound = documentsUsed.every(document => inspection.reports.some(report => report.key === document.reportKey && report.originalDigest === document.originalDigest && report.digest === document.contentDigest && report.origin === "seeded_document"));
+    const affected = target === null ? null : inspection.adhdFeatures.find(feature => feature.trace.featureId === target)?.decision;
+    const prerequisite = JSON.stringify({ caseId, mutation, target, featureCount: inspection.adhdFeatures.length, states: inspection.adhdFeatures.map(feature => feature.trace.featureId + ":" + feature.decision.state), affected: affected ? { findings: affected.findings, linkFindings: affected.linkFindings, missingRequirementIds: affected.missingRequirementIds, missingSourceIds: affected.missingSourceIds, missingValidationIds: affected.missingValidationIds } : null, canonicalTraceDigest: digest(JSON.stringify(inspection.adhdFeatures.map(feature => feature.trace))), resultDigest: digest(JSON.stringify(inspection.adhdFeatures)), archiveBound, registerAdmission: inspection.admission, activationVerified: false, liveProviderSends: 0, wholeATComplete: false });
+    const passed = inspection.adhdFeatures.length === 17 && inspection.adhdFeatures.every(feature => feature.decision.activationVerified === false) && archiveBound && expected(inspection.adhdFeatures) && Buffer.byteLength(prerequisite, "utf8") < 2000;
+    checks.push(checkViewSchema.parse({ id: "research.component-comparison", owner: "self-improvement", state: passed ? "PASS" : "FAIL", checkedAt: new Date().toISOString(), reasonCode: passed ? "ADHD_FEATURE_RESEARCH_PASS" : "ADHD_FEATURE_RESEARCH_FAIL", prerequisite, nextCommandId: "probe.show", links: { recordRefs: [], observations: [], artifactDigests: [digest(JSON.stringify(documentsUsed)), digest(JSON.stringify(inspection.adhdFeatures)), digest(readFileSync(new URL("./component-comparison-probe.js", import.meta.url))), digest(readFileSync(new URL("./engineering-control.js", import.meta.url)))] } }));
+  };
+  observe("actual-feature-inventory", "canonical-archive", null, baseline.data, [], result => result.every(feature => feature.decision.state === "BLOCKED" && feature.decision.findings.includes("DECISION_MISSING")) && result[0]?.trace.grillReferences[0]?.id === "coverage:G12" && result.find(feature => feature.trace.featureId === "F01")?.trace.grillReferences.some(reference => reference.id === "adhd:G12") === true);
+  const exercise = (caseId: typeof adhdFeatureCases[number], mutation: string, target: string | null, candidates: readonly ResearchAdhdFeatureDecisionV1[], expected: (features: ResearchRegisterInspectionV4["adhdFeatures"]) => boolean, malformed = ""): Result<true> => {
+    const overlays = documents(candidates, malformed);
+    const inspection = EngineeringControl.checkResearch({ release: "R0" }, context, overlays);
+    if (!inspection.ok) return inspection;
+    observe(caseId, mutation, target, inspection.data, overlays, expected);
+    return { ok: true, data: true };
+  };
+  const positive = exercise("linked-proven-all-features", "complete-records", null, records, result => result.every(feature => feature.decision.state === "PASS" && feature.decision.findings.length === 0 && feature.decision.linkFindings.length === 0));
+  if (!positive.ok) return positive;
+  for (const feature of features) {
+    const id = feature.trace.featureId;
+    const isolated = (result: ResearchRegisterInspectionV4["adhdFeatures"]): boolean => result.every(entry => entry.decision.state === (entry.trace.featureId === id ? "BLOCKED" : "PASS"));
+    const missing = exercise("missing-feature", "omit-" + id, id, records.filter(record => record.componentId !== id), result => isolated(result) && result.find(entry => entry.trace.featureId === id)?.decision.findings.includes("DECISION_MISSING") === true);
+    if (!missing.ok) return missing;
+    const unsupported = structuredClone(records);
+    const target = unsupported.find(record => record.componentId === id);
+    if (!target) return lifeStoreError();
+    target.selectedOptionId = "unsupported-uncompared";
+    const selection = exercise("unsupported-selection", "unsupported-" + id, id, unsupported, result => isolated(result) && result.find(entry => entry.trace.featureId === id)?.decision.findings.includes("CHOICE_UNSUPPORTED") === true);
+    if (!selection.ok) return selection;
+  }
+  const mutations: [string, (record: ResearchAdhdFeatureDecisionV1) => void, string][] = [
+    ["trace-digest", record => { record.traceRowDigest = "0".repeat(64); }, "TRACE_BINDING_MISMATCH"],
+    ["trace-source-digest", record => { record.traceSourceDigest = "0".repeat(64); }, "TRACE_BINDING_MISMATCH"],
+    ["quote-source-digest", record => { record.quoteReferences.forEach(reference => { reference.sourceDigest = "0".repeat(64); }); }, "QUOTE_LINK_MISMATCH"],
+    ["grill-source-row", record => { record.grillReferences.forEach(reference => { reference.rowDigest = "0".repeat(64); }); }, "GRILL_LINK_MISMATCH"],
+    ["register-digest", record => { record.registerRowDigest = "0".repeat(64); }, "TRACE_BINDING_MISMATCH"],
+    ["feature-requirements", record => { record.featureRequirementIds = ["0.1"]; }, "FEATURE_REQUIREMENTS_MISMATCH"],
+    ["global-requirement-quote", record => { record.requirementQuotes = []; }, "MAPPED_REQUIREMENTS_MISSING"],
+    ["quote-link", record => { record.quoteReferences.forEach(reference => { reference.id = "adhd:Q1"; }); }, "QUOTE_LINK_MISMATCH"],
+    ["grill-namespace", record => { record.grillReferences.forEach(reference => { reference.id = "adhd:G12"; }); }, "GRILL_LINK_MISMATCH"],
+    ["report-reference", record => { record.researchReference = "AF unrelated"; }, "REPORT_LINK_MISMATCH"],
+    ["primary-quote", record => { record.primarySource.quotes = []; }, "PRIMARY_EVIDENCE_MISSING"],
+    ["primary-digest", record => { record.primarySource.sourceDigest = "0".repeat(64); }, "PRIMARY_EVIDENCE_MISSING"],
+    ["date-invalid", record => { record.evidence.forEach(evidence => { evidence.verifiedAt = "2026-02-30"; }); }, "PRIMARY_DATE_INVALID"],
+    ["date-future", record => { record.evidence.forEach(evidence => { evidence.verifiedAt = "2099-01-01"; }); }, "PRIMARY_DATE_INVALID"],
+    ["tradeoffs", record => { record.options.forEach(option => { option.resources = ""; }); }, "TRADEOFFS_MISSING"],
+    ["release-gate", record => { record.releaseGate = "[R0] invented activation"; }, "RELEASE_GATE_MISSING"],
+    ["acceptance-id", record => { record.acceptanceIds = ["AT-adhd-features-66"]; }, "FEATURE_ACCEPTANCE_MISSING"],
+    ["wrong-feature-acceptance", record => { record.acceptanceIds = ["AT-adhd-features-1"]; }, "FEATURE_ACCEPTANCE_MISSING"],
+    ["validation", record => { record.validations = []; }, "VALIDATION_ID_MISSING"],
+    ["selected-unresolved", record => { record.unresolvedFacts = [{ optionId: record.selectedOptionId, fact: "Selected capability remains unverified" }]; }, "SELECTED_FACT_UNRESOLVED"]
+  ];
+  for (const [name, mutate, expectedFinding] of mutations) {
+    const candidates = structuredClone(records);
+    const target = candidates[0];
+    if (!target) return lifeStoreError();
+    mutate(target);
+    const result = exercise("broken-links", name, target.componentId, candidates, checked => checked.every(feature => feature.decision.state === (feature.trace.featureId === target.componentId ? "BLOCKED" : "PASS")) && checked.some(feature => feature.trace.featureId === target.componentId && [...feature.decision.findings, ...feature.decision.linkFindings].some(finding => finding === expectedFinding)));
+    if (!result.ok) return result;
+  }
+  const firstRecord = records[0];
+  if (!firstRecord) return lifeStoreError();
+  for (const malformed of ["", "```ResearchAdhdFeatureDecisionV1\n" + JSON.stringify({ componentId: firstRecord.componentId }) + "\n```\n"]) {
+    const candidates = malformed ? records : [...records, firstRecord];
+    const result = exercise("duplicate-malformed-decision", malformed ? "malformed-known-feature" : "duplicate-valid-feature", firstRecord.componentId, candidates, checked => checked.every(feature => feature.decision.state === (feature.trace.featureId === firstRecord.componentId ? "BLOCKED" : "PASS")) && checked.some(feature => feature.trace.featureId === firstRecord.componentId && feature.decision.linkFindings.includes("DECISION_INVALID")), malformed);
+    if (!result.ok) return result;
+  }
+  return TestProbeControl.run(input, context, checks);
+};
 const lifeStoreDocuments = (reports: readonly LifeStoreReport[], components: readonly ResearchComponentInspectionV1[], records: ReadonlyMap<string, ResearchComponentComparisonV4>, omittedComponentId?: string): ResearchDocumentOverlayV1[] => {
   const archived = reports.filter((report): report is LifeStoreReport & { originalDigest: string } => report.originalDigest !== null);
   const recordsByReport = new Map<string, ResearchComponentComparisonV4[]>();
@@ -189,7 +293,7 @@ const lifeStoreQuoteProbe = (input: RegisteredProbeInputV1, context: OpsControlC
   const baseline = EngineeringControl.checkResearch({ release: "R0" }, context);
   if (!baseline.ok) return baseline;
   const candidateRecords = new Map<string, ResearchComponentComparisonV4>();
-  for (const component of baseline.data.components) candidateRecords.set(component.id, lifeStoreRecord(component, [], []));
+  for (const component of baseline.data.components) candidateRecords.set(component.id, sourceDecisionRecord(component, [], []));
   const candidateDocuments = lifeStoreDocuments(baseline.data.reports, baseline.data.components, candidateRecords);
   const candidateReadback = EngineeringControl.checkResearch({ release: "R0" }, context, candidateDocuments);
   if (!candidateReadback.ok) return candidateReadback;
@@ -218,7 +322,7 @@ const lifeStoreQuoteProbe = (input: RegisteredProbeInputV1, context: OpsControlC
         return quote ? [quote] : [];
       });
       if (quotes.length !== ids.length) return lifeStoreError();
-      records.set(component.id, lifeStoreRecord(component, ids, quotes));
+      records.set(component.id, sourceDecisionRecord(component, ids, quotes));
     }
     const targetRecord = records.get(target.id);
     if (!targetRecord) return lifeStoreError();

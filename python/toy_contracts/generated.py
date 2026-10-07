@@ -1895,7 +1895,7 @@ class DoctorReportV1(TypedDict):
 
 CliResult = Union[
     "CliBootstrapIdentitiesResult",
-    "CliResearchCheckResultV3",
+    "CliResearchCheckResultV4",
     "CliFailure",
     "CliHelpResult",
     "CliVersionResult",
@@ -1918,7 +1918,7 @@ CliResult = Union[
     "CliGardenResult",
 ]
 
-class CliResearchCheckResultV3(TypedDict):
+class CliResearchCheckResultV4(TypedDict):
     schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
     commandId: "CliResearchCheckResultCommandId"
     invocationId: "UUID"
@@ -1929,9 +1929,9 @@ class CliResearchCheckResultV3(TypedDict):
     environment: "CliEnvironment"
     meta: "CliMetadata"
     ok: "CliBootstrapIdentitiesResultOk"
-    data: "ResearchRegisterInspectionV3"
+    data: "ResearchRegisterInspectionV4"
 
-class ResearchRegisterInspectionV3(TypedDict):
+class ResearchRegisterInspectionV4(TypedDict):
     requestedRelease: Optional["Release"]
     registerPath: str
     registerDigest: "Digest"
@@ -1948,6 +1948,7 @@ class ResearchRegisterInspectionV3(TypedDict):
     acceptanceComplete: "RoleBootstrapReportV1IdentityGateVerified"
     componentDecisions: list["ResearchComponentComparisonCheckV2"]
     attentionDecisions: list["ResearchAttentionDecisionCheckV1"]
+    adhdFeatures: list["ResearchRegisterInspectionV4AdhdFeaturesItem"]
 
 class ResearchComponentComparisonCheckV2(TypedDict):
     componentId: str
@@ -2003,6 +2004,80 @@ ResearchAttentionDecisionCheckV1DecisionId = Literal[
     "push-delivery",
     "alarm-delivery",
     "reminder-scheduling",
+]
+
+class ResearchRegisterInspectionV4AdhdFeaturesItem(TypedDict):
+    trace: "ResearchAdhdFeatureTraceV1"
+    decision: "ResearchAdhdFeatureCheckV1"
+
+class ResearchAdhdFeatureTraceV1(TypedDict):
+    featureId: "ResearchAdhdFeatureTraceV1FeatureId"
+    trace: "ResearchAdhdFeatureTraceV1Trace"
+    register: "ResearchAdhdFeatureTraceV1Trace"
+    globalRequirementIds: list[str]
+    featureRequirementIds: list[str]
+    quoteReferences: list["ResearchAdhdFeatureTraceV1Trace"]
+    grillReferences: list["ResearchAdhdFeatureTraceV1Trace"]
+    acceptanceReferences: list["ResearchAdhdFeatureTraceV1Trace"]
+    reportKeys: list[str]
+    researchReference: str
+    releaseGate: str
+
+ResearchAdhdFeatureTraceV1FeatureId = Literal[
+    "F00",
+    "F01",
+    "F02",
+    "F03",
+    "F04",
+    "F05",
+    "F06",
+    "F07",
+    "F08",
+    "F09",
+    "F10",
+    "F11",
+    "F12",
+    "F13",
+    "F14",
+    "F15",
+    "F16",
+]
+
+class ResearchAdhdFeatureTraceV1Trace(TypedDict):
+    id: str
+    path: str
+    sourceDigest: "Digest"
+    sourceLine: int
+    rowDigest: "Digest"
+
+class ResearchAdhdFeatureCheckV1(TypedDict):
+    componentId: "ResearchAdhdFeatureTraceV1FeatureId"
+    comparisonDigest: Optional["Digest"]
+    state: "ResearchComponentComparisonCheckV1State"
+    findings: list["ResearchComponentComparisonCheckV2FindingsItem"]
+    selectedTool: Optional[str]
+    validationPlan: str
+    unresolvedFacts: list["ResearchComponentComparisonCheckV1UnresolvedFactsItem"]
+    scope: "ResearchComponentComparisonCheckV1Scope"
+    researchAttestationVerified: "RoleBootstrapReportV1IdentityGateVerified"
+    acceptanceComplete: "RoleBootstrapReportV1IdentityGateVerified"
+    selectedOptionId: Optional[str]
+    missingRequirementIds: list[str]
+    missingSourceIds: list[str]
+    missingValidationIds: list[str]
+    linkFindings: list["ResearchAdhdFeatureCheckV1LinkFindingsItem"]
+    activationVerified: "RoleBootstrapReportV1IdentityGateVerified"
+
+ResearchAdhdFeatureCheckV1LinkFindingsItem = Literal[
+    "TRACE_BINDING_MISMATCH",
+    "FEATURE_REQUIREMENTS_MISMATCH",
+    "QUOTE_LINK_MISMATCH",
+    "GRILL_LINK_MISMATCH",
+    "REPORT_LINK_MISMATCH",
+    "PRIMARY_DATE_INVALID",
+    "FEATURE_ACCEPTANCE_MISSING",
+    "DECISION_INVALID",
+    "DECISION_DUPLICATE",
 ]
 
 class CliStackUpResult(TypedDict):
@@ -3189,6 +3264,42 @@ class CliProbeShowCommandResultVariant1(TypedDict):
     meta: "CliMetadata"
     ok: "RoleBootstrapReportV1IdentityGateVerified"
     error: "CliError"
+
+CliResearchCheckCommandResultV4 = Union[
+    "CliResearchCheckResultV4",
+    "CliResearchCheckCommandResultVariant1",
+]
+
+class CliResearchCheckResultV3(TypedDict):
+    schemaVersion: "CliBootstrapIdentitiesResultSchemaVersion"
+    commandId: "CliResearchCheckResultCommandId"
+    invocationId: "UUID"
+    generatedAt: "Instant"
+    cliVersion: "CliBootstrapIdentitiesResultCliVersion"
+    contractsVersion: "CliBootstrapIdentitiesResultCliVersion"
+    schemaDigest: "Digest"
+    environment: "CliEnvironment"
+    meta: "CliMetadata"
+    ok: "CliBootstrapIdentitiesResultOk"
+    data: "ResearchRegisterInspectionV3"
+
+class ResearchRegisterInspectionV3(TypedDict):
+    requestedRelease: Optional["Release"]
+    registerPath: str
+    registerDigest: "Digest"
+    components: list["ResearchComponentInspectionV1"]
+    componentComparisons: list["ResearchComponentComparisonCheckV1"]
+    reports: list["ResearchRegisterInspectionV1ReportsItem"]
+    specReferences: list["ResearchSpecReferencesV1"]
+    sourcesCatalogCoverage: "ResearchCatalogCoverageV1"
+    dependencyClosureVerified: "RoleBootstrapReportV1IdentityGateVerified"
+    findings: list["ResearchInspectionFindingV1"]
+    wholeATsPassed: list[str]
+    scope: "ResearchRegisterInspectionV1Scope"
+    admission: "ResearchRegisterInspectionV1Admission"
+    acceptanceComplete: "RoleBootstrapReportV1IdentityGateVerified"
+    componentDecisions: list["ResearchComponentComparisonCheckV2"]
+    attentionDecisions: list["ResearchAttentionDecisionCheckV1"]
 
 CliResearchCheckCommandResultV3 = Union[
     "CliResearchCheckResultV3",
@@ -4700,6 +4811,41 @@ ResearchAttentionDecisionV1Scope = Literal[
 ResearchAttentionDecisionV1ComponentId = Literal[
     "M02",
 ]
+
+class ResearchAdhdFeatureDecisionV1(TypedDict):
+    scope: "ResearchAdhdFeatureDecisionV1Scope"
+    componentId: "ResearchAdhdFeatureTraceV1FeatureId"
+    mappedRequirements: list[str]
+    options: list["ResearchComponentComparisonV2OptionsItem"]
+    evidence: list["ResearchAdhdFeatureDecisionV1EvidenceItem"]
+    selectedOptionId: str
+    unresolvedFacts: list["ResearchComponentComparisonCheckV1UnresolvedFactsItem"]
+    acceptanceIds: list[str]
+    validationPlan: str
+    releaseGate: str
+    validations: list["ResearchComponentComparisonV2ValidationsItem"]
+    executionReceipt: Optional["ModelRouteDelegationReceiptV1"]
+    primarySource: "ResearchComponentComparisonV4PrimarySource"
+    requirementQuotes: list["ResearchComponentComparisonV4RequirementQuotesItem"]
+    traceRowDigest: "Digest"
+    traceSourceDigest: "Digest"
+    registerRowDigest: "Digest"
+    featureRequirementIds: list[str]
+    quoteReferences: list["ResearchAdhdFeatureTraceV1Trace"]
+    grillReferences: list["ResearchAdhdFeatureTraceV1Trace"]
+    researchReference: str
+
+ResearchAdhdFeatureDecisionV1Scope = Literal[
+    "adhd-feature-decision",
+]
+
+class ResearchAdhdFeatureDecisionV1EvidenceItem(TypedDict):
+    id: str
+    url: str
+    publisher: str
+    kind: "ResearchComponentComparisonV1EvidenceItemKind"
+    supportedOptionIds: list[str]
+    verifiedAt: str
 
 class InstalledCodexRuntimeV1(TypedDict):
     expectedVersion: "InstalledCodexRuntimeV1ExpectedVersion"
