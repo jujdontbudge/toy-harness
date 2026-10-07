@@ -1,0 +1,59 @@
+{
+  "recordType": "r0.02.ops45-controller-source-review.v1",
+  "reviewedAt": "2026-10-07T05:59:20Z",
+  "verdict": "APPROVE",
+  "scope": {
+    "acceptanceId": "AT-ops-45",
+    "baseCommit": "0e26879b9560e1495ef85a672bdbdc551e8f886a",
+    "sourcePath": "packages/ops/src/fixture-stack.ts",
+    "sourceSha256": "4d746aa3a3d32f069accd726c708e74e1ae4996a79b5f14ecfa8bc9a0b12f39e",
+    "diffStat": { "insertions": 1, "deletions": 1, "changedFiles": ["packages/ops/src/fixture-stack.ts"] },
+    "relatedModelRouteProbeSha256": "eaf5ef4359ffd4fdb4ae748e61ce0fc48f5a4ee2ac7d7286f1087de51c8b4864"
+  },
+  "evidenceRead": {
+    "controllerCorrection": "build/evidence/R0.02/ops45-controller-correction.json",
+    "secondSummary": "build/evidence/R0.02/ops45-second-summary.json",
+    "failedRun": "build/evidence/R0.02/ops45-second-cli/AT-ops-45-run.json",
+    "failureEnvelope": {
+      "attempt": 2,
+      "unfiltered": true,
+      "summaryFailure": "PROBE_OPERATION_MISSING",
+      "runExitCode": 2,
+      "errorCode": "INVALID_INPUT",
+      "effectState": "none",
+      "operationId": null,
+      "data": null
+    },
+    "teardown": {
+      "worldId": "f69d80b9-4968-49ce-92a2-6876f2048847",
+      "complete": true,
+      "unresolvedResourceRefs": 0
+    }
+  },
+  "controllerReview": {
+    "change": "Added only AT-ops-45 to the existing explicit componentComparison probeId allowlist.",
+    "caseUndefinedGuardPreserved": true,
+    "nonemptyChecksStillRequireExplicitControllerAllowlist": true,
+    "componentCheckIdAndOwnerGuardPreserved": true,
+    "additionalInfrastructure": false,
+    "predicateWeakened": false,
+    "newPublicApiOrContract": false,
+    "relatedModelRouteProbeUnchangedAtReviewedSha": true
+  },
+  "findings": [],
+  "resourceEvidence": {
+    "doctor": "build/evidence/R0.02/ops45-native-doctor.json",
+    "measuredAt": "2026-10-07T05:56:48.008Z",
+    "minimumAvailableBytes": "3291480064",
+    "pressure": "normal",
+    "jobNeedBytes": "1073741824",
+    "marginBytes": "536870912",
+    "requiredAvailableBytes": "1610612736",
+    "admitted": true,
+    "alsoExceedsReviewHelperNeedAndMargin": true
+  },
+  "limitations": [
+    "This verdict covers the one-line fixture controller correction only; it does not certify runtime receipts or whole acceptance.",
+    "No build, strict check, test, CLI operation, or additional OS resource query was run by this reviewer."
+  ]
+}

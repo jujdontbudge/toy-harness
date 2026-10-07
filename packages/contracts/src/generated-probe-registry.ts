@@ -5664,6 +5664,117 @@ export const registeredCliAcceptanceManifestInventory = [
     "simUnavailableReason": "SIM cannot choose administrative pre-build comparison records. CLI invokes existing public owners with fixed external report and Codex executor/resource-reader fakes; native protected route and whole acceptance stay pending."
   },
   {
+    "id": "AT-ops-45",
+    "rung": "CLI",
+    "sourceAssertionHash": "0afc1f9882ead86be9e8b5e01d58e8ce3edbd73b5b0a6d10cee43646d397d3ef",
+    "commandId": "probe.run",
+    "scenarioId": "research.component-receipts",
+    "owner": "hermes",
+    "firstRelease": "R0",
+    "kind": "static_gate",
+    "mandatoryCases": [
+      {
+        "id": "research-route-observed",
+        "publicOperation": "ModelRoute.delegationReceipt + EngineeringControl.checkResearch",
+        "phase": "research-route-observed"
+      },
+      {
+        "id": "research-route-missing",
+        "publicOperation": "ModelRoute.delegationReceipt + EngineeringControl.checkResearch",
+        "phase": "research-route-missing"
+      },
+      {
+        "id": "research-route-luna",
+        "publicOperation": "ModelRoute.delegationReceipt + EngineeringControl.checkResearch",
+        "phase": "research-route-luna"
+      },
+      {
+        "id": "research-route-wrong-effort",
+        "publicOperation": "ModelRoute.delegationReceipt + EngineeringControl.checkResearch",
+        "phase": "research-route-wrong-effort"
+      },
+      {
+        "id": "research-route-wrong-tier",
+        "publicOperation": "ModelRoute.delegationReceipt + EngineeringControl.checkResearch",
+        "phase": "research-route-wrong-tier"
+      },
+      {
+        "id": "research-skill-missing",
+        "publicOperation": "ModelRoute.delegationReceipt + EngineeringControl.checkResearch",
+        "phase": "research-skill-missing"
+      },
+      {
+        "id": "research-skill-wrong-bytes",
+        "publicOperation": "ModelRoute.delegationReceipt + EngineeringControl.checkResearch",
+        "phase": "research-skill-wrong-bytes"
+      },
+      {
+        "id": "ordinary-implementation-luna",
+        "publicOperation": "ModelRoute.delegationReceipt + EngineeringControl.checkResearch",
+        "phase": "ordinary-implementation-luna"
+      },
+      {
+        "id": "module-local-override-refused",
+        "publicOperation": "ModelRoute.delegationReceipt + EngineeringControl.checkResearch",
+        "phase": "module-local-override-refused"
+      }
+    ],
+    "trigger": "Run the indexed A14 component research job through ModelRoute; independently bind current policy bytes, loaded research skill and public component archive readback, then preserve the distinct ordinary child route.",
+    "faultControls": [
+      {
+        "id": "external-codex-route-faults",
+        "seam": "provider",
+        "affectedPhases": [
+          "research-route-missing",
+          "research-route-luna",
+          "research-route-wrong-effort",
+          "research-route-wrong-tier"
+        ]
+      },
+      {
+        "id": "external-research-skill-resource-faults",
+        "seam": "provider",
+        "affectedPhases": [
+          "research-skill-missing",
+          "research-skill-wrong-bytes"
+        ]
+      }
+    ],
+    "observations": [
+      {
+        "id": "current-policy-and-native-arguments",
+        "independentReader": "Current behavior/models.yaml bytes, exported task and fake executor arguments; stored toy probe.show readback",
+        "caseIds": [
+          "research-route-observed",
+          "research-route-missing",
+          "research-route-luna",
+          "research-route-wrong-effort",
+          "research-route-wrong-tier",
+          "research-skill-missing",
+          "research-skill-wrong-bytes",
+          "ordinary-implementation-luna",
+          "module-local-override-refused"
+        ]
+      },
+      {
+        "id": "a14-public-route-skill-subgate",
+        "independentReader": "EngineeringControl.checkResearch: original archive/overlay digest and exact A14 route/skill missing IDs",
+        "caseIds": [
+          "research-route-observed",
+          "research-route-missing",
+          "research-route-luna",
+          "research-route-wrong-effort",
+          "research-route-wrong-tier",
+          "research-skill-missing",
+          "research-skill-wrong-bytes",
+          "ordinary-implementation-luna",
+          "module-local-override-refused"
+        ]
+      }
+    ],
+    "simUnavailableReason": "SIM cannot choose administrative pre-build component research records. CLI reaches real ModelRoute and EngineeringControl owners with external Codex/resource fakes; native protected route and whole acceptance remain pending."
+  },
+  {
     "id": "AT-ops-47",
     "rung": "CLI",
     "sourceAssertionHash": "a5197df8ac45e7cc1e660210288ad85e534204870ede21d629ca12fa19e4e799",

@@ -1,0 +1,22 @@
+{
+  "recordedAt": "2026-10-07T05:58:26.559068Z",
+  "state": "BOUNDED_CONTROLLER_REGISTRATION_CORRECTION_BEFORE_FINAL_RUN",
+  "failedAttempt": 2,
+  "nativeAttemptsUsed": 2,
+  "nativeAttemptsRemaining": 1,
+  "failureEvidence": "build/evidence/R0.02/ops45-second-cli/AT-ops-45-run.json",
+  "failureCode": "INVALID_INPUT",
+  "worldId": "f69d80b9-4968-49ce-92a2-6876f2048847",
+  "worldDown": true,
+  "teardownComplete": true,
+  "unresolvedResourceRefs": 0,
+  "diagnosis": "Registered AT-ops-45 reaches componentReceiptProbe and produces component CheckViews, but TestProbeControl.run refuses nonempty checks unless the ID is in the componentComparison controller allowlist. The new ID was missing.",
+  "correction": "Add only AT-ops-45 to the existing componentComparison explicit list in fixture-stack.ts; preserve same unfiltered-case/check-owner protections.",
+  "changedSource": "packages/ops/src/fixture-stack.ts",
+  "sourceSha256": "4d746aa3a3d32f069accd726c708e74e1ae4996a79b5f14ecfa8bc9a0b12f39e",
+  "additionalInfrastructure": false,
+  "predicateWeakened": false,
+  "maximumTotalNativeRuns": 3,
+  "wholeATComplete": false,
+  "acceptanceComplete": false
+}

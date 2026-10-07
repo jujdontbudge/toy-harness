@@ -2,7 +2,7 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-07T05:45:31.935878Z",
+  "updatedAt": "2026-10-07T06:01:02.236641Z",
   "phase": "R0_FEASIBILITY",
   "activeCard": "R0.12",
   "cardCount": 87,
@@ -440,7 +440,8 @@
         "build/evidence/R0.02/ops-scope-corrected-cli-test.json",
         "build/evidence/R0.02/ops-scope-corrected-sources-regression.json",
         "build/evidence/R0.02/ops-scope-corrected-verification.json",
-        "build/evidence/R0.02/ops44-final-verification.json"
+        "build/evidence/R0.02/ops44-final-verification.json",
+        "build/evidence/R0.02/ops45-final-verification.json"
       ],
       "requiredATs": [
         "AT-RESEARCH-REGISTER-1",
@@ -689,6 +690,51 @@
           "Real primary-source authentication and reliable comparison",
           "Generic host semantic policy and canonical affected-build consumer"
         ]
+      },
+      "ops45Unit": {
+        "state": "BOUNDED_CLI_UNIT_VERIFIED_AND_STOPPED",
+        "assignedAT": "AT-ops-45",
+        "startedAt": "2026-10-07T05:46:06.705Z",
+        "sourceStopAt": "2026-10-07T06:08:00Z",
+        "fullUnitStopAt": "2026-10-07T07:46:00Z",
+        "admission": "build/evidence/R0.02/ops45-source-admission.json",
+        "plan": "build/evidence/R0.02/ops45-next-minimum-plan.json",
+        "nativeRuns": 3,
+        "nativeUnsupportedBaselines": 1,
+        "wholeATComplete": false,
+        "acceptanceComplete": false,
+        "sourceStoppedAt": "2026-10-07T05:53:46Z",
+        "sourceHandoff": "build/evidence/R0.02/ops45-source-handoff.json",
+        "parentIntegration": "build/evidence/R0.02/ops45-parent-integration.json",
+        "nativeAcceptanceAttempts": 2,
+        "nativeAcceptanceFailures": 1,
+        "controllerCorrection": "build/evidence/R0.02/ops45-controller-correction.json",
+        "stoppedAt": "2026-10-07T06:00:27.172636Z",
+        "verification": "build/evidence/R0.02/ops45-final-verification.json",
+        "assignedChecks": 9,
+        "affectedRegressionChecks": 21,
+        "separateReadinessChecks": 1,
+        "worldId": "f57735ef-a93d-4320-b52f-f67aec47a6d2",
+        "teardownComplete": true,
+        "reviewClosedAt": "2026-10-07T06:01:02.236641Z",
+        "sourceReviews": [
+          "build/evidence/R0.02/ops45-source-review.json",
+          "build/evidence/R0.02/ops45-controller-source-review.json"
+        ]
+      },
+      "ops43Plan": {
+        "state": "SOURCE_DEFERRED_MISSING_COMPLETE_PRIMARY_BASELINE_AND_BUILD_CONSUMER",
+        "assignedAT": "AT-ops-43",
+        "plan": "build/evidence/R0.02/ops43-next-minimum-plan.json",
+        "planSha256": "e83c245d4efd964d6647a58a76dbf5da703ae64ca6bf0e5f7df36be849581e3c",
+        "baseline": "build/evidence/R0.02/ops43-scope-baseline.json",
+        "mappedComponents": 22,
+        "blockedComponents": 22,
+        "sourceExecutionStarted": false,
+        "wholeATComplete": false,
+        "acceptanceComplete": false,
+        "deferralOwner": "Builder, R0.02 with R0.01 protected research receipt and dependent build-admission consumer",
+        "knownPinDrift": "tests/registry.yaml changed only by current parent Ops45 registration; relevant public owner/source pins remain exact"
       }
     },
     "R0.03": {
@@ -11426,7 +11472,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Push reviewed result-reference checkpoint, then review bounded Ops45 public-owner plan. Poll exact root02 native UID310 read/restoration; valid DONE takes immediate R0.01 priority after safe cleanup. Goal remains ACTIVE.",
+  "nextAction": "Push reviewed bounded Ops45 checkpoint; source/proof STOPPED after31checks/finalnativeattempt. Root02 validnativeUID310read/restorationDONE takes immediateR0.01priority aftersafe cleanup; independentremainingR0 readonlyplanning continues whilepending. Wholecards/ATs pending, goalACTIVE.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -12487,7 +12533,9 @@
       "rung": "CLI",
       "firstRelease": "R0",
       "sourceAssertionHash": "0afc1f9882ead86be9e8b5e01d58e8ce3edbd73b5b0a6d10cee43646d397d3ef",
-      "evidence": []
+      "evidence": [
+        "build/evidence/R0.02/ops45-final-verification.json"
+      ]
     },
     "AT-ops-46": {
       "state": "NOT_IMPLEMENTED",
@@ -22025,7 +22073,7 @@
     "recordedAt": "2026-10-07T05:08:51.425359+00:00",
     "command": "npm run check"
   },
-  "sourceCheckpointCommit": "5d3eb1e",
+  "sourceCheckpointCommit": "0e26879",
   "sourceCheckpointPushed": true,
   "rootRequests": {
     "ROOT-R004-20261006-01": {

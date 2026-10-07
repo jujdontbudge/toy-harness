@@ -432,41 +432,58 @@ const attentionProbe = async (input: RegisteredProbeInputV1, context: OpsControl
 const componentReceiptProbe = async (input: RegisteredProbeInputV1, context: OpsControlContextV1): Promise<Result<RegisteredProbeOperationV1>> => {
   const authorityCases = ["missing-decision", "missing-primary-evidence", "unsupported-alternatives", "unsupported-selection", "missing-reliability", "missing-validation", "missing-acceptance-link", "unrelated-acceptance-link", "unresolved-selected-assumption", "ordinary-luna-receipt", "missing-route-observation", "wrong-observed-model", "wrong-observed-reasoning", "wrong-observed-tier", "missing-research-skill", "wrong-skill-hash", "complete-authority-decision"];
   const opsCases = ["outside-selected-with-evidence", "outside-without-primary-support", "outside-route-mismatch", "mapped-requirement-removed"];
+  const opsRouteSkillCases = ["research-route-observed", "research-route-missing", "research-route-luna", "research-route-wrong-effort", "research-route-wrong-tier", "research-skill-missing", "research-skill-wrong-bytes", "ordinary-implementation-luna", "module-local-override-refused"];
   const isOps = input.probeId === "AT-ops-44";
-  const cases = isOps ? opsCases : authorityCases;
+  const isOps45 = input.probeId === "AT-ops-45";
+  const isOpsComponent = isOps || isOps45;
+  const cases = isOps ? opsCases : isOps45 ? opsRouteSkillCases : authorityCases;
   const manifest = registeredCliAcceptanceManifestInventory.find(entry => entry.id === input.probeId);
-  if ((!isOps && input.probeId !== "AT-authority-60") || !manifest || manifest.owner !== "hermes" || manifest.scenarioId !== "research.component-receipts" || JSON.stringify(manifest.mandatoryCases.map(entry => entry.id)) !== JSON.stringify(cases)) return { ok: false, error: { module: "ops", code: "ATTESTATION_INVALID", message: opsErrorMessages.ATTESTATION_INVALID, retryable: false } };
+  if ((!isOpsComponent && input.probeId !== "AT-authority-60") || !manifest || manifest.owner !== "hermes" || manifest.scenarioId !== "research.component-receipts" || JSON.stringify(manifest.mandatoryCases.map(entry => entry.id)) !== JSON.stringify(cases)) return { ok: false, error: { module: "ops", code: "ATTESTATION_INVALID", message: opsErrorMessages.ATTESTATION_INVALID, retryable: false } };
   const baseline = EngineeringControl.checkResearch({ release: "R0" }, context);
   if (!baseline.ok) return baseline;
-  const componentId = isOps ? "A14" : "M03";
+  const componentId = isOpsComponent ? "A14" : "M03";
   const component = baseline.data.components.find(entry => entry.id === componentId);
-  const archive = baseline.data.reports.find(entry => (isOps ? component?.reportKeys.includes(entry.key) === true : entry.key === "CJ") && entry.originalDigest !== null);
+  const archive = baseline.data.reports.find(entry => (isOpsComponent ? component?.reportKeys.includes(entry.key) === true : entry.key === "CJ") && entry.originalDigest !== null);
   const required = baseline.data.componentDecisions.find(entry => entry.componentId === componentId);
   const removedRequirementId = isOps ? required?.missingRequirementIds[0] : undefined;
   if (!component || !archive?.originalDigest || !required || required.comparisonDigest !== null || !component.reportKeys.includes(archive.key) || isOps && !removedRequirementId) return { ok: false, error: { module: "ops", code: "ARTIFACT_MISMATCH", message: opsErrorMessages.ARTIFACT_MISMATCH, retryable: false } };
-  const opsPin = isOps ? researchSkillPinSchema.parse(JSON.parse(readFileSync(join(trustedCheckoutRoot(), "behavior/research-skill.json"), "utf8"))) : null;
+  const opsPin = isOpsComponent ? researchSkillPinSchema.parse(JSON.parse(readFileSync(join(trustedCheckoutRoot(), "behavior/research-skill.json"), "utf8"))) : null;
+  const modelsPolicyDigest = isOps45 ? digest(readFileSync(join(trustedCheckoutRoot(), "behavior/models.yaml"))) : null;
   const routeFaults: Readonly<Record<string, string>> = isOps
     ? { "outside-route-mismatch": "research-route-luna" }
+    : isOps45
+      ? { "research-route-missing": "research-route-missing", "research-route-luna": "research-route-luna", "research-route-wrong-effort": "research-route-wrong-effort", "research-route-wrong-tier": "research-route-wrong-tier", "research-skill-missing": "research-skill-missing", "research-skill-wrong-bytes": "research-skill-wrong-bytes" }
     : { "missing-route-observation": "research-route-missing", "wrong-observed-model": "research-route-luna", "wrong-observed-reasoning": "research-route-wrong-effort", "wrong-observed-tier": "research-route-wrong-tier", "missing-research-skill": "research-skill-missing", "wrong-skill-hash": "research-skill-wrong-bytes" };
   const expectedCodes: Readonly<Record<string, string>> = { "missing-decision": "DECISION_MISSING", "missing-primary-evidence": "PRIMARY_EVIDENCE_MISSING", "unsupported-alternatives": "REQUIRED_OPTIONS_MISSING", "unsupported-selection": "CHOICE_UNSUPPORTED", "missing-reliability": "TRADEOFFS_MISSING", "missing-validation": "VALIDATION_ID_MISSING", "missing-acceptance-link": "ACCEPTANCE_LINK_MISSING", "unrelated-acceptance-link": "ACCEPTANCE_LINK_MISSING", "unresolved-selected-assumption": "SELECTED_FACT_UNRESOLVED", "ordinary-luna-receipt": "VALIDATION_ID_MISSING", "missing-route-observation": "VALIDATION_ID_MISSING", "wrong-observed-model": "VALIDATION_ID_MISSING", "wrong-observed-reasoning": "VALIDATION_ID_MISSING", "wrong-observed-tier": "VALIDATION_ID_MISSING", "missing-research-skill": "VALIDATION_ID_MISSING", "wrong-skill-hash": "VALIDATION_ID_MISSING" };
   const opsExpectedCodes: Readonly<Record<string, string>> = { "outside-without-primary-support": "OUTSIDE_OPTION_MISSING", "outside-route-mismatch": "VALIDATION_ID_MISSING", "mapped-requirement-removed": "MAPPED_REQUIREMENTS_MISSING" };
   const objective = isOps
     ? "Compare only the seeded A14 backup-tool options and primary evidence; preserve the Mac as authoritative application host and produce no live research or adoption."
     : "Compare only seeded M03 Authority adapter options and primary evidence; preserve protected admission and perform no live effects.";
+  const ops45ResearchObjective = "Compare only the seeded A14 backup-tool options and primary evidence; preserve the Mac as authoritative application host and produce no live research or adoption.";
+  const ops45OrdinaryObjective = "Draft a local implementation checklist for the selected seeded A14 backup option; preserve the Mac as authoritative host and make no changes.";
   const opsToolNames: Readonly<Record<string, string>> = { "backblaze-b2": "Backblaze B2", "external-disk": "External disk", outside: "Seeded outside backup option" };
   const opsResources = "Selected fixture tool runs on the existing Mac; the Mac remains the authoritative application host; this option does not add an application host.";
   const checks: CheckViewV1[] = [];
   for (const caseId of cases) {
-    const purpose = !isOps && caseId === "ordinary-luna-receipt" ? "implementation" : "research";
-    const fixture = await delegationFixture(routeFaults[caseId] ?? "research-route-observed", purpose, context, objective);
+    const purpose = (!isOps && caseId === "ordinary-luna-receipt") || (isOps45 && caseId === "ordinary-implementation-luna") ? "implementation" : "research";
+    const caseObjective = isOps45 && purpose === "implementation" ? ops45OrdinaryObjective : isOps45 ? ops45ResearchObjective : objective;
+    const fixture = await delegationFixture(isOps45 ? caseId : routeFaults[caseId] ?? "research-route-observed", purpose, context, caseObjective);
+    if (!fixture.result.ok && isOps45 && caseId === "module-local-override-refused") {
+      const passed = fixture.result.error.code === "INVALID_INPUT" && fixture.sends === 0;
+      checks.push(checkViewSchema.parse({ id: "research.component-comparison", owner: "self-improvement", state: passed ? "PASS" : "FAIL", checkedAt: new Date().toISOString(), reasonCode: passed ? "OPS_A14_MODULE_ROUTE_OVERRIDE_REFUSED" : "OPS_A14_MODULE_ROUTE_OVERRIDE_NOT_REFUSED", nextCommandId: "probe.show",
+        prerequisite: JSON.stringify({ caseId, scope: "A14 route/skill subgate", archiveKey: archive.key, archiveOriginalDigest: archive.originalDigest, policyDigest: modelsPolicyDigest, errorCode: fixture.result.error.code, overrideRejected: fixture.result.error.code === "INVALID_INPUT", externalSends: fixture.sends, initialAdmission: baseline.data.admission, fakeExternalCli: true, liveProviderSends: 0, acceptanceComplete: false, wholeATComplete: false }),
+        links: { recordRefs: [], observations: [], artifactDigests: [archive.originalDigest, ...(modelsPolicyDigest === null ? [] : [modelsPolicyDigest]), digest(readFileSync(new URL("./model-route-probe.js", import.meta.url))), digest(readFileSync(new URL("./model-route.js", import.meta.url)))] }
+      }));
+      continue;
+    }
     if (!fixture.result.ok) return fixture.result;
-    const ids = isOps ? ["backblaze-b2", "external-disk", "outside"] : ["protected-adapter", "supported-vendor-sdk", "outside"];
+    const ids = isOpsComponent ? ["backblaze-b2", "external-disk", "outside"] : ["protected-adapter", "supported-vendor-sdk", "outside"];
     const acceptanceId = input.probeId;
     const report = researchComponentComparisonV3Schema.parse({ scope: "required-research-component", componentId: component.id, executionReceipt: fixture.result.data,
       mappedRequirements: required.missingRequirementIds,
-      options: ids.map(id => ({ id, tool: isOps ? opsToolNames[id] ?? id : id, example: id === "outside" ? null : id, viable: true, support: "proven", primaryEvidenceIds: component.reportKeys, reliability: isOps ? id === "outside" ? "Seeded A14 evidence makes this suitable option the strongest of the compared choices for the fixture's retention and restore conditions." : "Seeded A14 evidence records the named option's reliability and its specific limits for the fixture's retention and restore conditions." : "Seeded primary report distinguishes safe read retries from uncertain writes and readback.", maintenance: isOps ? "Preserve the existing Mac data authority, current cost constraint and tested restore boundary." : "Pin and maintain the typed adapter before live admission.", resources: isOps ? opsResources : "Use the shared local store and measured protected process budget." })),
-      evidence: component.reportKeys.map(id => ({ id, url: "https://primary.example.test/" + (isOps ? "ops/" : "authority/") + id, publisher: isOps ? "Seeded primary Ops report fixture" : "Seeded primary Authority report", kind: "primary", supportedOptionIds: ids })),
-      selectedOptionId: isOps ? "outside" : "protected-adapter", unresolvedFacts: [], acceptanceIds: [acceptanceId], validationPlan: isOps ? "Compare the seeded named and outside A14 options under the current requirement and host constraints; verify evidence, route and restore rationale before any real research or adoption." : "Validate positive, refusal and recovery cases in the owned fixture before dependent live admission.", releaseGate: component.releaseGate,
+      options: ids.map(id => ({ id, tool: isOpsComponent ? opsToolNames[id] ?? id : id, example: id === "outside" ? null : id, viable: true, support: "proven", primaryEvidenceIds: component.reportKeys, reliability: isOpsComponent ? id === "outside" ? "Seeded A14 evidence makes this suitable option the strongest of the compared choices for the fixture's retention and restore conditions." : "Seeded A14 evidence records the named option's reliability and its specific limits for the fixture's retention and restore conditions." : "Seeded primary report distinguishes safe read retries from uncertain writes and readback.", maintenance: isOpsComponent ? "Preserve the existing Mac data authority, current cost constraint and tested restore boundary." : "Pin and maintain the typed adapter before live admission.", resources: isOpsComponent ? opsResources : "Use the shared local store and measured protected process budget." })),
+      evidence: component.reportKeys.map(id => ({ id, url: "https://primary.example.test/" + (isOpsComponent ? "ops/" : "authority/") + id, publisher: isOpsComponent ? "Seeded primary Ops report fixture" : "Seeded primary Authority report", kind: "primary", supportedOptionIds: ids })),
+      selectedOptionId: isOpsComponent ? "outside" : "protected-adapter", unresolvedFacts: [], acceptanceIds: [acceptanceId], validationPlan: isOpsComponent ? "Compare the seeded named and outside A14 options under the current requirement and host constraints; verify evidence, route and restore rationale before any real research or adoption." : "Validate positive, refusal and recovery cases in the owned fixture before dependent live admission.", releaseGate: component.releaseGate,
       validations: [{ id: "G0:R0:" + component.id, support: "proven", sourceIds: component.reportKeys, testIds: [acceptanceId] }]
     });
     if (isOps && caseId === "outside-without-primary-support") {
@@ -483,14 +500,14 @@ const componentReceiptProbe = async (input: RegisteredProbeInputV1, context: Ops
     if (caseId === "missing-acceptance-link") report.acceptanceIds = [];
     if (caseId === "unrelated-acceptance-link") { report.acceptanceIds = ["AT-attention-66"]; for (const validation of report.validations) validation.testIds = report.acceptanceIds; }
     if (caseId === "unresolved-selected-assumption") report.unresolvedFacts = [{ optionId: report.selectedOptionId, fact: "Selected capability has not been established." }];
-    const markdown = "# Seeded external " + (isOps ? "Ops" : "Authority") + " decision\n\n" + (caseId === "missing-decision" ? "No decision supplied.\n" : "```ResearchComponentComparisonV3\n" + JSON.stringify(report) + "\n```\n");
+    const markdown = "# Seeded external " + (isOpsComponent ? "Ops" : "Authority") + " decision\n\n" + (caseId === "missing-decision" ? "No decision supplied.\n" : "```ResearchComponentComparisonV3\n" + JSON.stringify(report) + "\n```\n");
     const inspection = EngineeringControl.checkResearch({ release: "R0" }, context, [{ reportKey: archive.key, originalDigest: archive.originalDigest, contentDigest: digest(markdown), markdown }]);
     if (!inspection.ok) return inspection;
     const result = inspection.data.componentDecisions.find(entry => entry.componentId === component.id);
     const bound = inspection.data.reports.find(entry => entry.key === archive.key);
     if (!result || !bound) return { ok: false, error: { module: "ops", code: "ARTIFACT_MISMATCH", message: opsErrorMessages.ARTIFACT_MISMATCH, retryable: false } };
     const code = isOps ? opsExpectedCodes[caseId] : expectedCodes[caseId];
-    const missingId = isOps ? caseId === "outside-route-mismatch" ? "ROUTE:R0:A14" : null : caseId.includes("skill") ? "SKILL:R0:M03" : caseId === "ordinary-luna-receipt" || caseId.includes("route") || caseId.startsWith("wrong-observed-") ? "ROUTE:R0:M03" : null;
+    const missingId = isOps ? caseId === "outside-route-mismatch" ? "ROUTE:R0:A14" : null : isOps45 ? null : caseId.includes("skill") ? "SKILL:R0:M03" : caseId === "ordinary-luna-receipt" || caseId.includes("route") || caseId.startsWith("wrong-observed-") ? "ROUTE:R0:M03" : null;
     const exported = fixture.sends === 0 || fixture.exportReadback && fixture.nativeArgumentsMatched;
     const outside = report.options.find(option => option.id === "outside");
     const routeReceipt = report.executionReceipt;
@@ -498,20 +515,112 @@ const componentReceiptProbe = async (input: RegisteredProbeInputV1, context: Ops
     const requirementRemoved = removedRequirementId !== undefined && !report.mappedRequirements.includes(removedRequirementId) && result.missingRequirementIds.length === 1 && result.missingRequirementIds[0] === removedRequirementId;
     const routeObserved = isOps && opsPin !== null && routeReceipt?.state === "observed" && routeReceipt?.purpose === "research" && routeReceipt.invocation?.requested.role === "research" && routeReceipt.invocation?.requested.arm === "original" && routeReceipt.invocation?.requested.settings.model === "gpt-6.1-sol" && routeReceipt.invocation?.requested.settings.effort === "medium" && routeReceipt.invocation?.requested.settings.serviceTier === "priority" && routeReceipt.invocation?.observed?.model === "gpt-6.1-sol" && routeReceipt.invocation?.observed?.effort === "medium" && routeReceipt.invocation?.observed?.serviceTier === "priority" && routeReceipt.skill?.repository === opsPin.repository && routeReceipt.skill?.sourcePath === opsPin.sourcePath && routeReceipt.skill?.sourceCommit === opsPin.sourceCommit && routeReceipt.skill?.contentDigest === opsPin.contentDigest && routeReceipt.skill?.loadedDigest === opsPin.contentDigest && routeReceipt.skill?.semanticVersion === opsPin.semanticVersion && routeReceipt.skill?.resources.length === opsPin.resources.length && opsPin.resources.every(resource => routeReceipt.skill?.resources.some(loaded => loaded.path === resource.path && loaded.digest === resource.digest));
     const validationLinksMatch = report.validations.some(validation => validation.id === "G0:R0:A14" && validation.support === "proven" && JSON.stringify([...validation.sourceIds].sort()) === JSON.stringify([...component.reportKeys].sort()) && JSON.stringify([...validation.testIds].sort()) === JSON.stringify(["AT-ops-44"]));
+    const ops45ResearchReceipt = isOps45 &&
+      opsPin !== null &&
+      modelsPolicyDigest !== null &&
+      routeReceipt !== null &&
+      routeReceipt.executionBackend === "codex_exec" &&
+      routeReceipt.state === "observed" &&
+      routeReceipt.reasonCode === "DELEGATION_ROUTE_OBSERVED" &&
+      routeReceipt.purpose === "research" &&
+      routeReceipt.invocation !== null &&
+      routeReceipt.invocation.terminal === "completed" &&
+      routeReceipt.invocation.completion === "complete" &&
+      routeReceipt.invocation.observed !== null &&
+      routeReceipt.skill !== null &&
+      routeReceipt.invocation.requested.policyDigest === modelsPolicyDigest &&
+      routeReceipt.invocation.requested.role === "research" &&
+      routeReceipt.invocation.requested.arm === "original" &&
+      routeReceipt.invocation.requested.settings.model === "gpt-6.1-sol" &&
+      routeReceipt.invocation.requested.settings.effort === "medium" &&
+      routeReceipt.invocation.requested.settings.serviceTier === "priority" &&
+      routeReceipt.invocation.observed.model === "gpt-6.1-sol" &&
+      routeReceipt.invocation.observed.effort === "medium" &&
+      routeReceipt.invocation.observed.serviceTier === "priority" &&
+      routeReceipt.skill.repository === opsPin.repository &&
+      routeReceipt.skill.sourcePath === opsPin.sourcePath &&
+      routeReceipt.skill.sourceCommit === opsPin.sourceCommit &&
+      routeReceipt.skill.contentDigest === opsPin.contentDigest &&
+      routeReceipt.skill.loadedDigest === opsPin.contentDigest &&
+      routeReceipt.skill.semanticVersion === opsPin.semanticVersion &&
+      routeReceipt.skill.resources.length === opsPin.resources.length &&
+      opsPin.resources.every(resource => routeReceipt.skill?.resources.some(loaded => loaded.path === resource.path && loaded.digest === resource.digest)) &&
+      !routeReceipt.nativeExecutionVerified &&
+      !routeReceipt.acceptanceComplete;
+    const ops45OrdinaryReceipt = isOps45 &&
+      modelsPolicyDigest !== null &&
+      routeReceipt !== null &&
+      routeReceipt.executionBackend === "codex_exec" &&
+      routeReceipt.state === "observed" &&
+      routeReceipt.reasonCode === "DELEGATION_ROUTE_OBSERVED" &&
+      routeReceipt.purpose === "implementation" &&
+      routeReceipt.invocation !== null &&
+      routeReceipt.invocation.terminal === "completed" &&
+      routeReceipt.invocation.completion === "complete" &&
+      routeReceipt.invocation.observed !== null &&
+      routeReceipt.skill === null &&
+      routeReceipt.invocation.requested.policyDigest === modelsPolicyDigest &&
+      routeReceipt.invocation.requested.role === "child" &&
+      routeReceipt.invocation.requested.arm === "original" &&
+      routeReceipt.invocation.requested.settings.model === "gpt-6-luna" &&
+      routeReceipt.invocation.requested.settings.effort === "max" &&
+      routeReceipt.invocation.requested.settings.serviceTier === "priority" &&
+      routeReceipt.invocation.observed.model === "gpt-6-luna" &&
+      routeReceipt.invocation.observed.effort === "max" &&
+      routeReceipt.invocation.observed.serviceTier === "priority" &&
+      !routeReceipt.nativeExecutionVerified &&
+      !routeReceipt.acceptanceComplete;
+    const ops45RouteSkillExpected = caseId === "research-route-observed" ? [] : ["research-route-missing", "research-route-luna", "research-route-wrong-effort", "research-route-wrong-tier"].includes(caseId) ? ["ROUTE:R0:A14"] : ["ROUTE:R0:A14", "SKILL:R0:A14"];
+    const ops45RouteSkillMissing = result.missingValidationIds.filter(id => id === "ROUTE:R0:A14" || id === "SKILL:R0:A14").sort();
+    const ops45RouteSkillMatches = JSON.stringify(ops45RouteSkillMissing) === JSON.stringify([...ops45RouteSkillExpected].sort());
+    const ops45ArchiveBound = bound.origin === "seeded_document" && bound.path === archive.path && bound.originalDigest === archive.originalDigest && bound.digest === digest(markdown);
+    const ops45ValidationLinksMatch = report.validations.some(validation => validation.id === "G0:R0:A14" && validation.support === "proven" && JSON.stringify([...validation.sourceIds].sort()) === JSON.stringify([...component.reportKeys].sort()) && JSON.stringify([...validation.testIds].sort()) === JSON.stringify(["AT-ops-45"]));
+    const ops45RegisterBlocked = inspection.data.admission === "BLOCKED" && !inspection.data.acceptanceComplete && inspection.data.wholeATsPassed.length === 0;
+    const ops45SubgatePassed = ops45ArchiveBound && report.componentId === "A14" && report.releaseGate === component.releaseGate && report.acceptanceIds.includes("AT-ops-45") && result.comparisonDigest === digest(JSON.stringify(report)) && requirementExact && ops45ValidationLinksMatch && ops45RouteSkillMatches && ops45RegisterBlocked;
+    const ops45RouteFault = ["research-route-missing", "research-route-luna", "research-route-wrong-effort", "research-route-wrong-tier"].includes(caseId);
+    const ops45SkillFault = caseId === "research-skill-missing" || caseId === "research-skill-wrong-bytes";
+    const ops45FaultReceiptPass = ops45RouteFault
+      ? routeReceipt !== null && routeReceipt.state === "refused" && routeReceipt.reasonCode === "DELEGATION_ROUTE_REFUSED" && routeReceipt.invocation !== null && routeReceipt.invocation.completion === "pending" && routeReceipt.invocation.outputStarted === false && routeReceipt.invocation.reasonCode === (caseId === "research-route-missing" ? "route_unobserved" : "route_mismatch") && fixture.sends === 1 && fixture.exportReadback && fixture.nativeArgumentsMatched && routeReceipt.invocation.requested.policyDigest === modelsPolicyDigest
+      : ops45SkillFault
+        ? routeReceipt !== null && routeReceipt.state === "refused" && routeReceipt.reasonCode === (caseId === "research-skill-missing" ? "RESEARCH_SKILL_UNAVAILABLE" : "RESEARCH_SKILL_MISMATCH") && routeReceipt.invocation === null && fixture.sends === 0
+        : false;
     const opsExpected = caseId === "outside-selected-with-evidence"
       ? result.state === "PASS" && result.findings.length === 0 && result.selectedOptionId === "outside" && outside !== undefined && outside.example === null && outside.viable && outside.support === "proven" && outside.primaryEvidenceIds.length > 0 && ids.filter(id => id !== "outside").every(id => report.options.some(option => option.id === id && option.example !== null)) && requirementExact && routeObserved && outside.resources === opsResources && report.releaseGate === component.releaseGate && report.acceptanceIds.includes("AT-ops-44") && validationLinksMatch
       : result.state === "BLOCKED" && result.findings.some(finding => finding === (code ?? "OUTSIDE_OPTION_MISSING")) && (caseId !== "outside-without-primary-support" || result.findings.includes("PRIMARY_EVIDENCE_MISSING")) && (missingId === null || result.missingValidationIds.includes(missingId)) && (caseId !== "mapped-requirement-removed" || requirementRemoved) && (caseId !== "outside-route-mismatch" || routeReceipt?.state === "refused");
+    const ops45Expected = ops45SubgatePassed && (caseId === "research-route-observed"
+      ? ops45ResearchReceipt && fixture.sends === 1 && fixture.exportReadback && fixture.nativeArgumentsMatched
+      : caseId === "ordinary-implementation-luna"
+        ? ops45OrdinaryReceipt && fixture.sends === 1 && fixture.exportReadback && fixture.nativeArgumentsMatched
+        : ops45FaultReceiptPass);
     const authorityExpected = result.comparisonDigest === (caseId === "missing-decision" ? null : digest(JSON.stringify(report))) && (code === undefined
       ? result.state === "PASS" && result.findings.length === 0 && result.selectedOptionId === report.selectedOptionId
       : result.state === "BLOCKED" && result.findings.some(finding => finding === code) && (missingId === null || result.missingValidationIds.includes(missingId)));
-    const passed = exported && bound.path === archive.path && bound.originalDigest === archive.originalDigest && bound.digest === digest(markdown) && bound.origin === "seeded_document" && result.comparisonDigest === (caseId === "missing-decision" ? null : digest(JSON.stringify(report))) && (isOps ? opsExpected : authorityExpected);
+    const passed = exported && bound.path === archive.path && bound.originalDigest === archive.originalDigest && bound.digest === digest(markdown) && bound.origin === "seeded_document" && result.comparisonDigest === (caseId === "missing-decision" ? null : digest(JSON.stringify(report))) && (isOps ? opsExpected : isOps45 ? ops45Expected : authorityExpected);
     const execution = { ownerReceiptProduced: true, externalCliSends: fixture.sends, exportsVerified: exported, receiptDigest: digest(JSON.stringify(report.executionReceipt)), observed: report.executionReceipt?.invocation?.observed ?? null, loadedDigest: report.executionReceipt?.skill?.loadedDigest ?? null, sourceCommit: report.executionReceipt?.skill?.sourceCommit ?? null, nativeExecutionVerified: false };
+    const ops45Details = {
+      caseId, scope: "A14_ROUTE_SKILL_SUBGATE", archiveKey: bound.key, archiveOriginalDigest: bound.originalDigest, overlayDigest: bound.digest,
+      archiveBound: ops45ArchiveBound, comparisonDigest: result.comparisonDigest, decision: result.state,
+      routeSkillMissing: ops45RouteSkillMissing, routeSkillExpected: ops45RouteSkillExpected,
+      otherMissingCount: result.missingValidationIds.filter(id => id !== "ROUTE:R0:A14" && id !== "SKILL:R0:A14").length,
+      registerAdmission: inspection.data.admission, wholeATComplete: false,
+      modelsPolicyDigest, receiptPolicyDigest: routeReceipt?.invocation?.requested.policyDigest ?? null,
+      receiptPurpose: routeReceipt?.purpose ?? null, receiptState: routeReceipt?.state ?? null, receiptReason: routeReceipt?.reasonCode ?? null,
+      requested: routeReceipt?.invocation === null || routeReceipt?.invocation === undefined ? null : [routeReceipt.invocation.requested.role, routeReceipt.invocation.requested.settings.model, routeReceipt.invocation.requested.settings.effort, routeReceipt.invocation.requested.settings.serviceTier],
+      observed: routeReceipt?.invocation?.observed === null || routeReceipt?.invocation?.observed === undefined ? null : [routeReceipt.invocation.observed.model, routeReceipt.invocation.observed.effort, routeReceipt.invocation.observed.serviceTier],
+      skillSourceCommit: routeReceipt?.skill?.sourceCommit ?? null, skillContentDigest: routeReceipt?.skill?.contentDigest ?? null,
+      skillLoadedDigest: routeReceipt?.skill?.loadedDigest ?? null, skillPinMatches: ops45ResearchReceipt,
+      externalSends: fixture.sends, fastArgumentsMatched: fixture.nativeArgumentsMatched,
+      fixtureOnly: true, liveProviderSends: 0, nativeExecutionVerified: false, acceptanceComplete: false
+    };
+    const ops45Prerequisite = JSON.stringify(ops45Details);
+    if (isOps45 && ops45Prerequisite.length > 2000) return { ok: false, error: { module: "ops", code: "ATTESTATION_INVALID", message: opsErrorMessages.ATTESTATION_INVALID, retryable: false } };
     const details = isOps
       ? { caseId, fixtureOnly: true, actualUid: process.getuid?.() ?? null, archive: { key: bound.key, originalDigest: bound.originalDigest, contentDigest: bound.digest, origin: bound.origin }, result, execution, hostClaimIsFixtureTextOnly: true, registerAdmission: inspection.data.admission, liveProviderSends: 0, acceptanceComplete: false, wholeATComplete: false }
-      : { caseId, actualUid: process.getuid?.() ?? null, archive: { key: bound.key, originalDigest: bound.originalDigest, contentDigest: bound.digest, origin: bound.origin }, result, execution, registerAdmission: inspection.data.admission, liveProviderSends: 0, wholeATComplete: false };
-    checks.push(checkViewSchema.parse({ id: "research.component-comparison", owner: "self-improvement", state: passed ? "PASS" : "FAIL", checkedAt: new Date().toISOString(), reasonCode: passed ? isOps ? "OPS_OUTSIDE_RESEARCH_DIAGNOSTIC_PASS" : "AUTHORITY_RESEARCH_DIAGNOSTIC_PASS" : isOps ? "OPS_OUTSIDE_RESEARCH_DIAGNOSTIC_FAIL" : "AUTHORITY_RESEARCH_DIAGNOSTIC_FAIL", nextCommandId: "probe.show",
-      prerequisite: JSON.stringify(details),
-      links: { recordRefs: [], observations: [], artifactDigests: [digest(markdown), digest(readFileSync(new URL("./model-route-probe.js", import.meta.url))), digest(readFileSync(new URL("./model-route.js", import.meta.url)))] }
+      : isOps45 ? ops45Details
+        : { caseId, actualUid: process.getuid?.() ?? null, archive: { key: bound.key, originalDigest: bound.originalDigest, contentDigest: bound.digest, origin: bound.origin }, result, execution, registerAdmission: inspection.data.admission, liveProviderSends: 0, wholeATComplete: false };
+    checks.push(checkViewSchema.parse({ id: "research.component-comparison", owner: "self-improvement", state: passed ? "PASS" : "FAIL", checkedAt: new Date().toISOString(), reasonCode: isOps45 ? passed ? "OPS_A14_ROUTE_SKILL_DIAGNOSTIC_PASS" : "OPS_A14_ROUTE_SKILL_DIAGNOSTIC_FAIL" : passed ? isOps ? "OPS_OUTSIDE_RESEARCH_DIAGNOSTIC_PASS" : "AUTHORITY_RESEARCH_DIAGNOSTIC_PASS" : isOps ? "OPS_OUTSIDE_RESEARCH_DIAGNOSTIC_FAIL" : "AUTHORITY_RESEARCH_DIAGNOSTIC_FAIL", nextCommandId: "probe.show",
+      prerequisite: isOps45 ? ops45Prerequisite : JSON.stringify(details),
+      links: { recordRefs: [], observations: [], artifactDigests: isOps45 ? [digest(markdown), digest(readFileSync(new URL("./model-route-probe.js", import.meta.url))), digest(readFileSync(new URL("./model-route.js", import.meta.url))), ...(modelsPolicyDigest === null ? [] : [modelsPolicyDigest]), ...(opsPin === null ? [] : [opsPin.contentDigest])] : [digest(markdown), digest(readFileSync(new URL("./model-route-probe.js", import.meta.url))), digest(readFileSync(new URL("./model-route.js", import.meta.url)))] }
     }));
   }
   return TestProbeControl.run(input, context, checks);
