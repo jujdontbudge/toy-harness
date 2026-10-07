@@ -2,9 +2,9 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-07T01:04:59.043417+00:00",
+  "updatedAt": "2026-10-07T01:10:29.133098+00:00",
   "phase": "R0_FEASIBILITY",
-  "activeCard": "R0.02",
+  "activeCard": "R0.03",
   "cardCount": 87,
   "acceptanceCount": 1447,
   "cards": {
@@ -618,7 +618,27 @@
         "sourcesRegressionEvidence": "build/evidence/R0.02/ops-scope-corrected-sources-regression.json",
         "genericRegressionEvidence": "build/evidence/R0.03/mixed89-first-verification.json",
         "sourceUnitStopped": true,
-        "evidence": "build/evidence/R0.02/ops-scope-corrected-verification.json"
+        "evidence": "build/evidence/R0.02/ops-scope-corrected-verification.json",
+        "sourceCommit": "3ad57fa",
+        "sourcePushed": true
+      },
+      "ops44PlanUnit": {
+        "task": "/root/r005_control_probe_review",
+        "card": "R0.02",
+        "assignedAT": "AT-ops-44",
+        "state": "READ_ONLY_PLAN_RUNNING",
+        "deadline": "2026-10-07T01:25:00Z",
+        "model": "gpt-6-luna",
+        "reasoning": "max",
+        "ownedPath": "build/evidence/R0.02/ops44-next-minimum-plan.json",
+        "sourceMutationAllowed": false,
+        "admissionEvidence": "build/evidence/R0.03/dashboard90-baseline-doctor.json",
+        "helperNeedBytes": "268435456",
+        "marginBytes": "536870912",
+        "baselineEvidence": "build/evidence/R0.03/dashboard90-baseline.json",
+        "sourceCheckpoint": "3ad57fa",
+        "wholeATComplete": false,
+        "acceptanceComplete": false
       }
     },
     "R0.03": {
@@ -1165,7 +1185,27 @@
         "protectedControllerIdentityVerified": false,
         "SwiftDeferredTo": "R3",
         "sourceUnitStopped": true,
-        "evidence": "build/evidence/R0.03/mixed89-parent-verification.json"
+        "evidence": "build/evidence/R0.03/mixed89-parent-verification.json",
+        "sourceCommit": "3ad57fa",
+        "sourcePushed": true
+      },
+      "dashboardPlanUnit": {
+        "task": "/root/r003_per_generation_refresh_plan",
+        "card": "R0.03",
+        "assignedAT": "AT-hermes-config-90",
+        "state": "READ_ONLY_PLAN_RUNNING",
+        "deadline": "2026-10-07T01:25:00Z",
+        "model": "gpt-6-luna",
+        "reasoning": "max",
+        "ownedPath": "build/evidence/R0.03/dashboard90-next-minimum-plan.json",
+        "sourceMutationAllowed": false,
+        "admissionEvidence": "build/evidence/R0.03/dashboard90-baseline-doctor.json",
+        "helperNeedBytes": "268435456",
+        "marginBytes": "536870912",
+        "baselineEvidence": "build/evidence/R0.03/dashboard90-baseline.json",
+        "sourceCheckpoint": "3ad57fa",
+        "wholeATComplete": false,
+        "acceptanceComplete": false
       }
     },
     "R0.04": {
@@ -10958,7 +10998,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Commit/push the immutable verified AT86 source unit; review the two bounded read-only plans. No new source mutation until the corrected canonical Ops scope is checked. Poll both root requests; exact ROOT-R004-20261006-02 DONE immediately prioritizes R0.01 native owner load.",
+  "nextAction": "Review bounded read-only AT-hermes-config-90 and AT-ops-44 plans and exact source bindings; admit only the simplest assigned-CLI source units. Poll both root requests; exact ROOT-R004-20261006-02 DONE immediately prioritizes R0.01 native owner load. Passed AT86/89 and corrected Ops coverage units remain stopped.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -21568,7 +21608,7 @@
     "evidence": "build/evidence/R0.03/mixed89-strict.txt",
     "recordedAt": "2026-10-07T01:04:59.043417+00:00"
   },
-  "sourceCheckpointCommit": "d85ef43",
+  "sourceCheckpointCommit": "3ad57fa",
   "sourceCheckpointPushed": true,
   "rootRequests": {
     "ROOT-R004-20261006-01": {
@@ -21608,25 +21648,54 @@
     }
   },
   "resourceAdmission": {
-    "measuredAt": "2026-10-06T23:58:48.079Z",
-    "availableBytes": "2183168000",
+    "measuredAt": "2026-10-07T01:07:33.546Z",
+    "availableBytes": "2579693568",
     "pressure": "normal",
     "strictlyFreeAdmission": false,
     "repairFloorApplied": false,
     "ownedWorldsRunning": 0,
     "helpersRunning": 2,
     "helperNeedBytes": "268435456",
-    "measurementSource": "build/evidence/R0.03/siblings86-source-doctor.json",
+    "measurementSource": "build/evidence/R0.03/dashboard90-baseline-doctor.json",
     "marginBytes": "536870912",
     "ownedStackId": null,
     "stackAndNativeChildrenNeedBytes": "0",
-    "jobNeedBytes": "1073741824",
-    "requiredAvailableBytes": "1610612736",
+    "jobNeedBytes": "268435456",
+    "requiredAvailableBytes": "805306368",
     "secondPhysicalFitGate": false,
     "queuedRootReserveGate": false,
     "rule": "Normal OS pressure and available memory at least the current job declared need plus512MiB; no strictly-free, hypothetical reserve, swap or second physical-fit gate"
   },
-  "activeWorkers": [],
+  "activeWorkers": [
+    {
+      "task": "/root/r003_per_generation_refresh_plan",
+      "card": "R0.03",
+      "assignedAT": "AT-hermes-config-90",
+      "state": "READ_ONLY_PLAN_RUNNING",
+      "deadline": "2026-10-07T01:25:00Z",
+      "model": "gpt-6-luna",
+      "reasoning": "max",
+      "ownedPath": "build/evidence/R0.03/dashboard90-next-minimum-plan.json",
+      "sourceMutationAllowed": false,
+      "admissionEvidence": "build/evidence/R0.03/dashboard90-baseline-doctor.json",
+      "helperNeedBytes": "268435456",
+      "marginBytes": "536870912"
+    },
+    {
+      "task": "/root/r005_control_probe_review",
+      "card": "R0.02",
+      "assignedAT": "AT-ops-44",
+      "state": "READ_ONLY_PLAN_RUNNING",
+      "deadline": "2026-10-07T01:25:00Z",
+      "model": "gpt-6-luna",
+      "reasoning": "max",
+      "ownedPath": "build/evidence/R0.02/ops44-next-minimum-plan.json",
+      "sourceMutationAllowed": false,
+      "admissionEvidence": "build/evidence/R0.03/dashboard90-baseline-doctor.json",
+      "helperNeedBytes": "268435456",
+      "marginBytes": "536870912"
+    }
+  ],
   "pullRequestUpdatedAt": "2026-10-06T23:56:58.550592+00:00",
   "continuationCheckpoint": "build/checkpoints/2026-10-07-auth-siblings-ops-mixed-lineage"
 }
