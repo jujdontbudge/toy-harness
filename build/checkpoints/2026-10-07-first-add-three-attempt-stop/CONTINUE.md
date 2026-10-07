@@ -12,4 +12,4 @@ ROOT-R004-20261006-02 and ROOT-R005-20261006-01 PENDING. Poll build/ROOT-REQUEST
 
 Memory normal pressure + free/inactive/purgeable/speculative. Current job own need+512MiB only; helper256MiB, stack/build1GiB; no strictlyfree/swap/aggregate/queuedroot/physicalfit veto. R5 floor only repair worker. Fresh toy doctor before next admission. Preserve services/profiles/stores/secrets. All actual Toy driving through registered CLI; feature map only paved generator.
 
-Next: commit/push this source candidate + evidence, update draftPR1 with truthful proof/deferrals, then review independent R0.06 helper. Continue another unblocked card if no legitimate gap; do not recycle exhausted AT34 or duplicate synthetic research/native fixtures. Save exact source/native ownership and evidence before each transition.
+Source candidate316e2d7c7554951c46a37a46ba505c02103855a1 is committed/pushed; draftPR1 body/head readback verified. Next: review independent R0.06 helper. Continue another unblocked card if no legitimate gap; do not recycle exhausted AT34 or duplicate synthetic research/native fixtures. Save exact source/native ownership and evidence before each transition.
