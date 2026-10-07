@@ -1,0 +1,165 @@
+{
+  "schemaVersion": "toy.r003-root-shape-source-admission.v1",
+  "recordedAt": "2026-10-07T14:49:26.492934+00:00",
+  "sourceDeadline": "2026-10-07T15:09:26.492934+00:00",
+  "unitDeadline": "2026-10-07T16:49:26.492934+00:00",
+  "card": "R0.03",
+  "assignedAT": "AT-hermes-config-35",
+  "rung": "CLI",
+  "state": "SOURCE_ADMITTED_SEPARATE_CAUSAL_SHAPE_REPLAN_UNIT",
+  "sourceOwner": "/root/r004_next_minimum_readonly",
+  "model": "gpt-6-luna",
+  "effort": "max",
+  "replan": {
+    "path": "build/evidence/R0.03/manual-lineage35-root-shape-replan-20261007.json",
+    "sha256": "34761d66262e56501a6f97b1f24f6ab02c5af67225a05cab967ee8ebdd341e4d"
+  },
+  "priorActualRED": {
+    "run": {
+      "path": "build/evidence/R0.03/manual-lineage35-final-cli/AT-hermes-config-35-run.json",
+      "sha256": "78143443e4712eab71ffb271a3ba08e83c3543817d3f64912f00cfcb5d25d0ae",
+      "kind": "bounded-public-receipt"
+    },
+    "show": {
+      "path": "build/evidence/R0.03/manual-lineage35-final-cli/AT-hermes-config-35-show.json",
+      "sha256": "d4bb3059caa679162503afe2c19ae84ad94e6706ba8a2d80035de2048f37ee7b",
+      "kind": "bounded-public-receipt"
+    },
+    "operationId": "e9d08375-8798-41ed-a406-01ee118d7038",
+    "exitCode": 0,
+    "resultState": "NOT_IMPLEMENTED",
+    "complete": false,
+    "blockedCheck": {
+      "id": "auth.native-fixture",
+      "owner": "hermes",
+      "state": "BLOCKED",
+      "reasonCode": "NATIVE_AUTH_ANTHROPIC_ROOT_GRANT_UNAVAILABLE",
+      "checkedAt": "2026-10-07T13:41:23.770Z",
+      "prerequisite": {
+        "wholeATComplete": false,
+        "fixtureSubsetComplete": false,
+        "caseId": "root-add",
+        "setupReason": "PUBLIC_ROOT_ANTHROPIC_GRANT_SHAPE_UNSUPPORTED",
+        "rootAuth": {
+          "exists": true,
+          "digest": "567dcaa163532793ddb84e30a5a221933f8409876db5d5925829bef211ea92a0"
+        },
+        "singleton": {
+          "exists": false,
+          "digest": null
+        }
+      }
+    },
+    "earlierJsonFormFailure": "The stopped record says the JSON authorization-code/form mismatch and denial enum mismatch were repaired. The final run reaches the root shape gate with a schema-valid child result; this diagnosis does not reopen that earlier failure.",
+    "teardownComplete": true,
+    "allOwnedWorldsDown": true,
+    "twelvePhasesProven": false,
+    "runShowExactSavedByParent": true
+  },
+  "historicalAT35AssignedAttemptsUsed": 3,
+  "newUnitAttemptsUsed": 0,
+  "maximumNewUnitDiagnosticRuns": 1,
+  "baselineReusedReason": "Same pinned auth-fixture and upstream public producer; prior actual unfiltered root-shape BLOCKED is the deterministic causal baseline. No unchanged fourth rerun. Independent AT40 unit has completed in between.",
+  "ownedSourcePaths": [
+    {
+      "path": "packages/hermes/src/auth-fixture.ts",
+      "sha256": "e9c1893c60e523ea0667854e9dc05da63c3099b440dec996481e730fa08d2597"
+    },
+    {
+      "path": "docs/adr/0045-mixed-auth-lineage-probe.md",
+      "sha256": "55c8a65d618e209044013e8a64229c744d465e2766c87be2bc04389c46884c46"
+    }
+  ],
+  "writtenInterface": "Existing docs/adr/0045-mixed-auth-lineage-probe.md; correct representation before code, no new module/public interface",
+  "changes": [
+    "Accept actual public-minted manual:hermes_pkce only in absent-singleton one-row root-add OS projection; preserve all actual-material/id/future-expiry/containment/cardinality/projection guards and other root data",
+    "Qualify projection AFTER actual validated root public add exit, argv/operation/provider, child identity, token hygiene and exact fake HTTP exchange/network-denial proof; refuse without projection if any fact fails",
+    "Preserve root-list genuine materialization, exact copied store, all 12 manual/copy phases and owner healing/refresh/reload checks unchanged; do not invent or relabel sources/tokens/rows",
+    "Correct ADR root setup source representation, keep native/account/whole acceptance pending"
+  ],
+  "memory": {
+    "path": "build/evidence/R0.03/manual-lineage35-shape-source-memory.json",
+    "sha256": "10347d0a6d1d7f8330ffb2550cf3b608592f66fa5e27a17565f42531eb3c170d"
+  },
+  "availableBytes": 2212823040,
+  "helperOwnRequiredBytes": 805306368,
+  "normalPressure": true,
+  "frozenSourcePins": [
+    {
+      "path": "patches/hermes-profile-auth.patch",
+      "sha256": "814f13752d5132dbc175fb1864229dead2988f9eaa8f76af1481457f2b406b30"
+    },
+    {
+      "path": "packages/hermes/src/auth-probe.ts",
+      "sha256": "b26c56b0841953b9b071db8940f7efdbbce6ee44be3a922b940e2b235e151226"
+    },
+    {
+      "path": "packages/self-improvement/src/model-admission.ts",
+      "sha256": "e938ae2c18bbf34af9c863283dd853c2aff109c3eac0fc08962979458c39a630"
+    },
+    {
+      "path": "packages/self-improvement/src/accounting-probe.ts",
+      "sha256": "559ad8006265c63b87d7e9dd2e8f7fdfaaaf4b0d8d06f1433e7f1e6ec3f57a71"
+    },
+    {
+      "path": "packages/hermes/src/model-route-probe.ts",
+      "sha256": "820862303d2471517e4474440d697dc0bf3f043a4960dff680ea0fee6b605489"
+    },
+    {
+      "path": "packages/hermes/src/model-route.ts",
+      "sha256": "7c56f64981df351db6b8cd72237334369a86ffe9cb6d721c37c9dd2e2be945dc"
+    },
+    {
+      "path": "tests/registry.yaml",
+      "sha256": "2952c2a7bc3b66752de58360f3525957aa18fe6701d900427cf8f5df643f4004"
+    },
+    {
+      "path": "cli/src/main.ts",
+      "sha256": "2186840498e12e39156877da9e3e3431d86045af87108cbf2fd236105a1f2db5"
+    },
+    {
+      "path": "packages/ops/src/fixture-stack.ts",
+      "sha256": "4311ee0309bfa3dbc2a9c6eff3c07b55bdaca4e1e2ad41ff1e2334595560dda6"
+    }
+  ],
+  "frozenRootPins": [
+    {
+      "path": "scripts/probe-siwc-control-runtime.mts",
+      "sha256": "96e1fd2d98469772c3d0d203386c3f7aa56af57db025c420fa93f1f4ecd7e70d",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/stage-siwc-control-runtime.mts",
+      "sha256": "13ff53e341ab7670dbed967ce810d5aa2834df7a47ffe1620f037ff1da3ee0d4",
+      "unchanged": true
+    },
+    {
+      "path": "control/dist/bootstrap/siwc-runtime-probe.js",
+      "sha256": "06870b8dd41d2ffc093cc04680ba56c4570f07b4aa0a27a9ab70796cdd8204bd",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/probe-unfiltered-control-denials.mts",
+      "sha256": "1cb93d375df931a482d946170e31549450d8efb71d6a251f5d2bcea8c5b92529",
+      "unchanged": true
+    },
+    {
+      "path": "packages/ops/dist/role-control-probe.js",
+      "sha256": "1764a98e5ae45694118007c242320711a7bd9e0d021b7c6d6ee0cbb8cff73ec2",
+      "unchanged": true
+    },
+    {
+      "path": "control/dist/bootstrap/denial-probe.js",
+      "sha256": "7fda1824ec7bc308cac97d07c7c92cadd5527e87e89d79b410d33d95d1b30672",
+      "unchanged": true
+    }
+  ],
+  "firstActualTwelveCasePassStop": true,
+  "anyNewFAILOrBLOCKEDStop": true,
+  "noAddedDiagnosticsUnlessActualFailureRequires": true,
+  "noCLIOrGenOrStaticOrTestsDuringSource": true,
+  "noHelpersOrCommitOrActualCredentialOrProfileReads": true,
+  "wholeATAcceptance": false,
+  "wholeCardAcceptance": false,
+  "goalStatus": "active"
+}

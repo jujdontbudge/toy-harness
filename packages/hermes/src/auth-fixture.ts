@@ -341,7 +341,7 @@ const ensureAnthropicSingleton = (hermesHome: string): { ready: boolean; reason:
   }
   if (!Array.isArray(rows) || rows.length !== 1) return { ready: false, reason: "PUBLIC_ROOT_ANTHROPIC_GRANT_MISSING_OR_AMBIGUOUS", rootAuth, rootAnthropic };
   const row: unknown = rows[0];
-  if (!isRecord(row) || row.source !== "hermes_pkce" || typeof row.id !== "string" || row.id.length === 0 || typeof row.access_token !== "string" || row.access_token.length === 0 || typeof row.refresh_token !== "string" || row.refresh_token.length === 0 || typeof row.expires_at_ms !== "number" || !Number.isFinite(row.expires_at_ms) || row.expires_at_ms <= Date.now()) return { ready: false, reason: "PUBLIC_ROOT_ANTHROPIC_GRANT_SHAPE_UNSUPPORTED", rootAuth, rootAnthropic };
+  if (!isRecord(row) || row.source !== "manual:hermes_pkce" || typeof row.id !== "string" || row.id.length === 0 || typeof row.access_token !== "string" || row.access_token.length === 0 || typeof row.refresh_token !== "string" || row.refresh_token.length === 0 || typeof row.expires_at_ms !== "number" || !Number.isFinite(row.expires_at_ms) || row.expires_at_ms <= Date.now()) return { ready: false, reason: "PUBLIC_ROOT_ANTHROPIC_GRANT_SHAPE_UNSUPPORTED", rootAuth, rootAnthropic };
   const singleton = { accessToken: row.access_token, refreshToken: row.refresh_token, expiresAt: row.expires_at_ms };
   writeFileSync(singletonPath, JSON.stringify(singleton), { flag: "wx", mode: 0o600 });
   const nextPool = { ...(pool ?? {}), anthropic: [] };
@@ -831,11 +831,6 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
       const parsedResult = hermesAuthFixtureResultSchema.safeParse(rawResult);
       if (!parsedResult.success) return fail("FAIL", "NATIVE_AUTH_FIXTURE_RESULT_INVALID", { installedCommit, archiveDigest, operation, commandDigest, stdoutDigest: digest(child.result.stdout), stderrDigest });
       const result: HermesAuthFixtureResultV1 = parsedResult.data;
-      if (anthropicLineage && mixedStep?.caseId === "root-add") {
-        anthropicSingletonSetup = ensureAnthropicSingleton(hermesRoot);
-        if (!anthropicSingletonSetup.ready) return fail("BLOCKED", "NATIVE_AUTH_ANTHROPIC_ROOT_GRANT_UNAVAILABLE", { caseId: mixedStep.caseId, setupReason: anthropicSingletonSetup.reason, rootAuth: anthropicSingletonSetup.rootAuth, singleton: anthropicSingletonSetup.rootAnthropic, wholeATComplete: false });
-        mixedAnthropicRootBaseline = { rootAuth: anthropicSingletonSetup.rootAuth, rootEnv: storesBeforeOperation.rootEnv, rootAnthropic: anthropicSingletonSetup.rootAnthropic };
-      }
       if (anthropicLineage && mixedStep?.caseId === "root-lineage-readback") {
         const created = createAnthropicProfile("lineage-copy");
         if (!created) return fail("FAIL", "NATIVE_AUTH_ANTHROPIC_COPY_PROFILE_CREATE_FAILED", { caseId: mixedStep.caseId, wholeATComplete: false });
@@ -880,6 +875,42 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
         ? result.http_ledger.device_code_requests === expectedLedger.device_code_requests && result.http_ledger.device_code_polls === expectedLedger.device_code_polls && result.http_ledger.token_exchanges >= 1 && result.http_ledger.token_refreshes === 0 && result.http_ledger.model_requests === 0
         : result.http_ledger.model_requests === 1 && result.http_ledger.denied_http_requests === 0 && result.http_ledger.blocked_socket_events === 0 && result.http_ledger.device_code_requests === 0 && result.http_ledger.device_code_polls === 0 && result.http_ledger.token_exchanges === 0 && result.http_ledger.token_refreshes === 0);
       const ledgerMatches = firstAddCell !== undefined ? firstAddLedgerMatches : result.http_ledger.model_catalog_requests <= maxCatalogRequests && JSON.stringify(result.http_ledger) === JSON.stringify(expectedLedger);
+      const anthropicRootAddResultValidated = anthropicLineage
+        && mixedStep?.caseId === "root-add"
+        && rootScope
+        && commandOperation === "add"
+        && operation === "add"
+        && result.operation === "add"
+        && result.observations.phase === "add"
+        && result.observations.provider === "anthropic"
+        && result.observations.access_generation === null
+        && result.observations.network_denials.length === 0
+        && result.observations.socket_origin === null
+        && result.observations.token_hygiene
+        && !result.observations.fallback_attempted
+        && !result.observations.storage_fault_triggered
+        && result.public_argv.length === expectedArgv.length
+        && result.public_argv.every((argument, index) => argument === expectedArgv[index])
+        && child.result.status === 0
+        && result.exit_code === 0
+        && result.markers.length === 1
+        && result.markers[0] === "AUTH_ADD_OK"
+        && result.network_audit === "socket-audit-hook-installed"
+        && result.http_ledger.device_code_requests === 0
+        && result.http_ledger.device_code_polls === 0
+        && result.http_ledger.token_exchanges === 1
+        && result.http_ledger.token_refreshes === 0
+        && result.http_ledger.model_catalog_requests === 0
+        && result.http_ledger.model_requests === 0
+        && result.http_ledger.denied_http_requests === 0
+        && result.http_ledger.blocked_socket_events === 0
+        && ledgerMatches
+        && identityMatches;
+      if (anthropicLineage && mixedStep?.caseId === "root-add" && anthropicRootAddResultValidated) {
+        anthropicSingletonSetup = ensureAnthropicSingleton(hermesRoot);
+        if (!anthropicSingletonSetup.ready) return fail("BLOCKED", "NATIVE_AUTH_ANTHROPIC_ROOT_GRANT_UNAVAILABLE", { caseId: mixedStep.caseId, setupReason: anthropicSingletonSetup.reason, rootAuth: anthropicSingletonSetup.rootAuth, singleton: anthropicSingletonSetup.rootAnthropic, wholeATComplete: false });
+        mixedAnthropicRootBaseline = { rootAuth: anthropicSingletonSetup.rootAuth, rootEnv: storesBeforeOperation.rootEnv, rootAnthropic: anthropicSingletonSetup.rootAnthropic };
+      }
       const storesAfterOperation = privateStoreDigests(hermesRoot, mixedProfile);
       const rootStoreUnchanged = JSON.stringify(storesBefore.rootAuth) === JSON.stringify(storesAfterOperation.rootAuth)
         && JSON.stringify(storesBefore.rootEnv) === JSON.stringify(storesAfterOperation.rootEnv);

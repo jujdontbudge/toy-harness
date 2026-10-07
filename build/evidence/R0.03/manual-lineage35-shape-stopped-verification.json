@@ -1,0 +1,336 @@
+{
+  "schemaVersion": "toy.r003-root-shape-stopped-verification.v1",
+  "recordedAt": "2026-10-07T14:57:17.513874+00:00",
+  "card": "R0.03",
+  "assignedAT": "AT-hermes-config-35",
+  "rung": "CLI",
+  "state": "ROOT_SHAPE_FIXED_NEW_CATALOG_ORACLE_FAILURE_STOPPED",
+  "sourceOwnership": "STOPPED",
+  "sourceAdmission": {
+    "path": "build/evidence/R0.03/manual-lineage35-shape-source-admission.json",
+    "sha256": "5ecd448afb1af9765e0e812e6c2d5306c4db63ba9d7687438c77cd6c71129e08"
+  },
+  "sourceHandoff": {
+    "path": "build/evidence/R0.03/manual-lineage35-shape-source-handoff.json",
+    "sha256": "094b96df8754e6da1ecf28d0fd7bb7415aed1369c6591f9c702ae135bf61fc0e"
+  },
+  "replan": {
+    "path": "build/evidence/R0.03/manual-lineage35-root-shape-replan-20261007.json",
+    "sha256": "34761d66262e56501a6f97b1f24f6ab02c5af67225a05cab967ee8ebdd341e4d"
+  },
+  "runtime": {
+    "path": "build/evidence/R0.03/manual-lineage35-shape-summary.json",
+    "sha256": "00f9ec9377b8fdf638e1aa54885ad1b551fc549ca1592a74588d3cfc45dd74a6"
+  },
+  "strictCheck": {
+    "path": "build/evidence/R0.03/manual-lineage35-shape-strict-check.log",
+    "sha256": "2312b4abb68c03651a0e8aaa630078fbbdd12277bebb0c885f812944122f780e"
+  },
+  "runtimeMemory": {
+    "path": "build/evidence/R0.03/manual-lineage35-shape-runtime-memory-fresh1.json",
+    "sha256": "0a38dd3ea45215ec928ac44195ff2da2fb68c89398e6ca26630f6266396cba27"
+  },
+  "pressureRefusal": {
+    "path": "build/evidence/R0.03/manual-lineage35-shape-runtime-refusal.json",
+    "sha256": "d5f0ac8f6e74ee429f96d629a2c51b78b71b549141d3fca22bd124777fc738f5"
+  },
+  "historicalPriorUnitAssignedAttemptsUsed": 3,
+  "newUnitAssignedAttemptsUsed": 1,
+  "historicalTotalAT35AssignedAttemptsUsed": 4,
+  "priorThreeAttemptUnitReopened": false,
+  "unchangedFourthRunExecuted": false,
+  "changedSourceRunWasSeparatelyAdmitted": true,
+  "newUnitMaximumRuns": 1,
+  "noSecondRun": true,
+  "checksPassed": 7,
+  "checksFailed": 2,
+  "caseSummary": [
+    {
+      "id": "auth.native-runtime",
+      "state": "PASS",
+      "reasonCode": "NATIVE_PUBLIC_CLI_READY_AUTH_PENDING",
+      "caseId": null,
+      "projectionBytes": 913
+    },
+    {
+      "id": "auth.native-fixture",
+      "state": "PASS",
+      "reasonCode": "NATIVE_AUTH_FIXTURE_ADD_OBSERVED",
+      "caseId": "root-add",
+      "projectionBytes": 1038
+    },
+    {
+      "id": "auth.native-fixture",
+      "state": "PASS",
+      "reasonCode": "NATIVE_AUTH_ANTHROPIC_STORE_READBACK_OBSERVED",
+      "caseId": "root-add",
+      "projectionBytes": 791
+    },
+    {
+      "id": "auth.native-fixture",
+      "state": "PASS",
+      "reasonCode": "NATIVE_AUTH_FIXTURE_ADD_OBSERVED",
+      "caseId": "independent-manual-add",
+      "projectionBytes": 1077
+    },
+    {
+      "id": "auth.native-fixture",
+      "state": "PASS",
+      "reasonCode": "NATIVE_AUTH_ANTHROPIC_STORE_READBACK_OBSERVED",
+      "caseId": "independent-manual-add",
+      "projectionBytes": 994
+    },
+    {
+      "id": "auth.native-fixture",
+      "state": "PASS",
+      "reasonCode": "NATIVE_AUTH_FIXTURE_LIST_OBSERVED",
+      "caseId": "independent-profile-readback",
+      "projectionBytes": 1070
+    },
+    {
+      "id": "auth.native-fixture",
+      "state": "PASS",
+      "reasonCode": "NATIVE_AUTH_ANTHROPIC_STORE_READBACK_OBSERVED",
+      "caseId": "independent-profile-readback",
+      "projectionBytes": 1062
+    },
+    {
+      "id": "auth.native-fixture",
+      "state": "FAIL",
+      "reasonCode": "NATIVE_AUTH_FIXTURE_OPERATION_FAILED",
+      "caseId": "independent-profile-use",
+      "projectionBytes": 1110
+    },
+    {
+      "id": "auth.native-fixture",
+      "state": "FAIL",
+      "reasonCode": "NATIVE_AUTH_ANTHROPIC_STORE_READBACK_FAILED",
+      "caseId": "independent-profile-use",
+      "projectionBytes": 1057
+    }
+  ],
+  "failedFacts": [
+    {
+      "reasonCode": "NATIVE_AUTH_FIXTURE_OPERATION_FAILED",
+      "facts": {
+        "result": {
+          "operation": "chat",
+          "phase": "chat",
+          "public_argv": [
+            "hermes",
+            "--profile",
+            "toy",
+            "chat",
+            "--provider",
+            "anthropic",
+            "--model",
+            "claude-sonnet-4-5",
+            "--toolsets",
+            "none",
+            "-q",
+            "Return the fixed fixture marker."
+          ],
+          "processIdentity": {
+            "pid": 25482,
+            "parentPid": 25453,
+            "uid": 501,
+            "gid": 20
+          },
+          "exit_code": 0,
+          "markers": [
+            "CHAT_RESPONSE_OK"
+          ],
+          "provider": "anthropic",
+          "access_generation": "added",
+          "catalog_access_generation": null,
+          "token_hygiene": true,
+          "success_claim_absent": true,
+          "fallback_attempted": false,
+          "network_denials": [],
+          "socket_origin": null,
+          "http_ledger": {
+            "device_code_requests": 0,
+            "device_code_polls": 0,
+            "token_exchanges": 0,
+            "token_refreshes": 0,
+            "model_catalog_requests": 0,
+            "model_requests": 1,
+            "denied_http_requests": 0,
+            "blocked_socket_events": 0
+          },
+          "network_audit": "socket-audit-hook-installed"
+        },
+        "childPidMatches": true,
+        "freshChildPid": true,
+        "parentPidMatches": true,
+        "uidMatches": true,
+        "gidMatches": true,
+        "childStdoutDigest": "ebd2713fabfa4e0d066d8c222b3537d38cbe3c2a8d2f1fd294cdf0d8bb13860c",
+        "childStderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "caseId": "independent-profile-use",
+        "wholeATComplete": false
+      }
+    },
+    {
+      "reasonCode": "NATIVE_AUTH_ANTHROPIC_STORE_READBACK_FAILED",
+      "facts": {
+        "caseId": "independent-profile-use",
+        "profile": "toy",
+        "storeScope": "profile",
+        "rootAuthBefore": "1500bd781edb91a582b8d3900f835a419c3ea3949cc8f50b59206a2a87d48aa9",
+        "rootAuthAfter": "1500bd781edb91a582b8d3900f835a419c3ea3949cc8f50b59206a2a87d48aa9",
+        "rootAnthropicBefore": "1092b70f66baeadd9b1d23f9fef3089f4994b2ae540d8a4a4830162d8a99ef82",
+        "rootAnthropicAfter": "1092b70f66baeadd9b1d23f9fef3089f4994b2ae540d8a4a4830162d8a99ef82",
+        "rootEnvBefore": null,
+        "rootEnvAfter": null,
+        "profileAuthBefore": "8c1662de4502e1b4e78f0758816490304686b745019ca32f72dc5ef66d55e497",
+        "profileAuthAfter": "8c1662de4502e1b4e78f0758816490304686b745019ca32f72dc5ef66d55e497",
+        "profileAnthropicBefore": null,
+        "profileAnthropicAfter": null,
+        "rootStoreVerified": true,
+        "profileStoreVerified": true,
+        "singletonSetup": {
+          "ready": true,
+          "reason": "PUBLIC_ROOT_ANTHROPIC_GRANT_PROJECTED",
+          "rootAuth": {
+            "exists": true,
+            "digest": "1500bd781edb91a582b8d3900f835a419c3ea3949cc8f50b59206a2a87d48aa9"
+          },
+          "singleton": {
+            "exists": true,
+            "digest": "1092b70f66baeadd9b1d23f9fef3089f4994b2ae540d8a4a4830162d8a99ef82"
+          }
+        },
+        "wholeATComplete": false
+      }
+    }
+  ],
+  "maximumProjectionBytes": 1110,
+  "rootSetupNowVerified": true,
+  "independentManualAddAndListVerified": true,
+  "actualIndependentManualChatSucceeded": true,
+  "rootDigestsUnchangedDuringManualChat": true,
+  "newGap": "Anthropic explicit-model chat made one model request and no catalogue request; the fixture requires model_catalog_requests=1 and nonnull matching catalogue generation. Exact catalogue oracle reconciliation is not yet admitted.",
+  "twelveCaseMatrixComplete": false,
+  "remainingReloadRefreshCopiedLineageUnverified": true,
+  "sourcePins": [
+    {
+      "path": "packages/hermes/src/auth-fixture.ts",
+      "sha256": "9784f44a4add85a59c8381a404f65cace9aa8f91c8c58bb1cdc03abc01253b3d"
+    },
+    {
+      "path": "docs/adr/0045-mixed-auth-lineage-probe.md",
+      "sha256": "0af27246d3794500c09f8a547c95494d209fa67d6b3afff31665d873987ae0e2"
+    }
+  ],
+  "frozenSourcePins": [
+    {
+      "path": "patches/hermes-profile-auth.patch",
+      "sha256": "814f13752d5132dbc175fb1864229dead2988f9eaa8f76af1481457f2b406b30"
+    },
+    {
+      "path": "packages/hermes/src/auth-probe.ts",
+      "sha256": "b26c56b0841953b9b071db8940f7efdbbce6ee44be3a922b940e2b235e151226"
+    },
+    {
+      "path": "packages/self-improvement/src/model-admission.ts",
+      "sha256": "e938ae2c18bbf34af9c863283dd853c2aff109c3eac0fc08962979458c39a630"
+    },
+    {
+      "path": "packages/self-improvement/src/accounting-probe.ts",
+      "sha256": "559ad8006265c63b87d7e9dd2e8f7fdfaaaf4b0d8d06f1433e7f1e6ec3f57a71"
+    },
+    {
+      "path": "packages/hermes/src/model-route-probe.ts",
+      "sha256": "820862303d2471517e4474440d697dc0bf3f043a4960dff680ea0fee6b605489"
+    },
+    {
+      "path": "packages/hermes/src/model-route.ts",
+      "sha256": "7c56f64981df351db6b8cd72237334369a86ffe9cb6d721c37c9dd2e2be945dc"
+    },
+    {
+      "path": "tests/registry.yaml",
+      "sha256": "2952c2a7bc3b66752de58360f3525957aa18fe6701d900427cf8f5df643f4004"
+    },
+    {
+      "path": "cli/src/main.ts",
+      "sha256": "2186840498e12e39156877da9e3e3431d86045af87108cbf2fd236105a1f2db5"
+    },
+    {
+      "path": "packages/ops/src/fixture-stack.ts",
+      "sha256": "4311ee0309bfa3dbc2a9c6eff3c07b55bdaca4e1e2ad41ff1e2334595560dda6"
+    }
+  ],
+  "frozenRootPins": [
+    {
+      "path": "scripts/probe-siwc-control-runtime.mts",
+      "sha256": "96e1fd2d98469772c3d0d203386c3f7aa56af57db025c420fa93f1f4ecd7e70d",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/stage-siwc-control-runtime.mts",
+      "sha256": "13ff53e341ab7670dbed967ce810d5aa2834df7a47ffe1620f037ff1da3ee0d4",
+      "unchanged": true
+    },
+    {
+      "path": "control/dist/bootstrap/siwc-runtime-probe.js",
+      "sha256": "06870b8dd41d2ffc093cc04680ba56c4570f07b4aa0a27a9ab70796cdd8204bd",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/probe-unfiltered-control-denials.mts",
+      "sha256": "1cb93d375df931a482d946170e31549450d8efb71d6a251f5d2bcea8c5b92529",
+      "unchanged": true
+    },
+    {
+      "path": "packages/ops/dist/role-control-probe.js",
+      "sha256": "1764a98e5ae45694118007c242320711a7bd9e0d021b7c6d6ee0cbb8cff73ec2",
+      "unchanged": true
+    },
+    {
+      "path": "control/dist/bootstrap/denial-probe.js",
+      "sha256": "7fda1824ec7bc308cac97d07c7c92cadd5527e87e89d79b410d33d95d1b30672",
+      "unchanged": true
+    }
+  ],
+  "runShowExact": true,
+  "registrationExact": true,
+  "worldDownComplete": true,
+  "worldId": "7c1d3732-3aec-4e6c-bed9-6db276aa56c2",
+  "zeroUnresolvedResources": true,
+  "strictCounts": {
+    "artifacts": 412,
+    "contracts": 344,
+    "cliManifests": 54,
+    "features": 107,
+    "commands": 55,
+    "ATs": 1447
+  },
+  "nativeProtectedAccountAcceptance": false,
+  "wholeATAcceptance": false,
+  "wholeCardAcceptance": false,
+  "liveProviderSends": 0,
+  "goalStatus": "active",
+  "postVerificationMetadataFiles": [
+    {
+      "path": "architecture/features.json",
+      "sha256": "12ae8958000ade487ef473746a9c08c753121e54dde8e2efd86cdca3eb8c2ec4"
+    },
+    {
+      "path": "docs/adr/0045-mixed-auth-lineage-probe.md",
+      "sha256": "88f4cad52b1334b6bac1a693b21198f3e620ed048a754a5b6a2a6c3c5bac54ce"
+    }
+  ],
+  "featureMapUpdateRefusal": {
+    "path": "build/evidence/R0.03/manual-lineage35-shape-feature-map-update.json",
+    "sha256": "64e525acefa0e86d2e02d6198b8f9083072f602883a6491fac051136e2c7e3d3"
+  },
+  "featureMapUpdate": {
+    "path": "build/evidence/R0.03/manual-lineage35-shape-feature-map-update-fixed.json",
+    "sha256": "aa6f4efcc60c89c6e4be6b0a126a78aea681505b013543c4b76d9c10f55b17f0"
+  },
+  "featureMapCheck": {
+    "path": "build/evidence/R0.03/manual-lineage35-shape-feature-map-check.json",
+    "sha256": "53e1c6d7268fa5288d04793ce5d3aae4c230f745e7e573a25e3bda510fa5a656"
+  }
+}
