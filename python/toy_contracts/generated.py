@@ -5549,6 +5549,7 @@ class HermesGatewayProfileV1Gateway(TypedDict):
     loop_watchdog_probe_interval_s: float
     loop_watchdog_probe_timeout_s: float
     loop_watchdog_max_strikes: int
+    allow_all_users: bool
 
 class HermesGatewayProfileV1Platforms(TypedDict):
     discord: "HermesGatewayProfileV1PlatformsDiscord"
@@ -5583,16 +5584,23 @@ HermesGatewayConsumerInventoryV1KeysItemConsumer = Literal[
     "GatewayConfig",
     "PlatformConfig",
     "StreamingConfig",
+    "bridged_allow_all_users",
 ]
 
 class HermesGatewayNativeObservationV1(TypedDict):
     effective: "HermesGatewayProfileV1"
+    allowAllBridge: Optional["HermesGatewayNativeObservationV1AllowAllBridgeValue"]
+    allowAllEnvironment: Optional["HermesGatewayNativeObservationV1AllowAllBridgeValue"]
     pid: int
     parentPid: int
     uid: int
     gid: int
     networkAttempts: int
     blockedSocketBinds: int
+
+HermesGatewayNativeObservationV1AllowAllBridgeValue = Literal[
+    "true",
+]
 
 class HermesGatewayProfileReceiptV1(TypedDict):
     scope: "HermesGatewayProfileReceiptV1Scope"

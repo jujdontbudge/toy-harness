@@ -1,0 +1,433 @@
+{
+  "recordedAt": "2026-10-07T03:52:21.570Z",
+  "rung": "CLI",
+  "unfiltered": true,
+  "wholeATComplete": false,
+  "liveProviderSends": 0,
+  "nativeAttempt": 1,
+  "admissionEvidence": "build/evidence/R0.10/profile-allow-all-native-first-doctor.json",
+  "probes": [
+    {
+      "probeId": "AT-cli-4",
+      "run": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.10/profile-allow-all-first-cli/AT-cli-4-run.json",
+        "sha256": "9535a513f9c54d611ec79600aeeff5662531329ec3ce9570e2c750cd998e11df"
+      },
+      "operationId": "a2208709-64c8-49f2-b20c-7d840a213894",
+      "show": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.10/profile-allow-all-first-cli/AT-cli-4-show.json",
+        "sha256": "c3aa2ef583755a7baa2b8ad0345df71464618fd0cc4cd64af77321c479042176"
+      },
+      "sameData": true,
+      "sourceRegistration": null,
+      "registrationExact": false,
+      "cases": [
+        {
+          "id": "bootstrap.fixture-runtime",
+          "owner": "ops",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T03:52:21.986Z",
+          "reasonCode": "TRUSTED_FIXTURE_LIFECYCLE_SUBSET",
+          "prerequisite": "{\"stackId\":\"7525281b-a8e7-4554-845d-9fc260db6a8e\",\"nonce\":\"6c41ab61-718e-40f9-a206-7f0ea68b9f59\",\"pid\":44662,\"state\":\"running\",\"checkedAt\":\"2026-10-07T03:52:21.922Z\",\"heartbeatCount\":\"2\"}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": []
+          }
+        }
+      ],
+      "resultState": "NOT_IMPLEMENTED",
+      "complete": false
+    },
+    {
+      "probeId": "AT-hermes-config-75",
+      "run": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.10/profile-allow-all-first-cli/AT-hermes-config-75-run.json",
+        "sha256": "31fdba9776bd42e2ddab1d4c7fc7540dcdcb36a0206ac09750c3a7280bb49aaf"
+      },
+      "operationId": "52d3aff9-4198-4948-b989-ea091cd3d931",
+      "show": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.10/profile-allow-all-first-cli/AT-hermes-config-75-show.json",
+        "sha256": "38980ce9c5a19324a298a44ecc4b07a456ef576177868dce0d2bf474082fc100"
+      },
+      "sameData": true,
+      "sourceRegistration": {
+        "id": "AT-hermes-config-75",
+        "rung": "CLI",
+        "sourceAssertionHash": "901516dd5ec64a9d7e28c9fcfec9f7877b8e539031fcfda5fe347e06919316cd",
+        "commandId": "probe.run",
+        "scenarioId": "profile.gateway-consumers",
+        "owner": "hermes",
+        "firstRelease": "R0",
+        "kind": "behavioral",
+        "mandatoryCases": [
+          {
+            "id": "generated-gateway-consumed",
+            "publicOperation": "HermesProfile.consumeGateway",
+            "phase": "generated-gateway-consumed"
+          },
+          {
+            "id": "nondefault-gateway-consumed",
+            "publicOperation": "HermesProfile.consumeGateway",
+            "phase": "nondefault-gateway-consumed"
+          },
+          {
+            "id": "unknown-root-refused",
+            "publicOperation": "HermesProfile.consumeGateway",
+            "phase": "unknown-root-refused"
+          },
+          {
+            "id": "unknown-nested-refused",
+            "publicOperation": "HermesProfile.consumeGateway",
+            "phase": "unknown-nested-refused"
+          },
+          {
+            "id": "ignored-key-refused",
+            "publicOperation": "HermesProfile.consumeGateway",
+            "phase": "ignored-key-refused"
+          },
+          {
+            "id": "native-default-replacement-refused",
+            "publicOperation": "HermesProfile.consumeGateway",
+            "phase": "native-default-replacement-refused"
+          },
+          {
+            "id": "container-shape-refused",
+            "publicOperation": "HermesProfile.consumeGateway",
+            "phase": "container-shape-refused"
+          },
+          {
+            "id": "missing-key-refused",
+            "publicOperation": "HermesProfile.consumeGateway",
+            "phase": "missing-key-refused"
+          },
+          {
+            "id": "allow-all-users-wrong-type-refused",
+            "publicOperation": "HermesProfile.consumeGateway",
+            "phase": "allow-all-users-wrong-type-refused"
+          },
+          {
+            "id": "allow-all-users-missing-key-refused",
+            "publicOperation": "HermesProfile.consumeGateway",
+            "phase": "allow-all-users-missing-key-refused"
+          }
+        ],
+        "trigger": "Generate the reviewed eight-key gateway fragment and load its target false and nondefault true allow-all settings through the real locked native gateway loader; refuse unknown, ignored, missing, malformed and silently defaulted values before disposable profile effects. Complete native profile and protected publication remain pending.",
+        "faultControls": [],
+        "observations": [
+          {
+            "id": "locked-source-consumer-and-native-process",
+            "independentReader": "Native load_gateway_config: bridge/env true-or-absent readback, effective settings, child/network ledger and pins",
+            "caseIds": [
+              "generated-gateway-consumed",
+              "nondefault-gateway-consumed"
+            ]
+          },
+          {
+            "id": "preload-refusal-without-profile-effects",
+            "independentReader": "Public owner error code and disposable profile artifact count before/after rejection",
+            "caseIds": [
+              "unknown-root-refused",
+              "unknown-nested-refused",
+              "ignored-key-refused",
+              "native-default-replacement-refused",
+              "container-shape-refused",
+              "missing-key-refused",
+              "allow-all-users-wrong-type-refused",
+              "allow-all-users-missing-key-refused"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot generate administrative native configuration or inspect the locked parser and isolated OS loader. The public Toy CLI drives the real owner and native consumers without loading a live profile."
+      },
+      "registrationExact": true,
+      "cases": [
+        {
+          "id": "profile.native-gateway",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T03:52:23.524Z",
+          "reasonCode": "NATIVE_GATEWAY_FRAGMENT_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"generated-gateway-consumed\",\"generatedKeys\":8,\"profileArtifactsBefore\":0,\"profileArtifactsAfter\":1,\"receipt\":{\"scope\":\"gateway-fragment\",\"profile\":{\"gateway\":{\"multiplex_profiles\":true,\"loop_watchdog\":true,\"loop_watchdog_probe_interval_s\":30,\"loop_watchdog_probe_timeout_s\":10,\"loop_watchdog_max_strikes\":3,\"allow_all_users\":false},\"platforms\":{\"discord\":{\"enabled\":false}},\"streaming\":{\"enabled\":false}},\"profileDigest\":\"bbe4e0d609d9508d3802380ef12f80d9ab663c21d43bc6c604aa0346cdd5812f\",\"consumerInventoryDigest\":\"fb4554b3fd2a873b3568adae97b6efa648019ec3d31ff0308453d37889541bce\",\"sourceCommit\":\"8d5e3e412138342e8bf30443e72bd4e6a9abd057\",\"native\":{\"effective\":{\"gateway\":{\"multiplex_profiles\":true,\"loop_watchdog\":true,\"loop_watchdog_probe_interval_s\":30,\"loop_watchdog_probe_timeout_s\":10,\"loop_watchdog_max_strikes\":3,\"allow_all_users\":false},\"platforms\":{\"discord\":{\"enabled\":false}},\"streaming\":{\"enabled\":false}},\"allowAllBridge\":null,\"allowAllEnvironment\":null,\"pid\":44670,\"parentPid\":44665,\"uid\":501,\"gid\":20,\"networkAttempts\":0,\"blockedSocketBinds\":1},\"nativeExitCode\":0,\"nativeConsumerMatched\":true,\"profilePublicationPerformed\":false,\"liveProviderSends\":0,\"acceptanceComplete\":false},\"errorCode\":null,\"sourceValidation\":\"reviewed-native-files-and-locked-git-blobs\",\"completeProfileValidated\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "fb4554b3fd2a873b3568adae97b6efa648019ec3d31ff0308453d37889541bce",
+              "4306f5a1ed2eb529832f1c204a89cf023e3faf1ca7d363d65f28f1a67012e125",
+              "d5a891e09c09cd1ef45a67e77e96abf35990cf5998f3f5742d4cb16aaa85ea68"
+            ]
+          }
+        },
+        {
+          "id": "profile.native-gateway",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T03:52:24.371Z",
+          "reasonCode": "NATIVE_GATEWAY_FRAGMENT_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"nondefault-gateway-consumed\",\"generatedKeys\":8,\"profileArtifactsBefore\":1,\"profileArtifactsAfter\":2,\"receipt\":{\"scope\":\"gateway-fragment\",\"profile\":{\"gateway\":{\"multiplex_profiles\":false,\"loop_watchdog\":false,\"loop_watchdog_probe_interval_s\":37,\"loop_watchdog_probe_timeout_s\":11,\"loop_watchdog_max_strikes\":4,\"allow_all_users\":true},\"platforms\":{\"discord\":{\"enabled\":true}},\"streaming\":{\"enabled\":true}},\"profileDigest\":\"d47e8888495bba514877b6dd9d5526d507b6bc7fac6d915376cd374b7483a1ec\",\"consumerInventoryDigest\":\"fb4554b3fd2a873b3568adae97b6efa648019ec3d31ff0308453d37889541bce\",\"sourceCommit\":\"8d5e3e412138342e8bf30443e72bd4e6a9abd057\",\"native\":{\"effective\":{\"gateway\":{\"multiplex_profiles\":false,\"loop_watchdog\":false,\"loop_watchdog_probe_interval_s\":37,\"loop_watchdog_probe_timeout_s\":11,\"loop_watchdog_max_strikes\":4,\"allow_all_users\":true},\"platforms\":{\"discord\":{\"enabled\":true}},\"streaming\":{\"enabled\":true}},\"allowAllBridge\":\"true\",\"allowAllEnvironment\":\"true\",\"pid\":44676,\"parentPid\":44665,\"uid\":501,\"gid\":20,\"networkAttempts\":0,\"blockedSocketBinds\":1},\"nativeExitCode\":0,\"nativeConsumerMatched\":true,\"profilePublicationPerformed\":false,\"liveProviderSends\":0,\"acceptanceComplete\":false},\"errorCode\":null,\"sourceValidation\":\"reviewed-native-files-and-locked-git-blobs\",\"completeProfileValidated\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "fb4554b3fd2a873b3568adae97b6efa648019ec3d31ff0308453d37889541bce",
+              "4306f5a1ed2eb529832f1c204a89cf023e3faf1ca7d363d65f28f1a67012e125",
+              "d5a891e09c09cd1ef45a67e77e96abf35990cf5998f3f5742d4cb16aaa85ea68"
+            ]
+          }
+        },
+        {
+          "id": "profile.native-gateway",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T03:52:24.371Z",
+          "reasonCode": "NATIVE_GATEWAY_FRAGMENT_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"unknown-root-refused\",\"generatedKeys\":8,\"profileArtifactsBefore\":2,\"profileArtifactsAfter\":2,\"receipt\":null,\"errorCode\":\"INVALID_INPUT\",\"sourceValidation\":\"reviewed-native-files-and-locked-git-blobs\",\"completeProfileValidated\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "fb4554b3fd2a873b3568adae97b6efa648019ec3d31ff0308453d37889541bce",
+              "4306f5a1ed2eb529832f1c204a89cf023e3faf1ca7d363d65f28f1a67012e125",
+              "d5a891e09c09cd1ef45a67e77e96abf35990cf5998f3f5742d4cb16aaa85ea68"
+            ]
+          }
+        },
+        {
+          "id": "profile.native-gateway",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T03:52:24.371Z",
+          "reasonCode": "NATIVE_GATEWAY_FRAGMENT_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"unknown-nested-refused\",\"generatedKeys\":8,\"profileArtifactsBefore\":2,\"profileArtifactsAfter\":2,\"receipt\":null,\"errorCode\":\"INVALID_INPUT\",\"sourceValidation\":\"reviewed-native-files-and-locked-git-blobs\",\"completeProfileValidated\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "fb4554b3fd2a873b3568adae97b6efa648019ec3d31ff0308453d37889541bce",
+              "4306f5a1ed2eb529832f1c204a89cf023e3faf1ca7d363d65f28f1a67012e125",
+              "d5a891e09c09cd1ef45a67e77e96abf35990cf5998f3f5742d4cb16aaa85ea68"
+            ]
+          }
+        },
+        {
+          "id": "profile.native-gateway",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T03:52:24.371Z",
+          "reasonCode": "NATIVE_GATEWAY_FRAGMENT_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"ignored-key-refused\",\"generatedKeys\":8,\"profileArtifactsBefore\":2,\"profileArtifactsAfter\":2,\"receipt\":null,\"errorCode\":\"INVALID_INPUT\",\"sourceValidation\":\"reviewed-native-files-and-locked-git-blobs\",\"completeProfileValidated\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "fb4554b3fd2a873b3568adae97b6efa648019ec3d31ff0308453d37889541bce",
+              "4306f5a1ed2eb529832f1c204a89cf023e3faf1ca7d363d65f28f1a67012e125",
+              "d5a891e09c09cd1ef45a67e77e96abf35990cf5998f3f5742d4cb16aaa85ea68"
+            ]
+          }
+        },
+        {
+          "id": "profile.native-gateway",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T03:52:24.371Z",
+          "reasonCode": "NATIVE_GATEWAY_FRAGMENT_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"native-default-replacement-refused\",\"generatedKeys\":8,\"profileArtifactsBefore\":2,\"profileArtifactsAfter\":2,\"receipt\":null,\"errorCode\":\"INVALID_INPUT\",\"sourceValidation\":\"reviewed-native-files-and-locked-git-blobs\",\"completeProfileValidated\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "fb4554b3fd2a873b3568adae97b6efa648019ec3d31ff0308453d37889541bce",
+              "4306f5a1ed2eb529832f1c204a89cf023e3faf1ca7d363d65f28f1a67012e125",
+              "d5a891e09c09cd1ef45a67e77e96abf35990cf5998f3f5742d4cb16aaa85ea68"
+            ]
+          }
+        },
+        {
+          "id": "profile.native-gateway",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T03:52:24.371Z",
+          "reasonCode": "NATIVE_GATEWAY_FRAGMENT_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"container-shape-refused\",\"generatedKeys\":8,\"profileArtifactsBefore\":2,\"profileArtifactsAfter\":2,\"receipt\":null,\"errorCode\":\"INVALID_INPUT\",\"sourceValidation\":\"reviewed-native-files-and-locked-git-blobs\",\"completeProfileValidated\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "fb4554b3fd2a873b3568adae97b6efa648019ec3d31ff0308453d37889541bce",
+              "4306f5a1ed2eb529832f1c204a89cf023e3faf1ca7d363d65f28f1a67012e125",
+              "d5a891e09c09cd1ef45a67e77e96abf35990cf5998f3f5742d4cb16aaa85ea68"
+            ]
+          }
+        },
+        {
+          "id": "profile.native-gateway",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T03:52:24.371Z",
+          "reasonCode": "NATIVE_GATEWAY_FRAGMENT_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"missing-key-refused\",\"generatedKeys\":8,\"profileArtifactsBefore\":2,\"profileArtifactsAfter\":2,\"receipt\":null,\"errorCode\":\"INVALID_INPUT\",\"sourceValidation\":\"reviewed-native-files-and-locked-git-blobs\",\"completeProfileValidated\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "fb4554b3fd2a873b3568adae97b6efa648019ec3d31ff0308453d37889541bce",
+              "4306f5a1ed2eb529832f1c204a89cf023e3faf1ca7d363d65f28f1a67012e125",
+              "d5a891e09c09cd1ef45a67e77e96abf35990cf5998f3f5742d4cb16aaa85ea68"
+            ]
+          }
+        },
+        {
+          "id": "profile.native-gateway",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T03:52:24.371Z",
+          "reasonCode": "NATIVE_GATEWAY_FRAGMENT_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"allow-all-users-wrong-type-refused\",\"generatedKeys\":8,\"profileArtifactsBefore\":2,\"profileArtifactsAfter\":2,\"receipt\":null,\"errorCode\":\"INVALID_INPUT\",\"sourceValidation\":\"reviewed-native-files-and-locked-git-blobs\",\"completeProfileValidated\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "fb4554b3fd2a873b3568adae97b6efa648019ec3d31ff0308453d37889541bce",
+              "4306f5a1ed2eb529832f1c204a89cf023e3faf1ca7d363d65f28f1a67012e125",
+              "d5a891e09c09cd1ef45a67e77e96abf35990cf5998f3f5742d4cb16aaa85ea68"
+            ]
+          }
+        },
+        {
+          "id": "profile.native-gateway",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T03:52:24.371Z",
+          "reasonCode": "NATIVE_GATEWAY_FRAGMENT_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"allow-all-users-missing-key-refused\",\"generatedKeys\":8,\"profileArtifactsBefore\":2,\"profileArtifactsAfter\":2,\"receipt\":null,\"errorCode\":\"INVALID_INPUT\",\"sourceValidation\":\"reviewed-native-files-and-locked-git-blobs\",\"completeProfileValidated\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "fb4554b3fd2a873b3568adae97b6efa648019ec3d31ff0308453d37889541bce",
+              "4306f5a1ed2eb529832f1c204a89cf023e3faf1ca7d363d65f28f1a67012e125",
+              "d5a891e09c09cd1ef45a67e77e96abf35990cf5998f3f5742d4cb16aaa85ea68"
+            ]
+          }
+        }
+      ],
+      "resultState": "NOT_IMPLEMENTED",
+      "complete": false
+    },
+    {
+      "probeId": "AT-hermes-config-81",
+      "run": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.10/profile-allow-all-first-cli/AT-hermes-config-81-run.json",
+        "sha256": "d50c5f2c0b6d9396942f559b9e299c77519ebe89c37d8eeda181f101514d48bd"
+      },
+      "operationId": "174219b1-49b7-4068-abc5-f84b3432b713",
+      "show": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.10/profile-allow-all-first-cli/AT-hermes-config-81-show.json",
+        "sha256": "d2ab1c6ae45b6c5b9dc4ef937f41af128f324066f2d99351ba91ba862fa14b8a"
+      },
+      "sameData": true,
+      "sourceRegistration": {
+        "id": "AT-hermes-config-81",
+        "rung": "CLI",
+        "sourceAssertionHash": "3004088c3bb45e0ae8544fcefdcd53c79808d796adb2ab22e2b0c43f2d7937fc",
+        "commandId": "probe.run",
+        "scenarioId": "profile.mcp-http",
+        "owner": "hermes",
+        "firstRelease": "R0",
+        "kind": "behavioral",
+        "mandatoryCases": [
+          {
+            "id": "default-http-consumed",
+            "publicOperation": "HermesProfile.consumeMcpHttp",
+            "phase": "default-http-consumed"
+          }
+        ],
+        "trigger": "Use the pinned public Hermes MCP loader to connect to one disposable SDK endpoint with a URL-only life_store entry; observe actual default HTTP connection, discovered tool and bounded cleanup. Live Life Store remains pending.",
+        "faultControls": [],
+        "observations": [
+          {
+            "id": "native-http-discovery-and-cleanup",
+            "independentReader": "Public native registration/status/shutdown, SDK readiness, thread join and external OS counters",
+            "caseIds": [
+              "default-http-consumed"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot inspect the administrative pre-build native MCP transport. CLI exercises the real pinned loader with one external loopback SDK endpoint and OS isolation."
+      },
+      "registrationExact": true,
+      "cases": [
+        {
+          "id": "profile.native-mcp-http",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T03:52:25.778Z",
+          "reasonCode": "NATIVE_MCP_HTTP_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"default-http-consumed\",\"receipt\":{\"scope\":\"disposable-mcp-http\",\"sourceCommit\":\"8d5e3e412138342e8bf30443e72bd4e6a9abd057\",\"sourceInventoryDigest\":\"cbb22a250e15f06f42f27c5c845a5c1d9a4d4e077abf84e54507e97a9e789b5c\",\"native\":{\"pid\":44688,\"parentPid\":44679,\"uid\":501,\"gid\":20,\"sdkVersion\":\"2.0.0\",\"configurationKeys\":[\"url\"],\"transport\":\"http\",\"connected\":true,\"tools\":5,\"registeredTools\":[\"mcp__life_store__fixture_ping\",\"mcp__life_store__get_prompt\",\"mcp__life_store__list_prompts\",\"mcp__life_store__list_resources\",\"mcp__life_store__read_resource\"],\"connectedAfterShutdown\":false,\"serverReady\":true,\"serverStopped\":true,\"loopbackConnections\":6,\"deniedNetworkAttempts\":0,\"blockedSocketBinds\":0,\"deniedSubprocessAttempts\":1,\"failureStage\":\"none\"},\"transportOverrideUsed\":false,\"profilePublicationPerformed\":false,\"liveProviderSends\":0,\"acceptanceComplete\":false},\"errorCode\":null,\"actualLifeStoreValidated\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "4306f5a1ed2eb529832f1c204a89cf023e3faf1ca7d363d65f28f1a67012e125",
+              "d5a891e09c09cd1ef45a67e77e96abf35990cf5998f3f5742d4cb16aaa85ea68"
+            ]
+          }
+        }
+      ],
+      "resultState": "NOT_IMPLEMENTED",
+      "complete": false
+    }
+  ],
+  "up": {
+    "exitCode": 0,
+    "path": "build/evidence/R0.10/profile-allow-all-first-cli/up.json",
+    "sha256": "ecffedfe6155eea3fbb180febdf096b4b11a273b419213ffe1e05c5473c3aef2"
+  },
+  "stackId": "7525281b-a8e7-4554-845d-9fc260db6a8e",
+  "down": {
+    "exitCode": 0,
+    "path": "build/evidence/R0.10/profile-allow-all-first-cli/down.json",
+    "sha256": "cbdc70ee018ebaa8ffaf3c5b83e61d90b19de97c693d306aa8aea8b25312f319"
+  },
+  "teardown": {
+    "stackId": "7525281b-a8e7-4554-845d-9fc260db6a8e",
+    "checkpointRefs": [],
+    "fenceRefs": [],
+    "stoppedResourceRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "7525281b-a8e7-4554-845d-9fc260db6a8e"
+      }
+    ],
+    "retainedArtifactRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "7525281b-a8e7-4554-845d-9fc260db6a8e"
+      }
+    ],
+    "unresolvedResourceRefs": [],
+    "complete": true
+  }
+}

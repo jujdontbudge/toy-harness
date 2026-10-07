@@ -4214,14 +4214,24 @@ export const registeredCliAcceptanceManifestInventory = [
         "id": "missing-key-refused",
         "publicOperation": "HermesProfile.consumeGateway",
         "phase": "missing-key-refused"
+      },
+      {
+        "id": "allow-all-users-wrong-type-refused",
+        "publicOperation": "HermesProfile.consumeGateway",
+        "phase": "allow-all-users-wrong-type-refused"
+      },
+      {
+        "id": "allow-all-users-missing-key-refused",
+        "publicOperation": "HermesProfile.consumeGateway",
+        "phase": "allow-all-users-missing-key-refused"
       }
     ],
-    "trigger": "Generate the reviewed gateway fragment and load its target and nondefault sentinels through the real locked native gateway loader; refuse unknown, ignored, missing, malformed and silently defaulted values before disposable profile effects. Complete native profile and protected publication remain pending.",
+    "trigger": "Generate the reviewed eight-key gateway fragment and load its target false and nondefault true allow-all settings through the real locked native gateway loader; refuse unknown, ignored, missing, malformed and silently defaulted values before disposable profile effects. Complete native profile and protected publication remain pending.",
     "faultControls": [],
     "observations": [
       {
         "id": "locked-source-consumer-and-native-process",
-        "independentReader": "Native load_gateway_config: effective settings, child identity/network ledger; locked source digests",
+        "independentReader": "Native load_gateway_config: bridge/env true-or-absent readback, effective settings, child/network ledger and pins",
         "caseIds": [
           "generated-gateway-consumed",
           "nondefault-gateway-consumed"
@@ -4236,7 +4246,9 @@ export const registeredCliAcceptanceManifestInventory = [
           "ignored-key-refused",
           "native-default-replacement-refused",
           "container-shape-refused",
-          "missing-key-refused"
+          "missing-key-refused",
+          "allow-all-users-wrong-type-refused",
+          "allow-all-users-missing-key-refused"
         ]
       }
     ],

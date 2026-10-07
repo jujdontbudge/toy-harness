@@ -1,0 +1,79 @@
+{
+  "recordedAt": "2026-10-07T03:49:22.731Z",
+  "sourceHandoff": "build/evidence/R0.10/profile-allow-all-source-handoff.json",
+  "sourceHandoffSha256": "cdffc8edfe92320447e80de8d841526b4f09647fd7a402b7c156177208555155",
+  "sourceStoppedAt": "2026-10-07T03:47:45Z",
+  "sourceHashes": {
+    "packages/contracts/src/hermes-runtime.ts": "b8c51aca249e0b790f4e1d8c95d12270308eb29e93c828fe0fb6e4c7ce80fce1",
+    "packages/hermes/src/profile.ts": "e23289e9cddc1f268e0d08fd20e07a6055dda12cece1c8d2ffb3fc6f896190b7",
+    "packages/hermes/src/profile-probe.ts": "007f428c4c0ed9686c8db31c41b0468e5c92e8f5445a81c80f9e28a8a587c84b",
+    "behavior/hermes-gateway-consumers.json": "fb4554b3fd2a873b3568adae97b6efa648019ec3d31ff0308453d37889541bce",
+    "docs/adr/0051-native-allow-all-users-profile.md": "99eb023609fff6cfa9a0019f2599c3a6a752a7165ec7066cde8fa727ada970c9",
+    "tests/registry.yaml": "98d1b10a69c6b8bac62f38d79918dd1c5769c9488ff9f42b066ff29a192b867f",
+    "architecture/features.json": "957576f508301974fc45f3add68dfc3814a9f37d3fad52ecc9a82d5610417ea6"
+  },
+  "manifestCaseIds": [
+    "generated-gateway-consumed",
+    "nondefault-gateway-consumed",
+    "unknown-root-refused",
+    "unknown-nested-refused",
+    "ignored-key-refused",
+    "native-default-replacement-refused",
+    "container-shape-refused",
+    "missing-key-refused",
+    "allow-all-users-wrong-type-refused",
+    "allow-all-users-missing-key-refused"
+  ],
+  "parentCorrections": [
+    {
+      "reason": "New zero blocked-bind veto contradicts preserved native profile behavior",
+      "priorEvidence": "build/evidence/R0.10/profile-verification.json",
+      "priorNativeBlockedSocketBinds": 1,
+      "outsideNetworkAttempts": 0,
+      "fix": "Remove only unrequested blocked-bind count veto; audit still rejects every bind"
+    },
+    {
+      "reason": "Generated Python annotation exceeded the enforced Ruff line limit",
+      "failedCheck": "build/evidence/R0.10/profile-allow-all-strict.txt",
+      "fix": "Shorten new canonical native observation fields to allowAllBridge and allowAllEnvironment; retain literal true/null schemas and exact public native matches"
+    }
+  ],
+  "canonicalCheckId": "profile.native-gateway",
+  "canonicalCliCaseEnumChanged": false,
+  "wholeATComplete": false,
+  "finalSourceHashes": {
+    "packages/contracts/src/hermes-runtime.ts": "698774355295d8bc9f090205f4b49fbb43f6745be6b837bd9fced3497c42b7a5",
+    "packages/hermes/src/profile.ts": "867af0e41a76906b01b34d557c7bea449763688f07fa5eb7acb8d239fb78988e",
+    "packages/hermes/src/profile-probe.ts": "007f428c4c0ed9686c8db31c41b0468e5c92e8f5445a81c80f9e28a8a587c84b",
+    "behavior/hermes-gateway-consumers.json": "fb4554b3fd2a873b3568adae97b6efa648019ec3d31ff0308453d37889541bce",
+    "docs/adr/0051-native-allow-all-users-profile.md": "99eb023609fff6cfa9a0019f2599c3a6a752a7165ec7066cde8fa727ada970c9",
+    "tests/registry.yaml": "f2453287fd4397441cec953b0e6b346a55267f20ea2b44cd2b05dcc297b47ff2",
+    "architecture/features.json": "957576f508301974fc45f3add68dfc3814a9f37d3fad52ecc9a82d5610417ea6"
+  },
+  "finalSourceBoundAt": "2026-10-07T03:52:16.922Z",
+  "sourceStopped": true,
+  "staticPassed": {
+    "log": "build/evidence/R0.10/profile-allow-all-final-strict.txt",
+    "sha256": "6bc2ef7bc5e277d9bc439120dd82e17491ad0e747183fe6bcf691d6984cb21bb",
+    "artifacts": 402,
+    "contracts": 334,
+    "cliManifests": 37,
+    "features": 103,
+    "commands": 55,
+    "indexedATs": 1447,
+    "schemaDigest": "c3d3d925c494b9d4f7b475f98c2146cb57160fe19557d57497d54f999351947d",
+    "exitCode": 0,
+    "swiftInvoked": false
+  },
+  "rootPins": "build/evidence/R0.10/profile-allow-all-root-pins.json",
+  "independentReview": {
+    "reviewer": "/root/auth91_quota_readonly_review",
+    "scope": "Stopped source only before parent field-name shortening",
+    "finding": "Unrequested blockedSocketBinds zero veto rejects existing valid native profile behavior",
+    "closure": "Only veto removed; audit preserves all bind denials and outgoing network check",
+    "otherScopedSourceDefects": false,
+    "canonicalNameShorteningAfterReview": "New wirefield names only; literaltrue/null and matches unchanged",
+    "runtimeClaim": false,
+    "stopped": true
+  }
+}

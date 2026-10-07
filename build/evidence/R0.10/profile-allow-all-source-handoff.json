@@ -1,0 +1,84 @@
+{
+  "schema": "toy.r0.10-profile-allow-all-source-handoff.v1",
+  "card": "R0.10",
+  "unit": "profile-allow-all-users-source",
+  "state": "SOURCE_STOPPED",
+  "sourceStoppedAt": "2026-10-07T03:47:45Z",
+  "sourceDeadlineUtc": "2026-10-07T04:10:00Z",
+  "fullUnitDeadlineUtc": "2026-10-07T05:44:00.375Z",
+  "filesWritten": [
+    "packages/contracts/src/hermes-runtime.ts",
+    "packages/hermes/src/profile.ts",
+    "packages/hermes/src/profile-probe.ts",
+    "behavior/hermes-gateway-consumers.json",
+    "build/evidence/R0.10/profile-allow-all-source-handoff.json"
+  ],
+  "writtenFileHashes": {
+    "packages/contracts/src/hermes-runtime.ts": "b8c51aca249e0b790f4e1d8c95d12270308eb29e93c828fe0fb6e4c7ce80fce1",
+    "packages/hermes/src/profile.ts": "66c87872780f125fafc688f1f460f883f0e841dc64503b777525478e40a763b2",
+    "packages/hermes/src/profile-probe.ts": "007f428c4c0ed9686c8db31c41b0468e5c92e8f5445a81c80f9e28a8a587c84b",
+    "behavior/hermes-gateway-consumers.json": "fb4554b3fd2a873b3568adae97b6efa648019ec3d31ff0308453d37889541bce"
+  },
+  "consumerInventory": {
+    "sourceCommit": "8d5e3e412138342e8bf30443e72bd4e6a9abd057",
+    "sources": [
+      { "path": "gateway/config.py", "digest": "413d01c0ecca49c450e248cca64f89ab7ee0191905722104eef3a6b6c68c3cd8" },
+      { "path": "gateway/config_loader.py", "digest": "dd3027d8f55b1871e5b80578538ce5a1cb9d78515cdfb1aa5b4c3c548bbaae43" },
+      { "path": "hermes_cli/config.py", "digest": "a029ad91cc9c15604d7985452053fcb9f6c7ff19549803024ee76829d927d487" }
+    ],
+    "keys": [
+      { "path": "gateway.multiplex_profiles", "consumer": "GatewayConfig" },
+      { "path": "gateway.loop_watchdog", "consumer": "GatewayConfig" },
+      { "path": "gateway.loop_watchdog_probe_interval_s", "consumer": "GatewayConfig" },
+      { "path": "gateway.loop_watchdog_probe_timeout_s", "consumer": "GatewayConfig" },
+      { "path": "gateway.loop_watchdog_max_strikes", "consumer": "GatewayConfig" },
+      { "path": "gateway.allow_all_users", "consumer": "bridged_allow_all_users" },
+      { "path": "platforms.discord.enabled", "consumer": "PlatformConfig" },
+      { "path": "streaming.enabled", "consumer": "StreamingConfig" }
+    ]
+  },
+  "probe": {
+    "checkId": "profile.native-gateway",
+    "preservedCaseIdsInOrder": [
+      "generated-gateway-consumed",
+      "nondefault-gateway-consumed",
+      "unknown-root-refused",
+      "unknown-nested-refused",
+      "ignored-key-refused",
+      "native-default-replacement-refused",
+      "container-shape-refused",
+      "missing-key-refused"
+    ],
+    "addedCaseIdsInOrder": [
+      "allow-all-users-wrong-type-refused",
+      "allow-all-users-missing-key-refused"
+    ],
+    "generatedAllowAllUsers": false,
+    "nondefaultAllowAllUsers": true,
+    "expectedReadbacks": {
+      "true": { "bridgedAllowAllUsers": "true", "gatewayAllowAllUsersEnvironment": "true" },
+      "false": { "bridgedAllowAllUsers": null, "gatewayAllowAllUsersEnvironment": null }
+    },
+    "generatedKeys": 8,
+    "unexpectedBridgeValues": "rejected-before-child-stdout",
+    "launchEnvironmentGuard": "non-absent-GATEWAY_ALLOW_ALL_USERS-rejected-before-native-loader"
+  },
+  "deferred": [
+    "canonical-case-registration in tests/registry.yaml and test-control.ts",
+    "contract generation and generated schemas",
+    "feature map reconciliation",
+    "bounded CLI proof and affected native MCP profile regression",
+    "full AT-hermes-config-75 acceptance"
+  ],
+  "proof": {
+    "buildsRun": false,
+    "generationRun": false,
+    "staticChecksRun": false,
+    "testsRun": false,
+    "cliRun": false,
+    "stackOperationsRun": false,
+    "wholeATComplete": false,
+    "runtimePassClaim": false
+  },
+  "handoffHashReportedOutOfBand": true
+}

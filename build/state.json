@@ -2,7 +2,7 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-07T03:41:21.399Z",
+  "updatedAt": "2026-10-07T03:54:22.848Z",
   "phase": "R0_FEASIBILITY",
   "activeCard": "R0.10",
   "cardCount": 87,
@@ -2028,7 +2028,8 @@
         "build/evidence/R0.10/dto-roundtrip-next-minimum-plan.json",
         "build/evidence/R0.10/cadence-owner-final-verification.json",
         "build/evidence/R0.10/cadence-owner-independent-receipt-review.json",
-        "build/evidence/R0.10/cadence-owner-final-root-pins.json"
+        "build/evidence/R0.10/cadence-owner-final-root-pins.json",
+        "build/evidence/R0.10/profile-allow-all-final-verification.json"
       ],
       "requiredATs": [
         "AT-activity-focus-86",
@@ -2080,11 +2081,11 @@
         }
       },
       "lastVerification": {
-        "evidence": "build/evidence/R0.10/cadence-owner-final-verification.json",
-        "verdict": "STOPPED_AFTER_TWELVE_ASSIGNED_FLOOR_CASES_AND_FIFTY_SIX_TRIAL_REGRESSIONS_PASS",
-        "checks": 12,
-        "affectedRegressionChecks": 56,
-        "separateReadinessChecks": 5,
+        "evidence": "build/evidence/R0.10/profile-allow-all-final-verification.json",
+        "verdict": "STOPPED_AFTER_TEN_NATIVE_PROFILE_CASES_AND_MCP_REGRESSION_PASS",
+        "checks": 10,
+        "affectedRegressionChecks": 1,
+        "separateReadinessChecks": 1,
         "runShowExact": true,
         "cleanupPassed": true,
         "ownedWorldsDown": true,
@@ -2384,6 +2385,28 @@
         "readinessPasses": 5,
         "sourceMutationStopped": true,
         "sourceHashesStillMatch": true
+      },
+      "profileAllowAllUnit": {
+        "state": "STOPPED_AFTER_NATIVE_FLOOR_AND_MCP_REGRESSION_PASS",
+        "startedAt": "2026-10-07T03:44:00.373Z",
+        "deadlineUtc": "2026-10-07T05:44:00.375Z",
+        "sourceStopAt": "2026-10-07T04:10:00Z",
+        "assignedAT": "AT-hermes-config-75",
+        "plan": "build/evidence/R0.10/profile-allow-all-minimum-plan.json",
+        "interface": "docs/adr/0051-native-allow-all-users-profile.md",
+        "nativeAttempts": 1,
+        "nativeFailures": 0,
+        "wholeATsPassed": [],
+        "acceptanceComplete": false,
+        "sourceStoppedAt": "2026-10-07T03:47:45Z",
+        "integration": "build/evidence/R0.10/profile-allow-all-parent-integration.json",
+        "verification": "build/evidence/R0.10/profile-allow-all-final-verification.json",
+        "stoppedAt": "2026-10-07T03:52:59.879Z",
+        "diagnostics": 10,
+        "affectedRegressionDiagnostics": 1,
+        "separateReadinessDiagnostics": 1,
+        "sourceStopped": true,
+        "independentReceiptReview": "build/evidence/R0.10/profile-allow-all-independent-receipt-review.json"
       }
     },
     "R0.11": {
@@ -11270,7 +11293,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Curated commit/push of verified cadence unit; poll ROOT-REQUESTS. Exact ROOT-R004-20261006-02 DONE with native310 read and restoration takes priority: safe cleanup then R0.01. Otherwise next independent bounded R0 work; no expansion of passed cadence source.",
+  "nextAction": "Receipt review then curated commit/push. Poll exact ROOT-R004-20261006-02: verified actual310 native read and restored parents prioritizes R0.01 after safe cleanup. Otherwise next missing independent bounded R0 implementation; no more passed profile source.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -21862,21 +21885,21 @@
     "queuedRootReserveAdmissionGate": false
   },
   "latestStaticVerification": {
-    "recordedAt": "2026-10-07T03:33:42Z",
-    "command": "npm run check",
-    "exitCode": 0,
-    "log": "build/evidence/R0.10/cadence-owner-mts-source-strict.txt",
-    "sha256": "f630d0f3c8c955e105bd5cf260d0f4052547d87b6b86acde4682cb0c822b1319",
+    "log": "build/evidence/R0.10/profile-allow-all-final-strict.txt",
+    "sha256": "6bc2ef7bc5e277d9bc439120dd82e17491ad0e747183fe6bcf691d6984cb21bb",
     "artifacts": 402,
     "contracts": 334,
     "cliManifests": 37,
     "features": 103,
     "commands": 55,
     "indexedATs": 1447,
-    "schemaDigest": "ef613a23dd214c75e0976648883a9ecb891146604fbc295c08b71c609002b3dd",
-    "swiftInvoked": false
+    "schemaDigest": "c3d3d925c494b9d4f7b475f98c2146cb57160fe19557d57497d54f999351947d",
+    "exitCode": 0,
+    "swiftInvoked": false,
+    "recordedAt": "2026-10-07T03:52:59.879Z",
+    "command": "npm run check"
   },
-  "sourceCheckpointCommit": "f8e7116",
+  "sourceCheckpointCommit": "a49a649",
   "sourceCheckpointPushed": true,
   "rootRequests": {
     "ROOT-R004-20261006-01": {
@@ -21936,13 +21959,12 @@
     "measurementHistorical": false
   },
   "activeWorkers": [],
-  "pullRequestUpdatedAt": "2026-10-07T01:55:47.779462+00:00",
+  "pullRequestUpdatedAt": "2026-10-07T03:42:44.644Z",
   "continuationCheckpoint": "build/checkpoints/2026-10-07-ops44-verified-dashboard90-deferred",
   "readOnlyWorkers": [
     {
       "agent": "/root/r010_local_gate_audit",
-      "scope": "Smallest next independent R0.10 action; no edits or runtime",
-      "state": "READ_ONLY_RUNNING"
+      "scope": "Read-only next nonduplicate R0 owner gap; no source or runtime"
     }
   ]
 }

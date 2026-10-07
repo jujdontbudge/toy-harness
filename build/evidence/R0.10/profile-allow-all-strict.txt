@@ -1,0 +1,32 @@
+
+> toy-harness@1.0.0 check
+> npm run typecheck && node scripts/typecheck-tests.mjs && npm run boundaries && npm run python:check && npm run lint && npm run contracts:check && node cli/dist/main.js feature-map check --json
+
+
+> toy-harness@1.0.0 typecheck
+> tsc -b --pretty false && tsc -p scripts/tsconfig.json --pretty false
+
+
+> toy-harness@1.0.0 boundaries
+> depcruise --config .dependency-cruiser.cjs packages cli tests control
+
+
+✔ no dependency violations found (282 modules, 970 dependencies cruised)
+
+
+> toy-harness@1.0.0 python:check
+> pyright && .venv/bin/ruff check python && PYTHONPATH=python .venv/bin/lint-imports
+
+0 errors, 0 warnings, 0 informations
+E501 Line too long (106 > 100)
+    --> python/toy_contracts/generated.py:5593:101
+     |
+5591 |     effective: "HermesGatewayProfileV1"
+5592 |     bridgedAllowAllUsers: Optional["HermesGatewayNativeObservationV1BridgedAllowAllUsersValue"]
+5593 |     gatewayAllowAllUsersEnvironment: Optional["HermesGatewayNativeObservationV1BridgedAllowAllUsersValue"]
+     |                                                                                                     ^^^^^^
+5594 |     pid: int
+5595 |     parentPid: int
+     |
+
+Found 1 error.

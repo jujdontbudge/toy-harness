@@ -32,6 +32,9 @@
               "type": "integer",
               "minimum": 1,
               "maximum": 1000
+            },
+            "allow_all_users": {
+              "type": "boolean"
             }
           },
           "required": [
@@ -39,7 +42,8 @@
             "loop_watchdog",
             "loop_watchdog_probe_interval_s",
             "loop_watchdog_probe_timeout_s",
-            "loop_watchdog_max_strikes"
+            "loop_watchdog_max_strikes",
+            "allow_all_users"
           ],
           "additionalProperties": false
         },
@@ -125,6 +129,9 @@
                   "type": "integer",
                   "minimum": 1,
                   "maximum": 1000
+                },
+                "allow_all_users": {
+                  "type": "boolean"
                 }
               },
               "required": [
@@ -132,7 +139,8 @@
                 "loop_watchdog",
                 "loop_watchdog_probe_interval_s",
                 "loop_watchdog_probe_timeout_s",
-                "loop_watchdog_max_strikes"
+                "loop_watchdog_max_strikes",
+                "allow_all_users"
               ],
               "additionalProperties": false
             },
@@ -177,6 +185,28 @@
           ],
           "additionalProperties": false
         },
+        "allowAllBridge": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "true"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "allowAllEnvironment": {
+          "anyOf": [
+            {
+              "type": "string",
+              "const": "true"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "pid": {
           "type": "integer",
           "exclusiveMinimum": 0,
@@ -210,6 +240,8 @@
       },
       "required": [
         "effective",
+        "allowAllBridge",
+        "allowAllEnvironment",
         "pid",
         "parentPid",
         "uid",

@@ -9,10 +9,12 @@ import { OpsTestStack, trustedCheckoutRoot, trustedToolEnvironment } from "@toy/
 const installedRoot = "/Users/johansardar/.hermes/hermes-agent";
 const sourceCommit = "8d5e3e412138342e8bf30443e72bd4e6a9abd057";
 const digest = (bytes: string | Uint8Array): string => createHash("sha256").update(bytes).digest("hex");
-const keys = ["gateway.multiplex_profiles", "gateway.loop_watchdog", "gateway.loop_watchdog_probe_interval_s", "gateway.loop_watchdog_probe_timeout_s", "gateway.loop_watchdog_max_strikes", "platforms.discord.enabled", "streaming.enabled"];
-const consumers = ["GatewayConfig", "GatewayConfig", "GatewayConfig", "GatewayConfig", "GatewayConfig", "PlatformConfig", "StreamingConfig"];
+const keys = ["gateway.multiplex_profiles", "gateway.loop_watchdog", "gateway.loop_watchdog_probe_interval_s", "gateway.loop_watchdog_probe_timeout_s", "gateway.loop_watchdog_max_strikes", "gateway.allow_all_users", "platforms.discord.enabled", "streaming.enabled"];
+const consumers = ["GatewayConfig", "GatewayConfig", "GatewayConfig", "GatewayConfig", "GatewayConfig", "bridged_allow_all_users", "PlatformConfig", "StreamingConfig"];
 const fail = (code: OpsErrorCode): Result<HermesGatewayProfileReceiptV1> => ({ ok: false, error: { module: "ops", code, message: opsErrorMessages[code], retryable: code === "DEPENDENCY_UNAVAILABLE" } });
 const nativeConsumer = `import contextlib, io, json, os, sys
+if "GATEWAY_ALLOW_ALL_USERS" in os.environ:
+    raise RuntimeError("NATIVE_PROFILE_INHERITED_ALLOW_ALL_USERS")
 network_attempts = 0
 blocked_socket_binds = 0
 def audit(event, args):
@@ -27,19 +29,28 @@ sys.addaudithook(audit)
 sys.path.insert(0, sys.argv[1])
 with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
     from gateway.config import Platform, load_gateway_config
+    from gateway.config_loader import bridged_allow_all_users
     config = load_gateway_config()
+    bridged_value = bridged_allow_all_users()
+    environment_value = os.environ.get("GATEWAY_ALLOW_ALL_USERS")
+    if bridged_value not in (None, "true") or environment_value not in (None, "true") or bridged_value != environment_value:
+        raise RuntimeError("NATIVE_PROFILE_ALLOW_ALL_USERS_BRIDGE_MISMATCH")
+bridge_observation = bridged_value
+environment_observation = environment_value
+effective_allow_all_users = bridge_observation == "true" and environment_observation == "true"
 effective = {
     "gateway": {
         "multiplex_profiles": config.multiplex_profiles,
         "loop_watchdog": config.loop_watchdog,
         "loop_watchdog_probe_interval_s": config.loop_watchdog_probe_interval_s,
         "loop_watchdog_probe_timeout_s": config.loop_watchdog_probe_timeout_s,
-        "loop_watchdog_max_strikes": config.loop_watchdog_max_strikes
+        "loop_watchdog_max_strikes": config.loop_watchdog_max_strikes,
+        "allow_all_users": effective_allow_all_users
     },
     "platforms": {"discord": {"enabled": config.platforms[Platform.DISCORD].enabled}},
     "streaming": {"enabled": config.streaming.enabled}
 }
-print(json.dumps({"effective": effective, "pid": os.getpid(), "parentPid": os.getppid(), "uid": os.getuid(), "gid": os.getgid(), "networkAttempts": network_attempts, "blockedSocketBinds": blocked_socket_binds}))
+print(json.dumps({"effective": effective, "allowAllBridge": bridge_observation, "allowAllEnvironment": environment_observation, "pid": os.getpid(), "parentPid": os.getppid(), "uid": os.getuid(), "gid": os.getgid(), "networkAttempts": network_attempts, "blockedSocketBinds": blocked_socket_binds}))
 `;
 const nativeMcpHttp = `import contextlib, importlib.metadata, json, os, socket, sys, threading, time
 sdk_version = importlib.metadata.version("mcp")
@@ -129,7 +140,7 @@ print(json.dumps(observed))
 export const HermesProfile = {
   generateGateway(): HermesGatewayProfileV1 {
     return hermesGatewayProfileSchema.parse({
-      gateway: { multiplex_profiles: true, loop_watchdog: true, loop_watchdog_probe_interval_s: 30, loop_watchdog_probe_timeout_s: 10, loop_watchdog_max_strikes: 3 },
+      gateway: { multiplex_profiles: true, loop_watchdog: true, loop_watchdog_probe_interval_s: 30, loop_watchdog_probe_timeout_s: 10, loop_watchdog_max_strikes: 3, allow_all_users: false },
       platforms: { discord: { enabled: false } }, streaming: { enabled: false }
     });
   },
@@ -211,7 +222,8 @@ export const HermesProfile = {
       });
       if (child.error || child.status !== 0) return Promise.resolve(fail("DEPENDENCY_UNAVAILABLE"));
       const observed = hermesGatewayNativeObservationSchema.parse(JSON.parse(child.stdout));
-      if (observed.parentPid !== process.pid || observed.pid === process.pid || observed.uid !== process.getuid?.() || observed.gid !== process.getgid?.() || observed.networkAttempts !== 0 || JSON.stringify(observed.effective) !== JSON.stringify(profile.data)) return Promise.resolve(fail("ATTESTATION_INVALID"));
+      const expectedAllowAllUsersObservation = profile.data.gateway.allow_all_users ? "true" : null;
+      if (observed.parentPid !== process.pid || observed.pid === process.pid || observed.uid !== process.getuid?.() || observed.gid !== process.getgid?.() || observed.networkAttempts !== 0 || observed.allowAllBridge !== expectedAllowAllUsersObservation || observed.allowAllEnvironment !== expectedAllowAllUsersObservation || JSON.stringify(observed.effective) !== JSON.stringify(profile.data)) return Promise.resolve(fail("ATTESTATION_INVALID"));
       return Promise.resolve({ ok: true, data: hermesGatewayProfileReceiptSchema.parse({
         scope: "gateway-fragment", profile: profile.data, profileDigest: digest(profileBytes), consumerInventoryDigest: digest(inventoryBytes), sourceCommit,
         native: observed, nativeExitCode: 0, nativeConsumerMatched: true, profilePublicationPerformed: false, liveProviderSends: 0, acceptanceComplete: false

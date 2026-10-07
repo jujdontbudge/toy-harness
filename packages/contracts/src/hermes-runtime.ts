@@ -5,7 +5,7 @@ export const hermesGatewayProfileSchema = z.strictObject({
     multiplex_profiles: z.boolean(), loop_watchdog: z.boolean(),
     loop_watchdog_probe_interval_s: z.number().min(1).max(3600),
     loop_watchdog_probe_timeout_s: z.number().min(1).max(600),
-    loop_watchdog_max_strikes: z.int().min(1).max(1000)
+    loop_watchdog_max_strikes: z.int().min(1).max(1000), allow_all_users: z.boolean()
   }),
   platforms: z.strictObject({ discord: z.strictObject({ enabled: z.boolean() }) }),
   streaming: z.strictObject({ enabled: z.boolean() })
@@ -13,10 +13,11 @@ export const hermesGatewayProfileSchema = z.strictObject({
 export const hermesGatewayConsumerInventorySchema = z.strictObject({
   sourceCommit: z.literal("8d5e3e412138342e8bf30443e72bd4e6a9abd057"),
   sources: z.array(z.strictObject({ path: z.enum(["gateway/config.py", "gateway/config_loader.py", "hermes_cli/config.py"]), digest: z.string().regex(/^[a-f0-9]{64}$/) })).length(3),
-  keys: z.array(z.strictObject({ path: z.string().min(1).max(100), consumer: z.enum(["GatewayConfig", "PlatformConfig", "StreamingConfig"]) })).length(7)
+  keys: z.array(z.strictObject({ path: z.string().min(1).max(100), consumer: z.enum(["GatewayConfig", "PlatformConfig", "StreamingConfig", "bridged_allow_all_users"]) })).length(8)
 });
 export const hermesGatewayNativeObservationSchema = z.strictObject({
   effective: hermesGatewayProfileSchema,
+  allowAllBridge: z.literal("true").nullable(), allowAllEnvironment: z.literal("true").nullable(),
   pid: z.int().positive(), parentPid: z.int().positive(), uid: z.int().nonnegative(), gid: z.int().nonnegative(),
   networkAttempts: z.int().nonnegative(), blockedSocketBinds: z.int().nonnegative()
 });
