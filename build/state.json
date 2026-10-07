@@ -2,7 +2,7 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-07T00:38:02.752118+00:00",
+  "updatedAt": "2026-10-07T00:39:13.378949+00:00",
   "phase": "R0_FEASIBILITY",
   "activeCard": "R0.02",
   "cardCount": 87,
@@ -583,6 +583,18 @@
         "currentSourceRestoredTo": "01c9d15",
         "replan": "build/evidence/R0.02/ops-scope-replan.json",
         "scopeReferencesMeaning": "29 audit finding labels; not register component identity"
+      },
+      "opsScopeCorrectedUnit": {
+        "state": "LUNA_SOURCE_PHASE_IN_PROGRESS",
+        "startedAt": "2026-10-07T00:39:13.378949+00:00",
+        "helperStopAt": "2026-10-07T01:00:00Z",
+        "targetStopAt": "2026-10-07T01:57:00Z",
+        "planEvidence": "build/evidence/R0.02/ops-scope-replan.json",
+        "scope": "Keep all165 global3 checks; add source-derived Ops2.4/5.10 for canonical13 group rows without newDTO",
+        "opsScopeComponents": 49,
+        "wholeATComplete": false,
+        "acceptanceComplete": false,
+        "admissionEvidence": "build/evidence/R0.02/ops-scope-replan-source-doctor.json"
       }
     },
     "R0.03": {
@@ -1028,7 +1040,9 @@
         "showDataExact": true,
         "sourceRegistrationExact": true,
         "staticEvidence": "build/evidence/R0.03/siblings86-final-strict.txt",
-        "protectedControllerIdentityVerified": false
+        "protectedControllerIdentityVerified": false,
+        "sourceCommit": "d85ef43",
+        "sourcePushed": true
       },
       "mixedLineagePlanUnit": {
         "state": "READ_ONLY_MINIMUM_PLAN_RUNNING",
@@ -21444,7 +21458,7 @@
     "recordedAt": "2026-10-07T00:34:46.495Z",
     "bundleInventoryArtifacts": 380
   },
-  "sourceCheckpointCommit": "43970a8",
+  "sourceCheckpointCommit": "d85ef43",
   "sourceCheckpointPushed": true,
   "rootRequests": {
     "ROOT-R004-20261006-01": {
@@ -21508,14 +21522,17 @@
       "card": "R0.02",
       "model": "gpt-6-luna",
       "reasoning": "max",
-      "state": "read_only_scope_replan_revision",
+      "state": "corrected_ops_requirement_source_phase",
       "ownedScope": [
-        "build/evidence/R0.02/ops-scope-replan.json"
+        "docs/adr/0043-ops-research-scope.md",
+        "packages/self-improvement/src/engineering-control.ts",
+        "build/evidence/R0.02/ops-scope-replan.json",
+        "build/evidence/R0.02/ops-scope-corrected-source-handoff.json"
       ],
-      "admissionEvidence": "build/evidence/R0.02/ops-scope-replan-doctor.json",
+      "admissionEvidence": "build/evidence/R0.02/ops-scope-replan-source-doctor.json",
       "ownNeedBytes": "268435456",
       "marginBytes": "536870912",
-      "deadline": "2026-10-07T00:45:00Z"
+      "deadline": "2026-10-07T01:00:00Z"
     },
     {
       "task": "r003_per_generation_refresh_plan",
