@@ -5620,9 +5620,14 @@ export const registeredCliAcceptanceManifestInventory = [
         "id": "named-window-equality-2",
         "publicOperation": "ReplayEnvironment.runRegisteredProbe",
         "phase": "named-window-equality-2"
+      },
+      {
+        "id": "foreground-contention-recovery",
+        "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+        "phase": "foreground-contention-recovery"
       }
     ],
-    "trigger": "Run the current named accounting diagnostics through the real public ModelAdmission owner and PostgreSQL fixture; remaining assertion coverage and protected admission stay incomplete.",
+    "trigger": "Run named quota equality and foreground contention/recovery through the real public accounting owner and PostgreSQL. A busy foreground retry must preserve priority and retire its waiting state without permanent autonomous starvation. Protected ingress/send admission remain pending.",
     "faultControls": [
       {
         "id": "fixed-quota-observation",
@@ -5630,7 +5635,8 @@ export const registeredCliAcceptanceManifestInventory = [
         "affectedPhases": [
           "named-window-equality-0",
           "named-window-equality-1",
-          "named-window-equality-2"
+          "named-window-equality-2",
+          "foreground-contention-recovery"
         ]
       }
     ],
@@ -5641,7 +5647,8 @@ export const registeredCliAcceptanceManifestInventory = [
         "caseIds": [
           "named-window-equality-0",
           "named-window-equality-1",
-          "named-window-equality-2"
+          "named-window-equality-2",
+          "foreground-contention-recovery"
         ]
       },
       {
@@ -5650,7 +5657,8 @@ export const registeredCliAcceptanceManifestInventory = [
         "caseIds": [
           "named-window-equality-0",
           "named-window-equality-1",
-          "named-window-equality-2"
+          "named-window-equality-2",
+          "foreground-contention-recovery"
         ]
       },
       {
@@ -5659,7 +5667,8 @@ export const registeredCliAcceptanceManifestInventory = [
         "caseIds": [
           "named-window-equality-0",
           "named-window-equality-1",
-          "named-window-equality-2"
+          "named-window-equality-2",
+          "foreground-contention-recovery"
         ]
       }
     ],

@@ -1,0 +1,161 @@
+{
+  "recordedAt": "2026-10-07T04:06:47.659Z",
+  "assignedAT": "AT-ops-49",
+  "nativeAttempt": 2,
+  "phase": "foreground-contention-recovery",
+  "receipt": "build/evidence/R0.06/foreground-contention-second-cli.json",
+  "exactAssignedRegistration": true,
+  "runShowExact": true,
+  "thresholdCasesPassed": 3,
+  "targetCaseFailed": true,
+  "observed": {
+    "counterScope": "accounting-fixture",
+    "decisionFields": [
+      "eligible",
+      "reason",
+      "foregroundInputAccepted",
+      "providerSendPermitIssued",
+      "paidFallbackPermitted"
+    ],
+    "recordFields": [
+      "state",
+      "reservationCharged",
+      "leaseActive",
+      "nativeSendCount",
+      "nativeTerminalAcknowledged"
+    ],
+    "ledgerFields": [
+      "foregroundWaiting",
+      "providerLeaseActive",
+      "fallbackJobsReserved"
+    ],
+    "decisions": {
+      "event": [
+        true,
+        "ELIGIBLE",
+        true,
+        false,
+        false
+      ],
+      "busy": [
+        false,
+        "PROVIDER_BUSY",
+        true,
+        false,
+        false
+      ],
+      "continuationDenied": [
+        false,
+        "FOREGROUND_WAITING",
+        true,
+        false,
+        false
+      ],
+      "foregroundRetry": [
+        true,
+        "ELIGIBLE",
+        true,
+        false,
+        false
+      ],
+      "continuationRetry": [
+        false,
+        "FOREGROUND_WAITING",
+        true,
+        false,
+        false
+      ]
+    },
+    "records": {
+      "eventHeld": [
+        "sending",
+        true,
+        true,
+        1,
+        false
+      ],
+      "eventTerminal": [
+        "settled",
+        true,
+        false,
+        1,
+        true
+      ],
+      "busy": [
+        "denied",
+        false,
+        false,
+        0,
+        false
+      ],
+      "continuationDenied": [
+        "denied",
+        false,
+        false,
+        0,
+        false
+      ],
+      "foregroundRetry": [
+        "reserved",
+        true,
+        true,
+        0,
+        false
+      ],
+      "foregroundTerminal": [
+        "settled",
+        true,
+        false,
+        1,
+        true
+      ],
+      "continuationRetry": [
+        "denied",
+        false,
+        false,
+        0,
+        false
+      ],
+      "continuationTerminal": [
+        "denied",
+        false,
+        false,
+        0,
+        false
+      ]
+    },
+    "ledgerReadbacks": [
+      [
+        true,
+        true,
+        1
+      ],
+      [
+        true,
+        false,
+        1
+      ],
+      [
+        true,
+        false,
+        1
+      ],
+      [
+        true,
+        false,
+        1
+      ],
+      [
+        true,
+        false,
+        1
+      ]
+    ],
+    "sameAuthenticatedRequestId": true
+  },
+  "worldDown": true,
+  "unresolvedResources": 0,
+  "verdict": "COMPLETED_FOREGROUND_RETRY_LEAVES_WAITING_TRUE_AND_AUTONOMOUS_RETRY_DENIED",
+  "ownerRepairAuthorizedByActualAssignedFailure": true,
+  "wholeATComplete": false
+}

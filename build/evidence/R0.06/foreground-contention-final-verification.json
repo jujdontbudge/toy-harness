@@ -1,0 +1,374 @@
+{
+  "recordedAt": "2026-10-07T04:16:15.107Z",
+  "card": "R0.06",
+  "assignedAT": "AT-ops-49",
+  "state": "BOUNDED_CLI_UNIT_VERIFIED_AND_STOPPED",
+  "startedAt": "2026-10-07T03:57:18.044Z",
+  "stoppedAt": "2026-10-07T04:16:15.107Z",
+  "unitDeadlineUtc": "2026-10-07T05:57:18.044Z",
+  "rung": "CLI",
+  "unfiltered": true,
+  "nativeAttempts": 3,
+  "nativeFailures": 2,
+  "assignedChecks": 4,
+  "affectedRegressionChecks": 6,
+  "separateReadinessChecks": 1,
+  "summaryPath": "build/evidence/R0.06/foreground-contention-third-cli.json",
+  "receiptHashes": [
+    {
+      "path": "build/evidence/R0.06/foreground-contention-third-cli/AT-cli-4-run.json",
+      "sha256": "c4559ece93015fa15079440b65d3a659feaad987e1f02cfd06067bd6c1a05ea1"
+    },
+    {
+      "path": "build/evidence/R0.06/foreground-contention-third-cli/AT-cli-4-show.json",
+      "sha256": "663d73a070eef0cb528aa073432b9f5efacc8c768ffa5f85943cfa1d57a0619b"
+    },
+    {
+      "path": "build/evidence/R0.06/foreground-contention-third-cli/AT-ops-49-run.json",
+      "sha256": "bb9f7b125a2b5f34b5c59abdd1ea77acfd37eac54b4169dd2f806a15d7b07572"
+    },
+    {
+      "path": "build/evidence/R0.06/foreground-contention-third-cli/AT-ops-49-show.json",
+      "sha256": "0e43669a0b3459b7517137a4a1eed55b24cfe8174f8958e50e6ce0c533b0ac5e"
+    },
+    {
+      "path": "build/evidence/R0.06/foreground-contention-third-cli/AT-ops-51-run.json",
+      "sha256": "651a50e14e69984801f215ae86ec78d076dc747f33a6558e7580d1919ff3cf9c"
+    },
+    {
+      "path": "build/evidence/R0.06/foreground-contention-third-cli/AT-ops-51-show.json",
+      "sha256": "ebf3548621d55f8eb0d4baef89656916ff7fc45a74754f6b96604363ed09a6f4"
+    },
+    {
+      "path": "build/evidence/R0.06/foreground-contention-third-cli/AT-ops-52-run.json",
+      "sha256": "0c39914e8ba7bd613ea112d62f64d8eaa714ad72aa23e6289ec4474309acc438"
+    },
+    {
+      "path": "build/evidence/R0.06/foreground-contention-third-cli/AT-ops-52-show.json",
+      "sha256": "7a9380985a06f2245feb53351d790ea1e63f8315cdccb23f60f6e224632dedd6"
+    }
+  ],
+  "sourceDigests": {
+    "packages/self-improvement/src/model-admission.ts": "ba0a8b822c0782689caf8c42f93d0f75eca0df6d5eb560a2c16c2a7a06e0fb8e",
+    "packages/self-improvement/src/accounting-probe.ts": "c59baa27da9dcfee8e503a0ad3aa9d0cf825e9fd25fd46180696e9548f76a933",
+    "docs/adr/0052-foreground-admission-contention.md": "128c23d8ff55ff494b36c9a990d4ce945d187da45482553226d7f06f79120423",
+    "tests/registry.yaml": "160a3f98e1605a1b3014ffabf0592b6b5ecfe46e78f707f74a0e0491624ecaa1",
+    "architecture/features.json": "f06581462a0f066838ce8fc849e7ac08437d26f6a746837742ec4a05f4bc0a3b",
+    "packages/contracts/src/generated-probe-registry.ts": "40be0f989bd8d1077567ec2ac83cde90e81bc252c37b52bb0ece0d8a92c5a2b1",
+    "skills/toy-control/FEATURE-MAP.md": "c19f212619a732dc39a1e30f12e7205b4384022b6a5dafdabf046835d2a2e19c",
+    "packages/self-improvement/dist/model-admission.js": "c3e5bb9c2862082693e8fbb20ab38b2562bc4219f5c9fd7ec9850c91341d218d",
+    "packages/self-improvement/dist/accounting-probe.js": "9226636ef813e00afa62312c1422114a9044e7390a1f8bc407b5fccab1830e0a"
+  },
+  "foregroundCheckPrerequisiteCharacters": 1790,
+  "foregroundReadback": {
+    "name": "foreground-contention-recovery",
+    "evidence": {
+      "counterScope": "accounting-fixture",
+      "decisionFields": [
+        "eligible",
+        "reason",
+        "foregroundInputAccepted",
+        "providerSendPermitIssued",
+        "paidFallbackPermitted"
+      ],
+      "recordFields": [
+        "state",
+        "reservationCharged",
+        "leaseActive",
+        "nativeSendCount",
+        "nativeTerminalAcknowledged",
+        "endedAtPresent"
+      ],
+      "ledgerFields": [
+        "foregroundWaiting",
+        "providerLeaseActive",
+        "fallbackJobsReserved"
+      ],
+      "decisions": {
+        "event": [
+          true,
+          "ELIGIBLE",
+          true,
+          false,
+          false
+        ],
+        "busyA": [
+          false,
+          "PROVIDER_BUSY",
+          true,
+          false,
+          false
+        ],
+        "busyB": [
+          false,
+          "PROVIDER_BUSY",
+          true,
+          false,
+          false
+        ],
+        "continuation": [
+          false,
+          "FOREGROUND_WAITING",
+          true,
+          false,
+          false
+        ],
+        "retryA": [
+          true,
+          "ELIGIBLE",
+          true,
+          false,
+          false
+        ],
+        "continuationAfterA": [
+          false,
+          "FOREGROUND_WAITING",
+          true,
+          false,
+          false
+        ],
+        "retryB": [
+          true,
+          "ELIGIBLE",
+          true,
+          false,
+          false
+        ],
+        "continuationRetry": [
+          true,
+          "ELIGIBLE",
+          true,
+          false,
+          false
+        ]
+      },
+      "records": {
+        "eventHeld": [
+          "sending",
+          true,
+          true,
+          1,
+          false,
+          false
+        ],
+        "eventTerminal": [
+          "settled",
+          true,
+          false,
+          1,
+          true,
+          true
+        ],
+        "busyA": [
+          "denied",
+          false,
+          false,
+          0,
+          false,
+          false
+        ],
+        "busyB": [
+          "denied",
+          false,
+          false,
+          0,
+          false,
+          false
+        ],
+        "continuation": [
+          "denied",
+          false,
+          false,
+          0,
+          false,
+          false
+        ],
+        "retryATerminal": [
+          "settled",
+          true,
+          false,
+          1,
+          true,
+          true
+        ],
+        "busyAAfterA": [
+          "denied",
+          false,
+          false,
+          0,
+          false,
+          true
+        ],
+        "busyBBeforeB": [
+          "denied",
+          false,
+          false,
+          0,
+          false,
+          false
+        ],
+        "continuationAfterA": [
+          "denied",
+          false,
+          false,
+          0,
+          false,
+          false
+        ],
+        "retryBTerminal": [
+          "settled",
+          true,
+          false,
+          1,
+          true,
+          true
+        ],
+        "busyAFinal": [
+          "denied",
+          false,
+          false,
+          0,
+          false,
+          true
+        ],
+        "busyBFinal": [
+          "denied",
+          false,
+          false,
+          0,
+          false,
+          true
+        ],
+        "continuationTerminal": [
+          "settled",
+          true,
+          false,
+          1,
+          true,
+          true
+        ]
+      },
+      "ledgerReadbacks": [
+        [
+          true,
+          true,
+          1
+        ],
+        [
+          true,
+          false,
+          1
+        ],
+        [
+          true,
+          false,
+          1
+        ],
+        [
+          true,
+          false,
+          1
+        ],
+        [
+          true,
+          false,
+          1
+        ],
+        [
+          false,
+          false,
+          1
+        ],
+        [
+          false,
+          false,
+          2
+        ]
+      ],
+      "identities": {
+        "distinct": true,
+        "retryAMatchesA": true,
+        "retryBMatchesB": true
+      },
+      "waiterRetirement": {
+        "firstOnly": true,
+        "both": true,
+        "immutableRows": [
+          true,
+          true
+        ]
+      }
+    }
+  },
+  "protectedIngressProved": false,
+  "providerSendPermitIssued": false,
+  "liveProviderSends": 0,
+  "wholeATsPassed": [],
+  "wholeATComplete": false,
+  "cardAcceptanceComplete": false,
+  "teardown": {
+    "stackId": "43b62be5-573c-45cc-bb12-ba362483cadf",
+    "checkpointRefs": [],
+    "fenceRefs": [],
+    "stoppedResourceRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "43b62be5-573c-45cc-bb12-ba362483cadf"
+      }
+    ],
+    "retainedArtifactRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "43b62be5-573c-45cc-bb12-ba362483cadf"
+      }
+    ],
+    "unresolvedResourceRefs": [],
+    "complete": true
+  },
+  "failuresRetained": [
+    "build/evidence/R0.06/foreground-contention-first-cli.json",
+    "build/evidence/R0.06/foreground-contention-sticky-waiter-failure.json"
+  ],
+  "strict": {
+    "buildExitCode": 0,
+    "checkExitCode": 0,
+    "buildLog": "build/evidence/R0.06/foreground-contention-repair-build.txt",
+    "strictLog": "build/evidence/R0.06/foreground-contention-repair-strict.txt",
+    "contractArtifacts": 402,
+    "contractSchemas": 334,
+    "cliManifests": 37,
+    "features": 103,
+    "commands": 55,
+    "acceptanceTests": 1447,
+    "swiftCompiled": false
+  },
+  "rootPinsEvidence": "build/evidence/R0.06/foreground-contention-root-pins.json",
+  "deferrals": [
+    {
+      "owner": "R0.06",
+      "work": "Foreground-judge waiter retirement requires the additional parentCallId binding; outside this ordinary foreground failure unit."
+    },
+    {
+      "owner": "R0.01/R0.03/R0.05",
+      "work": "Actual protected ingress authentication, provider send entitlement and protected per-AT dispatch/receipt closure remain pending."
+    },
+    {
+      "owner": "R3",
+      "work": "Swift generation and compilation remain deferred."
+    }
+  ],
+  "goalStatus": "ACTIVE",
+  "sourceArtifactLinksExact": true,
+  "lifecycleReceiptHashes": [
+    {
+      "path": "build/evidence/R0.06/foreground-contention-third-cli/up.json",
+      "sha256": "60f14b7264926595415b1b646cc920c3f40ac419be29b1755a16948af158aa7c"
+    },
+    {
+      "path": "build/evidence/R0.06/foreground-contention-third-cli/down.json",
+      "sha256": "e6d2d5e5f309cd34bfe64809ea16278d3c13e1ed77379e699f491a1566619a66"
+    }
+  ]
+}

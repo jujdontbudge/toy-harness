@@ -1,0 +1,49 @@
+{
+  "schema": "toy.r0.06-foreground-contention-owner-source-review.v1",
+  "scope": [
+    "packages/self-improvement/src/model-admission.ts",
+    "packages/self-improvement/src/accounting-probe.ts"
+  ],
+  "sourceSha256": {
+    "packages/self-improvement/src/model-admission.ts": "ba0a8b822c0782689caf8c42f93d0f75eca0df6d5eb560a2c16c2a7a06e0fb8e",
+    "packages/self-improvement/src/accounting-probe.ts": "c59baa27da9dcfee8e503a0ad3aa9d0cf825e9fd25fd46180696e9548f76a933"
+  },
+  "references": {
+    "adr": "docs/adr/0052-foreground-admission-contention.md",
+    "handoff": "build/evidence/R0.06/foreground-contention-owner-repair-handoff.json",
+    "triggeringFailure": "build/evidence/R0.06/foreground-contention-sticky-waiter-failure.json"
+  },
+  "verdict": "NO_CONCRETE_SOURCE_DEFECT_FOUND",
+  "review": {
+    "repair": {
+      "ordinaryForegroundOnly": true,
+      "retirementPredicates": [
+        "same foreground purpose and authenticatedRequestId",
+        "same UTC day",
+        "prior state denied, uncharged, PROVIDER_BUSY, ended_at null",
+        "native_send_count zero and no terminal acknowledgement",
+        "fresh call_insert is eligible, reserved, and charged"
+      ],
+      "updateColumns": ["ended_at"],
+      "accountEqualityRequired": false
+    },
+    "probe": {
+      "publicOwnerAndRealAccountingFixture": true,
+      "sendingEventHeldBeforeForegroundArrivals": true,
+      "distinctAuthenticatedRequests": true,
+      "oldPayloadReplaysCheckRetirement": true,
+      "secondWaiterRemainsPriorityAfterFirstRetry": true,
+      "finalContinuationSettlesAfterBothWaitersRetire": true,
+      "representativePrerequisiteCharacters": 1794,
+      "checkViewLimitCharacters": 2000
+    },
+    "observedFailure": "Known-terminal same-request foreground retry left foregroundWaiting true and blocked continuation; source repair is gated on a fresh eligible charged insert."
+  },
+  "findings": [],
+  "acceptance": {
+    "wholeATComplete": false,
+    "protectedIngressPending": true,
+    "runtimeClaim": null,
+    "buildsTestsCliOrWorldsRunByReviewer": false
+  }
+}

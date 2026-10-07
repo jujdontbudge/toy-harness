@@ -2,9 +2,9 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-07T03:54:22.848Z",
+  "updatedAt": "2026-10-07T04:22:54.814Z",
   "phase": "R0_FEASIBILITY",
-  "activeCard": "R0.10",
+  "activeCard": "R0.06",
   "cardCount": 87,
   "acceptanceCount": 1447,
   "cards": {
@@ -1549,7 +1549,8 @@
         "build/evidence/R0.06/accounting-runtime-blocker.json",
         "build/evidence/R0.06/accounting-runtime-verification.json",
         "build/evidence/R0.06/unfiltered-accounting-verification.json",
-        "build/evidence/R0.06/swapped-quota-verification.json"
+        "build/evidence/R0.06/swapped-quota-verification.json",
+        "build/evidence/R0.06/foreground-contention-final-verification.json"
       ],
       "requiredATs": [
         "AT-hermes-config-59",
@@ -1676,6 +1677,31 @@
         "state": "NO_R0_NATIVE_PG_INIT_REQUIRED_R1_SOURCE_PREREQUISITE_TRACKED",
         "newRootRequestPrepared": false,
         "wholeATComplete": false
+      },
+      "foregroundContentionUnit": {
+        "state": "VERIFIED_BOUNDED_UNIT_CLOSED",
+        "startedAt": "2026-10-07T03:57:18.043Z",
+        "deadlineUtc": "2026-10-07T05:57:18.044Z",
+        "sourceStopAt": "2026-10-07T04:20:00Z",
+        "assignedAT": "AT-ops-49",
+        "plan": "build/evidence/R0.06/foreground-contention-minimum-plan.json",
+        "nativeAttempts": 3,
+        "nativeFailures": 2,
+        "wholeATsPassed": [],
+        "acceptanceComplete": false,
+        "sourceStoppedAt": "2026-10-07T04:12:48Z",
+        "firstFailure": "build/evidence/R0.06/foreground-contention-first-cli.json",
+        "ownerRepairNowAuthorized": true,
+        "directFailure": "build/evidence/R0.06/foreground-contention-sticky-waiter-failure.json",
+        "repairPlan": "build/evidence/R0.06/foreground-contention-owner-repair-plan.json",
+        "sourceHandoff": "build/evidence/R0.06/foreground-contention-owner-repair-handoff.json",
+        "foregroundJudgeRetirement": "DEFERRED_PARENT_BINDING",
+        "stoppedAt": "2026-10-07T04:16:15.107Z",
+        "assignedChecks": 4,
+        "affectedRegressionChecks": 6,
+        "separateReadinessChecks": 1,
+        "verificationEvidence": "build/evidence/R0.06/foreground-contention-final-verification.json",
+        "sourceReview": "build/evidence/R0.06/foreground-contention-owner-source-review.json"
       }
     },
     "R0.07": {
@@ -11293,7 +11319,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Receipt review then curated commit/push. Poll exact ROOT-R004-20261006-02: verified actual310 native read and restored parents prioritizes R0.01 after safe cleanup. Otherwise next missing independent bounded R0 implementation; no more passed profile source.",
+  "nextAction": "Curate commit/push verified foreground recovery and update PR1. Root02 actual UID310 native read/restoration DONE takes immediate R0.01 priority after safe cleanup; pending root never blocks goal. Otherwise implement next root-independent bounded R0 owner card from the reviewed minimum plan.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -21874,7 +21900,7 @@
       "pendingRootDoesNotBlockGoal": true,
       "pollWhileIndependentWork": true,
       "exactRegisteredCommandOrRepoScriptRequired": true,
-      "lastPollAt": "2026-10-07T02:14:27.521210+00:00",
+      "lastPollAt": "2026-10-07T04:16:51.013Z",
       "pendingRequests": [
         "ROOT-R004-20261006-02",
         "ROOT-R005-20261006-01"
@@ -21885,8 +21911,8 @@
     "queuedRootReserveAdmissionGate": false
   },
   "latestStaticVerification": {
-    "log": "build/evidence/R0.10/profile-allow-all-final-strict.txt",
-    "sha256": "6bc2ef7bc5e277d9bc439120dd82e17491ad0e747183fe6bcf691d6984cb21bb",
+    "log": "build/evidence/R0.06/foreground-contention-repair-strict.txt",
+    "sha256": "bda00a74e2e4e199081f7c6a493395795364cfe7e59cd86195f0282c08782c82",
     "artifacts": 402,
     "contracts": 334,
     "cliManifests": 37,
@@ -21896,10 +21922,10 @@
     "schemaDigest": "c3d3d925c494b9d4f7b475f98c2146cb57160fe19557d57497d54f999351947d",
     "exitCode": 0,
     "swiftInvoked": false,
-    "recordedAt": "2026-10-07T03:52:59.879Z",
+    "recordedAt": "2026-10-07T04:16:51.013Z",
     "command": "npm run check"
   },
-  "sourceCheckpointCommit": "a49a649",
+  "sourceCheckpointCommit": "0f84978",
   "sourceCheckpointPushed": true,
   "rootRequests": {
     "ROOT-R004-20261006-01": {
@@ -21959,12 +21985,7 @@
     "measurementHistorical": false
   },
   "activeWorkers": [],
-  "pullRequestUpdatedAt": "2026-10-07T03:42:44.644Z",
+  "pullRequestUpdatedAt": "2026-10-07T03:55:11.775Z",
   "continuationCheckpoint": "build/checkpoints/2026-10-07-ops44-verified-dashboard90-deferred",
-  "readOnlyWorkers": [
-    {
-      "agent": "/root/r010_local_gate_audit",
-      "scope": "Read-only next nonduplicate R0 owner gap; no source or runtime"
-    }
-  ]
+  "readOnlyWorkers": []
 }

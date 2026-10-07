@@ -28,8 +28,10 @@ const check = (name: string, passed: boolean, evidence: unknown): CheckViewV1 =>
 } satisfies CheckViewV1);
 const finish = (owner: ModelAdmissionApi, record: ModelAdmissionRecordV1, known: boolean): ModelAdmissionRecordV1 => {
   if (record.nativeSendCount === 1 && record.nativeTerminalAcknowledged) return record;
-  const claim = take(owner.claimSend(record.id));
-  if (!claim.claimed || claim.record.nativeSendCount !== 1 || !claim.record.leaseActive) throw new Error("ACCOUNTING_FIXTURE_CLAIM_REFUSED");
+  if (record.nativeSendCount === 0) {
+    const claim = take(owner.claimSend(record.id));
+    if (!claim.claimed || claim.record.nativeSendCount !== 1 || !claim.record.leaseActive) throw new Error("ACCOUNTING_FIXTURE_CLAIM_REFUSED");
+  } else if (record.state !== "sending" || !record.leaseActive) throw new Error("ACCOUNTING_FIXTURE_SENDING_RECORD_REQUIRED");
   if (take(owner.claimSend(record.id)).claimed) throw new Error("ACCOUNTING_FIXTURE_DUPLICATE_SEND");
   const partial = take(owner.settle(known
     ? {callId:record.id,nativeTerminalAcknowledged:false,usage:{inputTokens:1,outputTokens:1,reasoningTokens:0},reportedTotalTokens:"2"}
@@ -41,7 +43,7 @@ const finish = (owner: ModelAdmissionApi, record: ModelAdmissionRecordV1, known:
 export const accountingProbe = async (input: RegisteredProbeInputV1, context: OpsControlContextV1): Promise<Result<RegisteredProbeOperationV1>> => {
   if ((input.caseId !== undefined && input.caseId !== "model-admission") || !["AT-ops-49","AT-ops-51","AT-ops-52"].includes(input.probeId))
     return {ok:false,error:{module:"ops",code:"INVALID_INPUT",message:opsErrorMessages.INVALID_INPUT,retryable:false,effectState:"none"}};
-  const phases = input.probeId === "AT-ops-49" ? ["named-window-equality-0", "named-window-equality-1", "named-window-equality-2"] : input.probeId === "AT-ops-51" ? ["eight-durable-background-reservations", "restart-new-goal-ninth-refused-foreground-exempt"] : ["fresh-known-veto-0", "fresh-known-veto-1", "fresh-known-veto-2", "fresh-known-veto-3"];
+  const phases = input.probeId === "AT-ops-49" ? ["named-window-equality-0", "named-window-equality-1", "named-window-equality-2", "foreground-contention-recovery"] : input.probeId === "AT-ops-51" ? ["eight-durable-background-reservations", "restart-new-goal-ninth-refused-foreground-exempt"] : ["fresh-known-veto-0", "fresh-known-veto-1", "fresh-known-veto-2", "fresh-known-veto-3"];
   const manifest = registeredCliAcceptanceManifestInventory.find(entry => entry.id === input.probeId);
   if (!manifest || manifest.scenarioId !== "accounting.model-admission" || JSON.stringify(manifest.mandatoryCases) !== JSON.stringify(phases.map(phase => ({ id: phase, publicOperation: "ReplayEnvironment.runRegisteredProbe", phase })))) return {ok:false,error:{module:"ops",code:"ATTESTATION_INVALID",message:opsErrorMessages.ATTESTATION_INVALID,retryable:false,effectState:"none"}};
   try {
@@ -87,6 +89,98 @@ export const accountingProbe = async (input: RegisteredProbeInputV1, context: Op
           checks.push(check("named-window-equality-"+index,autonomous.every(record=>record.decision.eligible===(index===0)&&record.decision.reason===expectedReason)&&foreground.decision.eligible&&foreground.decision.foregroundInputAccepted,
             {fiveHour:pair[0],weekly:pair[1],autonomous:autonomous.map(record=>({class:record.work.class,eligible:record.decision.eligible,reason:record.decision.reason})),foreground:foreground.decision}));
         }
+        const accountRef = "fixture.contention."+prefix;
+        const key = prefix+":contention";
+        const authenticatedRequestIdA = identity(key+":human-a");
+        const authenticatedRequestIdB = identity(key+":human-b");
+        observe(owner,accountRef,key,windows(20,20));
+        const eventReservation = take(owner.reserve(request(accountRef,key+":event",{class:"event"},"background",true)));
+        const eventClaim = take(owner.claimSend(eventReservation.id));
+        const eventSending = eventClaim.record;
+        const foregroundRequestA = request(accountRef,key+":foreground-a",{class:"foreground",authenticatedRequestId:authenticatedRequestIdA},"foreground",true);
+        const foregroundRequestB = request(accountRef,key+":foreground-b",{class:"foreground",authenticatedRequestId:authenticatedRequestIdB},"foreground",true);
+        const foregroundBusyA = take(owner.reserve(foregroundRequestA));
+        const foregroundBusyB = take(owner.reserve(foregroundRequestB));
+        const duringContention = take(owner.inspect(accountRef)).ledger;
+        const eventTerminal = eventClaim.claimed ? finish(owner,eventSending,true) : eventSending;
+        const afterEvent = take(owner.inspect(accountRef)).ledger;
+        const continuationDenied = take(owner.reserve(request(accountRef,key+":continuation",{class:"continuation"},"background",true)));
+        const afterContinuationDenied = take(owner.inspect(accountRef)).ledger;
+        const foregroundRetryA = take(owner.reserve(request(accountRef,key+":foreground-a:retry",{class:"foreground",authenticatedRequestId:authenticatedRequestIdA},"foreground",true)));
+        const foregroundRetryATerminal = foregroundRetryA.decision.eligible ? finish(owner,foregroundRetryA,true) : foregroundRetryA;
+        const foregroundAAfterFirstRetry = take(owner.reserve(foregroundRequestA));
+        const foregroundBBeforeRetry = take(owner.reserve(foregroundRequestB));
+        const afterForegroundRetryA = take(owner.inspect(accountRef)).ledger;
+        const continuationAfterForegroundRetryA = take(owner.reserve(request(accountRef,key+":continuation-after-a",{class:"continuation"},"background",true)));
+        const afterContinuationAfterForegroundRetryA = take(owner.inspect(accountRef)).ledger;
+        const foregroundRetryB = take(owner.reserve(request(accountRef,key+":foreground-b:retry",{class:"foreground",authenticatedRequestId:authenticatedRequestIdB},"foreground",true)));
+        const foregroundRetryBTerminal = foregroundRetryB.decision.eligible ? finish(owner,foregroundRetryB,true) : foregroundRetryB;
+        const foregroundAFinal = take(owner.reserve(foregroundRequestA));
+        const foregroundBFinal = take(owner.reserve(foregroundRequestB));
+        const afterForegroundRetryB = take(owner.inspect(accountRef)).ledger;
+        const continuationRetry = take(owner.reserve(request(accountRef,key+":continuation:retry",{class:"continuation"},"background",true)));
+        const continuationRetryTerminal = continuationRetry.decision.eligible ? finish(owner,continuationRetry,true) : continuationRetry;
+        const finalLedger = take(owner.inspect(accountRef)).ledger;
+        const decisionFlags = (record: ModelAdmissionRecordV1) => [record.decision.eligible,record.decision.reason,record.decision.foregroundInputAccepted,record.decision.providerSendPermitIssued,record.decision.paidFallbackPermitted];
+        const recordFlags = (record: ModelAdmissionRecordV1) => [record.state,record.reservationCharged,record.leaseActive,record.nativeSendCount,record.nativeTerminalAcknowledged,record.endedAt!==null];
+        const unchangedWaiter = (original: ModelAdmissionRecordV1, readback: ModelAdmissionRecordV1): boolean => original.id === readback.id
+          && original.callKey === readback.callKey && original.requestHash === readback.requestHash && original.accountRef === readback.accountRef && original.utcDay === readback.utcDay
+          && JSON.stringify(original.work) === JSON.stringify(readback.work) && JSON.stringify(original.requested) === JSON.stringify(readback.requested)
+          && JSON.stringify(original.decision) === JSON.stringify(readback.decision) && original.state === "denied" && readback.state === "denied"
+          && !original.reservationCharged && !readback.reservationCharged && original.nativeSendCount === 0 && readback.nativeSendCount === 0
+          && !original.nativeTerminalAcknowledged && !readback.nativeTerminalAcknowledged && original.usage === null && readback.usage === null
+          && original.reportedTotalTokens === null && readback.reportedTotalTokens === null;
+        const eventSettled = eventTerminal.state === "settled" && eventTerminal.reservationCharged && !eventTerminal.leaseActive && eventTerminal.nativeSendCount === 1 && eventTerminal.nativeTerminalAcknowledged;
+        const foregroundRetryASettled = foregroundRetryATerminal.state === "settled" && foregroundRetryATerminal.reservationCharged && !foregroundRetryATerminal.leaseActive && foregroundRetryATerminal.nativeSendCount === 1 && foregroundRetryATerminal.nativeTerminalAcknowledged;
+        const foregroundRetryBSettled = foregroundRetryBTerminal.state === "settled" && foregroundRetryBTerminal.reservationCharged && !foregroundRetryBTerminal.leaseActive && foregroundRetryBTerminal.nativeSendCount === 1 && foregroundRetryBTerminal.nativeTerminalAcknowledged;
+        const continuationRetrySettled = continuationRetryTerminal.state === "settled" && continuationRetryTerminal.reservationCharged && !continuationRetryTerminal.leaseActive && continuationRetryTerminal.nativeSendCount === 1 && continuationRetryTerminal.nativeTerminalAcknowledged;
+        const firstWaiterRetiredOnly = foregroundBusyA.endedAt === null && foregroundBusyB.endedAt === null && foregroundAAfterFirstRetry.endedAt !== null && foregroundBBeforeRetry.endedAt === null
+          && unchangedWaiter(foregroundBusyA,foregroundAAfterFirstRetry) && unchangedWaiter(foregroundBusyB,foregroundBBeforeRetry);
+        const bothWaitersRetired = foregroundAFinal.endedAt !== null && foregroundBFinal.endedAt !== null
+          && unchangedWaiter(foregroundBusyA,foregroundAFinal) && unchangedWaiter(foregroundBusyB,foregroundBFinal);
+        const sameUtcDay = [foregroundBusyA,foregroundBusyB,foregroundRetryA,foregroundRetryB].every(record=>record.utcDay===eventReservation.utcDay);
+        const passed = eventReservation.decision.eligible && eventReservation.decision.reason === "ELIGIBLE" && eventReservation.leaseActive && eventReservation.reservationCharged
+          && !eventReservation.decision.providerSendPermitIssued && !eventReservation.decision.paidFallbackPermitted
+          && eventClaim.claimed && !eventClaim.providerSendPermitIssued && eventSending.state === "sending" && eventSending.nativeSendCount === 1 && eventSending.leaseActive
+          && foregroundBusyA.state === "denied" && !foregroundBusyA.decision.eligible && !foregroundBusyA.reservationCharged && foregroundBusyA.decision.reason === "PROVIDER_BUSY"
+          && foregroundBusyA.decision.foregroundInputAccepted && !foregroundBusyA.decision.providerSendPermitIssued
+          && !foregroundBusyA.decision.paidFallbackPermitted && foregroundBusyA.nativeSendCount === 0
+          && foregroundBusyB.state === "denied" && !foregroundBusyB.decision.eligible && !foregroundBusyB.reservationCharged && foregroundBusyB.decision.reason === "PROVIDER_BUSY"
+          && foregroundBusyB.decision.foregroundInputAccepted && !foregroundBusyB.decision.providerSendPermitIssued
+          && !foregroundBusyB.decision.paidFallbackPermitted && foregroundBusyB.nativeSendCount === 0
+          && authenticatedRequestIdA !== authenticatedRequestIdB && sameUtcDay
+          && duringContention.foregroundWaiting && duringContention.providerLeaseActive
+          && eventSettled && afterEvent.foregroundWaiting && !afterEvent.providerLeaseActive
+          && !continuationDenied.decision.eligible && continuationDenied.decision.reason === "FOREGROUND_WAITING" && continuationDenied.decision.foregroundInputAccepted && !continuationDenied.reservationCharged
+          && !continuationDenied.decision.providerSendPermitIssued && !continuationDenied.decision.paidFallbackPermitted && continuationDenied.nativeSendCount === 0
+          && afterContinuationDenied.foregroundWaiting && afterContinuationDenied.fallbackJobsReserved === afterEvent.fallbackJobsReserved
+          && foregroundRetryA.work.class === "foreground" && foregroundRetryA.work.authenticatedRequestId === authenticatedRequestIdA
+          && foregroundRetryA.decision.eligible && foregroundRetryA.decision.reason === "ELIGIBLE" && foregroundRetryA.decision.foregroundInputAccepted && !foregroundRetryA.decision.providerSendPermitIssued
+          && !foregroundRetryA.decision.paidFallbackPermitted && foregroundRetryASettled && firstWaiterRetiredOnly && afterForegroundRetryA.foregroundWaiting
+          && afterForegroundRetryA.fallbackJobsReserved === afterContinuationDenied.fallbackJobsReserved
+          && !continuationAfterForegroundRetryA.decision.eligible && continuationAfterForegroundRetryA.decision.reason === "FOREGROUND_WAITING"
+          && !continuationAfterForegroundRetryA.reservationCharged && continuationAfterForegroundRetryA.nativeSendCount === 0
+          && !continuationAfterForegroundRetryA.decision.providerSendPermitIssued && !continuationAfterForegroundRetryA.decision.paidFallbackPermitted
+          && afterContinuationAfterForegroundRetryA.foregroundWaiting && afterContinuationAfterForegroundRetryA.fallbackJobsReserved === afterForegroundRetryA.fallbackJobsReserved
+          && foregroundRetryB.work.class === "foreground" && foregroundRetryB.work.authenticatedRequestId === authenticatedRequestIdB
+          && foregroundRetryB.decision.eligible && foregroundRetryB.decision.reason === "ELIGIBLE" && foregroundRetryB.decision.foregroundInputAccepted && !foregroundRetryB.decision.providerSendPermitIssued
+          && !foregroundRetryB.decision.paidFallbackPermitted && foregroundRetryBSettled && bothWaitersRetired && !afterForegroundRetryB.foregroundWaiting
+          && afterForegroundRetryB.fallbackJobsReserved === afterContinuationAfterForegroundRetryA.fallbackJobsReserved
+          && continuationRetry.decision.eligible && continuationRetry.decision.reason === "ELIGIBLE" && !continuationRetry.decision.providerSendPermitIssued
+          && !continuationRetry.decision.paidFallbackPermitted && continuationRetrySettled
+          && finalLedger.fallbackJobsReserved === afterForegroundRetryB.fallbackJobsReserved + 1
+          && !finalLedger.foregroundWaiting && !finalLedger.providerLeaseActive;
+        checks.push(check("foreground-contention-recovery",passed,{
+          counterScope:"accounting-fixture",
+          decisionFields:["eligible","reason","foregroundInputAccepted","providerSendPermitIssued","paidFallbackPermitted"],
+          recordFields:["state","reservationCharged","leaseActive","nativeSendCount","nativeTerminalAcknowledged","endedAtPresent"],
+          ledgerFields:["foregroundWaiting","providerLeaseActive","fallbackJobsReserved"],
+          decisions:{event:decisionFlags(eventReservation),busyA:decisionFlags(foregroundBusyA),busyB:decisionFlags(foregroundBusyB),continuation:decisionFlags(continuationDenied),retryA:decisionFlags(foregroundRetryA),continuationAfterA:decisionFlags(continuationAfterForegroundRetryA),retryB:decisionFlags(foregroundRetryB),continuationRetry:decisionFlags(continuationRetry)},
+          records:{eventHeld:recordFlags(eventSending),eventTerminal:recordFlags(eventTerminal),busyA:recordFlags(foregroundBusyA),busyB:recordFlags(foregroundBusyB),continuation:recordFlags(continuationDenied),retryATerminal:recordFlags(foregroundRetryATerminal),busyAAfterA:recordFlags(foregroundAAfterFirstRetry),busyBBeforeB:recordFlags(foregroundBBeforeRetry),continuationAfterA:recordFlags(continuationAfterForegroundRetryA),retryBTerminal:recordFlags(foregroundRetryBTerminal),busyAFinal:recordFlags(foregroundAFinal),busyBFinal:recordFlags(foregroundBFinal),continuationTerminal:recordFlags(continuationRetryTerminal)},
+          ledgerReadbacks:[duringContention,afterEvent,afterContinuationDenied,afterForegroundRetryA,afterContinuationAfterForegroundRetryA,afterForegroundRetryB,finalLedger].map(ledger=>[ledger.foregroundWaiting,ledger.providerLeaseActive,ledger.fallbackJobsReserved]),
+          identities:{distinct:authenticatedRequestIdA!==authenticatedRequestIdB,retryAMatchesA:foregroundRetryA.work.class==="foreground"&&foregroundRetryA.work.authenticatedRequestId===authenticatedRequestIdA,retryBMatchesB:foregroundRetryB.work.class==="foreground"&&foregroundRetryB.work.authenticatedRequestId===authenticatedRequestIdB},
+          waiterRetirement:{firstOnly:firstWaiterRetiredOnly,both:bothWaitersRetired,immutableRows:[unchangedWaiter(foregroundBusyA,foregroundAFinal),unchangedWaiter(foregroundBusyB,foregroundBFinal)]}
+        }));
       }),diagnostic);
       if (!run.ok) return reportFailure(run.error);
     } else if (input.probeId === "AT-ops-52") {

@@ -1,0 +1,52 @@
+{
+  "recordedAt": "2026-10-07T04:12:48Z",
+  "card": "R0.06",
+  "assignedAT": "AT-ops-49",
+  "state": "FINITE_ATOMIC_OWNER_REPAIR_SOURCE_COMPLETE",
+  "sourceStoppedAt": "2026-10-07T04:12:48Z",
+  "sourceDigests": {
+    "packages/self-improvement/src/model-admission.ts": "ba0a8b822c0782689caf8c42f93d0f75eca0df6d5eb560a2c16c2a7a06e0fb8e",
+    "packages/self-improvement/src/accounting-probe.ts": "c59baa27da9dcfee8e503a0ad3aa9d0cf825e9fd25fd46180696e9548f76a933"
+  },
+  "caseOrder": [
+    "named-window-equality-0",
+    "named-window-equality-1",
+    "named-window-equality-2",
+    "foreground-contention-recovery"
+  ],
+  "contentionCaseOrder": [
+    "reserve-and-claim-event-send-lease",
+    "deny-two-distinct-foreground-requests-as-provider-busy",
+    "finish-event-with-known-terminal-acknowledgement",
+    "deny-autonomous-continuation-as-foreground-waiting",
+    "admit-and-finish-first-same-identity-foreground-retry",
+    "prove-only-first-waiter-ended-and-second-still-blocks-continuation",
+    "admit-and-finish-second-same-identity-foreground-retry",
+    "prove-both-prior-waiters-ended-and-wait-cleared",
+    "admit-and-finish-final-continuation"
+  ],
+  "acceptedFix": "The existing reserve transaction closes only same-purpose foreground, same authenticatedRequestId, same UTC-day denied, uncharged PROVIDER_BUSY rows with no end timestamp, native send count zero, and no terminal acknowledgement. The update changes ended_at only and requires a newly inserted foreground row with state reserved, reservation_charged true, and eligible decision; it has no account filter and references call_insert.",
+  "foregroundJudgeRetirement": "DEFERRED: parentCallId binding and shared authenticatedRequestId semantics are outside the assigned ordinary-foreground failure case.",
+  "triggeringFailureEvidence": "build/evidence/R0.06/foreground-contention-sticky-waiter-failure.json",
+  "retainedRunShowReceipt": "build/evidence/R0.06/foreground-contention-second-cli.json",
+  "nativeAttemptsBeforeRepair": 2,
+  "nativeFailuresBeforeRepair": 2,
+  "nextAssignedNativeFailureStopsUnit": true,
+  "runtimeClaim": null,
+  "acceptanceRun": "NOT_RUN_BY_SOURCE_PHASE",
+  "checkPrerequisiteSerializationCharacters": 1794,
+  "checkPrerequisiteMeasurement": "JSON.stringify({name,evidence}) using representative synthetic values matching all 8 decision tuples, 13 record tuples, 7 ledger readbacks, identity relations, and waiter-retirement flags.",
+  "deferrals": [
+    "Parent owns manifest, feature map, and registry changes after source stop.",
+    "No protected ingress authentication or provider send entitlement is claimed.",
+    "Whole AT-ops-49 acceptance remains pending the assigned CLI run.",
+    "No build, generation, static check, test, CLI, world, root operation, or commit was performed."
+  ],
+  "admission": {
+    "availableBytes": "2883125248",
+    "jobNeedBytes": "268435456",
+    "marginBytes": "536870912",
+    "admitted": true,
+    "normalPressure": true
+  }
+}

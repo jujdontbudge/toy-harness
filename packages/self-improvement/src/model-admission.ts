@@ -81,6 +81,11 @@ const openOwner = (runtime: ModelAdmissionRuntimeV1, clock: () => string, guard:
           const decision = ModelAdmissionPolicy.evaluate(modelAdmissionInputSchema.parse({ now, accountRef: request.accountRef, requested: request.requested,
             work: request.work, ledger: state.ledger, observation: state.observation, expectedFiveHourUpperPercent: request.expectedFiveHourUpperPercent,
             expectedWeeklyUpperPercent: request.expectedWeeklyUpperPercent }));
+          const admittedForeground = request.work.class === "foreground"
+            ? { purpose: request.work.class, authenticatedRequestId: request.work.authenticatedRequestId }
+            : null;
+          const foregroundPurpose = admittedForeground?.purpose ?? "";
+          const authenticatedRequestId = admittedForeground?.authenticatedRequestId ?? "";
           const encodedRequest = sqlJson(request);
           const encodedDecision = sqlJson(decision);
           const data = compare(snapshotSql(request.accountRef, now, runtime.policyDigest, predicate, request.budgetGroupId), state, `
@@ -91,6 +96,14 @@ const openOwner = (runtime: ModelAdmissionRuntimeV1, clock: () => string, guard:
               SELECT ${sqlText(id)}::uuid,(${encodedRequest}->>'runId')::uuid,${sqlText(request.budgetGroupId)}::uuid,${sqlText(request.callKey)},(${encodedRequest}->>'parentCallId')::uuid,${sqlText(request.work.class)},${sqlJson(request.requested)},${request.attempt},${sqlText(decision.eligible ? "reserved" : "denied")},${request.reservedInputTokens},4096,
                 (${encodedDecision}->>'quotaSnapshotId')::uuid,${sqlText(now)}::timestamptz,${sqlText(request.accountRef)},${sqlText(request.requested.policyDigest)},${sqlText(request.generation)}::bigint,${sqlText(now.slice(0,10))}::date,${sqlText(requestHash)},${sqlJson(request.work)},${encodedDecision},${decision.eligible},${decision.eligible},
                 (${encodedRequest}->>'expectedFiveHourUpperPercent')::numeric,(${encodedRequest}->>'expectedWeeklyUpperPercent')::numeric FROM unchanged LEFT JOIN root_budget ON TRUE RETURNING *),
+            foreground_waiter_retire AS (UPDATE toy_si.model_call prior_call SET ended_at=${sqlText(now)}::timestamptz
+              WHERE ${admittedForeground !== null} AND prior_call.purpose=${sqlText(foregroundPurpose)} AND prior_call.work->>'authenticatedRequestId'=${sqlText(authenticatedRequestId)}
+                AND prior_call.state='denied' AND NOT prior_call.reservation_charged AND prior_call.decision->>'reason'='PROVIDER_BUSY'
+                AND prior_call.ended_at IS NULL AND prior_call.native_send_count=0 AND NOT prior_call.native_terminal_acknowledged
+                AND EXISTS (SELECT 1 FROM call_insert fresh WHERE fresh.state='reserved' AND fresh.reservation_charged = true
+                  AND fresh.decision->>'eligible'='true' AND fresh.purpose='foreground'
+                  AND fresh.purpose=${sqlText(foregroundPurpose)} AND fresh.work->>'authenticatedRequestId'=${sqlText(authenticatedRequestId)}
+                  AND fresh.utc_day=prior_call.utc_day) RETURNING prior_call.id),
             budget_charge AS (UPDATE toy_si.budget_group SET model_iterations=model_iterations+1,unreported_calls=unreported_calls+1,started_at=COALESCE(started_at,${sqlText(now)}::timestamptz),updated_at=${sqlText(now)}::timestamptz
               WHERE id=${sqlText(request.budgetGroupId)}::uuid AND ${state.budgetBinding!==null} AND EXISTS (SELECT 1 FROM call_insert WHERE reservation_charged) RETURNING id)
             SELECT COALESCE((SELECT ${recordJson("c")} FROM call_insert c),'null'::jsonb);`);

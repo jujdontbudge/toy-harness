@@ -1,0 +1,26 @@
+{
+  "recordedAt": "2026-10-07T04:07:38.698Z",
+  "card": "R0.06",
+  "assignedAT": "AT-ops-49",
+  "interface": "docs/adr/0052-foreground-admission-contention.md",
+  "interfaceSha256": "128c23d8ff55ff494b36c9a990d4ce945d187da45482553226d7f06f79120423",
+  "actualFailure": "build/evidence/R0.06/foreground-contention-sticky-waiter-failure.json",
+  "state": "FINITE_ATOMIC_EXISTING_ENDED_AT_REPAIR_ACCEPTED",
+  "parentReview": "Existing immutable binding guard permits ended_at for denied rows; retire only after eligible call_insert. Native acknowledgement/usage/charge remain untouched. Distinct request/purpose cannot be retired; no timestamp ordering or API/schema invention. Independent review closed judge scope by limiting mutation to ordinary foreground.",
+  "admission": {
+    "evidence": "build/evidence/R0.06/foreground-contention-repair-doctor.json",
+    "measuredAt": "2026-10-07T04:07:38.573Z",
+    "availableBytes": "2883125248",
+    "normalPressure": true,
+    "jobNeedBytes": "268435456",
+    "marginBytes": "536870912",
+    "admitted": true
+  },
+  "sourceStopAt": "2026-10-07T04:20:00Z",
+  "fullUnitDeadlineUtc": "2026-10-07T05:57:18.044Z",
+  "nativeAttemptsAlready": 2,
+  "nativeFailuresAlready": 2,
+  "nextAssignedNativeFailureStopsUnit": true,
+  "wholeATComplete": false,
+  "scope": "Ordinary foreground only; foreground-judge retirement deferred because parentCallId also binds it."
+}
