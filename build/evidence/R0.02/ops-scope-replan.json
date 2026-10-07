@@ -1,0 +1,168 @@
+{
+  "schema": "toy.r0.02.ops-scope-replan.v2",
+  "status": "READ_ONLY_REPLAN",
+  "purpose": "Correct the source-derived Ops scope and minimum comparator change. This is not implementation or AT acceptance evidence.",
+  "sourceSnapshot": {
+    "registerReadback": {
+      "path": "build/evidence/R0.02/ops43-scope-baseline-cli/research.json",
+      "sha256": "aeaa0bbcd8de7bb8acafbc80ba90bb249d0356294a2d4531e49e3833898be73b",
+      "registerDigest": "e89b3336e0c2458ac204fb0927da30f4541abfab48a9d55735c4655719a3f10d",
+      "componentCount": 165
+    },
+    "canonicalInputs": [
+      {
+        "path": "../personal-assistant-harness/specs/RESEARCH-REGISTER.md",
+        "sha256": "e89b3336e0c2458ac204fb0927da30f4541abfab48a9d55735c4655719a3f10d",
+        "lines": [33, 45, 78, 84, 102],
+        "facts": [
+          "Line 78 defines P as ops.md; the component inventory carries each row's consumingSpecs.",
+          "Line 33 says README maps 0.1, 0.2, and 0.10 to all specs.",
+          "Lines 37-39 give component behavior coverage for those requirements: 0.1 all inventory rows; 0.2 A/B/C groups; 0.10 A03-A06.",
+          "Line 45 maps requirements 2.4 and 5.10 to A03-A06/A11-A19."
+        ]
+      },
+      {
+        "path": "../personal-assistant-harness/specs/README.md",
+        "sha256": "2c02bdb4d13abd198231446873eaacfe30177a97f66235158912fd2accd006f4",
+        "lines": [34, 35, 43, 64, 87],
+        "facts": ["0.1 maps to all specs", "0.2 maps to ops and all specs", "0.10 maps to all specs", "2.4 maps to ops", "5.10 maps to ops"]
+      },
+      {
+        "path": "../personal-assistant-harness/specs/ops.md",
+        "sha256": "f07aab65088c82e4ff21e4d63edb2f279e2324e6d7e2bbb801e0fd7494104b0b",
+        "lines": [2068, 2073],
+        "fact": "The table calls its first column 'Audit finding / binding resolution'; its B/M/N labels are audit namespaces, not component IDs. Its former 29-label match is rejected."
+      }
+    ]
+  },
+  "tokenRules": {
+    "P": "Match P as a standalone consumingSpecs token with any non-alphanumeric punctuation or whitespace as a delimiter. Slash-only parsing misses valid semicolon-delimited rows such as A03 and M02.",
+    "sharedGlobal": "Match standalone 'all' case-insensitively in consumingSpecs; this captures 'All modules', 'all model consumers', 'all research', and 'H/all'. Deduplicate these against P consumers and explicit requirement groups.",
+    "requirementGroups": "Expand canonical group/range expressions from RESEARCH-REGISTER requirement-coverage rows against the current 165 component IDs; do not freeze the expanded ID list in production code."
+  },
+  "derivedSets": {
+    "directPConsumers": {
+      "count": 44,
+      "rows": [
+        {"id":"A01","consumingSpecs":"H/A/O/T/L/K/I/P/C/F/D/S"},
+        {"id":"A02","consumingSpecs":"H/A/T/K/I/P"},
+        {"id":"A03","consumingSpecs":"H/I/P; all model consumers"},
+        {"id":"A04","consumingSpecs":"H/I/P/T/F"},
+        {"id":"A07","consumingSpecs":"O/T/A/S/L/C/I/P"},
+        {"id":"A08","consumingSpecs":"O/T/A/S/L/C/I/P/F/D"},
+        {"id":"A09","consumingSpecs":"O/T/A/S/L/C/I/P/D/F"},
+        {"id":"A10","consumingSpecs":"P/A/H/T/K/D/I/C/S"},
+        {"id":"A11","consumingSpecs":"P/C/A/D"},
+        {"id":"A12","consumingSpecs":"P/A/S/C/H/K"},
+        {"id":"A13","consumingSpecs":"P/L/S/I/O/A"},
+        {"id":"A14","consumingSpecs":"P/L/S"},
+        {"id":"A15","consumingSpecs":"P/L/H/I/C/D"},
+        {"id":"A16","consumingSpecs":"P"},
+        {"id":"A17","consumingSpecs":"P/H/O/T/I"},
+        {"id":"A18","consumingSpecs":"P/I/H"},
+        {"id":"A19","consumingSpecs":"I/P/H/O/L/C"},
+        {"id":"A20","consumingSpecs":"I/P"},
+        {"id":"A21","consumingSpecs":"L/H/I/P"},
+        {"id":"A22","consumingSpecs":"L/H/I/P"},
+        {"id":"B05","consumingSpecs":"C/P/A/T"},
+        {"id":"B06","consumingSpecs":"C/D/T/P"},
+        {"id":"B07","consumingSpecs":"A/C/P"},
+        {"id":"B08","consumingSpecs":"A/C/P"},
+        {"id":"B10","consumingSpecs":"C/S/L/P"},
+        {"id":"B11","consumingSpecs":"C/T/P"},
+        {"id":"B12","consumingSpecs":"T/C/P"},
+        {"id":"B15","consumingSpecs":"A/P/I/S/C"},
+        {"id":"C01","consumingSpecs":"K/H/A/D/S/P"},
+        {"id":"C02","consumingSpecs":"K/A/H/P"},
+        {"id":"C03","consumingSpecs":"K/A/H/P"},
+        {"id":"C04","consumingSpecs":"K/A/H/P/D"},
+        {"id":"C05","consumingSpecs":"K/P"},
+        {"id":"C06","consumingSpecs":"D/S/F/H/P"},
+        {"id":"C11","consumingSpecs":"D/H/P"},
+        {"id":"C14","consumingSpecs":"D/F/P"},
+        {"id":"C17","consumingSpecs":"D/P/A"},
+        {"id":"C19","consumingSpecs":"A/C/P/D"},
+        {"id":"C20","consumingSpecs":"D/C/P/A/K"},
+        {"id":"E02","consumingSpecs":"H/A/T/K/C/P"},
+        {"id":"E09","consumingSpecs":"L/C/S/A/I/P"},
+        {"id":"M02","consumingSpecs":"O/T/F/H/C/P; TS queue; AF P0.1–P0.4"},
+        {"id":"M07","consumingSpecs":"I/H/O/P/F; CJ continuation/receipts; SI recommendation; SR rollout"},
+        {"id":"M10","consumingSpecs":"H/I/P/C; HI §10; SR guardrails; TS monitoring"}
+      ]
+    },
+    "explicitOpsRequirementGroups": {
+      "count": 13,
+      "requirementIds": ["2.4", "5.10"],
+      "registerExpression": "A03-A06/A11-A19",
+      "ids": ["A03", "A04", "A05", "A06", "A11", "A12", "A13", "A14", "A15", "A16", "A17", "A18", "A19"],
+      "reason": "README maps 2.4 and 5.10 to ops; the register assigns their component coverage to this group. The existing 0.10 global requirement remains global and is not narrowed to A03-A06."
+    },
+    "sharedGlobalConsumers": {
+      "standaloneAllTokenRows": [
+        {"id":"A03","consumingSpecs":"H/I/P; all model consumers"},
+        {"id":"A06","consumingSpecs":"H/W and all research"},
+        {"id":"B01","consumingSpecs":"All modules"},
+        {"id":"E08","consumingSpecs":"All modules"},
+        {"id":"M01","consumingSpecs":"H/all; **REPORT** HI §§1/2/4/11/12"}
+      ],
+      "count": 5,
+      "newRowsAfterPAndRequirementGroupDeduplication": ["B01", "E08", "M01"],
+      "newRowCount": 3
+    },
+    "opsScope": {
+      "count": 49,
+      "rule": "Union of exact standalone-P consumers (44), explicit Ops requirement-group components (13), and standalone-all shared/global consumers (5), deduplicated against the same current register rows.",
+      "ids": [
+        "A01", "A02", "A03", "A04", "A05", "A06", "A07", "A08", "A09", "A10", "A11", "A12", "A13", "A14", "A15", "A16", "A17", "A18", "A19", "A20", "A21", "A22",
+        "B01", "B05", "B06", "B07", "B08", "B10", "B11", "B12", "B15",
+        "C01", "C02", "C03", "C04", "C05", "C06", "C11", "C14", "C17", "C19", "C20",
+        "E02", "E08", "E09", "M01", "M02", "M07", "M10"
+      ]
+    }
+  },
+  "minimumComparatorBehavior": {
+    "preserveExisting": "The comparator's generic/global 0.1, 0.2, and 0.10 expected requirement IDs stay applied to every register component row (all 165), not narrowed to the register's per-requirement group descriptions. Preserve Sources 0.9 behavior and the dedicated Attention and Authority requirements/predicates unchanged.",
+    "add": "Derive requirements 2.4 and 5.10 from the README requirement-to-spec table and the RESEARCH-REGISTER group A03-A06/A11-A19; add those IDs to the existing per-component expected requirement list for those 13 rows. Existing componentDecisions.missingRequirementIds exposes the result and the V2 contract already represents that array, so no new DTO or protocol is needed.",
+    "opsScopeUse": "Use the 49-row union for the Ops all-component completeness/static assertion. Keep the 2.4/5.10 comparator addition restricted to the 13 canonical group rows; retain global requirements for all register rows.",
+    "outOfScope": ["Do not use Ops audit finding labels as component IDs.", "Do not narrow to M02/D01.", "Do not extend Sources 0.9 or change dedicated Attention/Authority predicates.", "Do not claim primary evidence, protected/native role proof, AT-ops-43/44 PASS, or whole acceptance from this derivation."]
+  },
+  "minimumWrittenInterfaceAndOwnerFiles": [
+    {
+      "path": "docs/adr/0043-ops-research-scope.md",
+      "sha256": "7d703296d5ae879b13d24d8758cbd9e2c2a17e2e481b06cd4dd4d13745fc1afa",
+      "lines": [3, 9],
+      "status": "New corrected interface written first in the accepted source phase.",
+      "role": "Record the corrected scope, token/group join, global requirement preservation, and unchanged public V1-V3 result/route.",
+      "rejectedPredecessor": {
+        "path": "docs/adr/0043-ops-research-scope.md (removed archived predecessor)",
+        "sha256": "3fd2edbec2eacf9f9767d42b025eeac2b9e47fbaf48ec34b4e28ade7120f5631",
+        "disposition": "Rejected mapping, no longer current; this hash is provenance only and is not the interface written above."
+      }
+    },
+    {
+      "path": "packages/self-improvement/src/engineering-control.ts",
+      "sha256": "48df6bfa7c8dd9260f170c1acd6f1f32da1d495f7199d30fc9a851374ca8325a",
+      "lines": [493, 606, 638, 792, 794],
+      "role": "Existing EngineeringControl.checkResearch owner: parse direct Ops mappings and requirement groups at 493; apply mapped IDs in componentDecisions at 606/638; preserve global IDs and bind the parsed groups at 792/794."
+    }
+  ],
+  "notRequired": {
+    "contractFile": {
+      "path": "packages/contracts/src/engineering-control.ts",
+      "sha256": "f04b91f3ee915526ed5f5706d18e39b3842cbfa51498ddccb9c230218c8a889c",
+      "lines": [40, 46],
+      "reason": "Do not change the contract unless inspection proves existing componentDecisions.missingRequirementIds cannot represent the added IDs; current V2 schema already has that field."
+    },
+    "newDtoOrRoute": false
+  },
+  "currentProofBoundary": {
+    "baseline": {
+      "path": "build/evidence/R0.02/ops43-scope-baseline.json",
+      "sha256": "3e602afde222c8ee3c01bdac04962d0e1104cf5c7c0b18cba9f6346a1e1a63ed",
+      "AT-ops-43": "NOT_IMPLEMENTED",
+      "complete": false,
+      "sourceRegistration": null
+    },
+    "disposition": "AT-ops-43 and AT-ops-44 remain pending. This read-only replan establishes source-derived scope only; no implementation, runtime, protected/native, primary-research, or whole-acceptance proof is claimed."
+  }
+}

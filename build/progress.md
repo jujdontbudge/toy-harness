@@ -747,3 +747,19 @@ Previous goal turn isPROGRESS:43970a8 and01c9d15 are pushed, with source-bound n
 - Source/evidence commit d85ef43 pushed. AT86 readiness plus16mandatory cells and46authregression cells pass with exact stored readbacks and complete owned-world teardown. Whole/protected identity remains pending.
 - Corrected Ops replan derives44directP consumers,13requirement-group rows and49with shared/global rows; all165 retain global0.1/0.2/0.10. Freshnormal2226569216B admits the Luna own256MiB+512MiBmargin source phase, stopping by01:00Z inside original01:57Z unit. No newDTO or contract needed.
 - ROOT-R004-20261006-02 and ROOT-R005-20261006-01 remain PENDING; goal ACTIVE. Exact02DONE prioritizes R0.01.
+
+## 2026-10-07T00:43:42.644985+00:00 — AT89 minimum source unit admitted
+
+- Reviewed all10source bindings against pushedbase d85ef43/pinned installedsource. Accepted10public auth/chat cells andone declared synthetic OSstorecopy, using existingV1. Freshnormal2195046400B admits own256MiB+512MiBhelpermargin. Sourcephase stops01:15Z, fullunit02:43Z orafterpass/3failures.
+- Parent owns integration/CLIproof after sourceworkers stop; no sourcebuild orliveworld during mutations. Root02 remainsPENDING, exactDONE prioritizesR0.01; wholeacceptance stayspending.
+
+## 2026-10-07T00:47:42.918745+00:00 — corrected Ops owner and public regression ready
+
+- Luna sourceworker stopped; machine hashes for corrected interface, owner, replan and unchangedcontract match. Added a public toy researchcheck regression proving global3forall165, Sources0.9 retained, Ops2.4/5.10 for13only and gateBLOCKED. Saved priorCLIbaseline lacks bothIDs in13rows, so this regression catches the original omission.
+- Featuremetadata now maps2.4/5.10 and correctedADR. Parentbuild/check/runtime waits for independentauthsourceworker tostop. AT-ops-43/44 and wholeacceptance remainpending.
+
+## 2026-10-07T01:04:59.043417+00:00 — mixed auth and corrected Ops units verified/stopped
+
+- AT89 passes readiness+10mandatory cells on firstnativeattempt, exactrun/show andregistration; genuinecopiedprofileheals, rootinitial→rotated andindependentprofileadded→added-rotated survivefreshuse/refresh/reload. Maxreceipt1792, tenfreshPIDs, opposite-scopebytespreserved. Sharedauthregressions84/85/86/87/88 pass63cells; genericSI54/Authority60 pass21. BothworldsDOWNcomplete/zero unresolved.
+- CorrectedOps publicCLI regression passes: global3all165, Sources0.9 retained, Ops2.4/5.10 only13; independent44P+13group+5shared union49. Originalcatalogreceipt preservedafterarchiving currentSourcesregression. GlobalresearchgateBLOCKED; fullOps43/44protected/primary/buildproof pending.
+- FullstrictcheckPASS385artifacts/317contracts/32CLI manifests/100features/55commands/1447indexedATs, sixrootpinshashes unchanged. TS/Pythononly, SwiftR3. Sourceunitsstoppedafterpass; whole/protectedacceptancepending, goalACTIVE; root02/denialPENDING.

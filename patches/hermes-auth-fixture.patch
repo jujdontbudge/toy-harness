@@ -1,6 +1,6 @@
 --- /dev/null
 +++ b/tests/fixtures/toy_auth_httpx_fixture.py
-@@ -0,0 +1,747 @@
+@@ -0,0 +1,767 @@
 +from __future__ import annotations
 +
 +import base64
@@ -44,6 +44,12 @@
 +_PAID_KEY = "toy-fixture-paid-key"
 +_GENERATION_EXPIRATIONS = {"initial": 1893456000, "rotated": 4102444800, "added": 1893456000, "added-rotated": 4102531200, "stale": 4102531200}
 +_GENERATION_REFRESH_TOKENS = {"initial": "toy-fixture-refresh-initial", "rotated": "toy-fixture-refresh-rotated", "added": "toy-fixture-refresh-added", "added-rotated": "toy-fixture-refresh-added-rotated", "stale": "toy-fixture-refresh-stale"}
++_MIXED_LINEAGE_LABELS = {
++    "mixed-root-add": "toy-fixture-mixed-root",
++    "mixed-root-readback": "toy-fixture-mixed-root",
++    "mixed-profile-add": "toy-fixture-mixed-independent",
++    "mixed-profile-readback": "toy-fixture-mixed-independent",
++}
 +
 +
 +class _FixtureAsyncStream(httpx.AsyncByteStream):
@@ -72,6 +78,16 @@
 +
 +def _expected_access_generations() -> tuple[str, ...]:
 +    actor = os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR", "")
++    mixed_lineage_generations = {
++        "mixed-root-use": "initial",
++        "mixed-root-refresh": "rotated",
++        "mixed-root-reload": "rotated",
++        "mixed-profile-use": "added",
++        "mixed-profile-refresh": "added-rotated",
++        "mixed-profile-reload": "added-rotated",
++    }
++    if actor in mixed_lineage_generations:
++        return (mixed_lineage_generations[actor],)
 +    sibling_generations = {
 +        "sibling-profile-one": "stale",
 +        "sibling-profile-two": "added",
@@ -337,6 +353,8 @@
 +                "sibling-profile-one": "stale",
 +                "sibling-profile-two": "added",
 +                "sibling-profile-new": "added-rotated",
++                "mixed-root-add": "initial",
++                "mixed-profile-add": "added",
 +            }
 +            generation = sibling_generations.get(actor, "added" if actor == "auth-add" else "initial")
 +            if actor == "auth-add":
@@ -510,6 +528,8 @@
 +    if os.environ.get("TOY_AUTH_STORAGE_CONTEXT") == "1":
 +        return "toy-fixture-storage-cut"
 +    actor = os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR", "")
++    if actor in _MIXED_LINEAGE_LABELS:
++        return _MIXED_LINEAGE_LABELS[actor]
 +    if actor.startswith("sibling-"):
 +        return "toy-fixture-" + actor
 +    return "toy-fixture-added-" + os.environ.get("TOY_AUTH_CONCURRENCY_ORDER", "")
@@ -519,7 +539,7 @@
 +    prefix = ["hermes"] if os.environ.get("TOY_AUTH_STORE_SCOPE") == "root" else ["hermes", "--profile", "toy"]
 +    if operation == "add":
 +        actor = os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR", "")
-+        label = ["--label", _fixture_label()] if actor == "auth-add" or actor.startswith("sibling-") else []
++        label = ["--label", _fixture_label()] if actor == "auth-add" or actor.startswith("sibling-") or actor in _MIXED_LINEAGE_LABELS else []
 +        return [*prefix, "auth", "add", "openai-codex", "--type", "oauth", "--no-browser", *label]
 +    if operation == "list":
 +        return [*prefix, "auth", "list", "openai-codex"]
@@ -638,7 +658,7 @@
 +                    count = int(raw)
 +                    break
 +        observations["credential_count"] = count
-+        if os.environ.get("TOY_AUTH_STORAGE_CONTEXT") == "1" or os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR", "").startswith("sibling-"):
++        if os.environ.get("TOY_AUTH_STORAGE_CONTEXT") == "1" or os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR", "").startswith("sibling-") or os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR", "") in _MIXED_LINEAGE_LABELS:
 +            observations["target_label_present"] = _fixture_label() in stdout
 +        markers.append("AUTH_LIST_READBACK_OK" if count > 0 else "AUTH_LIST_EMPTY")
 +    else:

@@ -4614,6 +4614,117 @@ export const registeredCliAcceptanceManifestInventory = [
     "simUnavailableReason": "SIM cannot create or reload temporary root ownership lineage or invoke administrative auth-add. CLI drives the public native auth/chat entries with fake external providers and clock."
   },
   {
+    "id": "AT-hermes-config-89",
+    "rung": "CLI",
+    "sourceAssertionHash": "7027112b5e07bbbfc9a3a98f5b643373faa7ba79ecd3558d8fe8b1bf96116e85",
+    "commandId": "probe.run",
+    "scenarioId": "auth.mixed-lineage",
+    "owner": "hermes",
+    "firstRelease": "R0",
+    "kind": "behavioral",
+    "mandatoryCases": [
+      {
+        "id": "root-add",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "root-add"
+      },
+      {
+        "id": "copied-lineage-heal",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "copied-lineage-heal"
+      },
+      {
+        "id": "copied-lineage-use",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "copied-lineage-use"
+      },
+      {
+        "id": "copied-lineage-refresh",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "copied-lineage-refresh"
+      },
+      {
+        "id": "copied-lineage-reload",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "copied-lineage-reload"
+      },
+      {
+        "id": "independent-manual-add",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "independent-manual-add"
+      },
+      {
+        "id": "independent-profile-readback",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "independent-profile-readback"
+      },
+      {
+        "id": "independent-profile-use",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "independent-profile-use"
+      },
+      {
+        "id": "independent-profile-refresh",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "independent-profile-refresh"
+      },
+      {
+        "id": "independent-profile-reload",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "independent-profile-reload"
+      }
+    ],
+    "trigger": "Copy the synthetic temporary root auth store through the fixed OS seam; use fresh public auth/chat to heal lineage, refresh and reload root ownership, then add, refresh and reload a distinct profile grant.",
+    "faultControls": [
+      {
+        "id": "mixed-root-auth-store-copy",
+        "seam": "os",
+        "affectedPhases": [
+          "copied-lineage-heal"
+        ]
+      },
+      {
+        "id": "mixed-access-token-expiry",
+        "seam": "clock",
+        "affectedPhases": [
+          "copied-lineage-refresh",
+          "independent-profile-refresh"
+        ]
+      }
+    ],
+    "observations": [
+      {
+        "id": "copied-lineage-heal",
+        "independentReader": "HermesAuthProbe.run: copy digest equality, public label/count and independent profile-heal/root preservation readbacks",
+        "caseIds": [
+          "root-add",
+          "copied-lineage-heal"
+        ]
+      },
+      {
+        "id": "copied-root-refresh",
+        "independentReader": "HermesAuthProbe.run: fresh process/provider ledgers, root generation advance and unchanged healed profile digest",
+        "caseIds": [
+          "copied-lineage-use",
+          "copied-lineage-refresh",
+          "copied-lineage-reload"
+        ]
+      },
+      {
+        "id": "independent-profile-refresh",
+        "independentReader": "HermesAuthProbe.run: public label/count, distinct provider generation and unchanged root readbacks",
+        "caseIds": [
+          "independent-manual-add",
+          "independent-profile-readback",
+          "independent-profile-use",
+          "independent-profile-refresh",
+          "independent-profile-reload"
+        ]
+      }
+    ],
+    "simUnavailableReason": "SIM cannot seed or reload copied OAuth ownership lineage or administrative auth-add. CLI drives the pinned public entries with fake external OAuth/model/clock and the fixed synthetic OS copy."
+  },
+  {
     "id": "AT-lifestore-63",
     "rung": "CLI",
     "sourceAssertionHash": "33af59a30239c658b2475fce5dc48de4ad95de524e63222f988e8b086260e61d",

@@ -1,0 +1,1100 @@
+{
+  "recordedAt": "2026-10-07T00:58:34.070Z",
+  "rung": "CLI",
+  "unfiltered": true,
+  "wholeATComplete": false,
+  "liveProviderSends": 0,
+  "nativeAttempt": 1,
+  "admissionEvidence": "build/evidence/R0.03/mixed89-runtime-doctor.json",
+  "probes": [
+    {
+      "probeId": "AT-self-improvement-54",
+      "run": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.03/mixed89-first-cli/AT-self-improvement-54-run.json",
+        "sha256": "1175726564aa84ab46218faa20e4ff27c11982d8e887a7dda660e6498d3fb81b"
+      },
+      "operationId": "11d48ec3-ea73-4744-b757-1eb4bc298777",
+      "show": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.03/mixed89-first-cli/AT-self-improvement-54-show.json",
+        "sha256": "a8b41644c40f3ae93371ff3bb0a3c2f9866e62535bddfa3fdab25d76acee1c93"
+      },
+      "sameData": true,
+      "sourceRegistration": {
+        "id": "AT-self-improvement-54",
+        "rung": "CLI",
+        "sourceAssertionHash": "b4141538d262d66d789eb55ef7608df4effefb5dd4c7c6fc801f1c54e41e4c23",
+        "commandId": "probe.run",
+        "scenarioId": "research.component-comparison",
+        "owner": "self-improvement",
+        "firstRelease": "R0",
+        "kind": "static_gate",
+        "mandatoryCases": [
+          {
+            "id": "required-component-absent",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "required-component-absent"
+          },
+          {
+            "id": "required-component-unsupported",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "required-component-unsupported"
+          },
+          {
+            "id": "required-component-incomplete-ids",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "required-component-incomplete-ids"
+          },
+          {
+            "id": "required-component-complete-outside-selected",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "required-component-complete-outside-selected"
+          }
+        ],
+        "trigger": "Check absent, unsupported, incomplete and outside-selected required-component decisions through the real indexed research owner; report exact missing IDs while whole admission remains unresolved.",
+        "faultControls": [
+          {
+            "id": "external-required-decision-omissions",
+            "seam": "provider",
+            "affectedPhases": [
+              "required-component-absent",
+              "required-component-unsupported",
+              "required-component-incomplete-ids"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "indexed-required-component-result",
+            "independentReader": "EngineeringControl.checkResearch: bound archive digests and exact requirement/source/validation IDs",
+            "caseIds": [
+              "required-component-absent",
+              "required-component-unsupported",
+              "required-component-incomplete-ids",
+              "required-component-complete-outside-selected"
+            ]
+          },
+          {
+            "id": "stored-cli-readback",
+            "independentReader": "toy probe.show: persisted exact required-component decisions",
+            "caseIds": [
+              "required-component-absent",
+              "required-component-unsupported",
+              "required-component-incomplete-ids",
+              "required-component-complete-outside-selected"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot invoke administrative pre-build research gates or replace indexed external research documents. The CLI drives the real public owner through its owned document seam."
+      },
+      "registrationExact": true,
+      "cases": [
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T00:58:34.608Z",
+          "reasonCode": "REQUIRED_COMPONENT_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"required-component-absent\",\"actualUid\":501,\"archive\":{\"key\":\"TS\",\"path\":\"research/v2/tool-stack.md\",\"originalDigest\":\"de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3\",\"contentDigest\":\"b6d8323d49be7c1f40e1f46b01b03b0da841cba53c13f740b1dcf671f83d7587\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M02\",\"comparisonDigest\":null,\"state\":\"BLOCKED\",\"findings\":[\"DECISION_MISSING\",\"MAPPED_REQUIREMENTS_MISSING\",\"REQUIRED_OPTIONS_MISSING\",\"CHOICE_UNSUPPORTED\",\"PRIMARY_EVIDENCE_MISSING\",\"RELEASE_GATE_MISSING\",\"VALIDATION_PLAN_MISSING\",\"ACCEPTANCE_LINK_MISSING\",\"VALIDATION_ID_MISSING\"],\"selectedTool\":null,\"validationPlan\":\"\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":null,\"missingRequirementIds\":[\"0.1\",\"0.2\",\"0.10\"],\"missingSourceIds\":[\"TS\",\"AF\"],\"missingValidationIds\":[\"G0:R0:M02\"]},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "b6d8323d49be7c1f40e1f46b01b03b0da841cba53c13f740b1dcf671f83d7587",
+              "faa434baaad02f6340b30848cd470467415c81b1468bef6c51a0cd371ac4f4e4",
+              "29d42b6b46af16555ae0a41e50f045f84c955333c9578f800cfdd3893bd4a18a"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T00:58:34.662Z",
+          "reasonCode": "REQUIRED_COMPONENT_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"required-component-unsupported\",\"actualUid\":501,\"archive\":{\"key\":\"TS\",\"path\":\"research/v2/tool-stack.md\",\"originalDigest\":\"de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3\",\"contentDigest\":\"ecb2a3ae9fca209185313f0761eb4d9bf1b0b36a3a605982c11ee0143207d18d\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M02\",\"comparisonDigest\":\"3719f259526bda8ed72a4394f2dd1c8f0e9697561babb26890719ff61a19dd31\",\"state\":\"BLOCKED\",\"findings\":[\"CHOICE_UNSUPPORTED\",\"PRIMARY_EVIDENCE_MISSING\",\"VALIDATION_ID_MISSING\"],\"selectedTool\":\"Self-hosted workflow engine\",\"validationPlan\":\"Run the pinned shared-connection rollback, lost-claim fencing and generated-schema CLI fault probe before component admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"outside\",\"missingRequirementIds\":[],\"missingSourceIds\":[\"TS\"],\"missingValidationIds\":[\"G0:R0:M02\"]},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "ecb2a3ae9fca209185313f0761eb4d9bf1b0b36a3a605982c11ee0143207d18d",
+              "faa434baaad02f6340b30848cd470467415c81b1468bef6c51a0cd371ac4f4e4",
+              "29d42b6b46af16555ae0a41e50f045f84c955333c9578f800cfdd3893bd4a18a"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T00:58:34.712Z",
+          "reasonCode": "REQUIRED_COMPONENT_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"required-component-incomplete-ids\",\"actualUid\":501,\"archive\":{\"key\":\"TS\",\"path\":\"research/v2/tool-stack.md\",\"originalDigest\":\"de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3\",\"contentDigest\":\"65a69a552f28e9845904213edf670facc44a8eb7c4941d805788db4108481c1e\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M02\",\"comparisonDigest\":\"e3f050b4ffb75013ff7e4aa0e1f2e12f9bac8ebd5c23770ed39bb824669187c5\",\"state\":\"BLOCKED\",\"findings\":[\"MAPPED_REQUIREMENTS_MISSING\",\"PRIMARY_EVIDENCE_MISSING\",\"VALIDATION_ID_MISSING\"],\"selectedTool\":\"Self-hosted workflow engine\",\"validationPlan\":\"Run the pinned shared-connection rollback, lost-claim fencing and generated-schema CLI fault probe before component admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"outside\",\"missingRequirementIds\":[\"0.10\"],\"missingSourceIds\":[\"TS\"],\"missingValidationIds\":[\"G0:R0:M02\"]},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "65a69a552f28e9845904213edf670facc44a8eb7c4941d805788db4108481c1e",
+              "faa434baaad02f6340b30848cd470467415c81b1468bef6c51a0cd371ac4f4e4",
+              "29d42b6b46af16555ae0a41e50f045f84c955333c9578f800cfdd3893bd4a18a"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T00:58:34.761Z",
+          "reasonCode": "REQUIRED_COMPONENT_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"required-component-complete-outside-selected\",\"actualUid\":501,\"archive\":{\"key\":\"TS\",\"path\":\"research/v2/tool-stack.md\",\"originalDigest\":\"de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3\",\"contentDigest\":\"935ed85fc834e4c415a8466e8ff7ce9199f054d2fd06facb04c811c9ff3ac465\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M02\",\"comparisonDigest\":\"2488cd5e4ca64f84083e681bf5e4dcf257c1bb72a47e25f3880942141ed4fc17\",\"state\":\"PASS\",\"findings\":[],\"selectedTool\":\"Self-hosted workflow engine\",\"validationPlan\":\"Run the pinned shared-connection rollback, lost-claim fencing and generated-schema CLI fault probe before component admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"outside\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[]},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "935ed85fc834e4c415a8466e8ff7ce9199f054d2fd06facb04c811c9ff3ac465",
+              "faa434baaad02f6340b30848cd470467415c81b1468bef6c51a0cd371ac4f4e4",
+              "29d42b6b46af16555ae0a41e50f045f84c955333c9578f800cfdd3893bd4a18a"
+            ]
+          }
+        }
+      ],
+      "resultState": "NOT_IMPLEMENTED",
+      "complete": false
+    },
+    {
+      "probeId": "AT-authority-60",
+      "run": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.03/mixed89-first-cli/AT-authority-60-run.json",
+        "sha256": "765cefe389396c8844f6968441aae58dfb634a01a22c75a8abfe588e5985f8ab"
+      },
+      "operationId": "b8b50c5d-7d17-40eb-a99c-dbadd06a1034",
+      "show": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.03/mixed89-first-cli/AT-authority-60-show.json",
+        "sha256": "f1de9d94757934caac585c032c4bdd3e64ed8d1c3cbf5ceb850fe888104a155d"
+      },
+      "sameData": true,
+      "sourceRegistration": {
+        "id": "AT-authority-60",
+        "rung": "CLI",
+        "sourceAssertionHash": "6f9730e29aba4b5e9fe10a2999ce36b36f2da2f745d45223d96d8b8b7a055337",
+        "commandId": "probe.run",
+        "scenarioId": "research.component-receipts",
+        "owner": "hermes",
+        "firstRelease": "R0",
+        "kind": "static_gate",
+        "mandatoryCases": [
+          {
+            "id": "missing-decision",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-decision"
+          },
+          {
+            "id": "missing-primary-evidence",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-primary-evidence"
+          },
+          {
+            "id": "unsupported-alternatives",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "unsupported-alternatives"
+          },
+          {
+            "id": "unsupported-selection",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "unsupported-selection"
+          },
+          {
+            "id": "missing-reliability",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-reliability"
+          },
+          {
+            "id": "missing-validation",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-validation"
+          },
+          {
+            "id": "missing-acceptance-link",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-acceptance-link"
+          },
+          {
+            "id": "unrelated-acceptance-link",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "unrelated-acceptance-link"
+          },
+          {
+            "id": "unresolved-selected-assumption",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "unresolved-selected-assumption"
+          },
+          {
+            "id": "ordinary-luna-receipt",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "ordinary-luna-receipt"
+          },
+          {
+            "id": "missing-route-observation",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-route-observation"
+          },
+          {
+            "id": "wrong-observed-model",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "wrong-observed-model"
+          },
+          {
+            "id": "wrong-observed-reasoning",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "wrong-observed-reasoning"
+          },
+          {
+            "id": "wrong-observed-tier",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "wrong-observed-tier"
+          },
+          {
+            "id": "missing-research-skill",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-research-skill"
+          },
+          {
+            "id": "wrong-skill-hash",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "wrong-skill-hash"
+          },
+          {
+            "id": "complete-authority-decision",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "complete-authority-decision"
+          }
+        ],
+        "trigger": "Inspect the indexed Authority M03 decision and public Hermes research receipt; compare primary-supported proven options, reliable selection and validation IDs while all disposable probes remain provisional.",
+        "faultControls": [
+          {
+            "id": "external-authority-report-faults",
+            "seam": "provider",
+            "affectedPhases": [
+              "missing-decision",
+              "missing-primary-evidence",
+              "unsupported-alternatives",
+              "unsupported-selection",
+              "missing-reliability",
+              "missing-validation",
+              "missing-acceptance-link",
+              "unrelated-acceptance-link",
+              "unresolved-selected-assumption"
+            ]
+          },
+          {
+            "id": "external-cli-role-and-route",
+            "seam": "provider",
+            "affectedPhases": [
+              "ordinary-luna-receipt",
+              "missing-route-observation",
+              "wrong-observed-model",
+              "wrong-observed-reasoning",
+              "wrong-observed-tier"
+            ]
+          },
+          {
+            "id": "published-research-artifact-faults",
+            "seam": "os",
+            "affectedPhases": [
+              "missing-research-skill",
+              "wrong-skill-hash"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "indexed-central-authority-decision",
+            "independentReader": "EngineeringControl.checkResearch: indexed archive binding, decision predicates and central route/skill validation IDs",
+            "caseIds": [
+              "missing-decision",
+              "missing-primary-evidence",
+              "unsupported-alternatives",
+              "unsupported-selection",
+              "missing-reliability",
+              "missing-validation",
+              "missing-acceptance-link",
+              "unrelated-acceptance-link",
+              "unresolved-selected-assumption",
+              "ordinary-luna-receipt",
+              "missing-route-observation",
+              "wrong-observed-model",
+              "wrong-observed-reasoning",
+              "wrong-observed-tier",
+              "missing-research-skill",
+              "wrong-skill-hash",
+              "complete-authority-decision"
+            ]
+          },
+          {
+            "id": "public-route-owner-and-readback",
+            "independentReader": "External Codex CLI: task/skill readback; toy probe.show: stored source-bound decision and receipt diagnostics",
+            "caseIds": [
+              "missing-decision",
+              "missing-primary-evidence",
+              "unsupported-alternatives",
+              "unsupported-selection",
+              "missing-reliability",
+              "missing-validation",
+              "missing-acceptance-link",
+              "unrelated-acceptance-link",
+              "unresolved-selected-assumption",
+              "ordinary-luna-receipt",
+              "missing-route-observation",
+              "wrong-observed-model",
+              "wrong-observed-reasoning",
+              "wrong-observed-tier",
+              "missing-research-skill",
+              "wrong-skill-hash",
+              "complete-authority-decision"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot inspect administrative pre-build decisions and research metadata. CLI invokes public owners with fixed external document, Codex CLI and OS artifact fakes."
+      },
+      "registrationExact": true,
+      "cases": [
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T00:58:35.197Z",
+          "reasonCode": "AUTHORITY_RESEARCH_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"missing-decision\",\"actualUid\":501,\"archive\":{\"key\":\"CJ\",\"originalDigest\":\"87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed\",\"contentDigest\":\"cf233a6606690e2a27355999e296981876df3dda42687f5ed7bc49b989fe094b\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M03\",\"comparisonDigest\":null,\"state\":\"BLOCKED\",\"findings\":[\"DECISION_MISSING\",\"MAPPED_REQUIREMENTS_MISSING\",\"REQUIRED_OPTIONS_MISSING\",\"CHOICE_UNSUPPORTED\",\"PRIMARY_EVIDENCE_MISSING\",\"RELEASE_GATE_MISSING\",\"VALIDATION_PLAN_MISSING\",\"ACCEPTANCE_LINK_MISSING\",\"VALIDATION_ID_MISSING\"],\"selectedTool\":null,\"validationPlan\":\"\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":null,\"missingRequirementIds\":[\"0.1\",\"0.2\",\"0.10\"],\"missingSourceIds\":[\"CU\",\"CJ\"],\"missingValidationIds\":[\"G0:R0:M03\"]},\"execution\":{\"ownerReceiptProduced\":true,\"externalCliSends\":1,\"exportsVerified\":true,\"receiptDigest\":\"fb79e254168a4c90e0a1bd54afe879313c7c66a90238f01daf7ca85c8f40a89d\",\"observed\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"medium\",\"serviceTier\":\"priority\"},\"loadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"sourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"nativeExecutionVerified\":false},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "cf233a6606690e2a27355999e296981876df3dda42687f5ed7bc49b989fe094b",
+              "501dbc48d8e2dacbf3cd9c9256a554d53905c94895f11508956c10c03a796676",
+              "f97d83647c6798d4ddfe9100b9ac3424161d498115afc35106de6ebb020523c9"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T00:58:35.251Z",
+          "reasonCode": "AUTHORITY_RESEARCH_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"missing-primary-evidence\",\"actualUid\":501,\"archive\":{\"key\":\"CJ\",\"originalDigest\":\"87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed\",\"contentDigest\":\"4eabdcde8ea7df7bb45cac9f1bd68c3090f64f02c18c2bc7cccf6cfa39606c93\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M03\",\"comparisonDigest\":\"7796e06646aec0af51d7ac6430ad2d3404c988ab5aab071e0b1c39c06210d544\",\"state\":\"BLOCKED\",\"findings\":[\"OUTSIDE_OPTION_MISSING\",\"REQUIRED_OPTIONS_MISSING\",\"PRIMARY_EVIDENCE_MISSING\",\"VALIDATION_ID_MISSING\"],\"selectedTool\":\"protected-adapter\",\"validationPlan\":\"Validate positive, refusal and recovery cases in the owned fixture before dependent live admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"protected-adapter\",\"missingRequirementIds\":[],\"missingSourceIds\":[\"CU\",\"CJ\"],\"missingValidationIds\":[\"G0:R0:M03\"]},\"execution\":{\"ownerReceiptProduced\":true,\"externalCliSends\":1,\"exportsVerified\":true,\"receiptDigest\":\"91f2aa453d96710588bfc5eae0640db6f07ca5e84fd37d8b201f6f77f7589c9c\",\"observed\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"medium\",\"serviceTier\":\"priority\"},\"loadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"sourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"nativeExecutionVerified\":false},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "4eabdcde8ea7df7bb45cac9f1bd68c3090f64f02c18c2bc7cccf6cfa39606c93",
+              "501dbc48d8e2dacbf3cd9c9256a554d53905c94895f11508956c10c03a796676",
+              "f97d83647c6798d4ddfe9100b9ac3424161d498115afc35106de6ebb020523c9"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T00:58:35.305Z",
+          "reasonCode": "AUTHORITY_RESEARCH_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"unsupported-alternatives\",\"actualUid\":501,\"archive\":{\"key\":\"CJ\",\"originalDigest\":\"87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed\",\"contentDigest\":\"8a76f5e6eb7eaf164305e331d5718c37b91f6720cb3700e4ea1324d759faf1ed\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M03\",\"comparisonDigest\":\"db9f64f6619fe230be4cbaf1442ce302e1209796273133407a1a0eaa7e86888b\",\"state\":\"BLOCKED\",\"findings\":[\"OUTSIDE_OPTION_MISSING\",\"REQUIRED_OPTIONS_MISSING\"],\"selectedTool\":\"protected-adapter\",\"validationPlan\":\"Validate positive, refusal and recovery cases in the owned fixture before dependent live admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"protected-adapter\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[]},\"execution\":{\"ownerReceiptProduced\":true,\"externalCliSends\":1,\"exportsVerified\":true,\"receiptDigest\":\"a4b31278ee81731a65f0fbe11cb217a53411e58a03eb23b2d3c6ff3e6374eed3\",\"observed\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"medium\",\"serviceTier\":\"priority\"},\"loadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"sourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"nativeExecutionVerified\":false},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "8a76f5e6eb7eaf164305e331d5718c37b91f6720cb3700e4ea1324d759faf1ed",
+              "501dbc48d8e2dacbf3cd9c9256a554d53905c94895f11508956c10c03a796676",
+              "f97d83647c6798d4ddfe9100b9ac3424161d498115afc35106de6ebb020523c9"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T00:58:35.357Z",
+          "reasonCode": "AUTHORITY_RESEARCH_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"unsupported-selection\",\"actualUid\":501,\"archive\":{\"key\":\"CJ\",\"originalDigest\":\"87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed\",\"contentDigest\":\"10c01c31c35c5ad33fb555880d0174587583bceb6f1f0122c751123fee483c92\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M03\",\"comparisonDigest\":\"20a2df60c2dc8a9f685e5fcdcf54c62f6bae4408e025c7f2b20223623332fab6\",\"state\":\"BLOCKED\",\"findings\":[\"CHOICE_UNSUPPORTED\",\"PRIMARY_EVIDENCE_MISSING\",\"VALIDATION_ID_MISSING\"],\"selectedTool\":null,\"validationPlan\":\"Validate positive, refusal and recovery cases in the owned fixture before dependent live admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"uncompared\",\"missingRequirementIds\":[],\"missingSourceIds\":[\"CU\",\"CJ\"],\"missingValidationIds\":[\"G0:R0:M03\"]},\"execution\":{\"ownerReceiptProduced\":true,\"externalCliSends\":1,\"exportsVerified\":true,\"receiptDigest\":\"6139f4763405a62a8a3b658aca4ca2160d9df42ae8c44273c885d4586ab5cb64\",\"observed\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"medium\",\"serviceTier\":\"priority\"},\"loadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"sourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"nativeExecutionVerified\":false},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "10c01c31c35c5ad33fb555880d0174587583bceb6f1f0122c751123fee483c92",
+              "501dbc48d8e2dacbf3cd9c9256a554d53905c94895f11508956c10c03a796676",
+              "f97d83647c6798d4ddfe9100b9ac3424161d498115afc35106de6ebb020523c9"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T00:58:35.415Z",
+          "reasonCode": "AUTHORITY_RESEARCH_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"missing-reliability\",\"actualUid\":501,\"archive\":{\"key\":\"CJ\",\"originalDigest\":\"87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed\",\"contentDigest\":\"0aaf57214617f9225d105c009d31f5bf9dd81cea6419ea809446bb9ef5de2fda\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M03\",\"comparisonDigest\":\"323dd0e98e2ad43dd379506791bc41da2fc96cce1ff53c1a13018e62f8869fa8\",\"state\":\"BLOCKED\",\"findings\":[\"TRADEOFFS_MISSING\"],\"selectedTool\":\"protected-adapter\",\"validationPlan\":\"Validate positive, refusal and recovery cases in the owned fixture before dependent live admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"protected-adapter\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[]},\"execution\":{\"ownerReceiptProduced\":true,\"externalCliSends\":1,\"exportsVerified\":true,\"receiptDigest\":\"4cc43f1e067bf2aaf6ce10573672475f77f56ed81001e7507a93db39160923fd\",\"observed\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"medium\",\"serviceTier\":\"priority\"},\"loadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"sourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"nativeExecutionVerified\":false},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "0aaf57214617f9225d105c009d31f5bf9dd81cea6419ea809446bb9ef5de2fda",
+              "501dbc48d8e2dacbf3cd9c9256a554d53905c94895f11508956c10c03a796676",
+              "f97d83647c6798d4ddfe9100b9ac3424161d498115afc35106de6ebb020523c9"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T00:58:35.481Z",
+          "reasonCode": "AUTHORITY_RESEARCH_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"missing-validation\",\"actualUid\":501,\"archive\":{\"key\":\"CJ\",\"originalDigest\":\"87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed\",\"contentDigest\":\"ce3d7baa3bb6f1fdbe6fa90734eb8fa38211f72130bc39eaa268740a416a6ff7\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M03\",\"comparisonDigest\":\"a3074a13214a8982cb22b6f7523f7a19d3cb4d513b0688703b3051307be40380\",\"state\":\"BLOCKED\",\"findings\":[\"VALIDATION_ID_MISSING\"],\"selectedTool\":\"protected-adapter\",\"validationPlan\":\"Validate positive, refusal and recovery cases in the owned fixture before dependent live admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"protected-adapter\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[\"G0:R0:M03\"]},\"execution\":{\"ownerReceiptProduced\":true,\"externalCliSends\":1,\"exportsVerified\":true,\"receiptDigest\":\"c51d964a84af282dd93669c31c2b937a7ca6f46581f476f75ae604ef8844dc95\",\"observed\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"medium\",\"serviceTier\":\"priority\"},\"loadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"sourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"nativeExecutionVerified\":false},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "ce3d7baa3bb6f1fdbe6fa90734eb8fa38211f72130bc39eaa268740a416a6ff7",
+              "501dbc48d8e2dacbf3cd9c9256a554d53905c94895f11508956c10c03a796676",
+              "f97d83647c6798d4ddfe9100b9ac3424161d498115afc35106de6ebb020523c9"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T00:58:35.538Z",
+          "reasonCode": "AUTHORITY_RESEARCH_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"missing-acceptance-link\",\"actualUid\":501,\"archive\":{\"key\":\"CJ\",\"originalDigest\":\"87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed\",\"contentDigest\":\"759a06e20bd30b48b758c8d66916e5d8c13f025aa081321c1bb4017ae4e9eda0\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M03\",\"comparisonDigest\":\"6e4e919c461e946c0ff8dfab4ffcc8c0e83cffc98e2078df09c06097c6224bf3\",\"state\":\"BLOCKED\",\"findings\":[\"ACCEPTANCE_LINK_MISSING\",\"VALIDATION_ID_MISSING\"],\"selectedTool\":\"protected-adapter\",\"validationPlan\":\"Validate positive, refusal and recovery cases in the owned fixture before dependent live admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"protected-adapter\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[\"AT-authority-60\",\"G0:R0:M03\"]},\"execution\":{\"ownerReceiptProduced\":true,\"externalCliSends\":1,\"exportsVerified\":true,\"receiptDigest\":\"c10fec35b575e02f02d48444fafd8ac94491aa38874dce1140c1f1328abd2bde\",\"observed\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"medium\",\"serviceTier\":\"priority\"},\"loadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"sourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"nativeExecutionVerified\":false},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "759a06e20bd30b48b758c8d66916e5d8c13f025aa081321c1bb4017ae4e9eda0",
+              "501dbc48d8e2dacbf3cd9c9256a554d53905c94895f11508956c10c03a796676",
+              "f97d83647c6798d4ddfe9100b9ac3424161d498115afc35106de6ebb020523c9"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T00:58:35.594Z",
+          "reasonCode": "AUTHORITY_RESEARCH_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"unrelated-acceptance-link\",\"actualUid\":501,\"archive\":{\"key\":\"CJ\",\"originalDigest\":\"87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed\",\"contentDigest\":\"6e8101f9ceb04169bcfede21f12deb6a010e2cd022bc4becb1be07ac4f488132\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M03\",\"comparisonDigest\":\"4f40551a46056fe70b68ac1f6ab0d9e6bc715e1cfad2d1ef9b9e13b9efc1518c\",\"state\":\"BLOCKED\",\"findings\":[\"ACCEPTANCE_LINK_MISSING\"],\"selectedTool\":\"protected-adapter\",\"validationPlan\":\"Validate positive, refusal and recovery cases in the owned fixture before dependent live admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"protected-adapter\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[]},\"execution\":{\"ownerReceiptProduced\":true,\"externalCliSends\":1,\"exportsVerified\":true,\"receiptDigest\":\"77dad81a69ee89d020dda7bace035fdc41c135729da8262855902d1eefcc1305\",\"observed\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"medium\",\"serviceTier\":\"priority\"},\"loadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"sourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"nativeExecutionVerified\":false},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "6e8101f9ceb04169bcfede21f12deb6a010e2cd022bc4becb1be07ac4f488132",
+              "501dbc48d8e2dacbf3cd9c9256a554d53905c94895f11508956c10c03a796676",
+              "f97d83647c6798d4ddfe9100b9ac3424161d498115afc35106de6ebb020523c9"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T00:58:35.651Z",
+          "reasonCode": "AUTHORITY_RESEARCH_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"unresolved-selected-assumption\",\"actualUid\":501,\"archive\":{\"key\":\"CJ\",\"originalDigest\":\"87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed\",\"contentDigest\":\"b426fe4a1f0237a0722288b4fdc53229b35f63cc6a61f04bcc8e52fff9425348\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M03\",\"comparisonDigest\":\"1614ba7bf1285f28355060eff7b972fe8f070625455ae9ffbf5b904c40283e41\",\"state\":\"BLOCKED\",\"findings\":[\"SELECTED_FACT_UNRESOLVED\"],\"selectedTool\":\"protected-adapter\",\"validationPlan\":\"Validate positive, refusal and recovery cases in the owned fixture before dependent live admission.\",\"unresolvedFacts\":[{\"optionId\":\"protected-adapter\",\"fact\":\"Selected capability has not been established.\"}],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"protected-adapter\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[]},\"execution\":{\"ownerReceiptProduced\":true,\"externalCliSends\":1,\"exportsVerified\":true,\"receiptDigest\":\"8aa6aff5150b0a60d350a6ae2177986f3137c34aa5577af6ac3652271b9312f5\",\"observed\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"medium\",\"serviceTier\":\"priority\"},\"loadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"sourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"nativeExecutionVerified\":false},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "b426fe4a1f0237a0722288b4fdc53229b35f63cc6a61f04bcc8e52fff9425348",
+              "501dbc48d8e2dacbf3cd9c9256a554d53905c94895f11508956c10c03a796676",
+              "f97d83647c6798d4ddfe9100b9ac3424161d498115afc35106de6ebb020523c9"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T00:58:35.711Z",
+          "reasonCode": "AUTHORITY_RESEARCH_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"ordinary-luna-receipt\",\"actualUid\":501,\"archive\":{\"key\":\"CJ\",\"originalDigest\":\"87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed\",\"contentDigest\":\"a129dd56952295bf9ed7a33c0b8aaccb6cbd2f7d7fc07e78665ae69b214f38eb\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M03\",\"comparisonDigest\":\"917c54ef470d077d4718afd2cd70a1d73aca7b29bbc72742fd4322d3a5637e78\",\"state\":\"BLOCKED\",\"findings\":[\"VALIDATION_ID_MISSING\"],\"selectedTool\":\"protected-adapter\",\"validationPlan\":\"Validate positive, refusal and recovery cases in the owned fixture before dependent live admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"protected-adapter\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[\"ROUTE:R0:M03\",\"SKILL:R0:M03\"]},\"execution\":{\"ownerReceiptProduced\":true,\"externalCliSends\":1,\"exportsVerified\":true,\"receiptDigest\":\"40766c5a6fcbfa1166286f3bcf2fe4ec73851cbfb227fa717e091ed77bc98f64\",\"observed\":{\"model\":\"gpt-6-luna\",\"effort\":\"max\",\"serviceTier\":\"priority\"},\"loadedDigest\":null,\"sourceCommit\":null,\"nativeExecutionVerified\":false},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "a129dd56952295bf9ed7a33c0b8aaccb6cbd2f7d7fc07e78665ae69b214f38eb",
+              "501dbc48d8e2dacbf3cd9c9256a554d53905c94895f11508956c10c03a796676",
+              "f97d83647c6798d4ddfe9100b9ac3424161d498115afc35106de6ebb020523c9"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T00:58:35.768Z",
+          "reasonCode": "AUTHORITY_RESEARCH_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"missing-route-observation\",\"actualUid\":501,\"archive\":{\"key\":\"CJ\",\"originalDigest\":\"87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed\",\"contentDigest\":\"456811b085717929f85858e199ff3b6f27d73a3a11db1ed0397e1c7c2f67e939\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M03\",\"comparisonDigest\":\"6d0f1a33e5ac9b80c5469e66b2cda11741cec75f0fbd58944efaad0d6399263d\",\"state\":\"BLOCKED\",\"findings\":[\"VALIDATION_ID_MISSING\"],\"selectedTool\":\"protected-adapter\",\"validationPlan\":\"Validate positive, refusal and recovery cases in the owned fixture before dependent live admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"protected-adapter\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[\"ROUTE:R0:M03\"]},\"execution\":{\"ownerReceiptProduced\":true,\"externalCliSends\":1,\"exportsVerified\":true,\"receiptDigest\":\"f00418f61083e685a507945ef09b4dc6c1eafbb07db8fa9ae5349ae546d8b9ca\",\"observed\":null,\"loadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"sourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"nativeExecutionVerified\":false},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "456811b085717929f85858e199ff3b6f27d73a3a11db1ed0397e1c7c2f67e939",
+              "501dbc48d8e2dacbf3cd9c9256a554d53905c94895f11508956c10c03a796676",
+              "f97d83647c6798d4ddfe9100b9ac3424161d498115afc35106de6ebb020523c9"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T00:58:35.818Z",
+          "reasonCode": "AUTHORITY_RESEARCH_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"wrong-observed-model\",\"actualUid\":501,\"archive\":{\"key\":\"CJ\",\"originalDigest\":\"87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed\",\"contentDigest\":\"e6b39a5339cc26e88206c7253e56ce270bebcc67adadaa4a90c966007170d8e9\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M03\",\"comparisonDigest\":\"714724ba90a7484135ab8b0e7f2357f8486f4ef9c473f6bf086da2870010a8ff\",\"state\":\"BLOCKED\",\"findings\":[\"VALIDATION_ID_MISSING\"],\"selectedTool\":\"protected-adapter\",\"validationPlan\":\"Validate positive, refusal and recovery cases in the owned fixture before dependent live admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"protected-adapter\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[\"ROUTE:R0:M03\"]},\"execution\":{\"ownerReceiptProduced\":true,\"externalCliSends\":1,\"exportsVerified\":true,\"receiptDigest\":\"fbebd93f65e9a1eb06e78967f409bb93894119d166b4629b3fe6014cfd5e51dc\",\"observed\":{\"model\":\"gpt-6-luna\",\"effort\":\"medium\",\"serviceTier\":\"priority\"},\"loadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"sourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"nativeExecutionVerified\":false},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "e6b39a5339cc26e88206c7253e56ce270bebcc67adadaa4a90c966007170d8e9",
+              "501dbc48d8e2dacbf3cd9c9256a554d53905c94895f11508956c10c03a796676",
+              "f97d83647c6798d4ddfe9100b9ac3424161d498115afc35106de6ebb020523c9"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T00:58:35.869Z",
+          "reasonCode": "AUTHORITY_RESEARCH_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"wrong-observed-reasoning\",\"actualUid\":501,\"archive\":{\"key\":\"CJ\",\"originalDigest\":\"87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed\",\"contentDigest\":\"6933be6bc3ec80bfc99bfee09a1af0d32be5224c0429dd58413d3ffb07ec0955\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M03\",\"comparisonDigest\":\"79bfc355ce1232c7fb5125e8e69aec37fc63f3ded1de842c2fffcab908616ffd\",\"state\":\"BLOCKED\",\"findings\":[\"VALIDATION_ID_MISSING\"],\"selectedTool\":\"protected-adapter\",\"validationPlan\":\"Validate positive, refusal and recovery cases in the owned fixture before dependent live admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"protected-adapter\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[\"ROUTE:R0:M03\"]},\"execution\":{\"ownerReceiptProduced\":true,\"externalCliSends\":1,\"exportsVerified\":true,\"receiptDigest\":\"91000fdf7456c911af4407b7b27aeba88818d23851d993fc90e383fd257f6d99\",\"observed\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"max\",\"serviceTier\":\"priority\"},\"loadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"sourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"nativeExecutionVerified\":false},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "6933be6bc3ec80bfc99bfee09a1af0d32be5224c0429dd58413d3ffb07ec0955",
+              "501dbc48d8e2dacbf3cd9c9256a554d53905c94895f11508956c10c03a796676",
+              "f97d83647c6798d4ddfe9100b9ac3424161d498115afc35106de6ebb020523c9"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T00:58:35.921Z",
+          "reasonCode": "AUTHORITY_RESEARCH_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"wrong-observed-tier\",\"actualUid\":501,\"archive\":{\"key\":\"CJ\",\"originalDigest\":\"87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed\",\"contentDigest\":\"32c4eae5b47ee4f92156595b5251572dbe058e80d6993379fd75d67d0c9b6cf9\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M03\",\"comparisonDigest\":\"12604d26de86183228013cae202c4b0b3eb3b358aadae7a7fdef051fe0f589b1\",\"state\":\"BLOCKED\",\"findings\":[\"VALIDATION_ID_MISSING\"],\"selectedTool\":\"protected-adapter\",\"validationPlan\":\"Validate positive, refusal and recovery cases in the owned fixture before dependent live admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"protected-adapter\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[\"ROUTE:R0:M03\"]},\"execution\":{\"ownerReceiptProduced\":true,\"externalCliSends\":1,\"exportsVerified\":true,\"receiptDigest\":\"4cf8fe051fe4083f52a6fa8198d9fd888afb9159bd2513acb693f76d17b3a363\",\"observed\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"medium\",\"serviceTier\":\"default\"},\"loadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"sourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"nativeExecutionVerified\":false},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "32c4eae5b47ee4f92156595b5251572dbe058e80d6993379fd75d67d0c9b6cf9",
+              "501dbc48d8e2dacbf3cd9c9256a554d53905c94895f11508956c10c03a796676",
+              "f97d83647c6798d4ddfe9100b9ac3424161d498115afc35106de6ebb020523c9"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T00:58:35.970Z",
+          "reasonCode": "AUTHORITY_RESEARCH_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"missing-research-skill\",\"actualUid\":501,\"archive\":{\"key\":\"CJ\",\"originalDigest\":\"87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed\",\"contentDigest\":\"95214cdd471aada82949e05cd07da5c9ad59ac2408214ecd82f99cefcb0a9207\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M03\",\"comparisonDigest\":\"4baf45f18c29fcd42230b29de2bda6108a47572d0ad1b5111dadc9a263d6e958\",\"state\":\"BLOCKED\",\"findings\":[\"VALIDATION_ID_MISSING\"],\"selectedTool\":\"protected-adapter\",\"validationPlan\":\"Validate positive, refusal and recovery cases in the owned fixture before dependent live admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"protected-adapter\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[\"ROUTE:R0:M03\",\"SKILL:R0:M03\"]},\"execution\":{\"ownerReceiptProduced\":true,\"externalCliSends\":0,\"exportsVerified\":true,\"receiptDigest\":\"80459199d9f0adbdc5cca5f880eff64b6db0d905975f13cf16d1e7e66d8a129a\",\"observed\":null,\"loadedDigest\":null,\"sourceCommit\":null,\"nativeExecutionVerified\":false},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "95214cdd471aada82949e05cd07da5c9ad59ac2408214ecd82f99cefcb0a9207",
+              "501dbc48d8e2dacbf3cd9c9256a554d53905c94895f11508956c10c03a796676",
+              "f97d83647c6798d4ddfe9100b9ac3424161d498115afc35106de6ebb020523c9"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T00:58:36.019Z",
+          "reasonCode": "AUTHORITY_RESEARCH_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"wrong-skill-hash\",\"actualUid\":501,\"archive\":{\"key\":\"CJ\",\"originalDigest\":\"87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed\",\"contentDigest\":\"27cb4312919cce9d2fb0aa37fe3ecfe5ba04782645fa3bdbb5ee3300f4d3cf46\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M03\",\"comparisonDigest\":\"90cb434d2cb14a934aca262e0b99e74b70859d296550720a7c1c24bebd1ea1e0\",\"state\":\"BLOCKED\",\"findings\":[\"VALIDATION_ID_MISSING\"],\"selectedTool\":\"protected-adapter\",\"validationPlan\":\"Validate positive, refusal and recovery cases in the owned fixture before dependent live admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"protected-adapter\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[\"ROUTE:R0:M03\",\"SKILL:R0:M03\"]},\"execution\":{\"ownerReceiptProduced\":true,\"externalCliSends\":0,\"exportsVerified\":true,\"receiptDigest\":\"27dac32f8f53de330640918c0827efa02a7db2bacdb017406b6f77c78b88538b\",\"observed\":null,\"loadedDigest\":null,\"sourceCommit\":null,\"nativeExecutionVerified\":false},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "27cb4312919cce9d2fb0aa37fe3ecfe5ba04782645fa3bdbb5ee3300f4d3cf46",
+              "501dbc48d8e2dacbf3cd9c9256a554d53905c94895f11508956c10c03a796676",
+              "f97d83647c6798d4ddfe9100b9ac3424161d498115afc35106de6ebb020523c9"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T00:58:36.069Z",
+          "reasonCode": "AUTHORITY_RESEARCH_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"complete-authority-decision\",\"actualUid\":501,\"archive\":{\"key\":\"CJ\",\"originalDigest\":\"87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed\",\"contentDigest\":\"4b850da2c731abb310ec141c78c628196fbf8cad81e696655c08ac21cb736c7a\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M03\",\"comparisonDigest\":\"3480da60322652aa12e2d3c20fc529d9a2a1bb26662c620ebc9aa427dcd70ead\",\"state\":\"PASS\",\"findings\":[],\"selectedTool\":\"protected-adapter\",\"validationPlan\":\"Validate positive, refusal and recovery cases in the owned fixture before dependent live admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"protected-adapter\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[]},\"execution\":{\"ownerReceiptProduced\":true,\"externalCliSends\":1,\"exportsVerified\":true,\"receiptDigest\":\"ec22ff933ff75f3ac2df42b0e0904930c6fb477b095b9c640728d44b573a06fc\",\"observed\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"medium\",\"serviceTier\":\"priority\"},\"loadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"sourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"nativeExecutionVerified\":false},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "4b850da2c731abb310ec141c78c628196fbf8cad81e696655c08ac21cb736c7a",
+              "501dbc48d8e2dacbf3cd9c9256a554d53905c94895f11508956c10c03a796676",
+              "f97d83647c6798d4ddfe9100b9ac3424161d498115afc35106de6ebb020523c9"
+            ]
+          }
+        }
+      ],
+      "resultState": "NOT_IMPLEMENTED",
+      "complete": false
+    },
+    {
+      "probeId": "AT-hermes-config-89",
+      "run": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.03/mixed89-first-cli/AT-hermes-config-89-run.json",
+        "sha256": "12f08573b4cdbd5000e2943af8a03a6731b8f59a645925a77775c710c819ceb0"
+      },
+      "operationId": "196304a6-f5d1-4550-91d9-93082c042a01",
+      "show": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.03/mixed89-first-cli/AT-hermes-config-89-show.json",
+        "sha256": "5ab354f5829e6a99dbb665a14aab7f9110294e4cd3e741cf8b52b0e623e12823"
+      },
+      "sameData": true,
+      "sourceRegistration": {
+        "id": "AT-hermes-config-89",
+        "rung": "CLI",
+        "sourceAssertionHash": "7027112b5e07bbbfc9a3a98f5b643373faa7ba79ecd3558d8fe8b1bf96116e85",
+        "commandId": "probe.run",
+        "scenarioId": "auth.mixed-lineage",
+        "owner": "hermes",
+        "firstRelease": "R0",
+        "kind": "behavioral",
+        "mandatoryCases": [
+          {
+            "id": "root-add",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "root-add"
+          },
+          {
+            "id": "copied-lineage-heal",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "copied-lineage-heal"
+          },
+          {
+            "id": "copied-lineage-use",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "copied-lineage-use"
+          },
+          {
+            "id": "copied-lineage-refresh",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "copied-lineage-refresh"
+          },
+          {
+            "id": "copied-lineage-reload",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "copied-lineage-reload"
+          },
+          {
+            "id": "independent-manual-add",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "independent-manual-add"
+          },
+          {
+            "id": "independent-profile-readback",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "independent-profile-readback"
+          },
+          {
+            "id": "independent-profile-use",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "independent-profile-use"
+          },
+          {
+            "id": "independent-profile-refresh",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "independent-profile-refresh"
+          },
+          {
+            "id": "independent-profile-reload",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "independent-profile-reload"
+          }
+        ],
+        "trigger": "Copy the synthetic temporary root auth store through the fixed OS seam; use fresh public auth/chat to heal lineage, refresh and reload root ownership, then add, refresh and reload a distinct profile grant.",
+        "faultControls": [
+          {
+            "id": "mixed-root-auth-store-copy",
+            "seam": "os",
+            "affectedPhases": [
+              "copied-lineage-heal"
+            ]
+          },
+          {
+            "id": "mixed-access-token-expiry",
+            "seam": "clock",
+            "affectedPhases": [
+              "copied-lineage-refresh",
+              "independent-profile-refresh"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "copied-lineage-heal",
+            "independentReader": "HermesAuthProbe.run: copy digest equality, public label/count and independent profile-heal/root preservation readbacks",
+            "caseIds": [
+              "root-add",
+              "copied-lineage-heal"
+            ]
+          },
+          {
+            "id": "copied-root-refresh",
+            "independentReader": "HermesAuthProbe.run: fresh process/provider ledgers, root generation advance and unchanged healed profile digest",
+            "caseIds": [
+              "copied-lineage-use",
+              "copied-lineage-refresh",
+              "copied-lineage-reload"
+            ]
+          },
+          {
+            "id": "independent-profile-refresh",
+            "independentReader": "HermesAuthProbe.run: public label/count, distinct provider generation and unchanged root readbacks",
+            "caseIds": [
+              "independent-manual-add",
+              "independent-profile-readback",
+              "independent-profile-use",
+              "independent-profile-refresh",
+              "independent-profile-reload"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot seed or reload copied OAuth ownership lineage or administrative auth-add. CLI drives the pinned public entries with fake external OAuth/model/clock and the fixed synthetic OS copy."
+      },
+      "registrationExact": true,
+      "cases": [
+        {
+          "id": "auth.native-runtime",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T00:58:37.065Z",
+          "reasonCode": "NATIVE_PUBLIC_CLI_READY_AUTH_PENDING",
+          "prerequisite": "{\"interface\":\"hermes --help\",\"installedCommit\":\"8d5e3e412138342e8bf30443e72bd4e6a9abd057\",\"launcherDigest\":\"307ef6a7792a42083f6e4f71e9500543efd9c707e211068f80b138db76975397\",\"interpreterSource\":\"existing-committed-venv\",\"interpreterDigest\":\"e046691799a36090b5946d8910084f982bf819ed4dfaf27a4bfa5bdf9c8360ee\",\"publicRuntimeCommandDigest\":\"e99338b03dfdad1b660705657d5e8c4273cc8e1b53f2fe6cf995d9cb36e05403\",\"bytecodeWritesDisabled\":true,\"isolatedHome\":true,\"inheritedProviderEnvironment\":false,\"publicHelpObserved\":true,\"childExitCode\":0,\"childSignal\":null,\"outputDigest\":\"1b74616851009c28894dd94adf51fc3064e3d353021e1b37b716a4904b3881e3\",\"errorOutputDigest\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"dependencyEnvironmentUnavailable\":false,\"missingModule\":false,\"repairSuggested\":false,\"sourceUpdateIncomplete\":false,\"authExecuted\":false,\"credentialInspected\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "307ef6a7792a42083f6e4f71e9500543efd9c707e211068f80b138db76975397",
+              "e046691799a36090b5946d8910084f982bf819ed4dfaf27a4bfa5bdf9c8360ee",
+              "6a4f612c50c0d4ff954d36d7616165e04caea3da39fda6585d1b686a6283e64c"
+            ]
+          }
+        },
+        {
+          "id": "auth.native-fixture",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T00:58:51.015Z",
+          "reasonCode": "NATIVE_AUTH_FIXTURE_ADD_OBSERVED",
+          "prerequisite": "{\"result\":{\"schema\":\"toy.hermes-httpx-auth-fixture.v1\",\"operation\":\"add\",\"public_argv\":[\"hermes\",\"auth\",\"add\",\"openai-codex\",\"--type\",\"oauth\",\"--no-browser\",\"--label\",\"toy-fixture-mixed-root\"],\"exit_code\":0,\"markers\":[\"AUTH_ADD_OK\"],\"processIdentity\":{\"pid\":19110,\"parentPid\":19089,\"uid\":501,\"gid\":20},\"observations\":{\"provider\":\"openai-codex\",\"phase\":\"add\",\"access_generation\":null,\"catalog_access_generation\":null,\"storage_fault_triggered\":false,\"token_hygiene\":true,\"success_claim_absent\":false,\"fallback_attempted\":false,\"network_denials\":[],\"socket_origin\":null},\"http_ledger\":{\"device_code_requests\":1,\"device_code_polls\":1,\"token_exchanges\":1,\"token_refreshes\":0,\"model_catalog_requests\":0,\"model_requests\":0,\"denied_http_requests\":0,\"blocked_socket_events\":0},\"network_audit\":\"socket-audit-hook-installed\"},\"childPidMatches\":true,\"freshChildPid\":true,\"parentPidMatches\":true,\"uidMatches\":true,\"gidMatches\":true,\"childStdoutDigest\":\"39c090846c33dab35d0f231d82ad861d39fe94d0c038d9918b13bb33c4b2744e\",\"childStderrDigest\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"caseId\":\"root-add\",\"storeScope\":\"root\",\"label\":\"toy-fixture-mixed-root\",\"expectedCount\":null,\"expectedGeneration\":null,\"rootAuthBefore\":null,\"rootAuthAfter\":\"087cbb8292bb4d8d030ba6cc37379092f4de3bc39692646d3450c427cd46fe12\",\"rootEnvAfter\":null,\"rootEnvUnchanged\":true,\"profileAuthBefore\":null,\"profileAuthAfter\":null,\"rootStoreVerified\":true,\"profileStoreVerified\":true,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "60554c067d107b149109b33741c6a4032a13c42a879d132ef5d0cba0c4954447",
+              "1b2c15d4560062990cd01c7fa6d884a583b436815367d2b0a30a2f9f8052d135",
+              "a89ef58e0592ed2288a2cb77a8523f8e7063b567cc88ba5380f1a27fb5197cba",
+              "5886456b33e3c3b9ce9029e25cf8257eb45dbee50ed19831203b9b9b2e040ed9",
+              "99e407614348d415e9bc8558eeac63cff14dce4a9f07e3eba870d0b2674c0736",
+              "1f0c5d1f582b14c03b56d2bd9c9a3d46e36cc2ac160dde39e2d27789ff039f25",
+              "fc301e0f9097993fd8889ab3c0a09b5969bced8b1e0452bb3898eeca30b02829",
+              "d37cf87370131575dac18d6006890a6c7cf0b08f9c965eb91c8f5151e8206212",
+              "1c0d2505899483989b939caa1c70f045727da3a96a8d1b9a9d0e490a33b2d657"
+            ]
+          }
+        },
+        {
+          "id": "auth.native-fixture",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T00:58:51.855Z",
+          "reasonCode": "NATIVE_AUTH_FIXTURE_LIST_OBSERVED",
+          "prerequisite": "{\"result\":{\"schema\":\"toy.hermes-httpx-auth-fixture.v1\",\"operation\":\"list\",\"public_argv\":[\"hermes\",\"--profile\",\"toy\",\"auth\",\"list\",\"openai-codex\"],\"exit_code\":0,\"markers\":[\"AUTH_LIST_READBACK_OK\"],\"processIdentity\":{\"pid\":19112,\"parentPid\":19089,\"uid\":501,\"gid\":20},\"observations\":{\"provider\":\"openai-codex\",\"phase\":\"list\",\"credential_count\":1,\"target_label_present\":true,\"access_generation\":null,\"catalog_access_generation\":null,\"storage_fault_triggered\":false,\"token_hygiene\":true,\"success_claim_absent\":true,\"fallback_attempted\":false,\"network_denials\":[],\"socket_origin\":null},\"http_ledger\":{\"device_code_requests\":0,\"device_code_polls\":0,\"token_exchanges\":0,\"token_refreshes\":0,\"model_catalog_requests\":0,\"model_requests\":0,\"denied_http_requests\":0,\"blocked_socket_events\":0},\"network_audit\":\"socket-audit-hook-installed\"},\"childPidMatches\":true,\"freshChildPid\":true,\"parentPidMatches\":true,\"uidMatches\":true,\"gidMatches\":true,\"childStdoutDigest\":\"0330919691f00f55362d76acfd642d44b456b6ff2aa0f4edfb4cd0384b4c989e\",\"childStderrDigest\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"caseId\":\"copied-lineage-heal\",\"storeScope\":\"profile\",\"label\":\"toy-fixture-mixed-root\",\"expectedCount\":1,\"expectedGeneration\":null,\"rootAuthBefore\":\"087cbb8292bb4d8d030ba6cc37379092f4de3bc39692646d3450c427cd46fe12\",\"rootAuthAfter\":\"087cbb8292bb4d8d030ba6cc37379092f4de3bc39692646d3450c427cd46fe12\",\"rootEnvAfter\":null,\"rootEnvUnchanged\":true,\"profileAuthBefore\":\"087cbb8292bb4d8d030ba6cc37379092f4de3bc39692646d3450c427cd46fe12\",\"profileAuthAfter\":\"8a71e3f92e4409048ac774138d38f34ec508fd68db46bbca0adf055d66532309\",\"rootStoreVerified\":true,\"profileStoreVerified\":true,\"copyDigestsEqual\":true,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "60554c067d107b149109b33741c6a4032a13c42a879d132ef5d0cba0c4954447",
+              "1b2c15d4560062990cd01c7fa6d884a583b436815367d2b0a30a2f9f8052d135",
+              "a89ef58e0592ed2288a2cb77a8523f8e7063b567cc88ba5380f1a27fb5197cba",
+              "5886456b33e3c3b9ce9029e25cf8257eb45dbee50ed19831203b9b9b2e040ed9",
+              "99e407614348d415e9bc8558eeac63cff14dce4a9f07e3eba870d0b2674c0736",
+              "1f0c5d1f582b14c03b56d2bd9c9a3d46e36cc2ac160dde39e2d27789ff039f25",
+              "fc301e0f9097993fd8889ab3c0a09b5969bced8b1e0452bb3898eeca30b02829",
+              "d37cf87370131575dac18d6006890a6c7cf0b08f9c965eb91c8f5151e8206212",
+              "3c49b5c01a1bef717902678efa5db6e0a447861733a3904353d22042a01e90a0"
+            ]
+          }
+        },
+        {
+          "id": "auth.native-fixture",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T00:58:56.508Z",
+          "reasonCode": "NATIVE_AUTH_FIXTURE_CHAT_OBSERVED",
+          "prerequisite": "{\"result\":{\"schema\":\"toy.hermes-httpx-auth-fixture.v1\",\"operation\":\"chat\",\"public_argv\":[\"hermes\",\"--profile\",\"toy\",\"chat\",\"--provider\",\"openai-codex\",\"--model\",\"gpt-6.1-sol\",\"--toolsets\",\"none\",\"-q\",\"Return the fixed fixture marker.\"],\"exit_code\":0,\"markers\":[\"CHAT_RESPONSE_OK\"],\"processIdentity\":{\"pid\":19114,\"parentPid\":19089,\"uid\":501,\"gid\":20},\"observations\":{\"provider\":\"openai-codex\",\"phase\":\"chat\",\"access_generation\":\"initial\",\"catalog_access_generation\":\"initial\",\"storage_fault_triggered\":false,\"token_hygiene\":true,\"success_claim_absent\":true,\"fallback_attempted\":false,\"network_denials\":[],\"socket_origin\":null},\"http_ledger\":{\"device_code_requests\":0,\"device_code_polls\":0,\"token_exchanges\":0,\"token_refreshes\":0,\"model_catalog_requests\":1,\"model_requests\":1,\"denied_http_requests\":0,\"blocked_socket_events\":0},\"network_audit\":\"socket-audit-hook-installed\"},\"childPidMatches\":true,\"freshChildPid\":true,\"parentPidMatches\":true,\"uidMatches\":true,\"gidMatches\":true,\"childStdoutDigest\":\"b67dbcb99826bb4f37ad573095c7b47cd727f6ad527f604d1f09b5a7d2e81123\",\"childStderrDigest\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"caseId\":\"copied-lineage-use\",\"storeScope\":\"profile\",\"label\":\"toy-fixture-mixed-root\",\"expectedCount\":null,\"expectedGeneration\":\"initial\",\"rootAuthBefore\":\"087cbb8292bb4d8d030ba6cc37379092f4de3bc39692646d3450c427cd46fe12\",\"rootAuthAfter\":\"087cbb8292bb4d8d030ba6cc37379092f4de3bc39692646d3450c427cd46fe12\",\"rootEnvAfter\":null,\"rootEnvUnchanged\":true,\"profileAuthBefore\":\"8a71e3f92e4409048ac774138d38f34ec508fd68db46bbca0adf055d66532309\",\"profileAuthAfter\":\"8a71e3f92e4409048ac774138d38f34ec508fd68db46bbca0adf055d66532309\",\"rootStoreVerified\":true,\"profileStoreVerified\":true,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "60554c067d107b149109b33741c6a4032a13c42a879d132ef5d0cba0c4954447",
+              "1b2c15d4560062990cd01c7fa6d884a583b436815367d2b0a30a2f9f8052d135",
+              "a89ef58e0592ed2288a2cb77a8523f8e7063b567cc88ba5380f1a27fb5197cba",
+              "5886456b33e3c3b9ce9029e25cf8257eb45dbee50ed19831203b9b9b2e040ed9",
+              "99e407614348d415e9bc8558eeac63cff14dce4a9f07e3eba870d0b2674c0736",
+              "1f0c5d1f582b14c03b56d2bd9c9a3d46e36cc2ac160dde39e2d27789ff039f25",
+              "fc301e0f9097993fd8889ab3c0a09b5969bced8b1e0452bb3898eeca30b02829",
+              "d37cf87370131575dac18d6006890a6c7cf0b08f9c965eb91c8f5151e8206212",
+              "c5aa5590269ab5d8a2f0c190368fdf11ac31e4de4a1317c883762b2d68fb47e6"
+            ]
+          }
+        },
+        {
+          "id": "auth.native-fixture",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T00:59:00.671Z",
+          "reasonCode": "NATIVE_AUTH_FIXTURE_CHAT_EXPIRED_OBSERVED",
+          "prerequisite": "{\"result\":{\"schema\":\"toy.hermes-httpx-auth-fixture.v1\",\"operation\":\"chat\",\"public_argv\":[\"hermes\",\"--profile\",\"toy\",\"chat\",\"--provider\",\"openai-codex\",\"--model\",\"gpt-6.1-sol\",\"--toolsets\",\"none\",\"-q\",\"Return the fixed fixture marker.\"],\"exit_code\":0,\"markers\":[\"CHAT_RESPONSE_OK\"],\"processIdentity\":{\"pid\":19121,\"parentPid\":19089,\"uid\":501,\"gid\":20},\"observations\":{\"provider\":\"openai-codex\",\"phase\":\"chat-expired\",\"access_generation\":\"rotated\",\"catalog_access_generation\":\"rotated\",\"storage_fault_triggered\":false,\"token_hygiene\":true,\"success_claim_absent\":true,\"fallback_attempted\":false,\"network_denials\":[],\"socket_origin\":null},\"http_ledger\":{\"device_code_requests\":0,\"device_code_polls\":0,\"token_exchanges\":0,\"token_refreshes\":1,\"model_catalog_requests\":1,\"model_requests\":1,\"denied_http_requests\":0,\"blocked_socket_events\":0},\"network_audit\":\"socket-audit-hook-installed\"},\"childPidMatches\":true,\"freshChildPid\":true,\"parentPidMatches\":true,\"uidMatches\":true,\"gidMatches\":true,\"childStdoutDigest\":\"529c2bb3f00a6b47f79a56c086ccf8b6e3e95c5a5b1bb4d95eb48a5cae86f146\",\"childStderrDigest\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"caseId\":\"copied-lineage-refresh\",\"storeScope\":\"profile\",\"label\":\"toy-fixture-mixed-root\",\"expectedCount\":null,\"expectedGeneration\":\"rotated\",\"rootAuthBefore\":\"087cbb8292bb4d8d030ba6cc37379092f4de3bc39692646d3450c427cd46fe12\",\"rootAuthAfter\":\"3fa8bd516840b624aaf21cc072facba41147f60d1a237d1e554540682b4c9bcf\",\"rootEnvAfter\":null,\"rootEnvUnchanged\":true,\"profileAuthBefore\":\"8a71e3f92e4409048ac774138d38f34ec508fd68db46bbca0adf055d66532309\",\"profileAuthAfter\":\"8a71e3f92e4409048ac774138d38f34ec508fd68db46bbca0adf055d66532309\",\"rootStoreVerified\":true,\"profileStoreVerified\":true,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "60554c067d107b149109b33741c6a4032a13c42a879d132ef5d0cba0c4954447",
+              "1b2c15d4560062990cd01c7fa6d884a583b436815367d2b0a30a2f9f8052d135",
+              "a89ef58e0592ed2288a2cb77a8523f8e7063b567cc88ba5380f1a27fb5197cba",
+              "5886456b33e3c3b9ce9029e25cf8257eb45dbee50ed19831203b9b9b2e040ed9",
+              "99e407614348d415e9bc8558eeac63cff14dce4a9f07e3eba870d0b2674c0736",
+              "1f0c5d1f582b14c03b56d2bd9c9a3d46e36cc2ac160dde39e2d27789ff039f25",
+              "fc301e0f9097993fd8889ab3c0a09b5969bced8b1e0452bb3898eeca30b02829",
+              "d37cf87370131575dac18d6006890a6c7cf0b08f9c965eb91c8f5151e8206212",
+              "b936fa7b55f45cdfbae28f354326915d119a69f7ade6ac4a5cfd1581ab53ab24"
+            ]
+          }
+        },
+        {
+          "id": "auth.native-fixture",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T00:59:04.842Z",
+          "reasonCode": "NATIVE_AUTH_FIXTURE_CHAT_RELOADED_OBSERVED",
+          "prerequisite": "{\"result\":{\"schema\":\"toy.hermes-httpx-auth-fixture.v1\",\"operation\":\"chat\",\"public_argv\":[\"hermes\",\"--profile\",\"toy\",\"chat\",\"--provider\",\"openai-codex\",\"--model\",\"gpt-6.1-sol\",\"--toolsets\",\"none\",\"-q\",\"Return the fixed fixture marker.\"],\"exit_code\":0,\"markers\":[\"CHAT_RESPONSE_OK\"],\"processIdentity\":{\"pid\":19128,\"parentPid\":19089,\"uid\":501,\"gid\":20},\"observations\":{\"provider\":\"openai-codex\",\"phase\":\"chat-reloaded\",\"access_generation\":\"rotated\",\"catalog_access_generation\":\"rotated\",\"storage_fault_triggered\":false,\"token_hygiene\":true,\"success_claim_absent\":true,\"fallback_attempted\":false,\"network_denials\":[],\"socket_origin\":null},\"http_ledger\":{\"device_code_requests\":0,\"device_code_polls\":0,\"token_exchanges\":0,\"token_refreshes\":0,\"model_catalog_requests\":1,\"model_requests\":1,\"denied_http_requests\":0,\"blocked_socket_events\":0},\"network_audit\":\"socket-audit-hook-installed\"},\"childPidMatches\":true,\"freshChildPid\":true,\"parentPidMatches\":true,\"uidMatches\":true,\"gidMatches\":true,\"childStdoutDigest\":\"636eaadbd79a05d5511f9e09aff18726530c635612bf531ce003b0adb46e7cdb\",\"childStderrDigest\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"caseId\":\"copied-lineage-reload\",\"storeScope\":\"profile\",\"label\":\"toy-fixture-mixed-root\",\"expectedCount\":null,\"expectedGeneration\":\"rotated\",\"rootAuthBefore\":\"3fa8bd516840b624aaf21cc072facba41147f60d1a237d1e554540682b4c9bcf\",\"rootAuthAfter\":\"3fa8bd516840b624aaf21cc072facba41147f60d1a237d1e554540682b4c9bcf\",\"rootEnvAfter\":null,\"rootEnvUnchanged\":true,\"profileAuthBefore\":\"8a71e3f92e4409048ac774138d38f34ec508fd68db46bbca0adf055d66532309\",\"profileAuthAfter\":\"8a71e3f92e4409048ac774138d38f34ec508fd68db46bbca0adf055d66532309\",\"rootStoreVerified\":true,\"profileStoreVerified\":true,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "60554c067d107b149109b33741c6a4032a13c42a879d132ef5d0cba0c4954447",
+              "1b2c15d4560062990cd01c7fa6d884a583b436815367d2b0a30a2f9f8052d135",
+              "a89ef58e0592ed2288a2cb77a8523f8e7063b567cc88ba5380f1a27fb5197cba",
+              "5886456b33e3c3b9ce9029e25cf8257eb45dbee50ed19831203b9b9b2e040ed9",
+              "99e407614348d415e9bc8558eeac63cff14dce4a9f07e3eba870d0b2674c0736",
+              "1f0c5d1f582b14c03b56d2bd9c9a3d46e36cc2ac160dde39e2d27789ff039f25",
+              "fc301e0f9097993fd8889ab3c0a09b5969bced8b1e0452bb3898eeca30b02829",
+              "d37cf87370131575dac18d6006890a6c7cf0b08f9c965eb91c8f5151e8206212",
+              "bd919a1c1c662d08cee49de38bf8222e1ff024c0f9479576bed4b4e8511a37b2"
+            ]
+          }
+        },
+        {
+          "id": "auth.native-fixture",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T00:59:08.811Z",
+          "reasonCode": "NATIVE_AUTH_FIXTURE_ADD_OBSERVED",
+          "prerequisite": "{\"result\":{\"schema\":\"toy.hermes-httpx-auth-fixture.v1\",\"operation\":\"add\",\"public_argv\":[\"hermes\",\"--profile\",\"toy\",\"auth\",\"add\",\"openai-codex\",\"--type\",\"oauth\",\"--no-browser\",\"--label\",\"toy-fixture-mixed-independent\"],\"exit_code\":0,\"markers\":[\"AUTH_ADD_OK\"],\"processIdentity\":{\"pid\":19137,\"parentPid\":19089,\"uid\":501,\"gid\":20},\"observations\":{\"provider\":\"openai-codex\",\"phase\":\"add\",\"access_generation\":null,\"catalog_access_generation\":null,\"storage_fault_triggered\":false,\"token_hygiene\":true,\"success_claim_absent\":false,\"fallback_attempted\":false,\"network_denials\":[],\"socket_origin\":null},\"http_ledger\":{\"device_code_requests\":1,\"device_code_polls\":1,\"token_exchanges\":1,\"token_refreshes\":0,\"model_catalog_requests\":0,\"model_requests\":0,\"denied_http_requests\":0,\"blocked_socket_events\":0},\"network_audit\":\"socket-audit-hook-installed\"},\"childPidMatches\":true,\"freshChildPid\":true,\"parentPidMatches\":true,\"uidMatches\":true,\"gidMatches\":true,\"childStdoutDigest\":\"a7ebdf89931f9c2c96398ce728e3c5546165a863a5f379dc450ba1813d094c79\",\"childStderrDigest\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"caseId\":\"independent-manual-add\",\"storeScope\":\"profile\",\"label\":\"toy-fixture-mixed-independent\",\"expectedCount\":null,\"expectedGeneration\":null,\"rootAuthBefore\":\"3fa8bd516840b624aaf21cc072facba41147f60d1a237d1e554540682b4c9bcf\",\"rootAuthAfter\":\"3fa8bd516840b624aaf21cc072facba41147f60d1a237d1e554540682b4c9bcf\",\"rootEnvAfter\":null,\"rootEnvUnchanged\":true,\"profileAuthBefore\":\"8a71e3f92e4409048ac774138d38f34ec508fd68db46bbca0adf055d66532309\",\"profileAuthAfter\":\"8d03122392e591d199a3060211acc3d25fbbff2e245ac43848b26edba0ed6173\",\"rootStoreVerified\":true,\"profileStoreVerified\":true,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "60554c067d107b149109b33741c6a4032a13c42a879d132ef5d0cba0c4954447",
+              "1b2c15d4560062990cd01c7fa6d884a583b436815367d2b0a30a2f9f8052d135",
+              "a89ef58e0592ed2288a2cb77a8523f8e7063b567cc88ba5380f1a27fb5197cba",
+              "5886456b33e3c3b9ce9029e25cf8257eb45dbee50ed19831203b9b9b2e040ed9",
+              "99e407614348d415e9bc8558eeac63cff14dce4a9f07e3eba870d0b2674c0736",
+              "1f0c5d1f582b14c03b56d2bd9c9a3d46e36cc2ac160dde39e2d27789ff039f25",
+              "fc301e0f9097993fd8889ab3c0a09b5969bced8b1e0452bb3898eeca30b02829",
+              "d37cf87370131575dac18d6006890a6c7cf0b08f9c965eb91c8f5151e8206212",
+              "1c0d2505899483989b939caa1c70f045727da3a96a8d1b9a9d0e490a33b2d657"
+            ]
+          }
+        },
+        {
+          "id": "auth.native-fixture",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T00:59:09.659Z",
+          "reasonCode": "NATIVE_AUTH_FIXTURE_LIST_OBSERVED",
+          "prerequisite": "{\"result\":{\"schema\":\"toy.hermes-httpx-auth-fixture.v1\",\"operation\":\"list\",\"public_argv\":[\"hermes\",\"--profile\",\"toy\",\"auth\",\"list\",\"openai-codex\"],\"exit_code\":0,\"markers\":[\"AUTH_LIST_READBACK_OK\"],\"processIdentity\":{\"pid\":19139,\"parentPid\":19089,\"uid\":501,\"gid\":20},\"observations\":{\"provider\":\"openai-codex\",\"phase\":\"list\",\"credential_count\":1,\"target_label_present\":true,\"access_generation\":null,\"catalog_access_generation\":null,\"storage_fault_triggered\":false,\"token_hygiene\":true,\"success_claim_absent\":true,\"fallback_attempted\":false,\"network_denials\":[],\"socket_origin\":null},\"http_ledger\":{\"device_code_requests\":0,\"device_code_polls\":0,\"token_exchanges\":0,\"token_refreshes\":0,\"model_catalog_requests\":0,\"model_requests\":0,\"denied_http_requests\":0,\"blocked_socket_events\":0},\"network_audit\":\"socket-audit-hook-installed\"},\"childPidMatches\":true,\"freshChildPid\":true,\"parentPidMatches\":true,\"uidMatches\":true,\"gidMatches\":true,\"childStdoutDigest\":\"66edacc8d9fae6ac4e6bda609273c8cfe8ed5b20272410e1394fe5ed1aea3cdb\",\"childStderrDigest\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"caseId\":\"independent-profile-readback\",\"storeScope\":\"profile\",\"label\":\"toy-fixture-mixed-independent\",\"expectedCount\":1,\"expectedGeneration\":null,\"rootAuthBefore\":\"3fa8bd516840b624aaf21cc072facba41147f60d1a237d1e554540682b4c9bcf\",\"rootAuthAfter\":\"3fa8bd516840b624aaf21cc072facba41147f60d1a237d1e554540682b4c9bcf\",\"rootEnvAfter\":null,\"rootEnvUnchanged\":true,\"profileAuthBefore\":\"8d03122392e591d199a3060211acc3d25fbbff2e245ac43848b26edba0ed6173\",\"profileAuthAfter\":\"8d03122392e591d199a3060211acc3d25fbbff2e245ac43848b26edba0ed6173\",\"rootStoreVerified\":true,\"profileStoreVerified\":true,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "60554c067d107b149109b33741c6a4032a13c42a879d132ef5d0cba0c4954447",
+              "1b2c15d4560062990cd01c7fa6d884a583b436815367d2b0a30a2f9f8052d135",
+              "a89ef58e0592ed2288a2cb77a8523f8e7063b567cc88ba5380f1a27fb5197cba",
+              "5886456b33e3c3b9ce9029e25cf8257eb45dbee50ed19831203b9b9b2e040ed9",
+              "99e407614348d415e9bc8558eeac63cff14dce4a9f07e3eba870d0b2674c0736",
+              "1f0c5d1f582b14c03b56d2bd9c9a3d46e36cc2ac160dde39e2d27789ff039f25",
+              "fc301e0f9097993fd8889ab3c0a09b5969bced8b1e0452bb3898eeca30b02829",
+              "d37cf87370131575dac18d6006890a6c7cf0b08f9c965eb91c8f5151e8206212",
+              "3c49b5c01a1bef717902678efa5db6e0a447861733a3904353d22042a01e90a0"
+            ]
+          }
+        },
+        {
+          "id": "auth.native-fixture",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T00:59:13.799Z",
+          "reasonCode": "NATIVE_AUTH_FIXTURE_CHAT_OBSERVED",
+          "prerequisite": "{\"result\":{\"schema\":\"toy.hermes-httpx-auth-fixture.v1\",\"operation\":\"chat\",\"public_argv\":[\"hermes\",\"--profile\",\"toy\",\"chat\",\"--provider\",\"openai-codex\",\"--model\",\"gpt-6.1-sol\",\"--toolsets\",\"none\",\"-q\",\"Return the fixed fixture marker.\"],\"exit_code\":0,\"markers\":[\"CHAT_RESPONSE_OK\"],\"processIdentity\":{\"pid\":19141,\"parentPid\":19089,\"uid\":501,\"gid\":20},\"observations\":{\"provider\":\"openai-codex\",\"phase\":\"chat\",\"access_generation\":\"added\",\"catalog_access_generation\":\"added\",\"storage_fault_triggered\":false,\"token_hygiene\":true,\"success_claim_absent\":true,\"fallback_attempted\":false,\"network_denials\":[],\"socket_origin\":null},\"http_ledger\":{\"device_code_requests\":0,\"device_code_polls\":0,\"token_exchanges\":0,\"token_refreshes\":0,\"model_catalog_requests\":1,\"model_requests\":1,\"denied_http_requests\":0,\"blocked_socket_events\":0},\"network_audit\":\"socket-audit-hook-installed\"},\"childPidMatches\":true,\"freshChildPid\":true,\"parentPidMatches\":true,\"uidMatches\":true,\"gidMatches\":true,\"childStdoutDigest\":\"78ac34ddec6d96989c9e24cb7c58a23c77dcf13039a54e11e8c544d5004869bb\",\"childStderrDigest\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"caseId\":\"independent-profile-use\",\"storeScope\":\"profile\",\"label\":\"toy-fixture-mixed-independent\",\"expectedCount\":null,\"expectedGeneration\":\"added\",\"rootAuthBefore\":\"3fa8bd516840b624aaf21cc072facba41147f60d1a237d1e554540682b4c9bcf\",\"rootAuthAfter\":\"3fa8bd516840b624aaf21cc072facba41147f60d1a237d1e554540682b4c9bcf\",\"rootEnvAfter\":null,\"rootEnvUnchanged\":true,\"profileAuthBefore\":\"8d03122392e591d199a3060211acc3d25fbbff2e245ac43848b26edba0ed6173\",\"profileAuthAfter\":\"8d03122392e591d199a3060211acc3d25fbbff2e245ac43848b26edba0ed6173\",\"rootStoreVerified\":true,\"profileStoreVerified\":true,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "60554c067d107b149109b33741c6a4032a13c42a879d132ef5d0cba0c4954447",
+              "1b2c15d4560062990cd01c7fa6d884a583b436815367d2b0a30a2f9f8052d135",
+              "a89ef58e0592ed2288a2cb77a8523f8e7063b567cc88ba5380f1a27fb5197cba",
+              "5886456b33e3c3b9ce9029e25cf8257eb45dbee50ed19831203b9b9b2e040ed9",
+              "99e407614348d415e9bc8558eeac63cff14dce4a9f07e3eba870d0b2674c0736",
+              "1f0c5d1f582b14c03b56d2bd9c9a3d46e36cc2ac160dde39e2d27789ff039f25",
+              "fc301e0f9097993fd8889ab3c0a09b5969bced8b1e0452bb3898eeca30b02829",
+              "d37cf87370131575dac18d6006890a6c7cf0b08f9c965eb91c8f5151e8206212",
+              "c5aa5590269ab5d8a2f0c190368fdf11ac31e4de4a1317c883762b2d68fb47e6"
+            ]
+          }
+        },
+        {
+          "id": "auth.native-fixture",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T00:59:17.833Z",
+          "reasonCode": "NATIVE_AUTH_FIXTURE_CHAT_EXPIRED_OBSERVED",
+          "prerequisite": "{\"result\":{\"schema\":\"toy.hermes-httpx-auth-fixture.v1\",\"operation\":\"chat\",\"public_argv\":[\"hermes\",\"--profile\",\"toy\",\"chat\",\"--provider\",\"openai-codex\",\"--model\",\"gpt-6.1-sol\",\"--toolsets\",\"none\",\"-q\",\"Return the fixed fixture marker.\"],\"exit_code\":0,\"markers\":[\"CHAT_RESPONSE_OK\"],\"processIdentity\":{\"pid\":19148,\"parentPid\":19089,\"uid\":501,\"gid\":20},\"observations\":{\"provider\":\"openai-codex\",\"phase\":\"chat-expired\",\"access_generation\":\"added-rotated\",\"catalog_access_generation\":\"added-rotated\",\"storage_fault_triggered\":false,\"token_hygiene\":true,\"success_claim_absent\":true,\"fallback_attempted\":false,\"network_denials\":[],\"socket_origin\":null},\"http_ledger\":{\"device_code_requests\":0,\"device_code_polls\":0,\"token_exchanges\":0,\"token_refreshes\":1,\"model_catalog_requests\":1,\"model_requests\":1,\"denied_http_requests\":0,\"blocked_socket_events\":0},\"network_audit\":\"socket-audit-hook-installed\"},\"childPidMatches\":true,\"freshChildPid\":true,\"parentPidMatches\":true,\"uidMatches\":true,\"gidMatches\":true,\"childStdoutDigest\":\"6cc65643829e8428b94ee93704d5cf543efe3eb65daa1bbfd6c28329e3b75fbc\",\"childStderrDigest\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"caseId\":\"independent-profile-refresh\",\"storeScope\":\"profile\",\"label\":\"toy-fixture-mixed-independent\",\"expectedCount\":null,\"expectedGeneration\":\"added-rotated\",\"rootAuthBefore\":\"3fa8bd516840b624aaf21cc072facba41147f60d1a237d1e554540682b4c9bcf\",\"rootAuthAfter\":\"3fa8bd516840b624aaf21cc072facba41147f60d1a237d1e554540682b4c9bcf\",\"rootEnvAfter\":null,\"rootEnvUnchanged\":true,\"profileAuthBefore\":\"8d03122392e591d199a3060211acc3d25fbbff2e245ac43848b26edba0ed6173\",\"profileAuthAfter\":\"9d8d7866255ad9381ffda6beb466353675234bdc80746612d5afefbf66fc4637\",\"rootStoreVerified\":true,\"profileStoreVerified\":true,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "60554c067d107b149109b33741c6a4032a13c42a879d132ef5d0cba0c4954447",
+              "1b2c15d4560062990cd01c7fa6d884a583b436815367d2b0a30a2f9f8052d135",
+              "a89ef58e0592ed2288a2cb77a8523f8e7063b567cc88ba5380f1a27fb5197cba",
+              "5886456b33e3c3b9ce9029e25cf8257eb45dbee50ed19831203b9b9b2e040ed9",
+              "99e407614348d415e9bc8558eeac63cff14dce4a9f07e3eba870d0b2674c0736",
+              "1f0c5d1f582b14c03b56d2bd9c9a3d46e36cc2ac160dde39e2d27789ff039f25",
+              "fc301e0f9097993fd8889ab3c0a09b5969bced8b1e0452bb3898eeca30b02829",
+              "d37cf87370131575dac18d6006890a6c7cf0b08f9c965eb91c8f5151e8206212",
+              "b936fa7b55f45cdfbae28f354326915d119a69f7ade6ac4a5cfd1581ab53ab24"
+            ]
+          }
+        },
+        {
+          "id": "auth.native-fixture",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T00:59:21.858Z",
+          "reasonCode": "NATIVE_AUTH_FIXTURE_CHAT_RELOADED_OBSERVED",
+          "prerequisite": "{\"result\":{\"schema\":\"toy.hermes-httpx-auth-fixture.v1\",\"operation\":\"chat\",\"public_argv\":[\"hermes\",\"--profile\",\"toy\",\"chat\",\"--provider\",\"openai-codex\",\"--model\",\"gpt-6.1-sol\",\"--toolsets\",\"none\",\"-q\",\"Return the fixed fixture marker.\"],\"exit_code\":0,\"markers\":[\"CHAT_RESPONSE_OK\"],\"processIdentity\":{\"pid\":19155,\"parentPid\":19089,\"uid\":501,\"gid\":20},\"observations\":{\"provider\":\"openai-codex\",\"phase\":\"chat-reloaded\",\"access_generation\":\"added-rotated\",\"catalog_access_generation\":\"added-rotated\",\"storage_fault_triggered\":false,\"token_hygiene\":true,\"success_claim_absent\":true,\"fallback_attempted\":false,\"network_denials\":[],\"socket_origin\":null},\"http_ledger\":{\"device_code_requests\":0,\"device_code_polls\":0,\"token_exchanges\":0,\"token_refreshes\":0,\"model_catalog_requests\":1,\"model_requests\":1,\"denied_http_requests\":0,\"blocked_socket_events\":0},\"network_audit\":\"socket-audit-hook-installed\"},\"childPidMatches\":true,\"freshChildPid\":true,\"parentPidMatches\":true,\"uidMatches\":true,\"gidMatches\":true,\"childStdoutDigest\":\"5eccfd5e9c52b1a1ebb64b8629ffdad7eb67a227d42900f5f7abb056f1a1d94f\",\"childStderrDigest\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"caseId\":\"independent-profile-reload\",\"storeScope\":\"profile\",\"label\":\"toy-fixture-mixed-independent\",\"expectedCount\":null,\"expectedGeneration\":\"added-rotated\",\"rootAuthBefore\":\"3fa8bd516840b624aaf21cc072facba41147f60d1a237d1e554540682b4c9bcf\",\"rootAuthAfter\":\"3fa8bd516840b624aaf21cc072facba41147f60d1a237d1e554540682b4c9bcf\",\"rootEnvAfter\":null,\"rootEnvUnchanged\":true,\"profileAuthBefore\":\"9d8d7866255ad9381ffda6beb466353675234bdc80746612d5afefbf66fc4637\",\"profileAuthAfter\":\"9d8d7866255ad9381ffda6beb466353675234bdc80746612d5afefbf66fc4637\",\"rootStoreVerified\":true,\"profileStoreVerified\":true,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "60554c067d107b149109b33741c6a4032a13c42a879d132ef5d0cba0c4954447",
+              "1b2c15d4560062990cd01c7fa6d884a583b436815367d2b0a30a2f9f8052d135",
+              "a89ef58e0592ed2288a2cb77a8523f8e7063b567cc88ba5380f1a27fb5197cba",
+              "5886456b33e3c3b9ce9029e25cf8257eb45dbee50ed19831203b9b9b2e040ed9",
+              "99e407614348d415e9bc8558eeac63cff14dce4a9f07e3eba870d0b2674c0736",
+              "1f0c5d1f582b14c03b56d2bd9c9a3d46e36cc2ac160dde39e2d27789ff039f25",
+              "fc301e0f9097993fd8889ab3c0a09b5969bced8b1e0452bb3898eeca30b02829",
+              "d37cf87370131575dac18d6006890a6c7cf0b08f9c965eb91c8f5151e8206212",
+              "bd919a1c1c662d08cee49de38bf8222e1ff024c0f9479576bed4b4e8511a37b2"
+            ]
+          }
+        }
+      ],
+      "resultState": "NOT_IMPLEMENTED",
+      "complete": false
+    }
+  ],
+  "up": {
+    "exitCode": 0,
+    "path": "build/evidence/R0.03/mixed89-first-cli/up.json",
+    "sha256": "6aa8fb16890e5313c9a71a8599e0c71dbd2a020996fa2378afe56a4b35fba0cc"
+  },
+  "stackId": "25905364-3e14-4fa0-8e62-7687abc11705",
+  "down": {
+    "exitCode": 0,
+    "path": "build/evidence/R0.03/mixed89-first-cli/down.json",
+    "sha256": "86ac976c9b6d672c25c736492c0141653cbfb486bac55da2ff9da63e2cc865d5"
+  },
+  "teardown": {
+    "stackId": "25905364-3e14-4fa0-8e62-7687abc11705",
+    "checkpointRefs": [],
+    "fenceRefs": [],
+    "stoppedResourceRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "25905364-3e14-4fa0-8e62-7687abc11705"
+      }
+    ],
+    "retainedArtifactRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "25905364-3e14-4fa0-8e62-7687abc11705"
+      }
+    ],
+    "unresolvedResourceRefs": [],
+    "complete": true
+  }
+}

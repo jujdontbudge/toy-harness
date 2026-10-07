@@ -1,0 +1,236 @@
+{
+  "schema": "toy.r0.03.mixed-auth-lineage-next-minimum-plan.v1",
+  "scope": "read-only-plan",
+  "acceptance": {
+    "id": "AT-hermes-config-89",
+    "scenarioId": "auth.mixed-lineage",
+    "rung": "CLI",
+    "source": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/hermes-config.md",
+    "sourceLine": 3053,
+    "sourceDigest": "d3548fde13180bc750660f306caa0041101832e398ccdabd6cfdac0b3de8f4af",
+    "sourceAssertionHash": "7027112b5e07bbbfc9a3a98f5b643373faa7ba79ecd3558d8fe8b1bf96116e85",
+    "assertion": "Given matching-root lineage and an independent manual login, When fresh auth/chat processes reload and refresh both fixtures, Then copied lineage heals and the independent grant survives and remains usable.",
+    "adjacentScope": "AT-hermes-config-35's Anthropic singleton and PKCE fixture is separate; this plan makes no claim for it."
+  },
+  "baseline": {
+    "path": "build/evidence/R0.03/mixed89-baseline.json",
+    "sha256": "48da3dce73b3dea707afc99b2c828634d087bc293ea73b3f89abf85179e4a5f9",
+    "recordedAt": "2026-10-07T00:33:56.718Z",
+    "result": "NOT_IMPLEMENTED",
+    "sourceRegistration": null,
+    "registrationExact": false,
+    "run": {
+      "path": "build/evidence/R0.03/mixed89-baseline-cli/AT-hermes-config-89-run.json",
+      "sha256": "b0bf7a41227b2df03afbb0cbb1b1d5e96be8bbd327d4d91ef5065bc9b0105223",
+      "exitCode": 5
+    },
+    "show": {
+      "path": "build/evidence/R0.03/mixed89-baseline-cli/AT-hermes-config-89-show.json",
+      "sha256": "da3ae7d2be93e76beeab4fbdb8777d6cee24ceb5feb61ce3a2e329dcd64b3392",
+      "exitCode": 5,
+      "sameDataAsRun": true
+    },
+    "operationId": "fcc22d8b-d1de-4f42-8f86-bce79b96736a",
+    "blockingCase": {
+      "id": "bootstrap.fixture-runtime",
+      "state": "BLOCKED",
+      "reasonCode": "REGISTERED_CASE_NOT_IMPLEMENTED"
+    },
+    "world": {
+      "stackId": "f4976012-5a0b-4a49-899a-19552a32d757",
+      "downExitCode": 0,
+      "teardownComplete": true,
+      "unresolvedResourceRefs": []
+    },
+    "liveProviderSends": 0,
+    "wholeATComplete": false,
+    "admission": {
+      "path": "build/evidence/R0.03/mixed89-source-doctor.json",
+      "sha256": "eadd61953cb0b70d821e5a7a7f15d5208c7700b8097eccdd46459177e8155e3a",
+      "observedAt": "2026-10-07T00:33:26Z",
+      "pressure": "normal",
+      "availableBytes": 2119892992,
+      "ownRequirementBytes": 268435456,
+      "marginBytes": 536870912,
+      "admitted": true
+    }
+  },
+  "sourceBoundDiagnosis": {
+    "pinnedHermesCommit": "8d5e3e412138342e8bf30443e72bd4e6a9abd057",
+    "supportedMechanism": "Pinned public auth-add and auth-list both load the credential pool. On this single-use OAuth provider, load_pool invokes the fork healer before reading entries. The healer identifies copied lineage by matching row ID or token material, removes the matched profile copy, and retains a row without a root counterpart. A profile row shadows root fallback; after healing leaves no profile row, public profile auth/chat reloads the root-owned row.",
+    "minimumFixture": "Create the root row with public auth-add and the existing fake OAuth device flow, then copy that synthetic temporary auth.json byte-for-byte into profiles/toy/auth.json through one declared OS fixture control. A fresh public profile auth-list invokes the real healer. Hashes, public list output and subsequent fresh process generations can bind copy, removal and root ownership without loading private auth functions or exporting credential bytes.",
+    "independentGrant": "After copied-lineage healing and root refresh/reload, use public profile auth-add with a different fixed actor and label. The external fake returns the existing added generation, whose synthetic subject/account and refresh token differ from the root initial lineage. Public profile readback must show exactly one row with the independent label; public profile chat then refreshes added to added-rotated. Root digest must remain unchanged across independent add and independent refresh.",
+    "noSchemaExpansion": "HermesAuthFixtureResultV1 already records public argv, process identity, provider, phase, access/catalog generation, HTTP ledger, denial/socket state and token hygiene. Existing CheckView evidence can carry nonsecret before/after root/profile digests and copy-equality facts. Keep the canonical V1 result; add no DTO, protocol, service or route unless implementation demonstrates a specific missing AT oracle."
+  },
+  "sourceReferences": [
+    {
+      "path": "tests/acceptance-index.json",
+      "sha256": "c9b645eab7f55b2ebf35d7db769a534a4837de23ad3dc3d913f3189e781d44fa",
+      "lines": "845-854",
+      "finding": "AT89 is assigned to the CLI rung, exact assertion hash and canonical source digest above."
+    },
+    {
+      "path": "packages/hermes/src/auth-probe.ts",
+      "sha256": "1ae1287cc4c88a6f6621b738e67aee093218efb9c7d36c4128439963f1e7767f",
+      "lines": "19-20, 27-30, 88-94",
+      "finding": "Unfiltered auth registration currently stops at AT88. AT88 already demonstrates exact manifest validation and dispatch to the existing auth fixture; AT89 needs its corresponding guard, manifest assertion and mixed-lineage mode call."
+    },
+    {
+      "path": "packages/hermes/src/auth-fixture.ts",
+      "sha256": "d02c79b4ccc5e0cbc62e70712917ce4408f7eb21ff0c6668c2aa88a67fad6cb4",
+      "lines": "14-45, 149-160, 169-206, 250-272, 303-408",
+      "finding": "The existing owner already runs fresh pinned public children, uses temporary root/profile homes, checks exact argv/identity/provider ledgers and hashes root auth.json, root .env and profiles/toy/auth.json. Add one explicit mixed-lineage sequence and OS-only synthetic store-copy setup."
+    },
+    {
+      "path": "patches/hermes-auth-fixture.patch",
+      "sha256": "454c998f5b5f61dc6b4ee788c8dfd995d4eba2915f889246fd3203ab8825cc76",
+      "lines": "45-97, 330-398, 720-727",
+      "finding": "The existing external HTTP fake has initial/rotated and added/added-rotated generations, request/refresh ledgers, deterministic generation claims, and a child-local fake clock for chat-expired. Extend fixed actors and strict generation expectations only; no new endpoint or barrier protocol."
+    },
+    {
+      "path": "packages/contracts/src/hermes-runtime.ts",
+      "sha256": "a617671900394424c3036cd29f6c36be78abef8ff6497998478e1a7c15a43d38",
+      "lines": "75-91",
+      "finding": "HermesAuthFixtureResultV1 supports add/list/chat phases, provider generations, process identity, HTTP counts, hygiene and denial/socket observations needed for the planned cells."
+    },
+    {
+      "path": "tests/registry.yaml",
+      "sha256": "e19292b86cac925a659c96f88ca59e4e66ca1e8e895b12f7aed0f2ea8f9dad9d",
+      "lines": "2393-2457",
+      "finding": "AT88 supplies the current behavioral manifest shape: exact mandatory case-to-phase mapping, external clock fault control, grouped independent observation and SIM-unavailable reason."
+    },
+    {
+      "path": "/Users/johansardar/.hermes/hermes-agent/hermes_cli/auth_commands.py",
+      "sha256": "16c18f21402ac9940815450a41854cfeaadad6a34bffeb98d27de648df749d1a",
+      "lines": "245-262, 378-436, 509-540",
+      "finding": "Pinned Codex auth-add is public OAuth/device-code flow; it loads the provider pool and creates a distinct PooledCredential. Public auth-list also loads the pool and displays row count and label."
+    },
+    {
+      "path": "/Users/johansardar/.hermes/hermes-agent/hermes_cli/auth_oauth_grants.py",
+      "sha256": "7100477ebe886e6a833168373f77092c7dec10eeec90b3befb88965a268a65c0",
+      "lines": "417-454, 484-503, 601-627",
+      "finding": "The healer uses expiry metadata/JWT exp, recognizes copied row ID or shared token material rather than account identity, removes matching profile copies, and preserves independent rows."
+    },
+    {
+      "path": "/Users/johansardar/.hermes/hermes-agent/agent/credential_pool.py",
+      "sha256": "111d8e0d990630341a42dc2fa4a740f16746d5963e8d6900cfd25c54d109da66",
+      "lines": "3070-3085",
+      "finding": "load_pool calls the public-runtime lineage healer before reading provider entries."
+    },
+    {
+      "path": "/Users/johansardar/.hermes/hermes-agent/hermes_cli/auth.py",
+      "sha256": "99d04d861b6437927aee2e6976d02be2c0e4875a8fc8c4dcc51485c909eb7b0e",
+      "lines": "952-976",
+      "finding": "Profile entries take precedence when present; otherwise reads use the root provider entries, which makes post-heal profile chat exercise the root owner."
+    }
+  ],
+  "minimumWrittenInterfaceFirst": {
+    "document": "New mixed-lineage ADR, sequenced after the current 0044 profile-sibling ADR.",
+    "ownerInterface": "Extend the existing HermesAuthProbe.run -> runHermesAuthFixture entry with a closed mixed-lineage fixture mode; each child remains a pinned public hermes auth/chat command and returns the existing HermesAuthFixtureResultV1 plus safe CheckView evidence.",
+    "externalSeams": ["synthetic OAuth/model HTTP fake", "child-local fake clock", "OS copy of the root auth store inside the disposable temporary Hermes home"],
+    "forbiddenInputs": ["real-home auth files", "real credentials", "private auth functions", "token bytes in receipts"],
+    "dtoChange": false
+  },
+  "minimumFilesForImplementation": [
+    "new docs/adr/<next-number>-mixed-auth-lineage-probe.md, written before source edits",
+    "packages/hermes/src/auth-fixture.ts: add bounded mixed-lineage steps, temporary root-store copy, scope-specific before/after digests and strict assertions",
+    "patches/hermes-auth-fixture.patch: add fixed root/independent actors and expected generation mappings to existing OAuth/model/clock fake",
+    "tests/registry.yaml: register AT89 exact assertion, mandatory cases, OS copy control, independent observations and SIM-unavailable reason",
+    "packages/hermes/src/auth-probe.ts: admit unfiltered AT89, validate the exact registered manifest and dispatch mixed-lineage mode",
+    "generated acceptance/CLI route metadata and skills/toy-control/FEATURE-MAP.md through the existing paved path; only if required by that registration"
+  ],
+  "mandatoryCells": [
+    {
+      "id": "root-add",
+      "publicOperation": "HermesAuthProbe.run",
+      "operation": "root hermes auth add openai-codex --type oauth --no-browser --label toy-fixture-mixed-root",
+      "expected": "Synthetic initial root generation persists; root auth digest changes, root .env remains stable; public result confirms add without exposing tokens."
+    },
+    {
+      "id": "copied-lineage-heal",
+      "publicOperation": "HermesAuthProbe.run",
+      "operation": "OS fixture copies temporary root auth.json byte-for-byte to profiles/toy/auth.json, then a fresh hermes --profile toy auth list openai-codex",
+      "expected": "Pre-command root/profile digests are equal, proving a genuine copy with matching row ID and token material. Public list shows the single root label. Profile digest changes from the copied bytes after real load_pool healing; root auth and .env digests stay unchanged. No store bytes enter output."
+    },
+    {
+      "id": "copied-lineage-use",
+      "publicOperation": "HermesAuthProbe.run",
+      "operation": "Fresh hermes --profile toy chat through the external model fake",
+      "expected": "The profile has no profile-owned copy after healing, so public profile load uses the root fallback; accepted access and catalog generation are initial."
+    },
+    {
+      "id": "copied-lineage-refresh",
+      "publicOperation": "HermesAuthProbe.run",
+      "operation": "Fresh hermes --profile toy chat-expired with the existing fake clock",
+      "expected": "One initial-to-rotated refresh; root auth digest advances, profile auth digest remains at its healed value, provider/model ledgers are exact, and denials/sockets are zero."
+    },
+    {
+      "id": "copied-lineage-reload",
+      "publicOperation": "HermesAuthProbe.run",
+      "operation": "Fresh hermes --profile toy chat-reloaded",
+      "expected": "Rotated root generation is usable after process restart; root and profile digests remain unchanged."
+    },
+    {
+      "id": "independent-manual-add",
+      "publicOperation": "HermesAuthProbe.run",
+      "operation": "Fresh hermes --profile toy auth add openai-codex --type oauth --no-browser --label toy-fixture-mixed-independent",
+      "expected": "Distinct synthetic added generation and independent refresh token/account; profile store changes, root auth and .env digests are byte-for-byte stable across this add."
+    },
+    {
+      "id": "independent-profile-readback",
+      "publicOperation": "HermesAuthProbe.run",
+      "operation": "Fresh hermes --profile toy auth list openai-codex",
+      "expected": "Exactly one profile-visible row with the independent label; the root row is shadowed by the independent profile-owned row, and root digest is unchanged."
+    },
+    {
+      "id": "independent-profile-use",
+      "publicOperation": "HermesAuthProbe.run",
+      "operation": "Fresh hermes --profile toy chat through the external model fake",
+      "expected": "The independent added generation is usable and distinct from the root rotated generation."
+    },
+    {
+      "id": "independent-profile-refresh",
+      "publicOperation": "HermesAuthProbe.run",
+      "operation": "Fresh hermes --profile toy chat-expired with the existing fake clock",
+      "expected": "One added-to-added-rotated refresh; profile auth digest advances, root auth and .env digests remain unchanged, and provider/model ledgers are exact."
+    },
+    {
+      "id": "independent-profile-reload",
+      "publicOperation": "HermesAuthProbe.run",
+      "operation": "Fresh hermes --profile toy chat-reloaded",
+      "expected": "The independent added-rotated generation is usable after process restart; both stores are stable and distinct owner-generation evidence remains bound."
+    }
+  ],
+  "observationBindings": [
+    {
+      "id": "copied-root-lineage-and-heal",
+      "caseIds": ["root-add", "copied-lineage-heal"],
+      "reader": "HermesAuthProbe.run",
+      "binds": ["exact synthetic root/profile pre-copy digest equality", "public auth-list label/count", "post-heal profile digest delta", "unchanged root digest during healing"]
+    },
+    {
+      "id": "copied-root-owner-refresh",
+      "caseIds": ["copied-lineage-use", "copied-lineage-refresh", "copied-lineage-reload"],
+      "reader": "HermesAuthProbe.run",
+      "binds": ["fresh process identities and exact public argv", "initial-to-rotated provider generation and one refresh", "root-only refresh digest change", "profile fallback remains copy-free", "zero denials or socket events"]
+    },
+    {
+      "id": "independent-profile-owner-refresh",
+      "caseIds": ["independent-manual-add", "independent-profile-readback", "independent-profile-use", "independent-profile-refresh", "independent-profile-reload"],
+      "reader": "HermesAuthProbe.run",
+      "binds": ["public add and exact label/count readback", "added-to-added-rotated provider generation", "profile-only add/refresh digest changes", "root digest unchanged through independent add and refresh", "fresh-process usability and clean network/token-hygiene ledgers"]
+    }
+  ],
+  "dispatchAndAcceptanceProof": {
+    "registration": "Add AT89 exact assertion and the 10 mandatory cells to the existing CLI behavioral manifest; bind one OS setup control id mixed-root-auth-store-copy to copied-lineage-heal. Add the exact manifest guard and mixed mode dispatch to HermesAuthProbe; use existing CLI route and canonical result schema.",
+    "largestInterface": "After parent integration and source workers stop, run the unfiltered toy probe for AT-hermes-config-89 against the disposable fake stack, then independently show the same operation. Require exact source registration, every mandatory cell PASS, stable run/show data, source/patch/executable/schema digests, complete teardown, zero live provider sends, and wholeATComplete=false unless separately gated evidence changes it.",
+    "preservation": "Run assigned regression checks only after integration; preserve the accepted AT84-88 routes and all frozen root pins. This plan itself runs no CLI, test, build or service."
+  },
+  "limitsAndDeferrals": [
+    "The baseline proves NOT_IMPLEMENTED only; this plan is not an implementation or acceptance pass.",
+    "The matrix would prove this synthetic Codex lineage in a disposable CLI world. It does not prove real credentials, live OAuth accounts, installed Hermes mutation, service identity, production containment, or protected/root-role behavior.",
+    "Process identity records PID/PPID/UID/GID only; UID 501 must not be interpreted as service identity.",
+    "AT35's Anthropic singleton/PKCE, other providers, real-home data, and any separate native/controller/service gates remain outside AT89 and unproved.",
+    "Do not change `wholeATComplete` to true from this subset; retain zero live provider sends and preserve installed Hermes, profiles, services, accounts and files."
+  ]
+}

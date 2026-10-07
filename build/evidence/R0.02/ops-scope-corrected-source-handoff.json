@@ -1,0 +1,65 @@
+{
+  "schema": "toy.r0.02.ops-scope-corrected-source-handoff.v1",
+  "status": "SOURCE_PHASE_COMPLETE_PENDING_PARENT_VERIFICATION",
+  "scope": {
+    "objective": "Keep generic research requirements global across all register rows and add Ops-mapped requirements 2.4/5.10 to the source-derived 13-component group using the existing componentDecisions.missingRequirementIds field.",
+    "changedFiles": [
+      {
+        "path": "docs/adr/0043-ops-research-scope.md",
+        "sha256": "7d703296d5ae879b13d24d8758cbd9e2c2a17e2e481b06cd4dd4d13745fc1afa",
+        "role": "New written interface created before source change. The prior ADR with hash 3fd2edbec2eacf9f9767d42b025eeac2b9e47fbaf48ec34b4e28ade7120f5631 was rejected and removed; it is not the current interface."
+      },
+      {
+        "path": "packages/self-improvement/src/engineering-control.ts",
+        "sha256": "48df6bfa7c8dd9260f170c1acd6f1f32da1d495f7199d30fc9a851374ca8325a",
+        "role": "EngineeringControl.checkResearch source-derived README and register group parsing; existing per-component comparator augmentation."
+      },
+      {
+        "path": "build/evidence/R0.02/ops-scope-replan.json",
+        "sha256": "5d1922423a91e3d16e531a8032422a3350f1482b361b211eda7795672b98e088",
+        "role": "Corrected provenance and exact scope derivation."
+      }
+    ],
+    "unchangedContract": {
+      "path": "packages/contracts/src/engineering-control.ts",
+      "sha256": "f04b91f3ee915526ed5f5706d18e39b3842cbfa51498ddccb9c230218c8a889c",
+      "note": "No contract edit. Existing V2 componentDecisions already includes missingRequirementIds."
+    },
+    "canonicalInputHashes": {
+      "RESEARCH-REGISTER.md": "e89b3336e0c2458ac204fb0927da30f4541abfab48a9d55735c4655719a3f10d",
+      "README.md": "2c02bdb4d13abd198231446873eaacfe30177a97f66235158912fd2accd006f4",
+      "ops.md": "f07aab65088c82e4ff21e4d63edb2f279e2324e6d7e2bbb801e0fd7494104b0b"
+    }
+  },
+  "sourceBehavior": {
+    "preserved": [
+      "Register-header global requirements 0.1, 0.2, and 0.10 remain expected for all 165 componentDecisions.",
+      "Sources components retain 0.9 and their account, region, route, and skill checks.",
+      "Dedicated Attention and Authority predicates are unchanged.",
+      "Public route and ResearchRegisterInspectionV3 remain unchanged; no new DTO, command, or infrastructure."
+    ],
+    "added": "Read the README Req/Spec(s) table and require 2.4 and 5.10 to map directly to ops. Read their component coverage from the RESEARCH-REGISTER requirement table, expand canonical ID ranges against the current inventory, and add those IDs to expected mapped requirements for the resulting 13 rows.",
+    "failClosed": "Missing, duplicate, malformed, or unmappable global README rows, direct Ops mappings, relevant register coverage rows, or component ranges throw through the existing checkResearch ARTIFACT_MISMATCH boundary.",
+    "notImplemented": "The 49-row Ops scope remains an ADR/handoff derivation; no new public 49-scope field is introduced because the existing result already returns all 165 component decisions."
+  },
+  "expectedParentCliReadbacks": [
+    "Research check still returns exactly 165 componentDecisions and the original global expected IDs 0.1/0.2/0.10 for every row.",
+    "Exactly 13 group rows A03-A06/A11-A19 have additional expected IDs 2.4 and 5.10; when their saved decisions omit them, each row reports both in missingRequirementIds and is blocked for mapped requirements.",
+    "The remaining 152 component decisions show no Ops-specific 2.4/5.10 additions.",
+    "Dedicated Sources/Attention/Authority outputs and their existing predicates remain unchanged.",
+    "Malformed direct Ops source mapping or relevant component group fails closed as ARTIFACT_MISMATCH.",
+    "AT-ops-43/44, protected/native controller roles, primary research evidence, and whole acceptance remain pending and must not be reported as passed."
+  ],
+  "verificationPerformed": {
+    "sourceReview": "Manually inspected changed parser/comparator context and the unchanged V2 contract field; no build, typecheck, tests, CLI, or runtime was run per assignment.",
+    "artifactValidation": "The corrected scope JSON parses; its P/global source-row sets and deduplicated 49-member union were checked against the saved source-bound V3 research readback.",
+    "sourceHashes": "The handoff hashes were computed after the final source and artifact edits."
+  },
+  "baselineAcceptance": {
+    "path": "build/evidence/R0.02/ops43-scope-baseline.json",
+    "sha256": "3e602afde222c8ee3c01bdac04962d0e1104cf5c7c0b18cba9f6346a1e1a63ed",
+    "AT-ops-43": "NOT_IMPLEMENTED",
+    "complete": false,
+    "sourceRegistration": null
+  }
+}

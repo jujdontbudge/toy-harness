@@ -481,7 +481,129 @@ const inspectComponentComparisons = (reports: ResearchRegisterInspectionV1["repo
   }
   return [...comparisons.values()];
 };
-const inspectComponentDecisions = (reports: ResearchRegisterInspectionV1["reports"], components: ResearchRegisterInspectionV1["components"], findings: ResearchInspectionFindingV1[], documents: ReadonlyMap<string, ResearchDocumentOverlayV1>, requirementIds: readonly string[], release: string): ResearchComponentComparisonCheckV2[] => {
+const normalizedResearchHeader = (cell: string): string => cell.replace(/[*_~`]/g, "").toLowerCase().replace(/[^a-z]/g, "");
+const requirementIdsInCell = (cell: string): string[] => {
+  const ids = new Set<string>();
+  for (const match of cell.matchAll(/\b([0-9]+\.[0-9]+)\b/g)) {
+    const id = match[1];
+    if (id) ids.add(id);
+  }
+  return [...ids];
+};
+const opsMappedRequirementGroups = (registerRaw: string, readmeRaw: string, components: ResearchRegisterInspectionV1["components"], globalRequirementIds: readonly string[]): ReadonlyMap<string, ReadonlySet<string>> => {
+  const readmeLines = readmeRaw.split(/\r?\n/);
+  let readmeTable: { index: number; cells: string[]; reqIndex: number; specsIndex: number } | undefined;
+  for (let index = 0; index < readmeLines.length; index += 1) {
+    const cells = markdownTableCells(readmeLines[index] ?? "");
+    const separator = markdownTableCells(readmeLines[index + 1] ?? "");
+    if (!cells || !separator || cells.length !== separator.length || !isMarkdownTableSeparator(separator)) continue;
+    const headers = cells.map(normalizedResearchHeader);
+    const reqIndex = headers.findIndex(header => header === "req" || header === "requirement");
+    const specsIndex = headers.findIndex(header => header === "specs");
+    if (reqIndex < 0 || specsIndex < 0) continue;
+    if (readmeTable) throw new Error("README_REQUIREMENT_TABLE_DUPLICATE");
+    readmeTable = { index, cells, reqIndex, specsIndex };
+  }
+  if (!readmeTable) throw new Error("README_REQUIREMENT_TABLE_MISSING");
+  const readmeRows = new Map<string, { specs: Set<string>; count: number }>();
+  for (let index = readmeTable.index + 2; index < readmeLines.length; index += 1) {
+    const cells = markdownTableCells(readmeLines[index] ?? "");
+    if (!cells) break;
+    if (isMarkdownTableSeparator(cells)) continue;
+    if (cells.length !== readmeTable.cells.length) throw new Error("README_REQUIREMENT_ROW_INVALID");
+    const reqCell = cells[readmeTable.reqIndex];
+    const specsCell = cells[readmeTable.specsIndex];
+    if (reqCell === undefined || specsCell === undefined) throw new Error("README_REQUIREMENT_ROW_INVALID");
+    const ids = requirementIdsInCell(reqCell);
+    if (ids.length === 0) throw new Error("README_REQUIREMENT_ID_MISSING");
+    const specs = new Set(specsCell.split(",").map(normalizedResearchHeader).filter(Boolean));
+    for (const id of ids) {
+      const existing = readmeRows.get(id);
+      if (existing) {
+        existing.count += 1;
+        for (const spec of specs) existing.specs.add(spec);
+      } else readmeRows.set(id, { specs: new Set(specs), count: 1 });
+    }
+  }
+  for (const id of globalRequirementIds) {
+    const row = readmeRows.get(id);
+    if (!row || row.count !== 1 || !row.specs.has("all")) throw new Error("README_GLOBAL_REQUIREMENT_MAPPING_INVALID");
+  }
+  const directOpsRequirements = [...readmeRows.entries()].filter(([, row]) => row.specs.has("ops")).map(([id]) => id);
+  for (const id of ["2.4", "5.10"]) {
+    const row = readmeRows.get(id);
+    if (!row || row.count !== 1 || !row.specs.has("ops") || globalRequirementIds.includes(id)) throw new Error("README_OPS_REQUIREMENT_MAPPING_INVALID");
+  }
+  const additionalOpsRequirements = new Set(directOpsRequirements.filter(id => !globalRequirementIds.includes(id)));
+  const registerLines = registerRaw.split(/\r?\n/);
+  let coverageTable: { index: number; cells: string[]; requirementIndex: number; coverageIndex: number } | undefined;
+  for (let index = 0; index < registerLines.length; index += 1) {
+    const cells = markdownTableCells(registerLines[index] ?? "");
+    const separator = markdownTableCells(registerLines[index + 1] ?? "");
+    if (!cells || !separator || cells.length !== separator.length || !isMarkdownTableSeparator(separator)) continue;
+    const headers = cells.map(normalizedResearchHeader);
+    const requirementIndex = headers.findIndex(header => header.includes("requirement") && header.includes("originaldecision"));
+    const coverageIndex = headers.findIndex(header => header.includes("components") && header.includes("acceptance"));
+    if (requirementIndex < 0 || coverageIndex < 0) continue;
+    if (coverageTable) throw new Error("REGISTER_REQUIREMENT_TABLE_DUPLICATE");
+    coverageTable = { index, cells, requirementIndex, coverageIndex };
+  }
+  if (!coverageTable) throw new Error("REGISTER_REQUIREMENT_TABLE_MISSING");
+  const inventoryIds = new Set(components.map(component => component.id));
+  const coverageCounts = new Map<string, number>();
+  const requirementComponents = new Map<string, Set<string>>();
+  for (let index = coverageTable.index + 2; index < registerLines.length; index += 1) {
+    const cells = markdownTableCells(registerLines[index] ?? "");
+    if (!cells) break;
+    if (isMarkdownTableSeparator(cells)) continue;
+    if (cells.length !== coverageTable.cells.length) throw new Error("REGISTER_REQUIREMENT_ROW_INVALID");
+    const reqCell = cells[coverageTable.requirementIndex];
+    const coverageCell = cells[coverageTable.coverageIndex];
+    if (reqCell === undefined || coverageCell === undefined) throw new Error("REGISTER_REQUIREMENT_ROW_INVALID");
+    const relevantIds = requirementIdsInCell(reqCell).filter(id => additionalOpsRequirements.has(id));
+    if (relevantIds.length === 0) continue;
+    const groupExpression = coverageCell.split(";")[0]?.trim();
+    if (!groupExpression) throw new Error("REGISTER_OPS_COMPONENT_GROUP_MISSING");
+    const groupTokens = groupExpression.split(/[\/,]/).map(token => token.trim());
+    if (groupTokens.length === 0 || groupTokens.some(token => token.length === 0)) throw new Error("REGISTER_OPS_COMPONENT_GROUP_INVALID");
+    const mappedComponents = new Set<string>();
+    for (const token of groupTokens) {
+      const match = /^([A-Z][0-9]{2})(?:\s*[-–—]\s*([A-Z][0-9]{2}))?$/.exec(token);
+      const first = match?.[1];
+      const last = match?.[2] ?? first;
+      if (!first || !last || first.slice(0, -2) !== last.slice(0, -2)) throw new Error("REGISTER_OPS_COMPONENT_GROUP_INVALID");
+      const start = Number(first.slice(-2));
+      const end = Number(last.slice(-2));
+      if (end < start || end - start + 1 > components.length) throw new Error("REGISTER_OPS_COMPONENT_RANGE_INVALID");
+      const prefix = first.slice(0, -2);
+      for (let value = start; value <= end; value += 1) {
+        const componentId = prefix + String(value).padStart(2, "0");
+        if (!inventoryIds.has(componentId)) throw new Error("REGISTER_OPS_COMPONENT_UNMAPPED");
+        mappedComponents.add(componentId);
+      }
+    }
+    if (mappedComponents.size === 0) throw new Error("REGISTER_OPS_COMPONENT_GROUP_EMPTY");
+    for (const requirementId of relevantIds) {
+      const count = (coverageCounts.get(requirementId) ?? 0) + 1;
+      if (count !== 1) throw new Error("REGISTER_OPS_REQUIREMENT_MAPPING_DUPLICATE");
+      coverageCounts.set(requirementId, count);
+      requirementComponents.set(requirementId, new Set(mappedComponents));
+    }
+  }
+  for (const requirementId of additionalOpsRequirements) {
+    if (coverageCounts.get(requirementId) !== 1 || !requirementComponents.get(requirementId)?.size) throw new Error("REGISTER_OPS_REQUIREMENT_MAPPING_MISSING");
+  }
+  const byComponent = new Map<string, Set<string>>();
+  for (const [requirementId, componentIds] of requirementComponents) {
+    for (const componentId of componentIds) {
+      const requirements = byComponent.get(componentId) ?? new Set<string>();
+      requirements.add(requirementId);
+      byComponent.set(componentId, requirements);
+    }
+  }
+  return byComponent;
+};
+const inspectComponentDecisions = (reports: ResearchRegisterInspectionV1["reports"], components: ResearchRegisterInspectionV1["components"], findings: ResearchInspectionFindingV1[], documents: ReadonlyMap<string, ResearchDocumentOverlayV1>, requirementIds: readonly string[], release: string, opsRequirementIdsByComponent: ReadonlyMap<string, ReadonlySet<string>>): ResearchComponentComparisonCheckV2[] => {
   const decisions = new Map<string, ResearchComponentComparisonV2 | ResearchComponentComparisonV3 | ResearchSourcesComponentComparisonV1 | ResearchSourcesComponentComparisonV2>();
   for (const report of reports) {
     if (report.digest === null) continue;
@@ -499,9 +621,9 @@ const inspectComponentDecisions = (reports: ResearchRegisterInspectionV1["report
     }
   }
   const acceptanceIds = new Set(acceptanceIndexSchema.parse(JSON.parse(read("tests/acceptance-index.json"))).acceptance.map(entry => entry.id));
-  return components.map(component => compareDecision(decisions.get(component.id), component, findings, requirementIds, release, acceptanceIds));
+  return components.map(component => compareDecision(decisions.get(component.id), component, findings, requirementIds, release, acceptanceIds, opsRequirementIdsByComponent));
 };
-const compareDecision = (record: ResearchComponentComparisonV2 | ResearchComponentComparisonV3 | ResearchSourcesComponentComparisonV1 | ResearchSourcesComponentComparisonV2 | ResearchAttentionDecisionV1 | undefined, component: ResearchRegisterInspectionV1["components"][number], findings: ResearchInspectionFindingV1[], requirementIds: readonly string[], release: string, acceptanceIds: ReadonlySet<string>): ResearchComponentComparisonCheckV2 => {
+const compareDecision = (record: ResearchComponentComparisonV2 | ResearchComponentComparisonV3 | ResearchSourcesComponentComparisonV1 | ResearchSourcesComponentComparisonV2 | ResearchAttentionDecisionV1 | undefined, component: ResearchRegisterInspectionV1["components"][number], findings: ResearchInspectionFindingV1[], requirementIds: readonly string[], release: string, acceptanceIds: ReadonlySet<string>, opsRequirementIdsByComponent: ReadonlyMap<string, ReadonlySet<string>> = new Map()): ResearchComponentComparisonCheckV2 => {
   const codes: ResearchComponentComparisonCheckV2["findings"] = [];
   const add = (code: ResearchComponentComparisonCheckV2["findings"][number]): void => { if (!codes.includes(code)) codes.push(code); };
   const validationId = "G0:" + release + ":" + component.id + (record?.scope === "attention-research-decision" ? ":" + record.decisionId : "");
@@ -513,7 +635,7 @@ const compareDecision = (record: ResearchComponentComparisonV2 | ResearchCompone
     return source?.kind === "primary" && source.supportedOptionIds.includes(optionId);
   };
   const sourcesComponent = component.id.startsWith("D");
-  const expectedRequirements = sourcesComponent ? [...new Set([...requirementIds, "0.9"])] : requirementIds;
+  const expectedRequirements = [...new Set([...(sourcesComponent ? [...requirementIds, "0.9"] : requirementIds), ...(opsRequirementIdsByComponent.get(component.id) ?? [])])];
   const missingRequirementIds = expectedRequirements.filter(id => !record?.mappedRequirements.includes(id));
   const missingSourceIds = new Set(component.reportKeys.filter(id => !selected || !sourceSupports(id, selected.id)));
   if (component.reportKeys.length === 0) missingSourceIds.add("REGISTER:" + component.id);
@@ -669,7 +791,8 @@ const inspectResearch = (input: MapCheckInputV1, testDocuments: readonly Researc
   const globalMapping = /README maps ([^\n]+?) to all specs/.exec(raw)?.[1];
   const requirementIds = [...new Set(globalMapping?.match(/\b[0-9]+\.[0-9]+\b/g) ?? [])];
   if (requirementIds.length === 0) throw new Error("REGISTER_GLOBAL_REQUIREMENTS_MISSING");
-  const componentDecisions = inspectComponentDecisions(reports, components, findings, documents, requirementIds, input.release ?? "R0");
+  const opsRequirementIdsByComponent = opsMappedRequirementGroups(raw, readResearchFile("specs/README.md"), components, requirementIds);
+  const componentDecisions = inspectComponentDecisions(reports, components, findings, documents, requirementIds, input.release ?? "R0", opsRequirementIdsByComponent);
   const attentionDecisions = inspectAttentionDecisions(reports, components, findings, documents, requirementIds, input.release ?? "R0");
   return researchRegisterInspectionV3Schema.parse({ attentionDecisions, componentDecisions, requestedRelease: input.release, registerPath, registerDigest: hash(raw), components, componentComparisons, reports, specReferences, sourcesCatalogCoverage, dependencyClosureVerified: false, findings, wholeATsPassed: [], scope: "register_inventory", admission: "BLOCKED", acceptanceComplete: false });
 };

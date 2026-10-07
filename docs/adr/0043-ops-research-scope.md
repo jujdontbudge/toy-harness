@@ -1,0 +1,13 @@
+# Ops research component applicability
+
+`EngineeringControl.checkResearch` keeps its current public route, input, return type, and V1–V3 inspection schemas. The existing `componentDecisions` output covers every current register row and already exposes `missingRequirementIds`; no new DTO or route is needed.
+
+The generic requirements 0.1, 0.2, and 0.10 continue to apply to all register components. Sources keeps its 0.9 requirement and source-specific checks. Dedicated Attention and Authority predicates remain unchanged.
+
+For the Ops component completeness scope, the source-bound acceptance derivation unions current inventory rows whose `consumingSpecs` has standalone token `P`, rows in the explicitly mapped A03–A06/A11–A19 requirement group, and shared rows whose `consumingSpecs` has standalone token `all` (case-insensitive). P token boundaries accept non-alphanumeric delimiters, including `/` and `;`. The current derivation has 44 direct P consumers, 13 explicit group rows, and five shared/global rows before deduplication, for 49 current rows. This acceptance-scope derivation is represented by the existing 165-row `componentDecisions` output; production does not parse or expose a separate 49-row scope field. It does not narrow generic checks over all 165 rows.
+
+Read the README requirement table to identify requirements directly mapped to `ops`. Subtract requirements already covered by the generic all-spec set, then join each remaining requirement to the matching requirement-coverage row in `RESEARCH-REGISTER.md` and expand its component groups against the current inventory. For the current sources, requirements 2.4 and 5.10 both map to A03–A06/A11–A19, or 13 components. Their IDs are added to the existing per-component expected requirements; the resulting missing IDs remain visible through `componentDecisions.missingRequirementIds`. Missing, duplicate, malformed, or unmappable relevant source rows fail closed.
+
+Production parses README's direct Ops requirement mappings and RESEARCH-REGISTER's component groups for additional mapped requirements; it expands those group IDs against the current inventory rather than maintaining a hard-coded member list. The 49-row acceptance-scope union is independently derived from the saved source-bound register inspection. Ops audit finding labels such as B09 and M10 are not component identities and are not used for this join.
+
+This source change does not provide primary research, protected/native-role proof, component build-denial proof, AT-ops-43/44 acceptance, or whole release acceptance. Those remain pending their assigned owners and evidence.

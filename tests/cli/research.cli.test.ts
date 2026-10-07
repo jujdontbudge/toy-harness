@@ -77,3 +77,36 @@ await test("Sources named-member coverage remains visible through toy research c
     result, wholeATsPassed: [], acceptanceComplete: false
   }, null, 2) + "\n");
 });
+
+await test("Ops requirement omissions reach every mapped component through toy research check", () => {
+  const child = spawnSync(process.execPath, [join(root, "cli/dist/main.js"), "research", "check", "--release", "R0", "--json"], {
+    cwd: root, encoding: "utf8", timeout: 30000, maxBuffer: 4 * 1024 * 1024,
+    env: { PATH: "/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin", LANG: "C", LC_ALL: "C" }
+  });
+  assert.equal(child.error, undefined);
+  assert.equal(child.status, 5);
+  assert.equal(child.stderr, "");
+  const result = cliResultSchema.parse(JSON.parse(child.stdout));
+  assert.ok(result.ok && result.commandId === "research.check");
+  assert.equal(result.data.admission, "BLOCKED");
+  assert.equal(result.data.acceptanceComplete, false);
+  assert.deepEqual(result.data.wholeATsPassed, []);
+  assert.equal(result.data.components.length, 165);
+  assert.equal(result.data.componentDecisions.length, 165);
+  const opsIds = new Set(["A03", "A04", "A05", "A06", "A11", "A12", "A13", "A14", "A15", "A16", "A17", "A18", "A19"]);
+  const addedRows = result.data.componentDecisions.filter(decision => decision.missingRequirementIds.includes("2.4") || decision.missingRequirementIds.includes("5.10"));
+  assert.deepEqual(addedRows.map(decision => decision.componentId).sort(), [...opsIds].sort());
+  for (const decision of result.data.componentDecisions) {
+    const expected = ["0.1", "0.2", "0.10", ...(decision.componentId.startsWith("D") ? ["0.9"] : []), ...(opsIds.has(decision.componentId) ? ["2.4", "5.10"] : [])];
+    assert.deepEqual(decision.missingRequirementIds, expected, decision.componentId);
+    assert.equal(decision.state, "BLOCKED");
+    assert.ok(decision.findings.includes("MAPPED_REQUIREMENTS_MISSING"));
+  }
+  const output = join(root, "build/evidence/R0.02");
+  mkdirSync(output, { recursive: true });
+  writeFileSync(join(output, "ops-scope-corrected-cli-test.json"), JSON.stringify({
+    command: "toy research check --release R0 --json", exitCode: child.status,
+    result, globalRequirementRows: 165, addedOpsRequirementRows: 13,
+    wholeATsPassed: [], acceptanceComplete: false
+  }, null, 2) + "\n");
+});
