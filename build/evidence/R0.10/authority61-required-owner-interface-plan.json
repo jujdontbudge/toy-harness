@@ -1,0 +1,98 @@
+{
+  "recordType": "r0.10.authority61-required-owner-interface-plan.v1",
+  "createdAt": "2026-10-07T06:28:05Z",
+  "scope": "Read-only design from checked-in source/spec artifacts. No source, build, generation, check, test, CLI, world, root, account, credential, browser, or database operation was performed.",
+  "assignment": {
+    "atId": "AT-authority-61",
+    "source": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/authority.md:2162",
+    "assertionHash": "2aba96db8aea4665745bfc8229c0b6d9adb79b43ccbcd294712f25a93b79d6c0",
+    "rung": "CLI",
+    "requiredEvidence": ["static", "probe:AT-authority-61"],
+    "assertion": "Given the canonical dependency/tool/service registry and RFC canonicalization vectors, When the build inventory and protected release are validated, Then shared pins, pg-boss schema 44, one plugin/toolset, official typed adapters, and maintained authentication/cryptography are used; mismatched locks, duplicate tools/skills, a homemade serializer, writable runtime imports, or startup package downloads fail admission."
+  },
+  "decision": "Implement a truthful source-build inventory through Ops' existing read/release owner and registered probe path. This closes the local inventory owner gap but cannot certify the protected release while its installed manifest and authenticated owner transport are absent.",
+  "existingOwnerAndDeletionTest": {
+    "publicOwner": "Extend OpsControlRead.doctor/read.release in packages/ops/src/public.ts; keep the registry/lock parser private in packages/ops/src/build-inventory.ts. Use trustedCheckoutRoot() from packages/ops/src/checkout-root.ts, with no caller-supplied root, pin list, or manifest. ReplayEnvironment.runRegisteredProbe in packages/self-improvement/src/public.ts dispatches the assigned CLI probe to that Ops owner.",
+    "whyOps": "Ops already owns the existing read.release/doctor surface, service status, shared PostgreSQL/pg-boss pins, and native release eligibility policy. The implementation remains behind the existing public Ops boundary; it does not import protected control code or add a second release authority.",
+    "deletionTest": "The private inventory module earns its place only if it owns lock/manifest/generated-inventory reconciliation and returns one stable read result; deleting it would move this parsing and drift policy into the Ops facade and probe callers. Do not add a pass-through package or a new CLI command.",
+    "limits": "Do not reuse NativeReleaseEligibilityProbe's in-code verified fixture as inventory. Keep read.release PENDING/NOT_IMPLEMENTED until the actual protected owner returns an authenticated, digest-bound installed-service manifest."
+  },
+  "writtenInterface": {
+    "input": "Existing RegisteredProbeInputV1 through `toy probe run AT-authority-61 --json` (optional existing `--case` only for diagnosis); the probe obtains its root from trustedCheckoutRoot(). It accepts no caller-authored inventory, expected pins, arbitrary filesystem path, installed identity, or release assertion.",
+    "ownerResult": "Existing CheckViewV1 entries inside RegisteredProbeReportV1. Register distinct check IDs for source-lock inventory, plugin/tool/adapter inventory, canonicalization vectors, negative-control denials, and protected-release status. Each prerequisite is compact canonical JSON under the existing 2000-byte limit: schema version, source digests, row/count totals, exact mismatch/duplicate IDs, state, and reason code. Bind all inspected source/lock/vector artifacts in links.artifactDigests; do not print raw manifests, credentials, or arbitrary OS errors.",
+    "inventoryFacts": {
+      "dependencies": "Derive actual package rows from root and workspace package.json files plus the single package-lock.json: requested version, resolved lock version, integrity, and relative paths. Compare shared expected pins from CONTRACTS.md and the narrower Authority §20 pins against actual rows. Record absent/unresolved pins as missing, never as an inferred match. Reuse the same package/lock/module-graph inputs already read by the source parser in packages/self-improvement/src/engineering-control.ts; do not add a second general TypeScript parser or copy its inventories.",
+      "services": "Use the existing serviceIdSchema in packages/contracts/src/ops-registry.ts as the canonical declared service set. Report its digest/count separately from installed services. Only a real protected installed-service manifest can populate installed state.",
+      "pluginToolsSkills": "Use one generated plugin manifest and schemas from the existing contracts generator. Bind expected plugin `toy` version `1.0.0` and native toolset `toy`; the Authority tool entries are exactly toy_action_request, toy_action_enqueue, toy_action_status, toy_action_receipts, toy_calendar_undo, and toy_school_authorize. Reject toy_action_approve, duplicate tool/skill names, and competing plugin/toolset registrations. Preserve the single shared, unnamespaced toy-interact skill instead of registering a second Authority skill.",
+      "adaptersAndAuth": "Inventory adapter IDs, owners, typed contract digests, package names, and lock integrities from actual generated/public manifests. Do not count packages/sources/src/adapters/k4a-reference.ts as an official live adapter. Missing protected adapter or maintained auth/crypto artifacts remain BLOCKED; do not synthesize entries from names in prose.",
+      "queue": "Record pg-boss 12.36.0 and expected schema 44. Reuse the accepted AT-obligations-76 evidence digest for actual schema-44/transaction readbacks; do not repeat the database probe or claim that a source pin proves runtime schema state.",
+      "staticBoundaries": "Keep the existing `npm run boundaries`/dependency-cruiser graph and `architecture/modules.json` as the import-boundary authority. Ops must not import control/authority, evaluator, publisher, or secrets; the source inventory must not scan credentials or protected runtime contents. Startup-download admission is static/source evidence only until a real protected release manifest is available."
+    },
+    "canonicalization": {
+      "sourcePin": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/authority.md:1952",
+      "pinStatus": "Authority §20 proposes module-specific canonicalize 5.1.0 and says exact availability/integrity is a pre-build gate. This is not listed as a CONTRACTS shared pin and is absent from current package manifests and package-lock; mark unresolved until the exact maintained package artifact is lock-resolved.",
+      "verification": "Once that pin is actually installed/locked, the Ops inventory validator calls the maintained library directly against a source-hashed RFC 8785 vector artifact whose expected bytes are independent of the implementation. No handwritten canonicalizer, key-sort wrapper, JSON.stringify substitute, or network download is permitted. Missing package/vector artifacts return BLOCKED, never a fallback PASS."
+    },
+    "protectedRelease": "Existing read.release is currently NOT_IMPLEMENTED with OWNER_TRANSPORT_NOT_IMPLEMENTED. The latest doctor reports all eight role identities observed but identityGateVerified=false and maintenanceIdentityVerified=false. The output must retain protectedRelease=BLOCKED and acceptanceComplete=false; it must not treat observed UID rows, source registry names, or synthetic candidates as installed release evidence."
+  },
+  "finiteCliOracle": {
+    "command": "toy probe run AT-authority-61 --json",
+    "execution": "Run only after source admission, using the existing registered R0 test context. The later acceptance run must omit --case so every mandatory phase is exercised; per-case runs are diagnostics and do not certify the whole AT.",
+    "mandatoryCases": [
+      { "id": "source-lock-inventory", "publicOperation": "ReplayEnvironment.runRegisteredProbe -> OpsControlRead.doctor/read.build-inventory", "expected": "PASS only when actual workspace manifests/lock and generated source inventory match; current missing canonicalization/auth pins and plugin manifest keep this subgate blocked or failed." },
+      { "id": "plugin-adapter-inventory", "publicOperation": "ReplayEnvironment.runRegisteredProbe -> OpsControlRead.doctor/read.build-inventory", "expected": "PASS only for exactly one actual generated toy plugin/toolset and typed adapter inventory; no fake/reference adapter counts as official." },
+      { "id": "rfc8785-vectors", "publicOperation": "ReplayEnvironment.runRegisteredProbe -> OpsControlRead.doctor/read.build-inventory", "expected": "Every pinned RFC vector matches the independently fixed expected canonical bytes; absent canonicalize 5.1.0 lock entry or vector artifact is BLOCKED." },
+      { "id": "reject-lock-mismatch", "publicOperation": "ReplayEnvironment.runRegisteredProbe -> OpsControlRead.doctor/read.build-inventory", "expected": "A one-file disposable lock mutation is rejected by the same public CLI owner; test verdict PASS means candidate admission was denied." },
+      { "id": "reject-duplicate-tool-skill", "publicOperation": "ReplayEnvironment.runRegisteredProbe -> OpsControlRead.doctor/read.build-inventory", "expected": "A disposable duplicate tool or skill entry is rejected; test verdict PASS means candidate admission was denied." },
+      { "id": "reject-homemade-serializer", "publicOperation": "ReplayEnvironment.runRegisteredProbe -> OpsControlRead.doctor/read.build-inventory", "expected": "A disposable candidate replacing the maintained serializer dependency/entry is rejected; no mutation touches protected or installed files." },
+      { "id": "reject-writable-import", "publicOperation": "ReplayEnvironment.runRegisteredProbe -> OpsControlRead.doctor/read.build-inventory", "expected": "A disposable runtime import crossing the existing dependency-cruiser protected boundary is rejected." },
+      { "id": "reject-startup-download", "publicOperation": "ReplayEnvironment.runRegisteredProbe -> OpsControlRead.doctor/read.build-inventory", "expected": "A disposable runtime-startup install/download hook is rejected; the probe performs no network access." },
+      { "id": "protected-release-pending", "publicOperation": "OpsControlRead.doctor/read.release", "expected": "BLOCKED until a genuine authenticated installed-service manifest and verified identity/maintenance enforcement are supplied; this result keeps AT-authority-61 pending." }
+    ],
+    "fixtureRule": "The actual-checkout source inventory is the sole positive input. Negative controls may use isolated disposable copies with one controlled mutation each, driven through the public CLI; they can prove refusal behavior only and can never populate or certify a positive inventory."
+  },
+  "reachableWorkAndPrerequisites": {
+    "internalSourceWork": [
+      "Add the typed check declarations and AT-authority-61 manifest to the existing contracts/CLI acceptance registry, then regenerate only through scripts/generate-contracts.mjs.",
+      "Implement the private Ops source inventory over actual workspace manifests, package-lock, generated artifacts, existing service/tool registries, and existing dependency graph; bind AT-authority-61 dispatch through ReplayEnvironment.",
+      "Make missing/duplicate/mismatch conditions explicit and fail closed; preserve CheckViewV1 byte limits, use actual source digests, and keep the protected release verdict pending.",
+      "Add the RFC-vector check only behind the actual maintained library pin; do not vend or hand-implement a serializer."
+    ],
+    "currentLocalFacts": {
+      "matchingLocalPins": "Current package sources/lock declare Node 24.21.0, TypeScript 5.9.3, pg 8.23.1, pg-boss 12.36.0/schema-44 source path, Ajv 8.17.1, and Zod 4.6.5 with exact lock rows/integrities. This is source consistency, not installation/runtime proof.",
+      "missingLocalArtifacts": "Current package-lock has no canonicalize, better-auth, @better-auth/passkey, or @simplewebauthn/server/browser entry. The checkout has no plugins/toy directory or uv.lock. The existing generator lists generated contracts/DTO artifacts but no plugin manifest artifact.",
+      "queueProof": "Existing AT-obligations-76 evidence covers the actual pg-boss schema-44 transaction/readback gate; carry its accepted digest rather than retrying it.",
+      "releaseOwner": "build/evidence/R0.12/remaining-compatibility-selection-doctor.json at 2026-10-07T06:08:00.621Z reports read.release NOT_IMPLEMENTED because the verified installed-service manifest and authenticated public owner transport are absent. Its eight observed role rows do not verify identity enforcement."
+    },
+    "genuinePrerequisites": [
+      "Resolve and lock the exact maintained canonicalize package artifact before RFC-vector verification; current repository lock has no entry and no serializer fallback is allowed.",
+      "Restore/resolve the source-required maintained auth and adapter package artifacts (Better Auth 1.7.7 with matching plugins and WebAuthn 14.0.3) before claiming protected auth/crypto or official adapter readiness.",
+      "A separate protected owner must provide the genuine installed-service manifest and authenticated readback, plus verified identity/maintenance enforcement. No source probe can manufacture this evidence."
+    ],
+    "acceptance": "Only the source inventory implementation is locally actionable. Until exact package artifacts and protected release evidence are available, whole AT-authority-61 and R0.10 acceptance remain pending; no new root request, R1 work, database run, or release admission is proposed."
+  },
+  "sourcePins": [
+    { "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/authority.md", "sha256": "0127fd6e992c94bb512af83d507e107431426d2d4a09885d1a420119f2d530be" },
+    { "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/CONTRACTS.md", "sha256": "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d" },
+    { "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/TEST-PLAN.md", "sha256": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2" },
+    { "path": "tests/acceptance-index.json", "sha256": "c9b645eab7f55b2ebf35d7db769a534a4837de23ad3dc3d913f3189e781d44fa" },
+    { "path": "tests/registry.yaml", "sha256": "b2b552d221a6825e2a49e080770a53a67a1e3ee8ec31919e90e669724f97587e" },
+    { "path": "package.json", "sha256": "cb940fdd04a1fd8f3ccda07383b59ca279da8ffdacc6da239e501a183ea3fc05" },
+    { "path": "package-lock.json", "sha256": "cbac70e21ed9e9af625d57199aad9b4c33dd57a6c327676c4a1a8e0d697048e2" },
+    { "path": "packages/contracts/src/ops-registry.ts", "sha256": "c064026b90cc289b0e0ee3df8bf98482726c26843854daaaf40af459e2390d36" },
+    { "path": "packages/contracts/src/test-control.ts", "sha256": "1367e6db29a7a97d9258eefb8685141de51fc52b20bc0e79c90ce46c0ba74af1" },
+    { "path": "packages/contracts/src/generated-probe-registry.ts", "sha256": "0198b644c8b86ff01f77cfbb3a43daaa9f7107d5a14657785c1f5e7dd3608177" },
+    { "path": "packages/contracts/src/sources.ts", "sha256": "511061b71338ade9344c1977d122f52bf5cc6b3eee364c67a0a5b76dc0655867" },
+    { "path": "packages/ops/src/public.ts", "sha256": "9646f70f89434cf774e66a602eed45f751c353f200b2f3e1a2cf41968e079284" },
+    { "path": "packages/ops/src/checkout-root.ts", "sha256": "7df343c976cb5fa7c80ebe62bb17c4517636caa919eba86260d04702020e1b5d" },
+    { "path": "packages/ops/src/queue-fault-probe.ts", "sha256": "ba1fb68902c2e0bad76f956043ae02d7e97377807fa2e37303b14204bb76d008" },
+    { "path": "packages/self-improvement/src/public.ts", "sha256": "5ee52a433336f3b7237826873e669273d476a435bc8f30510aaa80b4c0a9c70e" },
+    { "path": "packages/self-improvement/src/engineering-control.ts", "sha256": "723753279ab77a525abae2a896b5ebfef80292807c634d25f27056b60ae095aa", "note": "Parent recently changed this file for AT-adhd-features-106; reuse its existing TypeScript inventory parser inputs rather than adding a parallel scanner." },
+    { "path": "architecture/modules.json", "sha256": "570e921735ed76778864746ef954875cbac9431bf3862f70d38bf69533190b93" },
+    { "path": ".dependency-cruiser.cjs", "sha256": "d62bbe60ae0f503e83734c938c4068077288cdf5ef39a44481bc0748345f7ed4" },
+    { "path": "scripts/generated-artifacts.json", "sha256": "dbd59d005f862d61a79f8502e82a10c8f00264f4583fafe69f203e7d8611077d" },
+    { "path": "scripts/generate-contracts.mjs", "sha256": "5d0d1c72d2cd7c9253241e7dd1ab057a0c1a15e47ad9cfb39dfdf67b182a44c2" },
+    { "path": "scripts/check-contract-pin.mjs", "sha256": "864a55c0669a85fedad4e4084db41b5b7c1b831ef2d2096e49eda806c9c1adf5" },
+    { "path": "build/evidence/R0.12/remaining-compatibility-selection-doctor.json", "sha256": "ca6705cee95c7ffb6ece77c8248bbd99f13e190202dbd56406b52d27f6d69bd5" }
+  ]
+}

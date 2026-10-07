@@ -1,0 +1,100 @@
+{
+  "schemaVersion": "toy.cli.v1",
+  "commandId": "stack.up",
+  "invocationId": "4be506d4-21f2-4ce9-b316-699cf57170ad",
+  "generatedAt": "2026-10-07T06:32:18.658Z",
+  "cliVersion": "1.0.0",
+  "contractsVersion": "1.0.0",
+  "schemaDigest": "5b00b21899c63adb3f7f36bb5d0f8d921da284529d1d8ba0afbc2a20bb2e4925",
+  "environment": {
+    "kind": "test",
+    "instanceId": null,
+    "stackId": "078b6886-b31c-4a19-b8f3-81f65b9d73c1"
+  },
+  "meta": {
+    "exitCode": 0,
+    "releaseDigest": null,
+    "controlDigest": null,
+    "evaluatedAt": null,
+    "operationId": "c2508b0f-ebfe-442c-9fd5-400f28a3b0c7",
+    "effectState": "confirmed",
+    "recordRefs": [],
+    "evidence": []
+  },
+  "ok": true,
+  "data": {
+    "operation": {
+      "operationId": "c2508b0f-ebfe-442c-9fd5-400f28a3b0c7",
+      "state": "succeeded",
+      "acceptedAt": "2026-10-07T06:32:18.542Z"
+    },
+    "requestId": "84ba612c-53f5-4dca-bb29-0802454ac53d",
+    "stackId": "078b6886-b31c-4a19-b8f3-81f65b9d73c1",
+    "result": {
+      "stackId": "078b6886-b31c-4a19-b8f3-81f65b9d73c1",
+      "release": "R0",
+      "manifestDigest": "76b14a3ace242d6379fbeb51795b023d2156b5a9fbc007d453cacfa8324a9cd0",
+      "clock": "fake",
+      "model": "fake",
+      "ready": true,
+      "components": [
+        {
+          "id": "bootstrap.resource-admission",
+          "owner": "ops",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:32:18.541Z",
+          "reasonCode": "AVAILABLE_MEMORY_AND_OBSERVED_PRESSURE",
+          "prerequisite": "{\"schemaVersion\":\"toy.bootstrap-resource-preflight.v2\",\"measuredAt\":\"2026-10-07T06:32:18.541Z\",\"samples\":[{\"observedAt\":\"2026-10-07T06:32:18.541Z\",\"monotonicNanoseconds\":\"224030304965833\",\"physicalBytes\":\"8589934592\",\"pageSizeBytes\":\"16384\",\"freeBytes\":\"1400553472\",\"inactiveBytes\":\"1313570816\",\"purgeableBytes\":\"33210368\",\"speculativeBytes\":\"51380224\",\"availableBytes\":\"2798714880\",\"pressure\":\"normal\",\"pressureSource\":\"os\",\"pressureQueryOutput\":\"1\\n\"}],\"completeMeasurements\":true,\"jobNeedBytes\":\"1073741824\",\"marginBytes\":\"536870912\",\"requiredAvailableBytes\":\"1610612736\",\"minimumAvailableBytes\":\"2798714880\",\"normalPressureObserved\":true,\"headroomSatisfied\":true,\"reasons\":[],\"resourcePermitIssued\":false,\"admissionState\":\"admitted\"}",
+          "nextCommandId": "stack.up",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": []
+          }
+        },
+        {
+          "id": "bootstrap.fixture-runtime",
+          "owner": "ops",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:32:18.656Z",
+          "reasonCode": "TRUSTED_FAKE_FIXTURE_READY",
+          "prerequisite": null,
+          "nextCommandId": "stack.up",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": []
+          }
+        },
+        {
+          "id": "bootstrap.fixture-identities",
+          "owner": "ops",
+          "state": "NOT_IMPLEMENTED",
+          "checkedAt": "2026-10-07T06:32:18.656Z",
+          "reasonCode": "R0_04_05_ACTUAL_PREREQUISITES_PENDING",
+          "prerequisite": "Actual protected service identities and signed target launcher remain pending.",
+          "nextCommandId": "doctor",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": []
+          }
+        }
+      ],
+      "ownedResourceRefs": [
+        {
+          "module": "ops",
+          "kind": "test_world",
+          "id": "078b6886-b31c-4a19-b8f3-81f65b9d73c1"
+        }
+      ],
+      "evidenceLocation": "093a632f-75e8-40eb-b0a7-b01a747152a8",
+      "teardown": null
+    },
+    "links": {
+      "recordRefs": [],
+      "observations": [],
+      "artifactDigests": []
+    }
+  }
+}

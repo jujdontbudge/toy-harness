@@ -12,6 +12,7 @@ import { componentComparisonProbe } from "./component-comparison-probe.js";
 import { capacityTrialProbe } from "./capacity-trial-probe.js";
 import { durableCadenceProbe } from "./durable-cadence-probe.js";
 import { dtoRoundtripProbe } from "./dto-roundtrip-probe.js";
+import { leastFragileToolsProbe } from "./least-fragile-tools-probe.js";
 import { accountingTestConnection, withAccountingFixture } from "./accounting-postgres.js";
 
 export const ReplayEnvironment = {
@@ -20,6 +21,7 @@ export const ReplayEnvironment = {
     if (!owned.ok) return owned;
     if (!registeredProbeInputSchema.safeParse(input).success) return { ok: false, error: { module: "ops", code: "INVALID_INPUT", message: opsErrorMessages.INVALID_INPUT, retryable: false } };
     if (input.probeId === "AT-hermes-config-50") return dtoRoundtripProbe(input, context);
+    if (input.probeId === "AT-adhd-features-106") return leastFragileToolsProbe(input, context);
     if (["AT-hermes-config-69", "AT-activity-focus-86"].includes(input.probeId)) return durableCadenceProbe(input, context);
     if (["AT-obligations-74", "AT-self-improvement-54", "AT-sources-188", "AT-sources-190", "AT-lifestore-45"].includes(input.probeId)) return componentComparisonProbe(input, context);
     if (input.caseId === "model-admission" || (input.caseId === undefined && ["AT-ops-49", "AT-ops-50", "AT-ops-51", "AT-ops-52"].includes(input.probeId))) return accountingProbe(input, context);

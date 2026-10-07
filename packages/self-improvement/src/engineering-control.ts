@@ -2,7 +2,8 @@ import { createHash, randomUUID } from "node:crypto";
 import { spawnSync } from "node:child_process";
 import { existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, realpathSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
-import { acceptanceIndexSchema, checkoutPathSchema, cliDeclarations, featureFactsSchema, featureMapCheckSchema, featureMapUpdateSchema, generatorInputSchema, generatorPlanSchema, gardenerInputSchema, gardenerReportSchema, kitchenGateSummarySchema, mapCheckInputSchema, mapUpdateInputSchema, opsControlContextSchema, opsErrorMessages, referenceAdmissionEvidenceSchema, researchCatalogCoverageSchema, researchComponentComparisonSchema, researchComponentComparisonCheckSchema, researchDocumentOverlaySchema, researchRegisterInspectionV3Schema, researchAttentionDecisionSchema, researchAttentionDecisionCheckSchema, researchAttentionDecisionIdSchema, researchComponentComparisonV2Schema, researchComponentComparisonV3Schema, researchComponentComparisonV4Schema, researchComponentComparisonCheckV2Schema, researchSourcesComponentComparisonSchema, researchSourcesComponentComparisonV2Schema, researchSkillPinSchema, modelRoutePolicySchema } from "@toy/contracts";
+import ts from "typescript";
+import { acceptanceIndexSchema, checkoutPathSchema, cliDeclarations, featureFactsSchema, featureMapCheckSchema, featureMapUpdateSchema, generatorInputSchema, generatorPlanSchema, gardenerInputSchema, gardenerReportSchema, kitchenGateSummarySchema, mapCheckInputSchema, mapUpdateInputSchema, opsControlContextSchema, opsErrorMessages, referenceAdmissionEvidenceSchema, researchCatalogCoverageSchema, researchComponentComparisonSchema, researchComponentComparisonCheckSchema, researchDocumentOverlaySchema, researchRegisterInspectionV3Schema, researchAttentionDecisionSchema, researchAttentionDecisionCheckSchema, researchAttentionDecisionIdSchema, researchComponentComparisonV2Schema, researchComponentComparisonV3Schema, researchComponentComparisonV4Schema, researchComponentComparisonCheckV2Schema, researchSourcesComponentComparisonSchema, researchSourcesComponentComparisonV2Schema, researchSkillPinSchema, modelRoutePolicySchema, filePatchSchema, checkViewSchema } from "@toy/contracts";
 import type { CheckViewV1, FeatureFactsV1, FilePatchV1, GeneratorInputV1, GeneratorPlanV1, FeatureMapCheckV1, FeatureMapUpdateV1, MapCheckInputV1, MapUpdateInputV1, GardenerInputV1, GardenerReportV1, OpsControlContextV1, ResearchCatalogCoverageFindingV1, ResearchCatalogMemberV1, ResearchCatalogSectionV1, ResearchInspectionFindingV1, ResearchComponentComparisonV1, ResearchComponentComparisonCheckV1, ResearchDocumentOverlayV1, ResearchRegisterInspectionV1, ResearchComponentComparisonV2, ResearchComponentComparisonV3, ResearchComponentComparisonV4, ResearchComponentComparisonCheckV2, ResearchSourcesComponentComparisonV1, ResearchSourcesComponentComparisonV2, ResearchAttentionDecisionV1, ResearchAttentionDecisionCheckV1, ResearchRegisterInspectionV3, Result } from "@toy/contracts";
 import { OpsTestStack, trustedCheckoutRoot, trustedToolEnvironment } from "@toy/ops/public";
 import { modelAdmissionMigration } from "./model-admission-migration.js";
@@ -955,7 +956,149 @@ const inspectResearch = (input: MapCheckInputV1, testDocuments: readonly Researc
   return researchRegisterInspectionV3Schema.parse({ attentionDecisions, componentDecisions, requestedRelease: input.release, registerPath, registerDigest: hash(raw), components, componentComparisons, reports, specReferences, sourcesCatalogCoverage, dependencyClosureVerified: false, findings, wholeATsPassed: [], scope: "register_inventory", admission: "BLOCKED", acceptanceComplete: false });
 };
 
+const isObjectRecord = (value: unknown): value is Record<string, unknown> => value !== null && typeof value === "object" && !Array.isArray(value);
+const objectRecord = (value: unknown): Record<string, unknown> | null => isObjectRecord(value) ? value : null;
+const stringList = (value: unknown): string[] => {
+  if (!Array.isArray(value) || value.some(item => typeof item !== "string")) throw new Error("INVALID_SOURCE_LIST");
+  return value.filter((item): item is string => typeof item === "string");
+};
+const leastFragileTools = (context: OpsControlContextV1, testSources: readonly FilePatchV1[], testResearch: readonly ResearchDocumentOverlayV1[]): Result<CheckViewV1[]> => {
+  if (!opsControlContextSchema.safeParse(context).success || testSources.length > 16 || testResearch.length > 16 || testSources.some(source => !filePatchSchema.safeParse(source).success) || testResearch.some(source => !researchDocumentOverlaySchema.safeParse(source).success)) return refused("INVALID_INPUT");
+  if (testSources.length > 0 || testResearch.length > 0) {
+    const owned = OpsTestStack.inspect(context);
+    if (!owned.ok) return owned;
+    if (!owned.data.result?.ready || owned.data.result.release !== "R0" || owned.data.result.clock !== "fake" || owned.data.result.model !== "fake") return refused("INVALID_INPUT");
+  }
+  try {
+    const overlays = new Map<string, FilePatchV1>();
+    for (const source of testSources) {
+      if (overlays.has(source.path) || !["package-lock.json", "packages/adhd/package.json"].includes(source.path) && !/^packages\/adhd\/src\/[a-zA-Z0-9._/-]+\.ts$/.test(source.path)) return refused("INVALID_INPUT");
+      const original = sourceExists(source.path) ? read(source.path) : null;
+      if (source.beforeDigest !== (original === null ? null : hash(original)) || source.afterDigest !== hash(source.patch) || source.kind !== (original === null ? "create" : "update")) return refused("ARTIFACT_MISMATCH");
+      overlays.set(source.path, source);
+    }
+    const inputs = new Map<string, string>();
+    const sourceRead = (path: string): string => {
+      const content = overlays.get(path)?.patch ?? read(path);
+      inputs.set(path, hash(content));
+      return content;
+    };
+    const json = (path: string): Record<string, unknown> => {
+      const value: unknown = JSON.parse(sourceRead(path));
+      const record = objectRecord(value);
+      if (!record) throw new Error("INVALID_SOURCE_RECORD");
+      return record;
+    };
+    const contracts = readResearchFile("specs/CONTRACTS.md");
+    inputs.set("planning:specs/CONTRACTS.md", hash(contracts));
+    const canonical = new Map(contracts.split(/\r?\n/).flatMap(line => {
+      const cells = markdownTableCells(line)?.map(cell => cell.trim());
+      const component = cells?.[0];
+      const pin = cells?.[1]?.match(/`([^`]+)`/)?.[1];
+      return component && pin ? [[component, pin] as const] : [];
+    }));
+    const pins = new Map([["pg", "`pg`"], ["pg-boss", "pg-boss"], ["next", "Next.js"], ["react", "React/React DOM"], ["react-dom", "React/React DOM"], ["expo", "Expo"], ["react-native", "React Native"], ["expo-notifications", "expo-notifications"], ["better-auth", "Better Auth and matching plugins"]]);
+    const graph = json("architecture/modules.json");
+    const modules = Array.isArray(graph.modules) ? graph.modules.map(objectRecord) : [];
+    const adhd = modules.find(module => module?.id === "adhd");
+    if (!adhd || modules.some(module => !module || typeof module.id !== "string")) throw new Error("INVALID_OWNER_GRAPH");
+    const allowedOwners = stringList(adhd.dependencies);
+    const root = json("package.json");
+    const lock = json("package-lock.json");
+    const locked = objectRecord(lock.packages);
+    if (!locked || lock.lockfileVersion !== 3) throw new Error("INVALID_APPLICATION_LOCK");
+    const manifest = json("packages/adhd/package.json");
+    const declared = objectRecord(manifest.dependencies) ?? {};
+    const lockFailures: string[] = [];
+    const capabilityFailures: string[] = [];
+    const nodePin = canonical.get("Node");
+    if (!nodePin || objectRecord(root.engines)?.node !== nodePin || objectRecord(objectRecord(locked[""])?.engines)?.node !== nodePin) lockFailures.push("NODE_PIN_MISMATCH");
+    for (const path of ["", ...modules.flatMap(module => typeof module?.id === "string" ? ["packages/" + module.id] : []), "cli"]) {
+      const packageManifest = path === "" ? root : json(path + "/package.json");
+      const lockedManifest = objectRecord(locked[path]);
+      if (!lockedManifest) { lockFailures.push("WORKSPACE_LOCK_MISSING:" + path); continue; }
+      for (const section of ["dependencies", "devDependencies", "optionalDependencies", "peerDependencies"]) {
+        const dependencies = objectRecord(packageManifest[section]) ?? {};
+        const lockedDependencies = objectRecord(lockedManifest[section]) ?? {};
+        if (JSON.stringify(Object.entries(dependencies).sort()) !== JSON.stringify(Object.entries(lockedDependencies).sort())) lockFailures.push("DECLARATION_LOCK_MISMATCH:" + path + ":" + section);
+        for (const [name, version] of Object.entries(dependencies)) {
+          const ancestry = path === "" ? [""] : path.split("/").map((_, index, parts) => parts.slice(0, parts.length - index).join("/")).concat("");
+          const record = ancestry.map(parent => objectRecord(locked[(parent === "" ? "" : parent + "/") + "node_modules/" + name])).find(entry => entry !== null);
+          const pinKey = pins.get(name);
+          if (typeof version !== "string" || pinKey && version !== canonical.get(pinKey)) lockFailures.push("CANONICAL_PIN_MISMATCH:" + name);
+          if (name.startsWith("@toy/")) {
+            if (record?.link !== true || typeof record.resolved !== "string" || objectRecord(locked[record.resolved])?.version !== version) lockFailures.push("OWNER_LOCK_MISMATCH:" + name);
+          } else if (record?.version !== version) lockFailures.push("DEPENDENCY_LOCK_MISMATCH:" + name);
+        }
+      }
+    }
+    for (const name of Object.keys(declared)) if (!name.startsWith("@toy/") || !allowedOwners.includes(name.slice(5))) capabilityFailures.push("FEATURE_DEPENDENCY_REFUSED:" + name);
+    for (const section of ["devDependencies", "optionalDependencies", "peerDependencies"]) if (Object.keys(objectRecord(manifest[section]) ?? {}).length > 0) capabilityFailures.push("FEATURE_DEPENDENCY_SECTION_REFUSED:" + section);
+    if (Object.keys(objectRecord(manifest.scripts) ?? {}).length > 0) capabilityFailures.push("FEATURE_LIFECYCLE_SCRIPT_REFUSED");
+    const featureEntry = objectRecord(objectRecord(manifest.exports)?.["./public"]);
+    if (featureEntry?.import !== "./dist/public.js" || featureEntry.types !== "./dist/public.d.ts" || manifest.bin !== undefined || manifest.imports !== undefined || manifest.main !== undefined || manifest.module !== undefined) capabilityFailures.push("FEATURE_PUBLIC_ENTRY_REFUSED");
+    const paths: string[] = [];
+    const walk = (directory: string): void => {
+      for (const entry of readdirSync(safePath(directory), { withFileTypes: true })) {
+        const path = directory + "/" + entry.name;
+        if (entry.isSymbolicLink()) throw new Error("UNSAFE_FEATURE_SOURCE");
+        if (entry.isDirectory() && !["dist", "node_modules"].includes(entry.name)) walk(path);
+        else if (entry.isFile() && path.startsWith("packages/adhd/src/") && path.endsWith(".ts")) paths.push(path);
+        else if (entry.isFile() && /(?:package-lock\.json|yarn\.lock|pnpm-lock\.yaml|bun\.lockb?)$/.test(entry.name)) lockFailures.push("FEATURE_LOCK_REFUSED:" + path);
+        else if (entry.isFile() && path.startsWith("packages/adhd/src/")) capabilityFailures.push("FEATURE_RUNTIME_SOURCE_REFUSED:" + path);
+      }
+    };
+    walk("packages/adhd");
+    paths.push(...[...overlays.keys()].filter(path => path.startsWith("packages/adhd/src/") && !paths.includes(path)));
+    const sources = new Map(paths.map(path => [path, sourceRead(path)]));
+    const ambient = new Set(["setTimeout", "setInterval", "setImmediate", "queueMicrotask", "fetch", "WebSocket", "XMLHttpRequest", "process", "global", "globalThis", "window", "self", "document", "navigator", "localStorage", "sessionStorage", "indexedDB", "Deno", "Bun", "eval", "Function", "require", "Atomics"]);
+    for (const [path, content] of sources) {
+      const syntax = ts.transpileModule(content, { fileName: path, reportDiagnostics: true, compilerOptions: { target: ts.ScriptTarget.ESNext, module: ts.ModuleKind.ESNext } });
+      if (syntax.diagnostics?.some(diagnostic => diagnostic.category === ts.DiagnosticCategory.Error)) capabilityFailures.push("FEATURE_SOURCE_INVALID:" + path);
+      const source = ts.createSourceFile(path, content, ts.ScriptTarget.Latest, true);
+      const inspectNode = (node: ts.Node): void => {
+        if (ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) {
+          const specifier = node.moduleSpecifier;
+          if (specifier && ts.isStringLiteral(specifier)) {
+            const name = specifier.text;
+            if (name.startsWith(".")) {
+              const target = relative(trustedCheckoutRoot(), resolve(dirname(safePath(path)), name)).replace(/\.js$/, ".ts");
+              if (!target.startsWith("packages/adhd/src/") || !sources.has(target)) capabilityFailures.push("FEATURE_LOCAL_IMPORT_REFUSED:" + name);
+            } else {
+              const owner = /^@toy\/([a-z-]+)\/public$/.exec(name)?.[1];
+              if (name !== "@toy/contracts" && (!owner || !allowedOwners.includes(owner) || !Object.hasOwn(declared, "@toy/" + owner))) capabilityFailures.push("FEATURE_OWNER_IMPORT_REFUSED:" + name);
+              else if (owner) {
+                const ownerManifest = json("packages/" + owner + "/package.json");
+                const entry = objectRecord(objectRecord(ownerManifest.exports)?.["./public"]);
+                const ownerSource = ts.createSourceFile("public.ts", sourceRead("packages/" + owner + "/src/public.ts"), ts.ScriptTarget.Latest, true);
+                const typeOnly = ts.isImportDeclaration(node) ? node.importClause?.isTypeOnly === true : node.isTypeOnly;
+                if (entry?.import !== "./dist/public.js" || !typeOnly && !ownerSource.statements.some(statement => ts.isExportDeclaration(statement) && !statement.isTypeOnly || ts.canHaveModifiers(statement) && ts.getModifiers(statement)?.some(modifier => modifier.kind === ts.SyntaxKind.ExportKeyword) && !ts.isTypeAliasDeclaration(statement) && !ts.isInterfaceDeclaration(statement))) capabilityFailures.push("FEATURE_OWNER_INTERFACE_UNPROVEN:" + owner);
+              }
+            }
+          }
+        }
+        if (ts.isIdentifier(node) && ambient.has(node.text) || ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword || ts.isImportEqualsDeclaration(node)) capabilityFailures.push("FEATURE_AMBIENT_CAPABILITY_REFUSED:" + path);
+        ts.forEachChild(node, inspectNode);
+      };
+      inspectNode(source);
+    }
+    const research = inspectResearch({ release: "R0" }, testResearch);
+    const decision = research.componentDecisions.find(component => component.componentId === "M08");
+    const researchGuarded = decision !== undefined && (decision.state === "BLOCKED" ? decision.selectedTool === null : decision.selectedTool !== null && decision.findings.length === 0 && decision.missingValidationIds.length === 0) && research.admission === "BLOCKED" && !research.acceptanceComplete;
+    const sourceDigests = [...inputs].map(([path, digest]) => ({ path, digest }));
+    const results = [
+      { phase: "canonical-lock", passed: lockFailures.length === 0, failures: lockFailures },
+      { phase: "owner-capabilities", passed: capabilityFailures.length === 0, failures: capabilityFailures },
+      { phase: "unproven-alternatives", passed: researchGuarded, failures: researchGuarded ? [] : ["UNPROVEN_DECISION_ADMITTED"] }
+    ];
+    return { ok: true, data: results.map(result => checkViewSchema.parse({ id: "engineering.least-fragile-tools", owner: "self-improvement", state: result.passed ? "PASS" : "FAIL", checkedAt: new Date().toISOString(), reasonCode: result.passed ? "LEAST_FRAGILE_TOOLS_SOURCE_PASS" : "LEAST_FRAGILE_TOOLS_SOURCE_FAIL", prerequisite: JSON.stringify({ phase: result.phase, failures: result.failures.slice(0, 12), sourceInventoryDigest: hash(JSON.stringify(sourceDigests)), sourceCount: sourceDigests.length, researchDecision: decision === undefined ? null : { componentId: decision.componentId, state: decision.state, selectedTool: decision.selectedTool, missingValidationIds: decision.missingValidationIds }, researchAdmission: research.admission, researchAcceptanceComplete: false, sourceOverlays: testSources.length, filesWritten: false, nativeAdmissionVerified: false, wholeATComplete: false }), nextCommandId: "gardener.run", links: { recordRefs: [], observations: [], artifactDigests: [...new Set([...inputs.values(), research.registerDigest, ...research.reports.flatMap(report => report.digest === null ? [] : [report.digest])])] } })) };
+  } catch { return refused("ARTIFACT_MISMATCH"); }
+};
+
 export const EngineeringControl = {
+  validateLeastFragileTools(context: OpsControlContextV1, testSources: readonly FilePatchV1[] = [], testResearch: readonly ResearchDocumentOverlayV1[] = []): Result<CheckViewV1[]> {
+    return leastFragileTools(context, testSources, testResearch);
+  },
   canonicalRequirementQuotes(requirementIds: ResearchComponentComparisonV4["mappedRequirements"], context: OpsControlContextV1): Result<ResearchComponentComparisonV4["requirementQuotes"]> {
     if (!opsControlContextSchema.safeParse(context).success || !Array.isArray(requirementIds) || requirementIds.length === 0 || requirementIds.length > 100 || new Set(requirementIds).size !== requirementIds.length || requirementIds.some(id => !/^[0-9]+\.[0-9]+$/.test(id))) return refused("INVALID_INPUT");
     const owned = OpsTestStack.inspect(context);
@@ -1061,6 +1204,9 @@ export const EngineeringControl = {
         if (child.status !== 0 && summary.verdict === "PASS") return refused("ARTIFACT_MISMATCH");
       }
       checks.push(...inspect().check.findings);
+      const toolValidation = leastFragileTools(context, [], []);
+      if (!toolValidation.ok) return toolValidation;
+      checks.push(...toolValidation.data);
       return { ok: true, data: gardenerReportSchema.parse({ mode: "scan", findings: checks.map((check) => ({ id: hash(check.prerequisite ?? ""), check, correctionRung: 2, disposition: check.state === "PASS" ? "fixed" : "blocked", obligationId: null, incidentId: null })), patches: [], verificationRefs: [], state: checks.every((check) => check.state === "PASS") ? "PASS" : "FAIL", complete: true }) };
     } catch { return refused("ARTIFACT_MISMATCH"); }
   }

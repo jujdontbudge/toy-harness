@@ -221,7 +221,7 @@ export const durableCadenceCheckInventory = [
 export const testStackCheckInventory = [
   ...durableCadenceCheckInventory,
   declaration("contracts.dto-roundtrip", "contracts", "probe.run"),
-  declaration("engineering.map", "self-improvement", "feature-map.check"), declaration("engineering.static", "self-improvement", "gardener.run"),
+  declaration("engineering.map", "self-improvement", "feature-map.check"), declaration("engineering.static", "self-improvement", "gardener.run"), declaration("engineering.least-fragile-tools", "self-improvement", "gardener.run"),
   declaration("accounting.model-admission", "self-improvement", "probe.run"),
   declaration("capacity.trial-journal", "self-improvement", "probe.run"),
   declaration("research.component-comparison", "self-improvement", "probe.run"),

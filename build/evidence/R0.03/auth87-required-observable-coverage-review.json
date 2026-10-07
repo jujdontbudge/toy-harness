@@ -1,0 +1,118 @@
+{
+  "binding": {
+    "acceptanceId": "AT-hermes-config-87",
+    "acceptanceIndex": {
+      "path": "tests/acceptance-index.json",
+      "requiredEvidence": "stack, probe:AT-hermes-config-87",
+      "rung": "CLI",
+      "sha256": "c9b645eab7f55b2ebf35d7db769a534a4837de23ad3dc3d913f3189e781d44fa"
+    },
+    "registry": {
+      "mandatoryCases": [
+        "add-first",
+        "refresh-first",
+        "before-replace",
+        "after-replace"
+      ],
+      "path": "tests/registry.yaml",
+      "sha256": "2663144fc449981d21d35f08fefd22c6b93bae39f45b8b302a2dab585332457c"
+    },
+    "rung": "CLI",
+    "scenarioId": "auth.concurrent-refresh-add",
+    "sourceAssertionHash": "b8ba9587534e2983742157a3ab9ae8911da4928e48e3ab0894944914bb91e6bb",
+    "specification": {
+      "assertionPredicate": "After both orders persist and fresh processes reload, the newest accepted refresh generation and added grant survive without a lost update.",
+      "assertionRow": 3051,
+      "path": "../personal-assistant-harness/specs/hermes-config.md",
+      "scenarioPredicate": "Two real subprocesses perform expired-grant chat refresh and independent auth-add; fake-provider barriers hold/release both orders and stale rotation responses; OS crash/restart cuts exercise storage/locking. Fresh processes must retain the latest accepted refresh generation and added grant, with no lost update/duplicate rotation and the independent root unchanged.",
+      "scenarioRow": 3040,
+      "sha256": "d3548fde13180bc750660f306caa0041101832e398ccdabd6cfdac0b3de8f4af"
+    },
+    "testPlan": {
+      "path": "../personal-assistant-harness/specs/TEST-PLAN.md",
+      "rung": "CLI",
+      "sha256": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2"
+    }
+  },
+  "conclusion": {
+    "acceptanceLimit": "The saved run/show receipts are regression evidence only: their result is NOT_IMPLEMENTED and complete=false. The subprocess identity in this evidence is UID 501/GID 20, so protected dispatcher/identity and full AT87 acceptance remain pending.",
+    "assignedFixtureCoverage": "one stale-response outcome remains unobserved",
+    "flockObserverRequired": false,
+    "smallestRemainingObservable": "At the existing fake-provider response seam, deliver a stale/out-of-order rotation response after a newer refresh generation has been accepted, then use fresh public auth readback/chat to prove the newer generation remains and no duplicate rotation is recorded. Keep this within the registered CLI owner path; do not add a private syscall observer or standalone protocol."
+  },
+  "executionLimits": {
+    "additionalAt87Runs": 0,
+    "sourceBuildGenerationChecksOrWorldOperations": 0,
+    "wholeAtClaimed": false
+  },
+  "observedReceipts": {
+    "run": {
+      "caseCount": 26,
+      "caseStates": "26 PASS",
+      "complete": false,
+      "operationState": "succeeded",
+      "path": "build/evidence/R0.03/lifecycle91-regression-cli/AT-hermes-config-87-run.json",
+      "resultState": "NOT_IMPLEMENTED",
+      "sha256": "89c9864eb708ea32c7c0297d6b44e738abebde99ff8e407ade3b25867a90ae0f"
+    },
+    "show": {
+      "caseCount": 26,
+      "caseStates": "26 PASS",
+      "complete": false,
+      "operationState": "succeeded",
+      "path": "build/evidence/R0.03/lifecycle91-regression-cli/AT-hermes-config-87-show.json",
+      "resultState": "NOT_IMPLEMENTED",
+      "sha256": "b060665e102ea64d0cac095268e02ad1e5527707416d0f8a28dd392a92658854"
+    }
+  },
+  "predicateReview": [
+    {
+      "evidence": "The run/show contain both add-first and refresh-first pairs, two child processes started before first release, exact public argv/process identity, and released provider-response barriers. add-first records both pre-persistence barriers reached; refresh-first records the refresh response barrier and ordered release, while both children were started before release.",
+      "predicate": "Real subprocess refresh/add in both orders through provider barriers",
+      "status": "covered_in_saved_fixture_receipts"
+    },
+    {
+      "evidence": "The fixture emits refreshEffects from rotated to stale in refresh-first and the fresh reload accepts generation stale. That demonstrates a stale-labeled generation in the normal refresh chain, not a delayed/out-of-order stale response being rejected or prevented from replacing a newer accepted generation. auth-fixture.ts explicitly requires staleRefreshTokenRejected and staleRefreshResponse to equal not-exercised; the receipt repeats those values. No existing case asserts the stale-response conflict outcome.",
+      "predicate": "Stale rotation response behavior",
+      "status": "specific_gap"
+    },
+    {
+      "evidence": "The owner checks exact refreshEffects and exact token_refreshes counts, reads expected fresh refresh generations rotated (add-first) and stale (refresh-first), fresh-list counts, added-rotated grant usability, lostUpdateAbsent=true, and rootStoreUnchanged=true. These assertions cover the registered sequence and its normal effect count, but do not fill the stale-response conflict gap above.",
+      "predicate": "Latest accepted refresh generation and added grant survive fresh reload; no lost update/duplicate normal rotation; independent root unchanged",
+      "status": "covered_for_registered_sequence"
+    },
+    {
+      "evidence": "before-replace and after-replace each report NATIVE_AUTH_STORAGE_CRASH_CUT_OBSERVED PASS and are followed by fresh public list/use or priority/use checks. Concurrency crash-cut receipts also record child SIGKILL boundaries.",
+      "predicate": "OS/storage crash/restart cuts",
+      "status": "covered_in_saved_fixture_receipts"
+    },
+    {
+      "evidence": "The spec requires provider ordering, storage/crash behavior, and public fresh-process outcomes. It does not require a probe of an intermediate flock call. The reverted internal observer is unnecessary for these assigned observables.",
+      "predicate": "Observe intermediate flock/syscall acquisition",
+      "status": "not_an_assigned_predicate"
+    }
+  ],
+  "recordedAt": "2026-10-07T06:38:37Z",
+  "review": "auth87-required-observable-coverage",
+  "rootQueue": {
+    "path": "build/ROOT-REQUESTS.md",
+    "sha256": "6bdca8b36154b5ec87875c5a1fe0e5d5f9a8a0b6d172c26c7d99ad9f2dd6307e",
+    "status": "R004-02 PENDING; R005-01 PENDING"
+  },
+  "schemaVersion": 1,
+  "scope": "Read-only comparison of assigned AT-hermes-config-87 predicates against the current fixture owner and its already-saved CLI run/show receipts. No probe, build, source, generator, world, provider, or system operation was performed.",
+  "sourcePins": [
+    {
+      "path": "packages/hermes/src/auth-fixture.ts",
+      "sha256": "a4b7739da7b909ca8fe854bb460a12b4a590dd8cab5545bab69f2cd793fd4898"
+    },
+    {
+      "path": "packages/hermes/src/auth-probe.ts",
+      "sha256": "58b2df70f3cba853b1993be85fb6e2c4732301c841e0edbe1ae78331c5335d0d"
+    },
+    {
+      "path": "patches/hermes-auth-fixture.patch",
+      "sha256": "edcdcf963730b74aba7e77bb544119bff55829f48204e138aedbbd06af965e96"
+    }
+  ]
+}

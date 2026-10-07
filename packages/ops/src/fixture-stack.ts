@@ -314,6 +314,7 @@ export const FixtureProbe = {
       const accounting = (input.caseId === undefined || input.caseId === "model-admission") && ["AT-ops-49", "AT-ops-50", "AT-ops-51", "AT-ops-52"].includes(input.probeId);
       const componentComparison = ["AT-authority-60", "AT-attention-66", "AT-obligations-74", "AT-self-improvement-54", "AT-sources-188", "AT-sources-190", "AT-ops-44", "AT-ops-45", "AT-lifestore-45"].includes(input.probeId) && input.caseId === undefined;
       const dtoRoundtrip = input.probeId === "AT-hermes-config-50" && input.caseId === undefined && sourceRegistration?.owner === "contracts" && sourceRegistration.scenarioId === "contracts.dto-roundtrip";
+      const leastFragileTools = input.probeId === "AT-adhd-features-106" && input.caseId === undefined && sourceRegistration?.owner === "self-improvement" && sourceRegistration.scenarioId === "engineering.least-fragile-tools";
       const capacityTrial = (input.caseId === undefined || input.caseId === "capacity-trial") && ["AT-ops-47", "AT-self-improvement-59", "AT-self-improvement-60", "AT-RESEARCH-REGISTER-6"].includes(input.probeId);
       const durableCadence = (input.caseId === undefined || input.caseId === "durable-cadence-owner-floor") && ["AT-hermes-config-69", "AT-activity-focus-86"].includes(input.probeId) && sourceRegistration?.owner === "self-improvement" && sourceRegistration.scenarioId === "cadence.owner-floor";
       const nativeEligibility = ["AT-ops-81", "AT-client-apps-49", "AT-activity-focus-64"].includes(input.probeId) && (input.caseId === "native-release-eligibility" || (input.caseId === undefined && sourceRegistration?.owner === "ops" && sourceRegistration.scenarioId === "native-release-eligibility"));
@@ -321,7 +322,8 @@ export const FixtureProbe = {
       const roleDenials = (input.caseId === undefined || input.caseId === "control-filesystem-denial") && input.probeId === "AT-authority-35";
       const queueFaults = input.probeId === "AT-obligations-76" && (input.caseId === undefined || input.caseId === "queue-transaction-faults");
       const backupCapacity = ["AT-ops-62", "AT-lifestore-63", "AT-sources-216"].includes(input.probeId) && (input.caseId === "backup-capacity" || (input.caseId === undefined && sourceRegistration?.owner === "ops" && sourceRegistration.scenarioId === "backup-capacity"));
-      if (checks.length > 0 && !reference && !(modelPolicy || modelStream || profileConsumers || mcpHttp || accounting || componentComparison || dtoRoundtrip || capacityTrial || durableCadence || nativeEligibility || nativeAuth || backupCapacity || roleDenials || queueFaults)) refuse("INVALID_INPUT");
+      if (checks.length > 0 && !reference && !(modelPolicy || modelStream || profileConsumers || mcpHttp || accounting || componentComparison || dtoRoundtrip || leastFragileTools || capacityTrial || durableCadence || nativeEligibility || nativeAuth || backupCapacity || roleDenials || queueFaults)) refuse("INVALID_INPUT");
+      if (leastFragileTools && checks.some(check => check.id !== "engineering.least-fragile-tools" || check.owner !== "self-improvement")) refuse("INVALID_INPUT");
       if (dtoRoundtrip && checks.some(check => check.id !== "contracts.dto-roundtrip" || check.owner !== "contracts")) refuse("INVALID_INPUT");
       if (profileConsumers && checks.some(check => check.id !== "profile.native-gateway" || check.owner !== "hermes")) refuse("INVALID_INPUT");
       if (mcpHttp && checks.some(check => check.id !== "profile.native-mcp-http" || check.owner !== "hermes")) refuse("INVALID_INPUT");

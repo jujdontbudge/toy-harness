@@ -809,6 +809,7 @@ RegisteredCheckIdV1 = Literal[
     "contracts.dto-roundtrip",
     "engineering.map",
     "engineering.static",
+    "engineering.least-fragile-tools",
     "accounting.model-admission",
     "capacity.trial-journal",
     "research.component-comparison",

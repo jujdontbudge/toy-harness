@@ -1,0 +1,1528 @@
+{
+  "recordedAt": "2026-10-07T06:36:20.451Z",
+  "rung": "CLI",
+  "unfiltered": true,
+  "wholeATComplete": false,
+  "liveProviderSends": 0,
+  "nativeAttempt": 3,
+  "admissionEvidence": "build/evidence/R0.12/adhd106-final-native-doctor.json",
+  "probes": [
+    {
+      "probeId": "AT-adhd-features-106",
+      "run": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.12/adhd106-final-cli/AT-adhd-features-106-run.json",
+        "sha256": "6836a196b8cfdf6190e04cdc460e5eaa070023c852fb1e523afdc6842f335699"
+      },
+      "operationId": "b301f37f-81ca-4c86-9388-6e1c4d1d15a2",
+      "show": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.12/adhd106-final-cli/AT-adhd-features-106-show.json",
+        "sha256": "e022e9caaa9527b431a47167d94c3052c93f6225d3fde875642ed8239073496a"
+      },
+      "sameData": true,
+      "sourceRegistration": {
+        "id": "AT-adhd-features-106",
+        "rung": "CLI",
+        "sourceAssertionHash": "0cf48737cb30e7053dad160595d3da029af0cbaee251692ae1465878a39fa6f9",
+        "commandId": "probe.run",
+        "scenarioId": "engineering.least-fragile-tools",
+        "owner": "self-improvement",
+        "firstRelease": "R0",
+        "kind": "static_gate",
+        "mandatoryCases": [
+          {
+            "id": "actual-lock-and-owners",
+            "publicOperation": "EngineeringControl.validateLeastFragileTools",
+            "phase": "actual-lock-and-owners"
+          },
+          {
+            "id": "mismatched-lock",
+            "publicOperation": "EngineeringControl.validateLeastFragileTools",
+            "phase": "mismatched-lock"
+          },
+          {
+            "id": "feature-scheduler",
+            "publicOperation": "EngineeringControl.validateLeastFragileTools",
+            "phase": "feature-scheduler"
+          },
+          {
+            "id": "feature-blocker",
+            "publicOperation": "EngineeringControl.validateLeastFragileTools",
+            "phase": "feature-blocker"
+          },
+          {
+            "id": "feature-credentials",
+            "publicOperation": "EngineeringControl.validateLeastFragileTools",
+            "phase": "feature-credentials"
+          },
+          {
+            "id": "runtime-download",
+            "publicOperation": "EngineeringControl.validateLeastFragileTools",
+            "phase": "runtime-download"
+          },
+          {
+            "id": "startup-package-download",
+            "publicOperation": "EngineeringControl.validateLeastFragileTools",
+            "phase": "startup-package-download"
+          },
+          {
+            "id": "private-owner-import",
+            "publicOperation": "EngineeringControl.validateLeastFragileTools",
+            "phase": "private-owner-import"
+          },
+          {
+            "id": "private-public-entry",
+            "publicOperation": "EngineeringControl.validateLeastFragileTools",
+            "phase": "private-public-entry"
+          },
+          {
+            "id": "unproven-alternative",
+            "publicOperation": "EngineeringControl.validateLeastFragileTools",
+            "phase": "unproven-alternative"
+          }
+        ],
+        "trigger": "Validate actual application lock, canonical pins, ADHD public-owner capabilities and actual M08 blocked research readback; isolate failing external OS inputs without writing files.",
+        "faultControls": [
+          {
+            "id": "external-source-overlay",
+            "seam": "os",
+            "affectedPhases": [
+              "mismatched-lock",
+              "feature-scheduler",
+              "feature-blocker",
+              "feature-credentials",
+              "runtime-download",
+              "startup-package-download",
+              "private-owner-import",
+              "private-public-entry"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "owner-source-validation",
+            "independentReader": "EngineeringControl public readback: source inventory digest, three check states and finite rejection reasons",
+            "caseIds": [
+              "actual-lock-and-owners",
+              "mismatched-lock",
+              "feature-scheduler",
+              "feature-blocker",
+              "feature-credentials",
+              "runtime-download",
+              "startup-package-download",
+              "private-owner-import",
+              "private-public-entry",
+              "unproven-alternative"
+            ]
+          },
+          {
+            "id": "real-m08-decision",
+            "independentReader": "EngineeringControl.checkResearch: M08 BLOCKED, null choice, missing G0 validation and release admission",
+            "caseIds": [
+              "actual-lock-and-owners",
+              "mismatched-lock",
+              "feature-scheduler",
+              "feature-blocker",
+              "feature-credentials",
+              "runtime-download",
+              "startup-package-download",
+              "private-owner-import",
+              "private-public-entry",
+              "unproven-alternative"
+            ]
+          },
+          {
+            "id": "unchanged-application-lock",
+            "independentReader": "Retained toy probe run/show and independent filesystem readback of original application lock digest",
+            "caseIds": [
+              "actual-lock-and-owners",
+              "mismatched-lock",
+              "feature-scheduler",
+              "feature-blocker",
+              "feature-credentials",
+              "runtime-download",
+              "startup-package-download",
+              "private-owner-import",
+              "private-public-entry",
+              "unproven-alternative"
+            ]
+          }
+        ],
+        "simUnavailableReason": "TEST-PLAN assigns this prebuild source/lock compatibility check to CLI; a user conversation cannot introduce isolated dependency or OS-source mutations."
+      },
+      "registrationExact": true,
+      "cases": [
+        {
+          "id": "engineering.least-fragile-tools",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:36:21.242Z",
+          "reasonCode": "LEAST_FRAGILE_TOOLS_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"actual-lock-and-owners\",\"expectedFailurePhase\":null,\"ownerStates\":[{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"},{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"},{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"}],\"observedFailures\":[],\"sourceOverlays\":0,\"externalSeam\":\"actual_sources\",\"filesWritten\":false,\"actualLockUnchanged\":true,\"researchDecision\":{\"componentId\":\"M08\",\"state\":\"BLOCKED\",\"selectedTool\":null,\"missingValidationIds\":[\"G0:R0:M08\"]},\"researchAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"nativeAdmissionVerified\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "cbac70e21ed9e9af625d57199aad9b4c33dd57a6c327676c4a1a8e0d697048e2",
+              "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d",
+              "570e921735ed76778864746ef954875cbac9431bf3862f70d38bf69533190b93",
+              "cb940fdd04a1fd8f3ccda07383b59ca279da8ffdacc6da239e501a183ea3fc05",
+              "1520e5a2e3d5f5d72e4373da951570abe9b55fd6c90d5770fd7baf4c9a12d7c5",
+              "58548a27ebef1188bc6ddf4349ec1a46b9cec328a49bace60d65ff09c1516178",
+              "517fe6e96e5a60306c24af43de025b31c91d1c235ca1884c8ed1810c8ea93262",
+              "b473376e473c822ca930b5f62d9cd8dbca72a600364e0cfeb4e6049823e8b481",
+              "c03337cf45b4566a09a1bed5c4a55a3548466ba6f10eca0af8c67f1cc299d707",
+              "77544f2cf942219e5eb052dad12738f1981e0deb6609b283a75d5b5149e1c66f",
+              "a5a7aa698052ad52006e806e0af65034e600cdeb57db25108a33c9e22affd47b",
+              "526b4f967454f88823d0aaa461d1af185186ff0a16f309187d4773814f7bc3c8",
+              "3798c44244de6a4e7259793d8f03dcc6f596415cd27e80352632e0b6c94d2474",
+              "b823967b9b3ffabe4da53343c1205ca12fe73f708b638149995118ec9e7d781f",
+              "bc8630f618dbe2e20e30673f3893eebbd7ec6779931dcb9800728d7685d61257",
+              "38fc305e90a51920456229f124f7455d9b048477a7f303b40f5b5ba081b30841",
+              "4f181c9f85ed5a823a2801416c2e47ac7d2d50cb137a4c67462f969e4dcd5488",
+              "526a993a0f22b2d2176444178c414f42c768f462b82b16554caba0490f539d62",
+              "e89b3336e0c2458ac204fb0927da30f4541abfab48a9d55735c4655719a3f10d",
+              "de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3",
+              "014b3b659391a46492cbdb2b16acfecdcea99bf1db0ade281ed5b3b780c031e0",
+              "4f4e1e038da0edd8e94789a66f6fa54488618f1211026f5bceeb8738d0ee7c13",
+              "1d05eb45ac19b66832681b21c20d014b443a90239a31b2bd96e7ec3298a325a0",
+              "087ee59a3db9407e7d099ebe1de03e60b1093b8ee4f279a64a8212fb97ba97d4",
+              "817397eb64804b1733b8078854583b2d15a7fd16e3c839e65703698892180235",
+              "bc0c7359b09596697361ee68cf3c6e25a653b1715c641a450d7d5685c9bd3c48",
+              "9dd9abecb68e044d0be3cede12784ae92b76d24590d74b860e1b8f40decf3670",
+              "87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed",
+              "148786c9813e819f52c31ea5c8529d2d47308a845dad0840daa965691f5308b5",
+              "69a1d774e0f1f7c5ab66036d3e00b55a5849be7aa680352d42359f67d937357a",
+              "e31f71139a843840cb714a0c85a42786bb308295d67c0585756924473de4a87c",
+              "b1552fe69af229003621293cae8981b2dac6d5107354629b7d5b610c874a40d4",
+              "9fabecd96737de50eb19f0ec53519d0c2e87e33034b332b1facc94a4b573370e",
+              "e9a2805429d979a01ebdae2e6ac4b7f4f65b6ddd68522736e21a85d7391372a8",
+              "5d8f4a275e4d6dff4d40fbf57add6267d7dd55b8fa12560b3eef973c0e50d6c2",
+              "c35c674a1da338bd2e80f1c21e7ccfca2cf9bd82e32cc3faf902c535c33cd21b"
+            ]
+          }
+        },
+        {
+          "id": "engineering.least-fragile-tools",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:36:21.355Z",
+          "reasonCode": "LEAST_FRAGILE_TOOLS_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"mismatched-lock\",\"expectedFailurePhase\":\"canonical-lock\",\"ownerStates\":[{\"state\":\"FAIL\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_FAIL\"},{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"},{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"}],\"observedFailures\":[\"{\\\"phase\\\":\\\"canonical-lock\\\",\\\"failures\\\":[\\\"DEPENDENCY_LOCK_MISMATCH:pg\\\"],\\\"sourceInventoryDigest\\\":\\\"f14de9bf555a829d6744293345dc5a25ecfaf3c54e300d5aae369f93bb09115c\\\",\\\"sourceCount\\\":18,\\\"researchDecision\\\":{\\\"componentId\\\":\\\"M08\\\",\\\"state\\\":\\\"BLOCKED\\\",\\\"selectedTool\\\":null,\\\"missingValidationIds\\\":[\\\"G0:R0:M08\\\"]},\\\"researchAdmission\\\":\\\"BLOCKED\\\",\\\"researchAcceptanceComplete\\\":false,\\\"sourceOverlays\\\":1,\\\"filesWritten\\\":false,\\\"nativeAdmissionVerified\\\":false,\\\"wholeATComplete\\\":false}\"],\"sourceOverlays\":1,\"externalSeam\":\"OS\",\"filesWritten\":false,\"actualLockUnchanged\":true,\"researchDecision\":{\"componentId\":\"M08\",\"state\":\"BLOCKED\",\"selectedTool\":null,\"missingValidationIds\":[\"G0:R0:M08\"]},\"researchAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"nativeAdmissionVerified\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "cbac70e21ed9e9af625d57199aad9b4c33dd57a6c327676c4a1a8e0d697048e2",
+              "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d",
+              "570e921735ed76778864746ef954875cbac9431bf3862f70d38bf69533190b93",
+              "cb940fdd04a1fd8f3ccda07383b59ca279da8ffdacc6da239e501a183ea3fc05",
+              "fea95fbd3218befeabb43b1668244dafc58511bc13803f1d52ce65bde4e67227",
+              "1520e5a2e3d5f5d72e4373da951570abe9b55fd6c90d5770fd7baf4c9a12d7c5",
+              "58548a27ebef1188bc6ddf4349ec1a46b9cec328a49bace60d65ff09c1516178",
+              "517fe6e96e5a60306c24af43de025b31c91d1c235ca1884c8ed1810c8ea93262",
+              "b473376e473c822ca930b5f62d9cd8dbca72a600364e0cfeb4e6049823e8b481",
+              "c03337cf45b4566a09a1bed5c4a55a3548466ba6f10eca0af8c67f1cc299d707",
+              "77544f2cf942219e5eb052dad12738f1981e0deb6609b283a75d5b5149e1c66f",
+              "a5a7aa698052ad52006e806e0af65034e600cdeb57db25108a33c9e22affd47b",
+              "526b4f967454f88823d0aaa461d1af185186ff0a16f309187d4773814f7bc3c8",
+              "3798c44244de6a4e7259793d8f03dcc6f596415cd27e80352632e0b6c94d2474",
+              "b823967b9b3ffabe4da53343c1205ca12fe73f708b638149995118ec9e7d781f",
+              "bc8630f618dbe2e20e30673f3893eebbd7ec6779931dcb9800728d7685d61257",
+              "38fc305e90a51920456229f124f7455d9b048477a7f303b40f5b5ba081b30841",
+              "4f181c9f85ed5a823a2801416c2e47ac7d2d50cb137a4c67462f969e4dcd5488",
+              "526a993a0f22b2d2176444178c414f42c768f462b82b16554caba0490f539d62",
+              "e89b3336e0c2458ac204fb0927da30f4541abfab48a9d55735c4655719a3f10d",
+              "de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3",
+              "014b3b659391a46492cbdb2b16acfecdcea99bf1db0ade281ed5b3b780c031e0",
+              "4f4e1e038da0edd8e94789a66f6fa54488618f1211026f5bceeb8738d0ee7c13",
+              "1d05eb45ac19b66832681b21c20d014b443a90239a31b2bd96e7ec3298a325a0",
+              "087ee59a3db9407e7d099ebe1de03e60b1093b8ee4f279a64a8212fb97ba97d4",
+              "817397eb64804b1733b8078854583b2d15a7fd16e3c839e65703698892180235",
+              "bc0c7359b09596697361ee68cf3c6e25a653b1715c641a450d7d5685c9bd3c48",
+              "9dd9abecb68e044d0be3cede12784ae92b76d24590d74b860e1b8f40decf3670",
+              "87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed",
+              "148786c9813e819f52c31ea5c8529d2d47308a845dad0840daa965691f5308b5",
+              "69a1d774e0f1f7c5ab66036d3e00b55a5849be7aa680352d42359f67d937357a",
+              "e31f71139a843840cb714a0c85a42786bb308295d67c0585756924473de4a87c",
+              "b1552fe69af229003621293cae8981b2dac6d5107354629b7d5b610c874a40d4",
+              "9fabecd96737de50eb19f0ec53519d0c2e87e33034b332b1facc94a4b573370e",
+              "e9a2805429d979a01ebdae2e6ac4b7f4f65b6ddd68522736e21a85d7391372a8",
+              "5d8f4a275e4d6dff4d40fbf57add6267d7dd55b8fa12560b3eef973c0e50d6c2",
+              "c35c674a1da338bd2e80f1c21e7ccfca2cf9bd82e32cc3faf902c535c33cd21b"
+            ]
+          }
+        },
+        {
+          "id": "engineering.least-fragile-tools",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:36:21.465Z",
+          "reasonCode": "LEAST_FRAGILE_TOOLS_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"feature-scheduler\",\"expectedFailurePhase\":\"owner-capabilities\",\"ownerStates\":[{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"},{\"state\":\"FAIL\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_FAIL\"},{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"}],\"observedFailures\":[\"{\\\"phase\\\":\\\"owner-capabilities\\\",\\\"failures\\\":[\\\"FEATURE_AMBIENT_CAPABILITY_REFUSED:packages/adhd/src/at106-external-os-fixture.ts\\\"],\\\"sourceInventoryDigest\\\":\\\"e3b044367c7351ddf4c972e34f75fd3b153ae3dc567f139de16d4f5dd6e2732f\\\",\\\"sourceCount\\\":19,\\\"researchDecision\\\":{\\\"componentId\\\":\\\"M08\\\",\\\"state\\\":\\\"BLOCKED\\\",\\\"selectedTool\\\":null,\\\"missingValidationIds\\\":[\\\"G0:R0:M08\\\"]},\\\"researchAdmission\\\":\\\"BLOCKED\\\",\\\"researchAcceptanceComplete\\\":false,\\\"sourceOverlays\\\":1,\\\"filesWritten\\\":false,\\\"nativeAdmissionVerified\\\":false,\\\"wholeATComplete\\\":false}\"],\"sourceOverlays\":1,\"externalSeam\":\"OS\",\"filesWritten\":false,\"actualLockUnchanged\":true,\"researchDecision\":{\"componentId\":\"M08\",\"state\":\"BLOCKED\",\"selectedTool\":null,\"missingValidationIds\":[\"G0:R0:M08\"]},\"researchAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"nativeAdmissionVerified\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "cbac70e21ed9e9af625d57199aad9b4c33dd57a6c327676c4a1a8e0d697048e2",
+              "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d",
+              "570e921735ed76778864746ef954875cbac9431bf3862f70d38bf69533190b93",
+              "cb940fdd04a1fd8f3ccda07383b59ca279da8ffdacc6da239e501a183ea3fc05",
+              "1520e5a2e3d5f5d72e4373da951570abe9b55fd6c90d5770fd7baf4c9a12d7c5",
+              "58548a27ebef1188bc6ddf4349ec1a46b9cec328a49bace60d65ff09c1516178",
+              "517fe6e96e5a60306c24af43de025b31c91d1c235ca1884c8ed1810c8ea93262",
+              "b473376e473c822ca930b5f62d9cd8dbca72a600364e0cfeb4e6049823e8b481",
+              "c03337cf45b4566a09a1bed5c4a55a3548466ba6f10eca0af8c67f1cc299d707",
+              "77544f2cf942219e5eb052dad12738f1981e0deb6609b283a75d5b5149e1c66f",
+              "a5a7aa698052ad52006e806e0af65034e600cdeb57db25108a33c9e22affd47b",
+              "526b4f967454f88823d0aaa461d1af185186ff0a16f309187d4773814f7bc3c8",
+              "3798c44244de6a4e7259793d8f03dcc6f596415cd27e80352632e0b6c94d2474",
+              "b823967b9b3ffabe4da53343c1205ca12fe73f708b638149995118ec9e7d781f",
+              "bc8630f618dbe2e20e30673f3893eebbd7ec6779931dcb9800728d7685d61257",
+              "38fc305e90a51920456229f124f7455d9b048477a7f303b40f5b5ba081b30841",
+              "4f181c9f85ed5a823a2801416c2e47ac7d2d50cb137a4c67462f969e4dcd5488",
+              "526a993a0f22b2d2176444178c414f42c768f462b82b16554caba0490f539d62",
+              "9431953152722d6d35c357bced98789ace3bb3a11bafdce8460928ead2b50ab3",
+              "e89b3336e0c2458ac204fb0927da30f4541abfab48a9d55735c4655719a3f10d",
+              "de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3",
+              "014b3b659391a46492cbdb2b16acfecdcea99bf1db0ade281ed5b3b780c031e0",
+              "4f4e1e038da0edd8e94789a66f6fa54488618f1211026f5bceeb8738d0ee7c13",
+              "1d05eb45ac19b66832681b21c20d014b443a90239a31b2bd96e7ec3298a325a0",
+              "087ee59a3db9407e7d099ebe1de03e60b1093b8ee4f279a64a8212fb97ba97d4",
+              "817397eb64804b1733b8078854583b2d15a7fd16e3c839e65703698892180235",
+              "bc0c7359b09596697361ee68cf3c6e25a653b1715c641a450d7d5685c9bd3c48",
+              "9dd9abecb68e044d0be3cede12784ae92b76d24590d74b860e1b8f40decf3670",
+              "87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed",
+              "148786c9813e819f52c31ea5c8529d2d47308a845dad0840daa965691f5308b5",
+              "69a1d774e0f1f7c5ab66036d3e00b55a5849be7aa680352d42359f67d937357a",
+              "e31f71139a843840cb714a0c85a42786bb308295d67c0585756924473de4a87c",
+              "b1552fe69af229003621293cae8981b2dac6d5107354629b7d5b610c874a40d4",
+              "9fabecd96737de50eb19f0ec53519d0c2e87e33034b332b1facc94a4b573370e",
+              "e9a2805429d979a01ebdae2e6ac4b7f4f65b6ddd68522736e21a85d7391372a8",
+              "5d8f4a275e4d6dff4d40fbf57add6267d7dd55b8fa12560b3eef973c0e50d6c2",
+              "c35c674a1da338bd2e80f1c21e7ccfca2cf9bd82e32cc3faf902c535c33cd21b"
+            ]
+          }
+        },
+        {
+          "id": "engineering.least-fragile-tools",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:36:21.571Z",
+          "reasonCode": "LEAST_FRAGILE_TOOLS_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"feature-blocker\",\"expectedFailurePhase\":\"owner-capabilities\",\"ownerStates\":[{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"},{\"state\":\"FAIL\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_FAIL\"},{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"}],\"observedFailures\":[\"{\\\"phase\\\":\\\"owner-capabilities\\\",\\\"failures\\\":[\\\"FEATURE_OWNER_IMPORT_REFUSED:node:child_process\\\"],\\\"sourceInventoryDigest\\\":\\\"3906d9158b109790d0146ad8e37edd0d6f7125c49c892266a65bb29871e60869\\\",\\\"sourceCount\\\":19,\\\"researchDecision\\\":{\\\"componentId\\\":\\\"M08\\\",\\\"state\\\":\\\"BLOCKED\\\",\\\"selectedTool\\\":null,\\\"missingValidationIds\\\":[\\\"G0:R0:M08\\\"]},\\\"researchAdmission\\\":\\\"BLOCKED\\\",\\\"researchAcceptanceComplete\\\":false,\\\"sourceOverlays\\\":1,\\\"filesWritten\\\":false,\\\"nativeAdmissionVerified\\\":false,\\\"wholeATComplete\\\":false}\"],\"sourceOverlays\":1,\"externalSeam\":\"OS\",\"filesWritten\":false,\"actualLockUnchanged\":true,\"researchDecision\":{\"componentId\":\"M08\",\"state\":\"BLOCKED\",\"selectedTool\":null,\"missingValidationIds\":[\"G0:R0:M08\"]},\"researchAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"nativeAdmissionVerified\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "cbac70e21ed9e9af625d57199aad9b4c33dd57a6c327676c4a1a8e0d697048e2",
+              "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d",
+              "570e921735ed76778864746ef954875cbac9431bf3862f70d38bf69533190b93",
+              "cb940fdd04a1fd8f3ccda07383b59ca279da8ffdacc6da239e501a183ea3fc05",
+              "1520e5a2e3d5f5d72e4373da951570abe9b55fd6c90d5770fd7baf4c9a12d7c5",
+              "58548a27ebef1188bc6ddf4349ec1a46b9cec328a49bace60d65ff09c1516178",
+              "517fe6e96e5a60306c24af43de025b31c91d1c235ca1884c8ed1810c8ea93262",
+              "b473376e473c822ca930b5f62d9cd8dbca72a600364e0cfeb4e6049823e8b481",
+              "c03337cf45b4566a09a1bed5c4a55a3548466ba6f10eca0af8c67f1cc299d707",
+              "77544f2cf942219e5eb052dad12738f1981e0deb6609b283a75d5b5149e1c66f",
+              "a5a7aa698052ad52006e806e0af65034e600cdeb57db25108a33c9e22affd47b",
+              "526b4f967454f88823d0aaa461d1af185186ff0a16f309187d4773814f7bc3c8",
+              "3798c44244de6a4e7259793d8f03dcc6f596415cd27e80352632e0b6c94d2474",
+              "b823967b9b3ffabe4da53343c1205ca12fe73f708b638149995118ec9e7d781f",
+              "bc8630f618dbe2e20e30673f3893eebbd7ec6779931dcb9800728d7685d61257",
+              "38fc305e90a51920456229f124f7455d9b048477a7f303b40f5b5ba081b30841",
+              "4f181c9f85ed5a823a2801416c2e47ac7d2d50cb137a4c67462f969e4dcd5488",
+              "526a993a0f22b2d2176444178c414f42c768f462b82b16554caba0490f539d62",
+              "1f4dda1b7c084f1fb27ccfccb216ef954ac6dcd7b60537b959342ba6977e0809",
+              "e89b3336e0c2458ac204fb0927da30f4541abfab48a9d55735c4655719a3f10d",
+              "de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3",
+              "014b3b659391a46492cbdb2b16acfecdcea99bf1db0ade281ed5b3b780c031e0",
+              "4f4e1e038da0edd8e94789a66f6fa54488618f1211026f5bceeb8738d0ee7c13",
+              "1d05eb45ac19b66832681b21c20d014b443a90239a31b2bd96e7ec3298a325a0",
+              "087ee59a3db9407e7d099ebe1de03e60b1093b8ee4f279a64a8212fb97ba97d4",
+              "817397eb64804b1733b8078854583b2d15a7fd16e3c839e65703698892180235",
+              "bc0c7359b09596697361ee68cf3c6e25a653b1715c641a450d7d5685c9bd3c48",
+              "9dd9abecb68e044d0be3cede12784ae92b76d24590d74b860e1b8f40decf3670",
+              "87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed",
+              "148786c9813e819f52c31ea5c8529d2d47308a845dad0840daa965691f5308b5",
+              "69a1d774e0f1f7c5ab66036d3e00b55a5849be7aa680352d42359f67d937357a",
+              "e31f71139a843840cb714a0c85a42786bb308295d67c0585756924473de4a87c",
+              "b1552fe69af229003621293cae8981b2dac6d5107354629b7d5b610c874a40d4",
+              "9fabecd96737de50eb19f0ec53519d0c2e87e33034b332b1facc94a4b573370e",
+              "e9a2805429d979a01ebdae2e6ac4b7f4f65b6ddd68522736e21a85d7391372a8",
+              "5d8f4a275e4d6dff4d40fbf57add6267d7dd55b8fa12560b3eef973c0e50d6c2",
+              "c35c674a1da338bd2e80f1c21e7ccfca2cf9bd82e32cc3faf902c535c33cd21b"
+            ]
+          }
+        },
+        {
+          "id": "engineering.least-fragile-tools",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:36:21.675Z",
+          "reasonCode": "LEAST_FRAGILE_TOOLS_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"feature-credentials\",\"expectedFailurePhase\":\"owner-capabilities\",\"ownerStates\":[{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"},{\"state\":\"FAIL\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_FAIL\"},{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"}],\"observedFailures\":[\"{\\\"phase\\\":\\\"owner-capabilities\\\",\\\"failures\\\":[\\\"FEATURE_OWNER_IMPORT_REFUSED:node:fs\\\"],\\\"sourceInventoryDigest\\\":\\\"2bab0f57036b2b4a74cd1e2dd4cfc791cb0469a999d3589a652e62107be70701\\\",\\\"sourceCount\\\":19,\\\"researchDecision\\\":{\\\"componentId\\\":\\\"M08\\\",\\\"state\\\":\\\"BLOCKED\\\",\\\"selectedTool\\\":null,\\\"missingValidationIds\\\":[\\\"G0:R0:M08\\\"]},\\\"researchAdmission\\\":\\\"BLOCKED\\\",\\\"researchAcceptanceComplete\\\":false,\\\"sourceOverlays\\\":1,\\\"filesWritten\\\":false,\\\"nativeAdmissionVerified\\\":false,\\\"wholeATComplete\\\":false}\"],\"sourceOverlays\":1,\"externalSeam\":\"OS\",\"filesWritten\":false,\"actualLockUnchanged\":true,\"researchDecision\":{\"componentId\":\"M08\",\"state\":\"BLOCKED\",\"selectedTool\":null,\"missingValidationIds\":[\"G0:R0:M08\"]},\"researchAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"nativeAdmissionVerified\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "cbac70e21ed9e9af625d57199aad9b4c33dd57a6c327676c4a1a8e0d697048e2",
+              "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d",
+              "570e921735ed76778864746ef954875cbac9431bf3862f70d38bf69533190b93",
+              "cb940fdd04a1fd8f3ccda07383b59ca279da8ffdacc6da239e501a183ea3fc05",
+              "1520e5a2e3d5f5d72e4373da951570abe9b55fd6c90d5770fd7baf4c9a12d7c5",
+              "58548a27ebef1188bc6ddf4349ec1a46b9cec328a49bace60d65ff09c1516178",
+              "517fe6e96e5a60306c24af43de025b31c91d1c235ca1884c8ed1810c8ea93262",
+              "b473376e473c822ca930b5f62d9cd8dbca72a600364e0cfeb4e6049823e8b481",
+              "c03337cf45b4566a09a1bed5c4a55a3548466ba6f10eca0af8c67f1cc299d707",
+              "77544f2cf942219e5eb052dad12738f1981e0deb6609b283a75d5b5149e1c66f",
+              "a5a7aa698052ad52006e806e0af65034e600cdeb57db25108a33c9e22affd47b",
+              "526b4f967454f88823d0aaa461d1af185186ff0a16f309187d4773814f7bc3c8",
+              "3798c44244de6a4e7259793d8f03dcc6f596415cd27e80352632e0b6c94d2474",
+              "b823967b9b3ffabe4da53343c1205ca12fe73f708b638149995118ec9e7d781f",
+              "bc8630f618dbe2e20e30673f3893eebbd7ec6779931dcb9800728d7685d61257",
+              "38fc305e90a51920456229f124f7455d9b048477a7f303b40f5b5ba081b30841",
+              "4f181c9f85ed5a823a2801416c2e47ac7d2d50cb137a4c67462f969e4dcd5488",
+              "526a993a0f22b2d2176444178c414f42c768f462b82b16554caba0490f539d62",
+              "85f0476d221642be1fcfe733af6d63b619bfafafb6bfd26c1efe6a7e0d5a09d3",
+              "e89b3336e0c2458ac204fb0927da30f4541abfab48a9d55735c4655719a3f10d",
+              "de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3",
+              "014b3b659391a46492cbdb2b16acfecdcea99bf1db0ade281ed5b3b780c031e0",
+              "4f4e1e038da0edd8e94789a66f6fa54488618f1211026f5bceeb8738d0ee7c13",
+              "1d05eb45ac19b66832681b21c20d014b443a90239a31b2bd96e7ec3298a325a0",
+              "087ee59a3db9407e7d099ebe1de03e60b1093b8ee4f279a64a8212fb97ba97d4",
+              "817397eb64804b1733b8078854583b2d15a7fd16e3c839e65703698892180235",
+              "bc0c7359b09596697361ee68cf3c6e25a653b1715c641a450d7d5685c9bd3c48",
+              "9dd9abecb68e044d0be3cede12784ae92b76d24590d74b860e1b8f40decf3670",
+              "87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed",
+              "148786c9813e819f52c31ea5c8529d2d47308a845dad0840daa965691f5308b5",
+              "69a1d774e0f1f7c5ab66036d3e00b55a5849be7aa680352d42359f67d937357a",
+              "e31f71139a843840cb714a0c85a42786bb308295d67c0585756924473de4a87c",
+              "b1552fe69af229003621293cae8981b2dac6d5107354629b7d5b610c874a40d4",
+              "9fabecd96737de50eb19f0ec53519d0c2e87e33034b332b1facc94a4b573370e",
+              "e9a2805429d979a01ebdae2e6ac4b7f4f65b6ddd68522736e21a85d7391372a8",
+              "5d8f4a275e4d6dff4d40fbf57add6267d7dd55b8fa12560b3eef973c0e50d6c2",
+              "c35c674a1da338bd2e80f1c21e7ccfca2cf9bd82e32cc3faf902c535c33cd21b"
+            ]
+          }
+        },
+        {
+          "id": "engineering.least-fragile-tools",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:36:21.775Z",
+          "reasonCode": "LEAST_FRAGILE_TOOLS_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"runtime-download\",\"expectedFailurePhase\":\"owner-capabilities\",\"ownerStates\":[{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"},{\"state\":\"FAIL\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_FAIL\"},{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"}],\"observedFailures\":[\"{\\\"phase\\\":\\\"owner-capabilities\\\",\\\"failures\\\":[\\\"FEATURE_AMBIENT_CAPABILITY_REFUSED:packages/adhd/src/at106-external-os-fixture.ts\\\"],\\\"sourceInventoryDigest\\\":\\\"0c6f73d518d49a10b446f69cd2b5a22d2cd7e3bf6674d4ece19a0521ac0c3c1c\\\",\\\"sourceCount\\\":19,\\\"researchDecision\\\":{\\\"componentId\\\":\\\"M08\\\",\\\"state\\\":\\\"BLOCKED\\\",\\\"selectedTool\\\":null,\\\"missingValidationIds\\\":[\\\"G0:R0:M08\\\"]},\\\"researchAdmission\\\":\\\"BLOCKED\\\",\\\"researchAcceptanceComplete\\\":false,\\\"sourceOverlays\\\":1,\\\"filesWritten\\\":false,\\\"nativeAdmissionVerified\\\":false,\\\"wholeATComplete\\\":false}\"],\"sourceOverlays\":1,\"externalSeam\":\"OS\",\"filesWritten\":false,\"actualLockUnchanged\":true,\"researchDecision\":{\"componentId\":\"M08\",\"state\":\"BLOCKED\",\"selectedTool\":null,\"missingValidationIds\":[\"G0:R0:M08\"]},\"researchAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"nativeAdmissionVerified\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "cbac70e21ed9e9af625d57199aad9b4c33dd57a6c327676c4a1a8e0d697048e2",
+              "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d",
+              "570e921735ed76778864746ef954875cbac9431bf3862f70d38bf69533190b93",
+              "cb940fdd04a1fd8f3ccda07383b59ca279da8ffdacc6da239e501a183ea3fc05",
+              "1520e5a2e3d5f5d72e4373da951570abe9b55fd6c90d5770fd7baf4c9a12d7c5",
+              "58548a27ebef1188bc6ddf4349ec1a46b9cec328a49bace60d65ff09c1516178",
+              "517fe6e96e5a60306c24af43de025b31c91d1c235ca1884c8ed1810c8ea93262",
+              "b473376e473c822ca930b5f62d9cd8dbca72a600364e0cfeb4e6049823e8b481",
+              "c03337cf45b4566a09a1bed5c4a55a3548466ba6f10eca0af8c67f1cc299d707",
+              "77544f2cf942219e5eb052dad12738f1981e0deb6609b283a75d5b5149e1c66f",
+              "a5a7aa698052ad52006e806e0af65034e600cdeb57db25108a33c9e22affd47b",
+              "526b4f967454f88823d0aaa461d1af185186ff0a16f309187d4773814f7bc3c8",
+              "3798c44244de6a4e7259793d8f03dcc6f596415cd27e80352632e0b6c94d2474",
+              "b823967b9b3ffabe4da53343c1205ca12fe73f708b638149995118ec9e7d781f",
+              "bc8630f618dbe2e20e30673f3893eebbd7ec6779931dcb9800728d7685d61257",
+              "38fc305e90a51920456229f124f7455d9b048477a7f303b40f5b5ba081b30841",
+              "4f181c9f85ed5a823a2801416c2e47ac7d2d50cb137a4c67462f969e4dcd5488",
+              "526a993a0f22b2d2176444178c414f42c768f462b82b16554caba0490f539d62",
+              "e340db36f6c405d9e6461e8f5d30027b21d0533b6070d1a1fa5f239737789866",
+              "e89b3336e0c2458ac204fb0927da30f4541abfab48a9d55735c4655719a3f10d",
+              "de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3",
+              "014b3b659391a46492cbdb2b16acfecdcea99bf1db0ade281ed5b3b780c031e0",
+              "4f4e1e038da0edd8e94789a66f6fa54488618f1211026f5bceeb8738d0ee7c13",
+              "1d05eb45ac19b66832681b21c20d014b443a90239a31b2bd96e7ec3298a325a0",
+              "087ee59a3db9407e7d099ebe1de03e60b1093b8ee4f279a64a8212fb97ba97d4",
+              "817397eb64804b1733b8078854583b2d15a7fd16e3c839e65703698892180235",
+              "bc0c7359b09596697361ee68cf3c6e25a653b1715c641a450d7d5685c9bd3c48",
+              "9dd9abecb68e044d0be3cede12784ae92b76d24590d74b860e1b8f40decf3670",
+              "87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed",
+              "148786c9813e819f52c31ea5c8529d2d47308a845dad0840daa965691f5308b5",
+              "69a1d774e0f1f7c5ab66036d3e00b55a5849be7aa680352d42359f67d937357a",
+              "e31f71139a843840cb714a0c85a42786bb308295d67c0585756924473de4a87c",
+              "b1552fe69af229003621293cae8981b2dac6d5107354629b7d5b610c874a40d4",
+              "9fabecd96737de50eb19f0ec53519d0c2e87e33034b332b1facc94a4b573370e",
+              "e9a2805429d979a01ebdae2e6ac4b7f4f65b6ddd68522736e21a85d7391372a8",
+              "5d8f4a275e4d6dff4d40fbf57add6267d7dd55b8fa12560b3eef973c0e50d6c2",
+              "c35c674a1da338bd2e80f1c21e7ccfca2cf9bd82e32cc3faf902c535c33cd21b"
+            ]
+          }
+        },
+        {
+          "id": "engineering.least-fragile-tools",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:36:21.875Z",
+          "reasonCode": "LEAST_FRAGILE_TOOLS_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"startup-package-download\",\"expectedFailurePhase\":\"owner-capabilities\",\"ownerStates\":[{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"},{\"state\":\"FAIL\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_FAIL\"},{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"}],\"observedFailures\":[\"{\\\"phase\\\":\\\"owner-capabilities\\\",\\\"failures\\\":[\\\"FEATURE_LIFECYCLE_SCRIPT_REFUSED\\\"],\\\"sourceInventoryDigest\\\":\\\"5451e37acc010a210ef861673585129b66c0d4519d7b8370cfeed299f7b2d43c\\\",\\\"sourceCount\\\":18,\\\"researchDecision\\\":{\\\"componentId\\\":\\\"M08\\\",\\\"state\\\":\\\"BLOCKED\\\",\\\"selectedTool\\\":null,\\\"missingValidationIds\\\":[\\\"G0:R0:M08\\\"]},\\\"researchAdmission\\\":\\\"BLOCKED\\\",\\\"researchAcceptanceComplete\\\":false,\\\"sourceOverlays\\\":1,\\\"filesWritten\\\":false,\\\"nativeAdmissionVerified\\\":false,\\\"wholeATComplete\\\":false}\"],\"sourceOverlays\":1,\"externalSeam\":\"OS\",\"filesWritten\":false,\"actualLockUnchanged\":true,\"researchDecision\":{\"componentId\":\"M08\",\"state\":\"BLOCKED\",\"selectedTool\":null,\"missingValidationIds\":[\"G0:R0:M08\"]},\"researchAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"nativeAdmissionVerified\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "cbac70e21ed9e9af625d57199aad9b4c33dd57a6c327676c4a1a8e0d697048e2",
+              "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d",
+              "570e921735ed76778864746ef954875cbac9431bf3862f70d38bf69533190b93",
+              "cb940fdd04a1fd8f3ccda07383b59ca279da8ffdacc6da239e501a183ea3fc05",
+              "5be4bbc93a5c93e1bcd4e760f400e51335f052c6b8ec2da45164377926b07b4b",
+              "58548a27ebef1188bc6ddf4349ec1a46b9cec328a49bace60d65ff09c1516178",
+              "517fe6e96e5a60306c24af43de025b31c91d1c235ca1884c8ed1810c8ea93262",
+              "b473376e473c822ca930b5f62d9cd8dbca72a600364e0cfeb4e6049823e8b481",
+              "c03337cf45b4566a09a1bed5c4a55a3548466ba6f10eca0af8c67f1cc299d707",
+              "77544f2cf942219e5eb052dad12738f1981e0deb6609b283a75d5b5149e1c66f",
+              "a5a7aa698052ad52006e806e0af65034e600cdeb57db25108a33c9e22affd47b",
+              "526b4f967454f88823d0aaa461d1af185186ff0a16f309187d4773814f7bc3c8",
+              "3798c44244de6a4e7259793d8f03dcc6f596415cd27e80352632e0b6c94d2474",
+              "b823967b9b3ffabe4da53343c1205ca12fe73f708b638149995118ec9e7d781f",
+              "bc8630f618dbe2e20e30673f3893eebbd7ec6779931dcb9800728d7685d61257",
+              "38fc305e90a51920456229f124f7455d9b048477a7f303b40f5b5ba081b30841",
+              "4f181c9f85ed5a823a2801416c2e47ac7d2d50cb137a4c67462f969e4dcd5488",
+              "526a993a0f22b2d2176444178c414f42c768f462b82b16554caba0490f539d62",
+              "e89b3336e0c2458ac204fb0927da30f4541abfab48a9d55735c4655719a3f10d",
+              "de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3",
+              "014b3b659391a46492cbdb2b16acfecdcea99bf1db0ade281ed5b3b780c031e0",
+              "4f4e1e038da0edd8e94789a66f6fa54488618f1211026f5bceeb8738d0ee7c13",
+              "1d05eb45ac19b66832681b21c20d014b443a90239a31b2bd96e7ec3298a325a0",
+              "087ee59a3db9407e7d099ebe1de03e60b1093b8ee4f279a64a8212fb97ba97d4",
+              "817397eb64804b1733b8078854583b2d15a7fd16e3c839e65703698892180235",
+              "bc0c7359b09596697361ee68cf3c6e25a653b1715c641a450d7d5685c9bd3c48",
+              "9dd9abecb68e044d0be3cede12784ae92b76d24590d74b860e1b8f40decf3670",
+              "87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed",
+              "148786c9813e819f52c31ea5c8529d2d47308a845dad0840daa965691f5308b5",
+              "69a1d774e0f1f7c5ab66036d3e00b55a5849be7aa680352d42359f67d937357a",
+              "e31f71139a843840cb714a0c85a42786bb308295d67c0585756924473de4a87c",
+              "b1552fe69af229003621293cae8981b2dac6d5107354629b7d5b610c874a40d4",
+              "9fabecd96737de50eb19f0ec53519d0c2e87e33034b332b1facc94a4b573370e",
+              "e9a2805429d979a01ebdae2e6ac4b7f4f65b6ddd68522736e21a85d7391372a8",
+              "5d8f4a275e4d6dff4d40fbf57add6267d7dd55b8fa12560b3eef973c0e50d6c2",
+              "c35c674a1da338bd2e80f1c21e7ccfca2cf9bd82e32cc3faf902c535c33cd21b"
+            ]
+          }
+        },
+        {
+          "id": "engineering.least-fragile-tools",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:36:21.975Z",
+          "reasonCode": "LEAST_FRAGILE_TOOLS_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"private-owner-import\",\"expectedFailurePhase\":\"owner-capabilities\",\"ownerStates\":[{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"},{\"state\":\"FAIL\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_FAIL\"},{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"}],\"observedFailures\":[\"{\\\"phase\\\":\\\"owner-capabilities\\\",\\\"failures\\\":[\\\"FEATURE_LOCAL_IMPORT_REFUSED:../../self-improvement/src/model-admission.js\\\"],\\\"sourceInventoryDigest\\\":\\\"16894ef5603a8ca19ce540f95502032d156ddb2ca30e4fc22a3266a4c858b2e0\\\",\\\"sourceCount\\\":19,\\\"researchDecision\\\":{\\\"componentId\\\":\\\"M08\\\",\\\"state\\\":\\\"BLOCKED\\\",\\\"selectedTool\\\":null,\\\"missingValidationIds\\\":[\\\"G0:R0:M08\\\"]},\\\"researchAdmission\\\":\\\"BLOCKED\\\",\\\"researchAcceptanceComplete\\\":false,\\\"sourceOverlays\\\":1,\\\"filesWritten\\\":false,\\\"nativeAdmissionVerified\\\":false,\\\"wholeATComplete\\\":false}\"],\"sourceOverlays\":1,\"externalSeam\":\"OS\",\"filesWritten\":false,\"actualLockUnchanged\":true,\"researchDecision\":{\"componentId\":\"M08\",\"state\":\"BLOCKED\",\"selectedTool\":null,\"missingValidationIds\":[\"G0:R0:M08\"]},\"researchAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"nativeAdmissionVerified\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "cbac70e21ed9e9af625d57199aad9b4c33dd57a6c327676c4a1a8e0d697048e2",
+              "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d",
+              "570e921735ed76778864746ef954875cbac9431bf3862f70d38bf69533190b93",
+              "cb940fdd04a1fd8f3ccda07383b59ca279da8ffdacc6da239e501a183ea3fc05",
+              "1520e5a2e3d5f5d72e4373da951570abe9b55fd6c90d5770fd7baf4c9a12d7c5",
+              "58548a27ebef1188bc6ddf4349ec1a46b9cec328a49bace60d65ff09c1516178",
+              "517fe6e96e5a60306c24af43de025b31c91d1c235ca1884c8ed1810c8ea93262",
+              "b473376e473c822ca930b5f62d9cd8dbca72a600364e0cfeb4e6049823e8b481",
+              "c03337cf45b4566a09a1bed5c4a55a3548466ba6f10eca0af8c67f1cc299d707",
+              "77544f2cf942219e5eb052dad12738f1981e0deb6609b283a75d5b5149e1c66f",
+              "a5a7aa698052ad52006e806e0af65034e600cdeb57db25108a33c9e22affd47b",
+              "526b4f967454f88823d0aaa461d1af185186ff0a16f309187d4773814f7bc3c8",
+              "3798c44244de6a4e7259793d8f03dcc6f596415cd27e80352632e0b6c94d2474",
+              "b823967b9b3ffabe4da53343c1205ca12fe73f708b638149995118ec9e7d781f",
+              "bc8630f618dbe2e20e30673f3893eebbd7ec6779931dcb9800728d7685d61257",
+              "38fc305e90a51920456229f124f7455d9b048477a7f303b40f5b5ba081b30841",
+              "4f181c9f85ed5a823a2801416c2e47ac7d2d50cb137a4c67462f969e4dcd5488",
+              "526a993a0f22b2d2176444178c414f42c768f462b82b16554caba0490f539d62",
+              "386bb9b497bc68934374e5769c8dca5d3b584f45c6ce345e8e3871022fb4d283",
+              "e89b3336e0c2458ac204fb0927da30f4541abfab48a9d55735c4655719a3f10d",
+              "de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3",
+              "014b3b659391a46492cbdb2b16acfecdcea99bf1db0ade281ed5b3b780c031e0",
+              "4f4e1e038da0edd8e94789a66f6fa54488618f1211026f5bceeb8738d0ee7c13",
+              "1d05eb45ac19b66832681b21c20d014b443a90239a31b2bd96e7ec3298a325a0",
+              "087ee59a3db9407e7d099ebe1de03e60b1093b8ee4f279a64a8212fb97ba97d4",
+              "817397eb64804b1733b8078854583b2d15a7fd16e3c839e65703698892180235",
+              "bc0c7359b09596697361ee68cf3c6e25a653b1715c641a450d7d5685c9bd3c48",
+              "9dd9abecb68e044d0be3cede12784ae92b76d24590d74b860e1b8f40decf3670",
+              "87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed",
+              "148786c9813e819f52c31ea5c8529d2d47308a845dad0840daa965691f5308b5",
+              "69a1d774e0f1f7c5ab66036d3e00b55a5849be7aa680352d42359f67d937357a",
+              "e31f71139a843840cb714a0c85a42786bb308295d67c0585756924473de4a87c",
+              "b1552fe69af229003621293cae8981b2dac6d5107354629b7d5b610c874a40d4",
+              "9fabecd96737de50eb19f0ec53519d0c2e87e33034b332b1facc94a4b573370e",
+              "e9a2805429d979a01ebdae2e6ac4b7f4f65b6ddd68522736e21a85d7391372a8",
+              "5d8f4a275e4d6dff4d40fbf57add6267d7dd55b8fa12560b3eef973c0e50d6c2",
+              "c35c674a1da338bd2e80f1c21e7ccfca2cf9bd82e32cc3faf902c535c33cd21b"
+            ]
+          }
+        },
+        {
+          "id": "engineering.least-fragile-tools",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:36:22.075Z",
+          "reasonCode": "LEAST_FRAGILE_TOOLS_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"private-public-entry\",\"expectedFailurePhase\":\"owner-capabilities\",\"ownerStates\":[{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"},{\"state\":\"FAIL\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_FAIL\"},{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"}],\"observedFailures\":[\"{\\\"phase\\\":\\\"owner-capabilities\\\",\\\"failures\\\":[\\\"FEATURE_PUBLIC_ENTRY_REFUSED\\\"],\\\"sourceInventoryDigest\\\":\\\"b60b1810f7a31624da2597e4bf8b90d6fdaa8ff3dcdbd373910c604ee3d58cb5\\\",\\\"sourceCount\\\":18,\\\"researchDecision\\\":{\\\"componentId\\\":\\\"M08\\\",\\\"state\\\":\\\"BLOCKED\\\",\\\"selectedTool\\\":null,\\\"missingValidationIds\\\":[\\\"G0:R0:M08\\\"]},\\\"researchAdmission\\\":\\\"BLOCKED\\\",\\\"researchAcceptanceComplete\\\":false,\\\"sourceOverlays\\\":1,\\\"filesWritten\\\":false,\\\"nativeAdmissionVerified\\\":false,\\\"wholeATComplete\\\":false}\"],\"sourceOverlays\":1,\"externalSeam\":\"OS\",\"filesWritten\":false,\"actualLockUnchanged\":true,\"researchDecision\":{\"componentId\":\"M08\",\"state\":\"BLOCKED\",\"selectedTool\":null,\"missingValidationIds\":[\"G0:R0:M08\"]},\"researchAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"nativeAdmissionVerified\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "cbac70e21ed9e9af625d57199aad9b4c33dd57a6c327676c4a1a8e0d697048e2",
+              "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d",
+              "570e921735ed76778864746ef954875cbac9431bf3862f70d38bf69533190b93",
+              "cb940fdd04a1fd8f3ccda07383b59ca279da8ffdacc6da239e501a183ea3fc05",
+              "b23a14b56e98958eaf711898901a665984bce8480cd97f02e3d3fa1d7a81e66c",
+              "58548a27ebef1188bc6ddf4349ec1a46b9cec328a49bace60d65ff09c1516178",
+              "517fe6e96e5a60306c24af43de025b31c91d1c235ca1884c8ed1810c8ea93262",
+              "b473376e473c822ca930b5f62d9cd8dbca72a600364e0cfeb4e6049823e8b481",
+              "c03337cf45b4566a09a1bed5c4a55a3548466ba6f10eca0af8c67f1cc299d707",
+              "77544f2cf942219e5eb052dad12738f1981e0deb6609b283a75d5b5149e1c66f",
+              "a5a7aa698052ad52006e806e0af65034e600cdeb57db25108a33c9e22affd47b",
+              "526b4f967454f88823d0aaa461d1af185186ff0a16f309187d4773814f7bc3c8",
+              "3798c44244de6a4e7259793d8f03dcc6f596415cd27e80352632e0b6c94d2474",
+              "b823967b9b3ffabe4da53343c1205ca12fe73f708b638149995118ec9e7d781f",
+              "bc8630f618dbe2e20e30673f3893eebbd7ec6779931dcb9800728d7685d61257",
+              "38fc305e90a51920456229f124f7455d9b048477a7f303b40f5b5ba081b30841",
+              "4f181c9f85ed5a823a2801416c2e47ac7d2d50cb137a4c67462f969e4dcd5488",
+              "526a993a0f22b2d2176444178c414f42c768f462b82b16554caba0490f539d62",
+              "e89b3336e0c2458ac204fb0927da30f4541abfab48a9d55735c4655719a3f10d",
+              "de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3",
+              "014b3b659391a46492cbdb2b16acfecdcea99bf1db0ade281ed5b3b780c031e0",
+              "4f4e1e038da0edd8e94789a66f6fa54488618f1211026f5bceeb8738d0ee7c13",
+              "1d05eb45ac19b66832681b21c20d014b443a90239a31b2bd96e7ec3298a325a0",
+              "087ee59a3db9407e7d099ebe1de03e60b1093b8ee4f279a64a8212fb97ba97d4",
+              "817397eb64804b1733b8078854583b2d15a7fd16e3c839e65703698892180235",
+              "bc0c7359b09596697361ee68cf3c6e25a653b1715c641a450d7d5685c9bd3c48",
+              "9dd9abecb68e044d0be3cede12784ae92b76d24590d74b860e1b8f40decf3670",
+              "87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed",
+              "148786c9813e819f52c31ea5c8529d2d47308a845dad0840daa965691f5308b5",
+              "69a1d774e0f1f7c5ab66036d3e00b55a5849be7aa680352d42359f67d937357a",
+              "e31f71139a843840cb714a0c85a42786bb308295d67c0585756924473de4a87c",
+              "b1552fe69af229003621293cae8981b2dac6d5107354629b7d5b610c874a40d4",
+              "9fabecd96737de50eb19f0ec53519d0c2e87e33034b332b1facc94a4b573370e",
+              "e9a2805429d979a01ebdae2e6ac4b7f4f65b6ddd68522736e21a85d7391372a8",
+              "5d8f4a275e4d6dff4d40fbf57add6267d7dd55b8fa12560b3eef973c0e50d6c2",
+              "c35c674a1da338bd2e80f1c21e7ccfca2cf9bd82e32cc3faf902c535c33cd21b"
+            ]
+          }
+        },
+        {
+          "id": "engineering.least-fragile-tools",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:36:22.173Z",
+          "reasonCode": "LEAST_FRAGILE_TOOLS_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"unproven-alternative\",\"expectedFailurePhase\":null,\"ownerStates\":[{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"},{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"},{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"}],\"observedFailures\":[],\"sourceOverlays\":0,\"externalSeam\":\"actual_sources\",\"filesWritten\":false,\"actualLockUnchanged\":true,\"researchDecision\":{\"componentId\":\"M08\",\"state\":\"BLOCKED\",\"selectedTool\":null,\"missingValidationIds\":[\"G0:R0:M08\"]},\"researchAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"nativeAdmissionVerified\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "cbac70e21ed9e9af625d57199aad9b4c33dd57a6c327676c4a1a8e0d697048e2",
+              "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d",
+              "570e921735ed76778864746ef954875cbac9431bf3862f70d38bf69533190b93",
+              "cb940fdd04a1fd8f3ccda07383b59ca279da8ffdacc6da239e501a183ea3fc05",
+              "1520e5a2e3d5f5d72e4373da951570abe9b55fd6c90d5770fd7baf4c9a12d7c5",
+              "58548a27ebef1188bc6ddf4349ec1a46b9cec328a49bace60d65ff09c1516178",
+              "517fe6e96e5a60306c24af43de025b31c91d1c235ca1884c8ed1810c8ea93262",
+              "b473376e473c822ca930b5f62d9cd8dbca72a600364e0cfeb4e6049823e8b481",
+              "c03337cf45b4566a09a1bed5c4a55a3548466ba6f10eca0af8c67f1cc299d707",
+              "77544f2cf942219e5eb052dad12738f1981e0deb6609b283a75d5b5149e1c66f",
+              "a5a7aa698052ad52006e806e0af65034e600cdeb57db25108a33c9e22affd47b",
+              "526b4f967454f88823d0aaa461d1af185186ff0a16f309187d4773814f7bc3c8",
+              "3798c44244de6a4e7259793d8f03dcc6f596415cd27e80352632e0b6c94d2474",
+              "b823967b9b3ffabe4da53343c1205ca12fe73f708b638149995118ec9e7d781f",
+              "bc8630f618dbe2e20e30673f3893eebbd7ec6779931dcb9800728d7685d61257",
+              "38fc305e90a51920456229f124f7455d9b048477a7f303b40f5b5ba081b30841",
+              "4f181c9f85ed5a823a2801416c2e47ac7d2d50cb137a4c67462f969e4dcd5488",
+              "526a993a0f22b2d2176444178c414f42c768f462b82b16554caba0490f539d62",
+              "e89b3336e0c2458ac204fb0927da30f4541abfab48a9d55735c4655719a3f10d",
+              "de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3",
+              "014b3b659391a46492cbdb2b16acfecdcea99bf1db0ade281ed5b3b780c031e0",
+              "4f4e1e038da0edd8e94789a66f6fa54488618f1211026f5bceeb8738d0ee7c13",
+              "1d05eb45ac19b66832681b21c20d014b443a90239a31b2bd96e7ec3298a325a0",
+              "087ee59a3db9407e7d099ebe1de03e60b1093b8ee4f279a64a8212fb97ba97d4",
+              "817397eb64804b1733b8078854583b2d15a7fd16e3c839e65703698892180235",
+              "bc0c7359b09596697361ee68cf3c6e25a653b1715c641a450d7d5685c9bd3c48",
+              "9dd9abecb68e044d0be3cede12784ae92b76d24590d74b860e1b8f40decf3670",
+              "87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed",
+              "148786c9813e819f52c31ea5c8529d2d47308a845dad0840daa965691f5308b5",
+              "69a1d774e0f1f7c5ab66036d3e00b55a5849be7aa680352d42359f67d937357a",
+              "e31f71139a843840cb714a0c85a42786bb308295d67c0585756924473de4a87c",
+              "b1552fe69af229003621293cae8981b2dac6d5107354629b7d5b610c874a40d4",
+              "9fabecd96737de50eb19f0ec53519d0c2e87e33034b332b1facc94a4b573370e",
+              "e9a2805429d979a01ebdae2e6ac4b7f4f65b6ddd68522736e21a85d7391372a8",
+              "5d8f4a275e4d6dff4d40fbf57add6267d7dd55b8fa12560b3eef973c0e50d6c2",
+              "c35c674a1da338bd2e80f1c21e7ccfca2cf9bd82e32cc3faf902c535c33cd21b"
+            ]
+          }
+        }
+      ],
+      "resultState": "NOT_IMPLEMENTED",
+      "complete": false
+    },
+    {
+      "probeId": "AT-self-improvement-54",
+      "run": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.12/adhd106-final-cli/AT-self-improvement-54-run.json",
+        "sha256": "31b1cb8385edae4db7645de9117a395733fe46f262602973e9010723ab3c427e"
+      },
+      "operationId": "2cf6529c-420a-4351-86cb-8d9323bcf21d",
+      "show": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.12/adhd106-final-cli/AT-self-improvement-54-show.json",
+        "sha256": "4afe75841ab27ca223a601f8817574dd92d416f718711aff943c140bc601bb95"
+      },
+      "sameData": true,
+      "sourceRegistration": {
+        "id": "AT-self-improvement-54",
+        "rung": "CLI",
+        "sourceAssertionHash": "b4141538d262d66d789eb55ef7608df4effefb5dd4c7c6fc801f1c54e41e4c23",
+        "commandId": "probe.run",
+        "scenarioId": "research.component-comparison",
+        "owner": "self-improvement",
+        "firstRelease": "R0",
+        "kind": "static_gate",
+        "mandatoryCases": [
+          {
+            "id": "required-component-absent",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "required-component-absent"
+          },
+          {
+            "id": "required-component-unsupported",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "required-component-unsupported"
+          },
+          {
+            "id": "required-component-incomplete-ids",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "required-component-incomplete-ids"
+          },
+          {
+            "id": "required-component-complete-outside-selected",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "required-component-complete-outside-selected"
+          }
+        ],
+        "trigger": "Check absent, unsupported, incomplete and outside-selected required-component decisions through the real indexed research owner; report exact missing IDs while whole admission remains unresolved.",
+        "faultControls": [
+          {
+            "id": "external-required-decision-omissions",
+            "seam": "provider",
+            "affectedPhases": [
+              "required-component-absent",
+              "required-component-unsupported",
+              "required-component-incomplete-ids"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "indexed-required-component-result",
+            "independentReader": "EngineeringControl.checkResearch: bound archive digests and exact requirement/source/validation IDs",
+            "caseIds": [
+              "required-component-absent",
+              "required-component-unsupported",
+              "required-component-incomplete-ids",
+              "required-component-complete-outside-selected"
+            ]
+          },
+          {
+            "id": "stored-cli-readback",
+            "independentReader": "toy probe.show: persisted exact required-component decisions",
+            "caseIds": [
+              "required-component-absent",
+              "required-component-unsupported",
+              "required-component-incomplete-ids",
+              "required-component-complete-outside-selected"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot invoke administrative pre-build research gates or replace indexed external research documents. The CLI drives the real public owner through its owned document seam."
+      },
+      "registrationExact": true,
+      "cases": [
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:36:22.834Z",
+          "reasonCode": "REQUIRED_COMPONENT_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"required-component-absent\",\"actualUid\":501,\"archive\":{\"key\":\"TS\",\"path\":\"research/v2/tool-stack.md\",\"originalDigest\":\"de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3\",\"contentDigest\":\"b6d8323d49be7c1f40e1f46b01b03b0da841cba53c13f740b1dcf671f83d7587\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M02\",\"comparisonDigest\":null,\"state\":\"BLOCKED\",\"findings\":[\"DECISION_MISSING\",\"REQUIRED_OPTIONS_MISSING\",\"CHOICE_UNSUPPORTED\",\"PRIMARY_EVIDENCE_MISSING\",\"RELEASE_GATE_MISSING\",\"VALIDATION_PLAN_MISSING\",\"ACCEPTANCE_LINK_MISSING\",\"MAPPED_REQUIREMENTS_MISSING\",\"VALIDATION_ID_MISSING\"],\"selectedTool\":null,\"validationPlan\":\"\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":null,\"missingRequirementIds\":[\"0.1\",\"0.2\",\"0.10\"],\"missingSourceIds\":[\"TS\",\"AF\"],\"missingValidationIds\":[\"G0:R0:M02\"]},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "b6d8323d49be7c1f40e1f46b01b03b0da841cba53c13f740b1dcf671f83d7587",
+              "e28a19d3562195f1c2ab121c93e9f2e3c24434230df6f89fac517e490da3478a",
+              "c35c674a1da338bd2e80f1c21e7ccfca2cf9bd82e32cc3faf902c535c33cd21b"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:36:22.887Z",
+          "reasonCode": "REQUIRED_COMPONENT_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"required-component-unsupported\",\"actualUid\":501,\"archive\":{\"key\":\"TS\",\"path\":\"research/v2/tool-stack.md\",\"originalDigest\":\"de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3\",\"contentDigest\":\"ecb2a3ae9fca209185313f0761eb4d9bf1b0b36a3a605982c11ee0143207d18d\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M02\",\"comparisonDigest\":\"3719f259526bda8ed72a4394f2dd1c8f0e9697561babb26890719ff61a19dd31\",\"state\":\"BLOCKED\",\"findings\":[\"CHOICE_UNSUPPORTED\",\"PRIMARY_EVIDENCE_MISSING\",\"VALIDATION_ID_MISSING\"],\"selectedTool\":\"Self-hosted workflow engine\",\"validationPlan\":\"Run the pinned shared-connection rollback, lost-claim fencing and generated-schema CLI fault probe before component admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"outside\",\"missingRequirementIds\":[],\"missingSourceIds\":[\"TS\"],\"missingValidationIds\":[\"G0:R0:M02\"]},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "ecb2a3ae9fca209185313f0761eb4d9bf1b0b36a3a605982c11ee0143207d18d",
+              "e28a19d3562195f1c2ab121c93e9f2e3c24434230df6f89fac517e490da3478a",
+              "c35c674a1da338bd2e80f1c21e7ccfca2cf9bd82e32cc3faf902c535c33cd21b"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:36:22.939Z",
+          "reasonCode": "REQUIRED_COMPONENT_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"required-component-incomplete-ids\",\"actualUid\":501,\"archive\":{\"key\":\"TS\",\"path\":\"research/v2/tool-stack.md\",\"originalDigest\":\"de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3\",\"contentDigest\":\"65a69a552f28e9845904213edf670facc44a8eb7c4941d805788db4108481c1e\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M02\",\"comparisonDigest\":\"e3f050b4ffb75013ff7e4aa0e1f2e12f9bac8ebd5c23770ed39bb824669187c5\",\"state\":\"BLOCKED\",\"findings\":[\"PRIMARY_EVIDENCE_MISSING\",\"MAPPED_REQUIREMENTS_MISSING\",\"VALIDATION_ID_MISSING\"],\"selectedTool\":\"Self-hosted workflow engine\",\"validationPlan\":\"Run the pinned shared-connection rollback, lost-claim fencing and generated-schema CLI fault probe before component admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"outside\",\"missingRequirementIds\":[\"0.10\"],\"missingSourceIds\":[\"TS\"],\"missingValidationIds\":[\"G0:R0:M02\"]},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "65a69a552f28e9845904213edf670facc44a8eb7c4941d805788db4108481c1e",
+              "e28a19d3562195f1c2ab121c93e9f2e3c24434230df6f89fac517e490da3478a",
+              "c35c674a1da338bd2e80f1c21e7ccfca2cf9bd82e32cc3faf902c535c33cd21b"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:36:22.995Z",
+          "reasonCode": "REQUIRED_COMPONENT_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"required-component-complete-outside-selected\",\"actualUid\":501,\"archive\":{\"key\":\"TS\",\"path\":\"research/v2/tool-stack.md\",\"originalDigest\":\"de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3\",\"contentDigest\":\"935ed85fc834e4c415a8466e8ff7ce9199f054d2fd06facb04c811c9ff3ac465\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M02\",\"comparisonDigest\":\"2488cd5e4ca64f84083e681bf5e4dcf257c1bb72a47e25f3880942141ed4fc17\",\"state\":\"PASS\",\"findings\":[],\"selectedTool\":\"Self-hosted workflow engine\",\"validationPlan\":\"Run the pinned shared-connection rollback, lost-claim fencing and generated-schema CLI fault probe before component admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"outside\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[]},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "935ed85fc834e4c415a8466e8ff7ce9199f054d2fd06facb04c811c9ff3ac465",
+              "e28a19d3562195f1c2ab121c93e9f2e3c24434230df6f89fac517e490da3478a",
+              "c35c674a1da338bd2e80f1c21e7ccfca2cf9bd82e32cc3faf902c535c33cd21b"
+            ]
+          }
+        }
+      ],
+      "resultState": "NOT_IMPLEMENTED",
+      "complete": false
+    },
+    {
+      "probeId": "AT-lifestore-45",
+      "run": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.12/adhd106-final-cli/AT-lifestore-45-run.json",
+        "sha256": "7e98e6e95170ae030f4a295044f295e2f6ab85c09831545d1d1e026e42591788"
+      },
+      "operationId": "10e67e4c-0b74-4319-bf90-deaf891c862e",
+      "show": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.12/adhd106-final-cli/AT-lifestore-45-show.json",
+        "sha256": "216cf0e672719f118c01202efb910589e12c6ec95f3a2a90132b59bc8073326f"
+      },
+      "sameData": true,
+      "sourceRegistration": {
+        "id": "AT-lifestore-45",
+        "rung": "CLI",
+        "sourceAssertionHash": "5b3088d82a6c550f5abb3104d6a258c6108a2f3efacd6212f5f6f31b806f4846",
+        "commandId": "probe.run",
+        "scenarioId": "research.component-comparison",
+        "owner": "self-improvement",
+        "firstRelease": "R0",
+        "kind": "static_gate",
+        "mandatoryCases": [
+          {
+            "id": "positive-all-required-quotes",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "positive-all-required-quotes"
+          },
+          {
+            "id": "missing-component",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-component"
+          },
+          {
+            "id": "missing-requirement-quote",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-requirement-quote"
+          },
+          {
+            "id": "unsupported-choice",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "unsupported-choice"
+          },
+          {
+            "id": "missing-version",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-version"
+          },
+          {
+            "id": "wrong-version",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "wrong-version"
+          },
+          {
+            "id": "wrong-digest",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "wrong-digest"
+          },
+          {
+            "id": "wrong-primary-quote",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "wrong-primary-quote"
+          },
+          {
+            "id": "wrong-requirement-quote",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "wrong-requirement-quote"
+          },
+          {
+            "id": "missing-validation",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-validation"
+          }
+        ],
+        "trigger": "Validate versioned primary evidence and exact canonical requirement quote spans for all 118 source-derived Life Store component decisions; retain unrelated route, skill, account, release and build-consumer gates.",
+        "faultControls": [
+          {
+            "id": "external-lifestore-comparison-report-faults",
+            "seam": "provider",
+            "affectedPhases": [
+              "missing-component",
+              "missing-requirement-quote",
+              "unsupported-choice",
+              "missing-version",
+              "wrong-version",
+              "wrong-digest",
+              "wrong-primary-quote",
+              "wrong-requirement-quote",
+              "missing-validation"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "canonical-component-evidence-readback",
+            "independentReader": "EngineeringControl.checkResearch: source scope, bytes, exact requirement quotes and missing IDs",
+            "caseIds": [
+              "positive-all-required-quotes",
+              "missing-component",
+              "missing-requirement-quote",
+              "unsupported-choice",
+              "missing-version",
+              "wrong-version",
+              "wrong-digest",
+              "wrong-primary-quote",
+              "wrong-requirement-quote",
+              "missing-validation"
+            ]
+          },
+          {
+            "id": "stored-cli-readback",
+            "independentReader": "toy probe.show: exact source-bound persisted operation; toy stack.down: complete owned-world teardown",
+            "caseIds": [
+              "positive-all-required-quotes",
+              "missing-component",
+              "missing-requirement-quote",
+              "unsupported-choice",
+              "missing-version",
+              "wrong-version",
+              "wrong-digest",
+              "wrong-primary-quote",
+              "wrong-requirement-quote",
+              "missing-validation"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot select administrative pre-build research comparison records. CLI exercises the public research owner with seeded external documents; authenticated primary research, protected dispatch and affected-build blocking remain pending."
+      },
+      "registrationExact": true,
+      "cases": [
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:36:23.769Z",
+          "reasonCode": "LIFESTORE_QUOTE_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"positive-all-required-quotes\",\"componentCount\":118,\"quotedComponents\":118,\"requirementQuoteCount\":1288,\"quoteFailureCount\":0,\"affectedComponentId\":\"A01\",\"findings\":[\"VALIDATION_ID_MISSING\"],\"selectedOptionId\":\"outside\",\"requirementIds\":[],\"sourceIds\":[],\"validationIds\":[\"ROUTE:R0:A01\",\"SKILL:R0:A01\"],\"routeMissingCount\":118,\"skillMissingCount\":118,\"requirementDigest\":\"77a54943cdc020f9a466422ecff15b7a26098c9113e498fda29459aee6be5dcb\",\"sourceDigest\":\"eeaf8ea8a411cc531785573db67664464716ee44e4a95cff0102691dd992407f\",\"archiveBound\":true,\"registerAdmission\":\"BLOCKED\",\"wholeDecisionState\":\"BLOCKED\",\"wholeATsPassedCount\":0,\"liveProviderSends\":0,\"wholeATComplete\":false,\"acceptanceComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "1d4477249880380780e2f8c70a214c652452fcbbf62a9220481f48009519318e",
+              "e28a19d3562195f1c2ab121c93e9f2e3c24434230df6f89fac517e490da3478a",
+              "c35c674a1da338bd2e80f1c21e7ccfca2cf9bd82e32cc3faf902c535c33cd21b"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:36:23.858Z",
+          "reasonCode": "LIFESTORE_QUOTE_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"missing-component\",\"componentCount\":118,\"quotedComponents\":117,\"requirementQuoteCount\":1288,\"quoteFailureCount\":0,\"affectedComponentId\":\"A01\",\"findings\":[\"DECISION_MISSING\",\"REQUIRED_OPTIONS_MISSING\",\"CHOICE_UNSUPPORTED\",\"PRIMARY_EVIDENCE_MISSING\",\"RELEASE_GATE_MISSING\",\"VALIDATION_PLAN_MISSING\",\"ACCEPTANCE_LINK_MISSING\",\"MAPPED_REQUIREMENTS_MISSING\",\"VALIDATION_ID_MISSING\"],\"selectedOptionId\":null,\"requirementIds\":[\"0.1\",\"0.2\",\"0.10\"],\"sourceIds\":[\"HI\",\"SI\"],\"validationIds\":[\"G0:R0:A01\"],\"routeMissingCount\":117,\"skillMissingCount\":117,\"requirementDigest\":\"77a54943cdc020f9a466422ecff15b7a26098c9113e498fda29459aee6be5dcb\",\"sourceDigest\":\"eeaf8ea8a411cc531785573db67664464716ee44e4a95cff0102691dd992407f\",\"archiveBound\":true,\"registerAdmission\":\"BLOCKED\",\"wholeDecisionState\":\"BLOCKED\",\"wholeATsPassedCount\":0,\"liveProviderSends\":0,\"wholeATComplete\":false,\"acceptanceComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "9f83a8fb01df532729e394336e162ba26c97c9d69ce32356db5325b0fb397c16",
+              "e28a19d3562195f1c2ab121c93e9f2e3c24434230df6f89fac517e490da3478a",
+              "c35c674a1da338bd2e80f1c21e7ccfca2cf9bd82e32cc3faf902c535c33cd21b"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:36:23.943Z",
+          "reasonCode": "LIFESTORE_QUOTE_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"missing-requirement-quote\",\"componentCount\":118,\"quotedComponents\":118,\"requirementQuoteCount\":1287,\"quoteFailureCount\":1,\"affectedComponentId\":\"A01\",\"findings\":[\"MAPPED_REQUIREMENTS_MISSING\",\"VALIDATION_ID_MISSING\"],\"selectedOptionId\":\"outside\",\"requirementIds\":[\"0.1\"],\"sourceIds\":[],\"validationIds\":[\"ROUTE:R0:A01\",\"SKILL:R0:A01\"],\"routeMissingCount\":118,\"skillMissingCount\":118,\"requirementDigest\":\"10d52a3a58c9b7983f81fc984afc75cae40746aa43428a67737742c3dd26808a\",\"sourceDigest\":\"eeaf8ea8a411cc531785573db67664464716ee44e4a95cff0102691dd992407f\",\"archiveBound\":true,\"registerAdmission\":\"BLOCKED\",\"wholeDecisionState\":\"BLOCKED\",\"wholeATsPassedCount\":0,\"liveProviderSends\":0,\"wholeATComplete\":false,\"acceptanceComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "37413106742692f441f38024b9cc7b5a56bf37fe9269f42bc75986d5bbcc4899",
+              "e28a19d3562195f1c2ab121c93e9f2e3c24434230df6f89fac517e490da3478a",
+              "c35c674a1da338bd2e80f1c21e7ccfca2cf9bd82e32cc3faf902c535c33cd21b"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:36:24.023Z",
+          "reasonCode": "LIFESTORE_QUOTE_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"unsupported-choice\",\"componentCount\":118,\"quotedComponents\":118,\"requirementQuoteCount\":1288,\"quoteFailureCount\":0,\"affectedComponentId\":\"A01\",\"findings\":[\"OUTSIDE_OPTION_MISSING\",\"REQUIRED_OPTIONS_MISSING\",\"CHOICE_UNSUPPORTED\",\"VALIDATION_ID_MISSING\"],\"selectedOptionId\":\"outside\",\"requirementIds\":[],\"sourceIds\":[],\"validationIds\":[\"ROUTE:R0:A01\",\"SKILL:R0:A01\"],\"routeMissingCount\":118,\"skillMissingCount\":118,\"requirementDigest\":\"77a54943cdc020f9a466422ecff15b7a26098c9113e498fda29459aee6be5dcb\",\"sourceDigest\":\"eeaf8ea8a411cc531785573db67664464716ee44e4a95cff0102691dd992407f\",\"archiveBound\":true,\"registerAdmission\":\"BLOCKED\",\"wholeDecisionState\":\"BLOCKED\",\"wholeATsPassedCount\":0,\"liveProviderSends\":0,\"wholeATComplete\":false,\"acceptanceComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "e59f5fd30c20f45bbd8afc9a9c8789003fdae6f581e6960782b272fd8512154c",
+              "e28a19d3562195f1c2ab121c93e9f2e3c24434230df6f89fac517e490da3478a",
+              "c35c674a1da338bd2e80f1c21e7ccfca2cf9bd82e32cc3faf902c535c33cd21b"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:36:24.103Z",
+          "reasonCode": "LIFESTORE_QUOTE_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"missing-version\",\"componentCount\":118,\"quotedComponents\":118,\"requirementQuoteCount\":1288,\"quoteFailureCount\":1,\"affectedComponentId\":\"A01\",\"findings\":[\"VALIDATION_ID_MISSING\",\"PRIMARY_EVIDENCE_MISSING\"],\"selectedOptionId\":\"outside\",\"requirementIds\":[],\"sourceIds\":[\"PRIMARY_SOURCE:VERSION\"],\"validationIds\":[\"ROUTE:R0:A01\",\"SKILL:R0:A01\"],\"routeMissingCount\":118,\"skillMissingCount\":118,\"requirementDigest\":\"77a54943cdc020f9a466422ecff15b7a26098c9113e498fda29459aee6be5dcb\",\"sourceDigest\":\"eeaf8ea8a411cc531785573db67664464716ee44e4a95cff0102691dd992407f\",\"archiveBound\":true,\"registerAdmission\":\"BLOCKED\",\"wholeDecisionState\":\"BLOCKED\",\"wholeATsPassedCount\":0,\"liveProviderSends\":0,\"wholeATComplete\":false,\"acceptanceComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "20a00784a297f44133b7f1c480dfc61672c17b3b2796cac04788904a563f0845",
+              "e28a19d3562195f1c2ab121c93e9f2e3c24434230df6f89fac517e490da3478a",
+              "c35c674a1da338bd2e80f1c21e7ccfca2cf9bd82e32cc3faf902c535c33cd21b"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:36:24.181Z",
+          "reasonCode": "LIFESTORE_QUOTE_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"wrong-version\",\"componentCount\":118,\"quotedComponents\":118,\"requirementQuoteCount\":1288,\"quoteFailureCount\":1,\"affectedComponentId\":\"A01\",\"findings\":[\"VALIDATION_ID_MISSING\",\"PRIMARY_EVIDENCE_MISSING\"],\"selectedOptionId\":\"outside\",\"requirementIds\":[],\"sourceIds\":[\"PRIMARY_SOURCE:VERSION\"],\"validationIds\":[\"ROUTE:R0:A01\",\"SKILL:R0:A01\"],\"routeMissingCount\":118,\"skillMissingCount\":118,\"requirementDigest\":\"77a54943cdc020f9a466422ecff15b7a26098c9113e498fda29459aee6be5dcb\",\"sourceDigest\":\"eeaf8ea8a411cc531785573db67664464716ee44e4a95cff0102691dd992407f\",\"archiveBound\":true,\"registerAdmission\":\"BLOCKED\",\"wholeDecisionState\":\"BLOCKED\",\"wholeATsPassedCount\":0,\"liveProviderSends\":0,\"wholeATComplete\":false,\"acceptanceComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "a8070c13bc0e37a531b5d578df0f3559a3c8cc881858d59a4eda0437ee9f6847",
+              "e28a19d3562195f1c2ab121c93e9f2e3c24434230df6f89fac517e490da3478a",
+              "c35c674a1da338bd2e80f1c21e7ccfca2cf9bd82e32cc3faf902c535c33cd21b"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:36:24.260Z",
+          "reasonCode": "LIFESTORE_QUOTE_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"wrong-digest\",\"componentCount\":118,\"quotedComponents\":118,\"requirementQuoteCount\":1288,\"quoteFailureCount\":1,\"affectedComponentId\":\"A01\",\"findings\":[\"VALIDATION_ID_MISSING\",\"PRIMARY_EVIDENCE_MISSING\"],\"selectedOptionId\":\"outside\",\"requirementIds\":[],\"sourceIds\":[\"PRIMARY_SOURCE:DIGEST\"],\"validationIds\":[\"ROUTE:R0:A01\",\"SKILL:R0:A01\"],\"routeMissingCount\":118,\"skillMissingCount\":118,\"requirementDigest\":\"77a54943cdc020f9a466422ecff15b7a26098c9113e498fda29459aee6be5dcb\",\"sourceDigest\":\"b65e2ab17855094baf70f0c4b9b307f5873ded9059da4d5e787eb99110f1baaf\",\"archiveBound\":true,\"registerAdmission\":\"BLOCKED\",\"wholeDecisionState\":\"BLOCKED\",\"wholeATsPassedCount\":0,\"liveProviderSends\":0,\"wholeATComplete\":false,\"acceptanceComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "9e3d7777d011a6429012b1ca30e87c12e42114f1808afdce71b193e846b2621d",
+              "e28a19d3562195f1c2ab121c93e9f2e3c24434230df6f89fac517e490da3478a",
+              "c35c674a1da338bd2e80f1c21e7ccfca2cf9bd82e32cc3faf902c535c33cd21b"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:36:24.337Z",
+          "reasonCode": "LIFESTORE_QUOTE_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"wrong-primary-quote\",\"componentCount\":118,\"quotedComponents\":118,\"requirementQuoteCount\":1288,\"quoteFailureCount\":1,\"affectedComponentId\":\"A01\",\"findings\":[\"VALIDATION_ID_MISSING\",\"PRIMARY_EVIDENCE_MISSING\"],\"selectedOptionId\":\"outside\",\"requirementIds\":[],\"sourceIds\":[\"PRIMARY_SOURCE:QUOTE:HI\"],\"validationIds\":[\"ROUTE:R0:A01\",\"SKILL:R0:A01\"],\"routeMissingCount\":118,\"skillMissingCount\":118,\"requirementDigest\":\"77a54943cdc020f9a466422ecff15b7a26098c9113e498fda29459aee6be5dcb\",\"sourceDigest\":\"eeaf8ea8a411cc531785573db67664464716ee44e4a95cff0102691dd992407f\",\"archiveBound\":true,\"registerAdmission\":\"BLOCKED\",\"wholeDecisionState\":\"BLOCKED\",\"wholeATsPassedCount\":0,\"liveProviderSends\":0,\"wholeATComplete\":false,\"acceptanceComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "6dccb59380a331f0b465d072d01a3f451d433e7d6dfc54454dc3b8d49cefd9b5",
+              "e28a19d3562195f1c2ab121c93e9f2e3c24434230df6f89fac517e490da3478a",
+              "c35c674a1da338bd2e80f1c21e7ccfca2cf9bd82e32cc3faf902c535c33cd21b"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:36:24.413Z",
+          "reasonCode": "LIFESTORE_QUOTE_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"wrong-requirement-quote\",\"componentCount\":118,\"quotedComponents\":118,\"requirementQuoteCount\":1288,\"quoteFailureCount\":1,\"affectedComponentId\":\"A01\",\"findings\":[\"MAPPED_REQUIREMENTS_MISSING\",\"VALIDATION_ID_MISSING\"],\"selectedOptionId\":\"outside\",\"requirementIds\":[\"0.1\"],\"sourceIds\":[],\"validationIds\":[\"ROUTE:R0:A01\",\"SKILL:R0:A01\"],\"routeMissingCount\":118,\"skillMissingCount\":118,\"requirementDigest\":\"77a54943cdc020f9a466422ecff15b7a26098c9113e498fda29459aee6be5dcb\",\"sourceDigest\":\"eeaf8ea8a411cc531785573db67664464716ee44e4a95cff0102691dd992407f\",\"archiveBound\":true,\"registerAdmission\":\"BLOCKED\",\"wholeDecisionState\":\"BLOCKED\",\"wholeATsPassedCount\":0,\"liveProviderSends\":0,\"wholeATComplete\":false,\"acceptanceComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "8f6aa9068260002debb036f9345af5483b58105ea797b479f9efed59f6cb178d",
+              "e28a19d3562195f1c2ab121c93e9f2e3c24434230df6f89fac517e490da3478a",
+              "c35c674a1da338bd2e80f1c21e7ccfca2cf9bd82e32cc3faf902c535c33cd21b"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:36:24.490Z",
+          "reasonCode": "LIFESTORE_QUOTE_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"missing-validation\",\"componentCount\":118,\"quotedComponents\":118,\"requirementQuoteCount\":1288,\"quoteFailureCount\":0,\"affectedComponentId\":\"A01\",\"findings\":[\"VALIDATION_ID_MISSING\"],\"selectedOptionId\":\"outside\",\"requirementIds\":[],\"sourceIds\":[],\"validationIds\":[\"ROUTE:R0:A01\",\"SKILL:R0:A01\",\"G0:R0:A01\"],\"routeMissingCount\":118,\"skillMissingCount\":118,\"requirementDigest\":\"77a54943cdc020f9a466422ecff15b7a26098c9113e498fda29459aee6be5dcb\",\"sourceDigest\":\"eeaf8ea8a411cc531785573db67664464716ee44e4a95cff0102691dd992407f\",\"archiveBound\":true,\"registerAdmission\":\"BLOCKED\",\"wholeDecisionState\":\"BLOCKED\",\"wholeATsPassedCount\":0,\"liveProviderSends\":0,\"wholeATComplete\":false,\"acceptanceComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "7bcc5988ca5e4dc2fc366c8a799a33bd26495f6a24b440200982ed7eb56c3ac5",
+              "e28a19d3562195f1c2ab121c93e9f2e3c24434230df6f89fac517e490da3478a",
+              "c35c674a1da338bd2e80f1c21e7ccfca2cf9bd82e32cc3faf902c535c33cd21b"
+            ]
+          }
+        }
+      ],
+      "resultState": "NOT_IMPLEMENTED",
+      "complete": false
+    },
+    {
+      "probeId": "AT-ops-45",
+      "run": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.12/adhd106-final-cli/AT-ops-45-run.json",
+        "sha256": "e1ea4fa8749765111feccab0045705ad52903a05d298777b623645403c03e1c5"
+      },
+      "operationId": "e8e82075-67f0-4a0c-af09-cdd2ab47653e",
+      "show": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.12/adhd106-final-cli/AT-ops-45-show.json",
+        "sha256": "484a7be79ad806c6b7f3035ace11aa1d108c44678528e135e17d75401f13d39d"
+      },
+      "sameData": true,
+      "sourceRegistration": {
+        "id": "AT-ops-45",
+        "rung": "CLI",
+        "sourceAssertionHash": "0afc1f9882ead86be9e8b5e01d58e8ce3edbd73b5b0a6d10cee43646d397d3ef",
+        "commandId": "probe.run",
+        "scenarioId": "research.component-receipts",
+        "owner": "hermes",
+        "firstRelease": "R0",
+        "kind": "static_gate",
+        "mandatoryCases": [
+          {
+            "id": "research-route-observed",
+            "publicOperation": "ModelRoute.delegationReceipt + EngineeringControl.checkResearch",
+            "phase": "research-route-observed"
+          },
+          {
+            "id": "research-route-missing",
+            "publicOperation": "ModelRoute.delegationReceipt + EngineeringControl.checkResearch",
+            "phase": "research-route-missing"
+          },
+          {
+            "id": "research-route-luna",
+            "publicOperation": "ModelRoute.delegationReceipt + EngineeringControl.checkResearch",
+            "phase": "research-route-luna"
+          },
+          {
+            "id": "research-route-wrong-effort",
+            "publicOperation": "ModelRoute.delegationReceipt + EngineeringControl.checkResearch",
+            "phase": "research-route-wrong-effort"
+          },
+          {
+            "id": "research-route-wrong-tier",
+            "publicOperation": "ModelRoute.delegationReceipt + EngineeringControl.checkResearch",
+            "phase": "research-route-wrong-tier"
+          },
+          {
+            "id": "research-skill-missing",
+            "publicOperation": "ModelRoute.delegationReceipt + EngineeringControl.checkResearch",
+            "phase": "research-skill-missing"
+          },
+          {
+            "id": "research-skill-wrong-bytes",
+            "publicOperation": "ModelRoute.delegationReceipt + EngineeringControl.checkResearch",
+            "phase": "research-skill-wrong-bytes"
+          },
+          {
+            "id": "ordinary-implementation-luna",
+            "publicOperation": "ModelRoute.delegationReceipt + EngineeringControl.checkResearch",
+            "phase": "ordinary-implementation-luna"
+          },
+          {
+            "id": "module-local-override-refused",
+            "publicOperation": "ModelRoute.delegationReceipt + EngineeringControl.checkResearch",
+            "phase": "module-local-override-refused"
+          }
+        ],
+        "trigger": "Run the indexed A14 component research job through ModelRoute; independently bind current policy bytes, loaded research skill and public component archive readback, then preserve the distinct ordinary child route.",
+        "faultControls": [
+          {
+            "id": "external-codex-route-faults",
+            "seam": "provider",
+            "affectedPhases": [
+              "research-route-missing",
+              "research-route-luna",
+              "research-route-wrong-effort",
+              "research-route-wrong-tier"
+            ]
+          },
+          {
+            "id": "external-research-skill-resource-faults",
+            "seam": "provider",
+            "affectedPhases": [
+              "research-skill-missing",
+              "research-skill-wrong-bytes"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "current-policy-and-native-arguments",
+            "independentReader": "Current behavior/models.yaml bytes, exported task and fake executor arguments; stored toy probe.show readback",
+            "caseIds": [
+              "research-route-observed",
+              "research-route-missing",
+              "research-route-luna",
+              "research-route-wrong-effort",
+              "research-route-wrong-tier",
+              "research-skill-missing",
+              "research-skill-wrong-bytes",
+              "ordinary-implementation-luna",
+              "module-local-override-refused"
+            ]
+          },
+          {
+            "id": "a14-public-route-skill-subgate",
+            "independentReader": "EngineeringControl.checkResearch: original archive/overlay digest and exact A14 route/skill missing IDs",
+            "caseIds": [
+              "research-route-observed",
+              "research-route-missing",
+              "research-route-luna",
+              "research-route-wrong-effort",
+              "research-route-wrong-tier",
+              "research-skill-missing",
+              "research-skill-wrong-bytes",
+              "ordinary-implementation-luna",
+              "module-local-override-refused"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot choose administrative pre-build component research records. CLI reaches real ModelRoute and EngineeringControl owners with external Codex/resource fakes; native protected route and whole acceptance remain pending."
+      },
+      "registrationExact": true,
+      "cases": [
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:36:25.171Z",
+          "reasonCode": "OPS_A14_ROUTE_SKILL_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"research-route-observed\",\"scope\":\"A14_ROUTE_SKILL_SUBGATE\",\"archiveKey\":\"TS\",\"archiveOriginalDigest\":\"de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3\",\"overlayDigest\":\"c2a1119627000a4ac3642ce6b37d8d47426a1f412a2641b2f772abeadd3ebfd3\",\"archiveBound\":true,\"comparisonDigest\":\"9f59fe00eeaf9589c439d27820a601011d883c1fb238a6a63e9b47e4552c9f1d\",\"decision\":\"PASS\",\"routeSkillMissing\":[],\"routeSkillExpected\":[],\"otherMissingCount\":0,\"registerAdmission\":\"BLOCKED\",\"wholeATComplete\":false,\"modelsPolicyDigest\":\"8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67\",\"receiptPolicyDigest\":\"8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67\",\"receiptPurpose\":\"research\",\"receiptState\":\"observed\",\"receiptReason\":\"DELEGATION_ROUTE_OBSERVED\",\"requested\":[\"research\",\"gpt-6.1-sol\",\"medium\",\"priority\"],\"observed\":[\"gpt-6.1-sol\",\"medium\",\"priority\"],\"skillSourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"skillContentDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"skillLoadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"skillPinMatches\":true,\"externalSends\":1,\"fastArgumentsMatched\":true,\"fixtureOnly\":true,\"liveProviderSends\":0,\"nativeExecutionVerified\":false,\"acceptanceComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "c2a1119627000a4ac3642ce6b37d8d47426a1f412a2641b2f772abeadd3ebfd3",
+              "431395f99cd85b48ed8d2e29c92be4569c3c072eec826c3a1d4ede547d4070d6",
+              "0e7b682dc833a0866c3ee2076b3a6b68a3085a497fe7961fa4118d3b00b53c39",
+              "8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67",
+              "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:36:25.228Z",
+          "reasonCode": "OPS_A14_ROUTE_SKILL_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"research-route-missing\",\"scope\":\"A14_ROUTE_SKILL_SUBGATE\",\"archiveKey\":\"TS\",\"archiveOriginalDigest\":\"de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3\",\"overlayDigest\":\"da2ea35e33b0d3d47767bf55769d83f6dd0cd3245e54b7313e6979bf568e024b\",\"archiveBound\":true,\"comparisonDigest\":\"191774c93d3cfc7b4214a77e152862c4aece84ec989dc7e9ab5b50bd5237cdd2\",\"decision\":\"BLOCKED\",\"routeSkillMissing\":[\"ROUTE:R0:A14\"],\"routeSkillExpected\":[\"ROUTE:R0:A14\"],\"otherMissingCount\":0,\"registerAdmission\":\"BLOCKED\",\"wholeATComplete\":false,\"modelsPolicyDigest\":\"8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67\",\"receiptPolicyDigest\":\"8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67\",\"receiptPurpose\":\"research\",\"receiptState\":\"refused\",\"receiptReason\":\"DELEGATION_ROUTE_REFUSED\",\"requested\":[\"research\",\"gpt-6.1-sol\",\"medium\",\"priority\"],\"observed\":null,\"skillSourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"skillContentDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"skillLoadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"skillPinMatches\":false,\"externalSends\":1,\"fastArgumentsMatched\":true,\"fixtureOnly\":true,\"liveProviderSends\":0,\"nativeExecutionVerified\":false,\"acceptanceComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "da2ea35e33b0d3d47767bf55769d83f6dd0cd3245e54b7313e6979bf568e024b",
+              "431395f99cd85b48ed8d2e29c92be4569c3c072eec826c3a1d4ede547d4070d6",
+              "0e7b682dc833a0866c3ee2076b3a6b68a3085a497fe7961fa4118d3b00b53c39",
+              "8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67",
+              "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:36:25.284Z",
+          "reasonCode": "OPS_A14_ROUTE_SKILL_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"research-route-luna\",\"scope\":\"A14_ROUTE_SKILL_SUBGATE\",\"archiveKey\":\"TS\",\"archiveOriginalDigest\":\"de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3\",\"overlayDigest\":\"d37efe19725366aa3a49448bca2e423ae33146e442fd521b1574943fe7c74f7c\",\"archiveBound\":true,\"comparisonDigest\":\"c032e0509ca8d1904324b33a285bc2e121878d1a0e74cb6744765f2e4d862f4c\",\"decision\":\"BLOCKED\",\"routeSkillMissing\":[\"ROUTE:R0:A14\"],\"routeSkillExpected\":[\"ROUTE:R0:A14\"],\"otherMissingCount\":0,\"registerAdmission\":\"BLOCKED\",\"wholeATComplete\":false,\"modelsPolicyDigest\":\"8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67\",\"receiptPolicyDigest\":\"8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67\",\"receiptPurpose\":\"research\",\"receiptState\":\"refused\",\"receiptReason\":\"DELEGATION_ROUTE_REFUSED\",\"requested\":[\"research\",\"gpt-6.1-sol\",\"medium\",\"priority\"],\"observed\":[\"gpt-6-luna\",\"medium\",\"priority\"],\"skillSourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"skillContentDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"skillLoadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"skillPinMatches\":false,\"externalSends\":1,\"fastArgumentsMatched\":true,\"fixtureOnly\":true,\"liveProviderSends\":0,\"nativeExecutionVerified\":false,\"acceptanceComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "d37efe19725366aa3a49448bca2e423ae33146e442fd521b1574943fe7c74f7c",
+              "431395f99cd85b48ed8d2e29c92be4569c3c072eec826c3a1d4ede547d4070d6",
+              "0e7b682dc833a0866c3ee2076b3a6b68a3085a497fe7961fa4118d3b00b53c39",
+              "8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67",
+              "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:36:25.337Z",
+          "reasonCode": "OPS_A14_ROUTE_SKILL_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"research-route-wrong-effort\",\"scope\":\"A14_ROUTE_SKILL_SUBGATE\",\"archiveKey\":\"TS\",\"archiveOriginalDigest\":\"de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3\",\"overlayDigest\":\"b4266680df11802247672c76da382a77b19d6e69740993e88af49e0a0c8474e6\",\"archiveBound\":true,\"comparisonDigest\":\"2764e2c033f2ea76269ba4f6e0b6c8face85140010ff3fc125d3e00e7d025801\",\"decision\":\"BLOCKED\",\"routeSkillMissing\":[\"ROUTE:R0:A14\"],\"routeSkillExpected\":[\"ROUTE:R0:A14\"],\"otherMissingCount\":0,\"registerAdmission\":\"BLOCKED\",\"wholeATComplete\":false,\"modelsPolicyDigest\":\"8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67\",\"receiptPolicyDigest\":\"8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67\",\"receiptPurpose\":\"research\",\"receiptState\":\"refused\",\"receiptReason\":\"DELEGATION_ROUTE_REFUSED\",\"requested\":[\"research\",\"gpt-6.1-sol\",\"medium\",\"priority\"],\"observed\":[\"gpt-6.1-sol\",\"max\",\"priority\"],\"skillSourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"skillContentDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"skillLoadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"skillPinMatches\":false,\"externalSends\":1,\"fastArgumentsMatched\":true,\"fixtureOnly\":true,\"liveProviderSends\":0,\"nativeExecutionVerified\":false,\"acceptanceComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "b4266680df11802247672c76da382a77b19d6e69740993e88af49e0a0c8474e6",
+              "431395f99cd85b48ed8d2e29c92be4569c3c072eec826c3a1d4ede547d4070d6",
+              "0e7b682dc833a0866c3ee2076b3a6b68a3085a497fe7961fa4118d3b00b53c39",
+              "8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67",
+              "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:36:25.390Z",
+          "reasonCode": "OPS_A14_ROUTE_SKILL_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"research-route-wrong-tier\",\"scope\":\"A14_ROUTE_SKILL_SUBGATE\",\"archiveKey\":\"TS\",\"archiveOriginalDigest\":\"de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3\",\"overlayDigest\":\"79a703c8288b4ec85810aeb36f9b2721fbd16dbeea16a833fcac4da1e7115aa1\",\"archiveBound\":true,\"comparisonDigest\":\"c607283e63a4c006be792b51189f36660a4053cefa5b44a3899583296e0caba7\",\"decision\":\"BLOCKED\",\"routeSkillMissing\":[\"ROUTE:R0:A14\"],\"routeSkillExpected\":[\"ROUTE:R0:A14\"],\"otherMissingCount\":0,\"registerAdmission\":\"BLOCKED\",\"wholeATComplete\":false,\"modelsPolicyDigest\":\"8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67\",\"receiptPolicyDigest\":\"8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67\",\"receiptPurpose\":\"research\",\"receiptState\":\"refused\",\"receiptReason\":\"DELEGATION_ROUTE_REFUSED\",\"requested\":[\"research\",\"gpt-6.1-sol\",\"medium\",\"priority\"],\"observed\":[\"gpt-6.1-sol\",\"medium\",\"default\"],\"skillSourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"skillContentDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"skillLoadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"skillPinMatches\":false,\"externalSends\":1,\"fastArgumentsMatched\":true,\"fixtureOnly\":true,\"liveProviderSends\":0,\"nativeExecutionVerified\":false,\"acceptanceComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "79a703c8288b4ec85810aeb36f9b2721fbd16dbeea16a833fcac4da1e7115aa1",
+              "431395f99cd85b48ed8d2e29c92be4569c3c072eec826c3a1d4ede547d4070d6",
+              "0e7b682dc833a0866c3ee2076b3a6b68a3085a497fe7961fa4118d3b00b53c39",
+              "8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67",
+              "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:36:25.442Z",
+          "reasonCode": "OPS_A14_ROUTE_SKILL_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"research-skill-missing\",\"scope\":\"A14_ROUTE_SKILL_SUBGATE\",\"archiveKey\":\"TS\",\"archiveOriginalDigest\":\"de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3\",\"overlayDigest\":\"22bd7a5140c7f2740f3df81fb27e70d5a8aee0c4c2abfc73c7a8721a1a2acd9c\",\"archiveBound\":true,\"comparisonDigest\":\"db8de3adb394b22691ae32efc03740dfca06fb720acc419b0bbc5d3431481072\",\"decision\":\"BLOCKED\",\"routeSkillMissing\":[\"ROUTE:R0:A14\",\"SKILL:R0:A14\"],\"routeSkillExpected\":[\"ROUTE:R0:A14\",\"SKILL:R0:A14\"],\"otherMissingCount\":0,\"registerAdmission\":\"BLOCKED\",\"wholeATComplete\":false,\"modelsPolicyDigest\":\"8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67\",\"receiptPolicyDigest\":null,\"receiptPurpose\":\"research\",\"receiptState\":\"refused\",\"receiptReason\":\"RESEARCH_SKILL_UNAVAILABLE\",\"requested\":null,\"observed\":null,\"skillSourceCommit\":null,\"skillContentDigest\":null,\"skillLoadedDigest\":null,\"skillPinMatches\":false,\"externalSends\":0,\"fastArgumentsMatched\":false,\"fixtureOnly\":true,\"liveProviderSends\":0,\"nativeExecutionVerified\":false,\"acceptanceComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "22bd7a5140c7f2740f3df81fb27e70d5a8aee0c4c2abfc73c7a8721a1a2acd9c",
+              "431395f99cd85b48ed8d2e29c92be4569c3c072eec826c3a1d4ede547d4070d6",
+              "0e7b682dc833a0866c3ee2076b3a6b68a3085a497fe7961fa4118d3b00b53c39",
+              "8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67",
+              "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:36:25.493Z",
+          "reasonCode": "OPS_A14_ROUTE_SKILL_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"research-skill-wrong-bytes\",\"scope\":\"A14_ROUTE_SKILL_SUBGATE\",\"archiveKey\":\"TS\",\"archiveOriginalDigest\":\"de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3\",\"overlayDigest\":\"dcdc604bdef1e11b5740b73694e0bfe959f752cfbd3671155463593758343d9d\",\"archiveBound\":true,\"comparisonDigest\":\"18358c82f34f66d2455946e7d8e75c2be9d3dbdf11f76c2705608423d7cbb655\",\"decision\":\"BLOCKED\",\"routeSkillMissing\":[\"ROUTE:R0:A14\",\"SKILL:R0:A14\"],\"routeSkillExpected\":[\"ROUTE:R0:A14\",\"SKILL:R0:A14\"],\"otherMissingCount\":0,\"registerAdmission\":\"BLOCKED\",\"wholeATComplete\":false,\"modelsPolicyDigest\":\"8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67\",\"receiptPolicyDigest\":null,\"receiptPurpose\":\"research\",\"receiptState\":\"refused\",\"receiptReason\":\"RESEARCH_SKILL_MISMATCH\",\"requested\":null,\"observed\":null,\"skillSourceCommit\":null,\"skillContentDigest\":null,\"skillLoadedDigest\":null,\"skillPinMatches\":false,\"externalSends\":0,\"fastArgumentsMatched\":false,\"fixtureOnly\":true,\"liveProviderSends\":0,\"nativeExecutionVerified\":false,\"acceptanceComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "dcdc604bdef1e11b5740b73694e0bfe959f752cfbd3671155463593758343d9d",
+              "431395f99cd85b48ed8d2e29c92be4569c3c072eec826c3a1d4ede547d4070d6",
+              "0e7b682dc833a0866c3ee2076b3a6b68a3085a497fe7961fa4118d3b00b53c39",
+              "8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67",
+              "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:36:25.544Z",
+          "reasonCode": "OPS_A14_ROUTE_SKILL_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"ordinary-implementation-luna\",\"scope\":\"A14_ROUTE_SKILL_SUBGATE\",\"archiveKey\":\"TS\",\"archiveOriginalDigest\":\"de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3\",\"overlayDigest\":\"6f92fa8b3603d0c69091676e8f67a329d94bd91886b5f5fc9086db432f7b4ec0\",\"archiveBound\":true,\"comparisonDigest\":\"a9358e6e421388f88839f36402b6ac0b0667b5832fc3f4c98458a54d1d30fefe\",\"decision\":\"BLOCKED\",\"routeSkillMissing\":[\"ROUTE:R0:A14\",\"SKILL:R0:A14\"],\"routeSkillExpected\":[\"ROUTE:R0:A14\",\"SKILL:R0:A14\"],\"otherMissingCount\":0,\"registerAdmission\":\"BLOCKED\",\"wholeATComplete\":false,\"modelsPolicyDigest\":\"8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67\",\"receiptPolicyDigest\":\"8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67\",\"receiptPurpose\":\"implementation\",\"receiptState\":\"observed\",\"receiptReason\":\"DELEGATION_ROUTE_OBSERVED\",\"requested\":[\"child\",\"gpt-6-luna\",\"max\",\"priority\"],\"observed\":[\"gpt-6-luna\",\"max\",\"priority\"],\"skillSourceCommit\":null,\"skillContentDigest\":null,\"skillLoadedDigest\":null,\"skillPinMatches\":false,\"externalSends\":1,\"fastArgumentsMatched\":true,\"fixtureOnly\":true,\"liveProviderSends\":0,\"nativeExecutionVerified\":false,\"acceptanceComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "6f92fa8b3603d0c69091676e8f67a329d94bd91886b5f5fc9086db432f7b4ec0",
+              "431395f99cd85b48ed8d2e29c92be4569c3c072eec826c3a1d4ede547d4070d6",
+              "0e7b682dc833a0866c3ee2076b3a6b68a3085a497fe7961fa4118d3b00b53c39",
+              "8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67",
+              "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:36:25.544Z",
+          "reasonCode": "OPS_A14_MODULE_ROUTE_OVERRIDE_REFUSED",
+          "prerequisite": "{\"caseId\":\"module-local-override-refused\",\"scope\":\"A14 route/skill subgate\",\"archiveKey\":\"TS\",\"archiveOriginalDigest\":\"de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3\",\"policyDigest\":\"8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67\",\"errorCode\":\"INVALID_INPUT\",\"overrideRejected\":true,\"externalSends\":0,\"initialAdmission\":\"BLOCKED\",\"fakeExternalCli\":true,\"liveProviderSends\":0,\"acceptanceComplete\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3",
+              "8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67",
+              "431395f99cd85b48ed8d2e29c92be4569c3c072eec826c3a1d4ede547d4070d6",
+              "0e7b682dc833a0866c3ee2076b3a6b68a3085a497fe7961fa4118d3b00b53c39"
+            ]
+          }
+        }
+      ],
+      "resultState": "NOT_IMPLEMENTED",
+      "complete": false
+    },
+    {
+      "probeId": "AT-cli-4",
+      "run": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.12/adhd106-final-cli/AT-cli-4-run.json",
+        "sha256": "4aa02c0764925755c8c34d86453119cc0949d0ba5e59e7ea08583f9ca8008776"
+      },
+      "operationId": "a92660fe-9e06-4cba-b228-f8201308e686",
+      "show": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.12/adhd106-final-cli/AT-cli-4-show.json",
+        "sha256": "2646b3f2c0f5907bcc4f345064b15acfcf682a153753b6b180ee15595125335c"
+      },
+      "sameData": true,
+      "sourceRegistration": null,
+      "registrationExact": false,
+      "cases": [
+        {
+          "id": "bootstrap.fixture-runtime",
+          "owner": "ops",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:36:26.072Z",
+          "reasonCode": "TRUSTED_FIXTURE_LIFECYCLE_SUBSET",
+          "prerequisite": "{\"stackId\":\"f9cd89f0-69c5-4171-a16d-29078f9628ae\",\"nonce\":\"a5bf58e5-a19e-486b-a517-d4fd4d4ff9aa\",\"pid\":65888,\"state\":\"running\",\"checkedAt\":\"2026-10-07T06:36:26.052Z\",\"heartbeatCount\":\"52\"}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": []
+          }
+        }
+      ],
+      "resultState": "NOT_IMPLEMENTED",
+      "complete": false
+    }
+  ],
+  "up": {
+    "exitCode": 0,
+    "path": "build/evidence/R0.12/adhd106-final-cli/up.json",
+    "sha256": "6bd647089eb11b20e9c43ae182099c13156b1296ec0168e37bf7fc97210a64c3"
+  },
+  "stackId": "f9cd89f0-69c5-4171-a16d-29078f9628ae",
+  "down": {
+    "exitCode": 0,
+    "path": "build/evidence/R0.12/adhd106-final-cli/down.json",
+    "sha256": "7d8e3f4ca7693ebe6a2023280b4eceb30bec27cd44f884850116d3c4bd781ba5"
+  },
+  "teardown": {
+    "stackId": "f9cd89f0-69c5-4171-a16d-29078f9628ae",
+    "checkpointRefs": [],
+    "fenceRefs": [],
+    "stoppedResourceRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "f9cd89f0-69c5-4171-a16d-29078f9628ae"
+      }
+    ],
+    "retainedArtifactRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "f9cd89f0-69c5-4171-a16d-29078f9628ae"
+      }
+    ],
+    "unresolvedResourceRefs": [],
+    "complete": true
+  }
+}

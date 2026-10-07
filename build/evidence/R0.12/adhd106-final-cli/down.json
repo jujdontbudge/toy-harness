@@ -1,0 +1,120 @@
+{
+  "schemaVersion": "toy.cli.v1",
+  "commandId": "stack.down",
+  "invocationId": "6c5b722c-4fbe-4cfc-90b2-af5f428aa8cf",
+  "generatedAt": "2026-10-07T06:36:26.685Z",
+  "cliVersion": "1.0.0",
+  "contractsVersion": "1.0.0",
+  "schemaDigest": "5b00b21899c63adb3f7f36bb5d0f8d921da284529d1d8ba0afbc2a20bb2e4925",
+  "environment": {
+    "kind": "test",
+    "instanceId": null,
+    "stackId": "f9cd89f0-69c5-4171-a16d-29078f9628ae"
+  },
+  "meta": {
+    "exitCode": 0,
+    "releaseDigest": null,
+    "controlDigest": null,
+    "evaluatedAt": null,
+    "operationId": "939f27f6-ad97-471b-899f-4c9eb263d782",
+    "effectState": "confirmed",
+    "recordRefs": [],
+    "evidence": []
+  },
+  "ok": true,
+  "data": {
+    "operation": {
+      "operationId": "939f27f6-ad97-471b-899f-4c9eb263d782",
+      "state": "succeeded",
+      "acceptedAt": "2026-10-07T06:36:26.684Z"
+    },
+    "requestId": "0a7e76b5-6b31-4aec-9ace-424b783edee7",
+    "stackId": "f9cd89f0-69c5-4171-a16d-29078f9628ae",
+    "result": {
+      "stackId": "f9cd89f0-69c5-4171-a16d-29078f9628ae",
+      "release": "R0",
+      "manifestDigest": "007b367ca8216b14ad2ea5b49ca6110241ff536c641c842dcc3bd20221cf32d4",
+      "clock": "fake",
+      "model": "fake",
+      "ready": false,
+      "components": [
+        {
+          "id": "bootstrap.resource-admission",
+          "owner": "ops",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:36:20.707Z",
+          "reasonCode": "AVAILABLE_MEMORY_AND_OBSERVED_PRESSURE",
+          "prerequisite": "{\"schemaVersion\":\"toy.bootstrap-resource-preflight.v2\",\"measuredAt\":\"2026-10-07T06:36:20.707Z\",\"samples\":[{\"observedAt\":\"2026-10-07T06:36:20.707Z\",\"monotonicNanoseconds\":\"224272472053916\",\"physicalBytes\":\"8589934592\",\"pageSizeBytes\":\"16384\",\"freeBytes\":\"1313456128\",\"inactiveBytes\":\"1305542656\",\"purgeableBytes\":\"32620544\",\"speculativeBytes\":\"101548032\",\"availableBytes\":\"2753167360\",\"pressure\":\"normal\",\"pressureSource\":\"os\",\"pressureQueryOutput\":\"1\\n\"}],\"completeMeasurements\":true,\"jobNeedBytes\":\"1073741824\",\"marginBytes\":\"536870912\",\"requiredAvailableBytes\":\"1610612736\",\"minimumAvailableBytes\":\"2753167360\",\"normalPressureObserved\":true,\"headroomSatisfied\":true,\"reasons\":[],\"resourcePermitIssued\":false,\"admissionState\":\"admitted\"}",
+          "nextCommandId": "stack.up",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": []
+          }
+        },
+        {
+          "id": "bootstrap.fixture-runtime",
+          "owner": "ops",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:36:26.682Z",
+          "reasonCode": "OWNED_FIXTURE_STOPPED",
+          "prerequisite": null,
+          "nextCommandId": "stack.up",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": []
+          }
+        },
+        {
+          "id": "bootstrap.fixture-identities",
+          "owner": "ops",
+          "state": "NOT_IMPLEMENTED",
+          "checkedAt": "2026-10-07T06:36:26.683Z",
+          "reasonCode": "R0_04_05_ACTUAL_PREREQUISITES_PENDING",
+          "prerequisite": "Actual protected service identities and signed target launcher remain pending.",
+          "nextCommandId": "doctor",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": []
+          }
+        }
+      ],
+      "ownedResourceRefs": [
+        {
+          "module": "ops",
+          "kind": "test_world",
+          "id": "f9cd89f0-69c5-4171-a16d-29078f9628ae"
+        }
+      ],
+      "evidenceLocation": "6b6d36c4-4134-487b-8eec-a28e06d0386a",
+      "teardown": {
+        "stackId": "f9cd89f0-69c5-4171-a16d-29078f9628ae",
+        "checkpointRefs": [],
+        "fenceRefs": [],
+        "stoppedResourceRefs": [
+          {
+            "module": "ops",
+            "kind": "test_world",
+            "id": "f9cd89f0-69c5-4171-a16d-29078f9628ae"
+          }
+        ],
+        "retainedArtifactRefs": [
+          {
+            "module": "ops",
+            "kind": "test_world",
+            "id": "f9cd89f0-69c5-4171-a16d-29078f9628ae"
+          }
+        ],
+        "unresolvedResourceRefs": [],
+        "complete": true
+      }
+    },
+    "links": {
+      "recordRefs": [],
+      "observations": [],
+      "artifactDigests": []
+    }
+  }
+}

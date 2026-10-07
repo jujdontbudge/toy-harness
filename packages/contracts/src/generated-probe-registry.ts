@@ -3488,6 +3488,136 @@ export const registeredCliAcceptanceManifestInventory = [
     "simUnavailableReason": "SIM cannot inspect the R0 pre-build schema/caller ownership gate or native PostgreSQL privileges. The registered CLI reaches the real owner with fake external clock and source-tree candidates."
   },
   {
+    "id": "AT-adhd-features-106",
+    "rung": "CLI",
+    "sourceAssertionHash": "0cf48737cb30e7053dad160595d3da029af0cbaee251692ae1465878a39fa6f9",
+    "commandId": "probe.run",
+    "scenarioId": "engineering.least-fragile-tools",
+    "owner": "self-improvement",
+    "firstRelease": "R0",
+    "kind": "static_gate",
+    "mandatoryCases": [
+      {
+        "id": "actual-lock-and-owners",
+        "publicOperation": "EngineeringControl.validateLeastFragileTools",
+        "phase": "actual-lock-and-owners"
+      },
+      {
+        "id": "mismatched-lock",
+        "publicOperation": "EngineeringControl.validateLeastFragileTools",
+        "phase": "mismatched-lock"
+      },
+      {
+        "id": "feature-scheduler",
+        "publicOperation": "EngineeringControl.validateLeastFragileTools",
+        "phase": "feature-scheduler"
+      },
+      {
+        "id": "feature-blocker",
+        "publicOperation": "EngineeringControl.validateLeastFragileTools",
+        "phase": "feature-blocker"
+      },
+      {
+        "id": "feature-credentials",
+        "publicOperation": "EngineeringControl.validateLeastFragileTools",
+        "phase": "feature-credentials"
+      },
+      {
+        "id": "runtime-download",
+        "publicOperation": "EngineeringControl.validateLeastFragileTools",
+        "phase": "runtime-download"
+      },
+      {
+        "id": "startup-package-download",
+        "publicOperation": "EngineeringControl.validateLeastFragileTools",
+        "phase": "startup-package-download"
+      },
+      {
+        "id": "private-owner-import",
+        "publicOperation": "EngineeringControl.validateLeastFragileTools",
+        "phase": "private-owner-import"
+      },
+      {
+        "id": "private-public-entry",
+        "publicOperation": "EngineeringControl.validateLeastFragileTools",
+        "phase": "private-public-entry"
+      },
+      {
+        "id": "unproven-alternative",
+        "publicOperation": "EngineeringControl.validateLeastFragileTools",
+        "phase": "unproven-alternative"
+      }
+    ],
+    "trigger": "Validate actual application lock, canonical pins, ADHD public-owner capabilities and actual M08 blocked research readback; isolate failing external OS inputs without writing files.",
+    "faultControls": [
+      {
+        "id": "external-source-overlay",
+        "seam": "os",
+        "affectedPhases": [
+          "mismatched-lock",
+          "feature-scheduler",
+          "feature-blocker",
+          "feature-credentials",
+          "runtime-download",
+          "startup-package-download",
+          "private-owner-import",
+          "private-public-entry"
+        ]
+      }
+    ],
+    "observations": [
+      {
+        "id": "owner-source-validation",
+        "independentReader": "EngineeringControl public readback: source inventory digest, three check states and finite rejection reasons",
+        "caseIds": [
+          "actual-lock-and-owners",
+          "mismatched-lock",
+          "feature-scheduler",
+          "feature-blocker",
+          "feature-credentials",
+          "runtime-download",
+          "startup-package-download",
+          "private-owner-import",
+          "private-public-entry",
+          "unproven-alternative"
+        ]
+      },
+      {
+        "id": "real-m08-decision",
+        "independentReader": "EngineeringControl.checkResearch: M08 BLOCKED, null choice, missing G0 validation and release admission",
+        "caseIds": [
+          "actual-lock-and-owners",
+          "mismatched-lock",
+          "feature-scheduler",
+          "feature-blocker",
+          "feature-credentials",
+          "runtime-download",
+          "startup-package-download",
+          "private-owner-import",
+          "private-public-entry",
+          "unproven-alternative"
+        ]
+      },
+      {
+        "id": "unchanged-application-lock",
+        "independentReader": "Retained toy probe run/show and independent filesystem readback of original application lock digest",
+        "caseIds": [
+          "actual-lock-and-owners",
+          "mismatched-lock",
+          "feature-scheduler",
+          "feature-blocker",
+          "feature-credentials",
+          "runtime-download",
+          "startup-package-download",
+          "private-owner-import",
+          "private-public-entry",
+          "unproven-alternative"
+        ]
+      }
+    ],
+    "simUnavailableReason": "TEST-PLAN assigns this prebuild source/lock compatibility check to CLI; a user conversation cannot introduce isolated dependency or OS-source mutations."
+  },
+  {
     "id": "AT-attention-66",
     "rung": "CLI",
     "sourceAssertionHash": "19bd2c265bd8baa95cbb780ca34b0ad5f53ba75f1bde7891147eb2838d4842f9",

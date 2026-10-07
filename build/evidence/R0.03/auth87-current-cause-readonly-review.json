@@ -1,0 +1,184 @@
+{
+  "schemaVersion": "toy.r0.03-auth87-current-cause-readonly-review.v1",
+  "recordedAt": "2026-10-07T06:22:05Z",
+  "verdict": "NO_ACCEPTED_REPLAN_FROM_CURRENT_AUTH91_CHANGES",
+  "scope": {
+    "mode": "read-only evidence and current-source review",
+    "sourceOrRuntimeMutations": 0,
+    "newProbeOrWorldRuns": 0,
+    "fourthAuth87AttemptPerformed": false,
+    "resourceAdmission": "Parent-provided fresh doctor observation: normal pressure, approximately 2.46 GB available, 256 MiB helper plus 512 MiB margin admitted. This review did not run doctor or any CLI."
+  },
+  "assignment": {
+    "at": "AT-hermes-config-87",
+    "source": "specs/hermes-config.md:3051",
+    "sourceAssertion": "- **AT-hermes-config-87 [R0]** Given concurrent real subprocess refresh/add with fake-provider barriers and OS/storage crash cuts, When both orders persist and fresh processes reload, Then the newest accepted refresh generation and added grant survive without a lost update.",
+    "sourceAssertionHash": "b8ba9587534e2983742157a3ab9ae8911da4928e48e3ab0894944914bb91e6bb",
+    "rung": "CLI",
+    "requiredEvidence": "stack, probe:AT-hermes-config-87"
+  },
+  "archivedFailureUnit": {
+    "attemptCount": 3,
+    "failedAttempts": [
+      {
+        "attempt": 1,
+        "path": "build/evidence/R0.03/held-response-verified-cli/held-response-run.json",
+        "runSha256": "f48ca5aa59caf7861ec9bd4f070c02d1c11fa241b0ace5109716e2df6b02103c",
+        "showPath": "build/evidence/R0.03/held-response-verified-cli/held-response-show.json",
+        "showSha256": "329df11b152bcd80436badc45b786ed9597dfe2a41831d526b6187ac628eb7ce",
+        "downPath": "build/evidence/R0.03/held-response-verified-cli/down.json",
+        "downSha256": "bcda471ffd62cd1f3f27954d9d0634acc1b5e6a9928bf986c042f6002d28a796",
+        "operationId": "f6f73b0d-e2a8-40b4-9f1c-09ca6ce5d3e7",
+        "runAndShowExact": true,
+        "checks": "11 PASS, 1 FAIL of 12",
+        "failureCode": "NATIVE_AUTH_HELD_RESPONSE_LOCK_CONTENTION_FAILED"
+      },
+      {
+        "attempt": 2,
+        "path": "build/evidence/R0.03/held-response-current-cli/held-response-run.json",
+        "runSha256": "82873a877384002164cacd710827b36ede0685b843fb4153fc7acaba8e69c6d3",
+        "showPath": "build/evidence/R0.03/held-response-current-cli/held-response-show.json",
+        "showSha256": "b0cb237ef7a88222cd2eed60c0e52760d0cdd15024026d872dbd9db5aa88fdef",
+        "downPath": "build/evidence/R0.03/held-response-current-cli/down.json",
+        "downSha256": "cfc302a77f72c342e5169028ac1f22aadbea3d879b90806a9f63bc1ce573fe49",
+        "operationId": "3548bb12-58dd-4628-ad41-a4e861b7c480",
+        "runAndShowExact": true,
+        "checks": "11 PASS, 1 FAIL of 12",
+        "failureCode": "NATIVE_AUTH_HELD_RESPONSE_LOCK_CONTENTION_FAILED",
+        "observerFields": {
+          "responseHeldAtContention": true,
+          "realLockContentionObserved": false,
+          "lockDescriptorBoundToProfile": false,
+          "addAcquiredBeforeRelease": false,
+          "addCompletedBeforeRelease": false,
+          "staleSuccessfulResponseRejected": false
+        }
+      },
+      {
+        "attempt": 3,
+        "path": "build/evidence/R0.03/held-response-diagnostic-cli/run.json",
+        "runSha256": "7a8694e99aa9171a0d9f429acb557383eedfebb42c698c1e2aad6cffd6649bb6",
+        "showPath": "build/evidence/R0.03/held-response-diagnostic-cli/show.json",
+        "showSha256": "bf5de8274048eb11f71b6bf90f6738afc2639c564f09fddfd4c2215988651cfd",
+        "downPath": "build/evidence/R0.03/held-response-diagnostic-cli/down.json",
+        "downSha256": "71b8dc0a239542504d5f43d8803a358e83b51f61c5536ccb65cfbfe0458fd434",
+        "runAndShowExact": true,
+        "checks": "11 PASS, 1 FAIL of 12",
+        "failureCode": "NATIVE_AUTH_HELD_RESPONSE_LOCK_CONTENTION_FAILED",
+        "observerFields": {
+          "observerReady": true,
+          "exclusiveLockCallObserved": false,
+          "anyNativeLockContentionObserved": false,
+          "fixedProfileLockContentionObserved": false,
+          "realLockContentionObserved": false,
+          "responseHeldAtContention": true,
+          "addAcquiredBeforeRelease": false,
+          "addCompletedBeforeRelease": false
+        }
+      }
+    ],
+    "observedOutcome": "All three runs had exact stored run/show readbacks, one failed held-response observation, and a successful stack.down. The replan records all owned worlds DOWN, all teardowns complete, no ATs passed, and whole AT state NOT_IMPLEMENTED.",
+    "causalFailure": "The experimental observer was inserted immediately after the refresh-first add child reached add-response-pending, before either provider response was released. The public auth-add child was still waiting at its fake OAuth token-response barrier; the test then waited for its OS flock marker before releasing that add-token response. The pre-existing sequence releases the held refresh response and observes the refresh catalog first, then releases the auth-add token. Consequently the check asked for an auth-add persistence-lock event without evidence that auth-add had progressed past provider token delivery. It deterministically observed no exclusive flock call in that earlier stage. This is a fixture-stage/order failure of the diagnostic; it does not prove that Hermes has no lock, prove a lost update, or establish stale-successful-response rejection.",
+    "sequenceEvidence": {
+      "failedPatch": "build/evidence/R0.03/held-response-unpassed-source.diff",
+      "failedPatchSha256": "94e56fb6223dce1b13995f0016acdd7edd8647ac91e38bcd924467a16502879c",
+      "insertion": "Its refresh-first hunk waits for add-auth-lock-contended directly after add-response-pending, before release-refresh-token; release-add-token remains later, after refresh-catalog-observed.",
+      "currentFixturePath": "packages/hermes/src/auth-fixture.ts",
+      "currentRelevantLines": "757-769: wait at add-response-pending; release refresh token; await refresh catalog; release add token.",
+      "providerPatchPath": "patches/hermes-auth-fixture.patch",
+      "providerBarrierMeaning": "add-response-pending is the fake OAuth token response barrier; release-add-token returns that response.",
+      "observerNamesAbsentFromCurrentSource": [
+        "add-auth-lock-contended",
+        "add-lock-observer-ready",
+        "add-lock-exclusive-call"
+      ]
+    }
+  },
+  "restorationAndPriorDeferral": {
+    "replanPath": "build/evidence/R0.03/held-response-replan.json",
+    "replanSha256": "d5d6c5ddca6b0fe4580d800fc0d2e13574fd710afab0a7504ad4f91e555d5b4d",
+    "restoredCommit": "a7b39c8",
+    "sourceChangesRetained": false,
+    "restoredFiles": [
+      "architecture/features.json",
+      "packages/contracts/src/generated-probe-registry.ts",
+      "packages/hermes/src/auth-fixture.ts",
+      "patches/hermes-auth-fixture.patch",
+      "skills/toy-control/FEATURE-MAP.md",
+      "tests/registry.yaml"
+    ],
+    "rootPinsPath": "build/evidence/R0.03/held-response-restored-root-pins.json",
+    "rootPinsSha256": "d4f3e4cda449f3180749c7e8f7558cf3f8aef2652b36f34e6847dac9f3c5c668",
+    "rootPinsVerified": true,
+    "restoredStrictCheckPath": "build/evidence/R0.03/held-response-restored-check-result.json",
+    "restoredStrictCheckSha256": "aa8225bc345dbb5c88262c0aca245f4799a235dd0bfd293544fe5d213a07b7c0",
+    "restoredStrictCheckExitCode": 0,
+    "priorMinimumPlan": {
+      "path": "build/evidence/R0.03/public-auth-add-stage-minimum-plan.json",
+      "sha256": "67fdb442172135b610132bfe18273be66803d081764ee83f2adcb59483de9e4f",
+      "parentDecision": "DEFER_EXTRA_ENDPOINT_OBSERVATION",
+      "decisionReason": "Existing signals can distinguish provider-response-pending, provider-response-released, public auth-add command-returned, and public-list-visible, but cannot locate an intermediate auth-add stage. That observation cannot prove same-grant stale-response rejection or native role enforcement; no fourth observer repair or additional protocol/research was authorized.",
+      "minimumCandidateIfASeparateCardIsAuthorized": "Release only the separate auth-add OAuth response while keeping the expired-chat refresh response held; use the existing finite command-completion wait and, if it returns, fresh public auth-list readback. If the child stays pending, report only that public stage and release the refresh response for teardown. This does not establish an internal lock stage or the complete assigned AT."
+    }
+  },
+  "currentAuth91Comparison": {
+    "sourceHandoffPath": "build/evidence/R0.03/lifecycle91-source-handoff.json",
+    "sourceHandoffSha256": "3670ad822e98fd388228186d64f3aa7b9b386c47f512b52b66a9fbe1e34f66bf",
+    "currentPostRepairSourceHashes": {
+      "packages/hermes/src/auth-fixture.ts": "a4b7739da7b909ca8fe854bb460a12b4a590dd8cab5545bab69f2cd793fd4898",
+      "packages/hermes/src/auth-probe.ts": "58b2df70f3cba853b1993be85fb6e2c4732301c841e0edbe1ae78331c5335d0d",
+      "patches/hermes-auth-fixture.patch": "edcdcf963730b74aba7e77bb544119bff55829f48204e138aedbbd06af965e96",
+      "docs/adr/0049-native-auth-lifecycle-probe.md": "baec9c3f47aec2e01c49b7e19114bcfa7b209c7611bcdddc57a6fab53a9924b1"
+    },
+    "scopeOfCurrentChanges": [
+      "The quota repair accepts exactly one fixed quota GET after exactly two synthetic target rate-limit responses in the lifecycle actor; it repairs Auth91 provider-fixture behavior.",
+      "The public-title repair disables auxiliary.title_generation in the disposable Auth91 root lifecycle before seeding so one public chat yields one model request.",
+      "Current auth-fixture.ts still has the same refresh-first order at lines 757-769; current auth-probe.ts remains the handoff-pinned file. The added lock observer markers are absent from current source/registry."
+    ],
+    "auth91Proof": {
+      "finalReadbackPath": "build/evidence/R0.03/lifecycle91-final-parent-readback.json",
+      "finalReadbackSha256": "d6c25aa89e9d680694736c4ad24daa50374855356c59343c8e812b34375b2f31",
+      "finalCliPath": "build/evidence/R0.03/lifecycle91-final-cli.json",
+      "finalCliSha256": "bf8d3dcffb0fc723632bac7b2047776328e795806b27db8d15bed19520364ce9",
+      "result": "17 checks PASS across 16 canonical Auth91 lifecycle cases; public run/show/down bindings match. Whole acceptance remains false; fixture identity UID501/GID20 is not the protected native service identity, and there is no installed-account or live-provider proof.",
+      "quotaRepairPath": "build/evidence/R0.03/lifecycle91-quota-repair.json",
+      "quotaRepairSha256": "a05da08bc61d61a4cb07d7a3bfa9bbc32a92d94d18652cc48b3478a3132d9e28",
+      "titleRepairPath": "build/evidence/R0.03/lifecycle91-root-title-repair.json",
+      "titleRepairSha256": "23ce826450479c65f2b5bc83608ced1bdc6a2966f52e5a282320e975a8c8dffe"
+    },
+    "existingAuth87Regression": {
+      "runPath": "build/evidence/R0.03/lifecycle91-regression-cli/AT-hermes-config-87-run.json",
+      "runSha256": "89c9864eb708ea32c7c0297d6b44e738abebde99ff8e407ade3b25867a90ae0f",
+      "showPath": "build/evidence/R0.03/lifecycle91-regression-cli/AT-hermes-config-87-show.json",
+      "showSha256": "b060665e102ea64d0cac095268e02ad1e5527707416d0f8a28dd392a92658854",
+      "result": "The existing registered 26 checks are all PASS in run/show, but result state remains NOT_IMPLEMENTED and complete=false. Current tests/registry.yaml has only add-first, refresh-first, before-replace, after-replace and no native-auth-lock-serialization observation. This regression does not cover the reverted held-response observer."
+    },
+    "materialChangeConclusion": "Auth91 repairs change fixture quota routing and temporary title-generation configuration, not the auth-add token-barrier/refresh-response ordering or a same-profile auth-add lock oracle. They do not materially resolve the failed Auth87 held-response slice and do not support accepting a new Auth87 replan."
+  },
+  "nextStepOrPrerequisite": {
+    "disposition": "STOPPED_NO_FURTHER_AUTH87_RUN_OR_SOURCE_ADMISSION",
+    "reason": "The three-attempt held-response unit is stopped, its observer patch was reverted, and the prior minimum public-stage proposal was parent-deferred. Auth91 evidence is orthogonal. Do not reapply the archive or run a fourth probe.",
+    "missingPrerequisiteForAnyLaterReplan": "A separately parent-reviewed, source-bound acceptance slice must identify a required public behavior that existing auth-add response/command/list receipts can actually establish. Existing receipts cannot identify a pre-return persistence stage, and they cannot prove same-grant stale-successful-response rejection. Until that gap is made precise without another observer protocol, no accepted Auth87 replan is supported."
+  },
+  "rootQueue": {
+    "path": "build/ROOT-REQUESTS.md",
+    "sha256": "6bdca8b36154b5ec87875c5a1fe0e5d5f9a8a0b6d172c26c7d99ad9f2dd6307e",
+    "statuses": {
+      "ROOT-R004-20261006-01": "DONE",
+      "ROOT-R004-20261006-02": "PENDING",
+      "ROOT-R005-20261006-01": "PENDING"
+    },
+    "priority": "Do not infer pending roots as DONE; if canonical Root02 later reaches valid DONE, parent R001 priority applies. No root input or native service was touched."
+  },
+  "sourcePins": {
+    "tests/acceptance-index.json": "c9b645eab7f55b2ebf35d7db769a534a4837de23ad3dc3d913f3189e781d44fa",
+    "tests/registry.yaml": "fe3134a2df00613d574a5ac562884384c8ac6a8ca31a91cbc54115cfb0e01e5e",
+    "../personal-assistant-harness/specs/hermes-config.md": "d3548fde13180bc750660f306caa0041101832e398ccdabd6cfdac0b3de8f4af",
+    "../personal-assistant-harness/specs/TEST-PLAN.md": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2",
+    "packages/hermes/src/auth-fixture.ts": "a4b7739da7b909ca8fe854bb460a12b4a590dd8cab5545bab69f2cd793fd4898",
+    "packages/hermes/src/auth-probe.ts": "58b2df70f3cba853b1993be85fb6e2c4732301c841e0edbe1ae78331c5335d0d",
+    "patches/hermes-auth-fixture.patch": "edcdcf963730b74aba7e77bb544119bff55829f48204e138aedbbd06af965e96",
+    "docs/adr/0049-native-auth-lifecycle-probe.md": "baec9c3f47aec2e01c49b7e19114bcfa7b209c7611bcdddc57a6fab53a9924b1",
+    "build/ROOT-REQUESTS.md": "6bdca8b36154b5ec87875c5a1fe0e5d5f9a8a0b6d172c26c7d99ad9f2dd6307e"
+  }
+}
