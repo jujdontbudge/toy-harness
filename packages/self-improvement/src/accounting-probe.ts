@@ -13,8 +13,8 @@ const take = <Data>(result: Result<Data>): Data => {
   if (!result.ok) throw new ProbeRefusal(result.error);
   return result.data;
 };
-const exercise = (work: () => void): Result<void> => {
-  try { work(); return {ok:true,data:undefined}; }
+const exercise = <Data>(work: () => Data): Result<Data> => {
+  try { return {ok:true,data:work()}; }
   catch (error) { return error instanceof ProbeRefusal ? {ok:false,error:error.error} : {ok:false,error:{module:"ops",code:"ATTESTATION_INVALID",message:opsErrorMessages.ATTESTATION_INVALID,retryable:false,effectState:"unknown"}}; }
 };
 const identity = (key: string): string => {
@@ -50,7 +50,7 @@ export const accountingProbe = async (input: RegisteredProbeInputV1, context: Op
     const content = readFileSync(join(trustedCheckoutRoot(),"behavior/models.yaml"));
     const policy = modelRoutePolicySchema.parse(JSON.parse(content.toString("utf8")));
     const policyDigest = createHash("sha256").update(content).digest("hex");
-    const now = take(TestClockControl.get(context)).virtualWall;
+    const now = (): string => take(TestClockControl.get(context)).virtualWall;
     const prefix = context.environment.stackId + ":" + input.requestId;
     const request = (accountRef: string, key: string, work: ModelAdmissionWorkV1, role: ModelRoleV1 = "background", measured = false): ModelAdmissionRequestV1 => modelAdmissionRequestSchema.parse({
       callKey:key,budgetGroupId:identity(key+":budget"),rootContractId:identity(key+":root"),runId:identity(key+":run"),generation:"1",parentCallId:null,attempt:key.endsWith(":retry")?2:1,
@@ -58,11 +58,11 @@ export const accountingProbe = async (input: RegisteredProbeInputV1, context: Op
       work,reservedInputTokens:1,expectedFiveHourUpperPercent:measured?0.001:null,expectedWeeklyUpperPercent:measured?0.001:null
     });
     const windows = (fiveHour: number | null, weekly: number | null): ModelQuotaWindowV1[] => [
-      ...(fiveHour===null?[]:[{bucketId:"primary",durationMinutes:300,usedPercent:fiveHour,resetAt:new Date(Date.parse(now)+18000000).toISOString()}]),
-      ...(weekly===null?[]:[{bucketId:"secondary",durationMinutes:10080,usedPercent:weekly,resetAt:new Date(Date.parse(now)+604800000).toISOString()}])
+      ...(fiveHour===null?[]:[{bucketId:"primary",durationMinutes:300,usedPercent:fiveHour,resetAt:new Date(Date.parse(now())+18000000).toISOString()}]),
+      ...(weekly===null?[]:[{bucketId:"secondary",durationMinutes:10080,usedPercent:weekly,resetAt:new Date(Date.parse(now())+604800000).toISOString()}])
     ];
-        const observe = (owner: ModelAdmissionApi, accountRef: string, key: string, values: ModelQuotaWindowV1[], unavailable = false): void => {
-      take(owner.observe(modelQuotaObservationSchema.parse({id:identity(key+":quota"),provider:"siwc_responses",accountRef,reportedAt:now,sourceAuthorized:true,schemaValid:!unavailable,status:unavailable?"unavailable":"available",windows:values,bodyRef:"fixed-external-quota-fixture:"+key})));
+    const observe = (owner: ModelAdmissionApi, accountRef: string, key: string, values: ModelQuotaWindowV1[], unavailable = false): void => {
+      take(owner.observe(modelQuotaObservationSchema.parse({id:identity(key+":quota"),provider:"siwc_responses",accountRef,reportedAt:now(),sourceAuthorized:true,schemaValid:!unavailable,status:unavailable?"unavailable":"available",windows:values,bodyRef:"fixed-external-quota-fixture:"+key})));
     };
     const checks: CheckViewV1[] = [];
     const diagnostic = (value: CheckViewV1): void => { checks.push(value); };
@@ -95,14 +95,14 @@ export const accountingProbe = async (input: RegisteredProbeInputV1, context: Op
     if (input.probeId === "AT-ops-10") {
       const retained: Array<{ accountRef: string; records: ModelAdmissionRecordV1[] }> = [];
       const variants = [
-        { name: "exhausted-known-reset", status: "exhausted", values: windows(10,20), reason: "QUOTA_EXHAUSTED", retryAt: new Date(Date.parse(now)+604800000).toISOString() },
+        { name: "exhausted-known-reset", status: "exhausted", values: windows(10,20), reason: "QUOTA_EXHAUSTED", retryAt: new Date(Date.parse(now())+604800000).toISOString() },
         { name: "exhausted-unknown-reset", status: "exhausted", values: [], reason: "QUOTA_EXHAUSTED", retryAt: null },
-        { name: "full-quota-windows", status: "available", values: windows(100,20), reason: "FIVE_HOUR_THRESHOLD", retryAt: new Date(Date.parse(now)+18000000).toISOString() }
+        { name: "full-quota-windows", status: "available", values: windows(100,20), reason: "FIVE_HOUR_THRESHOLD", retryAt: new Date(Date.parse(now())+18000000).toISOString() }
       ] as const;
       for (const variant of variants) {
         const accountRef = "fixture.exhausted."+prefix+":"+variant.name;
         const result = await ModelAdmission.withTest(context,policyDigest,owner=>exercise(()=>{
-          const observation = modelQuotaObservationSchema.parse({ id: identity(accountRef+":quota"), provider: "siwc_responses", accountRef, reportedAt: now, sourceAuthorized: true, schemaValid: true, status: variant.status, windows: variant.values, bodyRef: "fixed-external-quota-fixture:"+variant.name });
+          const observation = modelQuotaObservationSchema.parse({ id: identity(accountRef+":quota"), provider: "siwc_responses", accountRef, reportedAt: now(), sourceAuthorized: true, schemaValid: true, status: variant.status, windows: variant.values, bodyRef: "fixed-external-quota-fixture:"+variant.name });
           take(owner.observe(observation));
           const records = [
             take(owner.reserve(request(accountRef,accountRef+":cron",{class:"quiet-tick"},"background",true))),
@@ -122,11 +122,14 @@ export const accountingProbe = async (input: RegisteredProbeInputV1, context: Op
         }),diagnostic);
         if (!result.ok) return reportFailure(result.error);
       }
+      let persisted = true;
+      let refusedWhileExhausted = true;
+      let resumed = 0;
+      let duplicateCharge = false;
+      let sameDayPendingCleared = false;
+      let rolloverSeedValid = false;
+      let rootBindingRejectedBefore = false;
       const recovery = await ModelAdmission.withTest(context,policyDigest,owner=>exercise(()=>{
-        let persisted = true;
-        let refusedWhileExhausted = true;
-        let resumed = 0;
-        let duplicateCharge = false;
         for (const fixture of retained) {
           const pending = take(owner.inspectPending(fixture.accountRef));
           persisted &&= pending.length === fixture.records.length && fixture.records.every(record=>JSON.stringify(record)===JSON.stringify(pending.find(candidate=>candidate.id===record.id)));
@@ -149,11 +152,141 @@ export const accountingProbe = async (input: RegisteredProbeInputV1, context: Op
             if (terminal.nativeSendCount===1&&terminal.nativeTerminalAcknowledged&&terminal.state==="settled") resumed+=1;
           }
         }
-        checks.push(check("deferred-restart-recovery",persisted&&refusedWhileExhausted&&resumed===9&&!duplicateCharge&&retained.every(fixture=>take(owner.inspectPending(fixture.accountRef)).length===0),{
-          postgresqlRestarted:true, persisted, refusedWhileExhausted, resumed, expectedCalls:9, duplicateCharge, physicalProviderCalls:0, paidRequests:0, wholeATComplete:false
-        }));
-      }),diagnostic);
+        sameDayPendingCleared = retained.every(fixture=>take(owner.inspectPending(fixture.accountRef)).length===0);
+        const baseWall = new Date(Date.parse(now()));
+        const startAt = new Date(Date.UTC(baseWall.getUTCFullYear(),baseWall.getUTCMonth(),baseWall.getUTCDate()+1,23,59)).toISOString();
+        const resetAt = new Date(Date.parse(startAt)+360000).toISOString();
+        take(TestClockControl.freeze({at:startAt,requestId:identity(prefix+":cross-day-start")},context));
+        const accountRef = "fixture.cross-day."+prefix;
+        const callKey = accountRef+":original";
+        const observation = modelQuotaObservationSchema.parse({id:identity(callKey+":quota"),provider:"siwc_responses",accountRef,reportedAt:now(),sourceAuthorized:true,schemaValid:true,status:"exhausted",
+          windows:[{bucketId:"primary",durationMinutes:300,usedPercent:100,resetAt}],bodyRef:"fixed-external-quota-fixture:"+callKey});
+        take(owner.observe(observation));
+        const originalRequest = request(accountRef,callKey,{class:"quiet-tick"},"background",true);
+        const original = take(owner.reserve(originalRequest));
+        const seedPending = take(owner.inspectPending(accountRef));
+        const mismatchRequest = modelAdmissionRequestSchema.parse({...request(accountRef,accountRef+":wrong-root-before",{class:"quiet-tick"},"background",true),
+          budgetGroupId:original.budgetGroupId,rootContractId:identity(accountRef+":different-root-before"),runId:original.runId,generation:original.generation});
+        const mismatch = owner.reserve(mismatchRequest);
+        const afterMismatchPending = take(owner.inspectPending(accountRef));
+        const afterMismatchLedger = take(owner.inspect(accountRef)).ledger;
+        rootBindingRejectedBefore = !mismatch.ok&&mismatch.error.code==="CONFLICT"&&afterMismatchPending.length===1
+          &&JSON.stringify(afterMismatchPending[0])===JSON.stringify(original)&&afterMismatchLedger.fallbackJobsReserved===0;
+        rolloverSeedValid = original.utcDay===startAt.slice(0,10)&&original.state==="denied"&&!original.decision.eligible
+          &&original.decision.reason==="QUOTA_EXHAUSTED"&&original.decision.retryAt===resetAt&&!original.reservationCharged
+          &&!original.leaseActive&&original.nativeSendCount===0&&!original.nativeTerminalAcknowledged&&original.endedAt===null
+          &&seedPending.length===1&&JSON.stringify(seedPending[0])===JSON.stringify(original)
+          &&JSON.stringify(observation)===JSON.stringify(take(owner.inspect(accountRef)).observation);
+        return {accountRef,original,originalRequest,startAt,resetAt};
+      }));
       if (!recovery.ok) return reportFailure(recovery.error);
+      const rollover = recovery.data;
+      let clockAtTwo = false;
+      let pendingVisibleAtTwo = false;
+      let exhaustedReadbackAtTwo = false;
+      let blockedAtTwo = false;
+      let noChargeAtTwo = false;
+      let freshObservationAfterReset = false;
+      let retryValid = false;
+      let retryIdempotent = false;
+      let originalPreservedAfterRestart = false;
+      let originalPreservedAfterRetry = false;
+      let supersededOriginalNotPending = false;
+      let cleanupReleased = false;
+      let rootBindingRejectedAfter = false;
+      let chargeAtTwo = -1;
+      let chargeAfterFirstRetry = -1;
+      let chargeAfterRepeatedRetry = -1;
+      let retryError: string | null = null;
+      let blockedError: string | null = null;
+      let retryId: string | null = null;
+      let retryCallKey: string | null = null;
+        const {accountRef,original,originalRequest,startAt,resetAt} = rollover;
+        const toTwo = TestClockControl.advance({requestId:identity(prefix+":cross-day-00-02"),by:"PT3M",waitMs:0},context);
+        if (!toTwo.ok) return reportFailure(toTwo.error);
+        const atTwo = toTwo.data.result?.after.virtualWall ?? null;
+        clockAtTwo = atTwo===new Date(Date.parse(startAt)+180000).toISOString();
+        const crossDayRecovery = await ModelAdmission.withTest(context,policyDigest,owner=>exercise(()=>{
+          const pendingAtTwo = take(owner.inspectPending(accountRef));
+          const oldAtTwo = pendingAtTwo.find(record=>record.id===original.id);
+          pendingVisibleAtTwo = oldAtTwo!==undefined;
+          originalPreservedAfterRestart = oldAtTwo!==undefined&&JSON.stringify(oldAtTwo)===JSON.stringify(original);
+          const exhaustedSnapshot = take(owner.inspect(accountRef));
+          exhaustedReadbackAtTwo = exhaustedSnapshot.observation?.status==="exhausted"
+            &&exhaustedSnapshot.observation.reportedAt===startAt;
+          const blocked = owner.resumePending(accountRef,original.callKey);
+          blockedError = blocked.ok?null:blocked.error.code;
+          const blockedRow = blocked.ok?blocked.data:null;
+          const pendingAfterBlocked = take(owner.inspectPending(accountRef));
+          const afterBlocked = take(owner.inspect(accountRef));
+          chargeAtTwo = afterBlocked.ledger.fallbackJobsReserved;
+          blockedAtTwo = (blockedRow!==null&&blockedRow.id===original.id&&!blockedRow.decision.eligible
+            &&!blockedRow.reservationCharged&&!blockedRow.leaseActive&&blockedRow.nativeSendCount===0
+            &&JSON.stringify(blockedRow)===JSON.stringify(original))||(!blocked.ok&&blocked.error.code==="CONFLICT");
+          noChargeAtTwo = chargeAtTwo===0&&pendingAfterBlocked.length===1
+            &&pendingAfterBlocked.some(record=>record.id===original.id&&JSON.stringify(record)===JSON.stringify(original));
+          take(TestClockControl.advance({requestId:identity(prefix+":cross-day-00-06"),by:"PT4M",waitMs:0},context));
+          const availableWindows = windows(10,20);
+          observe(owner,accountRef,accountRef+":after-reset",availableWindows);
+          const availableWall = now();
+          const freshSnapshot = take(owner.inspect(accountRef));
+          freshObservationAfterReset = Date.parse(availableWall)>Date.parse(resetAt)
+            &&freshSnapshot.observation?.status==="available"&&freshSnapshot.observation.reportedAt===availableWall
+            &&freshSnapshot.observation.sourceAuthorized&&freshSnapshot.observation.schemaValid;
+          const beforeRetry = take(owner.inspect(accountRef)).ledger.fallbackJobsReserved;
+          const retried = owner.resumePending(accountRef,original.callKey);
+          retryError = retried.ok?null:retried.error.code;
+          const retry = retried.ok?retried.data:null;
+          retryId = retry?.id ?? null;
+          retryCallKey = retry?.callKey ?? null;
+          const afterFirstRetry = take(owner.inspect(accountRef)).ledger.fallbackJobsReserved;
+          const repeated = owner.resumePending(accountRef,original.callKey);
+          const repeatedRow = repeated.ok?repeated.data:null;
+          const afterRepeatedRetry = take(owner.inspect(accountRef)).ledger.fallbackJobsReserved;
+          chargeAfterFirstRetry = afterFirstRetry;
+          chargeAfterRepeatedRetry = afterRepeatedRetry;
+          retryValid = retry!==null&&retry.id!==original.id&&retry.callKey!==original.callKey
+            &&retry.utcDay===availableWall.slice(0,10)&&retry.accountRef===original.accountRef
+            &&retry.budgetGroupId===original.budgetGroupId&&retry.runId===original.runId
+            &&retry.generation===original.generation&&JSON.stringify(retry.requested)===JSON.stringify(original.requested)
+            &&JSON.stringify(retry.work)===JSON.stringify(original.work)&&retry.state==="reserved"&&retry.reservationCharged
+            &&retry.leaseActive&&retry.nativeSendCount===0&&!retry.nativeTerminalAcknowledged&&!retry.decision.providerSendPermitIssued
+            &&!retry.decision.paidFallbackPermitted&&beforeRetry===0&&afterFirstRetry===1;
+          retryIdempotent = retry!==null&&repeatedRow!==null&&repeatedRow.id===retry.id&&repeatedRow.callKey===retry.callKey
+            &&JSON.stringify(repeatedRow)===JSON.stringify(retry)&&afterRepeatedRetry===afterFirstRetry;
+          const pendingAfterRetry = take(owner.inspectPending(accountRef));
+          const oldAfterRetry = take(owner.reserve(originalRequest));
+          originalPreservedAfterRetry = JSON.stringify(oldAfterRetry)===JSON.stringify(original);
+          supersededOriginalNotPending = pendingAfterRetry.length===0;
+          const wrongRoot = modelAdmissionRequestSchema.parse({...request(accountRef,accountRef+":wrong-root-after",{class:"quiet-tick"},"background",true),
+            budgetGroupId:original.budgetGroupId,rootContractId:identity(accountRef+":different-root-after"),runId:original.runId,generation:original.generation});
+          const wrongRootResult = owner.reserve(wrongRoot);
+          const afterWrongRoot = take(owner.inspect(accountRef));
+          const oldAfterWrongRoot = take(owner.reserve(originalRequest));
+          rootBindingRejectedAfter = !wrongRootResult.ok&&wrongRootResult.error.code==="CONFLICT"
+            &&afterWrongRoot.ledger.fallbackJobsReserved===afterRepeatedRetry
+            &&JSON.stringify(oldAfterWrongRoot)===JSON.stringify(original);
+          if (retry!==null&&retry.reservationCharged&&retry.leaseActive) {
+            const released = take(owner.settle({callId:retry.id,nativeTerminalAcknowledged:true,usage:null,reportedTotalTokens:null}));
+            const afterRelease = take(owner.inspect(accountRef));
+            cleanupReleased = !released.leaseActive&&released.nativeSendCount===0&&released.usage===null
+              &&released.reservationCharged&&!afterRelease.ledger.providerLeaseActive
+              &&afterRelease.ledger.fallbackJobsReserved===afterRepeatedRetry;
+          }
+        }));
+        if (!crossDayRecovery.ok) return reportFailure(crossDayRecovery.error);
+      const crossDayPassed = rolloverSeedValid&&clockAtTwo&&pendingVisibleAtTwo&&exhaustedReadbackAtTwo&&blockedAtTwo&&noChargeAtTwo
+        &&freshObservationAfterReset&&retryValid&&retryIdempotent&&originalPreservedAfterRestart&&originalPreservedAfterRetry
+        &&rootBindingRejectedBefore&&rootBindingRejectedAfter&&supersededOriginalNotPending&&cleanupReleased
+        &&chargeAtTwo===0&&chargeAfterFirstRetry===1&&chargeAfterRepeatedRetry===1;
+      checks.push(check("deferred-restart-recovery",persisted&&refusedWhileExhausted&&resumed===9&&!duplicateCharge&&sameDayPendingCleared&&crossDayPassed,{
+        postgresqlRestarted:true,persisted,refusedWhileExhausted,resumed,expectedCalls:9,duplicateCharge,sameDayPendingCleared,
+        crossDay:{startAt,resetAt,seeded:rolloverSeedValid,clockAtTwo,pendingVisibleAtTwo,exhaustedReadbackAtTwo,
+          blockedError,blockedAtTwo,noChargeAtTwo,chargeAtTwo,freshObservationAfterReset,retryError,retryValid,retryId,retryCallKey,
+          retryIdempotent,originalPreservedAfterRestart,originalPreservedAfterRetry,rootBindingRejectedBefore,rootBindingRejectedAfter,
+          supersededOriginalNotPending,cleanupReleased,chargeAfterFirstRetry,chargeAfterRepeatedRetry,parentCallIdAttemptReadback:"UNPROVEN_PUBLIC_DTO"},
+        physicalProviderCalls:0,paidRequests:0,nativeProviderSendPermitIssued:false,wholeATComplete:false
+      }));
       return TestProbeControl.run(input,context,checks);
     }
     if (input.probeId === "AT-ops-50") {

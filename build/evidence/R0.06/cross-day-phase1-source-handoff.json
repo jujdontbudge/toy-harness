@@ -1,0 +1,94 @@
+{
+  "schemaVersion": "toy.r0.06.source-handoff.v1",
+  "recordedAt": "2026-10-07T12:37:30Z",
+  "card": "R0.06",
+  "assignedAT": "AT-ops-10",
+  "rung": "CLI",
+  "phase": "cross-day-deferred-restart-recovery",
+  "phaseState": "SOURCE_STOP",
+  "sourceOwner": "/root/r006_cross_day_minimum",
+  "sourceStoppedAt": "2026-10-07T12:37:30Z",
+  "deadline": "2026-10-07T12:45:00Z",
+  "acceptedPlan": {
+    "path": "build/evidence/R0.06/cross-day-next-minimum-20261007.json",
+    "sha256": "00c2952dd8d1a63530b633c4b5ec6e42c3117d0e59094d459e15eb552cc1c934"
+  },
+  "parentReview": {
+    "path": "build/evidence/R0.06/cross-day-plan-parent-review.json",
+    "sha256": "800c349a7944b098ca27335381101492062cdd511956864baa2d6d86244bb6cb",
+    "decision": "PLAN_ACCEPTED_TEST_ONLY_SOURCE_PHASE1"
+  },
+  "assertionPreservation": {
+    "sourceAssertionHash": "e281f3fe7221d3ddc551bf73c8fc5e0df616060c8d089af9ee4625930d11ee3f",
+    "mandatoryCaseIds": [
+      "exhausted-known-reset",
+      "exhausted-unknown-reset",
+      "full-quota-windows",
+      "deferred-restart-recovery"
+    ],
+    "unchanged": true,
+    "sameDayNineCallProofPreserved": true
+  },
+  "ownedPaths": [
+    "packages/self-improvement/src/accounting-probe.ts",
+    "tests/registry.yaml",
+    "architecture/features.json",
+    "docs/adr/0061-cross-day-model-admission.md",
+    "build/evidence/R0.06/cross-day-phase1-source-handoff.json"
+  ],
+  "sourcePins": {
+    "packages/self-improvement/src/accounting-probe.ts": "5a081edb3684c7226b31fdb21c2930a48f7732f360f61ee4449eb81383fa9d61",
+    "tests/registry.yaml": "647243cb0414e483d59d9bf4eed5c967d6c0d30cb0ed9d5dc393a6d50b43506e",
+    "architecture/features.json": "ce5c117cf86ed84e5f63c0c0eda85707f95b1cd5802900b7e49d547ff09b5884",
+    "docs/adr/0061-cross-day-model-admission.md": "bee5d595536ac4600f21eac59e29de91f4788d57a696606ef2fb73828b069325"
+  },
+  "forbiddenOwnerPreserved": {
+    "path": "packages/self-improvement/src/model-admission.ts",
+    "expectedSha256": "44a36ef026d203f9db9437dcf53c1172224420596d0570353bcc564a758439c7",
+    "actualSha256": "44a36ef026d203f9db9437dcf53c1172224420596d0570353bcc564a758439c7",
+    "unchanged": true
+  },
+  "generatedInventory": {
+    "path": "packages/contracts/src/generated-probe-registry.ts",
+    "sha256": "fdfcd6821a8aed9acd5df3b4a0ecd14bcb0abc3b286763dcc893e43e28d5c223",
+    "phase1Updated": false,
+    "reason": "Generated files and generation were forbidden during source phase 1. tests/registry.yaml trigger text now describes the cross-day case; refresh through the existing generator after SOURCE_STOP and before the assigned parent CLI RED."
+  },
+  "humanFeatureMap": {
+    "path": "skills/toy-control/FEATURE-MAP.md",
+    "phase1Updated": false,
+    "reason": "Explicitly outside the phase1 owned-path list; parent owns the remaining feature-map reconciliation after SOURCE_STOP."
+  },
+  "behaviorAddedToExistingCase": {
+    "dynamicObservationTime": "Provider observations use the current TestClockControl virtual wall, not a captured probe-start timestamp.",
+    "seed": "After the existing same-day nine-call recovery, retain one exhausted, uncharged pending call at 23:59 UTC with retryAt 00:05 UTC next day.",
+    "restartAndHold": "Reopen the existing disposable PostgreSQL owner at 00:02 UTC; require the old row to remain visible and unchanged, the exhausted observation to remain authoritative, and the current-day charge to remain zero. A public CONFLICT response is an acceptable refusal if readback proves no mutation.",
+    "freshRetry": "At 00:06 UTC, record an authorized normalized available observation through the existing provider seam; require a new current-day row and call key, unchanged observable account/budget-group/run/generation/route/work bindings, one current-day charge, and idempotent repeat readback.",
+    "rootBindingGuard": "Before and after rollover, reuse the existing budgetGroupId with a different root through public reserve; require CONFLICT and unchanged pending/charge readback.",
+    "nativeBoundary": "The new retry stays reserved with nativeSendCount zero, providerSendPermitIssued false, no paid request, and no protected provider execution."
+  },
+  "readbackLimit": {
+    "notPubliclyExposed": [
+      "stored parentCallId",
+      "attempt",
+      "rootContractId value"
+    ],
+    "evidence": "The public record omits those fields and inspect(accountRef) supplies no budgetBinding without an owner budget ID. The probe reports this limitation and does not inspect private SQL or claim direct parent-link verification."
+  },
+  "verification": {
+    "assignedCliRun": "NOT_RUN_BY_SOURCE_PHASE",
+    "genuineParentCliRedRequiredBeforeOwnerFix": true,
+    "build": "NOT_RUN",
+    "generation": "NOT_RUN",
+    "staticChecks": "NOT_RUN",
+    "tests": "NOT_RUN",
+    "providerOrNativeExecution": "NOT_RUN",
+    "rootOrOsProbe": "NOT_RUN",
+    "parentReportedAllLiveWorldsDown": true,
+    "parentCliAndBuildStoppedDuringWorkerSource": true,
+    "noBackgroundProcessesStartedBySource": true,
+    "wholeATComplete": false,
+    "goalStatus": "active"
+  },
+  "nextOwner": "After this SOURCE_STOP, update generated probe inventory through its existing generator, run the assigned public CLI case and preserve its genuine cross-day visibility/resume RED before editing model-admission.ts. Keep the failure evidence and handoff pins for phase 2."
+}

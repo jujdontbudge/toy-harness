@@ -1,0 +1,250 @@
+{
+  "recordedAt": "2026-10-07T12:43:28.621Z",
+  "state": "GENUINE_PUBLIC_CLI_RED_OWNER_UNCHANGED_TEARDOWN_COMPLETE",
+  "assignedAttempt": 1,
+  "card": "R0.06",
+  "AT": "AT-ops-10",
+  "rung": "CLI",
+  "summary": {
+    "path": "build/evidence/R0.06/cross-day-red-summary.json",
+    "sha256": "14b0962ab5c150fad5deb5762a7af024913c3829fed865210325042bf828b423"
+  },
+  "sourceReady": {
+    "path": "build/evidence/R0.06/cross-day-phase1-static-ready.json",
+    "sha256": "b575b5d38c7534a0ee7dd25206faa0311b8836f52e840eb5065c6a44ad778cad"
+  },
+  "run": {
+    "exitCode": 1,
+    "path": "build/evidence/R0.06/cross-day-red-cli/AT-ops-10-run.json",
+    "sha256": "ce0ab712f1652cc371ba8ffc94628e990d47c1eb47ed8a05e0a3cd793292b3fa"
+  },
+  "show": {
+    "exitCode": 1,
+    "path": "build/evidence/R0.06/cross-day-red-cli/AT-ops-10-show.json",
+    "sha256": "a63805fa28f43145d319f575784961056deb523d998477f50d97694401a9e9c9"
+  },
+  "sourceRegistrationExact": true,
+  "runShowExact": true,
+  "caseDetails": [
+    {
+      "state": "PASS",
+      "name": "exhausted-known-reset",
+      "evidence": {
+        "normalizedProviderObservation": "429-exhausted",
+        "reason": "QUOTA_EXHAUSTED",
+        "retryAt": "2026-10-12T00:00:00.000Z",
+        "records": [
+          [
+            "quiet-tick",
+            "QUOTA_EXHAUSTED",
+            "2026-10-12T00:00:00.000Z",
+            false,
+            0
+          ],
+          [
+            "auxiliary",
+            "QUOTA_EXHAUSTED",
+            "2026-10-12T00:00:00.000Z",
+            false,
+            0
+          ],
+          [
+            "child",
+            "QUOTA_EXHAUSTED",
+            "2026-10-12T00:00:00.000Z",
+            false,
+            0
+          ]
+        ],
+        "pendingCount": 3,
+        "exactReadback": true,
+        "charged": 0,
+        "lease": false,
+        "physicalProviderCalls": 0,
+        "paidRequests": 0,
+        "wholeATComplete": false
+      }
+    },
+    {
+      "state": "PASS",
+      "name": "exhausted-unknown-reset",
+      "evidence": {
+        "normalizedProviderObservation": "429-exhausted",
+        "reason": "QUOTA_EXHAUSTED",
+        "retryAt": null,
+        "records": [
+          [
+            "quiet-tick",
+            "QUOTA_EXHAUSTED",
+            null,
+            false,
+            0
+          ],
+          [
+            "auxiliary",
+            "QUOTA_EXHAUSTED",
+            null,
+            false,
+            0
+          ],
+          [
+            "child",
+            "QUOTA_EXHAUSTED",
+            null,
+            false,
+            0
+          ]
+        ],
+        "pendingCount": 3,
+        "exactReadback": true,
+        "charged": 0,
+        "lease": false,
+        "physicalProviderCalls": 0,
+        "paidRequests": 0,
+        "wholeATComplete": false
+      }
+    },
+    {
+      "state": "PASS",
+      "name": "full-quota-windows",
+      "evidence": {
+        "normalizedProviderObservation": "100-percent",
+        "reason": "FIVE_HOUR_THRESHOLD",
+        "retryAt": "2026-10-05T05:00:00.000Z",
+        "records": [
+          [
+            "quiet-tick",
+            "FIVE_HOUR_THRESHOLD",
+            "2026-10-05T05:00:00.000Z",
+            false,
+            0
+          ],
+          [
+            "auxiliary",
+            "FIVE_HOUR_THRESHOLD",
+            "2026-10-05T05:00:00.000Z",
+            false,
+            0
+          ],
+          [
+            "child",
+            "FIVE_HOUR_THRESHOLD",
+            "2026-10-05T05:00:00.000Z",
+            false,
+            0
+          ]
+        ],
+        "pendingCount": 3,
+        "exactReadback": true,
+        "charged": 0,
+        "lease": false,
+        "physicalProviderCalls": 0,
+        "paidRequests": 0,
+        "wholeATComplete": false
+      }
+    },
+    {
+      "state": "FAIL",
+      "name": "deferred-restart-recovery",
+      "evidence": {
+        "postgresqlRestarted": true,
+        "persisted": true,
+        "refusedWhileExhausted": true,
+        "resumed": 9,
+        "expectedCalls": 9,
+        "duplicateCharge": false,
+        "sameDayPendingCleared": true,
+        "crossDay": {
+          "startAt": "2026-10-06T23:59:00.000Z",
+          "resetAt": "2026-10-07T00:05:00.000Z",
+          "seeded": true,
+          "clockAtTwo": true,
+          "pendingVisibleAtTwo": false,
+          "exhaustedReadbackAtTwo": true,
+          "blockedError": "CONFLICT",
+          "blockedAtTwo": true,
+          "noChargeAtTwo": false,
+          "chargeAtTwo": 0,
+          "freshObservationAfterReset": true,
+          "retryError": "CONFLICT",
+          "retryValid": false,
+          "retryId": null,
+          "retryCallKey": null,
+          "retryIdempotent": false,
+          "originalPreservedAfterRestart": false,
+          "originalPreservedAfterRetry": true,
+          "rootBindingRejectedBefore": true,
+          "rootBindingRejectedAfter": true,
+          "supersededOriginalNotPending": true,
+          "cleanupReleased": false,
+          "chargeAfterFirstRetry": 0,
+          "chargeAfterRepeatedRetry": 0,
+          "parentCallIdAttemptReadback": "UNPROVEN_PUBLIC_DTO"
+        },
+        "physicalProviderCalls": 0,
+        "paidRequests": 0,
+        "nativeProviderSendPermitIssued": false,
+        "wholeATComplete": false
+      }
+    }
+  ],
+  "stackId": "f445b49a-5b13-49ba-a0fa-7f2d2371c335",
+  "teardown": {
+    "stackId": "f445b49a-5b13-49ba-a0fa-7f2d2371c335",
+    "checkpointRefs": [],
+    "fenceRefs": [],
+    "stoppedResourceRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "f445b49a-5b13-49ba-a0fa-7f2d2371c335"
+      }
+    ],
+    "retainedArtifactRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "f445b49a-5b13-49ba-a0fa-7f2d2371c335"
+      }
+    ],
+    "unresolvedResourceRefs": [],
+    "complete": true
+  },
+  "ownerBefore": {
+    "path": "packages/self-improvement/src/model-admission.ts",
+    "sha256": "44a36ef026d203f9db9437dcf53c1172224420596d0570353bcc564a758439c7"
+  },
+  "sourcePins": [
+    {
+      "path": "packages/self-improvement/src/accounting-probe.ts",
+      "sha256": "d89489f84a16f2d6ac078e11cae3b21de33b9b63158f9b230d34ee16c9e63164"
+    },
+    {
+      "path": "tests/registry.yaml",
+      "sha256": "647243cb0414e483d59d9bf4eed5c967d6c0d30cb0ed9d5dc393a6d50b43506e"
+    },
+    {
+      "path": "architecture/features.json",
+      "sha256": "ce5c117cf86ed84e5f63c0c0eda85707f95b1cd5802900b7e49d547ff09b5884"
+    },
+    {
+      "path": "docs/adr/0061-cross-day-model-admission.md",
+      "sha256": "2f7e003b6f9f3a2ca4ea8815b87853567e1d62aa263e18dda6e472825085486f"
+    }
+  ],
+  "generatedPins": [
+    {
+      "path": "packages/contracts/src/generated-probe-registry.ts",
+      "sha256": "dff6f091a2cef6103cbe0225d2a32432aa3ff9907ea53c29e88a795762e75ded"
+    },
+    {
+      "path": "packages/contracts/src/generated-bundle.ts",
+      "sha256": "d086b83a29fecafc5471e3ef6e670b45dd05805fac949cc04fb469331bbe0ab2"
+    },
+    {
+      "path": "skills/toy-control/FEATURE-MAP.md",
+      "sha256": "8bf786df0b3f2c4e949e4888bf22e3b0a20441ecaef2a86dfc946ee987124651"
+    }
+  ],
+  "wholeATComplete": false
+}

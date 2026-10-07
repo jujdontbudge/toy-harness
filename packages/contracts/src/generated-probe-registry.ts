@@ -6367,7 +6367,7 @@ export const registeredCliAcceptanceManifestInventory = [
         "phase": "deferred-restart-recovery"
       }
     ],
-    "trigger": "Normalized exhausted/429 and100-percent external observations deny cron, auxiliary and child calls; exact public pending enumeration survives PostgreSQL restart and same-day recovery charges each retained call once. Protected provider and canonical slot dispatch remain pending.",
+    "trigger": "Normalized exhausted/429 and100-percent external observations deny cron, auxiliary and child calls; exact public pending enumeration survives PostgreSQL restart and same-day recovery charges each retained call once. A denied call remains visible across UTC midnight, clock advancement alone does not recover it, and a fresh available observation after reset permits one current-day retry while preserving the original row. This is local accounting evidence only; protected provider and canonical slot dispatch remain pending.",
     "faultControls": [
       {
         "id": "fixed-quota-observation",

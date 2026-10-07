@@ -1,0 +1,205 @@
+{
+  "recordedAt": "2026-10-07T12:42:45.212Z",
+  "rung": "CLI",
+  "unfiltered": true,
+  "wholeATComplete": false,
+  "liveProviderSends": 0,
+  "nativeAttempt": 1,
+  "admissionEvidence": "build/evidence/R0.06/cross-day-red-runtime-memory.json",
+  "probes": [
+    {
+      "probeId": "AT-ops-10",
+      "run": {
+        "exitCode": 1,
+        "path": "build/evidence/R0.06/cross-day-red-cli/AT-ops-10-run.json",
+        "sha256": "ce0ab712f1652cc371ba8ffc94628e990d47c1eb47ed8a05e0a3cd793292b3fa"
+      },
+      "operationId": "302fde34-e77b-42ce-a04f-e6ddf360409b",
+      "show": {
+        "exitCode": 1,
+        "path": "build/evidence/R0.06/cross-day-red-cli/AT-ops-10-show.json",
+        "sha256": "a63805fa28f43145d319f575784961056deb523d998477f50d97694401a9e9c9"
+      },
+      "sameData": true,
+      "sourceRegistration": {
+        "id": "AT-ops-10",
+        "rung": "CLI",
+        "sourceAssertionHash": "e281f3fe7221d3ddc551bf73c8fc5e0df616060c8d089af9ee4625930d11ee3f",
+        "commandId": "probe.run",
+        "scenarioId": "accounting.model-admission",
+        "owner": "self-improvement",
+        "firstRelease": "R0",
+        "kind": "behavioral",
+        "mandatoryCases": [
+          {
+            "id": "exhausted-known-reset",
+            "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+            "phase": "exhausted-known-reset"
+          },
+          {
+            "id": "exhausted-unknown-reset",
+            "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+            "phase": "exhausted-unknown-reset"
+          },
+          {
+            "id": "full-quota-windows",
+            "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+            "phase": "full-quota-windows"
+          },
+          {
+            "id": "deferred-restart-recovery",
+            "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+            "phase": "deferred-restart-recovery"
+          }
+        ],
+        "trigger": "Normalized exhausted/429 and100-percent external observations deny cron, auxiliary and child calls; exact public pending enumeration survives PostgreSQL restart and same-day recovery charges each retained call once. A denied call remains visible across UTC midnight, clock advancement alone does not recover it, and a fresh available observation after reset permits one current-day retry while preserving the original row. This is local accounting evidence only; protected provider and canonical slot dispatch remain pending.",
+        "faultControls": [
+          {
+            "id": "fixed-quota-observation",
+            "seam": "provider",
+            "affectedPhases": [
+              "exhausted-known-reset",
+              "exhausted-unknown-reset",
+              "full-quota-windows",
+              "deferred-restart-recovery"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "public-accounting-denials",
+            "independentReader": "ModelAdmission.reserve and inspect: exact external quota binding and zero charges or sends",
+            "caseIds": [
+              "exhausted-known-reset",
+              "exhausted-unknown-reset",
+              "full-quota-windows",
+              "deferred-restart-recovery"
+            ]
+          },
+          {
+            "id": "durable-pending-readback",
+            "independentReader": "ModelAdmission.inspectPending and resumePending after physical PostgreSQL restart",
+            "caseIds": [
+              "exhausted-known-reset",
+              "exhausted-unknown-reset",
+              "full-quota-windows",
+              "deferred-restart-recovery"
+            ]
+          },
+          {
+            "id": "stored-cli-readback",
+            "independentReader": "toy probe.show and stack.down: exact persisted result and complete teardown",
+            "caseIds": [
+              "exhausted-known-reset",
+              "exhausted-unknown-reset",
+              "full-quota-windows",
+              "deferred-restart-recovery"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot drive pre-build native PostgreSQL restart or inspect admission records. The CLI reaches the real accounting owner with fixed external quota observations."
+      },
+      "registrationExact": true,
+      "cases": [
+        {
+          "id": "accounting.model-admission",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T12:42:46.793Z",
+          "reasonCode": "REAL_ACCOUNTING_FIXTURE_PASS",
+          "prerequisite": "{\"name\":\"exhausted-known-reset\",\"evidence\":{\"normalizedProviderObservation\":\"429-exhausted\",\"reason\":\"QUOTA_EXHAUSTED\",\"retryAt\":\"2026-10-12T00:00:00.000Z\",\"records\":[[\"quiet-tick\",\"QUOTA_EXHAUSTED\",\"2026-10-12T00:00:00.000Z\",false,0],[\"auxiliary\",\"QUOTA_EXHAUSTED\",\"2026-10-12T00:00:00.000Z\",false,0],[\"child\",\"QUOTA_EXHAUSTED\",\"2026-10-12T00:00:00.000Z\",false,0]],\"pendingCount\":3,\"exactReadback\":true,\"charged\":0,\"lease\":false,\"physicalProviderCalls\":0,\"paidRequests\":0,\"wholeATComplete\":false}}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "af668e3ed12eb868df03a7d161f35b6e7386dba000eb44402acac6dd9a799c2a"
+            ]
+          }
+        },
+        {
+          "id": "accounting.model-admission",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T12:42:47.102Z",
+          "reasonCode": "REAL_ACCOUNTING_FIXTURE_PASS",
+          "prerequisite": "{\"name\":\"exhausted-unknown-reset\",\"evidence\":{\"normalizedProviderObservation\":\"429-exhausted\",\"reason\":\"QUOTA_EXHAUSTED\",\"retryAt\":null,\"records\":[[\"quiet-tick\",\"QUOTA_EXHAUSTED\",null,false,0],[\"auxiliary\",\"QUOTA_EXHAUSTED\",null,false,0],[\"child\",\"QUOTA_EXHAUSTED\",null,false,0]],\"pendingCount\":3,\"exactReadback\":true,\"charged\":0,\"lease\":false,\"physicalProviderCalls\":0,\"paidRequests\":0,\"wholeATComplete\":false}}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "af668e3ed12eb868df03a7d161f35b6e7386dba000eb44402acac6dd9a799c2a"
+            ]
+          }
+        },
+        {
+          "id": "accounting.model-admission",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T12:42:47.358Z",
+          "reasonCode": "REAL_ACCOUNTING_FIXTURE_PASS",
+          "prerequisite": "{\"name\":\"full-quota-windows\",\"evidence\":{\"normalizedProviderObservation\":\"100-percent\",\"reason\":\"FIVE_HOUR_THRESHOLD\",\"retryAt\":\"2026-10-05T05:00:00.000Z\",\"records\":[[\"quiet-tick\",\"FIVE_HOUR_THRESHOLD\",\"2026-10-05T05:00:00.000Z\",false,0],[\"auxiliary\",\"FIVE_HOUR_THRESHOLD\",\"2026-10-05T05:00:00.000Z\",false,0],[\"child\",\"FIVE_HOUR_THRESHOLD\",\"2026-10-05T05:00:00.000Z\",false,0]],\"pendingCount\":3,\"exactReadback\":true,\"charged\":0,\"lease\":false,\"physicalProviderCalls\":0,\"paidRequests\":0,\"wholeATComplete\":false}}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "af668e3ed12eb868df03a7d161f35b6e7386dba000eb44402acac6dd9a799c2a"
+            ]
+          }
+        },
+        {
+          "id": "accounting.model-admission",
+          "owner": "self-improvement",
+          "state": "FAIL",
+          "checkedAt": "2026-10-07T12:42:50.129Z",
+          "reasonCode": "REAL_ACCOUNTING_FIXTURE_FAIL",
+          "prerequisite": "{\"name\":\"deferred-restart-recovery\",\"evidence\":{\"postgresqlRestarted\":true,\"persisted\":true,\"refusedWhileExhausted\":true,\"resumed\":9,\"expectedCalls\":9,\"duplicateCharge\":false,\"sameDayPendingCleared\":true,\"crossDay\":{\"startAt\":\"2026-10-06T23:59:00.000Z\",\"resetAt\":\"2026-10-07T00:05:00.000Z\",\"seeded\":true,\"clockAtTwo\":true,\"pendingVisibleAtTwo\":false,\"exhaustedReadbackAtTwo\":true,\"blockedError\":\"CONFLICT\",\"blockedAtTwo\":true,\"noChargeAtTwo\":false,\"chargeAtTwo\":0,\"freshObservationAfterReset\":true,\"retryError\":\"CONFLICT\",\"retryValid\":false,\"retryId\":null,\"retryCallKey\":null,\"retryIdempotent\":false,\"originalPreservedAfterRestart\":false,\"originalPreservedAfterRetry\":true,\"rootBindingRejectedBefore\":true,\"rootBindingRejectedAfter\":true,\"supersededOriginalNotPending\":true,\"cleanupReleased\":false,\"chargeAfterFirstRetry\":0,\"chargeAfterRepeatedRetry\":0,\"parentCallIdAttemptReadback\":\"UNPROVEN_PUBLIC_DTO\"},\"physicalProviderCalls\":0,\"paidRequests\":0,\"nativeProviderSendPermitIssued\":false,\"wholeATComplete\":false}}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "af668e3ed12eb868df03a7d161f35b6e7386dba000eb44402acac6dd9a799c2a"
+            ]
+          }
+        }
+      ],
+      "resultState": "NOT_IMPLEMENTED",
+      "complete": false
+    }
+  ],
+  "up": {
+    "exitCode": 0,
+    "path": "build/evidence/R0.06/cross-day-red-cli/up.json",
+    "sha256": "2837c3e1fea85b59d770e07f28606f4112904fcd00e952523ea0bb47beebf7e7"
+  },
+  "stackId": "f445b49a-5b13-49ba-a0fa-7f2d2371c335",
+  "down": {
+    "exitCode": 0,
+    "path": "build/evidence/R0.06/cross-day-red-cli/down.json",
+    "sha256": "b38285d5a4543c9af76cf4aa9be641ca158700f37352f756cd47aec0e77d5102"
+  },
+  "teardown": {
+    "stackId": "f445b49a-5b13-49ba-a0fa-7f2d2371c335",
+    "checkpointRefs": [],
+    "fenceRefs": [],
+    "stoppedResourceRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "f445b49a-5b13-49ba-a0fa-7f2d2371c335"
+      }
+    ],
+    "retainedArtifactRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "f445b49a-5b13-49ba-a0fa-7f2d2371c335"
+      }
+    ],
+    "unresolvedResourceRefs": [],
+    "complete": true
+  }
+}
