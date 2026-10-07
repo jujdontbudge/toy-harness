@@ -1,0 +1,203 @@
+{
+  "recordedAt": "2026-10-07T07:16:05.760Z",
+  "card": "R0.10",
+  "assignedAT": "AT-authority-61",
+  "state": "EXACT_BROWSER_ARTIFACT_FOUND_FOR_PROPOSED_SERVER_PIN",
+  "scope": "Read-only official npm metadata plus versioned upstream README and release notes. No package was installed, no source was fetched, no lockfile or repo spec was changed, and no ceremony or Toy CLI was run.",
+  "priorGate": {
+    "artifact": "@simplewebauthn/browser@14.0.3",
+    "result": "E404 version not found",
+    "preservedDecision": "build/evidence/R0.10/auth-artifact-gate-decision.json",
+    "freshMetadataResult": "build/evidence/R0.10/auth-browser-compatibility-simplewebauthn-browser14_0_3-metadata.json"
+  },
+  "decision": {
+    "proposedDirectPair": [
+      {
+        "name": "@simplewebauthn/server",
+        "version": "14.0.3",
+        "integrity": "sha512-D39/0fiDiYmGV+nraY9s63D1Ho2AX/waMLy22/9gUadTUuvbAnstfb4bpbHYbwZuV5ZLDYN1SmzDKuiHzKAA4Q==",
+        "engines": {
+          "node": ">=20.0.0"
+        },
+        "peerDependencies": {},
+        "publishedAt": "2026-09-25T17:10:28.463Z",
+        "metadataEvidence": "build/evidence/R0.10/auth-browser-compatibility-simplewebauthn-server14_0_3-metadata.json"
+      },
+      {
+        "name": "@simplewebauthn/browser",
+        "version": "14.0.0",
+        "integrity": "sha512-1odWVqeEBTl7lJ9zMKLEsmTlnyrDO5iRcTvfMKKk1WThUnp/i8JJdffdj2icP+tty159s4PgwE3BiMoEW9NFow==",
+        "engines": null,
+        "peerDependencies": {},
+        "publishedAt": "2026-09-02T05:49:26.615Z",
+        "metadataEvidence": "build/evidence/R0.10/auth-browser-compatibility-simplewebauthn-browser14_0_0-metadata.json"
+      }
+    ],
+    "requiredPinChange": "Revise the proposed browser pin explicitly from 14.0.3 to 14.0.0; keep the proposed server pin at 14.0.3. Do not rewrite the earlier E404 record.",
+    "classification": "The same-version assumption was a package-release-version mismatch, not an evidenced browser capability gap. The browser package has its own published 14.0.0 artifact; official v14.0.3 release notes contain a server-only patch, and the preceding v14.0.1 and v14.0.2 entries are also server-only.",
+    "packageLevelCompatibility": "The official v14.0.0 release covers both browser and server packages. Browser 14.0.0 is the published browser counterpart for server 14.0.3 within that release line. Metadata and release notes support this exact pair for the proposed pin; they do not prove the full action-bound ceremony.",
+    "behavioralActionBinding": "UNVERIFIED",
+    "acceptanceComplete": false,
+    "wholeATComplete": false
+  },
+  "betterAuthPasskeyBaseline": {
+    "betterAuth": {
+      "name": "better-auth",
+      "version": "1.7.7",
+      "integrity": "sha512-Zhgxi/c5ylmfB/sX+nwnBbsFf/j6k0L8DvL6CJXZSrXgxc5pPMC/e7j812zNd4L4B4ELmdURCPw3X8nAOUdcjw==",
+      "engines": null,
+      "peerDependencies": {
+        "pg": "^8.0.0",
+        "vue": "^3.0.0",
+        "next": "^14.0.0 || ^15.0.0 || ^16.0.0",
+        "react": "^18.0.0 || ^19.0.0",
+        "mysql2": "^3.0.0",
+        "prisma": "^5.0.0 || ^6.0.0 || ^7.0.0",
+        "svelte": "^4.0.0 || ^5.0.0",
+        "vitest": "^2.0.0 || ^3.0.0 || ^4.0.0 || ^5.0.0",
+        "mongodb": "^6.0.0 || ^7.0.0",
+        "solid-js": "^1.0.0",
+        "react-dom": "^18.0.0 || ^19.0.0",
+        "drizzle-kit": ">=0.31.4 || >=1.0.0-beta.1",
+        "drizzle-orm": "^0.45.2 || >=1.0.0-rc.1 <2.0.0",
+        "@sveltejs/kit": "^2.0.0",
+        "@lynx-js/react": "*",
+        "@prisma/client": "^5.0.0 || ^6.0.0 || ^7.0.0",
+        "@tanstack/react-start": "^1.0.0",
+        "@tanstack/solid-start": "^1.0.0"
+      },
+      "peerDependenciesOptional": true,
+      "runtimeDependenciesMatchingPasskeyPeers": {
+        "nanostores": {
+          "betterAuthRange": "^1.3.0",
+          "passkeyPeerRange": "^1.0.1",
+          "compatible": true
+        },
+        "better-call": {
+          "betterAuthVersion": "1.4.0",
+          "passkeyPeerRange": "1.4.0",
+          "compatible": true
+        },
+        "@better-auth/core": {
+          "betterAuthVersion": "1.7.7",
+          "passkeyPeerRange": "^1.7.7",
+          "compatible": true
+        },
+        "@better-auth/utils": {
+          "betterAuthVersion": "0.4.2",
+          "passkeyPeerVersion": "0.4.2",
+          "compatible": true
+        },
+        "@better-fetch/fetch": {
+          "betterAuthVersion": "1.3.2",
+          "passkeyPeerVersion": "1.3.2",
+          "compatible": true
+        }
+      },
+      "metadataEvidence": "build/evidence/R0.10/auth-browser-compatibility-better-auth1_7_7-metadata.json"
+    },
+    "passkey": {
+      "name": "@better-auth/passkey",
+      "version": "1.7.7",
+      "integrity": "sha512-FMhL3bspBxne8EcyPWx9LdWUCnmrNRoSxCnH9Q2FIWsSWXMYuPPcHOs07v4g0zUXmTlBSr4vwW3J6t2vdUIOlg==",
+      "engines": null,
+      "dependencies": {
+        "zod": "^4.5.4",
+        "@simplewebauthn/server": "^13.3.1",
+        "@simplewebauthn/browser": "^13.3.0"
+      },
+      "peerDependencies": {
+        "nanostores": "^1.0.1",
+        "better-auth": "^1.7.7",
+        "better-call": "1.4.0",
+        "@better-auth/core": "^1.7.7",
+        "@better-auth/utils": "0.4.2",
+        "@better-fetch/fetch": "1.3.2"
+      },
+      "metadataEvidence": "build/evidence/R0.10/auth-browser-compatibility-better-auth-passkey1_7_7-metadata.json"
+    },
+    "matchingPublishedWebAuthnArtifactsWithinPasskeyRanges": [
+      {
+        "name": "@simplewebauthn/server",
+        "declaredRange": "^13.3.1",
+        "publishedCandidate": "13.3.3",
+        "integrity": "sha512-LelX/lcy5cjc15A86i/aNxHhB5eU7dd20QsbP0VLAf9e38+SLlsnqCCyecx3xqfGofhmX05h1J9fKRYWxw+luA==",
+        "engines": {
+          "node": ">=20.0.0"
+        },
+        "peerDependencies": {},
+        "metadataEvidence": "build/evidence/R0.10/auth-browser-compatibility-simplewebauthn-server13_3_3-metadata.json"
+      },
+      {
+        "name": "@simplewebauthn/browser",
+        "declaredRange": "^13.3.0",
+        "publishedCandidate": "13.3.0",
+        "integrity": "sha512-BE/UWv6FOToAdVk0EokzkqQQDOWtNydYlY6+OrmiZ5SCNmb41VehttboTetUM3T/fr6EAFYVXjz4My2wg230rQ==",
+        "engines": null,
+        "peerDependencies": {},
+        "metadataEvidence": "build/evidence/R0.10/auth-browser-compatibility-simplewebauthn-browser13_3_0-metadata.json"
+      }
+    ],
+    "treeInterpretation": "Better Auth 1.7.7 remains the fixed CONTRACTS baseline. Its passkey plugin declares 13.x SimpleWebAuthn dependencies, so those may coexist as a separate transitive tree with the proposed direct 14.x pair. The registry metadata gives compatible published candidates, not a completed lock resolution or installed tree."
+  },
+  "runtimeNotes": {
+    "proposedNodeVersion": "24.21.0",
+    "registryEngines": "Server 14.0.3 and server 13.3.3 declare node >=20.0.0. Browser 14.0.0, browser 13.3.0, Better Auth 1.7.7, and passkey 1.7.7 do not publish an engines field.",
+    "versionedReadmeGuidance": "The v14.0.0 browser and server READMEs state Node LTS 22.x and higher for Node installation. The proposed runtime 24.21.0 meets that guidance.",
+    "enginesVsReadmeNote": "For server 14.0.3, npm metadata declares >=20.0.0 while the v14.0.0 README/release guidance says Node LTS 22.x and higher; preserve both facts."
+  },
+  "primarySources": [
+    {
+      "url": "https://registry.npmjs.org/@simplewebauthn/browser/14.0.3",
+      "supports": "Fresh exact-version lookup returned HTTP 404; the package index reports latest 14.0.0."
+    },
+    {
+      "url": "https://registry.npmjs.org/@simplewebauthn/browser/14.0.0",
+      "supports": "Exact browser package version, integrity, exports, and absent engines/peerDependencies fields."
+    },
+    {
+      "url": "https://registry.npmjs.org/@simplewebauthn/server/14.0.3",
+      "supports": "Exact server package version, integrity, Node engine, and absent peerDependencies field."
+    },
+    {
+      "url": "https://registry.npmjs.org/@better-auth/passkey/1.7.7",
+      "supports": "Passkey package exact integrity, declared SimpleWebAuthn dependency ranges, and peers."
+    },
+    {
+      "url": "https://registry.npmjs.org/better-auth/1.7.7",
+      "supports": "Better Auth 1.7.7 exact integrity, peers, and dependency alignment with the passkey peers."
+    },
+    {
+      "url": "https://github.com/MasterKale/SimpleWebAuthn/blob/v14.0.3/CHANGELOG.md",
+      "supports": "Immutable release history: v14.0.3, v14.0.2, and v14.0.1 changes are server-only; v14.0.0 includes browser and server features and the runtime floor."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/MasterKale/SimpleWebAuthn/v14.0.0/packages/browser/README.md",
+      "supports": "Versioned browser README, NPM package identity, and Node LTS 22.x guidance."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/MasterKale/SimpleWebAuthn/v14.0.3/packages/server/README.md",
+      "supports": "Versioned server README and Node LTS 22.x guidance."
+    }
+  ],
+  "evidenceFiles": [
+    "build/evidence/R0.10/auth-browser-compatibility-simplewebauthn-browser-index.json",
+    "build/evidence/R0.10/auth-browser-compatibility-simplewebauthn-server-index.json",
+    "build/evidence/R0.10/auth-browser-compatibility-simplewebauthn-browser14_0_0-metadata.json",
+    "build/evidence/R0.10/auth-browser-compatibility-simplewebauthn-browser14_0_3-metadata.json",
+    "build/evidence/R0.10/auth-browser-compatibility-simplewebauthn-server14_0_3-metadata.json",
+    "build/evidence/R0.10/auth-browser-compatibility-better-auth1_7_7-metadata.json",
+    "build/evidence/R0.10/auth-browser-compatibility-better-auth-passkey1_7_7-metadata.json",
+    "build/evidence/R0.10/auth-browser-compatibility-simplewebauthn-browser13_3_0-metadata.json",
+    "build/evidence/R0.10/auth-browser-compatibility-simplewebauthn-server13_3_3-metadata.json"
+  ],
+  "notPerformed": {
+    "sourceFetched": false,
+    "packagesInstalled": 0,
+    "packageLockChanged": false,
+    "runtimeCeremonyVerified": false,
+    "actionBoundChallengeVerified": false,
+    "wholeATComplete": false,
+    "acceptanceComplete": false
+  }
+}
