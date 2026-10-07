@@ -2,7 +2,7 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-07T13:43:25.954553+00:00",
+  "updatedAt": "2026-10-07T13:45:36.418888+00:00",
   "phase": "R0_FEASIBILITY",
   "activeCard": "R0.06",
   "cardCount": 87,
@@ -416,7 +416,8 @@
         "stoppedAt": "2026-10-06T10:21:22.803403+00:00",
         "evidence": "build/evidence/R0.01/native-refusal-fixture-verification.json"
       },
-      "nativeOwnerNextPlan": "build/evidence/R0.01/native-owner-load-minimum-plan.json"
+      "nativeOwnerNextPlan": "build/evidence/R0.01/native-owner-load-minimum-plan.json",
+      "nativeOwnerLoadReadinessReview": "build/evidence/R0.01/native-owner-load-readiness-review-20261007.json"
     },
     "R0.02": {
       "implementation": "IN_PROGRESS",
@@ -1576,7 +1577,9 @@
         "cardAcceptanceComplete": false,
         "verification": "build/evidence/R0.03/manual-lineage35-stopped-verification.json",
         "affectedAuthChecksPassed": 105,
-        "finalFailure": "NATIVE_AUTH_ANTHROPIC_ROOT_GRANT_UNAVAILABLE / PUBLIC_ROOT_ANTHROPIC_GRANT_SHAPE_UNSUPPORTED before root arrangement. Root auth exists; singleton absent. No twelve-phase auth acceptance proven."
+        "finalFailure": "NATIVE_AUTH_ANTHROPIC_ROOT_GRANT_UNAVAILABLE / PUBLIC_ROOT_ANTHROPIC_GRANT_SHAPE_UNSUPPORTED before root arrangement. Root auth exists; singleton absent. No twelve-phase auth acceptance proven.",
+        "sourceCommit": "28329680396bfc220b3fc39b1461570b643d3c26",
+        "sourcePushed": true
       }
     },
     "R0.04": {
@@ -2098,6 +2101,80 @@
         "observedAt": "2026-10-07T13:09:57.970Z",
         "priority": "After current AT35 SOURCE STOP/verification; verified ROOT00402 native read gives R0.01 priority.",
         "wholeATComplete": false
+      },
+      "unknownResetCrossDayUnit": {
+        "recordedAt": "2026-10-07T13:44:39.910742+00:00",
+        "state": "SOLE_SOURCE_PHASE1_REPRODUCER_ADMITTED_OWNER_FROZEN",
+        "card": "R0.06",
+        "AT": "AT-ops-10",
+        "assignedAttemptsUsed": 0,
+        "maximumAssignedAttempts": 3,
+        "deadline": "2026-10-07T15:44:39.910742+00:00",
+        "phase1SourceStopBy": "2026-10-07T14:09:39.910742+00:00",
+        "plan": {
+          "path": "build/evidence/R0.06/unknown-reset-cross-day-next-minimum-20261007.json",
+          "sha256": "a333224bef4e2a484c37a8a8c20fae69b0bcdaa12a634d12845ab1ef3069ccc5"
+        },
+        "independentReview": {
+          "path": "build/evidence/R0.06/unknown-reset-plan-review-20261007.json",
+          "sha256": "596a3fed639a91cd9013098c319f97ea3d98f6945bcb4ebbf96ecaf4d1c26ed8"
+        },
+        "freshMemory": {
+          "path": "build/evidence/R0.06/unknown-reset-source-memory.json",
+          "sha256": "4a19dfd846d60d21e6f5739acd661a7d8ba639d39ecd7b88855042956a27825e",
+          "measuredAt": "2026-10-07T13:44:17.459Z",
+          "availableBytes": "2168061952",
+          "pressure": "normal",
+          "ownJobNeedBytes": "268435456",
+          "marginBytes": "536870912",
+          "requiredAvailableBytes": "805306368",
+          "admitted": true
+        },
+        "pinsReverified": [
+          {
+            "path": "packages/self-improvement/src/accounting-probe.ts",
+            "sha256": "d89489f84a16f2d6ac078e11cae3b21de33b9b63158f9b230d34ee16c9e63164"
+          },
+          {
+            "path": "packages/contracts/src/model-admission.ts",
+            "sha256": "8803164cb2d4e3b5fe764870f8409f020be0841f2367a86c7cdd062fa3c6262e"
+          },
+          {
+            "path": "docs/adr/0061-cross-day-model-admission.md",
+            "sha256": "0cd558de9d047f2574dea2883719d9ebe0ed59f00424fccac2b496321457a852"
+          },
+          {
+            "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/ops.md",
+            "sha256": "f07aab65088c82e4ff21e4d63edb2f279e2324e6d7e2bbb801e0fd7494104b0b"
+          },
+          {
+            "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/TEST-PLAN.md",
+            "sha256": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2"
+          },
+          {
+            "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/CONTRACTS.md",
+            "sha256": "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d"
+          },
+          {
+            "path": "packages/self-improvement/src/model-admission.ts",
+            "sha256": "2afd5174b7b3edae3cb2398811acadd6bbc9268072faaf9bbaa49823f157a237"
+          },
+          {
+            "path": "build/evidence/R0.06/cross-day-final-verification.json",
+            "sha256": "8196774b713ad4e14b7f80ca86b826553a2a05b6252691d7f5ea8a5ea162fd8b"
+          }
+        ],
+        "ownedPaths": [
+          "docs/adr/0061-cross-day-model-admission.md",
+          "packages/self-improvement/src/accounting-probe.ts",
+          "build/evidence/R0.06/unknown-reset-phase1-source-handoff.json"
+        ],
+        "sourceOwner": "/root/r006_cross_day_minimum",
+        "liveWorlds": 0,
+        "parentNoToyCliGenerationBuildStaticUntilSourceStop": true,
+        "ownerFixForbiddenUntilActualPublicCliRed": true,
+        "wholeATComplete": false,
+        "priorityOnValidRoot02Done": "Clean current SOURCE/LIVE then R0.01"
       }
     },
     "R0.07": {
@@ -12067,7 +12144,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "R0.06 unknown-reset rollover: actual public CLI RED with owner frozen; if valid ROOT-R004-20261006-02 DONE arrives, prioritize R0.01 native owner load after owned cleanup. AT35 stopped after three attempts.",
+  "nextAction": "Parent metadata/read-only only until R006 phase1 STOP; then typecheck/static and actual unfiltered AT-ops-10 RED with owner frozen, complete DOWN before owner edit. Valid ROOT02DONE prioritizes R001 after cleanup.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -22775,21 +22852,34 @@
     "repairFloorApplied": false,
     "jobOwnDeclaredNeedOnly": true
   },
-  "activeWorkers": [],
-  "pullRequestUpdatedAt": "2026-10-07T11:08:10.716Z",
+  "activeWorkers": [
+    {
+      "agent": "/root/r006_cross_day_minimum",
+      "card": "R0.06",
+      "phase": "SOURCE_PHASE1_REPRODUCER",
+      "admission": "build/evidence/R0.06/unknown-reset-source-admission.json"
+    }
+  ],
+  "pullRequestUpdatedAt": "2026-10-07T13:44:39.910742+00:00",
   "continuationCheckpoint": "build/checkpoints/2026-10-07-manual-lineage-stopped",
-  "readOnlyWorkers": [],
+  "readOnlyWorkers": [
+    {
+      "agent": "/root/r003_dashboard_causal_replan",
+      "card": "R0.03",
+      "scope": "Independent stopped-AT35 root shape code-only replan, no source/runtime",
+      "deadline": "2026-10-07T14:01:00Z"
+    }
+  ],
   "liveRuntime": {
     "state": "ALL_OWNED_WORLDS_DOWN",
-    "sourceFrozenDuringLiveVerified": true,
-    "lastProof": "build/evidence/R0.03/manual-lineage35-stopped-verification.json"
+    "sourceOwner": "/root/r006_cross_day_minimum"
   },
   "goalStatus": "active",
   "latestSourceCandidate": {
-    "commit": "9e0e1006c3ef35202c39772c53235173ed04c2ee",
+    "commit": "28329680396bfc220b3fc39b1461570b643d3c26",
     "pushed": true,
-    "state": "R006_KNOWN_RESET_UNIT_VERIFIED_AT34_STOPPED_PARTIAL",
-    "verification": "build/evidence/R0.06/cross-day-final-verification.json",
-    "wholeATComplete": false
+    "state": "AT35_SOURCE_PARTIAL_STOPPED_WITH_105_AFFECTED_AUTH_PASS",
+    "proof": "build/evidence/R0.03/manual-lineage35-stopped-verification.json",
+    "wholeAcceptance": false
   }
 }

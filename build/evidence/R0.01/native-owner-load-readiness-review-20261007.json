@@ -1,0 +1,64 @@
+{
+  "schemaVersion": "toy.r001.native-owner-load-readiness-review.v1",
+  "recordedAt": "2026-10-07T13:42:40Z",
+  "card": "R0.01",
+  "state": "READ_ONLY_REVIEW_COMPLETE_NO_SOURCE_ADMISSION",
+  "memoryAdmission": {
+    "path": "build/evidence/R0.03/manual-lineage35-final-runtime-memory.json",
+    "sha256": "91b57cf5475639bffe1ce9e9622bfc147510bfdcbc91bc4eeee25bbf8ae05f71",
+    "measuredAt": "2026-10-07T13:41:07.203Z",
+    "pressure": "normal",
+    "availableBytes": "2888351744",
+    "ownJobNeedBytes": "268435456",
+    "ownMarginBytes": "536870912",
+    "ownRequiredAvailableBytes": "805306368",
+    "admitted": true
+  },
+  "rootRequest": {
+    "path": "build/ROOT-REQUESTS.md",
+    "sha256": "6bdca8b36154b5ec87875c5a1fe0e5d5f9a8a0b6d172c26c7d99ad9f2dd6307e",
+    "requestId": "049154d9-4ed1-4db0-97e5-69b5a79190d9",
+    "state": "PENDING",
+    "requiredBeforeSource": true,
+    "pinnedArtifact": "927562c37b764041c752a6a8d71168aedef088599d1a077ecac0b2228d7e2f71",
+    "pinnedChildSha256": "06870b8dd41d2ffc093cc04680ba56c4570f07b4aa0a27a9ab70796cdd8204bd",
+    "pinnedProbeScriptSha256": "96e1fd2d98469772c3d0d203386c3f7aa56af57db025c420fa93f1f4ecd7e70d",
+    "pinnedStagingVerifierSha256": "13ff53e341ab7670dbed967ce810d5aa2834df7a47ffe1620f037ff1da3ee0d4"
+  },
+  "sanitizedDoneEvidenceRequired": {
+    "preflight": "Fresh root toy doctor --deep --json; inspect bootstrap.resource-admission before the exact pending command. Require normal pressure and at least 1,073,741,824 available bytes; overall doctor exit 5 may remain because unrelated R0 gates are pending.",
+    "rootRun": "Run only the exact request02 command with its request, artifact, and child pins. Append its sanitized public JSON and verification output to the same ROOT-R004-20261006-02 entry, then mark DONE only for exit 0, state verified, reason CONTROL_RUNTIME_READ_VERIFIED.",
+    "identityAndRead": "Report callerUid 0; controlUid/controlGid 310; child real/effective uid and gid 310 with groups [310]; moduleImported true; actual keychainState absent or present; helperExitCode 3 for absent or 0 for present.",
+    "integrityAndEffects": "Require artifactVerified, backupWritten, parentModesRestored, and bootstrapReceiptUnchanged true; receipt digest 980a7bbd94f61e8a5e4d0bec1860555091e7aa303b7981df4392a6f5ee49fe65. Require credentialBytesCaptured, credentialWritten, currentPointerChanged, servicesActivated false; liveProviderSends 0; acceptanceComplete false.",
+    "neverInclude": "Helper stdout/stderr, Keychain/vault bytes or values, grant/token contents, environment values, or free-form exception text. If helper state is unavailable, module import fails, identity/integrity checks fail, or parent modes are not restored, record FAILED and stop before source work."
+  },
+  "workflowAssessment": {
+    "currentRootRequest": "The queued request uses the exact pinned repository probe and staging verifier under the documented root-request path. Its probe reports only bounded state; a real absent or present result does not disclose credential contents. No alternate profile, helper, route, or account is authorized.",
+    "futureOwnerLoadPlan": "The source placement is bounded to the existing root-owned probe, but the next source version needs its own immutable staged artifact and a new exact ROOT-REQUESTS entry before root execution; request02 only authorizes its current frozen digests. The keychain-owner-next-step rootPreparationRule requires that new concrete request.",
+    "secretReadLimit": "This plan prevents secret disclosure, but it is not literally a zero-secret-read operation: public SiwcGrantOwner.load calls the native keychain store read and parses the complete vault, including a grant if present, inside the child. The baseline-byte comparison also reads bytes privately. The plan keeps these values in child memory and forbids output, evidence, parent, or model exposure. If the requirement is to avoid any in-process secret read, stop after request02 and do not execute the owner-load extension."
+  },
+  "minimumNextSourceScopeAfterValidDone": {
+    "source": "control/bootstrap/siwc-runtime-probe.ts",
+    "sourceSha256": "b37c5b476723e3919ffa49c107724f633ae31650efb588e59f08367268f184f4",
+    "operation": "After request02 proves a real present/absent helper result under UID/GID310 and restores parents, add one bounded owner-load/readback extension using only generated SiwcKeychainLauncherV1 validation, public createMacOsSiwcKeychain, and public SiwcGrantOwner.load. Do not call read, retainClientId, or save on the owner.",
+    "existingVault": "Privately compare before/after bytes around two independent public load instances; preserve registration and grant. Emit only bounded booleans/state.",
+    "absentVault": "Permit only public load's canonical empty host-vault initialization; verify host metadata and null registration, pending client, and grant in child memory, then fresh-load and privately confirm identical bytes. Never overwrite a concurrent nonempty value.",
+    "receipt": "Reuse the existing sanitized report; if it cannot distinguish the proof, add only the planned finite ownerLoadState and freshLoadVerified fields to that same report contract.",
+    "disallowed": "No grant/token creation or update, consent, OAuth/provider call, service activation, pointer change, message, secret bytes/digest/length, host ID, registration, grant, or exception text in output."
+  },
+  "pins": {
+    "minimumPlan": {"path": "build/evidence/R0.01/native-owner-load-minimum-plan.json", "sha256": "c9d7dbdcc0605fbf1120c70b1628543c9e5624d52f432a3a38c7d2d4690008f7"},
+    "keychainNextStep": {"path": "build/evidence/R0.01/keychain-owner-next-step.json", "sha256": "b26141702698e250d78b09841ddcdd7786e08a4e6016a02d12d61b89737dd989"},
+    "publicSecretsEntry": {"path": "control/secrets/public.ts", "sha256": "df17ffc5bfc7e10e26050e433f3e93d9d6a9c883e4e6429b88e38a2903f60fb0"},
+    "ownerImplementation": {"path": "control/secrets/siwc-owner.ts", "sha256": "0b7637bc10cbd819be05ee534a0e17b182118304daa6537f75046de6b2e1aba7"},
+    "keychainImplementation": {"path": "control/secrets/keychain.ts", "sha256": "8f57ed8d2f5eac57f6c68af9c050aeb0092a74b862aeeee1815bb3020eeff463"},
+    "compiledProbe": {"path": "control/dist/bootstrap/siwc-runtime-probe.js", "sha256": "06870b8dd41d2ffc093cc04680ba56c4570f07b4aa0a27a9ab70796cdd8204bd"}
+  },
+  "scope": {
+    "sourceChanged": false,
+    "toyCliBuildStaticGenerationOrRuntimeRun": false,
+    "osBrowserProviderOrRootAction": false,
+    "secretMaterialInspected": false,
+    "sourceAdmission": false
+  }
+}
