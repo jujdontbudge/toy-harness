@@ -1,0 +1,143 @@
+{
+  "schemaVersion": "toy.r0.06.plan-review.v1",
+  "reviewedAt": "2026-10-07T09:52:59Z",
+  "card": "R0.06/AT-ops-9",
+  "plan": {
+    "path": "build/evidence/R0.06/ops9-route-next-minimum-plan.json",
+    "sha256": "0ae89fcefd5be8c76dc1b60680484494cdf65caef6aa3e362226510a61ff9821",
+    "recordedAt": "2026-10-07T09:48:56.531Z",
+    "state": "PLAN_ONLY_SOURCE_NOT_ADMITTED",
+    "assignedRung": "CLI"
+  },
+  "verdict": "APPROVE",
+  "status": "PLAN_APPROVED_SOURCE_NOT_ADMITTED",
+  "findings": [],
+  "scopeReview": {
+    "assignedAssertion": "AT-ops-9: foreground, child, research, and original background routes identify Sol/max/Fast, Luna/max/Fast, Sol/medium/Fast with the pinned research skill, and Sol/max/Fast; the experimental high/no-Fast arm has a separate receipt and cannot amend the original route.",
+    "proposedCases": [
+      "foreground-original-route",
+      "ordinary-child-route",
+      "research-pinned-skill",
+      "background-arm-isolation"
+    ],
+    "assessment": [
+      "Four positive cases cover the exact named assertion at its assigned CLI rung.",
+      "The existing ModelRoute.select, invoke, delegationReceipt and ModelRouteProbe.run interfaces are sufficient; the plan does not require owner, API, DTO, policy, module, provider protocol or CLI command changes.",
+      "The child and research cases reuse existing delegation helpers and fixed external fixtures; the research output remains synthetic and uses the pinned skill resources.",
+      "The background case sequences original, experimental high/default and original routes, and refuses the experimental foreground selection. This is enough to check arm separation without adding another role/arm matrix.",
+      "The nine policy and nine delegation checks in the verification section are existing regression cases, not new AT-ops-9 cases or a duplicated implementation matrix.",
+      "The plan explicitly keeps wholeATComplete false and defers protected production route proof and whole AT/card/release acceptance."
+    ]
+  },
+  "sourcePins": [
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/ops.md",
+      "expectedSha256": "f07aab65088c82e4ff21e4d63edb2f279e2324e6d7e2bbb801e0fd7494104b0b",
+      "observedSha256": "f07aab65088c82e4ff21e4d63edb2f279e2324e6d7e2bbb801e0fd7494104b0b",
+      "matches": true
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/TEST-PLAN.md",
+      "expectedSha256": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2",
+      "observedSha256": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2",
+      "matches": true
+    },
+    {
+      "path": "packages/hermes/src/model-route.ts",
+      "expectedSha256": "7c56f64981df351db6b8cd72237334369a86ffe9cb6d721c37c9dd2e2be945dc",
+      "observedSha256": "7c56f64981df351db6b8cd72237334369a86ffe9cb6d721c37c9dd2e2be945dc",
+      "matches": true
+    },
+    {
+      "path": "packages/hermes/src/model-route-probe.ts",
+      "expectedSha256": "eaf5ef4359ffd4fdb4ae748e61ce0fc48f5a4ee2ac7d7286f1087de51c8b4864",
+      "observedSha256": "eaf5ef4359ffd4fdb4ae748e61ce0fc48f5a4ee2ac7d7286f1087de51c8b4864",
+      "matches": true
+    },
+    {
+      "path": "packages/contracts/src/model-route.ts",
+      "expectedSha256": "ba828e8dde4fb234892c93ad73397f4280c26dd78760f336fe8a0a0a273ec273",
+      "observedSha256": "ba828e8dde4fb234892c93ad73397f4280c26dd78760f336fe8a0a0a273ec273",
+      "matches": true
+    },
+    {
+      "path": "behavior/models.yaml",
+      "expectedSha256": "8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67",
+      "observedSha256": "8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67",
+      "matches": true
+    },
+    {
+      "path": "behavior/research-skill.json",
+      "expectedSha256": "676190b93eccbee205a5ec7e2609b2f4100a27bac73f808704095fa0229d2f72",
+      "observedSha256": "676190b93eccbee205a5ec7e2609b2f4100a27bac73f808704095fa0229d2f72",
+      "matches": true
+    },
+    {
+      "path": "cli/src/main.ts",
+      "expectedSha256": "5623125eec41f7dbd1c9874f0778151b1527bca488ba26aa663512c7fefdb97c",
+      "observedSha256": "5623125eec41f7dbd1c9874f0778151b1527bca488ba26aa663512c7fefdb97c",
+      "matches": true
+    },
+    {
+      "path": "packages/ops/src/fixture-stack.ts",
+      "expectedSha256": "b73b333372cbc352538e1522c57538c827f572474d9f4cb868478935fa102cd6",
+      "observedSha256": "b73b333372cbc352538e1522c57538c827f572474d9f4cb868478935fa102cd6",
+      "matches": true
+    },
+    {
+      "path": "tests/registry.yaml",
+      "expectedSha256": "066356fd940257e07f92995bb0a49b80ebcf7a86742f7226f84da2705f51ccf7",
+      "observedSha256": "066356fd940257e07f92995bb0a49b80ebcf7a86742f7226f84da2705f51ccf7",
+      "matches": true
+    },
+    {
+      "path": "architecture/features.json",
+      "expectedSha256": "16e09fcad4f05291ba8b7d2da11dbbcfebf6a5add6cadea31d0b881e245a9f75",
+      "observedSha256": "16e09fcad4f05291ba8b7d2da11dbbcfebf6a5add6cadea31d0b881e245a9f75",
+      "matches": true
+    },
+    {
+      "path": "docs/adr/0021-supported-model-route.md",
+      "expectedSha256": "31af16692c6d68d663d7e98fed102a149656fbfd8c4b65aa6ecadb007818f2fb",
+      "observedSha256": "31af16692c6d68d663d7e98fed102a149656fbfd8c4b65aa6ecadb007818f2fb",
+      "matches": true
+    }
+  ],
+  "evidence": {
+    "baseline": {
+      "path": "build/evidence/R0.06/ops9-route-baseline-summary.json",
+      "sha256": "99b8704312bec58930a42bffef138d16324c1a0a77291ee9fba38d30940f2f7f",
+      "sourceRegistration": null,
+      "resultState": "NOT_IMPLEMENTED",
+      "complete": false,
+      "stackDownExitCode": 0,
+      "teardownComplete": true,
+      "unresolvedResources": 0,
+      "liveProviderSends": 0
+    },
+    "existingRouteEvidence": [
+      {
+        "path": "build/evidence/R0.02/route-verification.json",
+        "sha256": "2677a6de3d36d4698e704358be9a7ae7f76d8aef5690c0e06a60216f95578d1b"
+      },
+      {
+        "path": "build/evidence/R0.12/result-reference-final-verification.json",
+        "sha256": "30858ee0eee3029a2dfab1179078e2e738df23ac97cf6b10823d91f6086541d7"
+      }
+    ],
+    "parentAdmission": {
+      "path": "build/evidence/R0.06/ops9-route-next-admission.json",
+      "sha256": "290fc13a5c22e611c1be6d247b0fb491a3470de3cb8d182a977592c5ba60158c",
+      "generatedAt": "2026-10-07T09:50:38.821Z",
+      "resourcePressure": "normal",
+      "availableBytes": "2308997120",
+      "wholeATComplete": false
+    }
+  },
+  "wholeAcceptance": {
+    "state": "NOT_IMPLEMENTED",
+    "complete": false,
+    "claim": "This approves the bounded plan only; it does not claim AT-ops-9 or R0.06 completion."
+  },
+  "executionBoundary": "Read the plan, its source pins, the assigned spec and existing referenced evidence. Did not edit source or run CLI, build, check or tests."
+}

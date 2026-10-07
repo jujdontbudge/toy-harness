@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "toy.r0.06.independent-source-review.v1",
+  "reviewedAt": "2026-10-07T10:00:07Z",
+  "card": "R0.06/AT-ops-9",
+  "verdict": "APPROVE",
+  "status": "SOURCE_REVIEW_COMPLETE_PARENT_CLI_PENDING",
+  "findings": [],
+  "scope": [
+    "packages/hermes/src/model-route-probe.ts",
+    "cli/src/main.ts",
+    "packages/ops/src/fixture-stack.ts",
+    "tests/registry.yaml",
+    "architecture/features.json",
+    "docs/adr/0021-supported-model-route.md"
+  ],
+  "sourceAfterHashCheck": {
+    "evidence": "build/evidence/R0.06/ops9-route-parent-admission.json",
+    "snapshotState": "SOURCE_STOPPED_BEFORE_GENERATION",
+    "currentHashesMatchSnapshot": true,
+    "sourceHashes": {
+      "packages/hermes/src/model-route-probe.ts": "dcecd115c2b28fd39574b454ed9246172204dc295ce01103033a0e4b1492a4a8",
+      "cli/src/main.ts": "f11beae8458b3d1ec95ae4093fd8164ce96956b90cb988ea1e06280ae0d28363",
+      "packages/ops/src/fixture-stack.ts": "386c849cfd4c28bc8ae00aaabe7efb5a3477a5eac8ee234152d74817fbdfad27",
+      "tests/registry.yaml": "d320d30120dbfaa16abd027c04b9724840911c2cecded2ae5df9e8bd004c0dc4",
+      "architecture/features.json": "9ce406b96b0c91bccdad51b1bb374733bb5a036ba7dedfacd4ff4dd87a1ac168",
+      "docs/adr/0021-supported-model-route.md": "ada34793412aa9f0ab67f108ecb987b09c95f6e17636d5ca7b6a551ca7b04b54"
+    }
+  },
+  "approvedPlan": {
+    "path": "build/evidence/R0.06/ops9-route-plan-review.json",
+    "sha256": "ec8cb44ecf1fe45512dd4b555612628fca75d198877e9b2f134c59538f77eea8",
+    "approvedCases": [
+      "foreground-original-route",
+      "ordinary-child-route",
+      "research-pinned-skill",
+      "background-arm-isolation"
+    ]
+  },
+  "assessment": [
+    "The new route probe validates the four mandatory case IDs/phases and uses the existing ModelRoute interfaces and delegation fixture.",
+    "Foreground receipts must complete with known usage and exact requested/observed Sol/max/priority settings, original arm, and no paid fallback.",
+    "Child and research cases require the fixed external executor, exported task/argv readback, exact child/research route settings and original arm; research checks the pinned skill digests. Delegation receipts remain unverified for native execution and acceptance.",
+    "Background calls run original, experimental and original again. The code checks exact Sol/max/priority and Sol/high/default settings, their arm labels, a shared policy digest, and refusal of experimental foreground selection.",
+    "CLI routing and fixture admission include only the new model-route.roles scenario; the registry has the four approved cases. Existing policy/delegation matrices remain regression runs, not new AT-ops-9 cases.",
+    "Feature descriptions and ADR text identify the bounded AT-ops-9 route coverage and keep protected production execution pending."
+  ],
+  "parentRecordedBoundary": {
+    "evidence": "build/evidence/R0.06/ops9-route-parent-admission.json",
+    "ownerApiDtoPolicyChanges": false,
+    "generatedRegistryAndFeatureMap": "Excluded from this six-file review; parent generation may update them."
+  },
+  "wholeAcceptance": {
+    "state": "PENDING",
+    "wholeATComplete": false,
+    "acceptanceComplete": false,
+    "protectedLiveExecution": "PENDING",
+    "claim": "This review approves only the bounded source unit; it does not claim AT-ops-9, R0.06, or release completion."
+  },
+  "executionBoundary": "Read only the current diff for the six allowed paths and the approved plan/source-after snapshot. Did not run CLI, build, strict checks, tests, or modify source/generated/map/registry/root/credentials."
+}

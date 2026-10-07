@@ -1,0 +1,621 @@
+{
+  "recordedAt": "2026-10-07T10:00:19.377Z",
+  "card": "R0.06",
+  "assignedAT": "AT-ops-9",
+  "state": "BOUNDED_CLI_CASES_VERIFIED_AND_STOPPED",
+  "startedAt": "2026-10-07T09:47:37.000Z",
+  "deadlineUtc": "2026-10-07T11:47:37.000Z",
+  "sourceStopAt": "2026-10-07T09:56:28.327Z",
+  "stoppedAt": "2026-10-07T09:59:04.000Z",
+  "rung": "CLI",
+  "assignedUnfiltered": true,
+  "nativeAttempts": 2,
+  "unsupportedBaselineAttempts": 1,
+  "failedImplementedAttempts": 0,
+  "assignedChecks": 4,
+  "affectedRegressionChecks": 18,
+  "maximumPrerequisiteUtf8Bytes": 1269,
+  "summary": {
+    "path": "build/evidence/R0.06/ops9-route-final-cli-summary.json",
+    "sha256": "a5eeafb1f9bbe92ccca38c173ad827a7ad78061e074231757566aea89a5da899"
+  },
+  "baseline": {
+    "path": "build/evidence/R0.06/ops9-route-baseline-summary.json",
+    "sha256": "99b8704312bec58930a42bffef138d16324c1a0a77291ee9fba38d30940f2f7f"
+  },
+  "plan": {
+    "path": "build/evidence/R0.06/ops9-route-next-minimum-plan.json",
+    "sha256": "0ae89fcefd5be8c76dc1b60680484494cdf65caef6aa3e362226510a61ff9821"
+  },
+  "planReview": {
+    "path": "build/evidence/R0.06/ops9-route-plan-review.json",
+    "sha256": "ec8cb44ecf1fe45512dd4b555612628fca75d198877e9b2f134c59538f77eea8"
+  },
+  "parentAdmission": {
+    "path": "build/evidence/R0.06/ops9-route-parent-admission.json",
+    "sha256": "4202631e1084760aece62ed7b2397bfe43e12080bb53014891841fb237ebf0a6"
+  },
+  "assignedReadbacks": [
+    {
+      "caseId": "foreground-original-route",
+      "evidence": {
+        "receipt": {
+          "role": "foreground",
+          "arm": "original",
+          "policyDigest": "8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67",
+          "requested": {
+            "model": "gpt-6.1-sol",
+            "effort": "max",
+            "serviceTier": "priority"
+          },
+          "observed": {
+            "model": "gpt-6.1-sol",
+            "effort": "max",
+            "serviceTier": "priority"
+          },
+          "terminal": "completed",
+          "completion": "complete",
+          "usageState": "known",
+          "paidFallbackAttempted": false
+        },
+        "liveInferenceAttested": false
+      }
+    },
+    {
+      "caseId": "ordinary-child-route",
+      "evidence": {
+        "receipt": {
+          "role": "child",
+          "arm": "original",
+          "policyDigest": "8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67",
+          "requested": {
+            "model": "gpt-6-luna",
+            "effort": "max",
+            "serviceTier": "priority"
+          },
+          "observed": {
+            "model": "gpt-6-luna",
+            "effort": "max",
+            "serviceTier": "priority"
+          },
+          "terminal": "completed",
+          "completion": "complete",
+          "usageState": "known",
+          "paidFallbackAttempted": false
+        },
+        "purpose": "implementation",
+        "skillSourceCommit": null,
+        "skillLoadedDigest": null,
+        "exportReadback": true,
+        "nativeArgumentsMatched": true,
+        "externalExecutorCalls": 1,
+        "nativeExecutionVerified": false,
+        "acceptanceComplete": false
+      }
+    },
+    {
+      "caseId": "research-pinned-skill",
+      "evidence": {
+        "receipt": {
+          "role": "research",
+          "arm": "original",
+          "policyDigest": "8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67",
+          "requested": {
+            "model": "gpt-6.1-sol",
+            "effort": "medium",
+            "serviceTier": "priority"
+          },
+          "observed": {
+            "model": "gpt-6.1-sol",
+            "effort": "medium",
+            "serviceTier": "priority"
+          },
+          "terminal": "completed",
+          "completion": "complete",
+          "usageState": "known",
+          "paidFallbackAttempted": false
+        },
+        "purpose": "research",
+        "skillSourceCommit": "6fd947921b935b7e1e69293a200400f0fdd5c15f",
+        "skillLoadedDigest": "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4",
+        "exportReadback": true,
+        "nativeArgumentsMatched": true,
+        "externalExecutorCalls": 1,
+        "nativeExecutionVerified": false,
+        "acceptanceComplete": false
+      }
+    },
+    {
+      "caseId": "background-arm-isolation",
+      "evidence": {
+        "receipts": [
+          {
+            "role": "background",
+            "arm": "original",
+            "policyDigest": "8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67",
+            "requested": {
+              "model": "gpt-6.1-sol",
+              "effort": "max",
+              "serviceTier": "priority"
+            },
+            "observed": {
+              "model": "gpt-6.1-sol",
+              "effort": "max",
+              "serviceTier": "priority"
+            },
+            "terminal": "completed",
+            "completion": "complete",
+            "usageState": "known",
+            "paidFallbackAttempted": false
+          },
+          {
+            "role": "background",
+            "arm": "experimental-background-high-standard",
+            "policyDigest": "8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67",
+            "requested": {
+              "model": "gpt-6.1-sol",
+              "effort": "high",
+              "serviceTier": "default"
+            },
+            "observed": {
+              "model": "gpt-6.1-sol",
+              "effort": "high",
+              "serviceTier": "default"
+            },
+            "terminal": "completed",
+            "completion": "complete",
+            "usageState": "known",
+            "paidFallbackAttempted": false
+          },
+          {
+            "role": "background",
+            "arm": "original",
+            "policyDigest": "8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67",
+            "requested": {
+              "model": "gpt-6.1-sol",
+              "effort": "max",
+              "serviceTier": "priority"
+            },
+            "observed": {
+              "model": "gpt-6.1-sol",
+              "effort": "max",
+              "serviceTier": "priority"
+            },
+            "terminal": "completed",
+            "completion": "complete",
+            "usageState": "known",
+            "paidFallbackAttempted": false
+          }
+        ],
+        "experimentalForegroundRefused": true,
+        "liveInferenceAttested": false
+      }
+    }
+  ],
+  "readbacks": [
+    {
+      "probeId": "AT-ops-9",
+      "caseId": null,
+      "unfiltered": true,
+      "cases": 4,
+      "sourceRegistration": {
+        "id": "AT-ops-9",
+        "rung": "CLI",
+        "sourceAssertionHash": "b3ec167dc1ac94a171f4460af36ab74f992729e2cb798c2ceb4cd5cc793c6d71",
+        "commandId": "probe.run",
+        "scenarioId": "model-route.roles",
+        "owner": "hermes",
+        "firstRelease": "R0",
+        "kind": "behavioral",
+        "mandatoryCases": [
+          {
+            "id": "foreground-original-route",
+            "publicOperation": "ModelRoute.invoke",
+            "phase": "foreground-original-route"
+          },
+          {
+            "id": "ordinary-child-route",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "ordinary-child-route"
+          },
+          {
+            "id": "research-pinned-skill",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "research-pinned-skill"
+          },
+          {
+            "id": "background-arm-isolation",
+            "publicOperation": "ModelRoute.invoke + ModelRoute.select",
+            "phase": "background-arm-isolation"
+          }
+        ],
+        "trigger": "Observe the four assigned original role routes and a separate experimental background receipt through real ModelRoute interfaces with fixed external provider/executor inputs. Preserve original policy before and after the experimental call; protected live route remains pending.",
+        "faultControls": [
+          {
+            "id": "fixed-external-route-receipts",
+            "seam": "provider",
+            "affectedPhases": [
+              "foreground-original-route",
+              "ordinary-child-route",
+              "research-pinned-skill",
+              "background-arm-isolation"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "public-route-and-skill-readback",
+            "independentReader": "ModelRoute.invoke/delegationReceipt terminal receipts and actual exported task/skill readback",
+            "caseIds": [
+              "foreground-original-route",
+              "ordinary-child-route",
+              "research-pinned-skill",
+              "background-arm-isolation"
+            ]
+          },
+          {
+            "id": "original-experimental-isolation",
+            "independentReader": "ModelRoute.invoke before/experimental/after receipts and public select refusal",
+            "caseIds": [
+              "background-arm-isolation"
+            ]
+          },
+          {
+            "id": "stored-cli-readback",
+            "independentReader": "toy probe.show exact stored result and toy stack.down teardown",
+            "caseIds": [
+              "foreground-original-route",
+              "ordinary-child-route",
+              "research-pinned-skill",
+              "background-arm-isolation"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot exercise pre-build administrative role routing or inspect generated export receipts. CLI reaches the real ModelRoute owner with fixed external HTTP/Codex fakes."
+      },
+      "registrationExact": true,
+      "operationId": "bc3820bc-b8ca-40c8-bee7-0885e726873b",
+      "run": {
+        "path": "build/evidence/R0.06/ops9-route-final-cli/AT-ops-9-run.json",
+        "sha256": "b098bb9338e6a33eb4ea74da5075ec1071b42eacec5e7915cc51d7472bd0eb7a"
+      },
+      "show": {
+        "path": "build/evidence/R0.06/ops9-route-final-cli/AT-ops-9-show.json",
+        "sha256": "f700253f55904bfc99acbdd53a3e028400ba5dd476ad9f46839ce8cf2c124813"
+      },
+      "sameData": true
+    },
+    {
+      "probeId": "AT-obligations-75",
+      "caseId": null,
+      "unfiltered": true,
+      "cases": 9,
+      "sourceRegistration": {
+        "id": "AT-obligations-75",
+        "rung": "CLI",
+        "sourceAssertionHash": "a24197c805faf3897e4c115c9fac9b877d63134ee4cdfe5b15a0312c63541840",
+        "commandId": "probe.run",
+        "scenarioId": "delegation.route-skill",
+        "owner": "hermes",
+        "firstRelease": "R0",
+        "kind": "behavioral",
+        "mandatoryCases": [
+          {
+            "id": "research-route-observed",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "research-route-observed"
+          },
+          {
+            "id": "research-route-missing",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "research-route-missing"
+          },
+          {
+            "id": "research-route-luna",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "research-route-luna"
+          },
+          {
+            "id": "research-route-wrong-effort",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "research-route-wrong-effort"
+          },
+          {
+            "id": "research-route-wrong-tier",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "research-route-wrong-tier"
+          },
+          {
+            "id": "research-skill-missing",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "research-skill-missing"
+          },
+          {
+            "id": "research-skill-wrong-bytes",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "research-skill-wrong-bytes"
+          },
+          {
+            "id": "ordinary-implementation-luna",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "ordinary-implementation-luna"
+          },
+          {
+            "id": "module-local-override-refused",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "module-local-override-refused"
+          }
+        ],
+        "trigger": "Exercise the real route/skill receipt owner with a fixed external Codex CLI and OS artifact faults; verify native argument role binding, actual exported skill/version/hash and observed-route refusal without live model execution.",
+        "faultControls": [
+          {
+            "id": "external-cli-route-observations",
+            "seam": "provider",
+            "affectedPhases": [
+              "research-route-missing",
+              "research-route-luna",
+              "research-route-wrong-effort",
+              "research-route-wrong-tier"
+            ]
+          },
+          {
+            "id": "published-research-artifact-faults",
+            "seam": "os",
+            "affectedPhases": [
+              "research-skill-missing",
+              "research-skill-wrong-bytes"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "native-role-request-and-receipt",
+            "independentReader": "Fixed external Codex CLI: argument/task/skill readback and actual emitted settings",
+            "caseIds": [
+              "research-route-observed",
+              "research-route-missing",
+              "research-route-luna",
+              "research-route-wrong-effort",
+              "research-route-wrong-tier",
+              "research-skill-missing",
+              "research-skill-wrong-bytes",
+              "ordinary-implementation-luna",
+              "module-local-override-refused"
+            ]
+          },
+          {
+            "id": "persisted-cli-evidence",
+            "independentReader": "toy probe.show: source-bound exact route/skill receipt and no-send refusal readback",
+            "caseIds": [
+              "research-route-observed",
+              "research-route-missing",
+              "research-route-luna",
+              "research-route-wrong-effort",
+              "research-route-wrong-tier",
+              "research-skill-missing",
+              "research-skill-wrong-bytes",
+              "ordinary-implementation-luna",
+              "module-local-override-refused"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot inspect administrative pre-build delegation settings and published skill bytes. CLI exercises the public owner with external CLI/OS fakes and real isolated exports."
+      },
+      "registrationExact": true,
+      "operationId": "dc63e697-13f6-4e16-8cfe-1cd1702cc8ad",
+      "run": {
+        "path": "build/evidence/R0.06/ops9-route-final-cli/AT-obligations-75-run.json",
+        "sha256": "c89df0130f88b6922e711ca83187263905503d037930a55235862ed0d53c9848"
+      },
+      "show": {
+        "path": "build/evidence/R0.06/ops9-route-final-cli/AT-obligations-75-show.json",
+        "sha256": "81ccace910366ca0bba7b4716609ef0534c47c56a2944d9f3ea61ddbf4b88cca"
+      },
+      "sameData": true
+    },
+    {
+      "probeId": "AT-hermes-config-1",
+      "caseId": "model-route-policy",
+      "unfiltered": false,
+      "cases": 9,
+      "sourceRegistration": null,
+      "registrationExact": false,
+      "operationId": "33b284dc-a3d5-4ee7-bdfb-006cf24646a3",
+      "run": {
+        "path": "build/evidence/R0.06/ops9-route-final-cli/AT-hermes-config-1-run.json",
+        "sha256": "4724ba10a215497cf5ef0368c914137c72653074b1295d1f9e9f35ab9dca4614"
+      },
+      "show": {
+        "path": "build/evidence/R0.06/ops9-route-final-cli/AT-hermes-config-1-show.json",
+        "sha256": "4080ec5cd4ddfac7036537143bb78e67530a902633e5e5ee7d4ba43cd73787e2"
+      },
+      "sameData": true
+    }
+  ],
+  "sourceBindings": [
+    {
+      "path": "packages/hermes/src/model-route-probe.ts",
+      "sha256": "dcecd115c2b28fd39574b454ed9246172204dc295ce01103033a0e4b1492a4a8"
+    },
+    {
+      "path": "cli/src/main.ts",
+      "sha256": "f11beae8458b3d1ec95ae4093fd8164ce96956b90cb988ea1e06280ae0d28363"
+    },
+    {
+      "path": "packages/ops/src/fixture-stack.ts",
+      "sha256": "386c849cfd4c28bc8ae00aaabe7efb5a3477a5eac8ee234152d74817fbdfad27"
+    },
+    {
+      "path": "tests/registry.yaml",
+      "sha256": "d320d30120dbfaa16abd027c04b9724840911c2cecded2ae5df9e8bd004c0dc4"
+    },
+    {
+      "path": "architecture/features.json",
+      "sha256": "9ce406b96b0c91bccdad51b1bb374733bb5a036ba7dedfacd4ff4dd87a1ac168"
+    },
+    {
+      "path": "docs/adr/0021-supported-model-route.md",
+      "sha256": "ada34793412aa9f0ab67f108ecb987b09c95f6e17636d5ca7b6a551ca7b04b54"
+    },
+    {
+      "path": "packages/contracts/src/generated-probe-registry.ts",
+      "sha256": "94e8e18b703e11ac18b660add60daa72f7d1c8989a3ba947a790c07b69242283"
+    },
+    {
+      "path": "skills/toy-control/FEATURE-MAP.md",
+      "sha256": "e4f1924a3145b8a2b827b1fb5fd0a94b071dc23493f7706a6e99916415ef999c"
+    },
+    {
+      "path": "packages/hermes/dist/model-route-probe.js",
+      "sha256": "1f630087df3223263cd1a50e2857cb11d16004417410bb505d55242d67cfe9d1"
+    },
+    {
+      "path": "packages/hermes/dist/model-route.js",
+      "sha256": "0e7b682dc833a0866c3ee2076b3a6b68a3085a497fe7961fa4118d3b00b53c39"
+    },
+    {
+      "path": "packages/ops/dist/fixture-stack.js",
+      "sha256": "317432917fe59223f94f5733dd0fae21c42e9cd88d58305805b45b9edc25afa9"
+    },
+    {
+      "path": "cli/dist/main.js",
+      "sha256": "9544bdabba595d04bac0f4af311f07e824d5413f82ad9959393cbccddb8f591b"
+    }
+  ],
+  "unchangedOwnerPolicyDtoAndSkill": [
+    {
+      "path": "packages/hermes/src/model-route.ts",
+      "sha256": "7c56f64981df351db6b8cd72237334369a86ffe9cb6d721c37c9dd2e2be945dc"
+    },
+    {
+      "path": "packages/contracts/src/model-route.ts",
+      "sha256": "ba828e8dde4fb234892c93ad73397f4280c26dd78760f336fe8a0a0a273ec273"
+    },
+    {
+      "path": "behavior/models.yaml",
+      "sha256": "8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67"
+    },
+    {
+      "path": "behavior/research-skill.json",
+      "sha256": "676190b93eccbee205a5ec7e2609b2f4100a27bac73f808704095fa0229d2f72"
+    }
+  ],
+  "frozenBindings": [
+    {
+      "path": "scripts/probe-siwc-control-runtime.mts",
+      "sha256": "96e1fd2d98469772c3d0d203386c3f7aa56af57db025c420fa93f1f4ecd7e70d",
+      "observedSha256": "96e1fd2d98469772c3d0d203386c3f7aa56af57db025c420fa93f1f4ecd7e70d",
+      "matches": true,
+      "unchanged": true
+    },
+    {
+      "path": "scripts/stage-siwc-control-runtime.mts",
+      "sha256": "13ff53e341ab7670dbed967ce810d5aa2834df7a47ffe1620f037ff1da3ee0d4",
+      "observedSha256": "13ff53e341ab7670dbed967ce810d5aa2834df7a47ffe1620f037ff1da3ee0d4",
+      "matches": true,
+      "unchanged": true
+    },
+    {
+      "path": "control/dist/bootstrap/siwc-runtime-probe.js",
+      "sha256": "06870b8dd41d2ffc093cc04680ba56c4570f07b4aa0a27a9ab70796cdd8204bd",
+      "observedSha256": "06870b8dd41d2ffc093cc04680ba56c4570f07b4aa0a27a9ab70796cdd8204bd",
+      "matches": true,
+      "unchanged": true
+    },
+    {
+      "path": "scripts/probe-unfiltered-control-denials.mts",
+      "sha256": "1cb93d375df931a482d946170e31549450d8efb71d6a251f5d2bcea8c5b92529",
+      "observedSha256": "1cb93d375df931a482d946170e31549450d8efb71d6a251f5d2bcea8c5b92529",
+      "matches": true,
+      "unchanged": true
+    },
+    {
+      "path": "packages/ops/dist/role-control-probe.js",
+      "sha256": "1764a98e5ae45694118007c242320711a7bd9e0d021b7c6d6ee0cbb8cff73ec2",
+      "observedSha256": "1764a98e5ae45694118007c242320711a7bd9e0d021b7c6d6ee0cbb8cff73ec2",
+      "matches": true,
+      "unchanged": true
+    },
+    {
+      "path": "control/dist/bootstrap/denial-probe.js",
+      "sha256": "7fda1824ec7bc308cac97d07c7c92cadd5527e87e89d79b410d33d95d1b30672",
+      "observedSha256": "7fda1824ec7bc308cac97d07c7c92cadd5527e87e89d79b410d33d95d1b30672",
+      "matches": true,
+      "unchanged": true
+    }
+  ],
+  "strict": {
+    "exitCode": 0,
+    "artifacts": 403,
+    "contracts": 335,
+    "cliManifests": 48,
+    "features": 106,
+    "commands": 55,
+    "indexedATs": 1447,
+    "schemaDigest": "ec7a67e32a800c455daac36fa5566d3b786d6f8bb76742a66a72cb79cf267648",
+    "swiftInvoked": false,
+    "evidence": {
+      "path": "build/evidence/R0.06/ops9-route-strict-check.txt",
+      "sha256": "f93026215dd30c9e44949bb30069428d7bcd3dc05aee6f7ff77f50a584c0e855"
+    }
+  },
+  "preparationBindings": [
+    {
+      "path": "build/evidence/R0.06/ops9-route-generation.txt",
+      "sha256": "860127306049e9693f041b3009b38f103e02bdf8b098ba5ed2316a4313349113"
+    },
+    {
+      "path": "build/evidence/R0.06/ops9-route-build.txt",
+      "sha256": "00d502426f9571aac83be49953171282ad54f192ba02f3c4edb587f299cf6d1f"
+    },
+    {
+      "path": "build/evidence/R0.06/ops9-route-map-update.json",
+      "sha256": "c61de701402f0bbdbbe5ccd64de8ac97f30b6693c026d0d0fbba57c8070119d9"
+    },
+    {
+      "path": "build/evidence/R0.06/ops9-route-final-admission.json",
+      "sha256": "e4934bc30d31ea0d16f0dd7ef729f7338c8507fee8ee1c09fd54d105013d1c17"
+    }
+  ],
+  "ownedWorld": "6692efe9-e738-4989-abd3-8813876c5527",
+  "cleanupComplete": true,
+  "unresolvedResources": 0,
+  "down": {
+    "path": "build/evidence/R0.06/ops9-route-final-cli/down.json",
+    "sha256": "16961c5985b2c675d16348bcd9bc5590dc6a77b05d13d60057ca61ba4cc2dd11"
+  },
+  "wholeATsPassed": [],
+  "acceptanceComplete": false,
+  "liveProviderSends": 0,
+  "scope": "Four assigned original-role/experimental-isolation cases through existing interfaces; existing nine delegation and nine explicit legacy policy checks are regressions only.",
+  "deferred": [
+    "Actual protected provider/controller/service identity and real-account supported-route receipts",
+    "Whole AT/card/release acceptance",
+    "Swift generation/compilation untilR3"
+  ],
+  "independentReview": {
+    "state": "APPROVED_NO_FINDINGS",
+    "path": "build/evidence/R0.06/ops9-route-independent-review.json",
+    "sha256": "71eb0c39a34d3e259c3339d1d83c9840779b66db7d73b19f43800f356091176a"
+  },
+  "rootQueue": {
+    "path": "build/ROOT-REQUESTS.md",
+    "sha256": "6bdca8b36154b5ec87875c5a1fe0e5d5f9a8a0b6d172c26c7d99ad9f2dd6307e",
+    "states": [
+      {
+        "id": "ROOT-R004-20261006-01",
+        "state": "DONE"
+      },
+      {
+        "id": "ROOT-R004-20261006-02",
+        "state": "PENDING"
+      },
+      {
+        "id": "ROOT-R005-20261006-01",
+        "state": "PENDING"
+      }
+    ]
+  },
+  "goal": "ACTIVE",
+  "finalizedAt": "2026-10-07T10:01:24.676Z"
+}

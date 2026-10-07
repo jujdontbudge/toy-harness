@@ -1,0 +1,667 @@
+{
+  "recordedAt": "2026-10-07T09:58:45.971Z",
+  "rung": "CLI",
+  "unfiltered": false,
+  "wholeATComplete": false,
+  "liveProviderSends": 0,
+  "nativeAttempt": 2,
+  "admissionEvidence": "build/evidence/R0.06/ops9-route-final-admission.json",
+  "probes": [
+    {
+      "probeId": "AT-ops-9",
+      "caseId": null,
+      "unfiltered": true,
+      "run": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.06/ops9-route-final-cli/AT-ops-9-run.json",
+        "sha256": "b098bb9338e6a33eb4ea74da5075ec1071b42eacec5e7915cc51d7472bd0eb7a"
+      },
+      "operationId": "bc3820bc-b8ca-40c8-bee7-0885e726873b",
+      "show": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.06/ops9-route-final-cli/AT-ops-9-show.json",
+        "sha256": "f700253f55904bfc99acbdd53a3e028400ba5dd476ad9f46839ce8cf2c124813"
+      },
+      "sameData": true,
+      "sourceRegistration": {
+        "id": "AT-ops-9",
+        "rung": "CLI",
+        "sourceAssertionHash": "b3ec167dc1ac94a171f4460af36ab74f992729e2cb798c2ceb4cd5cc793c6d71",
+        "commandId": "probe.run",
+        "scenarioId": "model-route.roles",
+        "owner": "hermes",
+        "firstRelease": "R0",
+        "kind": "behavioral",
+        "mandatoryCases": [
+          {
+            "id": "foreground-original-route",
+            "publicOperation": "ModelRoute.invoke",
+            "phase": "foreground-original-route"
+          },
+          {
+            "id": "ordinary-child-route",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "ordinary-child-route"
+          },
+          {
+            "id": "research-pinned-skill",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "research-pinned-skill"
+          },
+          {
+            "id": "background-arm-isolation",
+            "publicOperation": "ModelRoute.invoke + ModelRoute.select",
+            "phase": "background-arm-isolation"
+          }
+        ],
+        "trigger": "Observe the four assigned original role routes and a separate experimental background receipt through real ModelRoute interfaces with fixed external provider/executor inputs. Preserve original policy before and after the experimental call; protected live route remains pending.",
+        "faultControls": [
+          {
+            "id": "fixed-external-route-receipts",
+            "seam": "provider",
+            "affectedPhases": [
+              "foreground-original-route",
+              "ordinary-child-route",
+              "research-pinned-skill",
+              "background-arm-isolation"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "public-route-and-skill-readback",
+            "independentReader": "ModelRoute.invoke/delegationReceipt terminal receipts and actual exported task/skill readback",
+            "caseIds": [
+              "foreground-original-route",
+              "ordinary-child-route",
+              "research-pinned-skill",
+              "background-arm-isolation"
+            ]
+          },
+          {
+            "id": "original-experimental-isolation",
+            "independentReader": "ModelRoute.invoke before/experimental/after receipts and public select refusal",
+            "caseIds": [
+              "background-arm-isolation"
+            ]
+          },
+          {
+            "id": "stored-cli-readback",
+            "independentReader": "toy probe.show exact stored result and toy stack.down teardown",
+            "caseIds": [
+              "foreground-original-route",
+              "ordinary-child-route",
+              "research-pinned-skill",
+              "background-arm-isolation"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot exercise pre-build administrative role routing or inspect generated export receipts. CLI reaches the real ModelRoute owner with fixed external HTTP/Codex fakes."
+      },
+      "registrationExact": true,
+      "cases": [
+        {
+          "id": "read.model-route-policy",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T09:58:46.631Z",
+          "reasonCode": "FIXED_EXTERNAL_MODEL_FIXTURE_PASS",
+          "prerequisite": "{\"caseId\":\"foreground-original-route\",\"evidence\":{\"receipt\":{\"role\":\"foreground\",\"arm\":\"original\",\"policyDigest\":\"8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67\",\"requested\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"max\",\"serviceTier\":\"priority\"},\"observed\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"max\",\"serviceTier\":\"priority\"},\"terminal\":\"completed\",\"completion\":\"complete\",\"usageState\":\"known\",\"paidFallbackAttempted\":false},\"liveInferenceAttested\":false}}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "1f630087df3223263cd1a50e2857cb11d16004417410bb505d55242d67cfe9d1"
+            ]
+          }
+        },
+        {
+          "id": "read.model-route-policy",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T09:58:46.638Z",
+          "reasonCode": "FIXED_EXTERNAL_MODEL_FIXTURE_PASS",
+          "prerequisite": "{\"caseId\":\"ordinary-child-route\",\"evidence\":{\"receipt\":{\"role\":\"child\",\"arm\":\"original\",\"policyDigest\":\"8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67\",\"requested\":{\"model\":\"gpt-6-luna\",\"effort\":\"max\",\"serviceTier\":\"priority\"},\"observed\":{\"model\":\"gpt-6-luna\",\"effort\":\"max\",\"serviceTier\":\"priority\"},\"terminal\":\"completed\",\"completion\":\"complete\",\"usageState\":\"known\",\"paidFallbackAttempted\":false},\"purpose\":\"implementation\",\"skillSourceCommit\":null,\"skillLoadedDigest\":null,\"exportReadback\":true,\"nativeArgumentsMatched\":true,\"externalExecutorCalls\":1,\"nativeExecutionVerified\":false,\"acceptanceComplete\":false}}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "1f630087df3223263cd1a50e2857cb11d16004417410bb505d55242d67cfe9d1"
+            ]
+          }
+        },
+        {
+          "id": "read.model-route-policy",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T09:58:46.647Z",
+          "reasonCode": "FIXED_EXTERNAL_MODEL_FIXTURE_PASS",
+          "prerequisite": "{\"caseId\":\"research-pinned-skill\",\"evidence\":{\"receipt\":{\"role\":\"research\",\"arm\":\"original\",\"policyDigest\":\"8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67\",\"requested\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"medium\",\"serviceTier\":\"priority\"},\"observed\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"medium\",\"serviceTier\":\"priority\"},\"terminal\":\"completed\",\"completion\":\"complete\",\"usageState\":\"known\",\"paidFallbackAttempted\":false},\"purpose\":\"research\",\"skillSourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"skillLoadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"exportReadback\":true,\"nativeArgumentsMatched\":true,\"externalExecutorCalls\":1,\"nativeExecutionVerified\":false,\"acceptanceComplete\":false}}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "1f630087df3223263cd1a50e2857cb11d16004417410bb505d55242d67cfe9d1"
+            ]
+          }
+        },
+        {
+          "id": "read.model-route-policy",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T09:58:46.649Z",
+          "reasonCode": "FIXED_EXTERNAL_MODEL_FIXTURE_PASS",
+          "prerequisite": "{\"caseId\":\"background-arm-isolation\",\"evidence\":{\"receipts\":[{\"role\":\"background\",\"arm\":\"original\",\"policyDigest\":\"8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67\",\"requested\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"max\",\"serviceTier\":\"priority\"},\"observed\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"max\",\"serviceTier\":\"priority\"},\"terminal\":\"completed\",\"completion\":\"complete\",\"usageState\":\"known\",\"paidFallbackAttempted\":false},{\"role\":\"background\",\"arm\":\"experimental-background-high-standard\",\"policyDigest\":\"8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67\",\"requested\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"high\",\"serviceTier\":\"default\"},\"observed\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"high\",\"serviceTier\":\"default\"},\"terminal\":\"completed\",\"completion\":\"complete\",\"usageState\":\"known\",\"paidFallbackAttempted\":false},{\"role\":\"background\",\"arm\":\"original\",\"policyDigest\":\"8a2f7733299cf7f3dfa8733f335e94adfe4e58e7b03ef0023861a73f9fb24f67\",\"requested\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"max\",\"serviceTier\":\"priority\"},\"observed\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"max\",\"serviceTier\":\"priority\"},\"terminal\":\"completed\",\"completion\":\"complete\",\"usageState\":\"known\",\"paidFallbackAttempted\":false}],\"experimentalForegroundRefused\":true,\"liveInferenceAttested\":false}}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "1f630087df3223263cd1a50e2857cb11d16004417410bb505d55242d67cfe9d1"
+            ]
+          }
+        }
+      ],
+      "resultState": "NOT_IMPLEMENTED",
+      "complete": false
+    },
+    {
+      "probeId": "AT-obligations-75",
+      "caseId": null,
+      "unfiltered": true,
+      "run": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.06/ops9-route-final-cli/AT-obligations-75-run.json",
+        "sha256": "c89df0130f88b6922e711ca83187263905503d037930a55235862ed0d53c9848"
+      },
+      "operationId": "dc63e697-13f6-4e16-8cfe-1cd1702cc8ad",
+      "show": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.06/ops9-route-final-cli/AT-obligations-75-show.json",
+        "sha256": "81ccace910366ca0bba7b4716609ef0534c47c56a2944d9f3ea61ddbf4b88cca"
+      },
+      "sameData": true,
+      "sourceRegistration": {
+        "id": "AT-obligations-75",
+        "rung": "CLI",
+        "sourceAssertionHash": "a24197c805faf3897e4c115c9fac9b877d63134ee4cdfe5b15a0312c63541840",
+        "commandId": "probe.run",
+        "scenarioId": "delegation.route-skill",
+        "owner": "hermes",
+        "firstRelease": "R0",
+        "kind": "behavioral",
+        "mandatoryCases": [
+          {
+            "id": "research-route-observed",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "research-route-observed"
+          },
+          {
+            "id": "research-route-missing",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "research-route-missing"
+          },
+          {
+            "id": "research-route-luna",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "research-route-luna"
+          },
+          {
+            "id": "research-route-wrong-effort",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "research-route-wrong-effort"
+          },
+          {
+            "id": "research-route-wrong-tier",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "research-route-wrong-tier"
+          },
+          {
+            "id": "research-skill-missing",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "research-skill-missing"
+          },
+          {
+            "id": "research-skill-wrong-bytes",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "research-skill-wrong-bytes"
+          },
+          {
+            "id": "ordinary-implementation-luna",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "ordinary-implementation-luna"
+          },
+          {
+            "id": "module-local-override-refused",
+            "publicOperation": "ModelRoute.delegationReceipt",
+            "phase": "module-local-override-refused"
+          }
+        ],
+        "trigger": "Exercise the real route/skill receipt owner with a fixed external Codex CLI and OS artifact faults; verify native argument role binding, actual exported skill/version/hash and observed-route refusal without live model execution.",
+        "faultControls": [
+          {
+            "id": "external-cli-route-observations",
+            "seam": "provider",
+            "affectedPhases": [
+              "research-route-missing",
+              "research-route-luna",
+              "research-route-wrong-effort",
+              "research-route-wrong-tier"
+            ]
+          },
+          {
+            "id": "published-research-artifact-faults",
+            "seam": "os",
+            "affectedPhases": [
+              "research-skill-missing",
+              "research-skill-wrong-bytes"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "native-role-request-and-receipt",
+            "independentReader": "Fixed external Codex CLI: argument/task/skill readback and actual emitted settings",
+            "caseIds": [
+              "research-route-observed",
+              "research-route-missing",
+              "research-route-luna",
+              "research-route-wrong-effort",
+              "research-route-wrong-tier",
+              "research-skill-missing",
+              "research-skill-wrong-bytes",
+              "ordinary-implementation-luna",
+              "module-local-override-refused"
+            ]
+          },
+          {
+            "id": "persisted-cli-evidence",
+            "independentReader": "toy probe.show: source-bound exact route/skill receipt and no-send refusal readback",
+            "caseIds": [
+              "research-route-observed",
+              "research-route-missing",
+              "research-route-luna",
+              "research-route-wrong-effort",
+              "research-route-wrong-tier",
+              "research-skill-missing",
+              "research-skill-wrong-bytes",
+              "ordinary-implementation-luna",
+              "module-local-override-refused"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot inspect administrative pre-build delegation settings and published skill bytes. CLI exercises the public owner with external CLI/OS fakes and real isolated exports."
+      },
+      "registrationExact": true,
+      "cases": [
+        {
+          "id": "read.model-route-policy",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T09:58:47.196Z",
+          "reasonCode": "DELEGATION_ROUTE_SKILL_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"research-route-observed\",\"actualUid\":501,\"externalCliSends\":1,\"exportReadback\":true,\"nativeArgumentsMatched\":true,\"receipt\":{\"purpose\":\"research\",\"state\":\"observed\",\"reasonCode\":\"DELEGATION_ROUTE_OBSERVED\",\"requestedRole\":\"research\",\"requestedArm\":\"original\",\"requestedModel\":\"gpt-6.1-sol\",\"requestedEffort\":\"medium\",\"requestedTier\":\"priority\",\"observedModel\":\"gpt-6.1-sol\",\"observedEffort\":\"medium\",\"observedTier\":\"priority\",\"terminal\":\"completed\",\"completion\":\"complete\",\"outputStarted\":true,\"skillSourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"skillContentDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"skillLoadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"resultRefs\":[{\"path\":\"reports/delegation-result.md\",\"media_type\":\"text/markdown\",\"bytes\":202,\"sha256\":\"36d75b9502778eeaa01f5f42df01a21332cd877f2c25f7a6ee8bb891df183ca4\",\"input_observations\":[]}],\"nativeExecutionVerified\":false,\"acceptanceComplete\":false},\"resultReadback\":null,\"outsideTargetUnchanged\":null,\"resultFileAbsent\":null,\"errorCode\":null,\"fakeExternalCli\":true,\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4",
+              "36d75b9502778eeaa01f5f42df01a21332cd877f2c25f7a6ee8bb891df183ca4",
+              "0e7b682dc833a0866c3ee2076b3a6b68a3085a497fe7961fa4118d3b00b53c39",
+              "1f630087df3223263cd1a50e2857cb11d16004417410bb505d55242d67cfe9d1"
+            ]
+          }
+        },
+        {
+          "id": "read.model-route-policy",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T09:58:47.198Z",
+          "reasonCode": "DELEGATION_ROUTE_SKILL_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"research-route-missing\",\"actualUid\":501,\"externalCliSends\":1,\"exportReadback\":true,\"nativeArgumentsMatched\":true,\"receipt\":{\"purpose\":\"research\",\"state\":\"refused\",\"reasonCode\":\"DELEGATION_ROUTE_REFUSED\",\"requestedRole\":\"research\",\"requestedArm\":\"original\",\"requestedModel\":\"gpt-6.1-sol\",\"requestedEffort\":\"medium\",\"requestedTier\":\"priority\",\"observedModel\":null,\"observedEffort\":null,\"observedTier\":null,\"terminal\":\"failed\",\"completion\":\"pending\",\"outputStarted\":false,\"skillSourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"skillContentDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"skillLoadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"resultRefs\":[],\"nativeExecutionVerified\":false,\"acceptanceComplete\":false},\"resultReadback\":null,\"outsideTargetUnchanged\":null,\"resultFileAbsent\":null,\"errorCode\":null,\"fakeExternalCli\":true,\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4",
+              "0e7b682dc833a0866c3ee2076b3a6b68a3085a497fe7961fa4118d3b00b53c39",
+              "1f630087df3223263cd1a50e2857cb11d16004417410bb505d55242d67cfe9d1"
+            ]
+          }
+        },
+        {
+          "id": "read.model-route-policy",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T09:58:47.200Z",
+          "reasonCode": "DELEGATION_ROUTE_SKILL_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"research-route-luna\",\"actualUid\":501,\"externalCliSends\":1,\"exportReadback\":true,\"nativeArgumentsMatched\":true,\"receipt\":{\"purpose\":\"research\",\"state\":\"refused\",\"reasonCode\":\"DELEGATION_ROUTE_REFUSED\",\"requestedRole\":\"research\",\"requestedArm\":\"original\",\"requestedModel\":\"gpt-6.1-sol\",\"requestedEffort\":\"medium\",\"requestedTier\":\"priority\",\"observedModel\":\"gpt-6-luna\",\"observedEffort\":\"medium\",\"observedTier\":\"priority\",\"terminal\":\"failed\",\"completion\":\"pending\",\"outputStarted\":false,\"skillSourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"skillContentDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"skillLoadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"resultRefs\":[],\"nativeExecutionVerified\":false,\"acceptanceComplete\":false},\"resultReadback\":null,\"outsideTargetUnchanged\":null,\"resultFileAbsent\":null,\"errorCode\":null,\"fakeExternalCli\":true,\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4",
+              "0e7b682dc833a0866c3ee2076b3a6b68a3085a497fe7961fa4118d3b00b53c39",
+              "1f630087df3223263cd1a50e2857cb11d16004417410bb505d55242d67cfe9d1"
+            ]
+          }
+        },
+        {
+          "id": "read.model-route-policy",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T09:58:47.203Z",
+          "reasonCode": "DELEGATION_ROUTE_SKILL_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"research-route-wrong-effort\",\"actualUid\":501,\"externalCliSends\":1,\"exportReadback\":true,\"nativeArgumentsMatched\":true,\"receipt\":{\"purpose\":\"research\",\"state\":\"refused\",\"reasonCode\":\"DELEGATION_ROUTE_REFUSED\",\"requestedRole\":\"research\",\"requestedArm\":\"original\",\"requestedModel\":\"gpt-6.1-sol\",\"requestedEffort\":\"medium\",\"requestedTier\":\"priority\",\"observedModel\":\"gpt-6.1-sol\",\"observedEffort\":\"max\",\"observedTier\":\"priority\",\"terminal\":\"failed\",\"completion\":\"pending\",\"outputStarted\":false,\"skillSourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"skillContentDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"skillLoadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"resultRefs\":[],\"nativeExecutionVerified\":false,\"acceptanceComplete\":false},\"resultReadback\":null,\"outsideTargetUnchanged\":null,\"resultFileAbsent\":null,\"errorCode\":null,\"fakeExternalCli\":true,\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4",
+              "0e7b682dc833a0866c3ee2076b3a6b68a3085a497fe7961fa4118d3b00b53c39",
+              "1f630087df3223263cd1a50e2857cb11d16004417410bb505d55242d67cfe9d1"
+            ]
+          }
+        },
+        {
+          "id": "read.model-route-policy",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T09:58:47.204Z",
+          "reasonCode": "DELEGATION_ROUTE_SKILL_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"research-route-wrong-tier\",\"actualUid\":501,\"externalCliSends\":1,\"exportReadback\":true,\"nativeArgumentsMatched\":true,\"receipt\":{\"purpose\":\"research\",\"state\":\"refused\",\"reasonCode\":\"DELEGATION_ROUTE_REFUSED\",\"requestedRole\":\"research\",\"requestedArm\":\"original\",\"requestedModel\":\"gpt-6.1-sol\",\"requestedEffort\":\"medium\",\"requestedTier\":\"priority\",\"observedModel\":\"gpt-6.1-sol\",\"observedEffort\":\"medium\",\"observedTier\":\"default\",\"terminal\":\"failed\",\"completion\":\"pending\",\"outputStarted\":false,\"skillSourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"skillContentDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"skillLoadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"resultRefs\":[],\"nativeExecutionVerified\":false,\"acceptanceComplete\":false},\"resultReadback\":null,\"outsideTargetUnchanged\":null,\"resultFileAbsent\":null,\"errorCode\":null,\"fakeExternalCli\":true,\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4",
+              "0e7b682dc833a0866c3ee2076b3a6b68a3085a497fe7961fa4118d3b00b53c39",
+              "1f630087df3223263cd1a50e2857cb11d16004417410bb505d55242d67cfe9d1"
+            ]
+          }
+        },
+        {
+          "id": "read.model-route-policy",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T09:58:47.205Z",
+          "reasonCode": "DELEGATION_ROUTE_SKILL_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"research-skill-missing\",\"actualUid\":501,\"externalCliSends\":0,\"exportReadback\":false,\"nativeArgumentsMatched\":false,\"receipt\":{\"purpose\":\"research\",\"state\":\"refused\",\"reasonCode\":\"RESEARCH_SKILL_UNAVAILABLE\",\"requestedRole\":null,\"requestedArm\":null,\"requestedModel\":null,\"requestedEffort\":null,\"requestedTier\":null,\"observedModel\":null,\"observedEffort\":null,\"observedTier\":null,\"terminal\":null,\"completion\":null,\"outputStarted\":null,\"skillSourceCommit\":null,\"skillContentDigest\":null,\"skillLoadedDigest\":null,\"resultRefs\":[],\"nativeExecutionVerified\":false,\"acceptanceComplete\":false},\"resultReadback\":null,\"outsideTargetUnchanged\":null,\"resultFileAbsent\":null,\"errorCode\":null,\"fakeExternalCli\":true,\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4",
+              "0e7b682dc833a0866c3ee2076b3a6b68a3085a497fe7961fa4118d3b00b53c39",
+              "1f630087df3223263cd1a50e2857cb11d16004417410bb505d55242d67cfe9d1"
+            ]
+          }
+        },
+        {
+          "id": "read.model-route-policy",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T09:58:47.206Z",
+          "reasonCode": "DELEGATION_ROUTE_SKILL_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"research-skill-wrong-bytes\",\"actualUid\":501,\"externalCliSends\":0,\"exportReadback\":false,\"nativeArgumentsMatched\":false,\"receipt\":{\"purpose\":\"research\",\"state\":\"refused\",\"reasonCode\":\"RESEARCH_SKILL_MISMATCH\",\"requestedRole\":null,\"requestedArm\":null,\"requestedModel\":null,\"requestedEffort\":null,\"requestedTier\":null,\"observedModel\":null,\"observedEffort\":null,\"observedTier\":null,\"terminal\":null,\"completion\":null,\"outputStarted\":null,\"skillSourceCommit\":null,\"skillContentDigest\":null,\"skillLoadedDigest\":null,\"resultRefs\":[],\"nativeExecutionVerified\":false,\"acceptanceComplete\":false},\"resultReadback\":null,\"outsideTargetUnchanged\":null,\"resultFileAbsent\":null,\"errorCode\":null,\"fakeExternalCli\":true,\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4",
+              "0e7b682dc833a0866c3ee2076b3a6b68a3085a497fe7961fa4118d3b00b53c39",
+              "1f630087df3223263cd1a50e2857cb11d16004417410bb505d55242d67cfe9d1"
+            ]
+          }
+        },
+        {
+          "id": "read.model-route-policy",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T09:58:47.207Z",
+          "reasonCode": "DELEGATION_ROUTE_SKILL_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"ordinary-implementation-luna\",\"actualUid\":501,\"externalCliSends\":1,\"exportReadback\":true,\"nativeArgumentsMatched\":true,\"receipt\":{\"purpose\":\"implementation\",\"state\":\"observed\",\"reasonCode\":\"DELEGATION_ROUTE_OBSERVED\",\"requestedRole\":\"child\",\"requestedArm\":\"original\",\"requestedModel\":\"gpt-6-luna\",\"requestedEffort\":\"max\",\"requestedTier\":\"priority\",\"observedModel\":\"gpt-6-luna\",\"observedEffort\":\"max\",\"observedTier\":\"priority\",\"terminal\":\"completed\",\"completion\":\"complete\",\"outputStarted\":true,\"skillSourceCommit\":null,\"skillContentDigest\":null,\"skillLoadedDigest\":null,\"resultRefs\":[],\"nativeExecutionVerified\":false,\"acceptanceComplete\":false},\"resultReadback\":null,\"outsideTargetUnchanged\":null,\"resultFileAbsent\":null,\"errorCode\":null,\"fakeExternalCli\":true,\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4",
+              "0e7b682dc833a0866c3ee2076b3a6b68a3085a497fe7961fa4118d3b00b53c39",
+              "1f630087df3223263cd1a50e2857cb11d16004417410bb505d55242d67cfe9d1"
+            ]
+          }
+        },
+        {
+          "id": "read.model-route-policy",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T09:58:47.208Z",
+          "reasonCode": "DELEGATION_ROUTE_SKILL_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"module-local-override-refused\",\"actualUid\":501,\"externalCliSends\":0,\"exportReadback\":false,\"nativeArgumentsMatched\":false,\"receipt\":null,\"resultReadback\":null,\"outsideTargetUnchanged\":null,\"resultFileAbsent\":null,\"errorCode\":\"INVALID_INPUT\",\"fakeExternalCli\":true,\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4",
+              "0e7b682dc833a0866c3ee2076b3a6b68a3085a497fe7961fa4118d3b00b53c39",
+              "1f630087df3223263cd1a50e2857cb11d16004417410bb505d55242d67cfe9d1"
+            ]
+          }
+        }
+      ],
+      "resultState": "NOT_IMPLEMENTED",
+      "complete": false
+    },
+    {
+      "probeId": "AT-hermes-config-1",
+      "caseId": "model-route-policy",
+      "unfiltered": false,
+      "run": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.06/ops9-route-final-cli/AT-hermes-config-1-run.json",
+        "sha256": "4724ba10a215497cf5ef0368c914137c72653074b1295d1f9e9f35ab9dca4614"
+      },
+      "operationId": "33b284dc-a3d5-4ee7-bdfb-006cf24646a3",
+      "show": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.06/ops9-route-final-cli/AT-hermes-config-1-show.json",
+        "sha256": "4080ec5cd4ddfac7036537143bb78e67530a902633e5e5ee7d4ba43cd73787e2"
+      },
+      "sameData": true,
+      "sourceRegistration": null,
+      "registrationExact": false,
+      "cases": [
+        {
+          "id": "read.model-route-policy",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T09:58:47.746Z",
+          "reasonCode": "FIXED_EXTERNAL_MODEL_FIXTURE_PASS",
+          "prerequisite": "[{\"role\":\"foreground\",\"arm\":\"original\",\"requested\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"max\",\"serviceTier\":\"priority\"},\"observed\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"max\",\"serviceTier\":\"priority\"},\"terminal\":\"completed\",\"completion\":\"complete\",\"usageState\":\"known\",\"reservationTokens\":0,\"providerOutputCap\":null,\"outputLimitKind\":\"estimate\",\"reasonCode\":null,\"paidFallbackAttempted\":false}]",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "1f630087df3223263cd1a50e2857cb11d16004417410bb505d55242d67cfe9d1"
+            ]
+          }
+        },
+        {
+          "id": "read.model-route-policy",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T09:58:47.747Z",
+          "reasonCode": "FIXED_EXTERNAL_MODEL_FIXTURE_PASS",
+          "prerequisite": "[{\"role\":\"background\",\"arm\":\"original\",\"requested\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"max\",\"serviceTier\":\"priority\"},\"observed\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"max\",\"serviceTier\":\"priority\"},\"terminal\":\"completed\",\"completion\":\"complete\",\"usageState\":\"known\",\"reservationTokens\":0,\"providerOutputCap\":null,\"outputLimitKind\":\"estimate\",\"reasonCode\":null,\"paidFallbackAttempted\":false}]",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "1f630087df3223263cd1a50e2857cb11d16004417410bb505d55242d67cfe9d1"
+            ]
+          }
+        },
+        {
+          "id": "read.model-route-policy",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T09:58:47.748Z",
+          "reasonCode": "FIXED_EXTERNAL_MODEL_FIXTURE_PASS",
+          "prerequisite": "[{\"role\":\"cron\",\"arm\":\"original\",\"requested\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"max\",\"serviceTier\":\"priority\"},\"observed\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"max\",\"serviceTier\":\"priority\"},\"terminal\":\"completed\",\"completion\":\"complete\",\"usageState\":\"known\",\"reservationTokens\":0,\"providerOutputCap\":null,\"outputLimitKind\":\"estimate\",\"reasonCode\":null,\"paidFallbackAttempted\":false}]",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "1f630087df3223263cd1a50e2857cb11d16004417410bb505d55242d67cfe9d1"
+            ]
+          }
+        },
+        {
+          "id": "read.model-route-policy",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T09:58:47.750Z",
+          "reasonCode": "FIXED_EXTERNAL_MODEL_FIXTURE_PASS",
+          "prerequisite": "[{\"role\":\"auxiliary\",\"arm\":\"original\",\"requested\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"max\",\"serviceTier\":\"priority\"},\"observed\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"max\",\"serviceTier\":\"priority\"},\"terminal\":\"completed\",\"completion\":\"complete\",\"usageState\":\"known\",\"reservationTokens\":0,\"providerOutputCap\":null,\"outputLimitKind\":\"estimate\",\"reasonCode\":null,\"paidFallbackAttempted\":false}]",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "1f630087df3223263cd1a50e2857cb11d16004417410bb505d55242d67cfe9d1"
+            ]
+          }
+        },
+        {
+          "id": "read.model-route-policy",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T09:58:47.750Z",
+          "reasonCode": "FIXED_EXTERNAL_MODEL_FIXTURE_PASS",
+          "prerequisite": "[{\"role\":\"continuation\",\"arm\":\"original\",\"requested\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"max\",\"serviceTier\":\"priority\"},\"observed\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"max\",\"serviceTier\":\"priority\"},\"terminal\":\"completed\",\"completion\":\"complete\",\"usageState\":\"known\",\"reservationTokens\":0,\"providerOutputCap\":null,\"outputLimitKind\":\"estimate\",\"reasonCode\":null,\"paidFallbackAttempted\":false}]",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "1f630087df3223263cd1a50e2857cb11d16004417410bb505d55242d67cfe9d1"
+            ]
+          }
+        },
+        {
+          "id": "read.model-route-policy",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T09:58:47.751Z",
+          "reasonCode": "FIXED_EXTERNAL_MODEL_FIXTURE_PASS",
+          "prerequisite": "[{\"role\":\"research\",\"arm\":\"original\",\"requested\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"medium\",\"serviceTier\":\"priority\"},\"observed\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"medium\",\"serviceTier\":\"priority\"},\"terminal\":\"completed\",\"completion\":\"complete\",\"usageState\":\"known\",\"reservationTokens\":0,\"providerOutputCap\":null,\"outputLimitKind\":\"estimate\",\"reasonCode\":null,\"paidFallbackAttempted\":false}]",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "1f630087df3223263cd1a50e2857cb11d16004417410bb505d55242d67cfe9d1"
+            ]
+          }
+        },
+        {
+          "id": "read.model-route-policy",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T09:58:47.751Z",
+          "reasonCode": "FIXED_EXTERNAL_MODEL_FIXTURE_PASS",
+          "prerequisite": "[{\"role\":\"child\",\"arm\":\"original\",\"requested\":{\"model\":\"gpt-6-luna\",\"effort\":\"max\",\"serviceTier\":\"priority\"},\"observed\":{\"model\":\"gpt-6-luna\",\"effort\":\"max\",\"serviceTier\":\"priority\"},\"terminal\":\"completed\",\"completion\":\"complete\",\"usageState\":\"known\",\"reservationTokens\":0,\"providerOutputCap\":null,\"outputLimitKind\":\"estimate\",\"reasonCode\":null,\"paidFallbackAttempted\":false}]",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "1f630087df3223263cd1a50e2857cb11d16004417410bb505d55242d67cfe9d1"
+            ]
+          }
+        },
+        {
+          "id": "read.model-route-policy",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T09:58:47.752Z",
+          "reasonCode": "FIXED_EXTERNAL_MODEL_FIXTURE_PASS",
+          "prerequisite": "[{\"role\":\"background\",\"arm\":\"experimental-background-high-standard\",\"requested\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"high\",\"serviceTier\":\"default\"},\"observed\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"high\",\"serviceTier\":\"default\"},\"terminal\":\"completed\",\"completion\":\"complete\",\"usageState\":\"known\",\"reservationTokens\":0,\"providerOutputCap\":null,\"outputLimitKind\":\"estimate\",\"reasonCode\":null,\"paidFallbackAttempted\":false}]",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "1f630087df3223263cd1a50e2857cb11d16004417410bb505d55242d67cfe9d1"
+            ]
+          }
+        },
+        {
+          "id": "read.model-route-policy",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T09:58:47.753Z",
+          "reasonCode": "ROLE_ARM_AND_CURRENT_POLICY_SEND_GUARDS",
+          "prerequisite": "{\"invalidSelections\":5,\"refusalBoundaries\":[\"contract\",\"contract\",\"contract\",\"contract\",\"current-policy\"],\"refusedBeforeProviderRequest\":[true,true,true,true,true]}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "1f630087df3223263cd1a50e2857cb11d16004417410bb505d55242d67cfe9d1"
+            ]
+          }
+        }
+      ],
+      "resultState": "NOT_IMPLEMENTED",
+      "complete": false
+    }
+  ],
+  "up": {
+    "exitCode": 0,
+    "path": "build/evidence/R0.06/ops9-route-final-cli/up.json",
+    "sha256": "a8e45a1cac4b5180f0a232c32b77e810b6d2ab997545fd403966aac68eaef316"
+  },
+  "stackId": "6692efe9-e738-4989-abd3-8813876c5527",
+  "down": {
+    "exitCode": 0,
+    "path": "build/evidence/R0.06/ops9-route-final-cli/down.json",
+    "sha256": "16961c5985b2c675d16348bcd9bc5590dc6a77b05d13d60057ca61ba4cc2dd11"
+  },
+  "teardown": {
+    "stackId": "6692efe9-e738-4989-abd3-8813876c5527",
+    "checkpointRefs": [],
+    "fenceRefs": [],
+    "stoppedResourceRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "6692efe9-e738-4989-abd3-8813876c5527"
+      }
+    ],
+    "retainedArtifactRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "6692efe9-e738-4989-abd3-8813876c5527"
+      }
+    ],
+    "unresolvedResourceRefs": [],
+    "complete": true
+  }
+}

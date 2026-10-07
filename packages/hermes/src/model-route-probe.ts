@@ -69,6 +69,7 @@ const refusedBeforeSend = async (selection: unknown): Promise<boolean> => {
 export const ModelRouteProbe = {
   async run(input: RegisteredProbeInputV1, context: OpsControlContextV1): Promise<Result<RegisteredProbeOperationV1>> {
     if (!registeredProbeInputSchema.safeParse(input).success) return { ok: false, error: { module: "ops", code: "INVALID_INPUT", message: opsErrorMessages.INVALID_INPUT, retryable: false } };
+    if (input.caseId === undefined && input.probeId === "AT-ops-9") return roleRouteProbe(input, context);
     if (input.caseId === undefined && registeredCliAcceptanceManifestInventory.some(entry => entry.id === input.probeId && entry.owner === "hermes" && entry.scenarioId === "research.component-receipts")) return componentReceiptProbe(input, context);
     if (input.caseId === undefined && input.probeId === "AT-attention-66") return attentionProbe(input, context);
     if (input.caseId === undefined && registeredCliAcceptanceManifestInventory.some(entry => entry.id === input.probeId && entry.owner === "hermes" && entry.scenarioId === "delegation.route-skill")) return delegationProbe(input, context);
@@ -185,6 +186,41 @@ const delegationFixture = async (caseId: string, purpose: ModelRouteDelegationIn
     try { rmSync(outsideDirectory, { recursive: true, force: true }); } catch { outsideTargetUnchanged = false; }
   }
   return { result, sends, exportReadback, nativeArgumentsMatched, workspace, outsideTargetUnchanged, expectedResearchResultDigest };
+};
+
+const roleRouteProbe = async (input: RegisteredProbeInputV1, context: OpsControlContextV1): Promise<Result<RegisteredProbeOperationV1>> => {
+  const cases = ["foreground-original-route", "ordinary-child-route", "research-pinned-skill", "background-arm-isolation"];
+  const manifest = registeredCliAcceptanceManifestInventory.find(entry => entry.id === input.probeId);
+  if (!manifest || manifest.owner !== "hermes" || manifest.scenarioId !== "model-route.roles" || JSON.stringify(manifest.mandatoryCases.map(entry => [entry.id, entry.phase])) !== JSON.stringify(cases.map(id => [id, id]))) return { ok: false, error: { module: "ops", code: "ATTESTATION_INVALID", message: opsErrorMessages.ATTESTATION_INVALID, retryable: false } };
+  const owned = OpsTestStack.inspect(context);
+  if (!owned.ok) return owned;
+  if (!owned.data.result?.ready || owned.data.result.release !== "R0" || owned.data.result.clock !== "fake" || owned.data.result.model !== "fake") return { ok: false, error: { module: "ops", code: "UNAUTHORIZED", message: opsErrorMessages.UNAUTHORIZED, retryable: false } };
+  try {
+    const checks: CheckViewV1[] = [];
+    const project = (receipt: ModelRouteReceiptV1 | null) => receipt === null ? null : { role: receipt.requested.role, arm: receipt.requested.arm, policyDigest: receipt.requested.policyDigest, requested: receipt.requested.settings, observed: receipt.observed, terminal: receipt.terminal, completion: receipt.completion, usageState: receipt.usageState, paidFallbackAttempted: receipt.paidFallbackAttempted };
+    const record = (caseId: string, passed: boolean, evidence: unknown) => checks.push(checkViewSchema.parse({ id: "read.model-route-policy", owner: "hermes", state: passed ? "PASS" : "FAIL", checkedAt: new Date().toISOString(), reasonCode: passed ? "FIXED_EXTERNAL_MODEL_FIXTURE_PASS" : "FIXED_EXTERNAL_MODEL_FIXTURE_FAIL", prerequisite: JSON.stringify({ caseId, evidence }), nextCommandId: "probe.show", links: { recordRefs: [], observations: [], artifactDigests: [digest(readFileSync(new URL("./model-route-probe.js", import.meta.url)))] } }));
+    const complete = (receipt: ModelRouteReceiptV1, model: ModelRouteSettingsV1["model"], effort: ModelRouteSettingsV1["effort"], tier: ModelRouteSettingsV1["serviceTier"]) => receipt.terminal === "completed" && receipt.completion === "complete" && receipt.usageState === "known" && receipt.usage !== null && !receipt.paidFallbackAttempted && receipt.requested.settings.model === model && receipt.requested.settings.effort === effort && receipt.requested.settings.serviceTier === tier && receipt.observed?.model === model && receipt.observed.effort === effort && receipt.observed.serviceTier === tier;
+    const foreground = await consume({ role: "foreground", arm: "original" }, "completed");
+    record("foreground-original-route", foreground.requested.role === "foreground" && foreground.requested.arm === "original" && complete(foreground, "gpt-6.1-sol", "max", "priority"), { receipt: project(foreground), liveInferenceAttested: false });
+    const pin = researchSkillPinSchema.parse(JSON.parse(readFileSync(join(trustedCheckoutRoot(), "behavior/research-skill.json"), "utf8")));
+    for (const purpose of ["implementation", "research"] as const) {
+      const fixture = await delegationFixture(purpose === "implementation" ? "ordinary-implementation-luna" : "research-route-observed", purpose, context);
+      const receipt = fixture.result.ok ? fixture.result.data : null;
+      const invocation = receipt?.invocation ?? null;
+      const child = purpose === "implementation";
+      const role = child ? "child" : "research";
+      const skillMatches = child ? receipt?.skill === null : receipt?.skill?.sourceCommit === pin.sourceCommit && receipt.skill.contentDigest === pin.contentDigest && receipt.skill.loadedDigest === pin.contentDigest;
+      const passed = receipt !== null && invocation !== null && receipt.purpose === purpose && receipt.state === "observed" && !receipt.nativeExecutionVerified && !receipt.acceptanceComplete && fixture.sends === 1 && fixture.exportReadback && fixture.nativeArgumentsMatched && invocation.requested.role === role && invocation.requested.arm === "original" && skillMatches && complete(invocation, child ? "gpt-6-luna" : "gpt-6.1-sol", child ? "max" : "medium", "priority") && receipt.resultRefs?.length === (child ? 0 : 1);
+      record(child ? "ordinary-child-route" : "research-pinned-skill", passed, { receipt: project(invocation), purpose: receipt?.purpose, skillSourceCommit: receipt?.skill?.sourceCommit ?? null, skillLoadedDigest: receipt?.skill?.loadedDigest ?? null, exportReadback: fixture.exportReadback, nativeArgumentsMatched: fixture.nativeArgumentsMatched, externalExecutorCalls: fixture.sends, nativeExecutionVerified: receipt?.nativeExecutionVerified, acceptanceComplete: receipt?.acceptanceComplete });
+    }
+    const before = await consume({ role: "background", arm: "original" }, "completed");
+    const experimental = await consume({ role: "background", arm: "experimental-background-high-standard" }, "completed");
+    const after = await consume({ role: "background", arm: "original" }, "completed");
+    const forbidden = ModelRoute.select({ role: "foreground", arm: "experimental-background-high-standard" });
+    const isolated = complete(before, "gpt-6.1-sol", "max", "priority") && complete(after, "gpt-6.1-sol", "max", "priority") && complete(experimental, "gpt-6.1-sol", "high", "default") && before.requested.arm === "original" && after.requested.arm === "original" && experimental.requested.arm === "experimental-background-high-standard" && before.requested.policyDigest === experimental.requested.policyDigest && before.requested.policyDigest === after.requested.policyDigest && !forbidden.ok;
+    record("background-arm-isolation", isolated, { receipts: [project(before), project(experimental), project(after)], experimentalForegroundRefused: !forbidden.ok, liveInferenceAttested: false });
+    return TestProbeControl.run(input, context, checks);
+  } catch { return { ok: false, error: { module: "ops", code: "ATTESTATION_INVALID", message: opsErrorMessages.ATTESTATION_INVALID, retryable: false } }; }
 };
 
 type LifeStoreSource = {

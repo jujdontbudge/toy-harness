@@ -4215,5 +4215,80 @@
       }
     ],
     "simUnavailableReason": "SIM cannot inspect pre-build admission records. The CLI reaches the real PostgreSQL owner with a fixed external quota result."
+  },
+  {
+    "id": "AT-ops-9",
+    "rung": "CLI",
+    "sourceAssertionHash": "b3ec167dc1ac94a171f4460af36ab74f992729e2cb798c2ceb4cd5cc793c6d71",
+    "commandId": "probe.run",
+    "scenarioId": "model-route.roles",
+    "owner": "hermes",
+    "firstRelease": "R0",
+    "kind": "behavioral",
+    "mandatoryCases": [
+      {
+        "id": "foreground-original-route",
+        "publicOperation": "ModelRoute.invoke",
+        "phase": "foreground-original-route"
+      },
+      {
+        "id": "ordinary-child-route",
+        "publicOperation": "ModelRoute.delegationReceipt",
+        "phase": "ordinary-child-route"
+      },
+      {
+        "id": "research-pinned-skill",
+        "publicOperation": "ModelRoute.delegationReceipt",
+        "phase": "research-pinned-skill"
+      },
+      {
+        "id": "background-arm-isolation",
+        "publicOperation": "ModelRoute.invoke + ModelRoute.select",
+        "phase": "background-arm-isolation"
+      }
+    ],
+    "trigger": "Observe the four assigned original role routes and a separate experimental background receipt through real ModelRoute interfaces with fixed external provider/executor inputs. Preserve original policy before and after the experimental call; protected live route remains pending.",
+    "faultControls": [
+      {
+        "id": "fixed-external-route-receipts",
+        "seam": "provider",
+        "affectedPhases": [
+          "foreground-original-route",
+          "ordinary-child-route",
+          "research-pinned-skill",
+          "background-arm-isolation"
+        ]
+      }
+    ],
+    "observations": [
+      {
+        "id": "public-route-and-skill-readback",
+        "independentReader": "ModelRoute.invoke/delegationReceipt terminal receipts and actual exported task/skill readback",
+        "caseIds": [
+          "foreground-original-route",
+          "ordinary-child-route",
+          "research-pinned-skill",
+          "background-arm-isolation"
+        ]
+      },
+      {
+        "id": "original-experimental-isolation",
+        "independentReader": "ModelRoute.invoke before/experimental/after receipts and public select refusal",
+        "caseIds": [
+          "background-arm-isolation"
+        ]
+      },
+      {
+        "id": "stored-cli-readback",
+        "independentReader": "toy probe.show exact stored result and toy stack.down teardown",
+        "caseIds": [
+          "foreground-original-route",
+          "ordinary-child-route",
+          "research-pinned-skill",
+          "background-arm-isolation"
+        ]
+      }
+    ],
+    "simUnavailableReason": "SIM cannot exercise pre-build administrative role routing or inspect generated export receipts. CLI reaches the real ModelRoute owner with fixed external HTTP/Codex fakes."
   }
 ]

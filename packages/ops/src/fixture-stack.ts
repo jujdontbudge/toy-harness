@@ -307,7 +307,7 @@ export const FixtureProbe = {
       const lifecycle = (input.probeId === "AT-cli-4" || input.probeId === "AT-hermes-config-100") && (input.caseId === undefined || input.caseId === "stack-lifecycle");
       const checks = observations.map(check => checkViewSchema.parse(check));
       const reference = input.probeId === "AT-hermes-config-101" && ["k4a-connector", "k4a-tool", "k4a-skill"].includes(input.caseId ?? "");
-      const modelPolicy = (input.caseId === "model-route-policy" && ["AT-hermes-config-1", "AT-hermes-config-76", "AT-hermes-config-77"].includes(input.probeId)) || (input.caseId === undefined && sourceRegistration?.owner === "hermes" && sourceRegistration.scenarioId === "delegation.route-skill");
+      const modelPolicy = (input.caseId === "model-route-policy" && ["AT-hermes-config-1", "AT-hermes-config-76", "AT-hermes-config-77"].includes(input.probeId)) || (input.caseId === undefined && sourceRegistration?.owner === "hermes" && ["model-route.roles", "delegation.route-skill"].includes(sourceRegistration.scenarioId));
       const modelStream = input.caseId === "model-route-stream" && ["AT-hermes-config-40", "AT-self-improvement-58"].includes(input.probeId);
       const profileConsumers = input.caseId === undefined && sourceRegistration?.owner === "hermes" && sourceRegistration.scenarioId === "profile.gateway-consumers";
       const mcpHttp = input.caseId === undefined && sourceRegistration?.owner === "hermes" && sourceRegistration.scenarioId === "profile.mcp-http";
