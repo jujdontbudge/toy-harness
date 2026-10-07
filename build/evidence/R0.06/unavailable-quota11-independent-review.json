@@ -1,0 +1,96 @@
+{
+  "schemaVersion": "toy.r0.06.independent-review.v1",
+  "reviewedAt": "2026-10-07T09:49:09Z",
+  "card": "R0.06/AT-ops-11",
+  "scope": "Bounded source review of the normalized quota-parse-failure unavailable CLI case and unchanged AT-ops-51 count/restart path.",
+  "verdict": "APPROVE",
+  "status": "BOUNDED_SOURCE_REVIEW_COMPLETE",
+  "findings": [],
+  "sourceHashes": {
+    "packages/self-improvement/src/accounting-probe.ts": "04c6558e19c63ca529888d3ed8887e7e4d1f1d01ea5fa70005ea2b89779dc619",
+    "packages/self-improvement/src/public.ts": "aa1fc6d22b23c94bd283e88f08ef20d5ef9b43cb9fe60e88c470fc12e2f089ec",
+    "packages/ops/src/fixture-stack.ts": "b73b333372cbc352538e1522c57538c827f572474d9f4cb868478935fa102cd6",
+    "tests/registry.yaml": "066356fd940257e07f92995bb0a49b80ebcf7a86742f7226f84da2705f51ccf7",
+    "architecture/features.json": "16e09fcad4f05291ba8b7d2da11dbbcfebf6a5add6cadea31d0b881e245a9f75",
+    "docs/adr/0027-model-admission-accounting.md": "4ec9fb14653a689095ea10e3b2350c169d84be6fbb4f61fe4e4969d9a95017f4",
+    "packages/contracts/src/generated-probe-registry.ts": "ee2e59142eed80f1e014556b1dcf7031811efbe0a9c7bd8c905dad060879b268",
+    "packages/self-improvement/src/model-admission.ts": "44a36ef026d203f9db9437dcf53c1172224420596d0570353bcc564a758439c7",
+    "packages/contracts/src/model-admission.ts": "8803164cb2d4e3b5fe764870f8409f020be0841f2367a86c7cdd062fa3c6262e",
+    "packages/ops/src/model-admission-policy.ts": "553eb6805c9779c924d16c3bdb8eeac9a92727086b64a673d317f9dddcbc2c95"
+  },
+  "bindingCheck": {
+    "evidence": "build/evidence/R0.06/unavailable-quota11-final-verification.json",
+    "checkedAt": "2026-10-07T09:46:10.034Z",
+    "result": "All in-scope source hashes above match the corresponding current sourceBindings; generated-probe-registry.ts is ee2e59142eed80f1e014556b1dcf7031811efbe0a9c7bd8c905dad060879b268."
+  },
+  "review": {
+    "assertion": "AT-ops-11",
+    "assignedCell": "parse-failure-unavailable-pauses-optional",
+    "assessment": [
+      "The public probe submits a fixed external-normalized observation with sourceAuthorized=true, schemaValid=false, status=unavailable, and no windows; it reads the persisted observation through ModelAdmission.inspect.",
+      "Repair and replay must each be denied with OPTIONAL_WORK_PAUSED, fixed-count mode, no charge, no lease, no native send count, and no provider-send or paid-fallback permission; the daily count stays unchanged.",
+      "The ordinary event reservation is eligible in fixed-count mode and increments the daily reservation by exactly one. Its returned and settled usage and reported total remain null; the path does not call a provider adapter.",
+      "The change adds AT-ops-11 routing and its single manifest case. The existing AT-ops-51 eight-count/restart/ninth-refusal implementation is unchanged."
+    ],
+    "evidence": [
+      {
+        "path": "build/evidence/R0.06/unavailable-quota11-final-cli/AT-ops-11-run.json",
+        "sha256": "4e0b8cd995545736e6f86f0ef45ac955b8af71420d9fe7090ab90b7599414320"
+      },
+      {
+        "path": "build/evidence/R0.06/unavailable-quota11-final-cli/AT-ops-11-show.json",
+        "sha256": "e9b88b5573c367f65d8aecc1a33ef6b3da746714b9847abc37015b49de17c7d0"
+      },
+      {
+        "path": "build/evidence/R0.06/unavailable-quota11-final-verification.json",
+        "sha256": "assigned CLI readback matches; wholeATsPassed is empty, acceptanceComplete is false, and liveProviderSends is 0"
+      }
+    ],
+    "observedCliState": {
+      "probeId": "AT-ops-11",
+      "caseState": "PASS",
+      "operationState": "NOT_IMPLEMENTED",
+      "complete": false,
+      "observation": {
+        "status": "unavailable",
+        "schemaValid": false,
+        "windowCount": 0
+      },
+      "optionalResults": [
+        {
+          "work": "repair",
+          "reason": "OPTIONAL_WORK_PAUSED",
+          "charged": false,
+          "nativeSendCount": 0
+        },
+        {
+          "work": "replay",
+          "reason": "OPTIONAL_WORK_PAUSED",
+          "charged": false,
+          "nativeSendCount": 0
+        }
+      ],
+      "reservations": [
+        0,
+        0,
+        1
+      ],
+      "eventMode": "fixed-count",
+      "eventEligible": true,
+      "usage": null,
+      "settledUsage": null,
+      "reportedTotalTokens": null,
+      "physicalProviderCalls": 0,
+      "paidRequests": 0,
+      "wholeATComplete": false
+    }
+  },
+  "wholeAcceptance": {
+    "state": "NOT_IMPLEMENTED",
+    "complete": false,
+    "acceptanceComplete": false,
+    "wholeATsPassed": [],
+    "claim": "No whole AT or card completion is claimed."
+  },
+  "executionBoundary": "Reviewer read the current diff, pinned contracts/policy and existing evidence. Reviewer did not run CLI, build, check, or tests."
+}

@@ -2,7 +2,7 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-07T09:31:31.151Z",
+  "updatedAt": "2026-10-07T09:50:10.317Z",
   "phase": "R0_FEASIBILITY",
   "activeCard": "R0.06",
   "cardCount": 87,
@@ -1766,7 +1766,8 @@
         "build/evidence/R0.06/foreground-contention-final-verification.json",
         "build/evidence/R0.06/exhausted-pending-final-verification.json",
         "build/evidence/R0.06/exhausted-pending-source-plan.json",
-        "build/evidence/R0.06/exhausted-pending-red-parent-review.json"
+        "build/evidence/R0.06/exhausted-pending-red-parent-review.json",
+        "build/evidence/R0.06/unavailable-quota11-final-verification.json"
       ],
       "requiredATs": [
         "AT-hermes-config-59",
@@ -1941,6 +1942,31 @@
           "Full AT/card/release acceptance",
           "Swift untilR3"
         ]
+      },
+      "unavailableQuotaUnit": {
+        "state": "BOUNDED_CLI_CASE_VERIFIED_AND_STOPPED",
+        "assignedAT": "AT-ops-11",
+        "startedAt": "2026-10-07T09:38:00.000Z",
+        "deadlineUtc": "2026-10-07T11:38:00.000Z",
+        "nativeAttempt": 2,
+        "priorUnsupportedBaseline": 1,
+        "wholeATComplete": false,
+        "plan": "build/evidence/R0.06/unavailable-quota11-next-minimum-plan.json",
+        "admission": "build/evidence/R0.06/unavailable-quota11-parent-admission.json",
+        "stoppedAt": "2026-10-07T09:44:51.000Z",
+        "assignedChecks": 1,
+        "affectedRegressionChecks": 6,
+        "maximumPrerequisiteUtf8Bytes": 1101,
+        "cleanupComplete": true,
+        "sourceStopped": true,
+        "evidence": "build/evidence/R0.06/unavailable-quota11-final-verification.json",
+        "deferred": [
+          "Raw quota parser and HTTP wire proof",
+          "Protected remaining-count owner/provider binding and actual service identity",
+          "Full AT/card/release acceptance",
+          "Swift generation/compilation untilR3"
+        ],
+        "independentReview": "build/evidence/R0.06/unavailable-quota11-independent-review.json"
       }
     },
     "R0.07": {
@@ -11836,7 +11862,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Poll canonical root queue and review bounded read-only AT-ops-11 plan against existing AT51 coverage; no next SOURCE admitted. Valid ROOT02 DONE with actual UID310/native read and exact restoration immediately prioritizes prepared R0.01. Preserve exhausted-pending correction and all closed units; native PG init remains R1.",
+  "nextAction": "Commit the verified AT-ops-11 unit, then review/admit the bounded AT-ops-9 four-case plan using existing ModelRoute interfaces. Root queue polling continues; valid ROOT02 DONE with actual UID310/native read and exact restoration immediately prioritizes prepared R0.01. No SOURCE is admitted; native PostgreSQL initialization remains R1.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -22456,18 +22482,18 @@
     "queuedRootReserveAdmissionGate": false
   },
   "latestStaticVerification": {
-    "path": "build/evidence/R0.06/exhausted-pending-owner-strict-check.txt",
-    "sha256": "a6bd10507aaf20b23dc3a9bf202cec8c1ee5a643eb04e73dab4c373699cac6c6",
+    "path": "build/evidence/R0.06/unavailable-quota11-strict-check.txt",
+    "sha256": "efbc51685f7a1dccbf6f9432fbd517f3fda7d4d6aec67f6a1b742122f0c557fa",
     "exitCode": 0,
     "artifacts": 403,
     "contracts": 335,
-    "cliManifests": 46,
+    "cliManifests": 47,
     "features": 106,
     "commands": 55,
     "indexedATs": 1447,
     "schemaDigest": "ec7a67e32a800c455daac36fa5566d3b786d6f8bb76742a66a72cb79cf267648",
     "swiftInvoked": false,
-    "recordedAt": "2026-10-07T09:27:13.179Z",
+    "recordedAt": "2026-10-07T09:46:48.756Z",
     "command": "npm run check"
   },
   "sourceCheckpointCommit": "03ad1ed519ef3a5a24d1566b6aa8929006c32671",
@@ -22510,15 +22536,15 @@
     }
   },
   "resourceAdmission": {
-    "measuredAt": "2026-10-07T09:22:46.821Z",
-    "availableBytes": "2742697984",
+    "measuredAt": "2026-10-07T09:44:13.220Z",
+    "availableBytes": "2851110912",
     "pressure": "normal",
     "strictlyFreeAdmission": false,
     "repairFloorApplied": false,
     "ownedWorldsRunning": 0,
     "helpersRunning": 0,
     "helperNeedBytes": "268435456",
-    "measurementSource": "build/evidence/R0.06/exhausted-pending-green-admission.json",
+    "measurementSource": "build/evidence/R0.06/unavailable-quota11-final-admission.json",
     "marginBytes": "536870912",
     "ownedStackId": null,
     "stackAndNativeChildrenNeedBytes": "0",
@@ -22536,21 +22562,24 @@
   "readOnlyWorkers": [
     {
       "task": "/root/unavailable_quota11_minimum",
-      "card": "R0.06",
-      "acceptanceId": "AT-ops-11",
-      "status": "READ_ONLY_RUNNING",
-      "deadlineUtc": "2026-10-07T09:39:00.000Z",
-      "allowedOutput": "build/evidence/R0.06/unavailable-quota11-next-minimum-plan.json",
-      "admission": "build/evidence/R0.06/unavailable-quota-next-admission.json"
+      "status": "STOPPED",
+      "evidence": "build/evidence/R0.06/unavailable-quota11-next-minimum-plan.json"
+    },
+    {
+      "task": "/root/quota11_readonly_review",
+      "status": "STOPPED",
+      "deadlineUtc": "2026-10-07T09:54:00.000Z",
+      "allowedOutput": "build/evidence/R0.06/unavailable-quota11-independent-review.json",
+      "admission": "build/evidence/R0.06/unavailable-quota11-final-admission.json",
+      "evidence": "build/evidence/R0.06/unavailable-quota11-independent-review.json"
     }
   ],
   "liveRuntime": {
     "state": "DOWN",
-    "worlds": [
-      "40af09c7-7556-488c-9e6b-f7155a46415f",
-      "f72ba9cd-b20c-4afc-960f-fa2878c3332b"
-    ],
-    "driverSessionId": null,
-    "teardownRequired": false
+    "stackId": "f2d0b0e9-9e3c-465d-b816-f54fdb9a883e",
+    "cleanupComplete": true,
+    "unresolvedResources": 0,
+    "sourceOwner": "NONE_SOURCE_STOPPED",
+    "evidence": "build/evidence/R0.06/unavailable-quota11-final-verification.json"
   }
 }

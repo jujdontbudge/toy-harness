@@ -1,0 +1,127 @@
+{
+  "schemaVersion": "toy.cli.v1",
+  "commandId": "probe.run",
+  "invocationId": "876ba738-8753-45ef-8786-ba89063de60f",
+  "generatedAt": "2026-10-07T09:44:44.092Z",
+  "cliVersion": "1.0.0",
+  "contractsVersion": "1.0.0",
+  "schemaDigest": "ec7a67e32a800c455daac36fa5566d3b786d6f8bb76742a66a72cb79cf267648",
+  "environment": {
+    "kind": "test",
+    "instanceId": null,
+    "stackId": "f2d0b0e9-9e3c-465d-b816-f54fdb9a883e"
+  },
+  "meta": {
+    "exitCode": 0,
+    "releaseDigest": null,
+    "controlDigest": null,
+    "evaluatedAt": null,
+    "operationId": null,
+    "effectState": "confirmed",
+    "recordRefs": [],
+    "evidence": []
+  },
+  "ok": true,
+  "data": {
+    "operation": {
+      "operationId": "82929e42-5eb0-4b51-a0d0-f8e2b5f032f8",
+      "state": "succeeded",
+      "acceptedAt": "2026-10-07T09:44:44.091Z"
+    },
+    "requestId": "8fc6b135-05e2-4b0e-8665-58798250301b",
+    "stackId": "f2d0b0e9-9e3c-465d-b816-f54fdb9a883e",
+    "result": {
+      "probeId": "AT-ops-11",
+      "caseManifestDigest": "9aa53e5ce9c64ec0e8b40298ebc3003acc77a71499f6e2e1f2ac59a4262213bd",
+      "cases": [
+        {
+          "id": "accounting.model-admission",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T09:44:44.036Z",
+          "reasonCode": "REAL_ACCOUNTING_FIXTURE_PASS",
+          "prerequisite": "{\"name\":\"parse-failure-unavailable-pauses-optional\",\"evidence\":{\"source\":\"fixed-normalized-provider-parse-failure\",\"status\":\"unavailable\",\"schemaValid\":false,\"windowCount\":0,\"optional\":[[\"repair\",\"OPTIONAL_WORK_PAUSED\",false,0],[\"replay\",\"OPTIONAL_WORK_PAUSED\",false,0]],\"counts\":[0,0,1],\"eventMode\":\"fixed-count\",\"eventEligible\":true,\"usage\":null,\"settledUsage\":null,\"reportedTotalTokens\":null,\"physicalProviderCalls\":0,\"paidRequests\":0,\"wholeATComplete\":false}}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "4c78a5e8d9d56e87a4c0bd8ec04bea74a826f5f4792f8e968abde5d6bd99f77f"
+            ]
+          }
+        }
+      ],
+      "state": "NOT_IMPLEMENTED",
+      "complete": false,
+      "links": {
+        "recordRefs": [],
+        "observations": [],
+        "artifactDigests": []
+      },
+      "sourceRegistration": {
+        "id": "AT-ops-11",
+        "rung": "CLI",
+        "sourceAssertionHash": "31ea39ad67f444a836917f53ac74705afd0212c91f1da1d5ba098ef3d26df34e",
+        "commandId": "probe.run",
+        "scenarioId": "accounting.model-admission",
+        "owner": "self-improvement",
+        "firstRelease": "R0",
+        "kind": "behavioral",
+        "mandatoryCases": [
+          {
+            "id": "parse-failure-unavailable-pauses-optional",
+            "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+            "phase": "parse-failure-unavailable-pauses-optional"
+          }
+        ],
+        "trigger": "Explicit normalized parsing failure persists unavailable quota, pauses repair/replay uncharged, and admits one ordinary reservation without synthesizing usage. Existing AT51 owns count/restart coverage; protected and wire proof remain pending.",
+        "faultControls": [
+          {
+            "id": "fixed-quota-observation",
+            "seam": "provider",
+            "affectedPhases": [
+              "parse-failure-unavailable-pauses-optional"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "unavailable-owner-readback",
+            "independentReader": "ModelAdmission.inspect exact unavailable observation and persisted counters",
+            "caseIds": [
+              "parse-failure-unavailable-pauses-optional"
+            ]
+          },
+          {
+            "id": "optional-pause-and-reservation",
+            "independentReader": "ModelAdmission.reserve and settle: denied optional work and null usage",
+            "caseIds": [
+              "parse-failure-unavailable-pauses-optional"
+            ]
+          },
+          {
+            "id": "stored-cli-readback",
+            "independentReader": "toy probe.show and stack.down exact persisted result and teardown",
+            "caseIds": [
+              "parse-failure-unavailable-pauses-optional"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot inspect pre-build admission records. The CLI reaches the real PostgreSQL owner with a fixed external quota result."
+      }
+    },
+    "links": {
+      "recordRefs": [],
+      "observations": [],
+      "artifactDigests": []
+    },
+    "probeId": "AT-ops-11",
+    "binding": {
+      "releaseDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+      "controlDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+      "schemaDigest": "ec7a67e32a800c455daac36fa5566d3b786d6f8bb76742a66a72cb79cf267648",
+      "fixtureDigest": "2d3783c7a689b8dc52dd56896e669e6191006bf79e4ff8260036fc95ea6df658"
+    },
+    "caseManifestDigest": "9aa53e5ce9c64ec0e8b40298ebc3003acc77a71499f6e2e1f2ac59a4262213bd"
+  }
+}

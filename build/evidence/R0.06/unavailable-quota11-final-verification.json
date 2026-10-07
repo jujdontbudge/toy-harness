@@ -1,0 +1,487 @@
+{
+  "recordedAt": "2026-10-07T09:46:10.034Z",
+  "card": "R0.06",
+  "assignedAT": "AT-ops-11",
+  "state": "BOUNDED_CLI_CASE_VERIFIED_AND_STOPPED",
+  "startedAt": "2026-10-07T09:38:00.000Z",
+  "deadlineUtc": "2026-10-07T11:38:00.000Z",
+  "stoppedAt": "2026-10-07T09:44:51.000Z",
+  "rung": "CLI",
+  "unfiltered": true,
+  "nativeAttempts": 2,
+  "unsupportedBaselineAttempts": 1,
+  "failedImplementedAttempts": 0,
+  "assignedChecks": 1,
+  "affectedRegressionChecks": 6,
+  "summary": {
+    "path": "build/evidence/R0.06/unavailable-quota11-final-cli-summary.json",
+    "sha256": "d6dbd6c28ebfb7800ddede8f9171f25164112b673e29aebcdefe95a15df2887d"
+  },
+  "baseline": {
+    "path": "build/evidence/R0.06/unavailable-quota11-baseline-summary.json",
+    "sha256": "bdff950ee114566bdeee3aff3253d0d1928e993eb2699ffd2ff1816a6a8d83ef"
+  },
+  "plan": {
+    "path": "build/evidence/R0.06/unavailable-quota11-next-minimum-plan.json",
+    "sha256": "03de9d8cf8f5046d35496b20648fe82a8fa96ffed8525c687926091b7c38ce75"
+  },
+  "parentAdmission": {
+    "path": "build/evidence/R0.06/unavailable-quota11-parent-admission.json",
+    "sha256": "e62bd0ce0bf824e503ab5d5a5b4c0be0099065fda3c2a8eba7ea4c6483712cb5"
+  },
+  "maximumPrerequisiteUtf8Bytes": 1101,
+  "assignedReadback": {
+    "name": "parse-failure-unavailable-pauses-optional",
+    "evidence": {
+      "source": "fixed-normalized-provider-parse-failure",
+      "status": "unavailable",
+      "schemaValid": false,
+      "windowCount": 0,
+      "optional": [
+        [
+          "repair",
+          "OPTIONAL_WORK_PAUSED",
+          false,
+          0
+        ],
+        [
+          "replay",
+          "OPTIONAL_WORK_PAUSED",
+          false,
+          0
+        ]
+      ],
+      "counts": [
+        0,
+        0,
+        1
+      ],
+      "eventMode": "fixed-count",
+      "eventEligible": true,
+      "usage": null,
+      "settledUsage": null,
+      "reportedTotalTokens": null,
+      "physicalProviderCalls": 0,
+      "paidRequests": 0,
+      "wholeATComplete": false
+    }
+  },
+  "readbacks": [
+    {
+      "probeId": "AT-ops-11",
+      "operationId": "82929e42-5eb0-4b51-a0d0-f8e2b5f032f8",
+      "checks": 1,
+      "sourceRegistration": {
+        "id": "AT-ops-11",
+        "rung": "CLI",
+        "sourceAssertionHash": "31ea39ad67f444a836917f53ac74705afd0212c91f1da1d5ba098ef3d26df34e",
+        "commandId": "probe.run",
+        "scenarioId": "accounting.model-admission",
+        "owner": "self-improvement",
+        "firstRelease": "R0",
+        "kind": "behavioral",
+        "mandatoryCases": [
+          {
+            "id": "parse-failure-unavailable-pauses-optional",
+            "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+            "phase": "parse-failure-unavailable-pauses-optional"
+          }
+        ],
+        "trigger": "Explicit normalized parsing failure persists unavailable quota, pauses repair/replay uncharged, and admits one ordinary reservation without synthesizing usage. Existing AT51 owns count/restart coverage; protected and wire proof remain pending.",
+        "faultControls": [
+          {
+            "id": "fixed-quota-observation",
+            "seam": "provider",
+            "affectedPhases": [
+              "parse-failure-unavailable-pauses-optional"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "unavailable-owner-readback",
+            "independentReader": "ModelAdmission.inspect exact unavailable observation and persisted counters",
+            "caseIds": [
+              "parse-failure-unavailable-pauses-optional"
+            ]
+          },
+          {
+            "id": "optional-pause-and-reservation",
+            "independentReader": "ModelAdmission.reserve and settle: denied optional work and null usage",
+            "caseIds": [
+              "parse-failure-unavailable-pauses-optional"
+            ]
+          },
+          {
+            "id": "stored-cli-readback",
+            "independentReader": "toy probe.show and stack.down exact persisted result and teardown",
+            "caseIds": [
+              "parse-failure-unavailable-pauses-optional"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot inspect pre-build admission records. The CLI reaches the real PostgreSQL owner with a fixed external quota result."
+      },
+      "run": {
+        "path": "build/evidence/R0.06/unavailable-quota11-final-cli/AT-ops-11-run.json",
+        "sha256": "4e0b8cd995545736e6f86f0ef45ac955b8af71420d9fe7090ab90b7599414320"
+      },
+      "show": {
+        "path": "build/evidence/R0.06/unavailable-quota11-final-cli/AT-ops-11-show.json",
+        "sha256": "e9b88b5573c367f65d8aecc1a33ef6b3da746714b9847abc37015b49de17c7d0"
+      },
+      "sameData": true
+    },
+    {
+      "probeId": "AT-ops-10",
+      "operationId": "29557ecb-51ad-4a30-8cea-f93e34370322",
+      "checks": 4,
+      "sourceRegistration": {
+        "id": "AT-ops-10",
+        "rung": "CLI",
+        "sourceAssertionHash": "e281f3fe7221d3ddc551bf73c8fc5e0df616060c8d089af9ee4625930d11ee3f",
+        "commandId": "probe.run",
+        "scenarioId": "accounting.model-admission",
+        "owner": "self-improvement",
+        "firstRelease": "R0",
+        "kind": "behavioral",
+        "mandatoryCases": [
+          {
+            "id": "exhausted-known-reset",
+            "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+            "phase": "exhausted-known-reset"
+          },
+          {
+            "id": "exhausted-unknown-reset",
+            "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+            "phase": "exhausted-unknown-reset"
+          },
+          {
+            "id": "full-quota-windows",
+            "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+            "phase": "full-quota-windows"
+          },
+          {
+            "id": "deferred-restart-recovery",
+            "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+            "phase": "deferred-restart-recovery"
+          }
+        ],
+        "trigger": "Normalized exhausted/429 and100-percent external observations deny cron, auxiliary and child calls; exact public pending enumeration survives PostgreSQL restart and same-day recovery charges each retained call once. Protected provider and canonical slot dispatch remain pending.",
+        "faultControls": [
+          {
+            "id": "fixed-quota-observation",
+            "seam": "provider",
+            "affectedPhases": [
+              "exhausted-known-reset",
+              "exhausted-unknown-reset",
+              "full-quota-windows",
+              "deferred-restart-recovery"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "public-accounting-denials",
+            "independentReader": "ModelAdmission.reserve and inspect: exact external quota binding and zero charges or sends",
+            "caseIds": [
+              "exhausted-known-reset",
+              "exhausted-unknown-reset",
+              "full-quota-windows",
+              "deferred-restart-recovery"
+            ]
+          },
+          {
+            "id": "durable-pending-readback",
+            "independentReader": "ModelAdmission.inspectPending and resumePending after physical PostgreSQL restart",
+            "caseIds": [
+              "exhausted-known-reset",
+              "exhausted-unknown-reset",
+              "full-quota-windows",
+              "deferred-restart-recovery"
+            ]
+          },
+          {
+            "id": "stored-cli-readback",
+            "independentReader": "toy probe.show and stack.down: exact persisted result and complete teardown",
+            "caseIds": [
+              "exhausted-known-reset",
+              "exhausted-unknown-reset",
+              "full-quota-windows",
+              "deferred-restart-recovery"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot drive pre-build native PostgreSQL restart or inspect admission records. The CLI reaches the real accounting owner with fixed external quota observations."
+      },
+      "run": {
+        "path": "build/evidence/R0.06/unavailable-quota11-final-cli/AT-ops-10-run.json",
+        "sha256": "7368c0ca39a78da83fe2ee848d3c1c9fc1c2e2cea11f0f936549ea50e64f74dd"
+      },
+      "show": {
+        "path": "build/evidence/R0.06/unavailable-quota11-final-cli/AT-ops-10-show.json",
+        "sha256": "e98556e2074fdc7e7f2f859fb38d7038f8037cb840b30e96d04237b66c533dcc"
+      },
+      "sameData": true
+    },
+    {
+      "probeId": "AT-ops-51",
+      "operationId": "521ab686-f358-4d09-9b78-a8e30c5d2cee",
+      "checks": 2,
+      "sourceRegistration": {
+        "id": "AT-ops-51",
+        "rung": "CLI",
+        "sourceAssertionHash": "ea41b9bcca501eb9ae00aa97b991ea915a418bc288913850f49b0e7c15555f26",
+        "commandId": "probe.run",
+        "scenarioId": "accounting.model-admission",
+        "owner": "self-improvement",
+        "firstRelease": "R0",
+        "kind": "behavioral",
+        "mandatoryCases": [
+          {
+            "id": "eight-durable-background-reservations",
+            "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+            "phase": "eight-durable-background-reservations"
+          },
+          {
+            "id": "restart-new-goal-ninth-refused-foreground-exempt",
+            "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+            "phase": "restart-new-goal-ninth-refused-foreground-exempt"
+          }
+        ],
+        "trigger": "Run the current named accounting diagnostics through the real public ModelAdmission owner and PostgreSQL fixture; remaining assertion coverage and protected admission stay incomplete.",
+        "faultControls": [
+          {
+            "id": "fixed-quota-observation",
+            "seam": "provider",
+            "affectedPhases": [
+              "eight-durable-background-reservations",
+              "restart-new-goal-ninth-refused-foreground-exempt"
+            ]
+          },
+          {
+            "id": "native-postgresql-restart",
+            "seam": "os",
+            "affectedPhases": [
+              "restart-new-goal-ninth-refused-foreground-exempt"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "public-owner-decisions",
+            "independentReader": "accountingProbe: real ModelAdmission reserve/claim/settle decisions and quota observations",
+            "caseIds": [
+              "eight-durable-background-reservations",
+              "restart-new-goal-ninth-refused-foreground-exempt"
+            ]
+          },
+          {
+            "id": "durable-ledger-readback",
+            "independentReader": "accountingProbe: ModelAdmission.inspect persisted counters, charges and native PostgreSQL restart",
+            "caseIds": [
+              "eight-durable-background-reservations",
+              "restart-new-goal-ninth-refused-foreground-exempt"
+            ]
+          },
+          {
+            "id": "stored-cli-readback",
+            "independentReader": "toy probe.show and stack.down: exact persisted operation and complete owned-world teardown",
+            "caseIds": [
+              "eight-durable-background-reservations",
+              "restart-new-goal-ninth-refused-foreground-exempt"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot inspect pre-build admission counters or drive the native PostgreSQL restart boundary. The CLI exercises the real accounting owner with fixed external quota and clock observations."
+      },
+      "run": {
+        "path": "build/evidence/R0.06/unavailable-quota11-final-cli/AT-ops-51-run.json",
+        "sha256": "f506d32b5360f1e6e34e8be6aeab363df3adc3858525754bc35741b33776f897"
+      },
+      "show": {
+        "path": "build/evidence/R0.06/unavailable-quota11-final-cli/AT-ops-51-show.json",
+        "sha256": "f63a51a1cfa66edfae03223974f323ec01965884c262fd86c09985fda7de2d2f"
+      },
+      "sameData": true
+    }
+  ],
+  "sourceBindings": [
+    {
+      "path": "packages/self-improvement/src/accounting-probe.ts",
+      "sha256": "04c6558e19c63ca529888d3ed8887e7e4d1f1d01ea5fa70005ea2b89779dc619"
+    },
+    {
+      "path": "packages/self-improvement/src/public.ts",
+      "sha256": "aa1fc6d22b23c94bd283e88f08ef20d5ef9b43cb9fe60e88c470fc12e2f089ec"
+    },
+    {
+      "path": "packages/ops/src/fixture-stack.ts",
+      "sha256": "b73b333372cbc352538e1522c57538c827f572474d9f4cb868478935fa102cd6"
+    },
+    {
+      "path": "packages/contracts/src/generated-probe-registry.ts",
+      "sha256": "ee2e59142eed80f1e014556b1dcf7031811efbe0a9c7bd8c905dad060879b268"
+    },
+    {
+      "path": "tests/registry.yaml",
+      "sha256": "066356fd940257e07f92995bb0a49b80ebcf7a86742f7226f84da2705f51ccf7"
+    },
+    {
+      "path": "architecture/features.json",
+      "sha256": "16e09fcad4f05291ba8b7d2da11dbbcfebf6a5add6cadea31d0b881e245a9f75"
+    },
+    {
+      "path": "skills/toy-control/FEATURE-MAP.md",
+      "sha256": "760dde48f6d7785fbc64145ece52186ab4efc3fba93cfa4773dd7eb6cc13695b"
+    },
+    {
+      "path": "docs/adr/0027-model-admission-accounting.md",
+      "sha256": "4ec9fb14653a689095ea10e3b2350c169d84be6fbb4f61fe4e4969d9a95017f4"
+    },
+    {
+      "path": "packages/self-improvement/dist/accounting-probe.js",
+      "sha256": "4c78a5e8d9d56e87a4c0bd8ec04bea74a826f5f4792f8e968abde5d6bd99f77f"
+    },
+    {
+      "path": "packages/self-improvement/dist/public.js",
+      "sha256": "13fc36b396ce68aa960c556275ac394458b1999b860e3705d4fad29ed5a4d31c"
+    },
+    {
+      "path": "packages/ops/dist/fixture-stack.js",
+      "sha256": "4d03e6d928b81ade405f0252fb5d32c675ef0e9b9a55a171721feb27dfd08a1c"
+    }
+  ],
+  "unchangedOwner": {
+    "path": "packages/self-improvement/src/model-admission.ts",
+    "sha256": "44a36ef026d203f9db9437dcf53c1172224420596d0570353bcc564a758439c7"
+  },
+  "unchangedPolicyAndDto": [
+    {
+      "path": "packages/contracts/src/model-admission.ts",
+      "sha256": "8803164cb2d4e3b5fe764870f8409f020be0841f2367a86c7cdd062fa3c6262e"
+    },
+    {
+      "path": "packages/ops/src/model-admission-policy.ts",
+      "sha256": "553eb6805c9779c924d16c3bdb8eeac9a92727086b64a673d317f9dddcbc2c95"
+    }
+  ],
+  "frozenBindings": [
+    {
+      "path": "scripts/probe-siwc-control-runtime.mts",
+      "sha256": "96e1fd2d98469772c3d0d203386c3f7aa56af57db025c420fa93f1f4ecd7e70d",
+      "observedSha256": "96e1fd2d98469772c3d0d203386c3f7aa56af57db025c420fa93f1f4ecd7e70d",
+      "matches": true,
+      "unchanged": true
+    },
+    {
+      "path": "scripts/stage-siwc-control-runtime.mts",
+      "sha256": "13ff53e341ab7670dbed967ce810d5aa2834df7a47ffe1620f037ff1da3ee0d4",
+      "observedSha256": "13ff53e341ab7670dbed967ce810d5aa2834df7a47ffe1620f037ff1da3ee0d4",
+      "matches": true,
+      "unchanged": true
+    },
+    {
+      "path": "control/dist/bootstrap/siwc-runtime-probe.js",
+      "sha256": "06870b8dd41d2ffc093cc04680ba56c4570f07b4aa0a27a9ab70796cdd8204bd",
+      "observedSha256": "06870b8dd41d2ffc093cc04680ba56c4570f07b4aa0a27a9ab70796cdd8204bd",
+      "matches": true,
+      "unchanged": true
+    },
+    {
+      "path": "scripts/probe-unfiltered-control-denials.mts",
+      "sha256": "1cb93d375df931a482d946170e31549450d8efb71d6a251f5d2bcea8c5b92529",
+      "observedSha256": "1cb93d375df931a482d946170e31549450d8efb71d6a251f5d2bcea8c5b92529",
+      "matches": true,
+      "unchanged": true
+    },
+    {
+      "path": "packages/ops/dist/role-control-probe.js",
+      "sha256": "1764a98e5ae45694118007c242320711a7bd9e0d021b7c6d6ee0cbb8cff73ec2",
+      "observedSha256": "1764a98e5ae45694118007c242320711a7bd9e0d021b7c6d6ee0cbb8cff73ec2",
+      "matches": true,
+      "unchanged": true
+    },
+    {
+      "path": "control/dist/bootstrap/denial-probe.js",
+      "sha256": "7fda1824ec7bc308cac97d07c7c92cadd5527e87e89d79b410d33d95d1b30672",
+      "observedSha256": "7fda1824ec7bc308cac97d07c7c92cadd5527e87e89d79b410d33d95d1b30672",
+      "matches": true,
+      "unchanged": true
+    }
+  ],
+  "strict": {
+    "exitCode": 0,
+    "artifacts": 403,
+    "contracts": 335,
+    "cliAcceptanceManifests": 47,
+    "features": 106,
+    "commands": 55,
+    "indexedATs": 1447,
+    "schemaDigest": "ec7a67e32a800c455daac36fa5566d3b786d6f8bb76742a66a72cb79cf267648",
+    "swiftInvoked": false,
+    "evidence": {
+      "path": "build/evidence/R0.06/unavailable-quota11-strict-check.txt",
+      "sha256": "efbc51685f7a1dccbf6f9432fbd517f3fda7d4d6aec67f6a1b742122f0c557fa"
+    }
+  },
+  "preparationBindings": [
+    {
+      "path": "build/evidence/R0.06/unavailable-quota11-generation.txt",
+      "sha256": "860127306049e9693f041b3009b38f103e02bdf8b098ba5ed2316a4313349113"
+    },
+    {
+      "path": "build/evidence/R0.06/unavailable-quota11-build.txt",
+      "sha256": "00d502426f9571aac83be49953171282ad54f192ba02f3c4edb587f299cf6d1f"
+    },
+    {
+      "path": "build/evidence/R0.06/unavailable-quota11-map-update.json",
+      "sha256": "f34fb2c609d4f21cb2294956893c49c7025de467e47a89fc8f47cfc881c9e3e2"
+    },
+    {
+      "path": "build/evidence/R0.06/unavailable-quota11-final-admission.json",
+      "sha256": "89457dd281181d51e7b8817635dffee2d861649d996fe77abc99ff306c4ece5c"
+    }
+  ],
+  "ownedWorld": "f2d0b0e9-9e3c-465d-b816-f54fdb9a883e",
+  "cleanupComplete": true,
+  "unresolvedResources": 0,
+  "down": {
+    "path": "build/evidence/R0.06/unavailable-quota11-final-cli/down.json",
+    "sha256": "118764e6b08d168d80c2f259cbc2240ec1f56c08d45c899f78b1926dd5fe8ed5"
+  },
+  "wholeATsPassed": [],
+  "acceptanceComplete": false,
+  "liveProviderSends": 0,
+  "deferred": [
+    "Raw quota parser and HTTP wire proof",
+    "Protected remaining-count owner/provider binding and actual service identity",
+    "Full AT/card/release acceptance",
+    "Swift generation/compilation untilR3"
+  ],
+  "independentReview": {
+    "state": "APPROVED_NO_FINDINGS",
+    "path": "build/evidence/R0.06/unavailable-quota11-independent-review.json",
+    "sha256": "235eabbee4ad7744adc6f1324e87013626989df6cb9f9b99521cf3811f15534a"
+  },
+  "rootQueue": {
+    "path": "build/ROOT-REQUESTS.md",
+    "sha256": "6bdca8b36154b5ec87875c5a1fe0e5d5f9a8a0b6d172c26c7d99ad9f2dd6307e",
+    "states": [
+      {
+        "id": "ROOT-R004-20261006-01",
+        "state": "DONE"
+      },
+      {
+        "id": "ROOT-R004-20261006-02",
+        "state": "PENDING"
+      },
+      {
+        "id": "ROOT-R005-20261006-01",
+        "state": "PENDING"
+      }
+    ]
+  },
+  "goal": "ACTIVE",
+  "finalizedAt": "2026-10-07T09:50:10.317Z"
+}

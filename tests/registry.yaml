@@ -4164,5 +4164,56 @@
       }
     ],
     "simUnavailableReason": "SIM cannot drive pre-build native PostgreSQL restart or inspect admission records. The CLI reaches the real accounting owner with fixed external quota observations."
+  },
+  {
+    "id": "AT-ops-11",
+    "rung": "CLI",
+    "sourceAssertionHash": "31ea39ad67f444a836917f53ac74705afd0212c91f1da1d5ba098ef3d26df34e",
+    "commandId": "probe.run",
+    "scenarioId": "accounting.model-admission",
+    "owner": "self-improvement",
+    "firstRelease": "R0",
+    "kind": "behavioral",
+    "mandatoryCases": [
+      {
+        "id": "parse-failure-unavailable-pauses-optional",
+        "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+        "phase": "parse-failure-unavailable-pauses-optional"
+      }
+    ],
+    "trigger": "Explicit normalized parsing failure persists unavailable quota, pauses repair/replay uncharged, and admits one ordinary reservation without synthesizing usage. Existing AT51 owns count/restart coverage; protected and wire proof remain pending.",
+    "faultControls": [
+      {
+        "id": "fixed-quota-observation",
+        "seam": "provider",
+        "affectedPhases": [
+          "parse-failure-unavailable-pauses-optional"
+        ]
+      }
+    ],
+    "observations": [
+      {
+        "id": "unavailable-owner-readback",
+        "independentReader": "ModelAdmission.inspect exact unavailable observation and persisted counters",
+        "caseIds": [
+          "parse-failure-unavailable-pauses-optional"
+        ]
+      },
+      {
+        "id": "optional-pause-and-reservation",
+        "independentReader": "ModelAdmission.reserve and settle: denied optional work and null usage",
+        "caseIds": [
+          "parse-failure-unavailable-pauses-optional"
+        ]
+      },
+      {
+        "id": "stored-cli-readback",
+        "independentReader": "toy probe.show and stack.down exact persisted result and teardown",
+        "caseIds": [
+          "parse-failure-unavailable-pauses-optional"
+        ]
+      }
+    ],
+    "simUnavailableReason": "SIM cannot inspect pre-build admission records. The CLI reaches the real PostgreSQL owner with a fixed external quota result."
   }
 ]

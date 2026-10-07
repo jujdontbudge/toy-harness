@@ -41,9 +41,9 @@ const finish = (owner: ModelAdmissionApi, record: ModelAdmissionRecordV1, known:
 };
 
 export const accountingProbe = async (input: RegisteredProbeInputV1, context: OpsControlContextV1): Promise<Result<RegisteredProbeOperationV1>> => {
-  if ((input.caseId !== undefined && input.caseId !== "model-admission") || !["AT-ops-10","AT-ops-49","AT-ops-50","AT-ops-51","AT-ops-52"].includes(input.probeId))
+  if ((input.caseId !== undefined && input.caseId !== "model-admission") || !["AT-ops-10","AT-ops-11","AT-ops-49","AT-ops-50","AT-ops-51","AT-ops-52"].includes(input.probeId))
     return {ok:false,error:{module:"ops",code:"INVALID_INPUT",message:opsErrorMessages.INVALID_INPUT,retryable:false,effectState:"none"}};
-  const phases = input.probeId === "AT-ops-10" ? ["exhausted-known-reset","exhausted-unknown-reset","full-quota-windows","deferred-restart-recovery"] : input.probeId === "AT-ops-49" ? ["named-window-equality-0", "named-window-equality-1", "named-window-equality-2", "foreground-contention-recovery"] : input.probeId === "AT-ops-50" ? ["persist-deferred-work","owner-queue-readback","ordered-resume-under-headroom"] : input.probeId === "AT-ops-51" ? ["eight-durable-background-reservations", "restart-new-goal-ninth-refused-foreground-exempt"] : ["fresh-known-veto-0", "fresh-known-veto-1", "fresh-known-veto-2", "fresh-known-veto-3"];
+  const phases = input.probeId === "AT-ops-11" ? ["parse-failure-unavailable-pauses-optional"] : input.probeId === "AT-ops-10" ? ["exhausted-known-reset","exhausted-unknown-reset","full-quota-windows","deferred-restart-recovery"] : input.probeId === "AT-ops-49" ? ["named-window-equality-0", "named-window-equality-1", "named-window-equality-2", "foreground-contention-recovery"] : input.probeId === "AT-ops-50" ? ["persist-deferred-work","owner-queue-readback","ordered-resume-under-headroom"] : input.probeId === "AT-ops-51" ? ["eight-durable-background-reservations", "restart-new-goal-ninth-refused-foreground-exempt"] : ["fresh-known-veto-0", "fresh-known-veto-1", "fresh-known-veto-2", "fresh-known-veto-3"];
   const manifest = registeredCliAcceptanceManifestInventory.find(entry => entry.id === input.probeId);
   if (!manifest || manifest.scenarioId !== "accounting.model-admission" || JSON.stringify(manifest.mandatoryCases) !== JSON.stringify(phases.map(phase => ({ id: phase, publicOperation: "ReplayEnvironment.runRegisteredProbe", phase })))) return {ok:false,error:{module:"ops",code:"ATTESTATION_INVALID",message:opsErrorMessages.ATTESTATION_INVALID,retryable:false,effectState:"none"}};
   try {
@@ -70,6 +70,28 @@ export const accountingProbe = async (input: RegisteredProbeInputV1, context: Op
       checks.push(check("public-accounting-interface-refused",false,{errorCode:error.code,effectState:error.effectState}));
       return TestProbeControl.run(input,context,checks);
     };
+    if (input.probeId === "AT-ops-11") {
+      const accountRef = "fixture.unavailable."+prefix;
+      const result = await ModelAdmission.withTest(context,policyDigest,owner=>exercise(()=>{
+        observe(owner,accountRef,prefix+":parse-failure",[],true);
+        const before = take(owner.inspect(accountRef));
+        const optional = ["repair","replay"].map(workClass=>take(owner.reserve(request(accountRef,prefix+":"+workClass,{class:workClass==="repair"?"repair":"replay"}))));
+        const afterOptional = take(owner.inspect(accountRef));
+        const event = take(owner.reserve(request(accountRef,prefix+":event",{class:"event"})));
+        const afterEvent = take(owner.inspect(accountRef));
+        const terminal = finish(owner,event,false);
+        const unknown = before.observation?.status==="unavailable"&&!before.observation.schemaValid&&before.observation.windows.length===0;
+        const paused = optional.every(record=>record.state==="denied"&&!record.decision.eligible&&record.decision.mode==="fixed-count"&&record.decision.reason==="OPTIONAL_WORK_PAUSED"&&!record.reservationCharged&&!record.leaseActive&&record.nativeSendCount===0&&!record.decision.paidFallbackPermitted&&!record.decision.providerSendPermitIssued);
+        const admitted = event.decision.eligible&&event.decision.mode==="fixed-count"&&event.reservationCharged&&afterEvent.ledger.fallbackJobsReserved===before.ledger.fallbackJobsReserved+1;
+        checks.push(check("parse-failure-unavailable-pauses-optional",unknown&&paused&&afterOptional.ledger.fallbackJobsReserved===before.ledger.fallbackJobsReserved&&admitted&&event.usage===null&&terminal.usage===null&&terminal.reportedTotalTokens===null&&JSON.stringify(afterEvent.observation)===JSON.stringify(before.observation),{
+          source:"fixed-normalized-provider-parse-failure",status:before.observation?.status,schemaValid:before.observation?.schemaValid,windowCount:before.observation?.windows.length,
+          optional:optional.map(record=>[record.work.class,record.decision.reason,record.reservationCharged,record.nativeSendCount]),
+          counts:[before.ledger.fallbackJobsReserved,afterOptional.ledger.fallbackJobsReserved,afterEvent.ledger.fallbackJobsReserved],eventMode:event.decision.mode,eventEligible:event.decision.eligible,usage:event.usage,settledUsage:terminal.usage,reportedTotalTokens:terminal.reportedTotalTokens,physicalProviderCalls:0,paidRequests:0,wholeATComplete:false
+        }));
+      }),diagnostic);
+      if (!result.ok) return reportFailure(result.error);
+      return TestProbeControl.run(input,context,checks);
+    }
     if (input.probeId === "AT-ops-10") {
       const retained: Array<{ accountRef: string; records: ModelAdmissionRecordV1[] }> = [];
       const variants = [
