@@ -1,0 +1,69 @@
+{
+  "recordedAt": "2026-10-07T12:13:43.130Z",
+  "state": "STOP_AFTER_THREE_FAILED_ASSIGNED_ATTEMPTS",
+  "card": "R0.03",
+  "AT": "AT-hermes-config-34",
+  "attempts": [
+    {
+      "attempt": 1,
+      "kind": "unsupported-unfiltered-baseline",
+      "evidence": "build/evidence/R0.03/first-add34-baseline-summary.json"
+    },
+    {
+      "attempt": 2,
+      "kind": "unfiltered-first-implementation-provider-and-deadline-failure",
+      "evidence": "build/evidence/R0.03/first-add34-green-summary.json"
+    },
+    {
+      "attempt": 3,
+      "kind": "canonical-input-admission-refused-before-owner",
+      "evidence": "build/evidence/R0.03/first-add34-final-summary.json",
+      "exitCode": 2,
+      "errorModule": "contracts",
+      "errorCode": "INVALID_INPUT",
+      "effectState": "none",
+      "operationId": null
+    }
+  ],
+  "finalBatchOwnerInvoked": false,
+  "finalMatrixCellsExecuted": 0,
+  "fourthRuntimeRunAllowed": false,
+  "worldDown": "3ad5aafa-8fbd-449d-add0-9365513fdf35",
+  "teardown": {
+    "stackId": "3ad5aafa-8fbd-449d-add0-9365513fdf35",
+    "checkpointRefs": [],
+    "fenceRefs": [],
+    "stoppedResourceRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "3ad5aafa-8fbd-449d-add0-9365513fdf35"
+      }
+    ],
+    "retainedArtifactRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "3ad5aafa-8fbd-449d-add0-9365513fdf35"
+      }
+    ],
+    "unresolvedResourceRefs": [],
+    "complete": true
+  },
+  "correction": {
+    "path": "packages/contracts/src/test-control.ts",
+    "description": "Derive finite registered first-add case enum from canonical manifest, preventing copied IDs and restoring the public input declaration.",
+    "runtimeVerified": false,
+    "staticVerificationPending": false,
+    "staticVerification": "build/evidence/R0.03/first-add34-stopped-static-check.txt"
+  },
+  "deferred": [
+    "Positive registered-case admission and corrected Anthropic/xAI/Nous fake responses remain runtime-unverified.",
+    "Unfiltered aggregate exceeds existing 120-second command limit.",
+    "Retained-sibling dimension and actual protected/provider/whole acceptance remain pending."
+  ],
+  "wholeATComplete": false,
+  "goalStatus": "active",
+  "sourceOwner": null,
+  "sourceStop": true
+}

@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import { mkdtempSync, mkdirSync, readFileSync, realpathSync, statSync } from "node:fs";
 import { isAbsolute, join, relative } from "node:path";
 import { checkViewSchema, hermesPublicRuntimeCommandSchema, installedHermesDependencyRecordSchema, opsErrorMessages, registeredCliAcceptanceManifestInventory, registeredProbeInputSchema } from "@toy/contracts";
-import type { OpsControlContextV1, RegisteredProbeInputV1, RegisteredProbeOperationV1, Result } from "@toy/contracts";
+import type { HermesFirstAddCellV1, HermesFirstAddRootShapeV1, HermesFirstAddSourceV1, OpsControlContextV1, RegisteredProbeInputV1, RegisteredProbeOperationV1, Result } from "@toy/contracts";
 import { OpsTestStack, TestProbeControl, trustedCheckoutRoot, trustedToolEnvironment } from "@toy/ops/public";
 import { runHermesAuthFixture } from "./auth-fixture.js";
 
@@ -11,13 +11,18 @@ const installedRoot = "/Users/johansardar/.hermes/hermes-agent";
 const installedCommit = "8d5e3e412138342e8bf30443e72bd4e6a9abd057";
 const launcher = join(installedRoot, ".hermes/bin/hermes");
 const digest = (bytes: string | Buffer): string => createHash("sha256").update(bytes).digest("hex");
+const firstAddRootShapes: readonly HermesFirstAddRootShapeV1[] = ["missing", "no-pool", "empty-pool", "empty-rows"];
+const firstAddSources: readonly HermesFirstAddSourceV1[] = ["anthropic-pkce", "codex-device", "codex-loopback-pkce", "xai-device", "nous-device"];
+const firstAddCells: readonly HermesFirstAddCellV1[] = firstAddRootShapes.flatMap(rootShape => firstAddSources.map(source => ({ source, rootShape })));
+const firstAddCaseId = (cell: HermesFirstAddCellV1): string => `${cell.rootShape}-${cell.source}`;
 
 export const HermesAuthProbe = {
   async run(input: RegisteredProbeInputV1, context: OpsControlContextV1): Promise<Result<RegisteredProbeOperationV1>> {
     const started = process.hrtime.bigint();
     const invalid: Result<RegisteredProbeOperationV1> = { ok: false, error: { module: "ops", code: "INVALID_INPUT", message: opsErrorMessages.INVALID_INPUT, retryable: false } };
-    const unfilteredAuth = ["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-86", "AT-hermes-config-87", "AT-hermes-config-88", "AT-hermes-config-89", "AT-hermes-config-90", "AT-hermes-config-91"].includes(input.probeId) && input.caseId === undefined;
-    if (!registeredProbeInputSchema.safeParse(input).success || (!unfilteredAuth && input.caseId !== "native-auth-cli") || !["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-86", "AT-hermes-config-87", "AT-hermes-config-88", "AT-hermes-config-89", "AT-hermes-config-90", "AT-hermes-config-91", "AT-hermes-config-78", "AT-ops-55"].includes(input.probeId)) return Promise.resolve(invalid);
+    const selectedFirstAddCell = input.probeId === "AT-hermes-config-34" ? firstAddCells.find(cell => firstAddCaseId(cell) === input.caseId) : undefined;
+    const unfilteredAuth = ["AT-hermes-config-34", "AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-86", "AT-hermes-config-87", "AT-hermes-config-88", "AT-hermes-config-89", "AT-hermes-config-90", "AT-hermes-config-91"].includes(input.probeId) && input.caseId === undefined;
+    if (!registeredProbeInputSchema.safeParse(input).success || (!unfilteredAuth && input.caseId !== "native-auth-cli" && selectedFirstAddCell === undefined) || (input.probeId === "AT-hermes-config-34" && input.caseId !== undefined && selectedFirstAddCell === undefined) || !["AT-hermes-config-34", "AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-86", "AT-hermes-config-87", "AT-hermes-config-88", "AT-hermes-config-89", "AT-hermes-config-90", "AT-hermes-config-91", "AT-hermes-config-78", "AT-ops-55"].includes(input.probeId)) return Promise.resolve(invalid);
     if (input.probeId === "AT-hermes-config-90") {
       const manifest = registeredCliAcceptanceManifestInventory.find(entry => entry.id === input.probeId);
       const mandatoryCases = ["dashboard-profile-success", "dashboard-fresh-profile-use", "dashboard-save-failure-400"].map(id => ({ id, publicOperation: "HermesAuthProbe.run", phase: id }));
@@ -63,6 +68,11 @@ export const HermesAuthProbe = {
       const mandatoryCases = phases.map(id => ({ id, publicOperation: "hermes --profile toy auth add openai-codex --type oauth --no-browser", phase: id }));
       const faults = [{ id: "profile-store-enospc", seam: "os", affectedPhases: ["add-enospc"] }, { id: "profile-auth-atomic-replace-eio", seam: "os", affectedPhases: ["add-replace-fault"] }];
       if (!manifest || manifest.scenarioId !== "auth.save-fault" || JSON.stringify(manifest.mandatoryCases) !== JSON.stringify(mandatoryCases) || JSON.stringify(manifest.faultControls) !== JSON.stringify(faults)) return Promise.resolve({ ok: false, error: { module: "ops", code: "ATTESTATION_INVALID", message: opsErrorMessages.ATTESTATION_INVALID, retryable: false } });
+    }
+    if (input.probeId === "AT-hermes-config-34") {
+      const manifest = registeredCliAcceptanceManifestInventory.find(entry => entry.id === input.probeId);
+      const mandatoryCases = firstAddCells.map(cell => ({ id: firstAddCaseId(cell), publicOperation: "HermesAuthProbe.run", phase: firstAddCaseId(cell) }));
+      if (!manifest || manifest.owner !== "hermes" || manifest.scenarioId !== "auth.first-add" || manifest.kind !== "behavioral" || JSON.stringify(manifest.mandatoryCases) !== JSON.stringify(mandatoryCases) || manifest.faultControls.length !== 0) return Promise.resolve({ ok: false, error: { module: "ops", code: "ATTESTATION_INVALID", message: opsErrorMessages.ATTESTATION_INVALID, retryable: false } });
     }
     const owned = OpsTestStack.inspect(context);
     if (!owned.ok) return Promise.resolve(owned);
@@ -111,6 +121,21 @@ export const HermesAuthProbe = {
       const fixtureBudgetMs = context.timeoutMs - Number((process.hrtime.bigint() - started) / 1000000n);
       const checks = [check];
       if (publicHelpObserved && fixtureBudgetMs > 0 && input.probeId === "AT-hermes-config-85") checks.push(...await runHermesAuthFixture(interpreter, home, hermesHome, fixtureBudgetMs));
+      if (publicHelpObserved && fixtureBudgetMs > 0 && input.probeId === "AT-hermes-config-34") {
+        const cells = selectedFirstAddCell === undefined ? firstAddCells : [selectedFirstAddCell];
+        for (const [index, cell] of cells.entries()) {
+          const cellBudgetMs = context.timeoutMs - Number((process.hrtime.bigint() - started) / 1000000n);
+          const cellId = firstAddCaseId(cell);
+          if (cellBudgetMs <= 0) {
+            checks.push(checkViewSchema.parse({ id: "auth.native-fixture", owner: "hermes", state: "BLOCKED", checkedAt: new Date().toISOString(), reasonCode: "NATIVE_AUTH_FIRST_ADD_DEADLINE_BEFORE_CELL", nextCommandId: "probe.show", prerequisite: JSON.stringify({ caseId: cellId, caseIndex: index, source: cell.source, rootShape: cell.rootShape, wholeATComplete: false }), links: { recordRefs: [], observations: [], artifactDigests: [] } }));
+            continue;
+          }
+          const cellHome = mkdtempSync(join(home, `first-add-${cellId}-`));
+          const cellHermesHome = join(cellHome, "hermes");
+          mkdirSync(cellHermesHome, { mode: 0o700 });
+          checks.push(...await runHermesAuthFixture(interpreter, cellHome, cellHermesHome, cellBudgetMs, "add", "first-add", cell));
+        }
+      }
       if (publicHelpObserved && fixtureBudgetMs > 0 && input.probeId === "AT-hermes-config-86") checks.push(...await runHermesAuthFixture(interpreter, home, hermesHome, fixtureBudgetMs, "add", "profile-siblings"));
       if (publicHelpObserved && fixtureBudgetMs > 0 && input.probeId === "AT-hermes-config-88") checks.push(...await runHermesAuthFixture(interpreter, home, hermesHome, fixtureBudgetMs, "add", "borrowed-root"));
       if (publicHelpObserved && fixtureBudgetMs > 0 && input.probeId === "AT-hermes-config-89") checks.push(...await runHermesAuthFixture(interpreter, home, hermesHome, fixtureBudgetMs, "add", "mixed-lineage"));

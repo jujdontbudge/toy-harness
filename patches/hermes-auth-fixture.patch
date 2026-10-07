@@ -1,6 +1,6 @@
 --- /dev/null
 +++ b/tests/fixtures/toy_auth_httpx_fixture.py
-@@ -0,0 +1,925 @@
+@@ -0,0 +1,1205 @@
 +from __future__ import annotations
 +
 +import base64
@@ -10,10 +10,12 @@
 +import json
 +import os
 +import sys
++import socket
 +import time
++import threading
 +import traceback
 +from pathlib import Path
-+from urllib.parse import parse_qs
++from urllib.parse import parse_qs, urlencode, urlparse
 +
 +import httpx
 +
@@ -73,6 +75,244 @@
 +        return None
 +
 +
++FIRST_ADD_SOURCES = {
++    "anthropic-pkce": ("anthropic", "claude-sonnet-4-5"),
++    "codex-device": ("openai-codex", "gpt-6.1-sol"),
++    "codex-loopback-pkce": ("openai-codex", "gpt-6.1-sol"),
++    "xai-device": ("xai-oauth", "grok-3-mini"),
++    "nous-device": ("nous", "hermes-3-llama-3.1-405b"),
++}
++_LOOPBACK_CALLBACK_SENT = False
++
++
++def _first_add_source() -> str:
++    source = os.environ.get("TOY_AUTH_FIRST_ADD_SOURCE", "")
++    return source if source in FIRST_ADD_SOURCES else ""
++
++
++def _first_add_provider() -> str:
++    return FIRST_ADD_SOURCES.get(_first_add_source(), ("openai-codex", _EXPECTED_MODEL))[0]
++
++
++def _first_add_model() -> str:
++    return FIRST_ADD_SOURCES.get(_first_add_source(), ("openai-codex", _EXPECTED_MODEL))[1]
++
++
++def _first_add_access_token() -> str:
++    source = _first_add_source()
++    if source == "nous-device":
++        header = base64.urlsafe_b64encode(b'{"alg":"none","typ":"JWT"}').rstrip(b"=").decode()
++        claims = {"exp": 4102444800, "scope": "inference:invoke", "sub": "toy-fixture-nous"}
++        payload = base64.urlsafe_b64encode(json.dumps(claims, separators=(",", ":")).encode()).rstrip(b"=").decode()
++        return f"{header}.{payload}.fixture"
++    return {
++        "anthropic-pkce": "sk-ant-oat01-toy-fixture-anthropic-access",
++        "codex-device": _access_token(_GENERATION_EXPIRATIONS["added"], "added"),
++        "codex-loopback-pkce": _access_token(_GENERATION_EXPIRATIONS["added"], "added"),
++        "xai-device": "toy-fixture-xai-access",
++        "nous-device": "toy-fixture-nous-access",
++    }.get(source, "")
++
++
++class _FixtureUrlResponse:
++    def __init__(self, value: dict[str, object]) -> None:
++        self._content = json.dumps(value, separators=(",", ":")).encode()
++
++    def __enter__(self):
++        return self
++
++    def __exit__(self, exc_type, exc, traceback_value):
++        return False
++
++    def read(self, size: int = -1) -> bytes:
++        return self._content if size < 0 else self._content[:size]
++
++
++def _fixture_urlopen(request, timeout=None):
++    global _TOKEN_RESPONSE_ISSUED
++    if _first_add_source() != "anthropic-pkce" or request.full_url not in {
++        "https://platform.claude.com/v1/oauth/token",
++        "https://console.anthropic.com/v1/oauth/token",
++    } or request.get_method() != "POST":
++        _COUNTS["denied_http_requests"] += 1
++        _DENIALS.append("unregistered-http")
++        raise RuntimeError("fixture denied HTTP request")
++    _COUNTS["token_exchanges"] += 1
++    _TOKEN_RESPONSE_ISSUED = True
++    return _FixtureUrlResponse({
++        "access_token": _first_add_access_token(),
++        "refresh_token": "toy-fixture-anthropic-refresh",
++        "expires_in": 3600,
++        "token_type": "Bearer",
++    })
++
++
++class _AnthropicFixtureInput(io.StringIO):
++    def __init__(self, captured_stdout: io.StringIO) -> None:
++        super().__init__("")
++        self._captured_stdout = captured_stdout
++        self._provided = False
++
++    def readline(self, size: int = -1) -> str:
++        if self._provided:
++            return ""
++        self._provided = True
++        for line in self._captured_stdout.getvalue().splitlines():
++            candidate = line.strip()
++            if not candidate.startswith("https://claude.ai/oauth/authorize?"):
++                continue
++            state = parse_qs(urlparse(candidate).query).get("state", [""])[0]
++            return f"toy-fixture-anthropic-code#{state}\n"
++        return "\n"
++
++
++def _codex_loopback_provider(captured_stdout: io.StringIO) -> None:
++    global _LOOPBACK_CALLBACK_SENT
++    deadline = time.monotonic() + 8.0
++    while time.monotonic() < deadline:
++        authorize_url = next((line.strip() for line in captured_stdout.getvalue().splitlines() if line.strip().startswith("https://auth.openai.com/oauth/authorize?")), None)
++        if authorize_url is None:
++            time.sleep(0.01)
++            continue
++        query = parse_qs(urlparse(authorize_url).query)
++        state = query.get("state", [""])[0]
++        redirect_uri = query.get("redirect_uri", [""])[0]
++        parsed_redirect = urlparse(redirect_uri)
++        if state and parsed_redirect.hostname == "localhost" and parsed_redirect.port == 1455 and parsed_redirect.path == "/auth/callback":
++            request_path = parsed_redirect.path + "?" + urlencode({"code": "toy-fixture-codex-code", "state": state})
++            try:
++                with socket.create_connection(("127.0.0.1", 1455), timeout=1.0) as callback:
++                    callback.sendall((f"GET {request_path} HTTP/1.1\r\nHost: localhost:1455\r\nConnection: close\r\n\r\n").encode())
++                    callback.settimeout(1.0)
++                    callback.recv(512)
++                _LOOPBACK_CALLBACK_SENT = True
++            except OSError:
++                return
++            return
++        return
++
++
++def _first_add_model_response(request: httpx.Request, asynchronous: bool) -> httpx.Response:
++    if _OPERATION != "chat" or _PHASE != "chat":
++        return _deny_request("model-request-outside-chat")
++    source = _first_add_source()
++    host = request.url.host.lower()
++    path = request.url.path
++    allowed = {
++        "anthropic-pkce": ("api.anthropic.com", "/v1/messages"),
++        "codex-device": ("chatgpt.com", "/backend-api/codex/responses"),
++        "codex-loopback-pkce": ("chatgpt.com", "/backend-api/codex/responses"),
++        "xai-device": ("api.x.ai", "/v1/responses"),
++        "nous-device": ("inference-api.nousresearch.com", "/v1/chat/completions"),
++    }.get(source)
++    if allowed is None or (host, path) != allowed:
++        return _deny_request("unregistered-http")
++    try:
++        payload = json.loads(request.read())
++    except Exception:
++        payload = {}
++    if not isinstance(payload, dict) or payload.get("model") != _first_add_model():
++        return _deny_request("model-mismatch")
++    expected = _first_add_access_token()
++    if request.headers.get("authorization") != "Bearer " + expected and request.headers.get("x-api-key") != expected:
++        return _deny_request("authorization-mismatch")
++    _COUNTS["model_requests"] += 1
++    if source == "anthropic-pkce":
++        if payload.get("stream"):
++            events = (
++                ("message_start", {"type": "message_start", "message": {"id": "msg_toy_fixture", "type": "message", "role": "assistant", "content": [], "model": _first_add_model(), "stop_reason": None, "stop_sequence": None, "usage": {"input_tokens": 1, "output_tokens": 0}}}),
++                ("content_block_start", {"type": "content_block_start", "index": 0, "content_block": {"type": "text", "text": ""}}),
++                ("content_block_delta", {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": _CHAT_MARKER}}),
++                ("content_block_stop", {"type": "content_block_stop", "index": 0}),
++                ("message_delta", {"type": "message_delta", "delta": {"stop_reason": "end_turn", "stop_sequence": None}, "usage": {"output_tokens": 1}}),
++                ("message_stop", {"type": "message_stop"}),
++            )
++            body = "".join(f"event: {name}\ndata: {json.dumps(value, separators=(',', ':'))}\n\n" for name, value in events).encode()
++            return _response(request, body, "text/event-stream", asynchronous)
++        return _json_response(request, {
++            "id": "msg_toy_fixture", "type": "message", "role": "assistant",
++            "content": [{"type": "text", "text": _CHAT_MARKER}], "model": _first_add_model(),
++            "stop_reason": "end_turn", "stop_sequence": None,
++            "usage": {"input_tokens": 1, "output_tokens": 1},
++        }, asynchronous)
++    if source in {"codex-device", "codex-loopback-pkce"}:
++        return _model_response(request, asynchronous)
++    if source == "xai-device":
++        if payload.get("stream") is not False:
++            return _event_stream_response(request, asynchronous)
++        return _json_response(request, {"id": "resp_toy_fixture", "object": "response", "created_at": 0, "model": _first_add_model(), "status": "completed", "output": [{"id": "msg_toy_fixture", "type": "message", "status": "completed", "role": "assistant", "content": [{"type": "output_text", "text": _CHAT_MARKER}]}], "usage": {"input_tokens": 1, "output_tokens": 1, "total_tokens": 2}}, asynchronous)
++    if payload.get("stream"):
++        chunks = (
++            {"id": "chatcmpl_toy_fixture", "object": "chat.completion.chunk", "created": 0, "model": _first_add_model(), "choices": [{"index": 0, "delta": {"role": "assistant", "content": _CHAT_MARKER}, "finish_reason": None}]},
++            {"id": "chatcmpl_toy_fixture", "object": "chat.completion.chunk", "created": 0, "model": _first_add_model(), "choices": [{"index": 0, "delta": {}, "finish_reason": "stop"}], "usage": {"prompt_tokens": 1, "completion_tokens": 1, "total_tokens": 2}},
++        )
++        body = ("".join(f"data: {json.dumps(value, separators=(',', ':'))}\n\n" for value in chunks) + "data: [DONE]\n\n").encode()
++        return _response(request, body, "text/event-stream", asynchronous)
++    return _json_response(request, {
++        "id": "chatcmpl_toy_fixture", "object": "chat.completion", "created": 0,
++        "model": _first_add_model(),
++        "choices": [{"index": 0, "message": {"role": "assistant", "content": _CHAT_MARKER}, "finish_reason": "stop"}],
++        "usage": {"prompt_tokens": 1, "completion_tokens": 1, "total_tokens": 2},
++    }, asynchronous)
++
++
++def _first_add_http_route(request: httpx.Request, asynchronous: bool) -> httpx.Response | None:
++    global _TOKEN_RESPONSE_ISSUED
++    source = _first_add_source()
++    if not source or source in {"codex-device", "codex-loopback-pkce"}:
++        return None
++    host = request.url.host.lower()
++    path = request.url.path
++    method = request.method.upper()
++    if source == "anthropic-pkce" and _OPERATION == "chat" and host == "api.anthropic.com" and method == "GET" and path == "/v1/models":
++        _COUNTS["model_catalog_requests"] += 1
++        return _json_response(request, {"data": [{"id": _first_add_model(), "type": "model", "display_name": _first_add_model(), "created_at": "2026-10-01T00:00:00Z"}], "has_more": False}, asynchronous)
++    if source == "xai-device" and host == "auth.x.ai" and method == "GET" and path == "/.well-known/openid-configuration":
++        return _json_response(request, {
++            "authorization_endpoint": "https://auth.x.ai/oauth2/auth",
++            "token_endpoint": "https://auth.x.ai/oauth2/token",
++        }, asynchronous)
++    if source == "xai-device" and host == "auth.x.ai" and method == "POST" and path == "/oauth2/device/code":
++        _COUNTS["device_code_requests"] += 1
++        return _json_response(request, {
++            "device_code": "toy-fixture-xai-device-code", "user_code": "TOY-XAI-CODE",
++            "verification_uri": "https://auth.x.ai/activate",
++            "verification_uri_complete": "https://auth.x.ai/activate?user_code=TOY-XAI-CODE",
++            "expires_in": 120, "interval": 1,
++        }, asynchronous)
++    if source == "xai-device" and host == "auth.x.ai" and method == "POST" and path == "/oauth2/token":
++        _COUNTS["device_code_polls"] += 1
++        _COUNTS["token_exchanges"] += 1
++        _TOKEN_RESPONSE_ISSUED = True
++        return _json_response(request, {
++            "access_token": _first_add_access_token(), "refresh_token": "toy-fixture-xai-refresh",
++            "id_token": "toy-fixture-xai-id", "expires_in": 3600, "token_type": "Bearer",
++        }, asynchronous)
++    if source == "nous-device" and host == "portal.nousresearch.com" and method == "POST" and path == "/api/oauth/device/code":
++        _COUNTS["device_code_requests"] += 1
++        return _json_response(request, {
++            "device_code": "toy-fixture-nous-device-code", "user_code": "TOY-NOUS-CODE",
++            "verification_uri": "https://portal.nousresearch.com/activate",
++            "verification_uri_complete": "https://portal.nousresearch.com/activate?user_code=TOY-NOUS-CODE",
++            "expires_in": 120, "interval": 1,
++        }, asynchronous)
++    if source == "nous-device" and host == "portal.nousresearch.com" and method == "POST" and path == "/api/oauth/token":
++        _COUNTS["device_code_polls"] += 1
++        _COUNTS["token_exchanges"] += 1
++        _TOKEN_RESPONSE_ISSUED = True
++        return _json_response(request, {
++            "access_token": _first_add_access_token(), "refresh_token": "toy-fixture-nous-refresh",
++            "expires_in": 3600, "scope": "inference:invoke", "token_type": "Bearer",
++        }, asynchronous)
++    if source in {"xai-device", "nous-device"} and _OPERATION == "chat":
++        if method == "GET" and path.endswith("/models"):
++            _COUNTS["model_catalog_requests"] += 1
++            return _json_response(request, {"data": [{"id": _first_add_model(), "object": "model"}]}, asynchronous)
++        if method == "POST":
++            return _first_add_model_response(request, asynchronous)
++    return None
++
++
 +def _access_token(expiration: int, generation: str = "initial") -> str:
 +    header = base64.urlsafe_b64encode(b'{"alg":"none","typ":"JWT"}').rstrip(b"=").decode()
 +    claims = {
@@ -87,6 +327,8 @@
 +
 +
 +def _expected_access_generations() -> tuple[str, ...]:
++    if _first_add_source() in {"codex-device", "codex-loopback-pkce"}:
++        return ("added",)
 +    actor = os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR", "")
 +    lifecycle_generations = {
 +        "lifecycle-root": "initial",
@@ -330,6 +572,11 @@
 +    host = request.url.host.lower()
 +    path = request.url.path
 +    method = request.method.upper()
++    first_add_response = _first_add_http_route(request, asynchronous)
++    if first_add_response is not None:
++        return first_add_response
++    if _first_add_source() and _OPERATION == "chat" and method == "POST":
++        return _first_add_model_response(request, asynchronous)
 +    if _PHASE == "siwc-unbound":
 +        _COUNTS["denied_http_requests"] += 1
 +        if host == "api.openai.com" and path in {"/v1/responses", "/v1/chat/completions"}:
@@ -390,6 +637,8 @@
 +            generation = sibling_generations.get(actor, "added" if actor == "auth-add" else "initial")
 +            if os.environ.get("TOY_AUTH_SINGLE_GRANT_CONTENTION") == "1":
 +                generation = "rotated"
++            if _first_add_source():
++                generation = "added"
 +            if actor == "auth-add":
 +                if not _signal_barrier("add-response-pending"):
 +                    return _deny_request("unregistered-http")
@@ -545,6 +794,12 @@
 +
 +def _deny_socket(event: str, args: tuple[object, ...]) -> None:
 +    global _SOCKET_ORIGIN, _STORAGE_FAULT_TRIGGERED
++    if event == "socket.getaddrinfo" and _first_add_source() == "codex-loopback-pkce" and len(args) > 1 and args[0] == "127.0.0.1" and args[1] == 1455 and not _LOOPBACK_CALLBACK_SENT:
++        return
++    if event == "socket.connect" and _first_add_source() == "codex-loopback-pkce" and len(args) > 1:
++        address = args[1]
++        if isinstance(address, tuple) and len(address) >= 2 and address[0] == "127.0.0.1" and address[1] == 1455 and not _LOOPBACK_CALLBACK_SENT:
++            return
 +    if event == "os.rename" and os.environ.get("TOY_AUTH_STORAGE_CUT") == "before-replace" and len(args) > 1 and _storage_replace_target(args[1]):
 +        _hold_storage_cut("before-replace")
 +    if event == "os.rename" and _PHASE in {"add-enospc", "add-replace-fault", "dashboard-save-failure-400"} and _TOKEN_RESPONSE_ISSUED and not _STORAGE_FAULT_TRIGGERED and len(args) > 1:
@@ -591,6 +846,12 @@
 +    profile = os.environ.get("TOY_AUTH_PROFILE", "toy")
 +    prefix = ["hermes"] if os.environ.get("TOY_AUTH_STORE_SCOPE") == "root" else ["hermes", "--profile", profile]
 +    if operation == "add":
++        source = _first_add_source()
++        if source:
++            args = ["auth", "add", _first_add_provider(), "--type", "oauth", "--no-browser"]
++            if source == "codex-loopback-pkce":
++                args = ["auth", "add", _first_add_provider(), "--type", "oauth", "--browser", "--no-browser", "--timeout", "10"]
++            return [*prefix, *args]
 +        actor = os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR", "")
 +        label = ["--label", _fixture_label()] if actor == "auth-add" or actor.startswith("sibling-") or actor.startswith("lifecycle-") or actor in _MIXED_LINEAGE_LABELS else []
 +        return [*prefix, "auth", "add", "openai-codex", "--type", "oauth", "--no-browser", *label]
@@ -601,20 +862,32 @@
 +        return [*prefix, "auth", "priority", "openai-codex", target, "0"]
 +    if operation in {"remove", "reset"}:
 +        return [*prefix, "auth", operation, "openai-codex", _fixture_label()]
-+    provider = "siwc_responses" if _PHASE == "siwc-unbound" else "openai-codex"
++    provider = "siwc_responses" if _PHASE == "siwc-unbound" else _first_add_provider() if _first_add_source() else "openai-codex"
++    model = _first_add_model() if _first_add_source() else _EXPECTED_MODEL
 +    structured = ["--format", "stream-json"] if os.environ.get("TOY_AUTH_SINGLE_GRANT_CONTENTION") == "1" else []
-+    return [*prefix, "chat", "--provider", provider, "--model", _EXPECTED_MODEL, "--toolsets", "none", "-q", _PROMPT, *structured]
++    return [*prefix, "chat", "--provider", provider, "--model", model, "--toolsets", "none", "-q", _PROMPT, *structured]
 +
 +
 +def _run_cli(argv: list[str]) -> tuple[int, str, str, str]:
 +    saved_argv = sys.argv
 +    saved_stdout, saved_stderr = sys.stdout, sys.stderr
++    saved_stdin = sys.stdin
 +    captured_stdout, captured_stderr = io.StringIO(), io.StringIO()
 +    result = 0
 +    failure = ""
 +    try:
 +        sys.argv = argv[:]
 +        sys.stdout, sys.stderr = captured_stdout, captured_stderr
++        callback_thread = None
++        if _first_add_source() == "anthropic-pkce":
++            sys.stdin = _AnthropicFixtureInput(captured_stdout)
++            import urllib.request
++            import webbrowser
++            urllib.request.urlopen = _fixture_urlopen
++            webbrowser.open = lambda url, new=0, autoraise=True: False
++        if _first_add_source() == "codex-loopback-pkce" and _OPERATION == "add":
++            callback_thread = threading.Thread(target=_codex_loopback_provider, args=(captured_stdout,), daemon=True)
++            callback_thread.start()
 +        from hermes_cli.main import main as hermes_main
 +
 +        hermes_main()
@@ -631,6 +904,9 @@
 +    finally:
 +        sys.argv = saved_argv
 +        sys.stdout, sys.stderr = saved_stdout, saved_stderr
++        sys.stdin = saved_stdin
++        if callback_thread is not None:
++            callback_thread.join(8.5)
 +    return result, captured_stdout.getvalue(), captured_stderr.getvalue(), failure
 +
 +
@@ -716,7 +992,7 @@
 +    tokens = tuple(
 +        _access_token(expiration, generation)
 +        for generation, expiration in _GENERATION_EXPIRATIONS.items()
-+    ) + tuple(_GENERATION_REFRESH_TOKENS.values()) + (_PAID_KEY,)
++    ) + tuple(_GENERATION_REFRESH_TOKENS.values()) + (_PAID_KEY, "toy-fixture-anthropic-access", "toy-fixture-anthropic-refresh", "toy-fixture-xai-access", "toy-fixture-xai-refresh", "toy-fixture-nous-refresh", "toy-fixture-codex-code", "toy-fixture-xai-id") + ((_first_add_access_token(),) if _first_add_source() else ())
 +    token_hygiene = not any(token in combined_output for token in tokens)
 +    lower_output = combined_output.casefold()
 +    fallback_attempted = any(
@@ -729,6 +1005,9 @@
 +        claim in lower_output
 +        for claim in (
 +            "added openai-codex oauth credential",
++            "added anthropic oauth credential",
++            "added xai-oauth oauth credential",
++            "saved nous oauth device-code credentials",
 +            "login successful",
 +            "authentication successful",
 +            "authenticated successfully",
@@ -736,7 +1015,7 @@
 +        )
 +    )
 +    observations: dict[str, object] = {
-+        "provider": "openai-chatgpt" if _PHASE == "siwc-unbound" else "openai-codex",
++        "provider": "openai-chatgpt" if _PHASE == "siwc-unbound" else _first_add_provider() if _first_add_source() else "openai-codex",
 +        "phase": _PHASE,
 +        "access_generation": _ACCEPTED_ACCESS_GENERATION,
 +        "catalog_access_generation": _CATALOG_ACCESS_GENERATION,
@@ -752,7 +1031,8 @@
 +            save_denied = exit_code != 0 and _STORAGE_FAULT_TRIGGERED and token_hygiene and success_claim_absent
 +            markers.append("AUTH_SAVE_DENIED" if save_denied else "AUTH_SAVE_FAULT_NOT_CONFIRMED")
 +        else:
-+            added = exit_code == 0 and "Added openai-codex OAuth credential #" in combined_output
++            success_phrase = "Saved nous OAuth device-code credentials" if _first_add_source() == "nous-device" else f"Added {_first_add_provider()} OAuth credential #" if _first_add_source() else "Added openai-codex OAuth credential #"
++            added = exit_code == 0 and success_phrase.casefold() in lower_output
 +            markers.append("AUTH_ADD_OK" if added else "AUTH_ADD_NOT_CONFIRMED")
 +    elif operation == "priority":
 +        expected_label = _fixture_label()

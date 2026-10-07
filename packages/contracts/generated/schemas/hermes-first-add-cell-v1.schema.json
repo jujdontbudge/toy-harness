@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "source": {
+      "type": "string",
+      "enum": [
+        "anthropic-pkce",
+        "codex-device",
+        "codex-loopback-pkce",
+        "xai-device",
+        "nous-device"
+      ]
+    },
+    "rootShape": {
+      "type": "string",
+      "enum": [
+        "missing",
+        "no-pool",
+        "empty-pool",
+        "empty-rows"
+      ]
+    }
+  },
+  "required": [
+    "source",
+    "rootShape"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:HermesFirstAddCellV1"
+}

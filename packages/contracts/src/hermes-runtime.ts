@@ -57,6 +57,9 @@ export const installedHermesDependencyRecordSchema = z.object({
   packages: z.object({ venv: z.object({ environment: z.string().min(1).max(4096) }) })
 });
 export const hermesPublicRuntimeCommandSchema = z.array(z.string().min(1).max(16384)).min(4).max(16);
+export const hermesFirstAddSourceSchema = z.enum(["anthropic-pkce", "codex-device", "codex-loopback-pkce", "xai-device", "nous-device"]);
+export const hermesFirstAddRootShapeSchema = z.enum(["missing", "no-pool", "empty-pool", "empty-rows"]);
+export const hermesFirstAddCellSchema = z.strictObject({ source: hermesFirstAddSourceSchema, rootShape: hermesFirstAddRootShapeSchema });
 const fixtureCounter = z.int().min(0).max(1000);
 export const hermesAuthRefreshEffectSchema = z.strictObject({
   from: z.enum(["initial", "rotated", "added"]), to: z.enum(["rotated", "stale", "added-rotated"]),
@@ -82,7 +85,7 @@ export const hermesAuthFixtureResultSchema = z.strictObject({
   public_argv: z.array(z.string().min(1).max(200)).min(2).max(16), exit_code: z.int().min(0).max(255),
   markers: z.array(z.enum(["AUTH_ADD_OK", "AUTH_ADD_NOT_CONFIRMED", "AUTH_SAVE_DENIED", "AUTH_SAVE_FAULT_NOT_CONFIRMED", "AUTH_LIST_READBACK_OK", "AUTH_LIST_EMPTY", "AUTH_LIST_NOT_CONFIRMED", "AUTH_PRIORITY_OK", "AUTH_PRIORITY_NOT_CONFIRMED", "CHAT_RESPONSE_OK", "CHAT_RESPONSE_NOT_CONFIRMED", "CHAT_GRANT_UNUSABLE", "CHAT_GRANT_USABILITY_NOT_CONFIRMED", "SIWC_AUTHORIZATION_REQUIRED", "SIWC_AUTHORIZATION_NOT_CONFIRMED", "CLI_EXIT_NONZERO", "CLI_EXCEPTION", "PUBLIC_STREAM_RESULT_INVALID", "AUTH_REMOVE_OK", "AUTH_RESET_OK", "AUTH_LIST_TARGET_RATE_LIMITED", "AUTH_PROVIDER_RATE_LIMIT_OBSERVED"])).max(8),
   processIdentity: z.strictObject({ pid: z.int().positive(), parentPid: z.int().positive(), uid: z.int().nonnegative(), gid: z.int().nonnegative() }),
-  observations: z.strictObject({ provider: z.enum(["openai-codex", "openai-chatgpt"]), phase: z.enum(["add", "list", "chat", "chat-expired", "chat-reloaded", "add-enospc", "add-replace-fault", "list-after-fault", "chat-after-fault", "siwc-unbound", "concurrent-refresh-add", "priority-added", "priority-restored", "remove", "reset", "dashboard-profile-success", "dashboard-save-failure-400"]), credential_count: fixtureCounter.optional(), target_label_present: z.boolean().optional(), access_generation: z.enum(["initial", "rotated", "added", "added-rotated", "stale"]).nullable(), catalog_access_generation: z.enum(["initial", "rotated", "added", "added-rotated", "stale"]).nullable(), storage_fault_triggered: z.boolean(), token_hygiene: z.boolean(), success_claim_absent: z.boolean(), fallback_attempted: z.boolean(), network_denials: z.array(z.enum(["model-mismatch", "authorization-mismatch", "grant-mismatch", "paid-model-fallback", "device-grant-outside-add", "device-poll-outside-add", "model-request-outside-chat", "model-catalog-outside-chat", "codex-model-discovery", "openai-model-discovery", "unregistered-http", "tokenizer-download", "unregistered-socket"])).max(16), socket_origin: z.string().max(120).regex(/^[a-z_][a-z0-9_]*(?:\.[a-z_][a-z0-9_]*)*$/i).nullable() }),
+  observations: z.strictObject({ provider: z.enum(["openai-codex", "openai-chatgpt", "anthropic", "xai-oauth", "nous"]), phase: z.enum(["add", "list", "chat", "chat-expired", "chat-reloaded", "add-enospc", "add-replace-fault", "list-after-fault", "chat-after-fault", "siwc-unbound", "concurrent-refresh-add", "priority-added", "priority-restored", "remove", "reset", "dashboard-profile-success", "dashboard-save-failure-400"]), credential_count: fixtureCounter.optional(), target_label_present: z.boolean().optional(), access_generation: z.enum(["initial", "rotated", "added", "added-rotated", "stale"]).nullable(), catalog_access_generation: z.enum(["initial", "rotated", "added", "added-rotated", "stale"]).nullable(), storage_fault_triggered: z.boolean(), token_hygiene: z.boolean(), success_claim_absent: z.boolean(), fallback_attempted: z.boolean(), network_denials: z.array(z.enum(["model-mismatch", "authorization-mismatch", "grant-mismatch", "paid-model-fallback", "device-grant-outside-add", "device-poll-outside-add", "model-request-outside-chat", "model-catalog-outside-chat", "codex-model-discovery", "openai-model-discovery", "unregistered-http", "tokenizer-download", "unregistered-socket"])).max(16), socket_origin: z.string().max(120).regex(/^[a-z_][a-z0-9_]*(?:\.[a-z_][a-z0-9_]*)*$/i).nullable() }),
   concurrency: hermesAuthConcurrencyObservationSchema.optional(),
   http_ledger: z.strictObject({
     device_code_requests: fixtureCounter, device_code_polls: fixtureCounter, token_exchanges: fixtureCounter,
@@ -94,6 +97,9 @@ export type HermesPublicRuntimeCommandV1 = z.infer<typeof hermesPublicRuntimeCom
 export type HermesAuthConcurrencyObservationV1 = z.infer<typeof hermesAuthConcurrencyObservationSchema>;
 export type HermesAuthRefreshEffectV1 = z.infer<typeof hermesAuthRefreshEffectSchema>;
 export type HermesAuthFixtureResultV1 = z.infer<typeof hermesAuthFixtureResultSchema>;
+export type HermesFirstAddSourceV1 = z.infer<typeof hermesFirstAddSourceSchema>;
+export type HermesFirstAddRootShapeV1 = z.infer<typeof hermesFirstAddRootShapeSchema>;
+export type HermesFirstAddCellV1 = z.infer<typeof hermesFirstAddCellSchema>;
 export const hermesRuntimeSchemaInventory = {
   HermesGatewayProfileV1: hermesGatewayProfileSchema,
   HermesGatewayConsumerInventoryV1: hermesGatewayConsumerInventorySchema,
@@ -105,5 +111,8 @@ export const hermesRuntimeSchemaInventory = {
   HermesPublicRuntimeCommandV1: hermesPublicRuntimeCommandSchema,
   HermesAuthConcurrencyObservationV1: hermesAuthConcurrencyObservationSchema,
   HermesAuthRefreshEffectV1: hermesAuthRefreshEffectSchema,
-  HermesAuthFixtureResultV1: hermesAuthFixtureResultSchema
+  HermesAuthFixtureResultV1: hermesAuthFixtureResultSchema,
+  HermesFirstAddSourceV1: hermesFirstAddSourceSchema,
+  HermesFirstAddRootShapeV1: hermesFirstAddRootShapeSchema,
+  HermesFirstAddCellV1: hermesFirstAddCellSchema
 };

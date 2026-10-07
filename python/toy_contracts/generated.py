@@ -3480,6 +3480,26 @@ RegisteredTestCaseV1 = Literal[
     "queue-transaction-faults",
     "capacity-trial",
     "durable-cadence-owner-floor",
+    "missing-anthropic-pkce",
+    "missing-codex-device",
+    "missing-codex-loopback-pkce",
+    "missing-xai-device",
+    "missing-nous-device",
+    "no-pool-anthropic-pkce",
+    "no-pool-codex-device",
+    "no-pool-codex-loopback-pkce",
+    "no-pool-xai-device",
+    "no-pool-nous-device",
+    "empty-pool-anthropic-pkce",
+    "empty-pool-codex-device",
+    "empty-pool-codex-loopback-pkce",
+    "empty-pool-xai-device",
+    "empty-pool-nous-device",
+    "empty-rows-anthropic-pkce",
+    "empty-rows-codex-device",
+    "empty-rows-codex-loopback-pkce",
+    "empty-rows-xai-device",
+    "empty-rows-nous-device",
 ]
 
 ElapsedDurationV1 = NewType("ElapsedDurationV1", str)
@@ -6026,6 +6046,9 @@ class HermesAuthFixtureResultV1Observations(TypedDict):
 HermesAuthFixtureResultV1ObservationsProvider = Literal[
     "openai-codex",
     "openai-chatgpt",
+    "anthropic",
+    "xai-oauth",
+    "nous",
 ]
 
 HermesAuthFixtureResultV1ObservationsPhase = Literal[
@@ -6077,6 +6100,25 @@ class HermesAuthFixtureResultV1Httpledger(TypedDict):
 HermesAuthFixtureResultV1Networkaudit = Literal[
     "socket-audit-hook-installed",
 ]
+
+HermesFirstAddSourceV1 = Literal[
+    "anthropic-pkce",
+    "codex-device",
+    "codex-loopback-pkce",
+    "xai-device",
+    "nous-device",
+]
+
+HermesFirstAddRootShapeV1 = Literal[
+    "missing",
+    "no-pool",
+    "empty-pool",
+    "empty-rows",
+]
+
+class HermesFirstAddCellV1(TypedDict):
+    source: "HermesFirstAddSourceV1"
+    rootShape: "HermesFirstAddRootShapeV1"
 
 class BackupCapacityInventoryV1(TypedDict):
     observedAt: "Instant"
