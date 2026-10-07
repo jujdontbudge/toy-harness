@@ -1,0 +1,299 @@
+{
+  "schemaVersion": "toy.r003.manual-lineage-root-shape-replan.v1",
+  "recordedAt": "2026-10-07T13:48:23.033183Z",
+  "card": "R0.03",
+  "AT": "AT-hermes-config-35",
+  "rung": "CLI",
+  "state": "READ_ONLY_DIAGNOSIS_STOP_DEFERRED_SOURCE_NOT_ADMITTED",
+  "decision": "PUBLIC_ADD_MANUAL_SOURCE_REJECTED_BY_SINGLETON_PROJECTION_GATE",
+  "sourceOwner": null,
+  "sourceStop": true,
+  "reviewTargetMinutes": 15,
+  "runtimeExecuted": false,
+  "assignedAttemptsUsed": 3,
+  "maximumAssignedAttempts": 3,
+  "fourthAT35RuntimeAdmitted": false,
+  "sourceAssertionHash": "7e69a039d367ed6ffa27c762c76cad43ad78a65c3ca5c91552a1f7adef47c2aa",
+  "actualReceipt": {
+    "run": {
+      "path": "build/evidence/R0.03/manual-lineage35-final-cli/AT-hermes-config-35-run.json",
+      "sha256": "78143443e4712eab71ffb271a3ba08e83c3543817d3f64912f00cfcb5d25d0ae",
+      "kind": "bounded-public-receipt"
+    },
+    "show": {
+      "path": "build/evidence/R0.03/manual-lineage35-final-cli/AT-hermes-config-35-show.json",
+      "sha256": "d4bb3059caa679162503afe2c19ae84ad94e6706ba8a2d80035de2048f37ee7b",
+      "kind": "bounded-public-receipt"
+    },
+    "operationId": "e9d08375-8798-41ed-a406-01ee118d7038",
+    "exitCode": 0,
+    "resultState": "NOT_IMPLEMENTED",
+    "complete": false,
+    "blockedCheck": {
+      "id": "auth.native-fixture",
+      "owner": "hermes",
+      "state": "BLOCKED",
+      "reasonCode": "NATIVE_AUTH_ANTHROPIC_ROOT_GRANT_UNAVAILABLE",
+      "checkedAt": "2026-10-07T13:41:23.770Z",
+      "prerequisite": {
+        "wholeATComplete": false,
+        "fixtureSubsetComplete": false,
+        "caseId": "root-add",
+        "setupReason": "PUBLIC_ROOT_ANTHROPIC_GRANT_SHAPE_UNSUPPORTED",
+        "rootAuth": {
+          "exists": true,
+          "digest": "567dcaa163532793ddb84e30a5a221933f8409876db5d5925829bef211ea92a0"
+        },
+        "singleton": {
+          "exists": false,
+          "digest": null
+        }
+      }
+    },
+    "earlierJsonFormFailure": "The stopped record says the JSON authorization-code/form mismatch and denial enum mismatch were repaired. The final run reaches the root shape gate with a schema-valid child result; this diagnosis does not reopen that earlier failure.",
+    "teardownComplete": true,
+    "allOwnedWorldsDown": true,
+    "twelvePhasesProven": false,
+    "runShowExactSavedByParent": true
+  },
+  "causalExplanation": {
+    "producer": {
+      "entryPoint": "hermes auth add anthropic --type oauth --no-browser",
+      "exactCommit": "8d5e3e412138342e8bf30443e72bd4e6a9abd057",
+      "path": "hermes_cli/auth_commands.py",
+      "constantEvidence": "agent/credential_pool.py:116 sets SOURCE_MANUAL to manual.",
+      "lines202to207": "The Anthropic add login calls run_hermes_oauth_login_pure and returns its credentials.",
+      "lines246to254": "The Anthropic OAuth add spec fixes source to manual:hermes_pkce and passes actual access_token, refresh_token and expires_at_ms into the pool entry.",
+      "lines429to442": "The public add producer creates a distinct self-contained PooledCredential with the spec source and persists it through pool.add_entry. Its design deliberately avoids a singleton shadow for manual grants.",
+      "derivedProducerSource": "manual:hermes_pkce",
+      "singletonAbsenceConsistentWithDesign": true
+    },
+    "gate": {
+      "path": "packages/hermes/src/auth-fixture.ts",
+      "sourceCommit": "2832968",
+      "function": "ensureAnthropicSingleton",
+      "callLine": 835,
+      "cardinalityGuardLine": 342,
+      "shapeGuardLine": 344,
+      "requiredSource": "hermes_pkce",
+      "otherRequiredPredicates": [
+        "row is a record",
+        "nonempty string id",
+        "nonempty string access_token",
+        "nonempty string refresh_token",
+        "finite numeric expires_at_ms later than Date.now()"
+      ],
+      "projectionLines345to348": "Only after that exact-source guard passes does the owned OS seam project the actual token/expiry fields into accessToken/refreshToken/expiresAt and remove the sole root Anthropic pool counterpart."
+    },
+    "sufficientCause": "The only normal row source emitted by the pinned public Anthropic add path is manual:hermes_pkce. The projection gate requires hermes_pkce. That source predicate is necessarily false for the public producer output, so the gate rejects the row before singleton projection. This is a fixture producer/consumer representation mismatch, not proof of a product persistence or lineage-healing failure.",
+    "noRelabeling": "The source string describes a manual pool grant correctly. Do not change the producer to emit hermes_pkce, rewrite its source, manufacture a seeded row or change an independent profile row to appear copied. Admit only the actual public-minted root grant to the existing owned fixture projection.",
+    "confidence": "The exact pinned producer and gate prove a sufficient rejection cause. They do not establish that every other compound shape predicate passed in the final process."
+  },
+  "observationBoundary": {
+    "directlyObserved": {
+      "setupReason": "PUBLIC_ROOT_ANTHROPIC_GRANT_SHAPE_UNSUPPORTED",
+      "caseId": "root-add",
+      "rootAuthExists": true,
+      "rootAuthDigest": "567dcaa163532793ddb84e30a5a221933f8409876db5d5925829bef211ea92a0",
+      "rootSingletonExists": false,
+      "rootSingletonDigest": null,
+      "nativeReadinessPass": true,
+      "wholeResultState": "NOT_IMPLEMENTED",
+      "wholeResultComplete": false
+    },
+    "controlFlowInference": {
+      "poolShape": "Under the pinned current gate, this exact setup reason is reachable only after rows has passed Array.isArray and length === 1. Thus the selected root Anthropic pool had one row. The receipt does not independently emit the pool count or raw row.",
+      "producerSource": "manual:hermes_pkce is established by the pinned public producer code, not a credential-file read or a source value exported in the receipt."
+    },
+    "unobserved": [
+      "Actual raw row source value in this run",
+      "row id/value/type",
+      "access and refresh material/value/type",
+      "actual expires_at_ms value/type and expiry status",
+      "whether any other compound predicate also failed",
+      "root-add actual stdout/stderr or token-bearing DTO",
+      "copied-lineage eligibility and all subsequent manual/copy phases"
+    ],
+    "noCredentialOrStreamRead": true,
+    "requiredOptionalDiagnostic": "If a later admitted run still stops after the code-grounded repair, expose only fixed booleans/count/source categories for the projection predicates and actual owned child exit/identity/ledger facts through the existing CheckView. Never emit the row, tokens, stream contents, arbitrary keys or exception messages.",
+    "diagnosticNotWholeAcceptance": true
+  },
+  "smallestDeferredNextUnit": {
+    "admittedNow": false,
+    "runtimeAdmittedNow": false,
+    "objective": "Align the existing owned root singleton projection with the pinned public Anthropic manual-add representation, without changing product grant semantics or the original twelve AT35 CLI phases.",
+    "maximumDurationMinutes": 60,
+    "sourcePaths": [
+      {
+        "path": "packages/hermes/src/auth-fixture.ts",
+        "change": "In the singleton-absent, one-row root-add setup path, qualify the actual public-minted manual:hermes_pkce grant rather than requiring the seeded hermes_pkce source. Bind eligibility to this owned root public add operation and its actual validated result. Keep all containment, sole-row, nonempty actual-material/id, finite future expiry and exact projection predicates; preserve unrelated root data and remove only the qualifying actual root counterpart."
+      },
+      {
+        "path": "docs/adr/0045-mixed-auth-lineage-probe.md",
+        "change": "Correct the setup representation from root hermes_pkce add row to public root manual:hermes_pkce add row. Keep singleton projection as a registered owned OS fixture arrangement and preserve the manual/copy lineage boundary."
+      }
+    ],
+    "eligibilityAndOrdering": [
+      "Require the actual owned root-add public command, schema-valid producer result, matching actual child identity/exit, AUTH_ADD_OK, Anthropic/add provider/phase, one expected OAuth exchange, no refresh/model/network denial/fallback, and token hygiene before projecting or clearing its row. Reuse the existing generated receipt and public validation; do not introduce a new DTO/protocol.",
+      "Accept the exact manual:hermes_pkce representation only for this verified public root-add projection context. Do not broaden to arbitrary manual sources, suffix matches or opaque imported grants. Preserve the existing conservative handling of an already-present singleton until its equality/eligibility is separately source-grounded.",
+      "Copy only the actual qualifying root access/refresh/expiry fields into the existing pinned singleton keys in memory. Never fabricate grant material, row ID or source. Remove only its actual root pool counterpart after successful owned singleton creation.",
+      "Freeze root auth/.env/singleton digests after setup; preserve all manual lineage and paired copy assertions, existing auth87 resync/refreshDispositions and other modes."
+    ],
+    "genuineCopiedLineageEligibility": "UNRESOLVED_BY_THIS_TARGETED_REVIEW. The public root-add row is manual, and projection eligibility is setup-only. Do not reinterpret it as a genuine copied row or claim post-projection root auth-list/copy healing PASS. Leave the existing paired public root-list, exact-copy, healing, use/refresh/reload path unchanged unless its own future actual evidence exposes a separate failure.",
+    "notNeeded": [
+      "Upstream public auth-add producer changes",
+      "Product profile-auth or dashboard patch changes",
+      "OAuth fake JSON/form or provider response changes",
+      "New CLI command/case selector",
+      "DTO/schema/enum changes",
+      "Registry case additions",
+      "Ops route changes",
+      "Private helper tests/mocks",
+      "New infrastructure or host/account inspection"
+    ],
+    "verificationAfterFutureAdmission": "Parent alone may admit a newly bounded unit after reviewing these pins and the source change. Required paved checks follow SOURCE_STOP. The existing original unfiltered AT35 public run and exact probe-show readback are the acceptance interface; no private test or fixture credential poke substitutes. No fourth runtime is authorized by this artifact.",
+    "passAndStop": "In a separately admitted unit, stop on the first implemented run whose original twelve public cases actually PASS with independent grant generations, unchanged manual-root digests and genuine copied owner refresh/reload; save exact bounded run/show and complete owned teardown. Any new FAIL/BLOCKED requires evidence review. Whole native/account/protected acceptance stays false.",
+    "redBoundary": "Current source plus the saved final receipt already provide the root-setup RED. No unchanged fourth run is needed to reproduce this deterministic source mismatch."
+  },
+  "exactSourcePins": [
+    {
+      "repository": "/Users/johansardar/.hermes/hermes-agent",
+      "commit": "8d5e3e412138342e8bf30443e72bd4e6a9abd057",
+      "path": "hermes_cli/auth_commands.py",
+      "sha256": "16c18f21402ac9940815450a41854cfeaadad6a34bffeb98d27de648df749d1a",
+      "kind": "exact-git-source-object",
+      "readMethod": "read-only git show; no module execution"
+    },
+    {
+      "repository": "/Users/johansardar/.hermes/hermes-agent",
+      "commit": "8d5e3e412138342e8bf30443e72bd4e6a9abd057",
+      "path": "agent/credential_pool.py",
+      "sha256": "111d8e0d990630341a42dc2fa4a740f16746d5963e8d6900cfd25c54d109da66",
+      "kind": "exact-git-source-object",
+      "purpose": "SOURCE_MANUAL constant and producer field representation; later auth87 patch is preserved separately"
+    },
+    {
+      "repository": "/Users/johansardar/Documents/Codex/toy-harness",
+      "commit": "2832968",
+      "path": "packages/hermes/src/auth-fixture.ts",
+      "sha256": "e9c1893c60e523ea0667854e9dc05da63c3099b440dec996481e730fa08d2597",
+      "kind": "exact-git-source-object",
+      "currentWorkspaceSha256": "e9c1893c60e523ea0667854e9dc05da63c3099b440dec996481e730fa08d2597",
+      "currentWorkspaceMatchesPinnedCommit": true
+    }
+  ],
+  "evidencePins": [
+    {
+      "path": "build/evidence/R0.03/manual-lineage35-stopped-verification.json",
+      "sha256": "56b72f5b5820b3a5de680d6a1ed6d5f3183a5d8478da3794d7d6c4b507d671f4",
+      "kind": "evidence"
+    },
+    {
+      "path": "build/evidence/R0.03/manual-lineage35-final-cli/AT-hermes-config-35-run.json",
+      "sha256": "78143443e4712eab71ffb271a3ba08e83c3543817d3f64912f00cfcb5d25d0ae",
+      "kind": "evidence"
+    },
+    {
+      "path": "build/evidence/R0.03/manual-lineage35-final-cli/AT-hermes-config-35-show.json",
+      "sha256": "d4bb3059caa679162503afe2c19ae84ad94e6706ba8a2d80035de2048f37ee7b",
+      "kind": "evidence"
+    },
+    {
+      "path": "build/evidence/R0.03/manual-lineage35-final-summary.json",
+      "sha256": "117375347331b8c82685b207f71c8c004ebd59bc9db010a4d4fc66d7b6d3ad56",
+      "kind": "evidence"
+    },
+    {
+      "path": "build/evidence/R0.03/manual-lineage35-final-cli/down.json",
+      "sha256": "3005d9d22aa761e187fa060c65e25707c7fe9d1de7e400cf38752bbab6b33251",
+      "kind": "evidence"
+    },
+    {
+      "path": "build/evidence/R0.03/manual-lineage35-source-handoff.json",
+      "sha256": "73dba62799b84e32b680b4324b312d3d3baae80c19cb089c954168d6f5e0dfc1",
+      "kind": "evidence"
+    },
+    {
+      "path": "build/evidence/R0.06/unknown-reset-source-memory.json",
+      "sha256": "4a19dfd846d60d21e6f5739acd661a7d8ba639d39ecd7b88855042956a27825e",
+      "kind": "evidence"
+    }
+  ],
+  "resourceAdmission": {
+    "source": "build/evidence/R0.06/unknown-reset-source-memory.json",
+    "measuredAt": "2026-10-07T13:44:17.459Z",
+    "pressure": "normal",
+    "availableBytes": "2168061952",
+    "ownNeedBytes": "268435456",
+    "ownMarginBytes": "536870912",
+    "ownRequiredAvailableBytes": "805306368",
+    "ownHeadroomSatisfied": true,
+    "registeredDoctorReceiptReadOnly": true,
+    "newMemoryProbeRun": false,
+    "aggregateOrHypotheticalVetoApplied": false
+  },
+  "preservation": {
+    "rootQueueStatus": "PENDING",
+    "rootQueue": {
+      "pollAt": "2026-10-07T13:43:25.954553+00:00",
+      "path": "build/ROOT-REQUESTS.md",
+      "sha256": "6bdca8b36154b5ec87875c5a1fe0e5d5f9a8a0b6d172c26c7d99ad9f2dd6307e",
+      "pending": [
+        "ROOT-R004-20261006-02",
+        "ROOT-R005-20261006-01"
+      ],
+      "pendingRootDoesNotBlockGoal": true
+    },
+    "rootPending": [
+      "ROOT-R004-20261006-02",
+      "ROOT-R005-20261006-01"
+    ],
+    "frozenRootInputs": [
+      {
+        "path": "scripts/probe-siwc-control-runtime.mts",
+        "sha256": "96e1fd2d98469772c3d0d203386c3f7aa56af57db025c420fa93f1f4ecd7e70d",
+        "unchanged": true
+      },
+      {
+        "path": "scripts/stage-siwc-control-runtime.mts",
+        "sha256": "13ff53e341ab7670dbed967ce810d5aa2834df7a47ffe1620f037ff1da3ee0d4",
+        "unchanged": true
+      },
+      {
+        "path": "control/dist/bootstrap/siwc-runtime-probe.js",
+        "sha256": "06870b8dd41d2ffc093cc04680ba56c4570f07b4aa0a27a9ab70796cdd8204bd",
+        "unchanged": true
+      },
+      {
+        "path": "scripts/probe-unfiltered-control-denials.mts",
+        "sha256": "1cb93d375df931a482d946170e31549450d8efb71d6a251f5d2bcea8c5b92529",
+        "unchanged": true
+      },
+      {
+        "path": "packages/ops/dist/role-control-probe.js",
+        "sha256": "1764a98e5ae45694118007c242320711a7bd9e0d021b7c6d6ee0cbb8cff73ec2",
+        "unchanged": true
+      },
+      {
+        "path": "control/dist/bootstrap/denial-probe.js",
+        "sha256": "7fda1824ec7bc308cac97d07c7c92cadd5527e87e89d79b410d33d95d1b30672",
+        "unchanged": true
+      }
+    ],
+    "frozenInputsReReadOrChanged": false,
+    "rootActionsPerformed": false,
+    "auth87ProductResyncAndRequiredRefreshDispositionsPreserved": true,
+    "hostOrFixtureCredentialFilesRead": false,
+    "rawChildStreamsRead": false,
+    "profilesServicesAccountsPreserved": true,
+    "providerSends": 0,
+    "nativeAcceptance": false,
+    "actualAccountActivation": false,
+    "protectedAcceptance": false,
+    "wholeATComplete": false,
+    "cardAcceptanceComplete": false,
+    "parentSourceOwner": "Independent R0.06 Luna owns sole SOURCE; this helper owns only its read-only diagnosis artifact."
+  },
+  "stopStatement": "READ_ONLY STOP: only the diagnosis artifact is written. No source/state/registry/generated/map edits, CLI system-driving/build/generation/static/runtime/browser/provider/root actions, helper invocations, private tests, host or fixture credential reads, raw child streams, source relabeling or fourth AT35 runtime were performed or admitted.",
+  "writeScope": "build/evidence/R0.03/manual-lineage35-root-shape-replan-20261007.json"
+}

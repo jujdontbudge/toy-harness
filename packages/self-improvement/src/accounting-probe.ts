@@ -177,7 +177,28 @@ export const accountingProbe = async (input: RegisteredProbeInputV1, context: Op
           &&!original.leaseActive&&original.nativeSendCount===0&&!original.nativeTerminalAcknowledged&&original.endedAt===null
           &&seedPending.length===1&&JSON.stringify(seedPending[0])===JSON.stringify(original)
           &&JSON.stringify(observation)===JSON.stringify(take(owner.inspect(accountRef)).observation);
-        return {accountRef,original,originalRequest,startAt,resetAt};
+        const unknownAccountRef="fixture.cross-day-unknown."+prefix;
+        const unknownCallKey=unknownAccountRef+":original";
+        const unknownObservation=modelQuotaObservationSchema.parse({id:identity(unknownCallKey+":quota"),provider:"siwc_responses",accountRef:unknownAccountRef,
+          reportedAt:now(),sourceAuthorized:true,schemaValid:true,status:"exhausted",windows:[],bodyRef:"fixed-external-quota-fixture:"+unknownCallKey});
+        take(owner.observe(unknownObservation));
+        const unknownOriginalRequest=request(unknownAccountRef,unknownCallKey,{class:"quiet-tick"},"background",true);
+        const unknownOriginal=take(owner.reserve(unknownOriginalRequest));
+        const unknownSeedPending=take(owner.inspectPending(unknownAccountRef));
+        const unknownSnapshot=take(owner.inspect(unknownAccountRef));
+        const unknownWrongRoot=modelAdmissionRequestSchema.parse({...request(unknownAccountRef,unknownAccountRef+":wrong-root-before",{class:"quiet-tick"},"background",true),
+          budgetGroupId:unknownOriginal.budgetGroupId,rootContractId:identity(unknownAccountRef+":different-root-before"),runId:unknownOriginal.runId,generation:unknownOriginal.generation});
+        const unknownMismatch=owner.reserve(unknownWrongRoot);
+        const unknownAfterMismatch=take(owner.inspectPending(unknownAccountRef));
+        const unknownMismatchLedger=take(owner.inspect(unknownAccountRef)).ledger;
+        const unknownRootBindingRejectedBefore=!unknownMismatch.ok&&unknownMismatch.error.code==="CONFLICT"
+          &&unknownAfterMismatch.length===1&&JSON.stringify(unknownAfterMismatch[0])===JSON.stringify(unknownOriginal)&&unknownMismatchLedger.fallbackJobsReserved===0;
+        const unknownSeedValid=unknownOriginal.utcDay===startAt.slice(0,10)&&unknownOriginal.state==="denied"&&!unknownOriginal.decision.eligible
+          &&unknownOriginal.decision.reason==="QUOTA_EXHAUSTED"&&unknownOriginal.decision.retryAt===null&&!unknownOriginal.reservationCharged
+          &&!unknownOriginal.leaseActive&&unknownOriginal.nativeSendCount===0&&!unknownOriginal.nativeTerminalAcknowledged&&unknownOriginal.endedAt===null
+          &&unknownSeedPending.length===1&&JSON.stringify(unknownSeedPending[0])===JSON.stringify(unknownOriginal)
+          &&JSON.stringify(unknownObservation)===JSON.stringify(unknownSnapshot.observation)&&unknownRootBindingRejectedBefore;
+        return {accountRef,original,originalRequest,startAt,resetAt,unknownAccountRef,unknownOriginal,unknownOriginalRequest,unknownSeedValid};
       }));
       if (!recovery.ok) return reportFailure(recovery.error);
       const rollover = recovery.data;
@@ -197,11 +218,25 @@ export const accountingProbe = async (input: RegisteredProbeInputV1, context: Op
       let chargeAtTwo = -1;
       let chargeAfterFirstRetry = -1;
       let chargeAfterRepeatedRetry = -1;
-      let retryError: string | null = null;
-      let blockedError: string | null = null;
-      let retryId: string | null = null;
-      let retryCallKey: string | null = null;
-        const {accountRef,original,originalRequest,startAt,resetAt} = rollover;
+      let unknownClockOnlyHeld=false;
+      let unknownUnavailableHeld=false;
+      let unknownStaleHeld=false;
+      let unknownUnauthorizedHeld=false;
+      let unknownFreshObservation=false;
+      let unknownRetryValid=false;
+      let unknownRetryIdempotent=false;
+      let unknownOriginalPreservedAtTwo=false;
+      let unknownOriginalPreservedAfterRetry=false;
+      let unknownSupersededOriginalNotPending=false;
+      let unknownCleanupReleased=false;
+      let unknownRootBindingRejectedAfter=false;
+      let unknownChargeAtTwo=-1;
+      let unknownChargeAfterUnavailable=-1;
+      let unknownChargeAfterStale=-1;
+      let unknownChargeAfterUnauthorized=-1;
+      let unknownChargeAfterFirstRetry=-1;
+      let unknownChargeAfterRepeatedRetry=-1;
+        const {accountRef,original,originalRequest,startAt,resetAt,unknownAccountRef,unknownOriginal,unknownOriginalRequest,unknownSeedValid} = rollover;
         const toTwo = TestClockControl.advance({requestId:identity(prefix+":cross-day-00-02"),by:"PT3M",waitMs:0},context);
         if (!toTwo.ok) return reportFailure(toTwo.error);
         const atTwo = toTwo.data.result?.after.virtualWall ?? null;
@@ -215,7 +250,6 @@ export const accountingProbe = async (input: RegisteredProbeInputV1, context: Op
           exhaustedReadbackAtTwo = exhaustedSnapshot.observation?.status==="exhausted"
             &&exhaustedSnapshot.observation.reportedAt===startAt;
           const blocked = owner.resumePending(accountRef,original.callKey);
-          blockedError = blocked.ok?null:blocked.error.code;
           const blockedRow = blocked.ok?blocked.data:null;
           const pendingAfterBlocked = take(owner.inspectPending(accountRef));
           const afterBlocked = take(owner.inspect(accountRef));
@@ -225,7 +259,46 @@ export const accountingProbe = async (input: RegisteredProbeInputV1, context: Op
             &&JSON.stringify(blockedRow)===JSON.stringify(original))||(!blocked.ok&&blocked.error.code==="CONFLICT");
           noChargeAtTwo = chargeAtTwo===0&&pendingAfterBlocked.length===1
             &&pendingAfterBlocked.some(record=>record.id===original.id&&JSON.stringify(record)===JSON.stringify(original));
-          take(TestClockControl.advance({requestId:identity(prefix+":cross-day-00-06"),by:"PT4M",waitMs:0},context));
+          const unknownPendingAtTwo=take(owner.inspectPending(unknownAccountRef));
+          const unknownOldAtTwo=unknownPendingAtTwo.find(record=>record.id===unknownOriginal.id);
+          unknownOriginalPreservedAtTwo=unknownOldAtTwo!==undefined&&JSON.stringify(unknownOldAtTwo)===JSON.stringify(unknownOriginal);
+          const unknownClockOnly=take(owner.resumePending(unknownAccountRef,unknownOriginal.callKey));
+          unknownChargeAtTwo=take(owner.inspect(unknownAccountRef)).ledger.fallbackJobsReserved;
+          unknownClockOnlyHeld=unknownClockOnly.id===unknownOriginal.id&&!unknownClockOnly.decision.eligible&&!unknownClockOnly.reservationCharged
+            &&unknownChargeAtTwo===0&&JSON.stringify(unknownClockOnly)===JSON.stringify(unknownOriginal);
+          observe(owner,unknownAccountRef,unknownAccountRef+":unavailable-00-02",[],true);
+          const unknownUnavailable=take(owner.resumePending(unknownAccountRef,unknownOriginal.callKey));
+          const unknownUnavailableReadback=take(owner.inspect(unknownAccountRef));
+          const unknownUnavailablePending=take(owner.inspectPending(unknownAccountRef));
+          unknownChargeAfterUnavailable=unknownUnavailableReadback.ledger.fallbackJobsReserved;
+          unknownUnavailableHeld=unknownUnavailable.id===unknownOriginal.id&&!unknownUnavailable.decision.eligible&&!unknownUnavailable.reservationCharged
+            &&JSON.stringify(unknownUnavailable)===JSON.stringify(unknownOriginal)&&unknownUnavailablePending.length===1
+            &&unknownUnavailableReadback.observation?.status==="unavailable"&&!unknownUnavailableReadback.observation.schemaValid
+            &&unknownChargeAfterUnavailable===0;
+          const staleObservation=modelQuotaObservationSchema.parse({id:identity(unknownAccountRef+":stale-available"),provider:"siwc_responses",accountRef:unknownAccountRef,
+            reportedAt:new Date(Date.parse(startAt)-960000).toISOString(),sourceAuthorized:true,schemaValid:true,status:"available",windows:windows(10,20),bodyRef:"fixed-external-quota-fixture:"+unknownAccountRef+":stale"});
+          take(owner.observe(staleObservation));
+          const unknownStale=take(owner.resumePending(unknownAccountRef,unknownOriginal.callKey));
+          const unknownStaleReadback=take(owner.inspect(unknownAccountRef));
+          const unknownStalePending=take(owner.inspectPending(unknownAccountRef));
+          unknownChargeAfterStale=unknownStaleReadback.ledger.fallbackJobsReserved;
+          unknownStaleHeld=unknownStale.id===unknownOriginal.id&&!unknownStale.decision.eligible&&!unknownStale.reservationCharged
+            &&JSON.stringify(unknownStale)===JSON.stringify(unknownOriginal)&&unknownStalePending.length===1
+            &&unknownStaleReadback.observation?.status==="available"&&unknownStaleReadback.observation.sourceAuthorized&&unknownStaleReadback.observation.schemaValid
+            &&Date.parse(now())-Date.parse(unknownStaleReadback.observation.reportedAt)>900000&&unknownChargeAfterStale===0;
+          take(TestClockControl.advance({requestId:identity(prefix+":cross-day-00-04"),by:"PT2M",waitMs:0},context));
+          const unauthorizedObservation=modelQuotaObservationSchema.parse({id:identity(unknownAccountRef+":unauthorized-00-04"),provider:"siwc_responses",accountRef:unknownAccountRef,
+            reportedAt:now(),sourceAuthorized:false,schemaValid:true,status:"available",windows:windows(10,20),bodyRef:"fixed-external-quota-fixture:"+unknownAccountRef+":unauthorized"});
+          take(owner.observe(unauthorizedObservation));
+          const unknownUnauthorized=take(owner.resumePending(unknownAccountRef,unknownOriginal.callKey));
+          const unknownUnauthorizedReadback=take(owner.inspect(unknownAccountRef));
+          const unknownUnauthorizedPending=take(owner.inspectPending(unknownAccountRef));
+          unknownChargeAfterUnauthorized=unknownUnauthorizedReadback.ledger.fallbackJobsReserved;
+          unknownUnauthorizedHeld=unknownUnauthorized.id===unknownOriginal.id&&!unknownUnauthorized.decision.eligible&&!unknownUnauthorized.reservationCharged
+            &&JSON.stringify(unknownUnauthorized)===JSON.stringify(unknownOriginal)&&unknownUnauthorizedPending.length===1
+            &&unknownUnauthorizedReadback.observation?.status==="available"&&!unknownUnauthorizedReadback.observation.sourceAuthorized
+            &&unknownChargeAfterUnauthorized===0;
+          take(TestClockControl.advance({requestId:identity(prefix+":cross-day-00-06"),by:"PT2M",waitMs:0},context));
           const availableWindows = windows(10,20);
           observe(owner,accountRef,accountRef+":after-reset",availableWindows);
           const availableWall = now();
@@ -233,12 +306,15 @@ export const accountingProbe = async (input: RegisteredProbeInputV1, context: Op
           freshObservationAfterReset = Date.parse(availableWall)>Date.parse(resetAt)
             &&freshSnapshot.observation?.status==="available"&&freshSnapshot.observation.reportedAt===availableWall
             &&freshSnapshot.observation.sourceAuthorized&&freshSnapshot.observation.schemaValid;
+          observe(owner,unknownAccountRef,unknownAccountRef+":after-reset",availableWindows);
+          const unknownFreshSnapshot=take(owner.inspect(unknownAccountRef));
+          unknownFreshObservation=unknownFreshSnapshot.observation?.status==="available"&&unknownFreshSnapshot.observation.sourceAuthorized
+            &&unknownFreshSnapshot.observation.schemaValid&&unknownFreshSnapshot.observation.accountRef===unknownAccountRef
+            &&unknownFreshSnapshot.observation.reportedAt===availableWall&&Date.parse(availableWall)>Date.parse(unknownOriginal.startedAt)
+            &&Date.parse(availableWall)-Date.parse(unknownFreshSnapshot.observation.reportedAt)<=900000;
           const beforeRetry = take(owner.inspect(accountRef)).ledger.fallbackJobsReserved;
           const retried = owner.resumePending(accountRef,original.callKey);
-          retryError = retried.ok?null:retried.error.code;
           const retry = retried.ok?retried.data:null;
-          retryId = retry?.id ?? null;
-          retryCallKey = retry?.callKey ?? null;
           const afterFirstRetry = take(owner.inspect(accountRef)).ledger.fallbackJobsReserved;
           const repeated = owner.resumePending(accountRef,original.callKey);
           const repeatedRow = repeated.ok?repeated.data:null;
@@ -273,18 +349,69 @@ export const accountingProbe = async (input: RegisteredProbeInputV1, context: Op
               &&released.reservationCharged&&!afterRelease.ledger.providerLeaseActive
               &&afterRelease.ledger.fallbackJobsReserved===afterRepeatedRetry;
           }
+          const unknownBeforeRetry=take(owner.inspect(unknownAccountRef)).ledger.fallbackJobsReserved;
+          const unknownFirstResult=owner.resumePending(unknownAccountRef,unknownOriginal.callKey);
+          const unknownRetry=unknownFirstResult.ok?unknownFirstResult.data:null;
+          const unknownAfterFirst=take(owner.inspect(unknownAccountRef)).ledger.fallbackJobsReserved;
+          const unknownRepeatedResult=owner.resumePending(unknownAccountRef,unknownOriginal.callKey);
+          const unknownRepeated=unknownRepeatedResult.ok?unknownRepeatedResult.data:null;
+          unknownChargeAfterFirstRetry=unknownAfterFirst;
+          unknownChargeAfterRepeatedRetry=take(owner.inspect(unknownAccountRef)).ledger.fallbackJobsReserved;
+          unknownRetryValid=unknownFreshObservation&&unknownRetry!==null&&unknownRetry.id!==unknownOriginal.id
+            &&unknownRetry.callKey==="toy-model-admission-retry:"+unknownOriginal.id+":"+availableWall.slice(0,10)
+            &&unknownRetry.callKey.length<=240&&unknownRetry.utcDay===availableWall.slice(0,10)
+            &&unknownRetry.accountRef===unknownOriginal.accountRef&&unknownRetry.budgetGroupId===unknownOriginal.budgetGroupId
+            &&unknownRetry.runId===unknownOriginal.runId&&unknownRetry.generation===unknownOriginal.generation
+            &&JSON.stringify(unknownRetry.requested)===JSON.stringify(unknownOriginal.requested)
+            &&JSON.stringify(unknownRetry.work)===JSON.stringify(unknownOriginal.work)
+            &&unknownRetry.state==="reserved"&&unknownRetry.decision.eligible&&unknownRetry.decision.mode==="measured"
+            &&unknownRetry.reservationCharged&&unknownRetry.leaseActive
+            &&unknownRetry.nativeSendCount===0&&!unknownRetry.nativeTerminalAcknowledged
+            &&!unknownRetry.decision.providerSendPermitIssued&&!unknownRetry.decision.paidFallbackPermitted
+            &&unknownBeforeRetry===0&&unknownAfterFirst===1;
+          unknownRetryIdempotent=unknownRetryValid&&unknownRetry!==null&&unknownRepeated!==null&&unknownRepeated.id===unknownRetry.id
+            &&unknownRepeated.callKey===unknownRetry.callKey&&JSON.stringify(unknownRepeated)===JSON.stringify(unknownRetry)
+            &&unknownChargeAfterRepeatedRetry===unknownAfterFirst;
+          const unknownPendingAfterRetry=take(owner.inspectPending(unknownAccountRef));
+          const unknownOldAfterRetry=take(owner.reserve(unknownOriginalRequest));
+          unknownOriginalPreservedAfterRetry=JSON.stringify(unknownOldAfterRetry)===JSON.stringify(unknownOriginal);
+          unknownSupersededOriginalNotPending=unknownPendingAfterRetry.length===0;
+          const unknownWrongRoot=modelAdmissionRequestSchema.parse({...request(unknownAccountRef,unknownAccountRef+":wrong-root-after",{class:"quiet-tick"},"background",true),
+            budgetGroupId:unknownOriginal.budgetGroupId,rootContractId:identity(unknownAccountRef+":different-root-after"),runId:unknownOriginal.runId,generation:unknownOriginal.generation});
+          const unknownWrongRootResult=owner.reserve(unknownWrongRoot);
+          const unknownAfterWrongRoot=take(owner.inspect(unknownAccountRef));
+          const unknownOldAfterWrongRoot=take(owner.reserve(unknownOriginalRequest));
+          unknownRootBindingRejectedAfter=!unknownWrongRootResult.ok&&unknownWrongRootResult.error.code==="CONFLICT"
+            &&unknownAfterWrongRoot.ledger.fallbackJobsReserved===unknownChargeAfterRepeatedRetry
+            &&JSON.stringify(unknownOldAfterWrongRoot)===JSON.stringify(unknownOriginal);
+          if (unknownRetry!==null&&unknownRetry.id!==unknownOriginal.id&&unknownRetry.reservationCharged&&unknownRetry.leaseActive) {
+            const unknownReleased=take(owner.settle({callId:unknownRetry.id,nativeTerminalAcknowledged:true,usage:null,reportedTotalTokens:null}));
+            const unknownAfterRelease=take(owner.inspect(unknownAccountRef));
+            unknownCleanupReleased=!unknownReleased.leaseActive&&unknownReleased.nativeSendCount===0&&unknownReleased.usage===null
+              &&unknownReleased.reservationCharged&&!unknownAfterRelease.ledger.providerLeaseActive
+              &&unknownAfterRelease.ledger.fallbackJobsReserved===unknownChargeAfterRepeatedRetry;
+          }
         }));
         if (!crossDayRecovery.ok) return reportFailure(crossDayRecovery.error);
+      const unknownResetPassed=unknownSeedValid&&unknownOriginalPreservedAtTwo&&unknownClockOnlyHeld&&unknownUnavailableHeld&&unknownStaleHeld
+        &&unknownUnauthorizedHeld&&unknownFreshObservation&&unknownRetryValid&&unknownRetryIdempotent&&unknownOriginalPreservedAfterRetry
+        &&unknownSupersededOriginalNotPending&&unknownRootBindingRejectedAfter&&unknownCleanupReleased
+        &&unknownChargeAtTwo===0&&unknownChargeAfterUnavailable===0&&unknownChargeAfterStale===0&&unknownChargeAfterUnauthorized===0
+        &&unknownChargeAfterFirstRetry===1&&unknownChargeAfterRepeatedRetry===1;
       const crossDayPassed = rolloverSeedValid&&clockAtTwo&&pendingVisibleAtTwo&&exhaustedReadbackAtTwo&&blockedAtTwo&&noChargeAtTwo
         &&freshObservationAfterReset&&retryValid&&retryIdempotent&&originalPreservedAfterRestart&&originalPreservedAfterRetry
         &&rootBindingRejectedBefore&&rootBindingRejectedAfter&&supersededOriginalNotPending&&cleanupReleased
-        &&chargeAtTwo===0&&chargeAfterFirstRetry===1&&chargeAfterRepeatedRetry===1;
+        &&chargeAtTwo===0&&chargeAfterFirstRetry===1&&chargeAfterRepeatedRetry===1&&unknownResetPassed;
       checks.push(check("deferred-restart-recovery",persisted&&refusedWhileExhausted&&resumed===9&&!duplicateCharge&&sameDayPendingCleared&&crossDayPassed,{
         postgresqlRestarted:true,persisted,refusedWhileExhausted,resumed,expectedCalls:9,duplicateCharge,sameDayPendingCleared,
-        crossDay:{startAt,resetAt,seeded:rolloverSeedValid,clockAtTwo,pendingVisibleAtTwo,exhaustedReadbackAtTwo,
-          blockedError,blockedAtTwo,noChargeAtTwo,chargeAtTwo,freshObservationAfterReset,retryError,retryValid,retryId,retryCallKey,
-          retryIdempotent,originalPreservedAfterRestart,originalPreservedAfterRetry,rootBindingRejectedBefore,rootBindingRejectedAfter,
-          supersededOriginalNotPending,cleanupReleased,chargeAfterFirstRetry,chargeAfterRepeatedRetry,parentCallIdAttemptReadback:"UNPROVEN_PUBLIC_DTO"},
+        crossDay:{startAt,resetAt,seed:rolloverSeedValid,atTwo:[clockAtTwo,pendingVisibleAtTwo,exhaustedReadbackAtTwo,blockedAtTwo,noChargeAtTwo,chargeAtTwo],
+          fresh:freshObservationAfterReset,retry:retryValid,idempotent:retryIdempotent,original:[originalPreservedAfterRestart,originalPreservedAfterRetry],
+          root:[rootBindingRejectedBefore,rootBindingRejectedAfter],pendingCleared:supersededOriginalNotPending,cleanup:cleanupReleased,
+          charges:[chargeAfterFirstRetry,chargeAfterRepeatedRetry],parentCallIdAttemptReadback:"UNPROVEN_PUBLIC_DTO"},
+        unknownReset:{seed:unknownSeedValid,oldAtTwo:unknownOriginalPreservedAtTwo,clockOnly:unknownClockOnlyHeld,unavailable:unknownUnavailableHeld,
+          stale:unknownStaleHeld,unauthorized:unknownUnauthorizedHeld,fresh:unknownFreshObservation,retry:unknownRetryValid,idempotent:unknownRetryIdempotent,
+          original:unknownOriginalPreservedAfterRetry,pendingCleared:unknownSupersededOriginalNotPending,root:unknownRootBindingRejectedAfter,cleanup:unknownCleanupReleased,
+          charges:[unknownChargeAtTwo,unknownChargeAfterUnavailable,unknownChargeAfterStale,unknownChargeAfterUnauthorized,unknownChargeAfterFirstRetry,unknownChargeAfterRepeatedRetry]},
         physicalProviderCalls:0,paidRequests:0,nativeProviderSendPermitIssued:false,wholeATComplete:false
       }));
       return TestProbeControl.run(input,context,checks);

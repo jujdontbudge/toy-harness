@@ -1,6 +1,6 @@
 # ADR 0061: R0.06 cross-day model admission resume
 
-Status: Known-reset rollover CLI unit verified and stopped after the first implementation pass: four assigned checks and fourteen affected checks pass. Whole AT/card acceptance remains pending; evidence is `build/evidence/R0.06/cross-day-final-verification.json`.
+Status: Known-reset rollover CLI unit verified and stopped after the first implementation pass: four assigned checks and fourteen affected checks pass. The existing `AT-ops-10` recovery case is extended with an unknown-reset public reproducer; its runtime result is pending. Whole AT/card acceptance remains pending; known-reset evidence is `build/evidence/R0.06/cross-day-final-verification.json`.
 
 ## Existing public interface
 
@@ -27,4 +27,10 @@ The existing AT-ops-10 `deferred-restart-recovery` case remains at its assigned 
 
 This accounting case does not prove durable cadence slot/wake dispatch, authenticated provider subscription evidence, raw HTTP 429 parsing, protected provider execution, or whole AT/card acceptance. It adds no public method, DTO, command, database field, table, migration, fixture infrastructure, acceptance ID, or native activation.
 
-Unknown-reset cross-day recovery is outside this known-reset unit and remains deferred to R0.06.
+## Unknown-reset recovery reproduction
+
+The same mandatory `deferred-restart-recovery` case covers a second fixed account with an exhausted observation that has no windows and no `retryAt`. Persist its denied row at 23:59 UTC and reopen the public owner after midnight. Clock advancement alone, an unavailable observation, or an unauthorized available observation must leave the exact old row pending and uncharged. A fresh authorized, schema-valid available observation at 00:06 UTC may admit recovery only after the policy reports measured eligibility.
+
+The unknown-reset arm expects one current-day retry through the existing `resumePending(originalCallKey)` interface. Preserve the original row and all call bindings; verify retry identity/current day, budget-group/run/generation/route/work bindings, idempotent repeat, wrong-root conflict, superseded pending removal, and null-usage no-send lease cleanup. Keep the known-reset arm and existing same-day nine-call proof unchanged. Report only bounded booleans and counts in the existing `deferred-restart-recovery` CheckView; no new mandatory case or source assertion is introduced.
+
+For a later owner correction, unknown reset remains a wait condition until the latest observation is authorized, schema-valid, available, for the same account, no later than the current virtual wall, and reported strictly after the persisted original denial time (`startedAt`). Retain the existing policy freshness, measured-mode and eligible-decision checks. A known `retryAt` continues to require the virtual wall to reach it and the available observation to be reported at or after it. Midnight alone, stale data, and unavailable data never authorize a retry. This phase adds only the public reproduction; the model-admission owner stays frozen until an actual assigned CLI RED is recorded.

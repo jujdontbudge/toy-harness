@@ -1,0 +1,83 @@
+{
+  "schemaVersion": "toy.r006.unknown-reset-phase1-source-handoff.v1",
+  "recordedAt": "2026-10-07T13:51:08Z",
+  "card": "R0.06",
+  "AT": "AT-ops-10",
+  "state": "PHASE1_SOURCE_STOP_CLI_RED_REQUIRED",
+  "sourceOwner": "/root/r006_cross_day_minimum",
+  "admission": {
+    "path": "build/evidence/R0.06/unknown-reset-source-admission.json",
+    "sha256": "f3ceb34b394e3a077065eb58a7a67cd3c48c8aa3bf5345837a5d1a66ad8fa624",
+    "phase1SourceStopBy": "2026-10-07T14:09:39.910742Z",
+    "fullUnitDeadline": "2026-10-07T15:44:39.910742Z",
+    "assignedAttemptsUsedBeforeSource": 0,
+    "maximumAssignedAttempts": 3
+  },
+  "basis": {
+    "acceptedPlan": {
+      "path": "build/evidence/R0.06/unknown-reset-cross-day-next-minimum-20261007.json",
+      "sha256": "a333224bef4e2a484c37a8a8c20fae69b0bcdaa12a634d12845ab1ef3069ccc5"
+    },
+    "independentReview": {
+      "path": "build/evidence/R0.06/unknown-reset-plan-review-20261007.json",
+      "sha256": "596a3fed639a91cd9013098c319f97ea3d98f6945bcb4ebbf96ecaf4d1c26ed8"
+    },
+    "priorKnownResetProof": {
+      "path": "build/evidence/R0.06/cross-day-final-verification.json",
+      "sha256": "8196774b713ad4e14b7f80ca86b826553a2a05b6252691d7f5ea8a5ea162fd8b",
+      "recordedPassingChecks": 18
+    },
+    "assignedMandatoryCases": [
+      "exhausted-known-reset",
+      "exhausted-unknown-reset",
+      "full-quota-windows",
+      "deferred-restart-recovery"
+    ],
+    "existingAssertionHash": "e281f3fe7221d3ddc551bf73c8fc5e0df616060c8d089af9ee4625930d11ee3f"
+  },
+  "ownedPaths": [
+    "docs/adr/0061-cross-day-model-admission.md",
+    "packages/self-improvement/src/accounting-probe.ts",
+    "build/evidence/R0.06/unknown-reset-phase1-source-handoff.json"
+  ],
+  "sourcePins": [
+    {
+      "path": "docs/adr/0061-cross-day-model-admission.md",
+      "sha256": "f5708560c20e3ae67fa263880da7bd1655b624da56e5d5090dc16702a53837fa"
+    },
+    {
+      "path": "packages/self-improvement/src/accounting-probe.ts",
+      "sha256": "f68d0271b59740eb5a06debaa835c3ad9a1545414bfdff15ee547367154a1e72"
+    },
+    {
+      "path": "packages/self-improvement/src/model-admission.ts",
+      "sha256": "2afd5174b7b3edae3cb2398811acadd6bbc9268072faaf9bbaa49823f157a237",
+      "state": "FROZEN_UNCHANGED_OWNER_FIX_NOT_ADMITTED"
+    }
+  ],
+  "reproducer": {
+    "existingCase": "AT-ops-10 / deferred-restart-recovery",
+    "publicSurface": "existing toy probe -> accountingProbe -> public ModelAdmission observe/inspect/inspectPending/resumePending, TestClockControl, disposable PostgreSQL fixture and owner reopen",
+    "unknownResetSequence": "Persist an exhausted no-window/no-reset denial at 23:59 UTC for the existing second fixed account; reopen at 00:02 and retain the exact original pending row with zero charge. Clock-only, unavailable, stale, and unauthorized observations must leave that row unchanged. At 00:06, observe fresh authorized schema-valid available windows and attempt one current-day retry.",
+    "retryAssertions": "Require a distinct current-day retry with unchanged account, budget-group, run, generation, requested route and work bindings; same-key resume is idempotent with one charge; the original row is unchanged and no longer runnable; wrong-root binding conflicts; null-usage terminal settlement records no native send and retains the reservation charge.",
+    "projection": "Compact booleans/counts in the existing check; no new case ID, DTO, API, schema, fixture, or protocol.",
+    "priorCoveragePreservedInSource": "Retain all nine same-day recoveries and existing known-reset rollover checks; retain the four mandatory AT-ops-10 IDs and assertion hash."
+  },
+  "phase1Result": {
+    "ownerFix": false,
+    "cliRedObserved": false,
+    "wholeATComplete": false,
+    "nextGate": "Parent must run the actual unfiltered assigned public CLI run/show and capture genuine RED before any owner edit. A source prediction is insufficient."
+  },
+  "actionsNotRunBySourceOwner": {
+    "toyCli": true,
+    "build": true,
+    "generation": true,
+    "staticChecks": true,
+    "tests": true,
+    "runtime": true,
+    "nativeProviderOrOS": true,
+    "browserOrRoot": true,
+    "backgroundProcessesStarted": false
+  }
+}
