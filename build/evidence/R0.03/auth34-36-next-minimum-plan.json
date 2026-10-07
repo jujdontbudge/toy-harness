@@ -1,0 +1,81 @@
+{
+  "schema": "toy.r003-auth34-36-next-minimum-plan.v1",
+  "recordedAt": "2026-10-07T11:00:40Z",
+  "card": "R0.03",
+  "decision": "SOURCE_READY",
+  "scope": "Read-only minimum owner-source diagnosis for AT-hermes-config-34/35/36. No source, generated files, CLI/runtime state, protected grant, or host auth store was changed or accessed.",
+  "assignment": {
+    "rung": "CLI",
+    "requiredCommand": "toy --env test --stack <UUID> probe run <AT-ID> --request-id <UUID> --json, then toy --env test --stack <UUID> probe show <operation-id> --json",
+    "spec": "specs/hermes-config.md §11.3 and AT rows 34–36",
+    "testPlan": "specs/TEST-PLAN.md rows 62–63 and acceptance index entries for 34–36"
+  },
+  "finding": {
+    "ownerRoute": "The public probe.run command and Hermès owner probe exist, but cli/src/main.ts explicitly routes unfiltered auth probes only for 84–91. packages/hermes/src/auth-probe.ts rejects 34–36; its current owner list is 84–91, 78, and AT-ops-55. These IDs therefore have no Hermès owner implementation behind their assigned CLI route.",
+    "registration": "tests/acceptance-index.json already assigns 34–36 to CLI and requires probe:AT-hermes-config-34/35/36. tests/registry.yaml and the generated owner registry contain no auth.first-add, auth.manual-lineage, or auth.independent-scopes scenarios. Register the existing AT IDs with their source-bound owner scenarios; do not mint duplicate ATs or a diagnostic-only manifest.",
+    "sharedFixture": "packages/hermes/src/auth-fixture.ts already runs real public auth-add/list/chat subprocesses with fake external provider responses, fresh-process readback, expiry/refresh and root/profile digest checks. It currently hardcodes openai-codex and supports standard, borrowed-root, profile-siblings, mixed-lineage, lifecycle, single-grant-concurrency, and dashboard-scope modes.",
+    "overlap": "Saved 84–91 evidence already covers the general public subprocess machinery, Codex fresh-process persistence, sibling preservation, copied/independent mixed lineage, save faults, concurrency and lifecycle. Reuse that machinery and its independent readers; add only the unrepresented root-shape/provider axes and the independent CLI-route grant behavior required below.",
+    "ops55Boundary": "Saved AT-ops-55 evidence is exactly read back at CLI rung, but exercises only siwc-unbound: no grant, no access generation, zero refreshes, and no fallback. It proves denial without credentials; it does not prove a bound CLI grant refreshes independently. The separate native consent/Keychain/account gate remains pending and is not a substitute for the synthetic CLI fixture behavior assigned to AT-36."
+  },
+  "minimumByAcceptance": [
+    {
+      "id": "AT-hermes-config-34",
+      "scenarioId": "auth.first-add",
+      "minimumOwnerBehavior": "Extend the existing auth fixture to seed only synthetic root-store states and run real profile auth-add plus a fresh chat process for every required root shape (missing, no-pool, empty-pool, empty-rows) across the specified supported Anthropic PKCE, Codex device/loopback PKCE, xAI device, and Nous sources. Independently verify profile ownership/usability, retained siblings, sanitized exits, provider effects, and unchanged root existence/digest in each cell.",
+      "notCoveredBySavedProbes": "AT-85 starts from its standard empty fixture and hardcodes Codex. AT-86 covers sibling stores but not all four root shapes and provider sources. Reuse their readback logic; do not rerun it as a new diagnostic-only case."
+    },
+    {
+      "id": "AT-hermes-config-35",
+      "scenarioId": "auth.manual-lineage",
+      "minimumOwnerBehavior": "Parameterize the existing mixed-lineage public subprocess fixture for a synthetic root Anthropic singleton and an independent manual profile PKCE login. Preserve the paired genuine copied-lineage seed/heal case. After login exits, use fresh profile chat twice and a fake expiry/refresh; prove independent grant identity/generation remains usable and root digest is unchanged for the independent path, while copied lineage returns to its root owner.",
+      "notCoveredBySavedProbes": "AT-89 already exercises copied lineage plus an independent manual add, fresh readback/use/refresh/reload, but its public operations are hardcoded to Codex. The missing behavior is the required Anthropic source and root singleton fixture, not another copy of AT-89's generic diagnostics."
+    },
+    {
+      "id": "AT-hermes-config-36",
+      "scenarioId": "auth.independent-scopes",
+      "minimumOwnerBehavior": "Add one owner fixture that uses separate disposable scopes for a real Hermes auth-add/refresh/chat grant and the supported CLI-route login/use grant, with independent synthetic provider/OS-Keychain seam responses. Cover repeated expiry/rotation, dead-grant reauthentication, and lost-response/restart cells from TEST-PLAN.md; expose only nonsecret provider identity/generation and recovery readbacks, and prove neither grant is copied into the other scope.",
+      "notCoveredBySavedProbes": "AT-ops-55 only establishes unbound-route denial and no paid fallback. Current auth fixture has no bound CLI-route grant or independent-scope refresh behavior. Actual supported-account certification remains a separate protected prerequisite."
+    }
+  ],
+  "minimumSourceSurface": [
+    "tests/registry.yaml and its generated owner registration for the three existing AT IDs",
+    "cli/src/main.ts and packages/hermes/src/auth-probe.ts to route the registered scenarios to HermesAuthProbe.run",
+    "packages/hermes/src/auth-fixture.ts plus its existing fake external seams for only the missing scenario behavior",
+    "packages/contracts/src/hermes-runtime.ts only if the owner needs a bounded nonsecret result field for independent identity/generation/recovery evidence",
+    "skills/toy-control/FEATURE-MAP.md entry to bind these existing ATs to the owner command and proof"
+  ],
+  "requiredAssignedRungProof": {
+    "method": "Run each whole registered ID through the public Toy CLI against the real local test stack and fake external providers, then independently read the exact stored operation through probe show and capture complete stack teardown receipts.",
+    "AT34": "Every required root-shape/provider cell reaches real public auth-add and a fresh chat process; provider ledger matches; profile grant is usable; root is unchanged; run/show data match exactly.",
+    "AT35": "Root Anthropic and copied-lineage fixtures are independent; manual profile login exits before fresh chat/refresh processes; fake provider accepts the independent profile grant after reload/refresh; root remains unchanged on the independent path and copied lineage resolves to root ownership; run/show data match exactly.",
+    "AT36": "Both real public route families run in separate temporary scopes through the registered owner CLI; repeated refresh, dead grant, reauthentication, lost-response and restart results agree with independent provider identity/generation and recovery readbacks; no credential bytes cross scopes or enter evidence; run/show data match exactly.",
+    "wholeResultLimit": "Bounded owner checks are partial evidence only. Keep every operation whole result NOT_IMPLEMENTED/complete=false until its complete assigned AT and separate protected prerequisites pass."
+  },
+  "deferrals": [
+    "Actual supported-account login/consent, live grant acquisition, Keychain ownership and account capability/zero-credit certification remain behind their protected human/native gates; synthetic fixture work does not satisfy them.",
+    "Native service identity/controller enforcement and any root-owned live auth-store observation remain separate; never read or copy existing host grants.",
+    "Do not expand AT-ops-55 into a duplicate grant test; it owns no-paid-fallback behavior, while AT-36 owns independent grant refresh behavior."
+  ],
+  "limitations": [
+    "This is a source-readiness plan, not proof that AT-hermes-config-34/35/36 pass.",
+    "No credentials, logs, raw process streams, environment/token bytes or token hashes/lengths were inspected or retained.",
+    "No one-off runtime/system pokes were performed; no source edits, generation, builds, static checks, CLI/runtime/native operations, git operations, or root queue operations were performed."
+  ],
+  "sha256Pins": [
+    { "path": "packages/hermes/src/auth-probe.ts", "sha256": "16f0d54f74f47418a54967f768eca222d7f338a60eb1ee88e01ed1f29f081782", "kind": "source" },
+    { "path": "packages/hermes/src/auth-fixture.ts", "sha256": "b8ed0a9ecd7de80dbe29b315d89d3a15bd972ee463b8adc8ad54f3b70a428cd5", "kind": "source" },
+    { "path": "packages/ops/src/fixture-stack.ts", "sha256": "87521cf7110c3fd0752477123c60c7adf4a3f28594c5072b2eeac8ca44dafd96", "kind": "source" },
+    { "path": "cli/src/main.ts", "sha256": "f11beae8458b3d1ec95ae4093fd8164ce96956b90cb988ea1e06280ae0d28363", "kind": "source" },
+    { "path": "packages/contracts/src/ops-registry.ts", "sha256": "d3561c802167daf325008af504221809457cc4d42ad71d9118042dbcdc574933", "kind": "source" },
+    { "path": "packages/contracts/src/generated-probe-registry.ts", "sha256": "46aa7768278a58d476d8518e61cb958c344d3914eab68de91a84ebacae968008", "kind": "source" },
+    { "path": "tests/registry.yaml", "sha256": "1624650e9e56dc92b927c8fcca5a28a707b17345693da1dbcf5c62bd8ba09d77", "kind": "source" },
+    { "path": "tests/acceptance-index.json", "sha256": "c9b645eab7f55b2ebf35d7db769a534a4837de23ad3dc3d913f3189e781d44fa", "kind": "source" },
+    { "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/hermes-config.md", "sha256": "d3548fde13180bc750660f306caa0041101832e398ccdabd6cfdac0b3de8f4af", "kind": "spec" },
+    { "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/TEST-PLAN.md", "sha256": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2", "kind": "spec" },
+    { "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/BUILD-PLAN.md", "sha256": "aa84eb600e53bc65e6c6b1ed4fce45870ead861e0d18bf00d81613ff2595f49a", "kind": "spec" },
+    { "path": "build/evidence/R0.03/auth-workflow-remaining-final-summary.json", "sha256": "f9f89806ced0fce917a13024db981c4216a11a572277cec84be0a368b759b328", "kind": "evidence", "use": "CLI run/show exactness and bounded PASS check records for AT-84–89 and AT-91; each whole result remains NOT_IMPLEMENTED/complete=false" },
+    { "path": "build/evidence/R0.03/dashboard90-final-verification.json", "sha256": "28e0beff09757a6e99e5ee7503cec8aab6a1b1363f687a3945cbe08f15adc6c9", "kind": "evidence", "use": "Bounded dashboard/auth regression verification; wholeATComplete=false and acceptanceComplete=false" },
+    { "path": "build/evidence/R0.01/native-refusal-fixture-verification.json", "sha256": "c2dd60312e608494505cde644e6f0445aac605544040f6fb8d9100681a0ef1dc", "kind": "evidence", "use": "AT-ops-55 exact CLI readback is siwc-unbound with no grant refresh; live authorization/account gates remain false" },
+    { "path": "build/evidence/R0.03/auth34-36-next-admission.json", "sha256": "f2a85aad16be2fc5d11a08bdae7c13ad043554e74f1bfe460c641180915f4883", "kind": "evidence", "use": "Fresh normal-pressure resource admission for this bounded planning task" }
+  ]
+}
