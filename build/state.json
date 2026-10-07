@@ -2,7 +2,7 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-07T09:50:10.317Z",
+  "updatedAt": "2026-10-07T09:51:44.222Z",
   "phase": "R0_FEASIBILITY",
   "activeCard": "R0.06",
   "cardCount": 87,
@@ -11862,7 +11862,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Commit the verified AT-ops-11 unit, then review/admit the bounded AT-ops-9 four-case plan using existing ModelRoute interfaces. Root queue polling continues; valid ROOT02 DONE with actual UID310/native read and exact restoration immediately prioritizes prepared R0.01. No SOURCE is admitted; native PostgreSQL initialization remains R1.",
+  "nextAction": "Review the bounded AT-ops-9 four-case plan and independent read-only review, then admit only that existing-interface SOURCE unit. Valid ROOT02 DONE with actual UID310/native read and exact restoration immediately prioritizes R0.01 after owned cleanup. Preserve all closed units; native PostgreSQL initialization remains R1.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -22426,9 +22426,63 @@
     "threadId": "01a109d1-2f67-7643-9677-404a83617cf8",
     "lockFile": "build/coordinator.lock",
     "lockKind": "exclusive session marker; not process-liveness evidence",
-    "checkpoint": "build/checkpoints/2026-10-07-quota-pending-verified"
+    "checkpoint": "build/checkpoints/2026-10-07-unavailable-quota-verified"
   },
-  "pullRequest": "https://github.com/JohanSardar/toy-harness/pull/1",
+  "pullRequest": {
+    "0": "h",
+    "1": "t",
+    "2": "t",
+    "3": "p",
+    "4": "s",
+    "5": ":",
+    "6": "/",
+    "7": "/",
+    "8": "g",
+    "9": "i",
+    "10": "t",
+    "11": "h",
+    "12": "u",
+    "13": "b",
+    "14": ".",
+    "15": "c",
+    "16": "o",
+    "17": "m",
+    "18": "/",
+    "19": "J",
+    "20": "o",
+    "21": "h",
+    "22": "a",
+    "23": "n",
+    "24": "S",
+    "25": "a",
+    "26": "r",
+    "27": "d",
+    "28": "a",
+    "29": "r",
+    "30": "/",
+    "31": "t",
+    "32": "o",
+    "33": "y",
+    "34": "-",
+    "35": "h",
+    "36": "a",
+    "37": "r",
+    "38": "n",
+    "39": "e",
+    "40": "s",
+    "41": "s",
+    "42": "/",
+    "43": "p",
+    "44": "u",
+    "45": "l",
+    "46": "l",
+    "47": "/",
+    "48": "1",
+    "url": "https://github.com/JohanSardar/toy-harness/pull/1",
+    "draft": true,
+    "headRefOid": "e2a0521151aff8d0e8df83b75edd7b280db27247",
+    "readback": "build/evidence/pr1-unavailable-quota-readback.json"
+  },
   "lastWorker": {
     "task": "/root/r012_next_assigned_gate",
     "card": "R0.12",
@@ -22496,7 +22550,7 @@
     "recordedAt": "2026-10-07T09:46:48.756Z",
     "command": "npm run check"
   },
-  "sourceCheckpointCommit": "03ad1ed519ef3a5a24d1566b6aa8929006c32671",
+  "sourceCheckpointCommit": "e2a0521151aff8d0e8df83b75edd7b280db27247",
   "sourceCheckpointPushed": true,
   "rootRequests": {
     "ROOT-R004-20261006-01": {
@@ -22536,15 +22590,15 @@
     }
   },
   "resourceAdmission": {
-    "measuredAt": "2026-10-07T09:44:13.220Z",
-    "availableBytes": "2851110912",
+    "measuredAt": "2026-10-07T09:50:38.819Z",
+    "availableBytes": "2308997120",
     "pressure": "normal",
     "strictlyFreeAdmission": false,
     "repairFloorApplied": false,
     "ownedWorldsRunning": 0,
-    "helpersRunning": 0,
+    "helpersRunning": 1,
     "helperNeedBytes": "268435456",
-    "measurementSource": "build/evidence/R0.06/unavailable-quota11-final-admission.json",
+    "measurementSource": "build/evidence/R0.06/ops9-route-next-admission.json",
     "marginBytes": "536870912",
     "ownedStackId": null,
     "stackAndNativeChildrenNeedBytes": "0",
@@ -22557,29 +22611,25 @@
     "jobOwnDeclaredNeedOnly": true
   },
   "activeWorkers": [],
-  "pullRequestUpdatedAt": "2026-10-07T09:07:30.954Z",
-  "continuationCheckpoint": "build/checkpoints/2026-10-07-quota-pending-verified",
+  "pullRequestUpdatedAt": "2026-10-07T09:51:44.222Z",
+  "continuationCheckpoint": "build/checkpoints/2026-10-07-unavailable-quota-verified",
   "readOnlyWorkers": [
     {
-      "task": "/root/unavailable_quota11_minimum",
-      "status": "STOPPED",
-      "evidence": "build/evidence/R0.06/unavailable-quota11-next-minimum-plan.json"
-    },
-    {
       "task": "/root/quota11_readonly_review",
-      "status": "STOPPED",
-      "deadlineUtc": "2026-10-07T09:54:00.000Z",
-      "allowedOutput": "build/evidence/R0.06/unavailable-quota11-independent-review.json",
-      "admission": "build/evidence/R0.06/unavailable-quota11-final-admission.json",
-      "evidence": "build/evidence/R0.06/unavailable-quota11-independent-review.json"
+      "card": "R0.06",
+      "acceptanceId": "AT-ops-9",
+      "status": "READ_ONLY_RUNNING",
+      "deadlineUtc": "2026-10-07T10:00:00.000Z",
+      "allowedOutput": "build/evidence/R0.06/ops9-route-plan-review.json",
+      "admission": "build/evidence/R0.06/ops9-route-next-admission.json"
     }
   ],
   "liveRuntime": {
     "state": "DOWN",
-    "stackId": "f2d0b0e9-9e3c-465d-b816-f54fdb9a883e",
+    "latestStackId": "174a4f82-2792-4223-9130-6eabdada38b0",
     "cleanupComplete": true,
     "unresolvedResources": 0,
     "sourceOwner": "NONE_SOURCE_STOPPED",
-    "evidence": "build/evidence/R0.06/unavailable-quota11-final-verification.json"
+    "evidence": "build/evidence/R0.06/ops9-route-baseline-summary.json"
   }
 }
