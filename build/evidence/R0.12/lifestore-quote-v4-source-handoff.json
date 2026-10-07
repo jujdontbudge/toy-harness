@@ -1,0 +1,112 @@
+{
+  "format": "toy-r0-source-handoff-v1",
+  "card": "R0.12 / AT-lifestore-45",
+  "status": "SOURCE_STOPPED_PENDING_PARENT_INTEGRATION_AND_ASSIGNED_CLI_PROOF",
+  "sourceBoundary": {
+    "assignedRung": "CLI",
+    "canonicalOwner": "EngineeringControl.checkResearch",
+    "publicDispatch": "ReplayEnvironment.run -> componentComparisonProbe -> lifeStoreQuoteProbe -> TestProbeControl.run",
+    "documentSeam": "ResearchDocumentOverlayV1 seeded archived-report overlay; original archive digest guard is preserved",
+    "publicHelper": "EngineeringControl.canonicalRequirementQuotes(requirementIds: ResearchComponentComparisonV4[\"mappedRequirements\"], context: OpsControlContextV1): Result<ResearchComponentComparisonV4[\"requirementQuotes\"]>",
+    "helperConstraints": [
+      "The helper accepts requirement IDs and owned control context only; no caller-supplied path or bytes.",
+      "It uses the same canonical REQUIREMENTS.md reader and ID-to-row quote parser as checkResearch.",
+      "checkResearch independently reparses and validates source bytes, full-file digest, exact ID-specific quote and byte span; the helper is not the check oracle."
+    ]
+  },
+  "cases": [
+    {
+      "id": "positive-all-required-quotes",
+      "phase": "positive-all-required-quotes",
+      "checkViewId": "research.component-comparison",
+      "assertion": "118 source-derived scoped components have valid primary/version and exact requirement quote evidence; unrelated route, skill, account, region, release, validation and whole acceptance gates remain applicable and may keep decisions BLOCKED."
+    },
+    {
+      "id": "missing-component",
+      "phase": "missing-component",
+      "checkViewId": "research.component-comparison",
+      "assertion": "Omit one scoped component record; its decision has no comparison digest and reports missing decision."
+    },
+    {
+      "id": "missing-requirement-quote",
+      "phase": "missing-requirement-quote",
+      "checkViewId": "research.component-comparison",
+      "assertion": "Remove one target requirement quote; exact missing requirement ID is reported."
+    },
+    {
+      "id": "unsupported-choice",
+      "phase": "unsupported-choice",
+      "checkViewId": "research.component-comparison",
+      "assertion": "Mark the selected outside option unsupported; CHOICE_UNSUPPORTED is reported while quote evidence remains intact."
+    },
+    {
+      "id": "missing-version",
+      "phase": "missing-version",
+      "checkViewId": "research.component-comparison",
+      "assertion": "Schema-valid null version and null locator produce PRIMARY_SOURCE:VERSION."
+    },
+    {
+      "id": "wrong-version",
+      "phase": "wrong-version",
+      "checkViewId": "research.component-comparison",
+      "assertion": "Wrong version text against the existing span produces PRIMARY_SOURCE:VERSION."
+    },
+    {
+      "id": "wrong-digest",
+      "phase": "wrong-digest",
+      "checkViewId": "research.component-comparison",
+      "assertion": "Wrong full-content digest produces PRIMARY_SOURCE:DIGEST."
+    },
+    {
+      "id": "wrong-primary-quote",
+      "phase": "wrong-primary-quote",
+      "checkViewId": "research.component-comparison",
+      "assertion": "Changed primary quote against unchanged source bytes produces PRIMARY_SOURCE:QUOTE:<evidenceId>."
+    },
+    {
+      "id": "wrong-requirement-quote",
+      "phase": "wrong-requirement-quote",
+      "checkViewId": "research.component-comparison",
+      "assertion": "Changed canonical requirement quote produces the exact missing requirement ID."
+    },
+    {
+      "id": "missing-validation",
+      "phase": "missing-validation",
+      "checkViewId": "research.component-comparison",
+      "assertion": "Remove the target G0 validation; exact missing validation ID is reported."
+    }
+  ],
+  "sourceOnlySafetyReview": {
+    "preserved": [
+      "V1/V2/V3 readers remain supported; V4 is additive.",
+      "V4 scope is derived from existing source-defined component and Life Store requirement-group parsing; no component inventory is copied into the probe.",
+      "V4 duplicate and out-of-scope records invalidate the affected record; archived report original/content digest checks remain active.",
+      "CheckViews remain capped at 2000 characters and emit compact counts, failing IDs and aggregate digests.",
+      "Global admission remains BLOCKED, wholeATsPassed remains empty, acceptanceComplete remains false, and live provider sends are zero."
+    ],
+    "notEstablished": [
+      "No authenticated or real external primary research is present; seeded fixture bytes establish only byte-span checker behavior.",
+      "No build consumer currently demonstrates that these findings block an affected build.",
+      "No source behavior, AT, CLI operation or whole-card acceptance has been verified by this source phase."
+    ]
+  },
+  "sourceHashesSha256": {
+    "docs/adr/0048-lifestore-primary-evidence.md": "262cd8393bd8e64a635c1c0880c76d9ee606af199f1c520291f15c7d8eef0580",
+    "packages/contracts/src/engineering-control.ts": "8c03f57d0dd51bd16688a004c150457f091d410629cfa67c1a5a7f01cae43b41",
+    "packages/self-improvement/src/engineering-control.ts": "8fb8fd14d5ad7edb1273c2e9639645143d1b31277cdcc5d0343d2102cfc82976",
+    "packages/self-improvement/src/component-comparison-probe.ts": "2591c8eb5dd070a37ee8628895a5627c20e5707218cd387049d79307dd4ec222",
+    "packages/self-improvement/src/public.ts": "ec346f0482cb0bb30c4f3651e30cf7bf93e31b41b2ebc73c776db713f53cf3c2"
+  },
+  "sourceSyntaxChecks": {
+    "typescriptTranspileModule": "PASS for the four owned TypeScript files",
+    "gitDiffCheck": "PASS",
+    "limitations": "Syntax-only transpilation and whitespace checks do not establish type correctness, package generation/build, runtime behavior or assigned AT acceptance."
+  },
+  "parentIntegrationAndProofStillRequired": [
+    "Add the AT-lifestore-45 registered CLI manifest with the ten exact case IDs above, phase equal to each case ID, scenario research.component-comparison, owner self-improvement, and the assigned source assertion hash.",
+    "Extend the existing packages/ops/src/fixture-stack.ts component-comparison probe allowlist: it currently omits AT-lifestore-45, so TestProbeControl.run would reject nonempty observations until integrated.",
+    "Update the existing fixture and feature/acceptance indexes as required, regenerate registered probe/contracts outputs, then run the assigned CLI probe.run, probe.show and fixture-world teardown through the established toy CLI.",
+    "Run required generated-contract/package strict checks and inspect the actual readback; retain AT and whole R0.12 incomplete unless their assigned assertions pass at CLI rung.",
+    "Keep authenticated primary provenance, native identity, route/skill/account prerequisites and actual build-consumer blocking as separate pending gates."
+  ]
+}

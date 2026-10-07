@@ -1,0 +1,66 @@
+{
+  "recordedAt": "2026-10-07T02:14:27.521210+00:00",
+  "verdict": "SOURCE_HANDOFF_REVIEWED_PARENT_INTEGRATION_PENDING_GENERATION_AND_CLI_PROOF",
+  "handoffSha256": "daf4ad670d997f3c4d482f1188d2d8af5d44d32d8cb4c7ef8088290e65e61a8b",
+  "bindings": [
+    {
+      "path": "docs/adr/0048-lifestore-primary-evidence.md",
+      "expectedSha256": "262cd8393bd8e64a635c1c0880c76d9ee606af199f1c520291f15c7d8eef0580",
+      "actualSha256": "262cd8393bd8e64a635c1c0880c76d9ee606af199f1c520291f15c7d8eef0580",
+      "matches": true
+    },
+    {
+      "path": "packages/contracts/src/engineering-control.ts",
+      "expectedSha256": "8c03f57d0dd51bd16688a004c150457f091d410629cfa67c1a5a7f01cae43b41",
+      "actualSha256": "8c03f57d0dd51bd16688a004c150457f091d410629cfa67c1a5a7f01cae43b41",
+      "matches": true
+    },
+    {
+      "path": "packages/self-improvement/src/engineering-control.ts",
+      "expectedSha256": "8fb8fd14d5ad7edb1273c2e9639645143d1b31277cdcc5d0343d2102cfc82976",
+      "actualSha256": "8fb8fd14d5ad7edb1273c2e9639645143d1b31277cdcc5d0343d2102cfc82976",
+      "matches": true
+    },
+    {
+      "path": "packages/self-improvement/src/component-comparison-probe.ts",
+      "expectedSha256": "2591c8eb5dd070a37ee8628895a5627c20e5707218cd387049d79307dd4ec222",
+      "actualSha256": "2591c8eb5dd070a37ee8628895a5627c20e5707218cd387049d79307dd4ec222",
+      "matches": true
+    },
+    {
+      "path": "packages/self-improvement/src/public.ts",
+      "expectedSha256": "ec346f0482cb0bb30c4f3651e30cf7bf93e31b41b2ebc73c776db713f53cf3c2",
+      "actualSha256": "ec346f0482cb0bb30c4f3651e30cf7bf93e31b41b2ebc73c776db713f53cf3c2",
+      "matches": true
+    }
+  ],
+  "cases": [
+    "positive-all-required-quotes",
+    "missing-component",
+    "missing-requirement-quote",
+    "unsupported-choice",
+    "missing-version",
+    "wrong-version",
+    "wrong-digest",
+    "wrong-primary-quote",
+    "wrong-requirement-quote",
+    "missing-validation"
+  ],
+  "review": "Additive V4 keeps existing comparison gates, exact safe REQUIREMENTS read, canonical per-ID row quote and byte spans, archive digest guard, duplicate/out-of-scope refusal and 2000-character receipts. Positive proves quote/evidence subchecks only.",
+  "behaviorVerified": false,
+  "wholeATsPassed": [],
+  "acceptanceComplete": false,
+  "parentRepairs": [
+    {
+      "reason": "Strict generated-contract ownership policy rejects a renamed alias of an existing generated component DTO.",
+      "change": "Export the already-inventoried ResearchComponentInspectionV1 from its schema owner and import it directly; remove the local alias.",
+      "runtimeChange": false
+    },
+    {
+      "reason": "Canonical independentReader strings are capped at120 characters.",
+      "change": "Shorten authored Life45 and auth91 observation reader labels without changing case, phase, assertion or observation coverage.",
+      "runtimeChange": false
+    }
+  ],
+  "updatedAt": "2026-10-07T02:18:05.529059+00:00"
+}

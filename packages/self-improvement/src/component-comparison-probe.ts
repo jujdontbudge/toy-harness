@@ -1,8 +1,8 @@
 import { createHash, randomUUID } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { checkViewSchema, opsErrorMessages, registeredCliAcceptanceManifestInventory, researchComponentComparisonSchema, researchComponentComparisonV2Schema, researchSourcesComponentComparisonSchema, researchSourcesComponentComparisonV2Schema, modelRouteDelegationReceiptSchema, researchSkillPinSchema } from "@toy/contracts";
-import type { CheckViewV1, OpsControlContextV1, RegisteredProbeInputV1, RegisteredProbeOperationV1, ResearchComponentComparisonV1, Result } from "@toy/contracts";
+import { checkViewSchema, opsErrorMessages, registeredCliAcceptanceManifestInventory, researchComponentComparisonSchema, researchComponentComparisonV2Schema, researchComponentComparisonV4Schema, researchSourcesComponentComparisonSchema, researchSourcesComponentComparisonV2Schema, modelRouteDelegationReceiptSchema, researchSkillPinSchema } from "@toy/contracts";
+import type { CheckViewV1, OpsControlContextV1, RegisteredProbeInputV1, RegisteredProbeOperationV1, ResearchComponentComparisonV1, ResearchComponentComparisonV4, ResearchDocumentOverlayV1, ResearchRegisterInspectionV3, ResearchComponentInspectionV1, Result } from "@toy/contracts";
 import { TestProbeControl, trustedCheckoutRoot } from "@toy/ops/public";
 import { EngineeringControl } from "./engineering-control.js";
 
@@ -25,6 +25,7 @@ const completeReport = (): ResearchComponentComparisonV1 => researchComponentCom
   validationPlan: "Run the pinned shared-connection rollback, lost-claim fencing and generated-schema CLI fault probe before component admission."
 });
 export const componentComparisonProbe = (input: RegisteredProbeInputV1, context: OpsControlContextV1): Result<RegisteredProbeOperationV1> => {
+  if (input.probeId === "AT-lifestore-45") return lifeStoreQuoteProbe(input, context);
   if (["AT-sources-188", "AT-sources-190"].includes(input.probeId)) return sourcesComponentProbe(input, context);
   if (input.probeId === "AT-self-improvement-54") return requiredComponentProbe(input, context);
   if (input.probeId !== "AT-obligations-74" || input.caseId !== undefined) return { ok: false, error: { module: "ops", code: "INVALID_INPUT", message: opsErrorMessages.INVALID_INPUT, retryable: false } };
@@ -58,6 +59,173 @@ export const componentComparisonProbe = (input: RegisteredProbeInputV1, context:
       prerequisite: JSON.stringify({ caseId, externalResearch: "seeded_archived_report", actualUid: process.getuid?.() ?? null, archive: { key: archive.key, path: archive.path, originalDigest: archive.originalDigest, contentDigest: archive.digest, origin: archive.origin }, result: observed, registerAdmission: inspection.data.admission, liveProviderSends: 0, wholeATComplete: false }),
       nextCommandId: "probe.show", links: { recordRefs: [], observations: [], artifactDigests: [digest(markdown), digest(JSON.stringify(report)), digest(readFileSync(new URL("./component-comparison-probe.js", import.meta.url))), digest(readFileSync(new URL("./engineering-control.js", import.meta.url)))] }
     }));
+  }
+  return TestProbeControl.run(input, context, checks);
+};
+const lifeStoreCases = ["positive-all-required-quotes", "missing-component", "missing-requirement-quote", "unsupported-choice", "missing-version", "wrong-version", "wrong-digest", "wrong-primary-quote", "wrong-requirement-quote", "missing-validation"] as const;
+type LifeStoreReport = ResearchRegisterInspectionV3["reports"][number];
+const lifeStoreError = (): Result<RegisteredProbeOperationV1> => ({ ok: false, error: { module: "ops", code: "ARTIFACT_MISMATCH", message: opsErrorMessages.ARTIFACT_MISMATCH, retryable: false } });
+const lifeStoreRecord = (component: ResearchComponentInspectionV1, mappedRequirements: readonly string[], requirementQuotes: ResearchComponentComparisonV4["requirementQuotes"]): ResearchComponentComparisonV4 => {
+  const sourceIds = component.reportKeys.length > 0 ? component.reportKeys : ["fixture-primary:" + component.id];
+  const evidence = sourceIds.map(id => ({ id, url: "https://fixture.invalid/" + id, publisher: "Seeded external primary report", kind: "primary" as const, supportedOptionIds: ["postgres", "outside"] }));
+  const sourceContentParts = ["version: v1\n"];
+  const quotes: ResearchComponentComparisonV4["primarySource"]["quotes"] = [];
+  let byteLength = Buffer.byteLength(sourceContentParts[0] ?? "", "utf8");
+  for (const id of sourceIds) {
+    const quote = "Seeded primary evidence for " + component.id + " from " + id + ".";
+    const prefix = id + ": ";
+    const byteStart = byteLength + Buffer.byteLength(prefix, "utf8");
+    const byteEnd = byteStart + Buffer.byteLength(quote, "utf8");
+    sourceContentParts.push(prefix + quote + "\n");
+    quotes.push({ evidenceId: id, quote, byteStart, byteEnd });
+    byteLength += Buffer.byteLength(prefix + quote + "\n", "utf8");
+  }
+  const sourceContent = sourceContentParts.join("");
+  const sourceBytes = Buffer.from(sourceContent, "utf8");
+  return researchComponentComparisonV4Schema.parse({
+    scope: "required-research-component", componentId: component.id, mappedRequirements: [...mappedRequirements],
+    options: [
+      { id: "postgres", tool: "PostgreSQL-backed fixture option", example: "postgres-pg-boss", viable: true, support: "proven", primaryEvidenceIds: sourceIds, reliability: "Validate the source revision against an independent readback.", maintenance: "Keep this seeded fixture outside live provider routes.", resources: "Use the existing local evidence adapter." },
+      { id: "outside", tool: "Independent local fixture option", example: null, viable: true, support: "proven", primaryEvidenceIds: sourceIds, reliability: "Compare an independent local source path.", maintenance: "Keep its fixture separate from the selected option.", resources: "Reuse the current fake external-document seam." }
+    ],
+    evidence, selectedOptionId: "outside", unresolvedFacts: [], acceptanceIds: ["AT-lifestore-45"],
+    validationPlan: "Compare the complete source and requirement quote readback through EngineeringControl.checkResearch.", releaseGate: component.releaseGate,
+    validations: [{ id: "G0:R0:" + component.id, support: "proven", sourceIds, testIds: ["AT-lifestore-45"] }],
+    executionReceipt: null,
+    primarySource: { sourceVersion: "v1", sourceDigest: digest(sourceBytes), sourceContent, versionByteStart: Buffer.byteLength("version: ", "utf8"), versionByteEnd: Buffer.byteLength("version: v1", "utf8"), quotes },
+    requirementQuotes: [...requirementQuotes]
+  });
+};
+const lifeStoreDocuments = (reports: readonly LifeStoreReport[], components: readonly ResearchComponentInspectionV1[], records: ReadonlyMap<string, ResearchComponentComparisonV4>, omittedComponentId?: string): ResearchDocumentOverlayV1[] => {
+  const archived = reports.filter((report): report is LifeStoreReport & { originalDigest: string } => report.originalDigest !== null);
+  const recordsByReport = new Map<string, ResearchComponentComparisonV4[]>();
+  for (const report of archived) recordsByReport.set(report.key, []);
+  for (const component of components) {
+    if (component.id === omittedComponentId) continue;
+    const record = records.get(component.id);
+    const reportKey = component.reportKeys.find(key => recordsByReport.has(key)) ?? (component.reportKeys.length === 0 && recordsByReport.has("MEM") ? "MEM" : undefined);
+    if (!record || !reportKey) continue;
+    recordsByReport.get(reportKey)?.push(record);
+  }
+  return archived.map(report => {
+    const markdown = "# Seeded external Life Store report\n\n" + (recordsByReport.get(report.key) ?? []).map(record => "```ResearchComponentComparisonV4\n" + JSON.stringify(record) + "\n```\n").join("\n");
+    return { reportKey: report.key, originalDigest: report.originalDigest, contentDigest: digest(markdown), markdown };
+  });
+};
+const lifeStoreQuoteProbe = (input: RegisteredProbeInputV1, context: OpsControlContextV1): Result<RegisteredProbeOperationV1> => {
+  if (input.caseId !== undefined) return { ok: false, error: { module: "ops", code: "INVALID_INPUT", message: opsErrorMessages.INVALID_INPUT, retryable: false } };
+  const manifest = registeredCliAcceptanceManifestInventory.find(entry => entry.id === input.probeId);
+  if (!manifest || manifest.scenarioId !== "research.component-comparison" || JSON.stringify(manifest.mandatoryCases.map(entry => entry.id)) !== JSON.stringify(lifeStoreCases)) return { ok: false, error: { module: "ops", code: "ATTESTATION_INVALID", message: opsErrorMessages.ATTESTATION_INVALID, retryable: false } };
+  const baseline = EngineeringControl.checkResearch({ release: "R0" }, context);
+  if (!baseline.ok) return baseline;
+  const candidateRecords = new Map<string, ResearchComponentComparisonV4>();
+  for (const component of baseline.data.components) candidateRecords.set(component.id, lifeStoreRecord(component, [], []));
+  const candidateDocuments = lifeStoreDocuments(baseline.data.reports, baseline.data.components, candidateRecords);
+  const candidateReadback = EngineeringControl.checkResearch({ release: "R0" }, context, candidateDocuments);
+  if (!candidateReadback.ok) return candidateReadback;
+  const componentDecisions = new Map(candidateReadback.data.componentDecisions.map(decision => [decision.componentId, decision]));
+  const scopedComponents = baseline.data.components.filter(component => {
+    const decision = componentDecisions.get(component.id);
+    return decision !== undefined && decision.comparisonDigest !== null;
+  }).sort((left, right) => left.id.localeCompare(right.id));
+  if (scopedComponents.length !== 118) return TestProbeControl.run(input, context, [checkViewSchema.parse({ id: "research.component-comparison", owner: "self-improvement", state: "FAIL", checkedAt: new Date().toISOString(), reasonCode: "LIFESTORE_SCOPE_BINDING_FAILED", prerequisite: JSON.stringify({ phase: "candidate-scope", expectedComponentCount: 118, componentCount: scopedComponents.length, boundComponentIds: scopedComponents.map(component => component.id), wholeATComplete: false }), nextCommandId: "probe.show", links: { recordRefs: [], observations: [], artifactDigests: [digest(JSON.stringify(candidateDocuments)), digest(readFileSync(new URL("./component-comparison-probe.js", import.meta.url)))] } })]);
+  const requirementIds = [...new Set(scopedComponents.flatMap(component => componentDecisions.get(component.id)?.missingRequirementIds ?? []))].sort();
+  const canonicalQuotes = EngineeringControl.canonicalRequirementQuotes(requirementIds, context);
+  if (!canonicalQuotes.ok) return canonicalQuotes;
+  const quoteById = new Map(canonicalQuotes.data.map(quote => [quote.requirementId, quote]));
+  const candidateRequirementIds = new Map(scopedComponents.map(component => [component.id, componentDecisions.get(component.id)?.missingRequirementIds ?? []]));
+  const target = scopedComponents[0];
+  if (!target) return lifeStoreError();
+  const targetRequirementId = candidateRequirementIds.get(target.id)?.[0];
+  if (!targetRequirementId) return lifeStoreError();
+  const checks: CheckViewV1[] = [];
+  for (const caseId of lifeStoreCases) {
+    const records = new Map<string, ResearchComponentComparisonV4>();
+    for (const component of scopedComponents) {
+      const ids = candidateRequirementIds.get(component.id) ?? [];
+      const quotes = ids.flatMap(id => {
+        const quote = quoteById.get(id);
+        return quote ? [quote] : [];
+      });
+      if (quotes.length !== ids.length) return lifeStoreError();
+      records.set(component.id, lifeStoreRecord(component, ids, quotes));
+    }
+    const targetRecord = records.get(target.id);
+    if (!targetRecord) return lifeStoreError();
+    if (caseId === "missing-requirement-quote") targetRecord.requirementQuotes = targetRecord.requirementQuotes.filter(quote => quote.requirementId !== targetRequirementId);
+    if (caseId === "unsupported-choice") {
+      const option = targetRecord.options.find(entry => entry.id === "outside");
+      if (!option) return lifeStoreError();
+      option.support = "unsupported";
+    }
+    if (caseId === "missing-version") {
+      targetRecord.primarySource.sourceVersion = null;
+      targetRecord.primarySource.versionByteStart = null;
+      targetRecord.primarySource.versionByteEnd = null;
+    }
+    if (caseId === "wrong-version") targetRecord.primarySource.sourceVersion = "v9";
+    if (caseId === "wrong-digest") targetRecord.primarySource.sourceDigest = "0".repeat(64);
+    if (caseId === "wrong-primary-quote") {
+      const quote = targetRecord.primarySource.quotes[0];
+      if (!quote) return lifeStoreError();
+      quote.quote += " changed";
+    }
+    if (caseId === "wrong-requirement-quote") {
+      const quote = targetRecord.requirementQuotes.find(entry => entry.requirementId === targetRequirementId);
+      if (!quote) return lifeStoreError();
+      quote.quote += " changed";
+    }
+    if (caseId === "missing-validation") targetRecord.validations = [];
+    const documents = lifeStoreDocuments(baseline.data.reports, baseline.data.components, records, caseId === "missing-component" ? target.id : undefined);
+    const inspection = EngineeringControl.checkResearch({ release: "R0" }, context, documents);
+    if (!inspection.ok) return inspection;
+    const decisions = new Map(inspection.data.componentDecisions.map(decision => [decision.componentId, decision]));
+    const affected = decisions.get(target.id);
+    if (!affected) return lifeStoreError();
+    const quotedComponents = scopedComponents.flatMap(component => {
+      const decision = decisions.get(component.id);
+      return decision !== undefined && decision.comparisonDigest !== null ? [decision] : [];
+    });
+    const quoteFailures = quotedComponents.filter(decision => decision.missingRequirementIds.length > 0 || decision.missingSourceIds.some(id => id.startsWith("PRIMARY_SOURCE:")));
+    const allDecisionsBlocked = scopedComponents.every(component => decisions.get(component.id)?.state === "BLOCKED");
+    const routeMissingCount = quotedComponents.filter(decision => decision.missingValidationIds.includes("ROUTE:R0:" + decision.componentId)).length;
+    const skillMissingCount = quotedComponents.filter(decision => decision.missingValidationIds.includes("SKILL:R0:" + decision.componentId)).length;
+    const affectedRequirementIds = affected.missingRequirementIds;
+    const affectedSourceIds = affected.missingSourceIds.filter(id => id.startsWith("PRIMARY_SOURCE:"));
+    const affectedValidationIds = affected.missingValidationIds;
+    const archiveBound = documents.every(document => {
+      const report = inspection.data.reports.find(entry => entry.key === document.reportKey);
+      return report !== undefined && report.origin === "seeded_document" && report.originalDigest === document.originalDigest && report.digest === document.contentDigest;
+    });
+    const requirementAnchors = scopedComponents.flatMap(component => records.get(component.id)?.requirementQuotes.map(quote => [component.id, quote.requirementId, quote.sourceDigest, quote.byteStart, quote.byteEnd]) ?? []);
+    requirementAnchors.sort((left, right) => JSON.stringify(left).localeCompare(JSON.stringify(right)));
+    const requirementDigest = digest(JSON.stringify(requirementAnchors));
+    const sourceDigests = scopedComponents.map(component => [component.id, records.get(component.id)?.primarySource.sourceDigest ?? null]);
+    sourceDigests.sort((left, right) => String(left[0]).localeCompare(String(right[0])));
+    const sourceDigest = digest(JSON.stringify(sourceDigests));
+    const localPass = caseId === "positive-all-required-quotes"
+      ? quoteFailures.length === 0 && quotedComponents.length === scopedComponents.length
+      : caseId === "missing-component"
+        ? affected.comparisonDigest === null && affected.findings.includes("DECISION_MISSING") && quotedComponents.length === scopedComponents.length - 1
+        : caseId === "missing-requirement-quote"
+          ? affected.missingRequirementIds.includes(targetRequirementId)
+          : caseId === "unsupported-choice"
+            ? affected.findings.includes("CHOICE_UNSUPPORTED") && affected.missingRequirementIds.length === 0 && affectedSourceIds.length === 0
+            : caseId === "missing-version" || caseId === "wrong-version"
+              ? affectedSourceIds.includes("PRIMARY_SOURCE:VERSION")
+              : caseId === "wrong-digest"
+                ? affectedSourceIds.includes("PRIMARY_SOURCE:DIGEST")
+                : caseId === "wrong-primary-quote"
+                  ? affectedSourceIds.some(id => id.startsWith("PRIMARY_SOURCE:QUOTE:"))
+                  : caseId === "wrong-requirement-quote"
+                    ? affected.missingRequirementIds.includes(targetRequirementId)
+                    : affected.missingValidationIds.includes("G0:R0:" + target.id);
+    const expectedQuoteFailureCount = ["missing-requirement-quote", "missing-version", "wrong-version", "wrong-digest", "wrong-primary-quote", "wrong-requirement-quote"].includes(caseId) ? 1 : 0;
+    const passed = localPass && quoteFailures.length === expectedQuoteFailureCount && allDecisionsBlocked && archiveBound && inspection.data.admission === "BLOCKED" && inspection.data.wholeATsPassed.length === 0 && !inspection.data.acceptanceComplete;
+    const details = { caseId, componentCount: scopedComponents.length, quotedComponents: quotedComponents.length, requirementQuoteCount: scopedComponents.reduce((count, component) => count + (records.get(component.id)?.requirementQuotes.length ?? 0), 0), quoteFailureCount: quoteFailures.length, affectedComponentId: target.id, findings: affected.findings, selectedOptionId: affected.selectedOptionId, requirementIds: affectedRequirementIds, sourceIds: affected.missingSourceIds, validationIds: affectedValidationIds, routeMissingCount, skillMissingCount, requirementDigest, sourceDigest, archiveBound, registerAdmission: inspection.data.admission, wholeDecisionState: "BLOCKED", wholeATsPassedCount: inspection.data.wholeATsPassed.length, liveProviderSends: 0, wholeATComplete: false, acceptanceComplete: false };
+    const prerequisite = JSON.stringify(details);
+    if (prerequisite.length > 2000) return lifeStoreError();
+    checks.push(checkViewSchema.parse({ id: "research.component-comparison", owner: "self-improvement", state: passed ? "PASS" : "FAIL", checkedAt: new Date().toISOString(), reasonCode: passed ? "LIFESTORE_QUOTE_DIAGNOSTIC_PASS" : "LIFESTORE_QUOTE_DIAGNOSTIC_FAIL", prerequisite, nextCommandId: "probe.show", links: { recordRefs: [], observations: [], artifactDigests: [digest(JSON.stringify(documents)), digest(readFileSync(new URL("./component-comparison-probe.js", import.meta.url))), digest(readFileSync(new URL("./engineering-control.js", import.meta.url)))] } }));
   }
   return TestProbeControl.run(input, context, checks);
 };

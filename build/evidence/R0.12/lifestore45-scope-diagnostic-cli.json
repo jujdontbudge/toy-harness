@@ -1,0 +1,195 @@
+{
+  "recordedAt": "2026-10-07T02:20:20.255Z",
+  "rung": "CLI",
+  "unfiltered": true,
+  "wholeATComplete": false,
+  "liveProviderSends": 0,
+  "nativeAttempt": null,
+  "admissionEvidence": "build/evidence/R0.12/lifestore45-scope-diagnostic-doctor.json",
+  "probes": [
+    {
+      "probeId": "AT-lifestore-45",
+      "run": {
+        "exitCode": 1,
+        "path": "build/evidence/R0.12/lifestore45-scope-diagnostic-cli/AT-lifestore-45-run.json",
+        "sha256": "39c3281b48f03152451536be1d4912b4bd1efadc3f4e8e5c00f3bc969fb038f8"
+      },
+      "operationId": "2dd5c316-051a-4cf2-9e20-50c217455896",
+      "show": {
+        "exitCode": 1,
+        "path": "build/evidence/R0.12/lifestore45-scope-diagnostic-cli/AT-lifestore-45-show.json",
+        "sha256": "38f0a86a2ce46cbbd8279c0489ef91d64f61f858747c72ef7dc06b7c907c41dd"
+      },
+      "sameData": true,
+      "sourceRegistration": {
+        "id": "AT-lifestore-45",
+        "rung": "CLI",
+        "sourceAssertionHash": "5b3088d82a6c550f5abb3104d6a258c6108a2f3efacd6212f5f6f31b806f4846",
+        "commandId": "probe.run",
+        "scenarioId": "research.component-comparison",
+        "owner": "self-improvement",
+        "firstRelease": "R0",
+        "kind": "static_gate",
+        "mandatoryCases": [
+          {
+            "id": "positive-all-required-quotes",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "positive-all-required-quotes"
+          },
+          {
+            "id": "missing-component",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-component"
+          },
+          {
+            "id": "missing-requirement-quote",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-requirement-quote"
+          },
+          {
+            "id": "unsupported-choice",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "unsupported-choice"
+          },
+          {
+            "id": "missing-version",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-version"
+          },
+          {
+            "id": "wrong-version",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "wrong-version"
+          },
+          {
+            "id": "wrong-digest",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "wrong-digest"
+          },
+          {
+            "id": "wrong-primary-quote",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "wrong-primary-quote"
+          },
+          {
+            "id": "wrong-requirement-quote",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "wrong-requirement-quote"
+          },
+          {
+            "id": "missing-validation",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-validation"
+          }
+        ],
+        "trigger": "Validate versioned primary evidence and exact canonical requirement quote spans for all 118 source-derived Life Store component decisions; retain unrelated route, skill, account, release and build-consumer gates.",
+        "faultControls": [
+          {
+            "id": "external-lifestore-comparison-report-faults",
+            "seam": "provider",
+            "affectedPhases": [
+              "missing-component",
+              "missing-requirement-quote",
+              "unsupported-choice",
+              "missing-version",
+              "wrong-version",
+              "wrong-digest",
+              "wrong-primary-quote",
+              "wrong-requirement-quote",
+              "missing-validation"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "canonical-component-evidence-readback",
+            "independentReader": "EngineeringControl.checkResearch: source scope, bytes, exact requirement quotes and missing IDs",
+            "caseIds": [
+              "positive-all-required-quotes",
+              "missing-component",
+              "missing-requirement-quote",
+              "unsupported-choice",
+              "missing-version",
+              "wrong-version",
+              "wrong-digest",
+              "wrong-primary-quote",
+              "wrong-requirement-quote",
+              "missing-validation"
+            ]
+          },
+          {
+            "id": "stored-cli-readback",
+            "independentReader": "toy probe.show: exact source-bound persisted operation; toy stack.down: complete owned-world teardown",
+            "caseIds": [
+              "positive-all-required-quotes",
+              "missing-component",
+              "missing-requirement-quote",
+              "unsupported-choice",
+              "missing-version",
+              "wrong-version",
+              "wrong-digest",
+              "wrong-primary-quote",
+              "wrong-requirement-quote",
+              "missing-validation"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot select administrative pre-build research comparison records. CLI exercises the public research owner with seeded external documents; authenticated primary research, protected dispatch and affected-build blocking remain pending."
+      },
+      "registrationExact": true,
+      "cases": [
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "FAIL",
+          "checkedAt": "2026-10-07T02:20:20.821Z",
+          "reasonCode": "LIFESTORE_SCOPE_BINDING_FAILED",
+          "prerequisite": "{\"phase\":\"candidate-scope\",\"expectedComponentCount\":118,\"componentCount\":95,\"boundComponentIds\":[\"A01\",\"A02\",\"A03\",\"A04\",\"A05\",\"A07\",\"A08\",\"A09\",\"A10\",\"A11\",\"A12\",\"A13\",\"A14\",\"A15\",\"A16\",\"A17\",\"A18\",\"A19\",\"A21\",\"A22\",\"B01\",\"B04\",\"C06\",\"C09\",\"C14\",\"C15\",\"C16\",\"C17\",\"D01\",\"D02\",\"D03\",\"D04\",\"D05\",\"D06\",\"D07\",\"D08\",\"D09\",\"D10\",\"D11\",\"D12\",\"D13\",\"D14\",\"D15\",\"D16\",\"D17\",\"D18\",\"D19\",\"D20\",\"D21\",\"D22\",\"D23\",\"D24\",\"D25\",\"D26\",\"D27\",\"D30\",\"D31\",\"D32\",\"D33\",\"D34\",\"D35\",\"D36\",\"D37\",\"D38\",\"D39\",\"D40\",\"D41\",\"D42\",\"D43\",\"D44\",\"D45\",\"D46\",\"D47\",\"D48\",\"D49\",\"D50\",\"D60\",\"D61\",\"D62\",\"D63\",\"D64\",\"D65\",\"D66\",\"E04\",\"E08\",\"M01\",\"M02\",\"M03\",\"M04\",\"M05\",\"M06\",\"M07\",\"M08\",\"M10\",\"M11\"],\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "127c4d92ce0b4c4656cc28b84611657e754b38d7c25e6f40a9dd58163c521c64",
+              "7e1cb08d7fc7a30a4959991e624418064dce772d4ccaace10593ad26a75aef3c"
+            ]
+          }
+        }
+      ],
+      "resultState": "NOT_IMPLEMENTED",
+      "complete": false
+    }
+  ],
+  "up": {
+    "exitCode": 0,
+    "path": "build/evidence/R0.12/lifestore45-scope-diagnostic-cli/up.json",
+    "sha256": "932752c4d5c25fb8450980058ede8485fe0e488d1829597cf96ca9db1efb11ab"
+  },
+  "stackId": "d76635b8-324b-4744-8078-750c4e7234c7",
+  "down": {
+    "exitCode": 0,
+    "path": "build/evidence/R0.12/lifestore45-scope-diagnostic-cli/down.json",
+    "sha256": "bde298047efb5f569c7be4923049c36528f14219f743dd75b19836052cba0119"
+  },
+  "teardown": {
+    "stackId": "d76635b8-324b-4744-8078-750c4e7234c7",
+    "checkpointRefs": [],
+    "fenceRefs": [],
+    "stoppedResourceRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "d76635b8-324b-4744-8078-750c4e7234c7"
+      }
+    ],
+    "retainedArtifactRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "d76635b8-324b-4744-8078-750c4e7234c7"
+      }
+    ],
+    "unresolvedResourceRefs": [],
+    "complete": true
+  }
+}

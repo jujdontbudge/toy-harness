@@ -4610,6 +4610,48 @@ ResearchComponentComparisonV3Scope = Literal[
     "required-research-component",
 ]
 
+class ResearchComponentComparisonV4(TypedDict):
+    scope: "ResearchComponentComparisonV3Scope"
+    componentId: str
+    mappedRequirements: list[str]
+    options: list["ResearchComponentComparisonV2OptionsItem"]
+    evidence: list["ResearchComponentComparisonV1EvidenceItem"]
+    selectedOptionId: str
+    unresolvedFacts: list["ResearchComponentComparisonCheckV1UnresolvedFactsItem"]
+    acceptanceIds: list[str]
+    validationPlan: str
+    releaseGate: str
+    validations: list["ResearchComponentComparisonV2ValidationsItem"]
+    executionReceipt: Optional["ModelRouteDelegationReceiptV1"]
+    primarySource: "ResearchComponentComparisonV4PrimarySource"
+    requirementQuotes: list["ResearchComponentComparisonV4RequirementQuotesItem"]
+
+class ResearchComponentComparisonV4PrimarySource(TypedDict):
+    sourceVersion: Optional[str]
+    sourceDigest: "Digest"
+    sourceContent: str
+    versionByteStart: Optional[int]
+    versionByteEnd: Optional[int]
+    quotes: list["ResearchComponentComparisonV4PrimarySourceQuotesItem"]
+
+class ResearchComponentComparisonV4PrimarySourceQuotesItem(TypedDict):
+    evidenceId: str
+    quote: str
+    byteStart: int
+    byteEnd: int
+
+class ResearchComponentComparisonV4RequirementQuotesItem(TypedDict):
+    requirementId: str
+    sourcePath: "ResearchComponentComparisonV4RequirementQuotesItemSourcePath"
+    sourceDigest: "Digest"
+    quote: str
+    byteStart: int
+    byteEnd: int
+
+ResearchComponentComparisonV4RequirementQuotesItemSourcePath = Literal[
+    "REQUIREMENTS.md",
+]
+
 class ResearchAttentionDecisionV1(TypedDict):
     scope: "ResearchAttentionDecisionV1Scope"
     componentId: "ResearchAttentionDecisionV1ComponentId"
@@ -5740,6 +5782,8 @@ HermesAuthFixtureResultV1Operation = Literal[
     "list",
     "chat",
     "priority",
+    "remove",
+    "reset",
 ]
 
 HermesAuthFixtureResultV1MarkersItem = Literal[
@@ -5760,6 +5804,10 @@ HermesAuthFixtureResultV1MarkersItem = Literal[
     "SIWC_AUTHORIZATION_NOT_CONFIRMED",
     "CLI_EXIT_NONZERO",
     "CLI_EXCEPTION",
+    "AUTH_REMOVE_OK",
+    "AUTH_RESET_OK",
+    "AUTH_LIST_TARGET_RATE_LIMITED",
+    "AUTH_PROVIDER_RATE_LIMIT_OBSERVED",
 ]
 
 class HermesAuthFixtureResultV1ProcessIdentity(TypedDict):
@@ -5801,6 +5849,8 @@ HermesAuthFixtureResultV1ObservationsPhase = Literal[
     "concurrent-refresh-add",
     "priority-added",
     "priority-restored",
+    "remove",
+    "reset",
 ]
 
 HermesAuthFixtureResultV1ObservationsNetworkdenialsItem = Literal[

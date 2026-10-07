@@ -1,0 +1,72 @@
+{
+  "recordedAt": "2026-10-07T02:15:48.818680+00:00",
+  "verdict": "STOPPED_SOURCE_REVIEWED_PARENT_INTEGRATION_PENDING_GENERATION_AND_CLI_PROOF",
+  "handoffSha256": "3670ad822e98fd388228186d64f3aa7b9b386c47f512b52b66a9fbe1e34f66bf",
+  "bindings": [
+    {
+      "path": "docs/adr/0049-native-auth-lifecycle-probe.md",
+      "expectedSha256": "a2674b39cab011df16a26e00fd82a605ecdf6e3ad6894583370a84f3a286e664",
+      "actualSha256": "a2674b39cab011df16a26e00fd82a605ecdf6e3ad6894583370a84f3a286e664",
+      "matches": true
+    },
+    {
+      "path": "packages/hermes/src/auth-fixture.ts",
+      "expectedSha256": "0cc2803b481e185ce2737f891d408ae944d2d5fb15bca14d9a5e52055490a2d7",
+      "actualSha256": "0cc2803b481e185ce2737f891d408ae944d2d5fb15bca14d9a5e52055490a2d7",
+      "matches": true
+    },
+    {
+      "path": "packages/hermes/src/auth-probe.ts",
+      "expectedSha256": "58b2df70f3cba853b1993be85fb6e2c4732301c841e0edbe1ae78331c5335d0d",
+      "actualSha256": "58b2df70f3cba853b1993be85fb6e2c4732301c841e0edbe1ae78331c5335d0d",
+      "matches": true
+    },
+    {
+      "path": "patches/hermes-auth-fixture.patch",
+      "expectedSha256": "faf785e2dc2e89107cefc6c7658a5c233d1f9cd34d883dbb6726d23a9ab86be0",
+      "actualSha256": "faf785e2dc2e89107cefc6c7658a5c233d1f9cd34d883dbb6726d23a9ab86be0",
+      "matches": true
+    }
+  ],
+  "patchAddedLines": 823,
+  "patchBodySha256": "1715c9cf620f0cc4c665df11614fd92e5101e8fd686b4b68a031a14b5cac9013",
+  "cases": [
+    "root-add",
+    "profile-add-target",
+    "profile-add-sibling",
+    "profile-initial-readback",
+    "priority-reorder-target",
+    "priority-target-rate-limit",
+    "reset-exhausted-readback",
+    "reset-target",
+    "reset-target-readback",
+    "reset-target-refresh",
+    "reset-target-reload",
+    "remove-target",
+    "remove-fresh-readback",
+    "remove-sibling-fresh-use",
+    "root-final-readback",
+    "root-fresh-use"
+  ],
+  "contractAdditions": {
+    "operation": [
+      "remove",
+      "reset"
+    ],
+    "phase": [
+      "remove",
+      "reset"
+    ],
+    "markers": [
+      "AUTH_REMOVE_OK",
+      "AUTH_RESET_OK",
+      "AUTH_LIST_TARGET_RATE_LIMITED",
+      "AUTH_PROVIDER_RATE_LIMIT_OBSERVED"
+    ],
+    "newFields": []
+  },
+  "review": "Fixed public commands, temporary stores, actor-bound fake 429, honest sibling fallback observation, exact public list state before/after reset, fresh refresh/reload and root/sibling preservation. No new receipt field or raw streams.",
+  "runtimeVerified": false,
+  "wholeATsPassed": [],
+  "acceptanceComplete": false
+}

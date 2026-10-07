@@ -2,13 +2,14 @@ import { createHash, randomUUID } from "node:crypto";
 import { spawnSync } from "node:child_process";
 import { existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, realpathSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
-import { acceptanceIndexSchema, checkoutPathSchema, cliDeclarations, featureFactsSchema, featureMapCheckSchema, featureMapUpdateSchema, generatorInputSchema, generatorPlanSchema, gardenerInputSchema, gardenerReportSchema, kitchenGateSummarySchema, mapCheckInputSchema, mapUpdateInputSchema, opsControlContextSchema, opsErrorMessages, referenceAdmissionEvidenceSchema, researchCatalogCoverageSchema, researchComponentComparisonSchema, researchComponentComparisonCheckSchema, researchDocumentOverlaySchema, researchRegisterInspectionV3Schema, researchAttentionDecisionSchema, researchAttentionDecisionCheckSchema, researchAttentionDecisionIdSchema, researchComponentComparisonV2Schema, researchComponentComparisonV3Schema, researchComponentComparisonCheckV2Schema, researchSourcesComponentComparisonSchema, researchSourcesComponentComparisonV2Schema, researchSkillPinSchema, modelRoutePolicySchema } from "@toy/contracts";
-import type { CheckViewV1, FeatureFactsV1, FilePatchV1, GeneratorInputV1, GeneratorPlanV1, FeatureMapCheckV1, FeatureMapUpdateV1, MapCheckInputV1, MapUpdateInputV1, GardenerInputV1, GardenerReportV1, OpsControlContextV1, ResearchCatalogCoverageFindingV1, ResearchCatalogMemberV1, ResearchCatalogSectionV1, ResearchInspectionFindingV1, ResearchComponentComparisonV1, ResearchComponentComparisonCheckV1, ResearchDocumentOverlayV1, ResearchRegisterInspectionV1, ResearchComponentComparisonV2, ResearchComponentComparisonV3, ResearchComponentComparisonCheckV2, ResearchSourcesComponentComparisonV1, ResearchSourcesComponentComparisonV2, ResearchAttentionDecisionV1, ResearchAttentionDecisionCheckV1, ResearchRegisterInspectionV3, Result } from "@toy/contracts";
+import { acceptanceIndexSchema, checkoutPathSchema, cliDeclarations, featureFactsSchema, featureMapCheckSchema, featureMapUpdateSchema, generatorInputSchema, generatorPlanSchema, gardenerInputSchema, gardenerReportSchema, kitchenGateSummarySchema, mapCheckInputSchema, mapUpdateInputSchema, opsControlContextSchema, opsErrorMessages, referenceAdmissionEvidenceSchema, researchCatalogCoverageSchema, researchComponentComparisonSchema, researchComponentComparisonCheckSchema, researchDocumentOverlaySchema, researchRegisterInspectionV3Schema, researchAttentionDecisionSchema, researchAttentionDecisionCheckSchema, researchAttentionDecisionIdSchema, researchComponentComparisonV2Schema, researchComponentComparisonV3Schema, researchComponentComparisonV4Schema, researchComponentComparisonCheckV2Schema, researchSourcesComponentComparisonSchema, researchSourcesComponentComparisonV2Schema, researchSkillPinSchema, modelRoutePolicySchema } from "@toy/contracts";
+import type { CheckViewV1, FeatureFactsV1, FilePatchV1, GeneratorInputV1, GeneratorPlanV1, FeatureMapCheckV1, FeatureMapUpdateV1, MapCheckInputV1, MapUpdateInputV1, GardenerInputV1, GardenerReportV1, OpsControlContextV1, ResearchCatalogCoverageFindingV1, ResearchCatalogMemberV1, ResearchCatalogSectionV1, ResearchInspectionFindingV1, ResearchComponentComparisonV1, ResearchComponentComparisonCheckV1, ResearchDocumentOverlayV1, ResearchRegisterInspectionV1, ResearchComponentComparisonV2, ResearchComponentComparisonV3, ResearchComponentComparisonV4, ResearchComponentComparisonCheckV2, ResearchSourcesComponentComparisonV1, ResearchSourcesComponentComparisonV2, ResearchAttentionDecisionV1, ResearchAttentionDecisionCheckV1, ResearchRegisterInspectionV3, Result } from "@toy/contracts";
 import { OpsTestStack, trustedCheckoutRoot, trustedToolEnvironment } from "@toy/ops/public";
 import { modelAdmissionMigration } from "./model-admission-migration.js";
 import { capacityTrialMigration } from "./capacity-trial-migration.js";
 
 const hash = (value: string): string => createHash("sha256").update(value).digest("hex");
+const hashBytes = (value: Buffer): string => createHash("sha256").update(value).digest("hex");
 const mapPath = "skills/toy-control/FEATURE-MAP.md";
 const factsPath = "architecture/features.json";
 const planning = (): string => join(dirname(trustedCheckoutRoot()), "personal-assistant-harness");
@@ -159,7 +160,7 @@ const inspect = (): { facts: FeatureFactsV1; check: FeatureMapCheckV1; expected:
 
 const readResearchFile = (path: string): string => {
   checkoutPathSchema.parse(path);
-  if (!/^specs\/[^/]+\.md$/.test(path) && !(path.startsWith("research/") && path.endsWith(".md"))) throw new Error("RESEARCH_PATH_REFUSED");
+  if (path !== "REQUIREMENTS.md" && !/^specs\/[^/]+\.md$/.test(path) && !(path.startsWith("research/") && path.endsWith(".md"))) throw new Error("RESEARCH_PATH_REFUSED");
   let current = realpathSync(planning());
   for (const part of path.split("/")) {
     current = join(current, part);
@@ -174,8 +175,57 @@ const markdownTableCells = (line: string): string[] | null => {
   const inner = trimmed.endsWith("|") ? trimmed.slice(1, -1) : trimmed.slice(1);
   return inner.split("|");
 };
+const markdownTableCellsWithOffsets = (line: string): { text: string; start: number; end: number }[] => {
+  const boundaries = [...line.matchAll(/\|/g)].flatMap(match => typeof match.index === "number" ? [match.index] : []);
+  return boundaries.slice(0, -1).map((left, index) => {
+    const right = boundaries[index + 1] ?? left + 1;
+    const raw = line.slice(left + 1, right);
+    const trimmed = raw.trim();
+    const leading = raw.indexOf(trimmed);
+    const start = left + 1 + Math.max(0, leading);
+    return { text: trimmed, start, end: start + trimmed.length };
+  });
+};
 const isMarkdownTableSeparator = (cells: string[]): boolean => cells.length > 0 && cells.every((cell) => /^:?-{3,}:?$/.test(cell.trim()));
 const isRequirementHeader = (cell: string): boolean => /^requirements?\b/i.test(cell.replace(/[*_~`]/g, "").trim());
+type CanonicalRequirementQuote = ResearchComponentComparisonV4["requirementQuotes"][number];
+const canonicalRequirementQuotesFrom = (raw: string): ReadonlyMap<string, CanonicalRequirementQuote> => {
+  const result = new Map<string, CanonicalRequirementQuote>();
+  const sourceDigest = hash(raw);
+  const chunks = raw.split(/(?<=\n)/);
+  let byteOffset = 0;
+  let inRequirementsTable = false;
+  for (const chunk of chunks) {
+    const line = chunk.replace(/\r?\n$/, "");
+    const cells = markdownTableCells(line);
+    const cellOffsets = markdownTableCellsWithOffsets(line);
+    const header = cells !== null && cells.length >= 2 && cells[0]?.trim() === "#" && normalizedResearchHeader(cells[1] ?? "") === "requirement";
+    if (header) {
+      inRequirementsTable = true;
+      byteOffset += Buffer.byteLength(chunk, "utf8");
+      continue;
+    }
+    if (inRequirementsTable && cells && isMarkdownTableSeparator(cells)) {
+      byteOffset += Buffer.byteLength(chunk, "utf8");
+      continue;
+    }
+    if (inRequirementsTable && !cells) inRequirementsTable = false;
+    if (inRequirementsTable && cells) {
+      const ids = requirementIdsInCell(cells[0] ?? "");
+      const quoteCell = cellOffsets[1];
+      if (ids.length === 0 || !quoteCell?.text || cellOffsets.length !== cells.length) throw new Error("REQUIREMENTS_ROW_INVALID");
+      const quoteStart = byteOffset + Buffer.byteLength(line.slice(0, quoteCell.start), "utf8");
+      const quoteEnd = byteOffset + Buffer.byteLength(line.slice(0, quoteCell.end), "utf8");
+      for (const id of ids) {
+        if (result.has(id)) throw new Error("REQUIREMENTS_ID_DUPLICATE");
+        result.set(id, { requirementId: id, sourcePath: "REQUIREMENTS.md", sourceDigest, quote: quoteCell.text, byteStart: quoteStart, byteEnd: quoteEnd });
+      }
+    }
+    byteOffset += Buffer.byteLength(chunk, "utf8");
+  }
+  if (result.size === 0) throw new Error("REQUIREMENTS_TABLE_MISSING");
+  return result;
+};
 const inspectResearchSpecs = (components: ResearchRegisterInspectionV1["components"], findings: ResearchInspectionFindingV1[]): ResearchRegisterInspectionV1["specReferences"] => {
   const specDirectory = join(realpathSync(planning()), "specs");
   const directory = lstatSync(specDirectory);
@@ -484,13 +534,17 @@ const inspectComponentComparisons = (reports: ResearchRegisterInspectionV1["repo
 const normalizedResearchHeader = (cell: string): string => cell.replace(/[*_~`]/g, "").toLowerCase().replace(/[^a-z]/g, "");
 const requirementIdsInCell = (cell: string): string[] => {
   const ids = new Set<string>();
-  for (const match of cell.matchAll(/\b([0-9]+\.[0-9]+)\b/g)) {
-    const id = match[1];
-    if (id) ids.add(id);
+  for (const match of cell.matchAll(/\b([0-9]+)\.([0-9]+)(?:\s*[-–—]\s*([0-9]+)\.([0-9]+))?\b/g)) {
+    const firstMajor = Number(match[1]);
+    const firstMinor = Number(match[2]);
+    const lastMajor = match[3] === undefined ? firstMajor : Number(match[3]);
+    const lastMinor = match[4] === undefined ? firstMinor : Number(match[4]);
+    if (lastMajor !== firstMajor || lastMinor < firstMinor || lastMinor - firstMinor > 100) throw new Error("REQUIREMENT_RANGE_INVALID");
+    for (let minor = firstMinor; minor <= lastMinor; minor += 1) ids.add(firstMajor + "." + minor);
   }
   return [...ids];
 };
-const opsMappedRequirementGroups = (registerRaw: string, readmeRaw: string, components: ResearchRegisterInspectionV1["components"], globalRequirementIds: readonly string[]): ReadonlyMap<string, ReadonlySet<string>> => {
+const mappedRequirementGroups = (registerRaw: string, readmeRaw: string, components: ResearchRegisterInspectionV1["components"], globalRequirementIds: readonly string[], consumer: "ops" | "lifestore", lifeStoreRequirementIds: readonly string[] = []): ReadonlyMap<string, ReadonlySet<string>> => {
   const readmeLines = readmeRaw.split(/\r?\n/);
   let readmeTable: { index: number; cells: string[]; reqIndex: number; specsIndex: number } | undefined;
   for (let index = 0; index < readmeLines.length; index += 1) {
@@ -530,11 +584,13 @@ const opsMappedRequirementGroups = (registerRaw: string, readmeRaw: string, comp
     if (!row || row.count !== 1 || !row.specs.has("all")) throw new Error("README_GLOBAL_REQUIREMENT_MAPPING_INVALID");
   }
   const directOpsRequirements = [...readmeRows.entries()].filter(([, row]) => row.specs.has("ops")).map(([id]) => id);
-  for (const id of ["2.4", "5.10"]) {
-    const row = readmeRows.get(id);
-    if (!row || row.count !== 1 || !row.specs.has("ops") || globalRequirementIds.includes(id)) throw new Error("README_OPS_REQUIREMENT_MAPPING_INVALID");
+  if (consumer === "ops") {
+    for (const id of ["2.4", "5.10"]) {
+      const row = readmeRows.get(id);
+      if (!row || row.count !== 1 || !row.specs.has("ops") || globalRequirementIds.includes(id)) throw new Error("README_OPS_REQUIREMENT_MAPPING_INVALID");
+    }
   }
-  const additionalOpsRequirements = new Set(directOpsRequirements.filter(id => !globalRequirementIds.includes(id)));
+  const additionalRequirements = new Set((consumer === "ops" ? directOpsRequirements : lifeStoreRequirementIds).filter(id => !globalRequirementIds.includes(id)));
   const registerLines = registerRaw.split(/\r?\n/);
   let coverageTable: { index: number; cells: string[]; requirementIndex: number; coverageIndex: number } | undefined;
   for (let index = 0; index < registerLines.length; index += 1) {
@@ -560,7 +616,7 @@ const opsMappedRequirementGroups = (registerRaw: string, readmeRaw: string, comp
     const reqCell = cells[coverageTable.requirementIndex];
     const coverageCell = cells[coverageTable.coverageIndex];
     if (reqCell === undefined || coverageCell === undefined) throw new Error("REGISTER_REQUIREMENT_ROW_INVALID");
-    const relevantIds = requirementIdsInCell(reqCell).filter(id => additionalOpsRequirements.has(id));
+    const relevantIds = requirementIdsInCell(reqCell).filter(id => additionalRequirements.has(id));
     if (relevantIds.length === 0) continue;
     const groupExpression = coverageCell.split(";")[0]?.trim();
     if (!groupExpression) throw new Error("REGISTER_OPS_COMPONENT_GROUP_MISSING");
@@ -585,13 +641,17 @@ const opsMappedRequirementGroups = (registerRaw: string, readmeRaw: string, comp
     if (mappedComponents.size === 0) throw new Error("REGISTER_OPS_COMPONENT_GROUP_EMPTY");
     for (const requirementId of relevantIds) {
       const count = (coverageCounts.get(requirementId) ?? 0) + 1;
-      if (count !== 1) throw new Error("REGISTER_OPS_REQUIREMENT_MAPPING_DUPLICATE");
+      if (consumer === "ops" && count !== 1) throw new Error("REGISTER_OPS_REQUIREMENT_MAPPING_DUPLICATE");
       coverageCounts.set(requirementId, count);
-      requirementComponents.set(requirementId, new Set(mappedComponents));
+      const combined = requirementComponents.get(requirementId) ?? new Set<string>();
+      for (const componentId of mappedComponents) combined.add(componentId);
+      requirementComponents.set(requirementId, combined);
     }
   }
-  for (const requirementId of additionalOpsRequirements) {
-    if (coverageCounts.get(requirementId) !== 1 || !requirementComponents.get(requirementId)?.size) throw new Error("REGISTER_OPS_REQUIREMENT_MAPPING_MISSING");
+  if (consumer === "ops") {
+    for (const requirementId of additionalRequirements) {
+      if (coverageCounts.get(requirementId) !== 1 || !requirementComponents.get(requirementId)?.size) throw new Error("REGISTER_OPS_REQUIREMENT_MAPPING_MISSING");
+    }
   }
   const byComponent = new Map<string, Set<string>>();
   for (const [requirementId, componentIds] of requirementComponents) {
@@ -603,40 +663,99 @@ const opsMappedRequirementGroups = (registerRaw: string, readmeRaw: string, comp
   }
   return byComponent;
 };
-const inspectComponentDecisions = (reports: ResearchRegisterInspectionV1["reports"], components: ResearchRegisterInspectionV1["components"], findings: ResearchInspectionFindingV1[], documents: ReadonlyMap<string, ResearchDocumentOverlayV1>, requirementIds: readonly string[], release: string, opsRequirementIdsByComponent: ReadonlyMap<string, ReadonlySet<string>>): ResearchComponentComparisonCheckV2[] => {
-  const decisions = new Map<string, ResearchComponentComparisonV2 | ResearchComponentComparisonV3 | ResearchSourcesComponentComparisonV1 | ResearchSourcesComponentComparisonV2>();
+const lifeStoreRequirementIdsFrom = (raw: string): string[] => {
+  const lines = raw.split(/\r?\n/);
+  const start = lines.findIndex(line => /^## 2\. Purpose and requirement traceability\s*$/.test(line));
+  const end = lines.findIndex((line, index) => index > start && /^## 3\./.test(line));
+  if (start < 0 || end < 0) throw new Error("LIFESTORE_REQUIREMENTS_SECTION_MISSING");
+  let tableStart = -1;
+  let tableHeader: string[] | null = null;
+  for (let index = start + 1; index < end; index += 1) {
+    const cells = markdownTableCells(lines[index] ?? "");
+    const separator = markdownTableCells(lines[index + 1] ?? "");
+    if (cells && separator && cells.length === separator.length && isMarkdownTableSeparator(separator) && normalizedResearchHeader(cells[0] ?? "") === "requirement") {
+      if (tableStart >= 0) throw new Error("LIFESTORE_REQUIREMENTS_TABLE_DUPLICATE");
+      tableStart = index;
+      tableHeader = cells;
+    }
+  }
+  if (tableStart < 0 || !tableHeader) throw new Error("LIFESTORE_REQUIREMENTS_TABLE_MISSING");
+  const ids = new Set<string>();
+  for (let index = tableStart + 2; index < end; index += 1) {
+    const cells = markdownTableCells(lines[index] ?? "");
+    if (!cells) break;
+    if (isMarkdownTableSeparator(cells)) continue;
+    if (cells.length !== tableHeader.length) throw new Error("LIFESTORE_REQUIREMENTS_ROW_INVALID");
+    for (const id of requirementIdsInCell(cells[0] ?? "")) ids.add(id);
+  }
+  if (ids.size === 0) throw new Error("LIFESTORE_REQUIREMENTS_EMPTY");
+  return [...ids];
+};
+const lifeStoreComponentIdsFrom = (components: ResearchRegisterInspectionV1["components"], lifeStoreRequirementIdsByComponent: ReadonlyMap<string, ReadonlySet<string>>): ReadonlySet<string> => {
+  const ids = new Set(components.filter(component => /\bL\b/.test(component.consumingSpecs) || /\bAll\b/i.test(component.consumingSpecs)).map(component => component.id));
+  for (const componentId of lifeStoreRequirementIdsByComponent.keys()) ids.add(componentId);
+  return ids;
+};
+const inspectComponentDecisions = (reports: ResearchRegisterInspectionV1["reports"], components: ResearchRegisterInspectionV1["components"], findings: ResearchInspectionFindingV1[], documents: ReadonlyMap<string, ResearchDocumentOverlayV1>, requirementIds: readonly string[], release: string, opsRequirementIdsByComponent: ReadonlyMap<string, ReadonlySet<string>>, lifeStoreRequirementIdsByComponent: ReadonlyMap<string, ReadonlySet<string>>, lifeStoreComponentIds: ReadonlySet<string>, canonicalRequirements: ReadonlyMap<string, CanonicalRequirementQuote>): ResearchComponentComparisonCheckV2[] => {
+  const decisions = new Map<string, ResearchComponentComparisonV2 | ResearchComponentComparisonV3 | ResearchComponentComparisonV4 | ResearchSourcesComponentComparisonV1 | ResearchSourcesComponentComparisonV2>();
+  const invalidV4Components = new Set<string>();
   for (const report of reports) {
     if (report.digest === null) continue;
     const original = readResearchFile(report.path);
     const raw = documents.get(report.key)?.markdown ?? original;
     if (hash(original) !== report.originalDigest || hash(raw) !== report.digest) throw new Error("RESEARCH_DOCUMENT_CHANGED");
-    for (const match of raw.matchAll(/^```(ResearchComponentComparisonV2|ResearchComponentComparisonV3|ResearchSourcesComponentComparisonV1|ResearchSourcesComponentComparisonV2)\r?\n([\s\S]*?)^```[ \t]*$/gm)) {
+    for (const match of raw.matchAll(/^```(ResearchComponentComparisonV2|ResearchComponentComparisonV3|ResearchComponentComparisonV4|ResearchSourcesComponentComparisonV1|ResearchSourcesComponentComparisonV2)\r?\n([\s\S]*?)^```[ \t]*$/gm)) {
       const sourceLine = raw.slice(0, match.index).split(/\r?\n/).length;
+      let candidateComponentId: string | null = null;
       try {
-        const schema = match[1] === "ResearchComponentComparisonV3" ? researchComponentComparisonV3Schema : match[1] === "ResearchSourcesComponentComparisonV2" ? researchSourcesComponentComparisonV2Schema : match[1] === "ResearchSourcesComponentComparisonV1" ? researchSourcesComponentComparisonSchema : researchComponentComparisonV2Schema;
-        const record = schema.parse(JSON.parse(match[2] ?? ""));
-        if (!components.some(component => component.id === record.componentId && component.reportKeys.includes(report.key)) || decisions.has(record.componentId)) throw new Error("COMPARISON_BINDING_INVALID");
+        const schema = match[1] === "ResearchComponentComparisonV4" ? researchComponentComparisonV4Schema : match[1] === "ResearchComponentComparisonV3" ? researchComponentComparisonV3Schema : match[1] === "ResearchSourcesComponentComparisonV2" ? researchSourcesComponentComparisonV2Schema : match[1] === "ResearchSourcesComponentComparisonV1" ? researchSourcesComponentComparisonSchema : researchComponentComparisonV2Schema;
+        const parsed: unknown = JSON.parse(match[2] ?? "");
+        if (typeof parsed === "object" && parsed !== null && "componentId" in parsed && typeof parsed.componentId === "string") candidateComponentId = parsed.componentId;
+        const record = schema.parse(parsed);
+        candidateComponentId = record.componentId;
+        const component = components.find(entry => entry.id === record.componentId);
+        if (!component) throw new Error("COMPARISON_BINDING_INVALID");
+        const seededUnmappedLifeRecord = match[1] === "ResearchComponentComparisonV4" && lifeStoreComponentIds.has(component.id) && component.reportKeys.length === 0 && report.key === "MEM" && documents.has("MEM");
+        if (!component.reportKeys.includes(report.key) && !seededUnmappedLifeRecord) throw new Error("COMPARISON_BINDING_INVALID");
+        if (match[1] === "ResearchComponentComparisonV4" && !lifeStoreComponentIds.has(record.componentId)) throw new Error("LIFESTORE_COMPONENT_OUT_OF_SCOPE");
+        const previous = decisions.get(record.componentId);
+        const previousIsV4 = previous !== undefined && "primarySource" in previous;
+        if (invalidV4Components.has(record.componentId) || previous !== undefined) {
+          if (match[1] === "ResearchComponentComparisonV4" || previousIsV4) {
+            decisions.delete(record.componentId);
+            invalidV4Components.add(record.componentId);
+          }
+          throw new Error("COMPARISON_BINDING_INVALID");
+        }
         decisions.set(record.componentId, record);
-      } catch { findings.push({ componentId: null, code: "COMPONENT_COMPARISON_INVALID", sourceLine, sourcePath: report.path }); }
+      } catch {
+        if (match[1] === "ResearchComponentComparisonV4" && candidateComponentId) {
+          decisions.delete(candidateComponentId);
+          invalidV4Components.add(candidateComponentId);
+        }
+        findings.push({ componentId: match[1] === "ResearchComponentComparisonV4" ? candidateComponentId : null, code: "COMPONENT_COMPARISON_INVALID", sourceLine, sourcePath: report.path });
+      }
     }
   }
   const acceptanceIds = new Set(acceptanceIndexSchema.parse(JSON.parse(read("tests/acceptance-index.json"))).acceptance.map(entry => entry.id));
-  return components.map(component => compareDecision(decisions.get(component.id), component, findings, requirementIds, release, acceptanceIds, opsRequirementIdsByComponent));
+  return components.map(component => compareDecision(invalidV4Components.has(component.id) ? undefined : decisions.get(component.id), component, findings, requirementIds, release, acceptanceIds, opsRequirementIdsByComponent, lifeStoreRequirementIdsByComponent, lifeStoreComponentIds, canonicalRequirements));
 };
-const compareDecision = (record: ResearchComponentComparisonV2 | ResearchComponentComparisonV3 | ResearchSourcesComponentComparisonV1 | ResearchSourcesComponentComparisonV2 | ResearchAttentionDecisionV1 | undefined, component: ResearchRegisterInspectionV1["components"][number], findings: ResearchInspectionFindingV1[], requirementIds: readonly string[], release: string, acceptanceIds: ReadonlySet<string>, opsRequirementIdsByComponent: ReadonlyMap<string, ReadonlySet<string>> = new Map()): ResearchComponentComparisonCheckV2 => {
+const compareDecision = (record: ResearchComponentComparisonV2 | ResearchComponentComparisonV3 | ResearchComponentComparisonV4 | ResearchSourcesComponentComparisonV1 | ResearchSourcesComponentComparisonV2 | ResearchAttentionDecisionV1 | undefined, component: ResearchRegisterInspectionV1["components"][number], findings: ResearchInspectionFindingV1[], requirementIds: readonly string[], release: string, acceptanceIds: ReadonlySet<string>, opsRequirementIdsByComponent: ReadonlyMap<string, ReadonlySet<string>> = new Map(), lifeStoreRequirementIdsByComponent: ReadonlyMap<string, ReadonlySet<string>> = new Map(), lifeStoreComponentIds: ReadonlySet<string> = new Set(), canonicalRequirements: ReadonlyMap<string, CanonicalRequirementQuote> = new Map()): ResearchComponentComparisonCheckV2 => {
   const codes: ResearchComponentComparisonCheckV2["findings"] = [];
   const add = (code: ResearchComponentComparisonCheckV2["findings"][number]): void => { if (!codes.includes(code)) codes.push(code); };
   const validationId = "G0:" + release + ":" + component.id + (record?.scope === "attention-research-decision" ? ":" + record.decisionId : "");
   const options = new Map(record?.options.map(option => [option.id, option]) ?? []);
   const sources = new Map(record?.evidence.map(source => [source.id, source]) ?? []);
   const selected = record ? options.get(record.selectedOptionId) : undefined;
+  const v4Record = record && "primarySource" in record ? record : undefined;
+  const isV4 = v4Record !== undefined;
   const sourceSupports = (id: string, optionId: string): boolean => {
     const source = sources.get(id);
     return source?.kind === "primary" && source.supportedOptionIds.includes(optionId);
   };
   const sourcesComponent = component.id.startsWith("D");
-  const expectedRequirements = [...new Set([...(sourcesComponent ? [...requirementIds, "0.9"] : requirementIds), ...(opsRequirementIdsByComponent.get(component.id) ?? [])])];
-  const missingRequirementIds = expectedRequirements.filter(id => !record?.mappedRequirements.includes(id));
+  const expectedRequirements = [...new Set([...(sourcesComponent ? [...requirementIds, "0.9"] : requirementIds), ...(opsRequirementIdsByComponent.get(component.id) ?? []), ...(isV4 && lifeStoreComponentIds.has(component.id) ? [...(lifeStoreRequirementIdsByComponent.get(component.id) ?? [])] : [])])];
+  const missingRequirements = new Set(expectedRequirements.filter(id => !record?.mappedRequirements.includes(id)));
   const missingSourceIds = new Set(component.reportKeys.filter(id => !selected || !sourceSupports(id, selected.id)));
   if (component.reportKeys.length === 0) missingSourceIds.add("REGISTER:" + component.id);
   const missingValidationIds = new Set<string>();
@@ -672,7 +791,6 @@ const compareDecision = (record: ResearchComponentComparisonV2 | ResearchCompone
     if (component.id === "M03" && !record.acceptanceIds.some(id => id.startsWith("AT-authority-"))) add("ACCEPTANCE_LINK_MISSING");
   }
   if (!record) add("DECISION_MISSING");
-  if (missingRequirementIds.length) add("MAPPED_REQUIREMENTS_MISSING");
   if (!record || options.size < 2) add("REQUIRED_OPTIONS_MISSING");
   if (!selected || !selected.viable || selected.support !== "proven") add("CHOICE_UNSUPPORTED");
   for (const option of record?.options ?? []) {
@@ -689,6 +807,40 @@ const compareDecision = (record: ResearchComponentComparisonV2 | ResearchCompone
   for (const id of validation?.sourceIds ?? []) if (!selected || !sourceSupports(id, selected.id)) { missingSourceIds.add(id); missingValidationIds.add(validationId); }
   for (const id of validation?.testIds ?? []) if (!acceptanceIds.has(id) || !record?.acceptanceIds.includes(id)) { missingValidationIds.add(id); missingValidationIds.add(validationId); }
   if (!record?.acceptanceIds.length || record.acceptanceIds.some(id => !acceptanceIds.has(id))) add("ACCEPTANCE_LINK_MISSING");
+  if (v4Record) {
+    const sourceBytes = Buffer.from(v4Record.primarySource.sourceContent, "utf8");
+    const mappedRequirementCounts = new Map<string, number>();
+    for (const requirementId of v4Record.mappedRequirements) mappedRequirementCounts.set(requirementId, (mappedRequirementCounts.get(requirementId) ?? 0) + 1);
+    for (const requirementId of expectedRequirements) if (mappedRequirementCounts.get(requirementId) !== 1) missingRequirements.add(requirementId);
+    for (const requirementId of v4Record.mappedRequirements) if (!expectedRequirements.includes(requirementId) || mappedRequirementCounts.get(requirementId) !== 1) missingRequirements.add(requirementId);
+    if (hashBytes(sourceBytes) !== v4Record.primarySource.sourceDigest) missingSourceIds.add("PRIMARY_SOURCE:DIGEST");
+    if (v4Record.primarySource.sourceVersion === null || v4Record.primarySource.versionByteStart === null || v4Record.primarySource.versionByteEnd === null || v4Record.primarySource.versionByteEnd > sourceBytes.length || Buffer.compare(sourceBytes.subarray(v4Record.primarySource.versionByteStart, v4Record.primarySource.versionByteEnd), Buffer.from(v4Record.primarySource.sourceVersion ?? "", "utf8")) !== 0) missingSourceIds.add("PRIMARY_SOURCE:VERSION");
+    const requiredPrimaryIds = v4Record.evidence.filter(entry => entry.kind === "primary").map(entry => entry.id);
+    const primaryQuoteCounts = new Map<string, number>();
+    for (const quote of v4Record.primarySource.quotes) primaryQuoteCounts.set(quote.evidenceId, (primaryQuoteCounts.get(quote.evidenceId) ?? 0) + 1);
+    for (const evidenceId of requiredPrimaryIds) {
+      const matches = v4Record.primarySource.quotes.filter(quote => quote.evidenceId === evidenceId);
+      if (primaryQuoteCounts.get(evidenceId) !== 1 || matches.length !== 1) {
+        missingSourceIds.add("PRIMARY_SOURCE:QUOTE:" + evidenceId);
+        continue;
+      }
+      const quote = matches[0];
+      if (!quote || quote.byteEnd > sourceBytes.length || Buffer.compare(sourceBytes.subarray(quote.byteStart, quote.byteEnd), Buffer.from(quote.quote, "utf8")) !== 0) missingSourceIds.add("PRIMARY_SOURCE:QUOTE:" + evidenceId);
+    }
+    for (const quote of v4Record.primarySource.quotes) if (!requiredPrimaryIds.includes(quote.evidenceId)) missingSourceIds.add("PRIMARY_SOURCE:QUOTE:" + quote.evidenceId);
+    const requirementQuoteCounts = new Map<string, number>();
+    for (const quote of v4Record.requirementQuotes) requirementQuoteCounts.set(quote.requirementId, (requirementQuoteCounts.get(quote.requirementId) ?? 0) + 1);
+    for (const requirementId of expectedRequirements) {
+      const canonical = canonicalRequirements.get(requirementId);
+      const matches = v4Record.requirementQuotes.filter(quote => quote.requirementId === requirementId);
+      const submitted = matches[0];
+      const valid = canonical !== undefined && requirementQuoteCounts.get(requirementId) === 1 && matches.length === 1 && submitted !== undefined && submitted.sourcePath === canonical.sourcePath && submitted.sourceDigest === canonical.sourceDigest && submitted.quote === canonical.quote && submitted.byteStart === canonical.byteStart && submitted.byteEnd === canonical.byteEnd;
+      if (!valid) missingRequirements.add(requirementId);
+    }
+    for (const quote of v4Record.requirementQuotes) if (!expectedRequirements.includes(quote.requirementId) || requirementQuoteCounts.get(quote.requirementId) !== 1) missingRequirements.add(quote.requirementId);
+  }
+  if (missingRequirements.size) add("MAPPED_REQUIREMENTS_MISSING");
+  const missingRequirementIds = [...missingRequirements];
   if (missingValidationIds.size) add("VALIDATION_ID_MISSING");
   if (missingSourceIds.size) add("PRIMARY_EVIDENCE_MISSING");
   if (record && (options.size !== record.options.length || sources.size !== record.evidence.length || new Set(record.validations.map(entry => entry.id)).size !== record.validations.length)) add("DUPLICATE_REFERENCE");
@@ -791,13 +943,29 @@ const inspectResearch = (input: MapCheckInputV1, testDocuments: readonly Researc
   const globalMapping = /README maps ([^\n]+?) to all specs/.exec(raw)?.[1];
   const requirementIds = [...new Set(globalMapping?.match(/\b[0-9]+\.[0-9]+\b/g) ?? [])];
   if (requirementIds.length === 0) throw new Error("REGISTER_GLOBAL_REQUIREMENTS_MISSING");
-  const opsRequirementIdsByComponent = opsMappedRequirementGroups(raw, readResearchFile("specs/README.md"), components, requirementIds);
-  const componentDecisions = inspectComponentDecisions(reports, components, findings, documents, requirementIds, input.release ?? "R0", opsRequirementIdsByComponent);
+  const readmeRaw = readResearchFile("specs/README.md");
+  const opsRequirementIdsByComponent = mappedRequirementGroups(raw, readmeRaw, components, requirementIds, "ops");
+  const lifeStoreRequirementIds = lifeStoreRequirementIdsFrom(readResearchFile("specs/lifestore.md"));
+  const lifeStoreRequirementIdsByComponent = mappedRequirementGroups(raw, readmeRaw, components, requirementIds, "lifestore", lifeStoreRequirementIds);
+  const lifeStoreComponentIds = lifeStoreComponentIdsFrom(components, lifeStoreRequirementIdsByComponent);
+  const canonicalRequirements = canonicalRequirementQuotesFrom(readResearchFile("REQUIREMENTS.md"));
+  const componentDecisions = inspectComponentDecisions(reports, components, findings, documents, requirementIds, input.release ?? "R0", opsRequirementIdsByComponent, lifeStoreRequirementIdsByComponent, lifeStoreComponentIds, canonicalRequirements);
   const attentionDecisions = inspectAttentionDecisions(reports, components, findings, documents, requirementIds, input.release ?? "R0");
   return researchRegisterInspectionV3Schema.parse({ attentionDecisions, componentDecisions, requestedRelease: input.release, registerPath, registerDigest: hash(raw), components, componentComparisons, reports, specReferences, sourcesCatalogCoverage, dependencyClosureVerified: false, findings, wholeATsPassed: [], scope: "register_inventory", admission: "BLOCKED", acceptanceComplete: false });
 };
 
 export const EngineeringControl = {
+  canonicalRequirementQuotes(requirementIds: ResearchComponentComparisonV4["mappedRequirements"], context: OpsControlContextV1): Result<ResearchComponentComparisonV4["requirementQuotes"]> {
+    if (!opsControlContextSchema.safeParse(context).success || !Array.isArray(requirementIds) || requirementIds.length === 0 || requirementIds.length > 100 || new Set(requirementIds).size !== requirementIds.length || requirementIds.some(id => !/^[0-9]+\.[0-9]+$/.test(id))) return refused("INVALID_INPUT");
+    const owned = OpsTestStack.inspect(context);
+    if (!owned.ok) return owned;
+    try {
+      const canonical = canonicalRequirementQuotesFrom(readResearchFile("REQUIREMENTS.md"));
+      const quotes = requirementIds.map(id => canonical.get(id));
+      if (quotes.some(quote => quote === undefined)) return refused("ARTIFACT_MISMATCH");
+      return { ok: true, data: quotes.filter((quote): quote is CanonicalRequirementQuote => quote !== undefined) };
+    } catch { return refused("ARTIFACT_MISMATCH"); }
+  },
   checkResearch(input: MapCheckInputV1, context: OpsControlContextV1, testDocuments: readonly ResearchDocumentOverlayV1[] = []): Result<ResearchRegisterInspectionV3> {
     if (!mapCheckInputSchema.safeParse(input).success || !opsControlContextSchema.safeParse(context).success || testDocuments.length > 100 || testDocuments.some(document => !researchDocumentOverlaySchema.safeParse(document).success)) return refused("INVALID_INPUT");
     if (testDocuments.length > 0) {

@@ -1,0 +1,115 @@
+{
+  "card": "R0.10",
+  "head": "f8e7116",
+  "status": "PENDING_SOURCE_WORK_NO_HONEST_TWO_HOUR_OWNER_SLICE",
+  "decision": "The smallest acceptance-honest ownership floor cannot be implemented as one bounded R0 unit from current written contracts. Keep AT-hermes-config-69 and AT-activity-focus-86 pending. This is missing source/interface work, not an external blocker.",
+  "acceptanceBindings": [
+    {
+      "id": "AT-hermes-config-69",
+      "source": "specs/hermes-config.md:3458",
+      "sourceAssertion": "- **AT-hermes-config-69 [R0]** Given the amended cadence registry and generated contracts, When schema/role cutover validation runs, Then `toy_si.cadence_slot`, `toy_si.run`, and `toy_si.review` have one Durable admission/Turn Review owner, Obligations reads a read-only projection, all canonical states including swept agree, and duplicate writers or noncanonical slot enums fail the gate.",
+      "sourceAssertionSha256": "965ebd8c120f65c939ac3dce6fb45aeda90dc34f5bbf08ea5e7db257c8f83ba4",
+      "sourceDigest": "d3548fde13180bc750660f306caa0041101832e398ccdabd6cfdac0b3de8f4af",
+      "rung": "CLI",
+      "requiredEvidence": ["static", "stack", "probe:AT-hermes-config-69"]
+    },
+    {
+      "id": "AT-activity-focus-86",
+      "source": "specs/activity-focus.md:2269",
+      "sourceAssertion": "- **AT-activity-focus-86 [R0]** Given amended generated cadence contracts, When the pre-build schema/caller gate exercises Activity-Focus and Obligations projections, Then only Durable admission/Turn Review writes `toy_si.cadence_slot`, `toy_si.run`, and `toy_si.review`, projection writes and alternative owners fail, and swept is distinct from accepted AI-reviewed coverage.",
+      "sourceAssertionSha256": "52ae93648c59baf2fd8a323afcd7d905d2818120da90106346b6d33c332b883f",
+      "sourceDigest": "95419ee43fbc5c4367e2109efc17eb0c08527b1355fea71fd170650adf4afa81",
+      "rung": "CLI",
+      "requiredEvidence": ["static", "probe:AT-activity-focus-86"]
+    }
+  ],
+  "exactWrittenInterfaces": {
+    "runAdmission": "Self-Improvement §2 writes RunAdmission.admit(input: AdmissionInput): Promise<Result<RunRef>>, heartbeat(run: RunRef, leaseEpoch: Revision): Promise<Result<void>>, and terminal(run: RunRef, leaseEpoch: Revision, terminal: TerminalRecord): Promise<Result<void>>.",
+    "turnReview": "Self-Improvement §3 writes TurnReview.checkStop(run: RunRef), review(run: RunRef), and get(runId: UUID), each returning Promise<Result<ReviewResult>>. ReviewResult is reviewed with an immutable Review or pending with an explicit reason and retry time.",
+    "missingInputContracts": "AdmissionInput and TerminalRecord are referenced by the written signatures but have no field definitions in the spec or generated @toy/contracts sources. RunRef/Review/ReviewResult are specified in prose but not generated in the current contract inventory.",
+    "cadenceRow": "Self-Improvement §5.2 gives the cadence_slot columns and key. No generated CadenceSlot DTO exists; current generated cadence contracts are CadenceSlotState, CadencePeriodV1, and CadenceCoverageV1.",
+    "obligationsProjection": "Obligations §13.6 mandates a read-only slot projection but supplies no public method signature or result DTO. Write this owner interface before implementing callers; no method name is invented here.",
+    "databaseRoleMap": "CONTRACTS names OS service identities such as _toy_pg and _toy_review, but does not map Durable admission/Turn Review and the Obligations projection to PostgreSQL roles or grants. Do not assume OS account names are PostgreSQL role names."
+  },
+  "currentOwnerBoundary": {
+    "singleExistingDdl": "packages/self-improvement/migrations/capacity-trial.sql and capacity-trial-migration.ts create toy_si.cadence_slot as part of the trial schema.",
+    "directWrites": "packages/self-improvement/src/capacity-trial.ts directly inserts the 3,360 scheduled trial rows and updates cadence_slot for deferrals and misses. Its public CapacityTrialJournal is not the specified RunAdmission/TurnReview boundary.",
+    "missingOwners": "packages/self-improvement/src/public.ts exports CapacityTrialJournal but no RunAdmission or TurnReview implementation. packages/obligations/src/public.ts exports only ModuleId and has no read-only projection.",
+    "trialRoutingGap": "CapacityTrialJournal.startArm/deferSlot/reconcileArm need to write slot rows, but the written RunAdmission/TurnReview signatures do not define a trial-slot operation, and AdmissionInput is undefined. Routing the current writes through an invented adapter method or a string owner label would not prove canonical ownership.",
+    "manifestGap": "The acceptance index contains both IDs and source hashes, but tests/registry.yaml has no authored manifests for either. This integration is parent-owned after Life45 and cadence workers stop."
+  },
+  "smallestRequiredOwnershipFloor": {
+    "components": [
+      "Complete the generated @toy/contracts inputs and outputs for the already-written RunAdmission and TurnReview signatures, plus the canonical CadenceSlot projection DTO.",
+      "Write the Obligations projection method signature/result contract and a canonical PostgreSQL capability map for the Durable owner and read-only projection role.",
+      "Consolidate toy_si.run, toy_si.review, and toy_si.cadence_slot under one actual owner migration with primary/foreign keys, slot uniqueness, the exact twelve-state constraint, and effective PostgreSQL grants/revokes.",
+      "Implement real RunAdmission/TurnReview persistence for the slot/run/review paths needed by the migration. Do not add stub methods or call an owner solely because its name appears in a registry.",
+      "Route CapacityTrialJournal slot creation and state changes through those actual owner operations, or first write a canonical capacity-trial mapping into the owner contract. Preserve no accepted TurnReview evidence as pending/zero reviewed.",
+      "Then add the two CLI manifests and source-mutation probes; parent owns public.ts/registry/fixture/feature-map integration after Life45 releases those files."
+    ],
+    "boundedness": "These pieces share DTOs, migration ownership, caller behavior, and database grants. Dropping any one leaves the current direct writer or unnamed projection in place, so a narrower unit cannot honestly pass either ownership AT. Implementing all together exceeds the requested single roughly two-hour source unit.",
+    "noWorkerAssignment": "No cadence source files are assigned by this refinement. This avoids overlap with Life45's four files. Parent integration files remain parent-owned and must wait until Life45 and cadence mutators stop."
+  },
+  "eventualCliCases": {
+    "AT-hermes-config-69": {
+      "static": [
+        "Compare generated CadenceSlotState, CadenceCoverage state keys, and the owner migration's SQL state constraint against the exact CONTRACTS enum.",
+        "Inspect actual table definitions and owner API write sites for toy_si.cadence_slot, toy_si.run, and toy_si.review; reject a second DDL/DML path and a writable Obligations projection.",
+        "Use fake OS source-tree copies to inject an Obligations writer, a projection write grant, and a missing/extra enum state; each mutation must fail the same public source gate."
+      ],
+      "stackAndDatabase": [
+        "Use the registered R0 fake CLI stack and its existing private disposable PostgreSQL 17 fixture (`withAccountingFixture`); apply the real owner migration in that isolated database.",
+        "Create/use the PostgreSQL roles named by the canonical capability map. Through the owner APIs, verify permitted owner persistence. Under the Obligations projection role, verify SELECT/readback succeeds and direct INSERT, UPDATE, and DELETE against cadence_slot/run/review fail with PostgreSQL permission errors.",
+        "Attempt the competing projection writer under its real role and verify denial. Record SQL result/readback and teardown evidence through probe.show; do not connect to the production database or activate the Hermes scheduler."
+      ],
+      "reviewEvidence": "With no trusted accepted review supplied, RunAdmission/TurnReview readback remains pending and AI-reviewed coverage is zero. A `swept` row stays distinct and cannot be converted to reviewed."
+    },
+    "AT-activity-focus-86": {
+      "static": [
+        "Run the same generated schema, actual migration/API caller, read-only projection, duplicate-writer, and enum mutation checks through the assigned CLI probe.",
+        "Use one required-AI projection fixture containing a swept slot and no accepted TurnReview record; assert zero accepted AI-reviewed coverage for it."
+      ],
+      "database": "The AT's source/schema/caller evidence does not itself establish installed PostgreSQL roles; retain that proof in AT-hermes-config-69's required stack evidence."
+    },
+    "commandsAfterAllSourceMutatorsStop": [
+      "toy stack up --release R0 --world registered --clock fake --model fake --request-id <uuid> --json",
+      "toy --env test --stack <stack-id> probe run AT-hermes-config-69 --request-id <uuid> --json",
+      "toy --env test --stack <stack-id> probe run AT-activity-focus-86 --request-id <uuid> --json",
+      "toy --env test --stack <stack-id> probe show <returned-operation-id> --json",
+      "toy --env test --stack <stack-id> stack down --request-id <uuid> --json"
+    ]
+  },
+  "limits": {
+    "sourceAdmission": "PENDING_SOURCE_WORK. The current capacity-trial DDL/write path is not proof of the canonical Durable admission/Turn Review owner.",
+    "AThermesConfig69": "PENDING; its stack qualifier requires actual disposable PostgreSQL role read/write evidence, not a source label or a fake permission object.",
+    "ATActivityFocus86": "PENDING; source/schema/caller restrictions and swept versus accepted reviewed coverage remain unverified.",
+    "reviewedCoverage": "No accepted TurnReview evidence was fabricated or inferred. Until a current trusted review is accepted, reviewed coverage remains zero.",
+    "execution": "Read-only spec/source review only. No source edits, generated output, tests, builds, CLI, runtime, database, provider, credentials, or network operations. Parent requests remain outside this card and their status is not inferred."
+  },
+  "sourceHashes": [
+    {"path": "tests/acceptance-index.json", "sha256": "c9b645eab7f55b2ebf35d7db769a534a4837de23ad3dc3d913f3189e781d44fa"},
+    {"path": "tests/registry.yaml", "sha256": "5137175d79ce434de98bf84c1c86600edfab681d1890291f51c812eab87b428a"},
+    {"path": "packages/contracts/src/primitives.ts", "sha256": "ab5e75b50f170ea4ecd8c6144b5d7f2a489e89a360651cc9f703b2e74d3afa58"},
+    {"path": "packages/contracts/src/ops.ts", "sha256": "f99adefbea806be7fe4a4ddd50e37bde156d4edbae55b8d68f80b08678dddf1d"},
+    {"path": "packages/contracts/generated/schemas/cadence-slot-state.schema.json", "sha256": "0b576ab7eb7305d4f1859fe29ba812e1bdb523357f4f610914c463f368a76d54"},
+    {"path": "packages/contracts/generated/schemas/cadence-coverage-v1.schema.json", "sha256": "07ed7092814325fac3ceb39448f4a0a8add8e3f39144e66d5ea77dea13bd2062"},
+    {"path": "packages/self-improvement/src/public.ts", "sha256": "ec346f0482cb0bb30c4f3651e30cf7bf93e31b41b2ebc73c776db713f53cf3c2"},
+    {"path": "packages/self-improvement/src/capacity-trial.ts", "sha256": "dab2b52588bd6f905690551101aeb916bcca6db7afd0afe7068520575171f82b"},
+    {"path": "packages/self-improvement/src/capacity-trial-migration.ts", "sha256": "6673e1acab2f5853df7d208ce1e377a2f9e23fe56416d6164e2c3000f2f01bbe"},
+    {"path": "packages/self-improvement/migrations/capacity-trial.sql", "sha256": "c4ee9357ea602ed4c3848362082ee3d6b2a13069b8b892e64e94e410bbe5e41e"},
+    {"path": "packages/self-improvement/src/accounting-postgres.ts", "sha256": "b9b2b721acec01d490a247b9fd415b6bd3e8ecc6d55fc4adab4b1b7bb91557f0"},
+    {"path": "packages/obligations/src/public.ts", "sha256": "526a993a0f22b2d2176444178c414f42c768f462b82b16554caba0490f539d62"},
+    {"path": "packages/contracts/src/ops-registry.ts", "sha256": "618032d8aaa716ffb2d1947428d236dc064e343beced482a19b3ee770c48f7c8"},
+    {"path": "packages/contracts/src/test-control.ts", "sha256": "0af0d0e4349cae05bfdc06a77592e32c5171f0dc5d0e5964f2ef87faeaa4111c"},
+    {"path": "packages/ops/src/fixture-stack.ts", "sha256": "f1cef4e77af709588b0ad2bf56b211f10992742f19f0ea54479d2b9b9bf7632c"}
+  ],
+  "authoritativeSpecHashes": [
+    {"path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/CONTRACTS.md", "sha256": "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d"},
+    {"path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/TEST-PLAN.md", "sha256": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2"},
+    {"path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/hermes-config.md", "sha256": "d3548fde13180bc750660f306caa0041101832e398ccdabd6cfdac0b3de8f4af"},
+    {"path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/activity-focus.md", "sha256": "95419ee43fbc5c4367e2109efc17eb0c08527b1355fea71fd170650adf4afa81"},
+    {"path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/self-improvement.md", "sha256": "23e69b258189148328f029acd3ec7c4c125544bf49d670757eee2bf071ab7014"},
+    {"path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/obligations.md", "sha256": "5379f943578b4248dc21379a029acead930047c091316deb796fae0d49f4eb0f"}
+  ],
+  "scopeStatement": "Plan-only refinement. No current source slice is admitted, and no acceptance evidence or whole-card PASS is claimed."
+}

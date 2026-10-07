@@ -1,0 +1,645 @@
+{
+  "schemaVersion": "toy.cli.v1",
+  "commandId": "probe.run",
+  "invocationId": "c1399945-2187-41ef-afe4-8bc3a90028fd",
+  "generatedAt": "2026-10-07T02:35:41.172Z",
+  "cliVersion": "1.0.0",
+  "contractsVersion": "1.0.0",
+  "schemaDigest": "a9798dc39646fb2fe7b9c5c13d4f673095ce31c3e04f8c048f91556a1c354d9a",
+  "environment": {
+    "kind": "test",
+    "instanceId": null,
+    "stackId": "6f8071d9-dab6-4f34-ad62-4504643adedd"
+  },
+  "meta": {
+    "exitCode": 0,
+    "releaseDigest": null,
+    "controlDigest": null,
+    "evaluatedAt": null,
+    "operationId": null,
+    "effectState": "confirmed",
+    "recordRefs": [],
+    "evidence": []
+  },
+  "ok": true,
+  "data": {
+    "operation": {
+      "operationId": "c66420be-50d3-48fb-ae09-c5e88d22f2ab",
+      "state": "succeeded",
+      "acceptedAt": "2026-10-07T02:35:41.170Z"
+    },
+    "requestId": "8a2690d5-80f7-4b94-b7a8-ed7fa63f8bec",
+    "stackId": "6f8071d9-dab6-4f34-ad62-4504643adedd",
+    "result": {
+      "probeId": "AT-hermes-config-91",
+      "caseManifestDigest": "ae15bacfbc6432ed2a4fc257c017eab336b4452bd89bbb38e45766b123dd6701",
+      "cases": [
+        {
+          "id": "auth.native-runtime",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T02:34:47.792Z",
+          "reasonCode": "NATIVE_PUBLIC_CLI_READY_AUTH_PENDING",
+          "prerequisite": "{\"interface\":\"hermes --help\",\"installedCommit\":\"8d5e3e412138342e8bf30443e72bd4e6a9abd057\",\"launcherDigest\":\"307ef6a7792a42083f6e4f71e9500543efd9c707e211068f80b138db76975397\",\"interpreterSource\":\"existing-committed-venv\",\"interpreterDigest\":\"e046691799a36090b5946d8910084f982bf819ed4dfaf27a4bfa5bdf9c8360ee\",\"publicRuntimeCommandDigest\":\"e99338b03dfdad1b660705657d5e8c4273cc8e1b53f2fe6cf995d9cb36e05403\",\"bytecodeWritesDisabled\":true,\"isolatedHome\":true,\"inheritedProviderEnvironment\":false,\"publicHelpObserved\":true,\"childExitCode\":0,\"childSignal\":null,\"outputDigest\":\"1b74616851009c28894dd94adf51fc3064e3d353021e1b37b716a4904b3881e3\",\"errorOutputDigest\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"dependencyEnvironmentUnavailable\":false,\"missingModule\":false,\"repairSuggested\":false,\"sourceUpdateIncomplete\":false,\"authExecuted\":false,\"credentialInspected\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "307ef6a7792a42083f6e4f71e9500543efd9c707e211068f80b138db76975397",
+              "e046691799a36090b5946d8910084f982bf819ed4dfaf27a4bfa5bdf9c8360ee",
+              "49c8fdda2f91166da1631b525878636961a91a6e583881a2c33a40c17377d31a"
+            ]
+          }
+        },
+        {
+          "id": "auth.native-fixture",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T02:35:02.491Z",
+          "reasonCode": "NATIVE_AUTH_FIXTURE_ADD_OBSERVED",
+          "prerequisite": "{\"profileCreate\":{\"publicArgv\":[\"hermes\",\"profile\",\"create\",\"toy\",\"--no-skills\"],\"exitCode\":0,\"profileCreated\":true,\"autoTitleDisabledByPublicConfig\":true,\"stdoutDigest\":\"2292f045f19ec790be6129640e5841e3c0fe3c0b15760d5d6aa75fa0ed5e165b\",\"stderrDigest\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"},\"result\":{\"schema\":\"toy.hermes-httpx-auth-fixture.v1\",\"operation\":\"add\",\"public_argv\":[\"hermes\",\"auth\",\"add\",\"openai-codex\",\"--type\",\"oauth\",\"--no-browser\",\"--label\",\"toy-fixture-lifecycle-root\"],\"exit_code\":0,\"markers\":[\"AUTH_ADD_OK\"],\"processIdentity\":{\"pid\":35393,\"parentPid\":35361,\"uid\":501,\"gid\":20},\"observations\":{\"provider\":\"openai-codex\",\"phase\":\"add\",\"access_generation\":null,\"catalog_access_generation\":null,\"storage_fault_triggered\":false,\"token_hygiene\":true,\"success_claim_absent\":false,\"fallback_attempted\":false,\"network_denials\":[],\"socket_origin\":null},\"http_ledger\":{\"device_code_requests\":1,\"device_code_polls\":1,\"token_exchanges\":1,\"token_refreshes\":0,\"model_catalog_requests\":0,\"model_requests\":0,\"denied_http_requests\":0,\"blocked_socket_events\":0},\"network_audit\":\"socket-audit-hook-installed\"},\"childPidMatches\":true,\"freshChildPid\":true,\"parentPidMatches\":true,\"uidMatches\":true,\"gidMatches\":true,\"childStdoutDigest\":\"adce8b95e3006838c29cbac5ed915272da79d98cb7fbbed7dec173eafa068a38\",\"childStderrDigest\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"caseId\":\"root-add\",\"storeScope\":\"root\",\"label\":\"toy-fixture-lifecycle-root\",\"expectedCount\":null,\"expectedLabelPresent\":null,\"expectedGeneration\":null,\"rootAuthBefore\":{\"exists\":false,\"digest\":null},\"rootAuthAfter\":{\"exists\":true,\"digest\":\"209409b12d944bc85d6eec68b2a460884b7807e40ff71d521dcf7713273db1cd\"},\"rootEnvBefore\":{\"exists\":false,\"digest\":null},\"rootEnvAfter\":{\"exists\":false,\"digest\":null},\"profileAuthBefore\":{\"exists\":false,\"digest\":null},\"profileAuthAfter\":{\"exists\":false,\"digest\":null},\"rootStoreVerified\":true,\"profileStoreVerified\":true,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "60554c067d107b149109b33741c6a4032a13c42a879d132ef5d0cba0c4954447",
+              "edcdcf963730b74aba7e77bb544119bff55829f48204e138aedbbd06af965e96",
+              "85f7fec70019f267210c90ec3798bec6839b94a49c70745129f3c68789c26855",
+              "f976a83543d53f1a42059c64f3b3fbb94e8069a39f89f7b60fe63027a88b4846",
+              "846b28f0b5a22e0f42fb236e7f4f4b092f1dea76af59c80258a9c6c32d10e8c0",
+              "69c8a0d2c7947c11fa7a87aebf7b19a0050fde142cf7b09f00f59bc256cda4fd",
+              "a792f705a65d7a2215d3bb401f2f9ef03b47c1b303f010932126252345e758d9",
+              "fc301e0f9097993fd8889ab3c0a09b5969bced8b1e0452bb3898eeca30b02829",
+              "fcb00a86184500b0ad864fdb4b30b4d56c4578496200ce16ff97ca2da45e215d",
+              "d1971278f46fdb948131d6c79086846e179368cbe70a11106a2173b92901a186"
+            ]
+          }
+        },
+        {
+          "id": "auth.native-fixture",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T02:35:06.430Z",
+          "reasonCode": "NATIVE_AUTH_FIXTURE_ADD_OBSERVED",
+          "prerequisite": "{\"result\":{\"schema\":\"toy.hermes-httpx-auth-fixture.v1\",\"operation\":\"add\",\"public_argv\":[\"hermes\",\"--profile\",\"toy\",\"auth\",\"add\",\"openai-codex\",\"--type\",\"oauth\",\"--no-browser\",\"--label\",\"toy-fixture-lifecycle-target\"],\"exit_code\":0,\"markers\":[\"AUTH_ADD_OK\"],\"processIdentity\":{\"pid\":35395,\"parentPid\":35361,\"uid\":501,\"gid\":20},\"observations\":{\"provider\":\"openai-codex\",\"phase\":\"add\",\"access_generation\":null,\"catalog_access_generation\":null,\"storage_fault_triggered\":false,\"token_hygiene\":true,\"success_claim_absent\":false,\"fallback_attempted\":false,\"network_denials\":[],\"socket_origin\":null},\"http_ledger\":{\"device_code_requests\":1,\"device_code_polls\":1,\"token_exchanges\":1,\"token_refreshes\":0,\"model_catalog_requests\":0,\"model_requests\":0,\"denied_http_requests\":0,\"blocked_socket_events\":0},\"network_audit\":\"socket-audit-hook-installed\"},\"childPidMatches\":true,\"freshChildPid\":true,\"parentPidMatches\":true,\"uidMatches\":true,\"gidMatches\":true,\"childStdoutDigest\":\"0ce283ea451a5509efe569ed5b1b151a919a89630b7b74faeb1507948eba70d5\",\"childStderrDigest\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"caseId\":\"profile-add-target\",\"storeScope\":\"profile\",\"label\":\"toy-fixture-lifecycle-target\",\"expectedCount\":null,\"expectedLabelPresent\":null,\"expectedGeneration\":null,\"rootAuthBefore\":{\"exists\":true,\"digest\":\"209409b12d944bc85d6eec68b2a460884b7807e40ff71d521dcf7713273db1cd\"},\"rootAuthAfter\":{\"exists\":true,\"digest\":\"209409b12d944bc85d6eec68b2a460884b7807e40ff71d521dcf7713273db1cd\"},\"rootEnvBefore\":{\"exists\":false,\"digest\":null},\"rootEnvAfter\":{\"exists\":false,\"digest\":null},\"profileAuthBefore\":{\"exists\":false,\"digest\":null},\"profileAuthAfter\":{\"exists\":true,\"digest\":\"643399e851cc8e8fa7439f7e7f2675248bd11a647d52aed8bd82f823d903e668\"},\"rootStoreVerified\":true,\"profileStoreVerified\":true,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "60554c067d107b149109b33741c6a4032a13c42a879d132ef5d0cba0c4954447",
+              "edcdcf963730b74aba7e77bb544119bff55829f48204e138aedbbd06af965e96",
+              "85f7fec70019f267210c90ec3798bec6839b94a49c70745129f3c68789c26855",
+              "f976a83543d53f1a42059c64f3b3fbb94e8069a39f89f7b60fe63027a88b4846",
+              "846b28f0b5a22e0f42fb236e7f4f4b092f1dea76af59c80258a9c6c32d10e8c0",
+              "69c8a0d2c7947c11fa7a87aebf7b19a0050fde142cf7b09f00f59bc256cda4fd",
+              "a792f705a65d7a2215d3bb401f2f9ef03b47c1b303f010932126252345e758d9",
+              "fc301e0f9097993fd8889ab3c0a09b5969bced8b1e0452bb3898eeca30b02829",
+              "fcb00a86184500b0ad864fdb4b30b4d56c4578496200ce16ff97ca2da45e215d",
+              "d1971278f46fdb948131d6c79086846e179368cbe70a11106a2173b92901a186"
+            ]
+          }
+        },
+        {
+          "id": "auth.native-fixture",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T02:35:10.364Z",
+          "reasonCode": "NATIVE_AUTH_FIXTURE_ADD_OBSERVED",
+          "prerequisite": "{\"result\":{\"schema\":\"toy.hermes-httpx-auth-fixture.v1\",\"operation\":\"add\",\"public_argv\":[\"hermes\",\"--profile\",\"toy\",\"auth\",\"add\",\"openai-codex\",\"--type\",\"oauth\",\"--no-browser\",\"--label\",\"toy-fixture-lifecycle-sibling\"],\"exit_code\":0,\"markers\":[\"AUTH_ADD_OK\"],\"processIdentity\":{\"pid\":35397,\"parentPid\":35361,\"uid\":501,\"gid\":20},\"observations\":{\"provider\":\"openai-codex\",\"phase\":\"add\",\"access_generation\":null,\"catalog_access_generation\":null,\"storage_fault_triggered\":false,\"token_hygiene\":true,\"success_claim_absent\":false,\"fallback_attempted\":false,\"network_denials\":[],\"socket_origin\":null},\"http_ledger\":{\"device_code_requests\":1,\"device_code_polls\":1,\"token_exchanges\":1,\"token_refreshes\":0,\"model_catalog_requests\":0,\"model_requests\":0,\"denied_http_requests\":0,\"blocked_socket_events\":0},\"network_audit\":\"socket-audit-hook-installed\"},\"childPidMatches\":true,\"freshChildPid\":true,\"parentPidMatches\":true,\"uidMatches\":true,\"gidMatches\":true,\"childStdoutDigest\":\"d3f159e3ea0680367c9e97fb219c1b9f6637770969a073cb5f1f1bfeab6e2a31\",\"childStderrDigest\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"caseId\":\"profile-add-sibling\",\"storeScope\":\"profile\",\"label\":\"toy-fixture-lifecycle-sibling\",\"expectedCount\":null,\"expectedLabelPresent\":null,\"expectedGeneration\":null,\"rootAuthBefore\":{\"exists\":true,\"digest\":\"209409b12d944bc85d6eec68b2a460884b7807e40ff71d521dcf7713273db1cd\"},\"rootAuthAfter\":{\"exists\":true,\"digest\":\"209409b12d944bc85d6eec68b2a460884b7807e40ff71d521dcf7713273db1cd\"},\"rootEnvBefore\":{\"exists\":false,\"digest\":null},\"rootEnvAfter\":{\"exists\":false,\"digest\":null},\"profileAuthBefore\":{\"exists\":true,\"digest\":\"643399e851cc8e8fa7439f7e7f2675248bd11a647d52aed8bd82f823d903e668\"},\"profileAuthAfter\":{\"exists\":true,\"digest\":\"e2867d0ae28f2cda1cbf10d6789760b612e85c13ba5df5567e4a83ed0a7f4a94\"},\"rootStoreVerified\":true,\"profileStoreVerified\":true,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "60554c067d107b149109b33741c6a4032a13c42a879d132ef5d0cba0c4954447",
+              "edcdcf963730b74aba7e77bb544119bff55829f48204e138aedbbd06af965e96",
+              "85f7fec70019f267210c90ec3798bec6839b94a49c70745129f3c68789c26855",
+              "f976a83543d53f1a42059c64f3b3fbb94e8069a39f89f7b60fe63027a88b4846",
+              "846b28f0b5a22e0f42fb236e7f4f4b092f1dea76af59c80258a9c6c32d10e8c0",
+              "69c8a0d2c7947c11fa7a87aebf7b19a0050fde142cf7b09f00f59bc256cda4fd",
+              "a792f705a65d7a2215d3bb401f2f9ef03b47c1b303f010932126252345e758d9",
+              "fc301e0f9097993fd8889ab3c0a09b5969bced8b1e0452bb3898eeca30b02829",
+              "fcb00a86184500b0ad864fdb4b30b4d56c4578496200ce16ff97ca2da45e215d",
+              "d1971278f46fdb948131d6c79086846e179368cbe70a11106a2173b92901a186"
+            ]
+          }
+        },
+        {
+          "id": "auth.native-fixture",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T02:35:11.208Z",
+          "reasonCode": "NATIVE_AUTH_FIXTURE_LIST_OBSERVED",
+          "prerequisite": "{\"result\":{\"schema\":\"toy.hermes-httpx-auth-fixture.v1\",\"operation\":\"list\",\"public_argv\":[\"hermes\",\"--profile\",\"toy\",\"auth\",\"list\",\"openai-codex\"],\"exit_code\":0,\"markers\":[\"AUTH_LIST_READBACK_OK\"],\"processIdentity\":{\"pid\":35399,\"parentPid\":35361,\"uid\":501,\"gid\":20},\"observations\":{\"provider\":\"openai-codex\",\"phase\":\"list\",\"credential_count\":2,\"target_label_present\":true,\"access_generation\":null,\"catalog_access_generation\":null,\"storage_fault_triggered\":false,\"token_hygiene\":true,\"success_claim_absent\":true,\"fallback_attempted\":false,\"network_denials\":[],\"socket_origin\":null},\"http_ledger\":{\"device_code_requests\":0,\"device_code_polls\":0,\"token_exchanges\":0,\"token_refreshes\":0,\"model_catalog_requests\":0,\"model_requests\":0,\"denied_http_requests\":0,\"blocked_socket_events\":0},\"network_audit\":\"socket-audit-hook-installed\"},\"childPidMatches\":true,\"freshChildPid\":true,\"parentPidMatches\":true,\"uidMatches\":true,\"gidMatches\":true,\"childStdoutDigest\":\"8583fe33d68d08bcceb66ebebb7d341705035eba694e79b01306f634223e2fbd\",\"childStderrDigest\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"caseId\":\"profile-initial-readback\",\"storeScope\":\"profile\",\"label\":\"toy-fixture-lifecycle-target\",\"expectedCount\":2,\"expectedLabelPresent\":true,\"expectedGeneration\":null,\"rootAuthBefore\":{\"exists\":true,\"digest\":\"209409b12d944bc85d6eec68b2a460884b7807e40ff71d521dcf7713273db1cd\"},\"rootAuthAfter\":{\"exists\":true,\"digest\":\"209409b12d944bc85d6eec68b2a460884b7807e40ff71d521dcf7713273db1cd\"},\"rootEnvBefore\":{\"exists\":false,\"digest\":null},\"rootEnvAfter\":{\"exists\":false,\"digest\":null},\"profileAuthBefore\":{\"exists\":true,\"digest\":\"e2867d0ae28f2cda1cbf10d6789760b612e85c13ba5df5567e4a83ed0a7f4a94\"},\"profileAuthAfter\":{\"exists\":true,\"digest\":\"e2867d0ae28f2cda1cbf10d6789760b612e85c13ba5df5567e4a83ed0a7f4a94\"},\"rootStoreVerified\":true,\"profileStoreVerified\":true,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "60554c067d107b149109b33741c6a4032a13c42a879d132ef5d0cba0c4954447",
+              "edcdcf963730b74aba7e77bb544119bff55829f48204e138aedbbd06af965e96",
+              "85f7fec70019f267210c90ec3798bec6839b94a49c70745129f3c68789c26855",
+              "f976a83543d53f1a42059c64f3b3fbb94e8069a39f89f7b60fe63027a88b4846",
+              "846b28f0b5a22e0f42fb236e7f4f4b092f1dea76af59c80258a9c6c32d10e8c0",
+              "69c8a0d2c7947c11fa7a87aebf7b19a0050fde142cf7b09f00f59bc256cda4fd",
+              "a792f705a65d7a2215d3bb401f2f9ef03b47c1b303f010932126252345e758d9",
+              "fc301e0f9097993fd8889ab3c0a09b5969bced8b1e0452bb3898eeca30b02829",
+              "fcb00a86184500b0ad864fdb4b30b4d56c4578496200ce16ff97ca2da45e215d",
+              "06a620bf23123a1a02b6769c756960062cfd7933bcf83437bf2630dbde06568f"
+            ]
+          }
+        },
+        {
+          "id": "auth.native-fixture",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T02:35:12.053Z",
+          "reasonCode": "NATIVE_AUTH_FIXTURE_PRIORITY_ADDED_OBSERVED",
+          "prerequisite": "{\"result\":{\"schema\":\"toy.hermes-httpx-auth-fixture.v1\",\"operation\":\"priority\",\"public_argv\":[\"hermes\",\"--profile\",\"toy\",\"auth\",\"priority\",\"openai-codex\",\"toy-fixture-lifecycle-target\",\"0\"],\"exit_code\":0,\"markers\":[\"AUTH_PRIORITY_OK\"],\"processIdentity\":{\"pid\":35401,\"parentPid\":35361,\"uid\":501,\"gid\":20},\"observations\":{\"provider\":\"openai-codex\",\"phase\":\"priority-added\",\"access_generation\":null,\"catalog_access_generation\":null,\"storage_fault_triggered\":false,\"token_hygiene\":true,\"success_claim_absent\":true,\"fallback_attempted\":false,\"network_denials\":[],\"socket_origin\":null},\"http_ledger\":{\"device_code_requests\":0,\"device_code_polls\":0,\"token_exchanges\":0,\"token_refreshes\":0,\"model_catalog_requests\":0,\"model_requests\":0,\"denied_http_requests\":0,\"blocked_socket_events\":0},\"network_audit\":\"socket-audit-hook-installed\"},\"childPidMatches\":true,\"freshChildPid\":true,\"parentPidMatches\":true,\"uidMatches\":true,\"gidMatches\":true,\"childStdoutDigest\":\"0644f5b3755feaafe9a64c1911a9f1d45e73fbb30c28ac31a8c49f5ae4e5d682\",\"childStderrDigest\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"caseId\":\"priority-reorder-target\",\"storeScope\":\"profile\",\"label\":\"toy-fixture-lifecycle-target\",\"expectedCount\":null,\"expectedLabelPresent\":null,\"expectedGeneration\":null,\"rootAuthBefore\":{\"exists\":true,\"digest\":\"209409b12d944bc85d6eec68b2a460884b7807e40ff71d521dcf7713273db1cd\"},\"rootAuthAfter\":{\"exists\":true,\"digest\":\"209409b12d944bc85d6eec68b2a460884b7807e40ff71d521dcf7713273db1cd\"},\"rootEnvBefore\":{\"exists\":false,\"digest\":null},\"rootEnvAfter\":{\"exists\":false,\"digest\":null},\"profileAuthBefore\":{\"exists\":true,\"digest\":\"e2867d0ae28f2cda1cbf10d6789760b612e85c13ba5df5567e4a83ed0a7f4a94\"},\"profileAuthAfter\":{\"exists\":true,\"digest\":\"68a6963c918f4a3a0ab718fc81a44762279abb42e8f9f64514cbbb016693f835\"},\"rootStoreVerified\":true,\"profileStoreVerified\":true,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "60554c067d107b149109b33741c6a4032a13c42a879d132ef5d0cba0c4954447",
+              "edcdcf963730b74aba7e77bb544119bff55829f48204e138aedbbd06af965e96",
+              "85f7fec70019f267210c90ec3798bec6839b94a49c70745129f3c68789c26855",
+              "f976a83543d53f1a42059c64f3b3fbb94e8069a39f89f7b60fe63027a88b4846",
+              "846b28f0b5a22e0f42fb236e7f4f4b092f1dea76af59c80258a9c6c32d10e8c0",
+              "69c8a0d2c7947c11fa7a87aebf7b19a0050fde142cf7b09f00f59bc256cda4fd",
+              "a792f705a65d7a2215d3bb401f2f9ef03b47c1b303f010932126252345e758d9",
+              "fc301e0f9097993fd8889ab3c0a09b5969bced8b1e0452bb3898eeca30b02829",
+              "fcb00a86184500b0ad864fdb4b30b4d56c4578496200ce16ff97ca2da45e215d",
+              "984d19fc83df50c15a7ece722480c27ed151215f49029b34346f721bd19711a1"
+            ]
+          }
+        },
+        {
+          "id": "auth.native-fixture",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T02:35:19.100Z",
+          "reasonCode": "NATIVE_AUTH_FIXTURE_CHAT_OBSERVED",
+          "prerequisite": "{\"result\":{\"schema\":\"toy.hermes-httpx-auth-fixture.v1\",\"operation\":\"chat\",\"public_argv\":[\"hermes\",\"--profile\",\"toy\",\"chat\",\"--provider\",\"openai-codex\",\"--model\",\"gpt-6.1-sol\",\"--toolsets\",\"none\",\"-q\",\"Return the fixed fixture marker.\"],\"exit_code\":0,\"markers\":[\"AUTH_PROVIDER_RATE_LIMIT_OBSERVED\",\"CHAT_RESPONSE_OK\"],\"processIdentity\":{\"pid\":35403,\"parentPid\":35361,\"uid\":501,\"gid\":20},\"observations\":{\"provider\":\"openai-codex\",\"phase\":\"chat\",\"access_generation\":\"stale\",\"catalog_access_generation\":\"added\",\"storage_fault_triggered\":false,\"token_hygiene\":true,\"success_claim_absent\":true,\"fallback_attempted\":true,\"network_denials\":[],\"socket_origin\":null},\"http_ledger\":{\"device_code_requests\":0,\"device_code_polls\":0,\"token_exchanges\":0,\"token_refreshes\":0,\"model_catalog_requests\":1,\"model_requests\":3,\"denied_http_requests\":0,\"blocked_socket_events\":0},\"network_audit\":\"socket-audit-hook-installed\"},\"childPidMatches\":true,\"freshChildPid\":true,\"parentPidMatches\":true,\"uidMatches\":true,\"gidMatches\":true,\"childStdoutDigest\":\"d053216e8433e718e25fbc8d2f0c9124d8018869e12edd8c742d7804a01e458f\",\"childStderrDigest\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"caseId\":\"priority-target-rate-limit\",\"storeScope\":\"profile\",\"label\":\"toy-fixture-lifecycle-target\",\"expectedCount\":null,\"expectedLabelPresent\":null,\"expectedGeneration\":\"added\",\"rootAuthBefore\":{\"exists\":true,\"digest\":\"209409b12d944bc85d6eec68b2a460884b7807e40ff71d521dcf7713273db1cd\"},\"rootAuthAfter\":{\"exists\":true,\"digest\":\"209409b12d944bc85d6eec68b2a460884b7807e40ff71d521dcf7713273db1cd\"},\"rootEnvBefore\":{\"exists\":false,\"digest\":null},\"rootEnvAfter\":{\"exists\":false,\"digest\":null},\"profileAuthBefore\":{\"exists\":true,\"digest\":\"68a6963c918f4a3a0ab718fc81a44762279abb42e8f9f64514cbbb016693f835\"},\"profileAuthAfter\":{\"exists\":true,\"digest\":\"baaf476e9ad82e8509cf8b5b622b6a76e4c53806fdea267b7d310b2f6227e20d\"},\"rootStoreVerified\":true,\"profileStoreVerified\":true,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "60554c067d107b149109b33741c6a4032a13c42a879d132ef5d0cba0c4954447",
+              "edcdcf963730b74aba7e77bb544119bff55829f48204e138aedbbd06af965e96",
+              "85f7fec70019f267210c90ec3798bec6839b94a49c70745129f3c68789c26855",
+              "f976a83543d53f1a42059c64f3b3fbb94e8069a39f89f7b60fe63027a88b4846",
+              "846b28f0b5a22e0f42fb236e7f4f4b092f1dea76af59c80258a9c6c32d10e8c0",
+              "69c8a0d2c7947c11fa7a87aebf7b19a0050fde142cf7b09f00f59bc256cda4fd",
+              "a792f705a65d7a2215d3bb401f2f9ef03b47c1b303f010932126252345e758d9",
+              "fc301e0f9097993fd8889ab3c0a09b5969bced8b1e0452bb3898eeca30b02829",
+              "fcb00a86184500b0ad864fdb4b30b4d56c4578496200ce16ff97ca2da45e215d",
+              "d1840bd50d6dea3724ebd69b60ba614e58c6f7f8c2b71a60b4b9d93ab01880c9"
+            ]
+          }
+        },
+        {
+          "id": "auth.native-fixture",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T02:35:19.947Z",
+          "reasonCode": "NATIVE_AUTH_FIXTURE_LIST_OBSERVED",
+          "prerequisite": "{\"result\":{\"schema\":\"toy.hermes-httpx-auth-fixture.v1\",\"operation\":\"list\",\"public_argv\":[\"hermes\",\"--profile\",\"toy\",\"auth\",\"list\",\"openai-codex\"],\"exit_code\":0,\"markers\":[\"AUTH_LIST_TARGET_RATE_LIMITED\",\"AUTH_LIST_READBACK_OK\"],\"processIdentity\":{\"pid\":35417,\"parentPid\":35361,\"uid\":501,\"gid\":20},\"observations\":{\"provider\":\"openai-codex\",\"phase\":\"list\",\"credential_count\":2,\"target_label_present\":true,\"access_generation\":null,\"catalog_access_generation\":null,\"storage_fault_triggered\":false,\"token_hygiene\":true,\"success_claim_absent\":true,\"fallback_attempted\":false,\"network_denials\":[],\"socket_origin\":null},\"http_ledger\":{\"device_code_requests\":0,\"device_code_polls\":0,\"token_exchanges\":0,\"token_refreshes\":0,\"model_catalog_requests\":0,\"model_requests\":0,\"denied_http_requests\":0,\"blocked_socket_events\":0},\"network_audit\":\"socket-audit-hook-installed\"},\"childPidMatches\":true,\"freshChildPid\":true,\"parentPidMatches\":true,\"uidMatches\":true,\"gidMatches\":true,\"childStdoutDigest\":\"078879758ae28b970ff3d5ffa89e3cbc4f15dc162a3177e19c722cce19292878\",\"childStderrDigest\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"caseId\":\"reset-exhausted-readback\",\"storeScope\":\"profile\",\"label\":\"toy-fixture-lifecycle-target\",\"expectedCount\":2,\"expectedLabelPresent\":true,\"expectedGeneration\":null,\"rootAuthBefore\":{\"exists\":true,\"digest\":\"209409b12d944bc85d6eec68b2a460884b7807e40ff71d521dcf7713273db1cd\"},\"rootAuthAfter\":{\"exists\":true,\"digest\":\"209409b12d944bc85d6eec68b2a460884b7807e40ff71d521dcf7713273db1cd\"},\"rootEnvBefore\":{\"exists\":false,\"digest\":null},\"rootEnvAfter\":{\"exists\":false,\"digest\":null},\"profileAuthBefore\":{\"exists\":true,\"digest\":\"baaf476e9ad82e8509cf8b5b622b6a76e4c53806fdea267b7d310b2f6227e20d\"},\"profileAuthAfter\":{\"exists\":true,\"digest\":\"baaf476e9ad82e8509cf8b5b622b6a76e4c53806fdea267b7d310b2f6227e20d\"},\"rootStoreVerified\":true,\"profileStoreVerified\":true,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "60554c067d107b149109b33741c6a4032a13c42a879d132ef5d0cba0c4954447",
+              "edcdcf963730b74aba7e77bb544119bff55829f48204e138aedbbd06af965e96",
+              "85f7fec70019f267210c90ec3798bec6839b94a49c70745129f3c68789c26855",
+              "f976a83543d53f1a42059c64f3b3fbb94e8069a39f89f7b60fe63027a88b4846",
+              "846b28f0b5a22e0f42fb236e7f4f4b092f1dea76af59c80258a9c6c32d10e8c0",
+              "69c8a0d2c7947c11fa7a87aebf7b19a0050fde142cf7b09f00f59bc256cda4fd",
+              "a792f705a65d7a2215d3bb401f2f9ef03b47c1b303f010932126252345e758d9",
+              "fc301e0f9097993fd8889ab3c0a09b5969bced8b1e0452bb3898eeca30b02829",
+              "fcb00a86184500b0ad864fdb4b30b4d56c4578496200ce16ff97ca2da45e215d",
+              "06a620bf23123a1a02b6769c756960062cfd7933bcf83437bf2630dbde06568f"
+            ]
+          }
+        },
+        {
+          "id": "auth.native-fixture",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T02:35:20.794Z",
+          "reasonCode": "NATIVE_AUTH_FIXTURE_RESET_OBSERVED",
+          "prerequisite": "{\"result\":{\"schema\":\"toy.hermes-httpx-auth-fixture.v1\",\"operation\":\"reset\",\"public_argv\":[\"hermes\",\"--profile\",\"toy\",\"auth\",\"reset\",\"openai-codex\",\"toy-fixture-lifecycle-target\"],\"exit_code\":0,\"markers\":[\"AUTH_RESET_OK\"],\"processIdentity\":{\"pid\":35419,\"parentPid\":35361,\"uid\":501,\"gid\":20},\"observations\":{\"provider\":\"openai-codex\",\"phase\":\"reset\",\"access_generation\":null,\"catalog_access_generation\":null,\"storage_fault_triggered\":false,\"token_hygiene\":true,\"success_claim_absent\":true,\"fallback_attempted\":false,\"network_denials\":[],\"socket_origin\":null},\"http_ledger\":{\"device_code_requests\":0,\"device_code_polls\":0,\"token_exchanges\":0,\"token_refreshes\":0,\"model_catalog_requests\":0,\"model_requests\":0,\"denied_http_requests\":0,\"blocked_socket_events\":0},\"network_audit\":\"socket-audit-hook-installed\"},\"childPidMatches\":true,\"freshChildPid\":true,\"parentPidMatches\":true,\"uidMatches\":true,\"gidMatches\":true,\"childStdoutDigest\":\"1d2ec651f340adea306e20ce7e73023e3d16d2819259ca074aa14d48691e58f3\",\"childStderrDigest\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"caseId\":\"reset-target\",\"storeScope\":\"profile\",\"label\":\"toy-fixture-lifecycle-target\",\"expectedCount\":null,\"expectedLabelPresent\":null,\"expectedGeneration\":null,\"rootAuthBefore\":{\"exists\":true,\"digest\":\"209409b12d944bc85d6eec68b2a460884b7807e40ff71d521dcf7713273db1cd\"},\"rootAuthAfter\":{\"exists\":true,\"digest\":\"209409b12d944bc85d6eec68b2a460884b7807e40ff71d521dcf7713273db1cd\"},\"rootEnvBefore\":{\"exists\":false,\"digest\":null},\"rootEnvAfter\":{\"exists\":false,\"digest\":null},\"profileAuthBefore\":{\"exists\":true,\"digest\":\"baaf476e9ad82e8509cf8b5b622b6a76e4c53806fdea267b7d310b2f6227e20d\"},\"profileAuthAfter\":{\"exists\":true,\"digest\":\"a27a7403dd30b714ece87c34e736e514ba5151d48029df8572eb09af85773fe2\"},\"rootStoreVerified\":true,\"profileStoreVerified\":true,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "60554c067d107b149109b33741c6a4032a13c42a879d132ef5d0cba0c4954447",
+              "edcdcf963730b74aba7e77bb544119bff55829f48204e138aedbbd06af965e96",
+              "85f7fec70019f267210c90ec3798bec6839b94a49c70745129f3c68789c26855",
+              "f976a83543d53f1a42059c64f3b3fbb94e8069a39f89f7b60fe63027a88b4846",
+              "846b28f0b5a22e0f42fb236e7f4f4b092f1dea76af59c80258a9c6c32d10e8c0",
+              "69c8a0d2c7947c11fa7a87aebf7b19a0050fde142cf7b09f00f59bc256cda4fd",
+              "a792f705a65d7a2215d3bb401f2f9ef03b47c1b303f010932126252345e758d9",
+              "fc301e0f9097993fd8889ab3c0a09b5969bced8b1e0452bb3898eeca30b02829",
+              "fcb00a86184500b0ad864fdb4b30b4d56c4578496200ce16ff97ca2da45e215d",
+              "b6540099cd844d02e00e2c0c5a950fe0cc18a98bc44134727074e844fc85489c"
+            ]
+          }
+        },
+        {
+          "id": "auth.native-fixture",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T02:35:21.643Z",
+          "reasonCode": "NATIVE_AUTH_FIXTURE_LIST_OBSERVED",
+          "prerequisite": "{\"result\":{\"schema\":\"toy.hermes-httpx-auth-fixture.v1\",\"operation\":\"list\",\"public_argv\":[\"hermes\",\"--profile\",\"toy\",\"auth\",\"list\",\"openai-codex\"],\"exit_code\":0,\"markers\":[\"AUTH_LIST_READBACK_OK\"],\"processIdentity\":{\"pid\":35421,\"parentPid\":35361,\"uid\":501,\"gid\":20},\"observations\":{\"provider\":\"openai-codex\",\"phase\":\"list\",\"credential_count\":2,\"target_label_present\":true,\"access_generation\":null,\"catalog_access_generation\":null,\"storage_fault_triggered\":false,\"token_hygiene\":true,\"success_claim_absent\":true,\"fallback_attempted\":false,\"network_denials\":[],\"socket_origin\":null},\"http_ledger\":{\"device_code_requests\":0,\"device_code_polls\":0,\"token_exchanges\":0,\"token_refreshes\":0,\"model_catalog_requests\":0,\"model_requests\":0,\"denied_http_requests\":0,\"blocked_socket_events\":0},\"network_audit\":\"socket-audit-hook-installed\"},\"childPidMatches\":true,\"freshChildPid\":true,\"parentPidMatches\":true,\"uidMatches\":true,\"gidMatches\":true,\"childStdoutDigest\":\"f630cd6d8fe44a3797677f56a177fb1a59f27913a73416af7fea54e35eda12b3\",\"childStderrDigest\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"caseId\":\"reset-target-readback\",\"storeScope\":\"profile\",\"label\":\"toy-fixture-lifecycle-target\",\"expectedCount\":2,\"expectedLabelPresent\":true,\"expectedGeneration\":null,\"rootAuthBefore\":{\"exists\":true,\"digest\":\"209409b12d944bc85d6eec68b2a460884b7807e40ff71d521dcf7713273db1cd\"},\"rootAuthAfter\":{\"exists\":true,\"digest\":\"209409b12d944bc85d6eec68b2a460884b7807e40ff71d521dcf7713273db1cd\"},\"rootEnvBefore\":{\"exists\":false,\"digest\":null},\"rootEnvAfter\":{\"exists\":false,\"digest\":null},\"profileAuthBefore\":{\"exists\":true,\"digest\":\"a27a7403dd30b714ece87c34e736e514ba5151d48029df8572eb09af85773fe2\"},\"profileAuthAfter\":{\"exists\":true,\"digest\":\"a27a7403dd30b714ece87c34e736e514ba5151d48029df8572eb09af85773fe2\"},\"rootStoreVerified\":true,\"profileStoreVerified\":true,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "60554c067d107b149109b33741c6a4032a13c42a879d132ef5d0cba0c4954447",
+              "edcdcf963730b74aba7e77bb544119bff55829f48204e138aedbbd06af965e96",
+              "85f7fec70019f267210c90ec3798bec6839b94a49c70745129f3c68789c26855",
+              "f976a83543d53f1a42059c64f3b3fbb94e8069a39f89f7b60fe63027a88b4846",
+              "846b28f0b5a22e0f42fb236e7f4f4b092f1dea76af59c80258a9c6c32d10e8c0",
+              "69c8a0d2c7947c11fa7a87aebf7b19a0050fde142cf7b09f00f59bc256cda4fd",
+              "a792f705a65d7a2215d3bb401f2f9ef03b47c1b303f010932126252345e758d9",
+              "fc301e0f9097993fd8889ab3c0a09b5969bced8b1e0452bb3898eeca30b02829",
+              "fcb00a86184500b0ad864fdb4b30b4d56c4578496200ce16ff97ca2da45e215d",
+              "06a620bf23123a1a02b6769c756960062cfd7933bcf83437bf2630dbde06568f"
+            ]
+          }
+        },
+        {
+          "id": "auth.native-fixture",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T02:35:25.886Z",
+          "reasonCode": "NATIVE_AUTH_FIXTURE_CHAT_EXPIRED_OBSERVED",
+          "prerequisite": "{\"result\":{\"schema\":\"toy.hermes-httpx-auth-fixture.v1\",\"operation\":\"chat\",\"public_argv\":[\"hermes\",\"--profile\",\"toy\",\"chat\",\"--provider\",\"openai-codex\",\"--model\",\"gpt-6.1-sol\",\"--toolsets\",\"none\",\"-q\",\"Return the fixed fixture marker.\"],\"exit_code\":0,\"markers\":[\"CHAT_RESPONSE_OK\"],\"processIdentity\":{\"pid\":35423,\"parentPid\":35361,\"uid\":501,\"gid\":20},\"observations\":{\"provider\":\"openai-codex\",\"phase\":\"chat-expired\",\"access_generation\":\"added-rotated\",\"catalog_access_generation\":\"added-rotated\",\"storage_fault_triggered\":false,\"token_hygiene\":true,\"success_claim_absent\":true,\"fallback_attempted\":false,\"network_denials\":[],\"socket_origin\":null},\"http_ledger\":{\"device_code_requests\":0,\"device_code_polls\":0,\"token_exchanges\":0,\"token_refreshes\":1,\"model_catalog_requests\":1,\"model_requests\":1,\"denied_http_requests\":0,\"blocked_socket_events\":0},\"network_audit\":\"socket-audit-hook-installed\"},\"childPidMatches\":true,\"freshChildPid\":true,\"parentPidMatches\":true,\"uidMatches\":true,\"gidMatches\":true,\"childStdoutDigest\":\"b4faf9c2f80923b97c416b7b2d3b5df08eb3321ccf45e140a454e58924b937b7\",\"childStderrDigest\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"caseId\":\"reset-target-refresh\",\"storeScope\":\"profile\",\"label\":\"toy-fixture-lifecycle-target\",\"expectedCount\":null,\"expectedLabelPresent\":null,\"expectedGeneration\":\"added-rotated\",\"rootAuthBefore\":{\"exists\":true,\"digest\":\"209409b12d944bc85d6eec68b2a460884b7807e40ff71d521dcf7713273db1cd\"},\"rootAuthAfter\":{\"exists\":true,\"digest\":\"209409b12d944bc85d6eec68b2a460884b7807e40ff71d521dcf7713273db1cd\"},\"rootEnvBefore\":{\"exists\":false,\"digest\":null},\"rootEnvAfter\":{\"exists\":false,\"digest\":null},\"profileAuthBefore\":{\"exists\":true,\"digest\":\"a27a7403dd30b714ece87c34e736e514ba5151d48029df8572eb09af85773fe2\"},\"profileAuthAfter\":{\"exists\":true,\"digest\":\"76b7c2203a286d62e6dd1b648ef21943dd79ee5b25b9be48d6064055dcef6410\"},\"rootStoreVerified\":true,\"profileStoreVerified\":true,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "60554c067d107b149109b33741c6a4032a13c42a879d132ef5d0cba0c4954447",
+              "edcdcf963730b74aba7e77bb544119bff55829f48204e138aedbbd06af965e96",
+              "85f7fec70019f267210c90ec3798bec6839b94a49c70745129f3c68789c26855",
+              "f976a83543d53f1a42059c64f3b3fbb94e8069a39f89f7b60fe63027a88b4846",
+              "846b28f0b5a22e0f42fb236e7f4f4b092f1dea76af59c80258a9c6c32d10e8c0",
+              "69c8a0d2c7947c11fa7a87aebf7b19a0050fde142cf7b09f00f59bc256cda4fd",
+              "a792f705a65d7a2215d3bb401f2f9ef03b47c1b303f010932126252345e758d9",
+              "fc301e0f9097993fd8889ab3c0a09b5969bced8b1e0452bb3898eeca30b02829",
+              "fcb00a86184500b0ad864fdb4b30b4d56c4578496200ce16ff97ca2da45e215d",
+              "90c34841a4996000aad3750dce5cadecf9aa7884d0d644d5a98b5aa01fba393c"
+            ]
+          }
+        },
+        {
+          "id": "auth.native-fixture",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T02:35:30.056Z",
+          "reasonCode": "NATIVE_AUTH_FIXTURE_CHAT_RELOADED_OBSERVED",
+          "prerequisite": "{\"result\":{\"schema\":\"toy.hermes-httpx-auth-fixture.v1\",\"operation\":\"chat\",\"public_argv\":[\"hermes\",\"--profile\",\"toy\",\"chat\",\"--provider\",\"openai-codex\",\"--model\",\"gpt-6.1-sol\",\"--toolsets\",\"none\",\"-q\",\"Return the fixed fixture marker.\"],\"exit_code\":0,\"markers\":[\"CHAT_RESPONSE_OK\"],\"processIdentity\":{\"pid\":35441,\"parentPid\":35361,\"uid\":501,\"gid\":20},\"observations\":{\"provider\":\"openai-codex\",\"phase\":\"chat-reloaded\",\"access_generation\":\"added-rotated\",\"catalog_access_generation\":\"added-rotated\",\"storage_fault_triggered\":false,\"token_hygiene\":true,\"success_claim_absent\":true,\"fallback_attempted\":false,\"network_denials\":[],\"socket_origin\":null},\"http_ledger\":{\"device_code_requests\":0,\"device_code_polls\":0,\"token_exchanges\":0,\"token_refreshes\":0,\"model_catalog_requests\":1,\"model_requests\":1,\"denied_http_requests\":0,\"blocked_socket_events\":0},\"network_audit\":\"socket-audit-hook-installed\"},\"childPidMatches\":true,\"freshChildPid\":true,\"parentPidMatches\":true,\"uidMatches\":true,\"gidMatches\":true,\"childStdoutDigest\":\"52b67766847d8201416d32d8d1ba4617b11fbce91bf737620338de6859793c25\",\"childStderrDigest\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"caseId\":\"reset-target-reload\",\"storeScope\":\"profile\",\"label\":\"toy-fixture-lifecycle-target\",\"expectedCount\":null,\"expectedLabelPresent\":null,\"expectedGeneration\":\"added-rotated\",\"rootAuthBefore\":{\"exists\":true,\"digest\":\"209409b12d944bc85d6eec68b2a460884b7807e40ff71d521dcf7713273db1cd\"},\"rootAuthAfter\":{\"exists\":true,\"digest\":\"209409b12d944bc85d6eec68b2a460884b7807e40ff71d521dcf7713273db1cd\"},\"rootEnvBefore\":{\"exists\":false,\"digest\":null},\"rootEnvAfter\":{\"exists\":false,\"digest\":null},\"profileAuthBefore\":{\"exists\":true,\"digest\":\"76b7c2203a286d62e6dd1b648ef21943dd79ee5b25b9be48d6064055dcef6410\"},\"profileAuthAfter\":{\"exists\":true,\"digest\":\"76b7c2203a286d62e6dd1b648ef21943dd79ee5b25b9be48d6064055dcef6410\"},\"rootStoreVerified\":true,\"profileStoreVerified\":true,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "60554c067d107b149109b33741c6a4032a13c42a879d132ef5d0cba0c4954447",
+              "edcdcf963730b74aba7e77bb544119bff55829f48204e138aedbbd06af965e96",
+              "85f7fec70019f267210c90ec3798bec6839b94a49c70745129f3c68789c26855",
+              "f976a83543d53f1a42059c64f3b3fbb94e8069a39f89f7b60fe63027a88b4846",
+              "846b28f0b5a22e0f42fb236e7f4f4b092f1dea76af59c80258a9c6c32d10e8c0",
+              "69c8a0d2c7947c11fa7a87aebf7b19a0050fde142cf7b09f00f59bc256cda4fd",
+              "a792f705a65d7a2215d3bb401f2f9ef03b47c1b303f010932126252345e758d9",
+              "fc301e0f9097993fd8889ab3c0a09b5969bced8b1e0452bb3898eeca30b02829",
+              "fcb00a86184500b0ad864fdb4b30b4d56c4578496200ce16ff97ca2da45e215d",
+              "1158d6220d0696ee20192aa6e1c25a475debde1e8276e76ff2637998fd81cb69"
+            ]
+          }
+        },
+        {
+          "id": "auth.native-fixture",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T02:35:30.906Z",
+          "reasonCode": "NATIVE_AUTH_FIXTURE_REMOVE_OBSERVED",
+          "prerequisite": "{\"result\":{\"schema\":\"toy.hermes-httpx-auth-fixture.v1\",\"operation\":\"remove\",\"public_argv\":[\"hermes\",\"--profile\",\"toy\",\"auth\",\"remove\",\"openai-codex\",\"toy-fixture-lifecycle-target\"],\"exit_code\":0,\"markers\":[\"AUTH_REMOVE_OK\"],\"processIdentity\":{\"pid\":35448,\"parentPid\":35361,\"uid\":501,\"gid\":20},\"observations\":{\"provider\":\"openai-codex\",\"phase\":\"remove\",\"access_generation\":null,\"catalog_access_generation\":null,\"storage_fault_triggered\":false,\"token_hygiene\":true,\"success_claim_absent\":true,\"fallback_attempted\":false,\"network_denials\":[],\"socket_origin\":null},\"http_ledger\":{\"device_code_requests\":0,\"device_code_polls\":0,\"token_exchanges\":0,\"token_refreshes\":0,\"model_catalog_requests\":0,\"model_requests\":0,\"denied_http_requests\":0,\"blocked_socket_events\":0},\"network_audit\":\"socket-audit-hook-installed\"},\"childPidMatches\":true,\"freshChildPid\":true,\"parentPidMatches\":true,\"uidMatches\":true,\"gidMatches\":true,\"childStdoutDigest\":\"e550f9e1c2e56e28c6f6da87bdfa0dd49e27c68e520661293c6dd23668c1bcac\",\"childStderrDigest\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"caseId\":\"remove-target\",\"storeScope\":\"profile\",\"label\":\"toy-fixture-lifecycle-target\",\"expectedCount\":null,\"expectedLabelPresent\":null,\"expectedGeneration\":null,\"rootAuthBefore\":{\"exists\":true,\"digest\":\"209409b12d944bc85d6eec68b2a460884b7807e40ff71d521dcf7713273db1cd\"},\"rootAuthAfter\":{\"exists\":true,\"digest\":\"209409b12d944bc85d6eec68b2a460884b7807e40ff71d521dcf7713273db1cd\"},\"rootEnvBefore\":{\"exists\":false,\"digest\":null},\"rootEnvAfter\":{\"exists\":false,\"digest\":null},\"profileAuthBefore\":{\"exists\":true,\"digest\":\"76b7c2203a286d62e6dd1b648ef21943dd79ee5b25b9be48d6064055dcef6410\"},\"profileAuthAfter\":{\"exists\":true,\"digest\":\"e6d8320cd44986dc97461f6fa96e6155aee554761d1a2c0534399c321914078a\"},\"rootStoreVerified\":true,\"profileStoreVerified\":true,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "60554c067d107b149109b33741c6a4032a13c42a879d132ef5d0cba0c4954447",
+              "edcdcf963730b74aba7e77bb544119bff55829f48204e138aedbbd06af965e96",
+              "85f7fec70019f267210c90ec3798bec6839b94a49c70745129f3c68789c26855",
+              "f976a83543d53f1a42059c64f3b3fbb94e8069a39f89f7b60fe63027a88b4846",
+              "846b28f0b5a22e0f42fb236e7f4f4b092f1dea76af59c80258a9c6c32d10e8c0",
+              "69c8a0d2c7947c11fa7a87aebf7b19a0050fde142cf7b09f00f59bc256cda4fd",
+              "a792f705a65d7a2215d3bb401f2f9ef03b47c1b303f010932126252345e758d9",
+              "fc301e0f9097993fd8889ab3c0a09b5969bced8b1e0452bb3898eeca30b02829",
+              "fcb00a86184500b0ad864fdb4b30b4d56c4578496200ce16ff97ca2da45e215d",
+              "b8391874113bc71403a247c4872aae9534963c8db1484073b74d2a7eaf996ce7"
+            ]
+          }
+        },
+        {
+          "id": "auth.native-fixture",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T02:35:31.755Z",
+          "reasonCode": "NATIVE_AUTH_FIXTURE_LIST_OBSERVED",
+          "prerequisite": "{\"result\":{\"schema\":\"toy.hermes-httpx-auth-fixture.v1\",\"operation\":\"list\",\"public_argv\":[\"hermes\",\"--profile\",\"toy\",\"auth\",\"list\",\"openai-codex\"],\"exit_code\":0,\"markers\":[\"AUTH_LIST_READBACK_OK\"],\"processIdentity\":{\"pid\":35450,\"parentPid\":35361,\"uid\":501,\"gid\":20},\"observations\":{\"provider\":\"openai-codex\",\"phase\":\"list\",\"credential_count\":1,\"target_label_present\":false,\"access_generation\":null,\"catalog_access_generation\":null,\"storage_fault_triggered\":false,\"token_hygiene\":true,\"success_claim_absent\":true,\"fallback_attempted\":false,\"network_denials\":[],\"socket_origin\":null},\"http_ledger\":{\"device_code_requests\":0,\"device_code_polls\":0,\"token_exchanges\":0,\"token_refreshes\":0,\"model_catalog_requests\":0,\"model_requests\":0,\"denied_http_requests\":0,\"blocked_socket_events\":0},\"network_audit\":\"socket-audit-hook-installed\"},\"childPidMatches\":true,\"freshChildPid\":true,\"parentPidMatches\":true,\"uidMatches\":true,\"gidMatches\":true,\"childStdoutDigest\":\"adc9f36d882477ea24b09f7ad8d5f2b2857a632e55583fa1b5adf51c4a5f1575\",\"childStderrDigest\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"caseId\":\"remove-fresh-readback\",\"storeScope\":\"profile\",\"label\":\"toy-fixture-lifecycle-target\",\"expectedCount\":1,\"expectedLabelPresent\":false,\"expectedGeneration\":null,\"rootAuthBefore\":{\"exists\":true,\"digest\":\"209409b12d944bc85d6eec68b2a460884b7807e40ff71d521dcf7713273db1cd\"},\"rootAuthAfter\":{\"exists\":true,\"digest\":\"209409b12d944bc85d6eec68b2a460884b7807e40ff71d521dcf7713273db1cd\"},\"rootEnvBefore\":{\"exists\":false,\"digest\":null},\"rootEnvAfter\":{\"exists\":false,\"digest\":null},\"profileAuthBefore\":{\"exists\":true,\"digest\":\"e6d8320cd44986dc97461f6fa96e6155aee554761d1a2c0534399c321914078a\"},\"profileAuthAfter\":{\"exists\":true,\"digest\":\"e6d8320cd44986dc97461f6fa96e6155aee554761d1a2c0534399c321914078a\"},\"rootStoreVerified\":true,\"profileStoreVerified\":true,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "60554c067d107b149109b33741c6a4032a13c42a879d132ef5d0cba0c4954447",
+              "edcdcf963730b74aba7e77bb544119bff55829f48204e138aedbbd06af965e96",
+              "85f7fec70019f267210c90ec3798bec6839b94a49c70745129f3c68789c26855",
+              "f976a83543d53f1a42059c64f3b3fbb94e8069a39f89f7b60fe63027a88b4846",
+              "846b28f0b5a22e0f42fb236e7f4f4b092f1dea76af59c80258a9c6c32d10e8c0",
+              "69c8a0d2c7947c11fa7a87aebf7b19a0050fde142cf7b09f00f59bc256cda4fd",
+              "a792f705a65d7a2215d3bb401f2f9ef03b47c1b303f010932126252345e758d9",
+              "fc301e0f9097993fd8889ab3c0a09b5969bced8b1e0452bb3898eeca30b02829",
+              "fcb00a86184500b0ad864fdb4b30b4d56c4578496200ce16ff97ca2da45e215d",
+              "06a620bf23123a1a02b6769c756960062cfd7933bcf83437bf2630dbde06568f"
+            ]
+          }
+        },
+        {
+          "id": "auth.native-fixture",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T02:35:35.936Z",
+          "reasonCode": "NATIVE_AUTH_FIXTURE_CHAT_OBSERVED",
+          "prerequisite": "{\"result\":{\"schema\":\"toy.hermes-httpx-auth-fixture.v1\",\"operation\":\"chat\",\"public_argv\":[\"hermes\",\"--profile\",\"toy\",\"chat\",\"--provider\",\"openai-codex\",\"--model\",\"gpt-6.1-sol\",\"--toolsets\",\"none\",\"-q\",\"Return the fixed fixture marker.\"],\"exit_code\":0,\"markers\":[\"CHAT_RESPONSE_OK\"],\"processIdentity\":{\"pid\":35452,\"parentPid\":35361,\"uid\":501,\"gid\":20},\"observations\":{\"provider\":\"openai-codex\",\"phase\":\"chat\",\"access_generation\":\"stale\",\"catalog_access_generation\":\"stale\",\"storage_fault_triggered\":false,\"token_hygiene\":true,\"success_claim_absent\":true,\"fallback_attempted\":false,\"network_denials\":[],\"socket_origin\":null},\"http_ledger\":{\"device_code_requests\":0,\"device_code_polls\":0,\"token_exchanges\":0,\"token_refreshes\":0,\"model_catalog_requests\":1,\"model_requests\":1,\"denied_http_requests\":0,\"blocked_socket_events\":0},\"network_audit\":\"socket-audit-hook-installed\"},\"childPidMatches\":true,\"freshChildPid\":true,\"parentPidMatches\":true,\"uidMatches\":true,\"gidMatches\":true,\"childStdoutDigest\":\"721b5fe4d9e5e92e5d89a71ed5cb9134fb04d19360e4b4ef0b604e121eab3a47\",\"childStderrDigest\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"caseId\":\"remove-sibling-fresh-use\",\"storeScope\":\"profile\",\"label\":\"toy-fixture-lifecycle-sibling\",\"expectedCount\":null,\"expectedLabelPresent\":null,\"expectedGeneration\":\"stale\",\"rootAuthBefore\":{\"exists\":true,\"digest\":\"209409b12d944bc85d6eec68b2a460884b7807e40ff71d521dcf7713273db1cd\"},\"rootAuthAfter\":{\"exists\":true,\"digest\":\"209409b12d944bc85d6eec68b2a460884b7807e40ff71d521dcf7713273db1cd\"},\"rootEnvBefore\":{\"exists\":false,\"digest\":null},\"rootEnvAfter\":{\"exists\":false,\"digest\":null},\"profileAuthBefore\":{\"exists\":true,\"digest\":\"e6d8320cd44986dc97461f6fa96e6155aee554761d1a2c0534399c321914078a\"},\"profileAuthAfter\":{\"exists\":true,\"digest\":\"e6d8320cd44986dc97461f6fa96e6155aee554761d1a2c0534399c321914078a\"},\"rootStoreVerified\":true,\"profileStoreVerified\":true,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "60554c067d107b149109b33741c6a4032a13c42a879d132ef5d0cba0c4954447",
+              "edcdcf963730b74aba7e77bb544119bff55829f48204e138aedbbd06af965e96",
+              "85f7fec70019f267210c90ec3798bec6839b94a49c70745129f3c68789c26855",
+              "f976a83543d53f1a42059c64f3b3fbb94e8069a39f89f7b60fe63027a88b4846",
+              "846b28f0b5a22e0f42fb236e7f4f4b092f1dea76af59c80258a9c6c32d10e8c0",
+              "69c8a0d2c7947c11fa7a87aebf7b19a0050fde142cf7b09f00f59bc256cda4fd",
+              "a792f705a65d7a2215d3bb401f2f9ef03b47c1b303f010932126252345e758d9",
+              "fc301e0f9097993fd8889ab3c0a09b5969bced8b1e0452bb3898eeca30b02829",
+              "fcb00a86184500b0ad864fdb4b30b4d56c4578496200ce16ff97ca2da45e215d",
+              "d1840bd50d6dea3724ebd69b60ba614e58c6f7f8c2b71a60b4b9d93ab01880c9"
+            ]
+          }
+        },
+        {
+          "id": "auth.native-fixture",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T02:35:36.768Z",
+          "reasonCode": "NATIVE_AUTH_FIXTURE_LIST_OBSERVED",
+          "prerequisite": "{\"result\":{\"schema\":\"toy.hermes-httpx-auth-fixture.v1\",\"operation\":\"list\",\"public_argv\":[\"hermes\",\"auth\",\"list\",\"openai-codex\"],\"exit_code\":0,\"markers\":[\"AUTH_LIST_READBACK_OK\"],\"processIdentity\":{\"pid\":35468,\"parentPid\":35361,\"uid\":501,\"gid\":20},\"observations\":{\"provider\":\"openai-codex\",\"phase\":\"list\",\"credential_count\":1,\"target_label_present\":true,\"access_generation\":null,\"catalog_access_generation\":null,\"storage_fault_triggered\":false,\"token_hygiene\":true,\"success_claim_absent\":true,\"fallback_attempted\":false,\"network_denials\":[],\"socket_origin\":null},\"http_ledger\":{\"device_code_requests\":0,\"device_code_polls\":0,\"token_exchanges\":0,\"token_refreshes\":0,\"model_catalog_requests\":0,\"model_requests\":0,\"denied_http_requests\":0,\"blocked_socket_events\":0},\"network_audit\":\"socket-audit-hook-installed\"},\"childPidMatches\":true,\"freshChildPid\":true,\"parentPidMatches\":true,\"uidMatches\":true,\"gidMatches\":true,\"childStdoutDigest\":\"ceec09f7cc0b305aa3f20d18f481bbfc8b53efdd9722a9a15ad03685e8f662b4\",\"childStderrDigest\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"caseId\":\"root-final-readback\",\"storeScope\":\"root\",\"label\":\"toy-fixture-lifecycle-root\",\"expectedCount\":1,\"expectedLabelPresent\":true,\"expectedGeneration\":null,\"rootAuthBefore\":{\"exists\":true,\"digest\":\"209409b12d944bc85d6eec68b2a460884b7807e40ff71d521dcf7713273db1cd\"},\"rootAuthAfter\":{\"exists\":true,\"digest\":\"209409b12d944bc85d6eec68b2a460884b7807e40ff71d521dcf7713273db1cd\"},\"rootEnvBefore\":{\"exists\":false,\"digest\":null},\"rootEnvAfter\":{\"exists\":false,\"digest\":null},\"profileAuthBefore\":{\"exists\":true,\"digest\":\"e6d8320cd44986dc97461f6fa96e6155aee554761d1a2c0534399c321914078a\"},\"profileAuthAfter\":{\"exists\":true,\"digest\":\"e6d8320cd44986dc97461f6fa96e6155aee554761d1a2c0534399c321914078a\"},\"rootStoreVerified\":true,\"profileStoreVerified\":true,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "60554c067d107b149109b33741c6a4032a13c42a879d132ef5d0cba0c4954447",
+              "edcdcf963730b74aba7e77bb544119bff55829f48204e138aedbbd06af965e96",
+              "85f7fec70019f267210c90ec3798bec6839b94a49c70745129f3c68789c26855",
+              "f976a83543d53f1a42059c64f3b3fbb94e8069a39f89f7b60fe63027a88b4846",
+              "846b28f0b5a22e0f42fb236e7f4f4b092f1dea76af59c80258a9c6c32d10e8c0",
+              "69c8a0d2c7947c11fa7a87aebf7b19a0050fde142cf7b09f00f59bc256cda4fd",
+              "a792f705a65d7a2215d3bb401f2f9ef03b47c1b303f010932126252345e758d9",
+              "fc301e0f9097993fd8889ab3c0a09b5969bced8b1e0452bb3898eeca30b02829",
+              "fcb00a86184500b0ad864fdb4b30b4d56c4578496200ce16ff97ca2da45e215d",
+              "06a620bf23123a1a02b6769c756960062cfd7933bcf83437bf2630dbde06568f"
+            ]
+          }
+        },
+        {
+          "id": "auth.native-fixture",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T02:35:41.169Z",
+          "reasonCode": "NATIVE_AUTH_FIXTURE_CHAT_OBSERVED",
+          "prerequisite": "{\"result\":{\"schema\":\"toy.hermes-httpx-auth-fixture.v1\",\"operation\":\"chat\",\"public_argv\":[\"hermes\",\"chat\",\"--provider\",\"openai-codex\",\"--model\",\"gpt-6.1-sol\",\"--toolsets\",\"none\",\"-q\",\"Return the fixed fixture marker.\"],\"exit_code\":0,\"markers\":[\"CHAT_RESPONSE_OK\"],\"processIdentity\":{\"pid\":35470,\"parentPid\":35361,\"uid\":501,\"gid\":20},\"observations\":{\"provider\":\"openai-codex\",\"phase\":\"chat\",\"access_generation\":\"initial\",\"catalog_access_generation\":\"initial\",\"storage_fault_triggered\":false,\"token_hygiene\":true,\"success_claim_absent\":true,\"fallback_attempted\":false,\"network_denials\":[],\"socket_origin\":null},\"http_ledger\":{\"device_code_requests\":0,\"device_code_polls\":0,\"token_exchanges\":0,\"token_refreshes\":0,\"model_catalog_requests\":1,\"model_requests\":1,\"denied_http_requests\":0,\"blocked_socket_events\":0},\"network_audit\":\"socket-audit-hook-installed\"},\"childPidMatches\":true,\"freshChildPid\":true,\"parentPidMatches\":true,\"uidMatches\":true,\"gidMatches\":true,\"childStdoutDigest\":\"9886d4d0826002ec4ac19571c3be6bbbb9f6582bbf808456503076fe42f164f1\",\"childStderrDigest\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"caseId\":\"root-fresh-use\",\"storeScope\":\"root\",\"label\":\"toy-fixture-lifecycle-root\",\"expectedCount\":null,\"expectedLabelPresent\":null,\"expectedGeneration\":\"initial\",\"rootAuthBefore\":{\"exists\":true,\"digest\":\"209409b12d944bc85d6eec68b2a460884b7807e40ff71d521dcf7713273db1cd\"},\"rootAuthAfter\":{\"exists\":true,\"digest\":\"209409b12d944bc85d6eec68b2a460884b7807e40ff71d521dcf7713273db1cd\"},\"rootEnvBefore\":{\"exists\":false,\"digest\":null},\"rootEnvAfter\":{\"exists\":false,\"digest\":null},\"profileAuthBefore\":{\"exists\":true,\"digest\":\"e6d8320cd44986dc97461f6fa96e6155aee554761d1a2c0534399c321914078a\"},\"profileAuthAfter\":{\"exists\":true,\"digest\":\"e6d8320cd44986dc97461f6fa96e6155aee554761d1a2c0534399c321914078a\"},\"rootStoreVerified\":true,\"profileStoreVerified\":true,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "60554c067d107b149109b33741c6a4032a13c42a879d132ef5d0cba0c4954447",
+              "edcdcf963730b74aba7e77bb544119bff55829f48204e138aedbbd06af965e96",
+              "85f7fec70019f267210c90ec3798bec6839b94a49c70745129f3c68789c26855",
+              "f976a83543d53f1a42059c64f3b3fbb94e8069a39f89f7b60fe63027a88b4846",
+              "846b28f0b5a22e0f42fb236e7f4f4b092f1dea76af59c80258a9c6c32d10e8c0",
+              "69c8a0d2c7947c11fa7a87aebf7b19a0050fde142cf7b09f00f59bc256cda4fd",
+              "a792f705a65d7a2215d3bb401f2f9ef03b47c1b303f010932126252345e758d9",
+              "fc301e0f9097993fd8889ab3c0a09b5969bced8b1e0452bb3898eeca30b02829",
+              "fcb00a86184500b0ad864fdb4b30b4d56c4578496200ce16ff97ca2da45e215d",
+              "d1840bd50d6dea3724ebd69b60ba614e58c6f7f8c2b71a60b4b9d93ab01880c9"
+            ]
+          }
+        }
+      ],
+      "state": "NOT_IMPLEMENTED",
+      "complete": false,
+      "links": {
+        "recordRefs": [],
+        "observations": [],
+        "artifactDigests": []
+      },
+      "sourceRegistration": {
+        "id": "AT-hermes-config-91",
+        "rung": "CLI",
+        "sourceAssertionHash": "2e360a60d70a821aac4885911b96da67b582f1799ea2c383071aa786978a5887",
+        "commandId": "probe.run",
+        "scenarioId": "auth.lifecycle",
+        "owner": "hermes",
+        "firstRelease": "R0",
+        "kind": "behavioral",
+        "mandatoryCases": [
+          {
+            "id": "root-add",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "root-add"
+          },
+          {
+            "id": "profile-add-target",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "profile-add-target"
+          },
+          {
+            "id": "profile-add-sibling",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "profile-add-sibling"
+          },
+          {
+            "id": "profile-initial-readback",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "profile-initial-readback"
+          },
+          {
+            "id": "priority-reorder-target",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "priority-reorder-target"
+          },
+          {
+            "id": "priority-target-rate-limit",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "priority-target-rate-limit"
+          },
+          {
+            "id": "reset-exhausted-readback",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "reset-exhausted-readback"
+          },
+          {
+            "id": "reset-target",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "reset-target"
+          },
+          {
+            "id": "reset-target-readback",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "reset-target-readback"
+          },
+          {
+            "id": "reset-target-refresh",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "reset-target-refresh"
+          },
+          {
+            "id": "reset-target-reload",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "reset-target-reload"
+          },
+          {
+            "id": "remove-target",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "remove-target"
+          },
+          {
+            "id": "remove-fresh-readback",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "remove-fresh-readback"
+          },
+          {
+            "id": "remove-sibling-fresh-use",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "remove-sibling-fresh-use"
+          },
+          {
+            "id": "root-final-readback",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "root-final-readback"
+          },
+          {
+            "id": "root-fresh-use",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "root-fresh-use"
+          }
+        ],
+        "trigger": "Exercise public profile auth priority, target rate-limit/reset, fresh target refresh/reload and target removal while retaining sibling usability and disposable root-store isolation.",
+        "faultControls": [
+          {
+            "id": "lifecycle-target-rate-limit",
+            "seam": "provider",
+            "affectedPhases": [
+              "priority-target-rate-limit",
+              "reset-exhausted-readback"
+            ]
+          },
+          {
+            "id": "expired-access-after-target-reset",
+            "seam": "clock",
+            "affectedPhases": [
+              "reset-target-refresh"
+            ]
+          },
+          {
+            "id": "temporary-store-boundary",
+            "seam": "os",
+            "affectedPhases": [
+              "root-add",
+              "profile-add-target",
+              "profile-add-sibling",
+              "remove-target"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "public-auth-lifecycle-readback",
+            "independentReader": "HermesAuthProbe.run: fresh public auth status, labels, counts, confirmations and actor-bound provider effects",
+            "caseIds": [
+              "root-add",
+              "profile-add-target",
+              "profile-add-sibling",
+              "profile-initial-readback",
+              "priority-reorder-target",
+              "priority-target-rate-limit",
+              "reset-exhausted-readback",
+              "reset-target",
+              "reset-target-readback",
+              "reset-target-refresh",
+              "reset-target-reload",
+              "remove-target",
+              "remove-fresh-readback",
+              "remove-sibling-fresh-use",
+              "root-final-readback",
+              "root-fresh-use"
+            ]
+          },
+          {
+            "id": "scope-and-fresh-process-readback",
+            "independentReader": "HermesAuthProbe.run: child identity, synthetic scope digests and fresh generations; toy probe.show exact operation",
+            "caseIds": [
+              "root-add",
+              "profile-add-target",
+              "profile-add-sibling",
+              "profile-initial-readback",
+              "priority-reorder-target",
+              "priority-target-rate-limit",
+              "reset-exhausted-readback",
+              "reset-target",
+              "reset-target-readback",
+              "reset-target-refresh",
+              "reset-target-reload",
+              "remove-target",
+              "remove-fresh-readback",
+              "remove-sibling-fresh-use",
+              "root-final-readback",
+              "root-fresh-use"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot administer provider credential priority/reset/remove or observe temporary OS store scope. CLI drives pinned public auth/chat entries with fake external provider/model/clock and isolated synthetic homes."
+      }
+    },
+    "links": {
+      "recordRefs": [],
+      "observations": [],
+      "artifactDigests": []
+    },
+    "probeId": "AT-hermes-config-91",
+    "binding": {
+      "releaseDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+      "controlDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+      "schemaDigest": "a9798dc39646fb2fe7b9c5c13d4f673095ce31c3e04f8c048f91556a1c354d9a",
+      "fixtureDigest": "f32b4a1b2d407d42c1d0ba29f8f6b670a09dbd81599b1eb597d208ca25d2047b"
+    },
+    "caseManifestDigest": "ae15bacfbc6432ed2a4fc257c017eab336b4452bd89bbb38e45766b123dd6701"
+  }
+}

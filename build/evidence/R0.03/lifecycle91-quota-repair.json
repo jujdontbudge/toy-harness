@@ -1,0 +1,34 @@
+{
+  "recordedAt": "2026-10-07T02:29:19.588637+00:00",
+  "verdict": "ACTUAL_FIRST_NATIVE_FAILURE_REQUIRED_FIXED_PROVIDER_QUOTA_FAKE_REPAIRED_PENDING_CLI_PROOF",
+  "evidenceBindings": [
+    {
+      "path": "build/evidence/R0.03/lifecycle91-first-cli.json",
+      "sha256": "4ca2a8bc9fabf15dc7e57550bf69fbe41a1bc2708f6e27f5606271489ffbac9e"
+    },
+    {
+      "path": "/Users/johansardar/.hermes/hermes-agent/agent/agent_runtime_helpers.py",
+      "sha256": "735612c07ffb2d28e5d1ab555578c961e34e7e70fd53404fec574e61954e805a"
+    },
+    {
+      "path": "/Users/johansardar/.hermes/hermes-agent/agent/credential_pool.py",
+      "sha256": "111d8e0d990630341a42dc2fa4a740f16746d5963e8d6900cfd25c54d109da66"
+    },
+    {
+      "path": "/Users/johansardar/.hermes/hermes-agent/hermes_cli/auth_codex.py",
+      "sha256": "85c4644c052f5f5b3d4dc0f862592b5f13f286bf48d4d239015c3c74ae3f8e91"
+    }
+  ],
+  "nativeFailureCountBeforeRepair": 1,
+  "cause": "Pinned rate-limit recovery retries target once, then rotates; two target429s trigger an early-reopen quota GET absent from the sealed fake. Generic unregistered-http denial stopped the child.",
+  "repair": "Only target actor chat GET chatgpt.com/backend-api/wham/usage after exactlytwo target429s, matching synthetic target authorization, exactlyone check, fixed100percent used withfuture reset. Existing provider marker requires these observations; successful sibling generation and model ledger3 confirm rotation. All other routes denied.",
+  "originalExactlyOne429AssumptionSuperseded": true,
+  "newReceiptFields": [],
+  "newProtocolOutsideFailedCheck": false,
+  "sourceHashesSha256": {
+    "docs/adr/0049-native-auth-lifecycle-probe.md": "25e1bae167ef20044832e64307bf6e6faacde3c37fd3cf36c56eefd04cc0e9e6",
+    "packages/hermes/src/auth-fixture.ts": "f6ba753b56a2300705a77e930e452d92ce82138743ed9f1247ddf7e9855a4536",
+    "patches/hermes-auth-fixture.patch": "edcdcf963730b74aba7e77bb544119bff55829f48204e138aedbbd06af965e96"
+  },
+  "wholeATComplete": false
+}

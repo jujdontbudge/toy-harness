@@ -1,0 +1,25 @@
+{
+  "schema":"toy.r0.03.lifecycle91-source-handoff.v1",
+  "recordedAt":"2026-10-07T02:14:59Z",
+  "verdict":"SOURCE_FROZEN_FOR_PARENT_INTEGRATION",
+  "acceptance":"AT-hermes-config-91",
+  "planSha256":"ea6377b68902bcee73ace035e8d27738ca05b835fcd8259b1b7f279992c5a802",
+  "pinnedHermesCommit":"8d5e3e412138342e8bf30443e72bd4e6a9abd057",
+  "sourceSha256":{
+    "docs/adr/0049-native-auth-lifecycle-probe.md":"a2674b39cab011df16a26e00fd82a605ecdf6e3ad6894583370a84f3a286e664",
+    "packages/hermes/src/auth-fixture.ts":"0cc2803b481e185ce2737f891d408ae944d2d5fb15bca14d9a5e52055490a2d7",
+    "packages/hermes/src/auth-probe.ts":"58b2df70f3cba853b1993be85fb6e2c4732301c841e0edbe1ae78331c5335d0d",
+    "patches/hermes-auth-fixture.patch":"faf785e2dc2e89107cefc6c7658a5c233d1f9cd34d883dbb6726d23a9ab86be0"
+  },
+  "mandatoryCases":[["root-add","add"],["profile-add-target","add"],["profile-add-sibling","add"],["profile-initial-readback","list"],["priority-reorder-target","priority-added"],["priority-target-rate-limit","chat"],["reset-exhausted-readback","list"],["reset-target","reset"],["reset-target-readback","list"],["reset-target-refresh","chat-expired"],["reset-target-reload","chat-reloaded"],["remove-target","remove"],["remove-fresh-readback","list"],["remove-sibling-fresh-use","chat"],["root-final-readback","list"],["root-fresh-use","chat"]],
+  "manifestPhase":"each mandatory case phase equals its case ID",
+  "contractAdditions":{
+    "operation":["remove","reset"],
+    "phase":["remove","reset"],
+    "markers":["AUTH_REMOVE_OK","AUTH_RESET_OK","AUTH_LIST_TARGET_RATE_LIMITED","AUTH_PROVIDER_RATE_LIMIT_OBSERVED"],
+    "newFields":[]
+  },
+  "parentIntegration":["packages/contracts/src/hermes-runtime.ts","tests/registry.yaml","packages/ops/src/fixture-stack.ts","cli/src/main.ts","architecture/features.json","skills/toy-control/FEATURE-MAP.md","generator-owned outputs"],
+  "sourceReview":{"gitDiffCheck":"clean","builds":0,"tests":0,"cliOrRuntimeAttempts":0,"networkAttempts":0},
+  "claims":{"sourceOnly":true,"wholeATComplete":false,"runtimePassed":false,"acceptanceComplete":false,"rootR004":"PENDING"}
+}

@@ -1,6 +1,6 @@
 --- /dev/null
 +++ b/tests/fixtures/toy_auth_httpx_fixture.py
-@@ -0,0 +1,767 @@
+@@ -0,0 +1,833 @@
 +from __future__ import annotations
 +
 +import base64
@@ -24,6 +24,8 @@
 +_SOCKET_ORIGIN: str | None = None
 +_STORAGE_FAULT_TRIGGERED = False
 +_TOKEN_RESPONSE_ISSUED = False
++_RATE_LIMITED_RESPONSE_COUNT = 0
++_QUOTA_CHECK_COUNT = 0
 +_CONCURRENCY_BARRIER_STATE = "not-used"
 +_REFRESH_EFFECTS: list[dict[str, str]] = []
 +_ADD_PHASES = {"add", "add-enospc", "add-replace-fault"}
@@ -44,6 +46,14 @@
 +_PAID_KEY = "toy-fixture-paid-key"
 +_GENERATION_EXPIRATIONS = {"initial": 1893456000, "rotated": 4102444800, "added": 1893456000, "added-rotated": 4102531200, "stale": 4102531200}
 +_GENERATION_REFRESH_TOKENS = {"initial": "toy-fixture-refresh-initial", "rotated": "toy-fixture-refresh-rotated", "added": "toy-fixture-refresh-added", "added-rotated": "toy-fixture-refresh-added-rotated", "stale": "toy-fixture-refresh-stale"}
++_LIFECYCLE_LABELS = {
++    "lifecycle-root": "toy-fixture-lifecycle-root",
++    "lifecycle-target": "toy-fixture-lifecycle-target",
++    "lifecycle-sibling": "toy-fixture-lifecycle-sibling",
++    "lifecycle-target-rate-limit": "toy-fixture-lifecycle-target",
++    "lifecycle-target-expired": "toy-fixture-lifecycle-target",
++    "lifecycle-target-reload": "toy-fixture-lifecycle-target",
++}
 +_MIXED_LINEAGE_LABELS = {
 +    "mixed-root-add": "toy-fixture-mixed-root",
 +    "mixed-root-readback": "toy-fixture-mixed-root",
@@ -78,6 +88,17 @@
 +
 +def _expected_access_generations() -> tuple[str, ...]:
 +    actor = os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR", "")
++    lifecycle_generations = {
++        "lifecycle-root": "initial",
++        "lifecycle-sibling": "stale",
++        "lifecycle-target-rate-limit": "added",
++        "lifecycle-target-expired": "added-rotated",
++        "lifecycle-target-reload": "added-rotated",
++    }
++    if actor in lifecycle_generations:
++        if actor == "lifecycle-target-rate-limit":
++            return ("added", "stale")
++        return (lifecycle_generations[actor],)
 +    mixed_lineage_generations = {
 +        "mixed-root-use": "initial",
 +        "mixed-root-refresh": "rotated",
@@ -236,7 +257,7 @@
 +
 +
 +def _model_response(request: httpx.Request, asynchronous: bool) -> httpx.Response:
-+    global _ACCEPTED_ACCESS_GENERATION
++    global _ACCEPTED_ACCESS_GENERATION, _RATE_LIMITED_RESPONSE_COUNT
 +    observed_generation = next((name for name in _GENERATION_EXPIRATIONS if request.headers.get("authorization") == "Bearer " + _access_token(_GENERATION_EXPIRATIONS[name], name)), None)
 +    observe_model = os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR") in {"expired-chat", "fresh-add-reload", "fresh-refresh-reload"}
 +    if observe_model:
@@ -263,6 +284,12 @@
 +        if observe_model:
 +            _signal_barrier("model-request-authorization-denied")
 +        return _deny_request("authorization-mismatch")
++    if os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR") == "lifecycle-target-rate-limit" and expected_generation == "added":
++        if _RATE_LIMITED_RESPONSE_COUNT >= 2:
++            return _deny_request("unregistered-http")
++        _RATE_LIMITED_RESPONSE_COUNT += 1
++        content = b'{"error":{"message":"fixture rate limit","type":"rate_limit_error","code":"rate_limit_exceeded"}}'
++        return _response(request, content, "application/json", asynchronous, 429)
 +    _ACCEPTED_ACCESS_GENERATION = expected_generation
 +    if payload.get("stream") is not False:
 +        return _event_stream_response(request, asynchronous)
@@ -296,7 +323,7 @@
 +
 +
 +def _route(request: httpx.Request, asynchronous: bool = False) -> httpx.Response:
-+    global _CONCURRENCY_BARRIER_STATE, _TOKEN_RESPONSE_ISSUED, _CATALOG_ACCESS_GENERATION
++    global _CONCURRENCY_BARRIER_STATE, _TOKEN_RESPONSE_ISSUED, _CATALOG_ACCESS_GENERATION, _QUOTA_CHECK_COUNT
 +    if request.url.scheme != "https":
 +        return _deny_request()
 +    host = request.url.host.lower()
@@ -355,6 +382,9 @@
 +                "sibling-profile-new": "added-rotated",
 +                "mixed-root-add": "initial",
 +                "mixed-profile-add": "added",
++                "lifecycle-root": "initial",
++                "lifecycle-target": "added",
++                "lifecycle-sibling": "stale",
 +            }
 +            generation = sibling_generations.get(actor, "added" if actor == "auth-add" else "initial")
 +            if actor == "auth-add":
@@ -452,6 +482,13 @@
 +                return _deny_request("unregistered-http")
 +            _CONCURRENCY_BARRIER_STATE = "released"
 +        return _json_response(request, {"models": [{"slug": _EXPECTED_MODEL, "visibility": "list", "priority": 0}]}, asynchronous)
++    if _OPERATION == "chat" and _PHASE == "chat" and os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR") == "lifecycle-target-rate-limit" and host == "chatgpt.com" and method == "GET" and path == "/backend-api/wham/usage":
++        if _RATE_LIMITED_RESPONSE_COUNT != 2 or _QUOTA_CHECK_COUNT != 0:
++            return _deny_request("unregistered-http")
++        if request.headers.get("authorization") != "Bearer " + _access_token(_GENERATION_EXPIRATIONS["added"], "added"):
++            return _deny_request("authorization-mismatch")
++        _QUOTA_CHECK_COUNT += 1
++        return _json_response(request, {"rate_limit": {"primary_window": {"used_percent": 100, "reset_at": int(time.time()) + 3600}}}, asynchronous)
 +    if host == "api.openai.com" and path == "/v1/models":
 +        return _deny_request("openai-model-discovery")
 +    return _deny_request()
@@ -528,6 +565,8 @@
 +    if os.environ.get("TOY_AUTH_STORAGE_CONTEXT") == "1":
 +        return "toy-fixture-storage-cut"
 +    actor = os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR", "")
++    if actor in _LIFECYCLE_LABELS:
++        return _LIFECYCLE_LABELS[actor]
 +    if actor in _MIXED_LINEAGE_LABELS:
 +        return _MIXED_LINEAGE_LABELS[actor]
 +    if actor.startswith("sibling-"):
@@ -539,13 +578,15 @@
 +    prefix = ["hermes"] if os.environ.get("TOY_AUTH_STORE_SCOPE") == "root" else ["hermes", "--profile", "toy"]
 +    if operation == "add":
 +        actor = os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR", "")
-+        label = ["--label", _fixture_label()] if actor == "auth-add" or actor.startswith("sibling-") or actor in _MIXED_LINEAGE_LABELS else []
++        label = ["--label", _fixture_label()] if actor == "auth-add" or actor.startswith("sibling-") or actor.startswith("lifecycle-") or actor in _MIXED_LINEAGE_LABELS else []
 +        return [*prefix, "auth", "add", "openai-codex", "--type", "oauth", "--no-browser", *label]
 +    if operation == "list":
 +        return [*prefix, "auth", "list", "openai-codex"]
 +    if operation == "priority":
 +        target = _fixture_label() if _PHASE == "priority-added" else "2"
 +        return [*prefix, "auth", "priority", "openai-codex", target, "0"]
++    if operation in {"remove", "reset"}:
++        return [*prefix, "auth", operation, "openai-codex", _fixture_label()]
 +    provider = "siwc_responses" if _PHASE == "siwc-unbound" else "openai-codex"
 +    return [*prefix, "chat", "--provider", provider, "--model", _EXPECTED_MODEL, "--toolsets", "none", "-q", _PROMPT]
 +
@@ -615,6 +656,8 @@
 +        claim in lower_output
 +        for claim in ("falling through to fallback:", "switching to fallback", "falling back to ")
 +    )
++    if os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR") == "lifecycle-target-rate-limit" and _RATE_LIMITED_RESPONSE_COUNT == 2 and _QUOTA_CHECK_COUNT == 1 and _COUNTS["model_requests"] == 3 and _ACCEPTED_ACCESS_GENERATION == "stale":
++        fallback_attempted = True
 +    success_claim_absent = not any(
 +        claim in lower_output
 +        for claim in (
@@ -658,10 +701,33 @@
 +                    count = int(raw)
 +                    break
 +        observations["credential_count"] = count
-+        if os.environ.get("TOY_AUTH_STORAGE_CONTEXT") == "1" or os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR", "").startswith("sibling-") or os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR", "") in _MIXED_LINEAGE_LABELS:
++        actor = os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR", "")
++        if os.environ.get("TOY_AUTH_STORAGE_CONTEXT") == "1" or actor.startswith("sibling-") or actor in _MIXED_LINEAGE_LABELS or actor in _LIFECYCLE_LABELS:
 +            observations["target_label_present"] = _fixture_label() in stdout
-+        markers.append("AUTH_LIST_READBACK_OK" if count > 0 else "AUTH_LIST_EMPTY")
++        target_line = next((line for line in stdout.splitlines() if _LIFECYCLE_LABELS.get(actor, _fixture_label()) in line), "")
++        sibling_line = next((line for line in stdout.splitlines() if "toy-fixture-lifecycle-sibling" in line), "")
++        if "rate-limited" in target_line.casefold():
++            markers.append("AUTH_LIST_TARGET_RATE_LIMITED")
++        case_id = os.environ.get("TOY_AUTH_CASE_ID", "")
++        lifecycle_readback_valid = {
++            "profile-initial-readback": count == 2 and bool(target_line) and bool(sibling_line),
++            "reset-exhausted-readback": count == 2 and bool(target_line) and bool(sibling_line) and "rate-limited" in target_line.casefold() and "rate-limited" not in sibling_line.casefold(),
++            "reset-target-readback": count == 2 and bool(target_line) and bool(sibling_line) and not any(status in target_line.casefold() for status in ("rate-limited", "auth failed", "exhausted")) and not any(status in sibling_line.casefold() for status in ("rate-limited", "auth failed", "exhausted")) and "priority=0" in target_line,
++            "remove-fresh-readback": count == 1 and not target_line and bool(sibling_line) and not any(status in sibling_line.casefold() for status in ("rate-limited", "auth failed", "exhausted")),
++            "root-final-readback": count == 1 and bool(target_line),
++        }.get(case_id, True)
++        markers.append("AUTH_LIST_READBACK_OK" if count > 0 and lifecycle_readback_valid else "AUTH_LIST_EMPTY" if count == 0 else "AUTH_LIST_NOT_CONFIRMED")
++    elif operation == "remove":
++        removed = exit_code == 0 and f"Removed openai-codex credential #" in stdout and f"({_fixture_label()})" in stdout
++        if removed:
++            markers.append("AUTH_REMOVE_OK")
++    elif operation == "reset":
++        reset = exit_code == 0 and f"Reset status on openai-codex credential #" in stdout and f"({_fixture_label()})" in stdout
++        if reset:
++            markers.append("AUTH_RESET_OK")
 +    else:
++        if _PHASE == "chat" and os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR") == "lifecycle-target-rate-limit" and _RATE_LIMITED_RESPONSE_COUNT == 2 and _QUOTA_CHECK_COUNT == 1:
++            markers.append("AUTH_PROVIDER_RATE_LIMIT_OBSERVED")
 +        if _PHASE == "siwc-unbound":
 +            refused = (
 +                exit_code != 0
@@ -711,7 +777,7 @@
 +
 +def main() -> int:
 +    global _OPERATION, _PHASE, _CONCURRENCY_BARRIER_STATE
-+    if len(sys.argv) != 2 or sys.argv[1] not in {"add", "list", "chat", "chat-expired", "chat-reloaded", "add-enospc", "add-replace-fault", "list-after-fault", "chat-after-fault", "siwc-unbound", "priority-added", "priority-restored"}:
++    if len(sys.argv) != 2 or sys.argv[1] not in {"add", "list", "chat", "chat-expired", "chat-reloaded", "add-enospc", "add-replace-fault", "list-after-fault", "chat-after-fault", "siwc-unbound", "priority-added", "priority-restored", "remove", "reset"}:
 +        print(
 +            json.dumps(
 +                {

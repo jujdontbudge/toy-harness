@@ -12,7 +12,7 @@ const maxArchiveBytes = 268435456;
 const maxChildBytes = 65536;
 const fixtureModule = "tests.fixtures.toy_auth_httpx_fixture";
 type FixtureOperation = HermesAuthFixtureResultV1["observations"]["phase"];
-type AuthFixtureMode = "standard" | "borrowed-root" | "profile-siblings" | "mixed-lineage";
+type AuthFixtureMode = "standard" | "borrowed-root" | "profile-siblings" | "mixed-lineage" | "lifecycle";
 type FixtureStoreDigest = { exists: boolean; digest: string | null };
 type AuthFixtureStep = {
   caseId: string;
@@ -57,6 +57,25 @@ const mixedLineageSteps: readonly AuthFixtureStep[] = [
   { caseId: "independent-profile-reload", operation: "chat-reloaded", scope: "profile", actor: "mixed-profile-reload", label: "toy-fixture-mixed-independent", expectedGeneration: "added-rotated" }
 ];
 
+const lifecycleSteps: readonly AuthFixtureStep[] = [
+  { caseId: "root-add", operation: "add", scope: "root", actor: "lifecycle-root", label: "toy-fixture-lifecycle-root" },
+  { caseId: "profile-add-target", operation: "add", scope: "profile", actor: "lifecycle-target", label: "toy-fixture-lifecycle-target" },
+  { caseId: "profile-add-sibling", operation: "add", scope: "profile", actor: "lifecycle-sibling", label: "toy-fixture-lifecycle-sibling" },
+  { caseId: "profile-initial-readback", operation: "list", scope: "profile", actor: "lifecycle-target", label: "toy-fixture-lifecycle-target", expectedCount: 2, expectedLabelPresent: true },
+  { caseId: "priority-reorder-target", operation: "priority-added", scope: "profile", actor: "lifecycle-target", label: "toy-fixture-lifecycle-target" },
+  { caseId: "priority-target-rate-limit", operation: "chat", scope: "profile", actor: "lifecycle-target-rate-limit", label: "toy-fixture-lifecycle-target", expectedGeneration: "added" },
+  { caseId: "reset-exhausted-readback", operation: "list", scope: "profile", actor: "lifecycle-target", label: "toy-fixture-lifecycle-target", expectedCount: 2, expectedLabelPresent: true },
+  { caseId: "reset-target", operation: "reset", scope: "profile", actor: "lifecycle-target", label: "toy-fixture-lifecycle-target" },
+  { caseId: "reset-target-readback", operation: "list", scope: "profile", actor: "lifecycle-target", label: "toy-fixture-lifecycle-target", expectedCount: 2, expectedLabelPresent: true },
+  { caseId: "reset-target-refresh", operation: "chat-expired", scope: "profile", actor: "lifecycle-target-expired", label: "toy-fixture-lifecycle-target", expectedGeneration: "added-rotated" },
+  { caseId: "reset-target-reload", operation: "chat-reloaded", scope: "profile", actor: "lifecycle-target-reload", label: "toy-fixture-lifecycle-target", expectedGeneration: "added-rotated" },
+  { caseId: "remove-target", operation: "remove", scope: "profile", actor: "lifecycle-target", label: "toy-fixture-lifecycle-target" },
+  { caseId: "remove-fresh-readback", operation: "list", scope: "profile", actor: "lifecycle-target", label: "toy-fixture-lifecycle-target", expectedCount: 1, expectedLabelPresent: false },
+  { caseId: "remove-sibling-fresh-use", operation: "chat", scope: "profile", actor: "lifecycle-sibling", label: "toy-fixture-lifecycle-sibling", expectedGeneration: "stale" },
+  { caseId: "root-final-readback", operation: "list", scope: "root", actor: "lifecycle-root", label: "toy-fixture-lifecycle-root", expectedCount: 1, expectedLabelPresent: true },
+  { caseId: "root-fresh-use", operation: "chat", scope: "root", actor: "lifecycle-root", label: "toy-fixture-lifecycle-root", expectedGeneration: "initial" }
+];
+
 const digest = (value: string | Buffer): string => createHash("sha256").update(value).digest("hex");
 const isWithin = (base: string, target: string): boolean => {
   const path = relative(base, target);
@@ -68,6 +87,7 @@ const publicArgv = (operation: FixtureOperation, order?: HermesAuthConcurrencyOb
   const label = labelOverride ?? (storageContext ? "toy-fixture-storage-cut" : `toy-fixture-added-${order}`);
   if (operation.startsWith("add")) return [...prefix, "auth", "add", "openai-codex", "--type", "oauth", "--no-browser", ...(order === undefined && labelOverride === undefined ? [] : ["--label", label])];
   if (operation.startsWith("list")) return [...prefix, "auth", "list", "openai-codex"];
+  if (operation === "remove" || operation === "reset") return [...prefix, "auth", operation, "openai-codex", label];
   if (operation === "priority-added" || operation === "priority-restored") return [...prefix, "auth", "priority", "openai-codex", operation === "priority-added" ? label : "2", "0"];
   return [...prefix, "chat", "--provider", operation === "siwc-unbound" ? "siwc_responses" : "openai-codex", "--model", "gpt-6.1-sol", "--toolsets", "none", "-q", "Return the fixed fixture marker."];
 };
@@ -198,10 +218,12 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
     const borrowedRoot = mode === "borrowed-root";
     const profileSiblings = mode === "profile-siblings";
     const mixedLineage = mode === "mixed-lineage";
+    const lifecycle = mode === "lifecycle";
     if (borrowedRoot && firstOperation !== "add") return fail("BLOCKED", "NATIVE_AUTH_FIXTURE_OPERATION_INVALID");
     if (profileSiblings && firstOperation !== "add") return fail("BLOCKED", "NATIVE_AUTH_FIXTURE_OPERATION_INVALID");
     if (mixedLineage && firstOperation !== "add") return fail("BLOCKED", "NATIVE_AUTH_FIXTURE_OPERATION_INVALID");
-    const operations: readonly FixtureOperation[] = borrowedRoot ? ["add", "list", "chat", "chat-expired", "chat-reloaded", "chat-reloaded"] : profileSiblings ? profileSiblingSteps.map(step => step.operation) : mixedLineage ? mixedLineageSteps.map(step => step.operation) : siwcUnbound ? [firstOperation] : saveFault ? [firstOperation, "list-after-fault", "chat-after-fault"] : concurrentRun ? ["add", "list"] : ["add", "list", "chat", "chat-expired", "chat-reloaded"];
+    if (lifecycle && firstOperation !== "add") return fail("BLOCKED", "NATIVE_AUTH_FIXTURE_OPERATION_INVALID");
+    const operations: readonly FixtureOperation[] = borrowedRoot ? ["add", "list", "chat", "chat-expired", "chat-reloaded", "chat-reloaded"] : profileSiblings ? profileSiblingSteps.map(step => step.operation) : mixedLineage ? mixedLineageSteps.map(step => step.operation) : lifecycle ? lifecycleSteps.map(step => step.operation) : siwcUnbound ? [firstOperation] : saveFault ? [firstOperation, "list-after-fault", "chat-after-fault"] : concurrentRun ? ["add", "list"] : ["add", "list", "chat", "chat-expired", "chat-reloaded"];
     if (!Number.isInteger(timeoutMs) || timeoutMs < 1 || timeoutMs > 120000) return fail("BLOCKED", "NATIVE_AUTH_FIXTURE_TIMEOUT_INVALID");
     const homeRoot = realpathSync(home);
     const hermesRoot = realpathSync(hermesHome);
@@ -287,8 +309,8 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
     const profileAuthAfterCreate = privateStoreDigests(hermesRoot).profileAuth;
     const fallback = [{ provider: "openai", model: "gpt-6.1-sol" }];
     const profileConfigCommands = [["--profile", "toy", "config", "set", "auxiliary.title_generation.enabled", "false"]];
-    if (borrowedRoot) profileConfigCommands.push(["config", "set", "auxiliary.title_generation.enabled", "false"]);
-    if (borrowedRoot || profileSiblings || mixedLineage) profileConfigCommands.push(["--profile", "toy", "config", "set", "model.provider", "openai-codex"]);
+    if (borrowedRoot || lifecycle) profileConfigCommands.push(["config", "set", "auxiliary.title_generation.enabled", "false"]);
+    if (borrowedRoot || profileSiblings || mixedLineage || lifecycle) profileConfigCommands.push(["--profile", "toy", "config", "set", "model.provider", "openai-codex"]);
     if (siwcUnbound) profileConfigCommands.push(["--profile", "toy", "config", "set", "fallback_model", JSON.stringify(fallback)], ["--profile", "toy", "config", "get", "fallback_model", "--json"]);
     for (const profileConfigArgs of profileConfigCommands) {
       const profileConfigRequest = bounded(interpreter, ["-B", "-I", candidateStore, "--print-runtime-command", "--module", "hermes_cli.main", "--", ...profileConfigArgs], maxChildBytes, 5000);
@@ -316,13 +338,16 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
     let profileSiblingRootBaseline: { rootAuth: FixtureStoreDigest; rootEnv: FixtureStoreDigest } | null = null;
     let mixedCopySeed: { rootAuth: FixtureStoreDigest; profileAuth: FixtureStoreDigest; equal: boolean } | null = null;
     let mixedHealedProfileAuth: FixtureStoreDigest | null = null;
+    let lifecycleRootBaseline: { rootAuth: FixtureStoreDigest; rootEnv: FixtureStoreDigest } | null = null;
     const childPids = new Set<number>();
     for (const [operationIndex, operation] of operations.entries()) {
       const siblingStep = profileSiblings ? profileSiblingSteps[operationIndex] : undefined;
       const mixedStep = mixedLineage ? mixedLineageSteps[operationIndex] : undefined;
+      const lifecycleStep = lifecycle ? lifecycleSteps[operationIndex] : undefined;
       if (profileSiblings && !siblingStep) return fail("FAIL", "NATIVE_AUTH_FIXTURE_SIBLING_STEP_MISSING", { operationIndex });
       if (mixedLineage && !mixedStep) return fail("FAIL", "NATIVE_AUTH_FIXTURE_MIXED_LINEAGE_STEP_MISSING", { operationIndex });
-      const fixtureStep = siblingStep ?? mixedStep;
+      if (lifecycle && !lifecycleStep) return fail("FAIL", "NATIVE_AUTH_FIXTURE_LIFECYCLE_STEP_MISSING", { operationIndex });
+      const fixtureStep = siblingStep ?? mixedStep ?? lifecycleStep;
       if (mixedStep?.caseId === "copied-lineage-heal") {
         const storesBeforeCopy = privateStoreDigests(hermesRoot);
         const rootAuthPath = join(hermesRoot, "auth.json");
@@ -361,9 +386,9 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
       const scopedEnvironment = {
         ...environment,
         TOY_AUTH_STORE_SCOPE: rootScope ? "root" : "profile",
-        ...(fixtureStep ? { TOY_AUTH_CONCURRENCY_ACTOR: fixtureStep.actor } : {})
+        ...(fixtureStep ? { TOY_AUTH_CONCURRENCY_ACTOR: fixtureStep.actor, ...(lifecycle ? { TOY_AUTH_CASE_ID: fixtureStep.caseId } : {}) } : {})
       };
-      const child = bounded(interpreter, ["-B", ...publicCommand.slice(1)], maxChildBytes, 30000, undefined, homeRoot, borrowedRoot || profileSiblings || mixedLineage ? scopedEnvironment : environment);
+      const child = bounded(interpreter, ["-B", ...publicCommand.slice(1)], maxChildBytes, 30000, undefined, homeRoot, borrowedRoot || profileSiblings || mixedLineage || lifecycle ? scopedEnvironment : environment);
       if (child.timedOut || !child.result || child.result.error || child.result.status === null) return fail("BLOCKED", "NATIVE_AUTH_FIXTURE_CHILD_UNAVAILABLE", { installedCommit, archiveDigest, operation, commandDigest, childExitCode: child.result?.status ?? null, childSignal: child.result?.signal ?? null, childError: child.result?.error?.message.includes("ETIMEDOUT") ? "TIMEOUT" : child.result?.error ? "EXECUTION_UNAVAILABLE" : null, stdoutDigest: digest(child.result?.stdout ?? ""), stderrDigest: digest(child.result?.stderr ?? "") });
       const stdout = child.result.stdout.toString("utf8");
       const stderrDigest = digest(child.result.stderr);
@@ -380,13 +405,16 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
       const addOperation = operation.startsWith("add");
       const listOperation = operation.startsWith("list");
       const priorityOperation = operation === "priority-added" || operation === "priority-restored";
-      const resultMarker = siwcUnbound ? "SIWC_AUTHORIZATION_REQUIRED" : addOperation ? saveFault ? "AUTH_SAVE_DENIED" : "AUTH_ADD_OK" : listOperation ? saveFault ? "AUTH_LIST_EMPTY" : "AUTH_LIST_READBACK_OK" : priorityOperation ? "AUTH_PRIORITY_OK" : saveFault ? "CHAT_GRANT_UNUSABLE" : "CHAT_RESPONSE_OK";
+      const removeOperation = operation === "remove";
+      const resetOperation = operation === "reset";
+      const rateLimitStep = lifecycleStep?.caseId === "priority-target-rate-limit";
+      const resultMarker = siwcUnbound ? "SIWC_AUTHORIZATION_REQUIRED" : addOperation ? saveFault ? "AUTH_SAVE_DENIED" : "AUTH_ADD_OK" : listOperation ? saveFault ? "AUTH_LIST_EMPTY" : "AUTH_LIST_READBACK_OK" : priorityOperation ? "AUTH_PRIORITY_OK" : removeOperation ? "AUTH_REMOVE_OK" : resetOperation ? "AUTH_RESET_OK" : saveFault ? "CHAT_GRANT_UNUSABLE" : "CHAT_RESPONSE_OK";
       const chatOperation = operation.startsWith("chat") || siwcUnbound;
       const expectedLedger = addOperation
         ? { device_code_requests: 1, device_code_polls: 1, token_exchanges: 1, token_refreshes: 0, model_catalog_requests: 0, model_requests: 0, denied_http_requests: 0, blocked_socket_events: 0 }
-        : listOperation || priorityOperation || deniedGrant
+        : listOperation || priorityOperation || removeOperation || resetOperation || deniedGrant
           ? { device_code_requests: 0, device_code_polls: 0, token_exchanges: 0, token_refreshes: 0, model_catalog_requests: 0, model_requests: 0, denied_http_requests: 0, blocked_socket_events: 0 }
-          : { device_code_requests: 0, device_code_polls: 0, token_exchanges: 0, token_refreshes: operation === "chat-expired" ? 1 : 0, model_catalog_requests: result.http_ledger.model_catalog_requests, model_requests: 1, denied_http_requests: 0, blocked_socket_events: 0 };
+          : { device_code_requests: 0, device_code_polls: 0, token_exchanges: 0, token_refreshes: operation === "chat-expired" ? 1 : 0, model_catalog_requests: result.http_ledger.model_catalog_requests, model_requests: rateLimitStep ? result.observations.fallback_attempted ? 3 : 2 : 1, denied_http_requests: 0, blocked_socket_events: 0 };
       const identity = result.processIdentity;
       const freshChildPid = !childPids.has(identity.pid);
       childPids.add(identity.pid);
@@ -395,13 +423,33 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
         && identity.parentPid === process.pid
         && typeof process.getuid === "function" && identity.uid === process.getuid()
         && typeof process.getgid === "function" && identity.gid === process.getgid();
-      const markerMatches = deniedGrant ? result.markers.includes(resultMarker) && !result.markers.includes("AUTH_ADD_OK") && !result.markers.includes("CHAT_RESPONSE_OK") : result.markers.length === 1 && result.markers[0] === resultMarker;
+      const markerMatches = deniedGrant ? result.markers.includes(resultMarker) && !result.markers.includes("AUTH_ADD_OK") && !result.markers.includes("CHAT_RESPONSE_OK")
+        : rateLimitStep
+          ? result.markers.includes("AUTH_PROVIDER_RATE_LIMIT_OBSERVED") && result.markers.includes(result.observations.fallback_attempted ? "CHAT_RESPONSE_OK" : "CHAT_RESPONSE_NOT_CONFIRMED")
+          : lifecycleStep?.caseId === "reset-exhausted-readback"
+            ? result.markers.includes("AUTH_LIST_READBACK_OK") && result.markers.includes("AUTH_LIST_TARGET_RATE_LIMITED")
+            : result.markers.length === 1 && result.markers[0] === resultMarker;
       const countMatches = !listOperation || result.observations.credential_count === (fixtureStep?.expectedCount ?? (saveFault ? 0 : 1));
-      const ledgerMatches = result.http_ledger.model_catalog_requests <= 1 && JSON.stringify(result.http_ledger) === JSON.stringify(expectedLedger);
+      const maxCatalogRequests = rateLimitStep && result.observations.fallback_attempted ? 2 : 1;
+      const ledgerMatches = result.http_ledger.model_catalog_requests <= maxCatalogRequests && JSON.stringify(result.http_ledger) === JSON.stringify(expectedLedger);
       const storesAfterOperation = privateStoreDigests(hermesRoot);
       const rootStoreUnchanged = JSON.stringify(storesBefore.rootAuth) === JSON.stringify(storesAfterOperation.rootAuth)
         && JSON.stringify(storesBefore.rootEnv) === JSON.stringify(storesAfterOperation.rootEnv);
       const mixedRootEnvUnchanged = JSON.stringify(storesBeforeOperation.rootEnv) === JSON.stringify(storesAfterOperation.rootEnv);
+      const lifecycleRootStoreVerified = lifecycleStep !== undefined && (lifecycleStep.caseId === "root-add"
+        ? storesAfterOperation.rootAuth.exists
+          && storesAfterOperation.rootAuth.digest !== storesBeforeOperation.rootAuth.digest
+          && JSON.stringify(storesBeforeOperation.rootEnv) === JSON.stringify(storesAfterOperation.rootEnv)
+          && JSON.stringify(storesBeforeOperation.profileAuth) === JSON.stringify(storesAfterOperation.profileAuth)
+        : lifecycleRootBaseline !== null
+          && JSON.stringify(lifecycleRootBaseline.rootAuth) === JSON.stringify(storesAfterOperation.rootAuth)
+          && JSON.stringify(lifecycleRootBaseline.rootEnv) === JSON.stringify(storesAfterOperation.rootEnv));
+      const lifecycleProfileStoreVerified = lifecycleStep !== undefined && (lifecycleStep.scope === "root"
+        ? JSON.stringify(storesBeforeOperation.profileAuth) === JSON.stringify(storesAfterOperation.profileAuth)
+        : addOperation
+          ? storesAfterOperation.profileAuth.exists
+            && storesAfterOperation.profileAuth.digest !== storesBeforeOperation.profileAuth.digest
+          : storesAfterOperation.profileAuth.exists);
       const siblingRootStoreUnchanged = profileSiblingRootBaseline !== null
         && JSON.stringify(profileSiblingRootBaseline.rootAuth) === JSON.stringify(storesAfterOperation.rootAuth)
         && JSON.stringify(profileSiblingRootBaseline.rootEnv) === JSON.stringify(storesAfterOperation.rootEnv);
@@ -445,7 +493,9 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
             : mixedStep.caseId === "copied-lineage-use" || mixedStep.caseId === "copied-lineage-reload"
               ? true
               : JSON.stringify(storesBeforeOperation.rootAuth) === JSON.stringify(storesAfterOperation.rootAuth));
-      const profileStoreVerified = mixedLineage
+      const profileStoreVerified = lifecycle
+        ? lifecycleProfileStoreVerified
+        : mixedLineage
         ? mixedLineageProfileStoreVerified
         : siblingStep
         ? siblingStep.scope === "root" ? siblingProfileStoreUnchanged : storesAfterOperation.profileAuth.exists
@@ -457,17 +507,24 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
         && (operation === "add" || operation === "chat-expired"
           ? storesAfterOperation.rootAuth.digest !== previousRootAuth.digest
           : storesAfterOperation.rootAuth.digest === previousRootAuth.digest);
-      const expectedGeneration = deniedGrant ? null : chatOperation ? fixtureStep?.expectedGeneration ?? (operation === "chat" ? "initial" : "rotated") : null;
-      const exitMatches = result.exit_code === child.result.status && (deniedGrant && (addOperation || chatOperation) ? result.exit_code !== 0 : result.exit_code === 0);
-      const operationPassed = result.operation === (chatOperation ? "chat" : addOperation ? "add" : priorityOperation ? "priority" : "list")
+      const expectedGeneration = deniedGrant ? null : rateLimitStep ? result.observations.fallback_attempted ? "stale" : null : chatOperation ? fixtureStep?.expectedGeneration ?? (operation === "chat" ? "initial" : "rotated") : null;
+      const exitMatches = result.exit_code === child.result.status
+        && (deniedGrant && (addOperation || chatOperation)
+          ? result.exit_code !== 0
+          : rateLimitStep
+            ? result.exit_code === (result.observations.fallback_attempted ? 0 : 1)
+            : result.exit_code === 0);
+      const operationPassed = result.operation === (chatOperation ? "chat" : addOperation ? "add" : priorityOperation ? "priority" : removeOperation ? "remove" : resetOperation ? "reset" : "list")
         && result.observations.phase === operation
         && result.observations.provider === (siwcUnbound ? "openai-chatgpt" : "openai-codex")
         && result.observations.access_generation === expectedGeneration
-        && (!fixtureStep || result.observations.catalog_access_generation === (chatOperation ? fixtureStep.expectedGeneration : null))
+        && (!fixtureStep || (rateLimitStep
+          ? result.observations.catalog_access_generation === "added" || result.observations.fallback_attempted && result.observations.catalog_access_generation === "stale"
+          : result.observations.catalog_access_generation === (chatOperation ? fixtureStep.expectedGeneration : null)))
         && result.observations.network_denials.length === 0
         && result.observations.socket_origin === null
         && result.observations.token_hygiene
-        && !result.observations.fallback_attempted
+        && (rateLimitStep || !result.observations.fallback_attempted)
         && result.observations.storage_fault_triggered === (saveFault && addOperation)
         && (!deniedGrant || result.observations.success_claim_absent)
         && result.public_argv.length === expectedArgv.length
@@ -476,10 +533,11 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
         && markerMatches
         && countMatches
         && (!fixtureStep || priorityOperation || !listOperation || result.observations.target_label_present === fixtureStep.expectedLabelPresent)
+        && (lifecycleStep?.caseId !== "reset-target-readback" || !result.markers.includes("AUTH_LIST_TARGET_RATE_LIMITED"))
         && result.network_audit === "socket-audit-hook-installed"
         && ledgerMatches
         && profileStoreVerified
-        && (borrowedRoot ? borrowedRootStoreVerified : mixedLineage ? mixedLineageRootStoreVerified : profileSiblings ? true : rootStoreUnchanged)
+        && (lifecycle ? lifecycleRootStoreVerified : borrowedRoot ? borrowedRootStoreVerified : mixedLineage ? mixedLineageRootStoreVerified : profileSiblings ? true : rootStoreUnchanged)
         && (!siblingStep || (rootScope ? siblingRootAddPersisted || siblingRootStoreUnchanged : siblingRootStoreUnchanged))
         && (!siblingStep || (rootScope ? siblingProfileStoreUnchanged : !addOperation || siblingProfileAddPersisted))
         && identityMatches;
@@ -493,7 +551,7 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
         operationPassed ? "PASS" : "FAIL",
         operationPassed ? `NATIVE_AUTH_FIXTURE_${operation.toUpperCase().replaceAll("-", "_")}_OBSERVED` : "NATIVE_AUTH_FIXTURE_OPERATION_FAILED",
         {
-          ...(operation === firstOperation && !profileSiblings && !mixedLineage ? { profileCreate: {
+          ...(operation === firstOperation && !profileSiblings && !mixedLineage && (!lifecycle || operationIndex === 0) ? { profileCreate: {
             publicArgv: ["hermes", ...profileCreateArgs],
             exitCode: profileCreate.result.status,
             profileCreated: true,
@@ -510,10 +568,11 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
           gidMatches: typeof process.getgid === "function" && identity.gid === process.getgid(),
           childStdoutDigest: digest(child.result.stdout),
           childStderrDigest: stderrDigest,
-          ...(!profileSiblings && !mixedLineage ? storeEvidence : {}),
+          ...(!profileSiblings && !mixedLineage && !lifecycle ? storeEvidence : {}),
           ...(borrowedRoot ? { caseId: borrowedCase, storeScope: rootScope ? "root" : "profile", borrowedRootStoreVerified, profileCopyAbsent: profileStoreVerified } : {}),
           ...(siblingStep ? { caseId: siblingStep.caseId, storeScope: siblingStep.scope, label: siblingStep.label, expectedCount: siblingStep.expectedCount ?? null, expectedGeneration: siblingStep.expectedGeneration ?? null, rootAuth: storesAfterOperation.rootAuth, rootEnv: storesAfterOperation.rootEnv, profileAuth: storesAfterOperation.profileAuth, rootStoreUnchanged: siblingRootStoreUnchanged, rootAddPersisted: siblingRootAddPersisted, profileStoreUnchanged: siblingProfileStoreUnchanged, profileAddPersisted: siblingProfileAddPersisted } : {}),
           ...(mixedStep ? { caseId: mixedStep.caseId, storeScope: mixedStep.scope, label: mixedStep.label, expectedCount: mixedStep.expectedCount ?? null, expectedGeneration: mixedStep.expectedGeneration ?? null, rootAuthBefore: storesBeforeOperation.rootAuth.digest, rootAuthAfter: storesAfterOperation.rootAuth.digest, rootEnvAfter: storesAfterOperation.rootEnv.digest, rootEnvUnchanged: mixedRootEnvUnchanged, profileAuthBefore: storesBeforeOperation.profileAuth.digest, profileAuthAfter: storesAfterOperation.profileAuth.digest, rootStoreVerified: mixedLineageRootStoreVerified, profileStoreVerified: mixedLineageProfileStoreVerified, ...(mixedStep.caseId === "copied-lineage-heal" ? { copyDigestsEqual: mixedCopySeed?.equal ?? false } : {}) } : {}),
+          ...(lifecycleStep ? { caseId: lifecycleStep.caseId, storeScope: lifecycleStep.scope, label: lifecycleStep.label, expectedCount: lifecycleStep.expectedCount ?? null, expectedLabelPresent: lifecycleStep.expectedLabelPresent ?? null, expectedGeneration: lifecycleStep.expectedGeneration ?? null, rootAuthBefore: storesBeforeOperation.rootAuth, rootAuthAfter: storesAfterOperation.rootAuth, rootEnvBefore: storesBeforeOperation.rootEnv, rootEnvAfter: storesAfterOperation.rootEnv, profileAuthBefore: storesBeforeOperation.profileAuth, profileAuthAfter: storesAfterOperation.profileAuth, rootStoreVerified: lifecycleRootStoreVerified, profileStoreVerified: lifecycleProfileStoreVerified } : {}),
           wholeATComplete: false
         },
         [...artifacts, archiveDigest, profileCreateDigest, commandDigest]
@@ -522,6 +581,7 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
       if (!operationPassed) return operationChecks;
       if (mixedStep?.caseId === "copied-lineage-heal") mixedHealedProfileAuth = storesAfterOperation.profileAuth;
       previousRootAuth = storesAfterOperation.rootAuth;
+      if (lifecycleStep?.caseId === "root-add") lifecycleRootBaseline = { rootAuth: storesAfterOperation.rootAuth, rootEnv: storesAfterOperation.rootEnv };
       if (siblingStep?.scope === "root" && addOperation && operationIndex === 1) profileSiblingRootBaseline = { rootAuth: storesAfterOperation.rootAuth, rootEnv: storesAfterOperation.rootEnv };
     }
     if (concurrentRun) {
