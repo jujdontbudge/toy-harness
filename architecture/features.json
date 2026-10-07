@@ -4158,6 +4158,36 @@
         "AT-authority-61",
         "AT-adhd-features-106"
       ]
+    },
+    {
+      "id": "engineering.client-activity-requirements",
+      "description": "Resolve Client and Activity research requirement mappings from canonical consumer aliases and reject missing, unsupported, unresolved or unvalidated comparisons; native compatibility and whole build activation remain pending.",
+      "implementation": "built",
+      "requirementIds": [
+        "spec:client-apps",
+        "spec:activity-focus"
+      ],
+      "entry": "docs/adr/0059-client-activity-requirement-mapping.md",
+      "owner": "self-improvement",
+      "publicInterface": "EngineeringControl.checkResearch",
+      "paths": [
+        "docs/adr/0059-client-activity-requirement-mapping.md",
+        "packages/self-improvement/src/engineering-control.ts",
+        "packages/self-improvement/src/component-comparison-probe.ts",
+        "packages/self-improvement/src/public.ts",
+        "packages/ops/src/fixture-stack.ts",
+        "tests/registry.yaml"
+      ],
+      "firstRelease": "R0",
+      "commands": [
+        "research.check",
+        "probe.run",
+        "probe.show"
+      ],
+      "atIds": [
+        "AT-client-apps-45",
+        "AT-activity-focus-61"
+      ]
     }
   ],
   "requirements": [

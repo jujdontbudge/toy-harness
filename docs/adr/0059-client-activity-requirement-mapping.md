@@ -1,0 +1,9 @@
+# Client and Activity component requirement mapping
+
+EngineeringControl.checkResearch retains its ResearchRegisterInspectionV4 public interface. Each generic component decision additionally requires the README requirement IDs assigned to client-apps.md and activity-focus.md when the component declares those consuming specs in RESEARCH-REGISTER.md. The owner resolves C and D through the canonical abbreviation legend; a component ID beginning with D still denotes the Sources inventory and does not by itself select Activity. The leading consumer expression before a semicolon is authoritative. All/all consumers include both specs; a superseded reference in later prose does not enable the live consumer.
+
+The existing Ops component-group requirements remain additive. Life Store's full-content records retain their existing scope and canonical quote checks, with the additional Client/Activity IDs checked when relevant. The separate Attention and ADHD feature decisions retain their own requirement mappings. No DTO version, store, native adapter or activation service is added.
+
+Registered unfiltered toy CLI probes for AT-client-apps-45 and AT-activity-focus-61 check the distinct consumer scopes and exercise a representative complete comparison, absent comparison, missing module requirement, missing indexed primary support, unsupported selection, unresolved selected compatibility and absent validation receipt through the real owner with external report fakes. PASS is bounded comparison evidence. Actual research-route/account evidence, native supported API compatibility, protected build activation and whole assigned AT/card completion remain pending.
+
+The source/proof unit stops at the first passing implementation run or three assigned runs, within two hours. Swift generation and compilation remain deferred to R3.

@@ -25,6 +25,7 @@ const completeReport = (): ResearchComponentComparisonV1 => researchComponentCom
   validationPlan: "Run the pinned shared-connection rollback, lost-claim fencing and generated-schema CLI fault probe before component admission."
 });
 export const componentComparisonProbe = (input: RegisteredProbeInputV1, context: OpsControlContextV1): Result<RegisteredProbeOperationV1> => {
+  if (["AT-client-apps-45", "AT-activity-focus-61"].includes(input.probeId)) return clientActivityRequirementProbe(input, context);
   if (input.probeId === "AT-adhd-features-66") return adhdFeatureResearchProbe(input, context);
   if (input.probeId === "AT-lifestore-45") return lifeStoreQuoteProbe(input, context);
   if (["AT-sources-188", "AT-sources-190"].includes(input.probeId)) return sourcesComponentProbe(input, context);
@@ -61,6 +62,70 @@ export const componentComparisonProbe = (input: RegisteredProbeInputV1, context:
       prerequisite: JSON.stringify({ caseId, externalResearch: "seeded_archived_report", actualUid: process.getuid?.() ?? null, archive: { key: archive.key, path: archive.path, originalDigest: archive.originalDigest, contentDigest: archive.digest, origin: archive.origin }, result: observed, registerAdmission: inspection.data.admission, liveProviderSends: 0, wholeATComplete: false }),
       nextCommandId: "probe.show", links: { recordRefs: [], observations: [], artifactDigests: [digest(markdown), digest(JSON.stringify(report)), digest(readFileSync(new URL("./component-comparison-probe.js", import.meta.url))), digest(readFileSync(new URL("./engineering-control.js", import.meta.url)))] }
     }));
+  }
+  return TestProbeControl.run(input, context, checks);
+};
+const clientActivityRequirementCases = ["module-consumer-scope", "complete-supported-comparison", "missing-module-requirement", "missing-primary-report", "unsupported-selection", "unresolved-selected-compatibility", "missing-validation-receipt", "missing-comparison"];
+const clientActivityRequirementProbe = (input: RegisteredProbeInputV1, context: OpsControlContextV1): Result<RegisteredProbeOperationV1> => {
+  if (input.caseId !== undefined) return lifeStoreError();
+  const manifest = registeredCliAcceptanceManifestInventory.find(entry => entry.id === input.probeId);
+  if (!manifest || manifest.scenarioId !== "research.component-comparison" || JSON.stringify(manifest.mandatoryCases.map(entry => entry.id)) !== JSON.stringify(clientActivityRequirementCases)) return lifeStoreError();
+  const baseline = EngineeringControl.checkResearch({ release: "R0" }, context);
+  if (!baseline.ok) return baseline;
+  const globalIds = ["0.1", "0.2", "0.10"];
+  const clientIds = ["0.6", "0.7", "0.8", "1.12", "3.2", "3.3", "3.4", "3.5", "3.6"];
+  const activityIds = ["5.4", "5.6", "5.7", "7.1", "7.2", "7.3"];
+  const expectedScopes = new Map([
+    ["B06", [...globalIds, ...clientIds, ...activityIds]],
+    ["C01", [...globalIds, ...activityIds]],
+    ["D10", [...globalIds, "0.9", ...clientIds]],
+    ["C18", globalIds],
+    ["B01", [...globalIds, ...clientIds, ...activityIds]],
+    ["M02", [...globalIds, ...clientIds]]
+  ]);
+  const component = baseline.data.components.find(entry => entry.id === "B06");
+  const archive = baseline.data.reports.find(entry => component?.reportKeys.includes(entry.key) && entry.originalDigest !== null);
+  const requiredIds = expectedScopes.get("B06");
+  if (!component || !archive?.originalDigest || !requiredIds) return lifeStoreError();
+  const original = readFileSync(join(trustedCheckoutRoot(), "..", "personal-assistant-harness", archive.path), "utf8");
+  if (digest(original) !== archive.originalDigest) return lifeStoreError();
+  const exact = (actual: readonly string[], expected: readonly string[]): boolean => JSON.stringify([...actual].sort()) === JSON.stringify([...expected].sort());
+  const validationId = "G0:R0:" + component.id;
+  const removedId = input.probeId === "AT-client-apps-45" ? "0.6" : "5.6";
+  const checks: CheckViewV1[] = [];
+  for (const caseId of clientActivityRequirementCases) {
+    const template = completeReport();
+    const report = researchComponentComparisonV2Schema.parse({ ...template, scope: "required-component", componentId: component.id, mappedRequirements: requiredIds, selectedOptionId: "outside", releaseGate: component.releaseGate, acceptanceIds: [input.probeId], evidence: [...template.evidence, ...component.reportKeys.map(id => ({ id, url: "https://fixture.invalid/" + id, publisher: "Seeded indexed primary report", kind: "primary", supportedOptionIds: template.options.map(option => option.id) }))], validations: [{ id: validationId, support: "proven", sourceIds: component.reportKeys, testIds: [input.probeId] }] });
+    if (caseId === "missing-module-requirement") report.mappedRequirements = report.mappedRequirements.filter(id => id !== removedId);
+    if (caseId === "missing-primary-report") report.evidence = report.evidence.filter(source => source.id !== archive.key);
+    if (caseId === "unsupported-selection") {
+      const selected = report.options.find(option => option.id === report.selectedOptionId);
+      if (!selected) return lifeStoreError();
+      selected.support = "unsupported";
+    }
+    if (caseId === "unresolved-selected-compatibility") report.unresolvedFacts = [{ optionId: report.selectedOptionId, fact: "Supported host compatibility has no validation evidence." }];
+    if (caseId === "missing-validation-receipt") report.validations = [];
+    const markdown = original + "\n```ResearchComponentComparisonV2\n" + JSON.stringify(report) + "\n```\n";
+    const documents: ResearchDocumentOverlayV1[] = caseId === "module-consumer-scope" || caseId === "missing-comparison" ? [] : [{ reportKey: archive.key, originalDigest: archive.originalDigest, markdown, contentDigest: digest(markdown) }];
+    const inspection = EngineeringControl.checkResearch({ release: "R0" }, context, documents);
+    if (!inspection.ok) return inspection;
+    const observed = inspection.data.componentDecisions.find(entry => entry.componentId === component.id);
+    const bound = inspection.data.reports.find(entry => entry.key === archive.key);
+    if (!observed || !bound) return lifeStoreError();
+    const scopes = [...expectedScopes].map(([componentId, requirementIds]) => {
+      const decision = inspection.data.componentDecisions.find(entry => entry.componentId === componentId);
+      return { componentId, expectedRequirementIds: requirementIds, observedRequirementIds: decision?.missingRequirementIds ?? [], comparisonAbsent: decision?.comparisonDigest === null, exact: decision !== undefined && decision.comparisonDigest === null && exact(decision.missingRequirementIds, requirementIds) };
+    });
+    const passed = caseId === "module-consumer-scope" ? scopes.every(scope => scope.exact)
+      : caseId === "complete-supported-comparison" ? observed.state === "PASS" && observed.findings.length === 0 && observed.missingRequirementIds.length === 0 && observed.selectedOptionId === "outside"
+        : caseId === "missing-module-requirement" ? observed.state === "BLOCKED" && observed.findings.includes("MAPPED_REQUIREMENTS_MISSING") && exact(observed.missingRequirementIds, [removedId])
+          : caseId === "missing-primary-report" ? observed.state === "BLOCKED" && observed.findings.includes("PRIMARY_EVIDENCE_MISSING") && observed.missingSourceIds.includes(archive.key)
+            : caseId === "unsupported-selection" ? observed.state === "BLOCKED" && observed.findings.includes("CHOICE_UNSUPPORTED")
+              : caseId === "unresolved-selected-compatibility" ? observed.state === "BLOCKED" && observed.findings.includes("SELECTED_FACT_UNRESOLVED")
+                : caseId === "missing-validation-receipt" ? observed.state === "BLOCKED" && exact(observed.missingValidationIds, [validationId])
+                  : observed.state === "BLOCKED" && observed.comparisonDigest === null && observed.findings.includes("DECISION_MISSING") && exact(observed.missingRequirementIds, requiredIds);
+    const archiveBound = bound.path === archive.path && bound.originalDigest === archive.originalDigest && (documents.length === 0 ? bound.digest === archive.originalDigest && bound.origin === "planning_archive" : bound.digest === documents[0]?.contentDigest && bound.origin === "seeded_document");
+    checks.push(checkViewSchema.parse({ id: "research.component-comparison", owner: "self-improvement", state: passed && archiveBound ? "PASS" : "FAIL", checkedAt: new Date().toISOString(), reasonCode: passed && archiveBound ? "CLIENT_ACTIVITY_REQUIREMENTS_PASS" : "CLIENT_ACTIVITY_REQUIREMENTS_FAIL", prerequisite: JSON.stringify({ caseId, componentId: component.id, removedRequirementId: caseId === "missing-module-requirement" ? removedId : null, result: caseId === "module-consumer-scope" ? scopes : observed, archiveBound, registerAdmission: inspection.data.admission, liveProviderSends: 0, wholeATComplete: false }), nextCommandId: "probe.show", links: { recordRefs: [], observations: [], artifactDigests: [digest(JSON.stringify(documents)), digest(JSON.stringify(scopes)), digest(readFileSync(new URL("./component-comparison-probe.js", import.meta.url))), digest(readFileSync(new URL("./engineering-control.js", import.meta.url)))] } }));
   }
   return TestProbeControl.run(input, context, checks);
 };

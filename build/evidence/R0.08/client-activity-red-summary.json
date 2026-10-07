@@ -1,0 +1,555 @@
+{
+  "recordedAt": "2026-10-07T10:53:21.695Z",
+  "rung": "CLI",
+  "unfiltered": true,
+  "wholeATComplete": false,
+  "liveProviderSends": 0,
+  "nativeAttempt": 1,
+  "admissionEvidence": "build/evidence/R0.08/client-activity-red-memory.json",
+  "probes": [
+    {
+      "probeId": "AT-client-apps-45",
+      "run": {
+        "exitCode": 1,
+        "path": "build/evidence/R0.08/client-activity-red/AT-client-apps-45-run.json",
+        "sha256": "b7b43ac8b0e0710afe2a4e37ce88aa04ffba4188a873b15b7ef16731c37e3063"
+      },
+      "operationId": "1de311d8-0195-480f-b042-a74e81101da8",
+      "show": {
+        "exitCode": 1,
+        "path": "build/evidence/R0.08/client-activity-red/AT-client-apps-45-show.json",
+        "sha256": "1f4672dec1e70618550582365710399fdb971a4bd44a5ea6207345e92a5fca71"
+      },
+      "sameData": true,
+      "sourceRegistration": {
+        "id": "AT-client-apps-45",
+        "rung": "CLI",
+        "sourceAssertionHash": "dda8cc6be5b129288c02c43527cbac8f8bd17f17e295582b8a4d50d6ae55e0f2",
+        "commandId": "probe.run",
+        "scenarioId": "research.component-comparison",
+        "owner": "self-improvement",
+        "firstRelease": "R0",
+        "kind": "static_gate",
+        "mandatoryCases": [
+          {
+            "id": "module-consumer-scope",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "module-consumer-scope"
+          },
+          {
+            "id": "complete-supported-comparison",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "complete-supported-comparison"
+          },
+          {
+            "id": "missing-module-requirement",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-module-requirement"
+          },
+          {
+            "id": "missing-primary-report",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-primary-report"
+          },
+          {
+            "id": "unsupported-selection",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "unsupported-selection"
+          },
+          {
+            "id": "unresolved-selected-compatibility",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "unresolved-selected-compatibility"
+          },
+          {
+            "id": "missing-validation-receipt",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-validation-receipt"
+          },
+          {
+            "id": "missing-comparison",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-comparison"
+          }
+        ],
+        "trigger": "Resolve canonical Client/Activity consuming-spec requirement IDs; prove distinct alias scopes and complete/missing/unsupported/unresolved/unvalidated comparisons through the existing owner. Whole build admission remains pending.",
+        "faultControls": [
+          {
+            "id": "external-client-activity-comparison-report",
+            "seam": "provider",
+            "affectedPhases": [
+              "missing-module-requirement",
+              "missing-primary-report",
+              "unsupported-selection",
+              "unresolved-selected-compatibility",
+              "missing-validation-receipt",
+              "missing-comparison"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "persisted-owner-comparison-readback",
+            "independentReader": "toy probe show",
+            "caseIds": [
+              "module-consumer-scope",
+              "complete-supported-comparison",
+              "missing-module-requirement",
+              "missing-primary-report",
+              "unsupported-selection",
+              "unresolved-selected-compatibility",
+              "missing-validation-receipt",
+              "missing-comparison"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot author administrative pre-build comparison records. The registered CLI reaches the real owner with an external report fake; no native compatibility or activation is inferred."
+      },
+      "registrationExact": false,
+      "cases": [
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "FAIL",
+          "checkedAt": "2026-10-07T10:53:22.623Z",
+          "reasonCode": "CLIENT_ACTIVITY_REQUIREMENTS_FAIL",
+          "prerequisite": "{\"caseId\":\"module-consumer-scope\",\"componentId\":\"B06\",\"removedRequirementId\":null,\"result\":[{\"componentId\":\"B06\",\"expectedRequirementIds\":[\"0.1\",\"0.2\",\"0.10\",\"0.6\",\"0.7\",\"0.8\",\"1.12\",\"3.2\",\"3.3\",\"3.4\",\"3.5\",\"3.6\",\"5.4\",\"5.6\",\"5.7\",\"7.1\",\"7.2\",\"7.3\"],\"observedRequirementIds\":[\"0.1\",\"0.2\",\"0.10\"],\"comparisonAbsent\":true,\"exact\":false},{\"componentId\":\"C01\",\"expectedRequirementIds\":[\"0.1\",\"0.2\",\"0.10\",\"5.4\",\"5.6\",\"5.7\",\"7.1\",\"7.2\",\"7.3\"],\"observedRequirementIds\":[\"0.1\",\"0.2\",\"0.10\"],\"comparisonAbsent\":true,\"exact\":false},{\"componentId\":\"D10\",\"expectedRequirementIds\":[\"0.1\",\"0.2\",\"0.10\",\"0.9\",\"0.6\",\"0.7\",\"0.8\",\"1.12\",\"3.2\",\"3.3\",\"3.4\",\"3.5\",\"3.6\"],\"observedRequirementIds\":[\"0.1\",\"0.2\",\"0.10\",\"0.9\"],\"comparisonAbsent\":true,\"exact\":false},{\"componentId\":\"C18\",\"expectedRequirementIds\":[\"0.1\",\"0.2\",\"0.10\"],\"observedRequirementIds\":[\"0.1\",\"0.2\",\"0.10\"],\"comparisonAbsent\":true,\"exact\":true},{\"componentId\":\"B01\",\"expectedRequirementIds\":[\"0.1\",\"0.2\",\"0.10\",\"0.6\",\"0.7\",\"0.8\",\"1.12\",\"3.2\",\"3.3\",\"3.4\",\"3.5\",\"3.6\",\"5.4\",\"5.6\",\"5.7\",\"7.1\",\"7.2\",\"7.3\"],\"observedRequirementIds\":[\"0.1\",\"0.2\",\"0.10\"],\"comparisonAbsent\":true,\"exact\":false},{\"componentId\":\"M02\",\"expectedRequirementIds\":[\"0.1\",\"0.2\",\"0.10\",\"0.6\",\"0.7\",\"0.8\",\"1.12\",\"3.2\",\"3.3\",\"3.4\",\"3.5\",\"3.6\"],\"observedRequirementIds\":[\"0.1\",\"0.2\",\"0.10\"],\"comparisonAbsent\":true,\"exact\":false}],\"archiveBound\":true,\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+              "be1356fb34a2e525ce8ab60daf0c547b958bf008fffb49fb3e153b534dcc1f92",
+              "99085402962263da9db4573e3fded046297009a67510e8b4befd8f4b604e7caa",
+              "e62055f8a2a763ba0899c0d5fa603857bc6e3899ac70057213a5ac6b9efa8fc6"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T10:53:22.752Z",
+          "reasonCode": "CLIENT_ACTIVITY_REQUIREMENTS_PASS",
+          "prerequisite": "{\"caseId\":\"complete-supported-comparison\",\"componentId\":\"B06\",\"removedRequirementId\":null,\"result\":{\"componentId\":\"B06\",\"comparisonDigest\":\"6298e3d4fdfd713c8eccb777c49db49adcd99109ae4ceb7b713756e044e0bf80\",\"state\":\"PASS\",\"findings\":[],\"selectedTool\":\"Self-hosted workflow engine\",\"validationPlan\":\"Run the pinned shared-connection rollback, lost-claim fencing and generated-schema CLI fault probe before component admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"outside\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[]},\"archiveBound\":true,\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "26a89f2b6cff2a3cbb8c3160b676b3a750d1fa7ffaf8426406d52e060a774283",
+              "6e5301276ab43baf8006b2a675905c4dc18a4532049061e655899b1fa586bcf0",
+              "99085402962263da9db4573e3fded046297009a67510e8b4befd8f4b604e7caa",
+              "e62055f8a2a763ba0899c0d5fa603857bc6e3899ac70057213a5ac6b9efa8fc6"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "FAIL",
+          "checkedAt": "2026-10-07T10:53:22.881Z",
+          "reasonCode": "CLIENT_ACTIVITY_REQUIREMENTS_FAIL",
+          "prerequisite": "{\"caseId\":\"missing-module-requirement\",\"componentId\":\"B06\",\"removedRequirementId\":\"0.6\",\"result\":{\"componentId\":\"B06\",\"comparisonDigest\":\"7b1551955d077f7cf886e46b275dd37c4b877e93445edf41131f2aff61424617\",\"state\":\"PASS\",\"findings\":[],\"selectedTool\":\"Self-hosted workflow engine\",\"validationPlan\":\"Run the pinned shared-connection rollback, lost-claim fencing and generated-schema CLI fault probe before component admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"outside\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[]},\"archiveBound\":true,\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "497e094331ffbf921db3ff813ffd10e41555984f6d6cfce07ec4bf90cf292e9c",
+              "6e5301276ab43baf8006b2a675905c4dc18a4532049061e655899b1fa586bcf0",
+              "99085402962263da9db4573e3fded046297009a67510e8b4befd8f4b604e7caa",
+              "e62055f8a2a763ba0899c0d5fa603857bc6e3899ac70057213a5ac6b9efa8fc6"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T10:53:23.007Z",
+          "reasonCode": "CLIENT_ACTIVITY_REQUIREMENTS_PASS",
+          "prerequisite": "{\"caseId\":\"missing-primary-report\",\"componentId\":\"B06\",\"removedRequirementId\":null,\"result\":{\"componentId\":\"B06\",\"comparisonDigest\":\"08460817a9131b80c91f8092a13511ccb32a2e9ba5b88becebc00e540b8af4e1\",\"state\":\"BLOCKED\",\"findings\":[\"PRIMARY_EVIDENCE_MISSING\",\"VALIDATION_ID_MISSING\"],\"selectedTool\":\"Self-hosted workflow engine\",\"validationPlan\":\"Run the pinned shared-connection rollback, lost-claim fencing and generated-schema CLI fault probe before component admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"outside\",\"missingRequirementIds\":[],\"missingSourceIds\":[\"TS\"],\"missingValidationIds\":[\"G0:R0:B06\"]},\"archiveBound\":true,\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "ac72fced7695c05f4437915666bbec3c183f8c82f1d66eab9abb016de4e10725",
+              "6e5301276ab43baf8006b2a675905c4dc18a4532049061e655899b1fa586bcf0",
+              "99085402962263da9db4573e3fded046297009a67510e8b4befd8f4b604e7caa",
+              "e62055f8a2a763ba0899c0d5fa603857bc6e3899ac70057213a5ac6b9efa8fc6"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T10:53:23.130Z",
+          "reasonCode": "CLIENT_ACTIVITY_REQUIREMENTS_PASS",
+          "prerequisite": "{\"caseId\":\"unsupported-selection\",\"componentId\":\"B06\",\"removedRequirementId\":null,\"result\":{\"componentId\":\"B06\",\"comparisonDigest\":\"b8fbaef06c6298e46a66682ce076b8890267cfba5e4d2f65e04bcf6a40f066e8\",\"state\":\"BLOCKED\",\"findings\":[\"CHOICE_UNSUPPORTED\"],\"selectedTool\":\"Self-hosted workflow engine\",\"validationPlan\":\"Run the pinned shared-connection rollback, lost-claim fencing and generated-schema CLI fault probe before component admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"outside\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[]},\"archiveBound\":true,\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "c17cce2e64a359f9057bb937584d24833e37e3baea338ce779e8cb51f472607e",
+              "6e5301276ab43baf8006b2a675905c4dc18a4532049061e655899b1fa586bcf0",
+              "99085402962263da9db4573e3fded046297009a67510e8b4befd8f4b604e7caa",
+              "e62055f8a2a763ba0899c0d5fa603857bc6e3899ac70057213a5ac6b9efa8fc6"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T10:53:23.254Z",
+          "reasonCode": "CLIENT_ACTIVITY_REQUIREMENTS_PASS",
+          "prerequisite": "{\"caseId\":\"unresolved-selected-compatibility\",\"componentId\":\"B06\",\"removedRequirementId\":null,\"result\":{\"componentId\":\"B06\",\"comparisonDigest\":\"adcb2dc3541ec46cecbb8aafb582c22cf5115b61de84feeafb78df9c272af0df\",\"state\":\"BLOCKED\",\"findings\":[\"SELECTED_FACT_UNRESOLVED\"],\"selectedTool\":\"Self-hosted workflow engine\",\"validationPlan\":\"Run the pinned shared-connection rollback, lost-claim fencing and generated-schema CLI fault probe before component admission.\",\"unresolvedFacts\":[{\"optionId\":\"outside\",\"fact\":\"Supported host compatibility has no validation evidence.\"}],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"outside\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[]},\"archiveBound\":true,\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "2745d23b7aadc18bdd0d03a9a8834fd3cbe71ce961339bbabf5ad1dd9007f2f1",
+              "6e5301276ab43baf8006b2a675905c4dc18a4532049061e655899b1fa586bcf0",
+              "99085402962263da9db4573e3fded046297009a67510e8b4befd8f4b604e7caa",
+              "e62055f8a2a763ba0899c0d5fa603857bc6e3899ac70057213a5ac6b9efa8fc6"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T10:53:23.377Z",
+          "reasonCode": "CLIENT_ACTIVITY_REQUIREMENTS_PASS",
+          "prerequisite": "{\"caseId\":\"missing-validation-receipt\",\"componentId\":\"B06\",\"removedRequirementId\":null,\"result\":{\"componentId\":\"B06\",\"comparisonDigest\":\"90db872198ab5a3a93b333d7fe0f6ef24bf673deb8f2dce1ddf3889c7609bee6\",\"state\":\"BLOCKED\",\"findings\":[\"VALIDATION_ID_MISSING\"],\"selectedTool\":\"Self-hosted workflow engine\",\"validationPlan\":\"Run the pinned shared-connection rollback, lost-claim fencing and generated-schema CLI fault probe before component admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"outside\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[\"G0:R0:B06\"]},\"archiveBound\":true,\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "7370a203ec9365d71e12c305621d10ac2fcc23767063fed78b82f48abd4a0b44",
+              "6e5301276ab43baf8006b2a675905c4dc18a4532049061e655899b1fa586bcf0",
+              "99085402962263da9db4573e3fded046297009a67510e8b4befd8f4b604e7caa",
+              "e62055f8a2a763ba0899c0d5fa603857bc6e3899ac70057213a5ac6b9efa8fc6"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "FAIL",
+          "checkedAt": "2026-10-07T10:53:23.498Z",
+          "reasonCode": "CLIENT_ACTIVITY_REQUIREMENTS_FAIL",
+          "prerequisite": "{\"caseId\":\"missing-comparison\",\"componentId\":\"B06\",\"removedRequirementId\":null,\"result\":{\"componentId\":\"B06\",\"comparisonDigest\":null,\"state\":\"BLOCKED\",\"findings\":[\"DECISION_MISSING\",\"REQUIRED_OPTIONS_MISSING\",\"CHOICE_UNSUPPORTED\",\"PRIMARY_EVIDENCE_MISSING\",\"RELEASE_GATE_MISSING\",\"VALIDATION_PLAN_MISSING\",\"ACCEPTANCE_LINK_MISSING\",\"MAPPED_REQUIREMENTS_MISSING\",\"VALIDATION_ID_MISSING\"],\"selectedTool\":null,\"validationPlan\":\"\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":null,\"missingRequirementIds\":[\"0.1\",\"0.2\",\"0.10\"],\"missingSourceIds\":[\"TS\",\"GUI\"],\"missingValidationIds\":[\"G0:R0:B06\"]},\"archiveBound\":true,\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+              "be1356fb34a2e525ce8ab60daf0c547b958bf008fffb49fb3e153b534dcc1f92",
+              "99085402962263da9db4573e3fded046297009a67510e8b4befd8f4b604e7caa",
+              "e62055f8a2a763ba0899c0d5fa603857bc6e3899ac70057213a5ac6b9efa8fc6"
+            ]
+          }
+        }
+      ],
+      "resultState": "NOT_IMPLEMENTED",
+      "complete": false
+    },
+    {
+      "probeId": "AT-activity-focus-61",
+      "run": {
+        "exitCode": 1,
+        "path": "build/evidence/R0.08/client-activity-red/AT-activity-focus-61-run.json",
+        "sha256": "80c238a2a73f2461895a4c39c63a3ce8cb8249ed74eb053afef93bf03cdafa4c"
+      },
+      "operationId": "513d8fee-745c-43b3-9062-f7e3be1cf852",
+      "show": {
+        "exitCode": 1,
+        "path": "build/evidence/R0.08/client-activity-red/AT-activity-focus-61-show.json",
+        "sha256": "2d0c960d82c2b792c7ceef82d1ce886eace16f7d571284391ae642c0bd7a98e5"
+      },
+      "sameData": true,
+      "sourceRegistration": {
+        "id": "AT-activity-focus-61",
+        "rung": "CLI",
+        "sourceAssertionHash": "23d331a7127a349b3d7166e6151174d0acfade8f6489a62ba0541c88e66406ba",
+        "commandId": "probe.run",
+        "scenarioId": "research.component-comparison",
+        "owner": "self-improvement",
+        "firstRelease": "R0",
+        "kind": "static_gate",
+        "mandatoryCases": [
+          {
+            "id": "module-consumer-scope",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "module-consumer-scope"
+          },
+          {
+            "id": "complete-supported-comparison",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "complete-supported-comparison"
+          },
+          {
+            "id": "missing-module-requirement",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-module-requirement"
+          },
+          {
+            "id": "missing-primary-report",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-primary-report"
+          },
+          {
+            "id": "unsupported-selection",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "unsupported-selection"
+          },
+          {
+            "id": "unresolved-selected-compatibility",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "unresolved-selected-compatibility"
+          },
+          {
+            "id": "missing-validation-receipt",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-validation-receipt"
+          },
+          {
+            "id": "missing-comparison",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-comparison"
+          }
+        ],
+        "trigger": "Resolve canonical Client/Activity consuming-spec requirement IDs; prove distinct alias scopes and complete/missing/unsupported/unresolved/unvalidated comparisons through the existing owner. Whole build admission remains pending.",
+        "faultControls": [
+          {
+            "id": "external-client-activity-comparison-report",
+            "seam": "provider",
+            "affectedPhases": [
+              "missing-module-requirement",
+              "missing-primary-report",
+              "unsupported-selection",
+              "unresolved-selected-compatibility",
+              "missing-validation-receipt",
+              "missing-comparison"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "persisted-owner-comparison-readback",
+            "independentReader": "toy probe show",
+            "caseIds": [
+              "module-consumer-scope",
+              "complete-supported-comparison",
+              "missing-module-requirement",
+              "missing-primary-report",
+              "unsupported-selection",
+              "unresolved-selected-compatibility",
+              "missing-validation-receipt",
+              "missing-comparison"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot author administrative pre-build comparison records. The registered CLI reaches the real owner with an external report fake; no native compatibility or activation is inferred."
+      },
+      "registrationExact": false,
+      "cases": [
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "FAIL",
+          "checkedAt": "2026-10-07T10:53:24.312Z",
+          "reasonCode": "CLIENT_ACTIVITY_REQUIREMENTS_FAIL",
+          "prerequisite": "{\"caseId\":\"module-consumer-scope\",\"componentId\":\"B06\",\"removedRequirementId\":null,\"result\":[{\"componentId\":\"B06\",\"expectedRequirementIds\":[\"0.1\",\"0.2\",\"0.10\",\"0.6\",\"0.7\",\"0.8\",\"1.12\",\"3.2\",\"3.3\",\"3.4\",\"3.5\",\"3.6\",\"5.4\",\"5.6\",\"5.7\",\"7.1\",\"7.2\",\"7.3\"],\"observedRequirementIds\":[\"0.1\",\"0.2\",\"0.10\"],\"comparisonAbsent\":true,\"exact\":false},{\"componentId\":\"C01\",\"expectedRequirementIds\":[\"0.1\",\"0.2\",\"0.10\",\"5.4\",\"5.6\",\"5.7\",\"7.1\",\"7.2\",\"7.3\"],\"observedRequirementIds\":[\"0.1\",\"0.2\",\"0.10\"],\"comparisonAbsent\":true,\"exact\":false},{\"componentId\":\"D10\",\"expectedRequirementIds\":[\"0.1\",\"0.2\",\"0.10\",\"0.9\",\"0.6\",\"0.7\",\"0.8\",\"1.12\",\"3.2\",\"3.3\",\"3.4\",\"3.5\",\"3.6\"],\"observedRequirementIds\":[\"0.1\",\"0.2\",\"0.10\",\"0.9\"],\"comparisonAbsent\":true,\"exact\":false},{\"componentId\":\"C18\",\"expectedRequirementIds\":[\"0.1\",\"0.2\",\"0.10\"],\"observedRequirementIds\":[\"0.1\",\"0.2\",\"0.10\"],\"comparisonAbsent\":true,\"exact\":true},{\"componentId\":\"B01\",\"expectedRequirementIds\":[\"0.1\",\"0.2\",\"0.10\",\"0.6\",\"0.7\",\"0.8\",\"1.12\",\"3.2\",\"3.3\",\"3.4\",\"3.5\",\"3.6\",\"5.4\",\"5.6\",\"5.7\",\"7.1\",\"7.2\",\"7.3\"],\"observedRequirementIds\":[\"0.1\",\"0.2\",\"0.10\"],\"comparisonAbsent\":true,\"exact\":false},{\"componentId\":\"M02\",\"expectedRequirementIds\":[\"0.1\",\"0.2\",\"0.10\",\"0.6\",\"0.7\",\"0.8\",\"1.12\",\"3.2\",\"3.3\",\"3.4\",\"3.5\",\"3.6\"],\"observedRequirementIds\":[\"0.1\",\"0.2\",\"0.10\"],\"comparisonAbsent\":true,\"exact\":false}],\"archiveBound\":true,\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+              "be1356fb34a2e525ce8ab60daf0c547b958bf008fffb49fb3e153b534dcc1f92",
+              "99085402962263da9db4573e3fded046297009a67510e8b4befd8f4b604e7caa",
+              "e62055f8a2a763ba0899c0d5fa603857bc6e3899ac70057213a5ac6b9efa8fc6"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T10:53:24.440Z",
+          "reasonCode": "CLIENT_ACTIVITY_REQUIREMENTS_PASS",
+          "prerequisite": "{\"caseId\":\"complete-supported-comparison\",\"componentId\":\"B06\",\"removedRequirementId\":null,\"result\":{\"componentId\":\"B06\",\"comparisonDigest\":\"23f264a196dc7e10effb0888ffb3caccd6f21b5f1349dc2cdeb075647de4e257\",\"state\":\"PASS\",\"findings\":[],\"selectedTool\":\"Self-hosted workflow engine\",\"validationPlan\":\"Run the pinned shared-connection rollback, lost-claim fencing and generated-schema CLI fault probe before component admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"outside\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[]},\"archiveBound\":true,\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "a6628267524eedfe3ab70c28e18cd3ad43999a756678ae7fc6654301548477a2",
+              "6e5301276ab43baf8006b2a675905c4dc18a4532049061e655899b1fa586bcf0",
+              "99085402962263da9db4573e3fded046297009a67510e8b4befd8f4b604e7caa",
+              "e62055f8a2a763ba0899c0d5fa603857bc6e3899ac70057213a5ac6b9efa8fc6"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "FAIL",
+          "checkedAt": "2026-10-07T10:53:24.572Z",
+          "reasonCode": "CLIENT_ACTIVITY_REQUIREMENTS_FAIL",
+          "prerequisite": "{\"caseId\":\"missing-module-requirement\",\"componentId\":\"B06\",\"removedRequirementId\":\"5.6\",\"result\":{\"componentId\":\"B06\",\"comparisonDigest\":\"343fc3cccdcc655acae196d4e93c2683b6cf88b9199bc81d4979229f0bc63817\",\"state\":\"PASS\",\"findings\":[],\"selectedTool\":\"Self-hosted workflow engine\",\"validationPlan\":\"Run the pinned shared-connection rollback, lost-claim fencing and generated-schema CLI fault probe before component admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"outside\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[]},\"archiveBound\":true,\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "199ec58fd439948500302739e1d6deae5cf19f7d1b2364afa8336d6512d937d3",
+              "6e5301276ab43baf8006b2a675905c4dc18a4532049061e655899b1fa586bcf0",
+              "99085402962263da9db4573e3fded046297009a67510e8b4befd8f4b604e7caa",
+              "e62055f8a2a763ba0899c0d5fa603857bc6e3899ac70057213a5ac6b9efa8fc6"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T10:53:24.698Z",
+          "reasonCode": "CLIENT_ACTIVITY_REQUIREMENTS_PASS",
+          "prerequisite": "{\"caseId\":\"missing-primary-report\",\"componentId\":\"B06\",\"removedRequirementId\":null,\"result\":{\"componentId\":\"B06\",\"comparisonDigest\":\"e149c856dd9a3955a00a8754209d6118d761c284c99d421a59057857aba28887\",\"state\":\"BLOCKED\",\"findings\":[\"PRIMARY_EVIDENCE_MISSING\",\"VALIDATION_ID_MISSING\"],\"selectedTool\":\"Self-hosted workflow engine\",\"validationPlan\":\"Run the pinned shared-connection rollback, lost-claim fencing and generated-schema CLI fault probe before component admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"outside\",\"missingRequirementIds\":[],\"missingSourceIds\":[\"TS\"],\"missingValidationIds\":[\"G0:R0:B06\"]},\"archiveBound\":true,\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "6f1123639b10d44e25534ea5acb0f05329963556b3d54d45ebf683d3f75ca89d",
+              "6e5301276ab43baf8006b2a675905c4dc18a4532049061e655899b1fa586bcf0",
+              "99085402962263da9db4573e3fded046297009a67510e8b4befd8f4b604e7caa",
+              "e62055f8a2a763ba0899c0d5fa603857bc6e3899ac70057213a5ac6b9efa8fc6"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T10:53:24.822Z",
+          "reasonCode": "CLIENT_ACTIVITY_REQUIREMENTS_PASS",
+          "prerequisite": "{\"caseId\":\"unsupported-selection\",\"componentId\":\"B06\",\"removedRequirementId\":null,\"result\":{\"componentId\":\"B06\",\"comparisonDigest\":\"8eb90eafc7969b9bff00643f34bee782a25eb3561dd1b3e768d95de1f6a17081\",\"state\":\"BLOCKED\",\"findings\":[\"CHOICE_UNSUPPORTED\"],\"selectedTool\":\"Self-hosted workflow engine\",\"validationPlan\":\"Run the pinned shared-connection rollback, lost-claim fencing and generated-schema CLI fault probe before component admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"outside\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[]},\"archiveBound\":true,\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "479afd87dc158829da2b5f343121d3a404e7131bc476f113645dedad340a79a5",
+              "6e5301276ab43baf8006b2a675905c4dc18a4532049061e655899b1fa586bcf0",
+              "99085402962263da9db4573e3fded046297009a67510e8b4befd8f4b604e7caa",
+              "e62055f8a2a763ba0899c0d5fa603857bc6e3899ac70057213a5ac6b9efa8fc6"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T10:53:24.945Z",
+          "reasonCode": "CLIENT_ACTIVITY_REQUIREMENTS_PASS",
+          "prerequisite": "{\"caseId\":\"unresolved-selected-compatibility\",\"componentId\":\"B06\",\"removedRequirementId\":null,\"result\":{\"componentId\":\"B06\",\"comparisonDigest\":\"9999792637d75883a232ac4bc011ddbdf0ac1fbbc11a117fc803d8955995a800\",\"state\":\"BLOCKED\",\"findings\":[\"SELECTED_FACT_UNRESOLVED\"],\"selectedTool\":\"Self-hosted workflow engine\",\"validationPlan\":\"Run the pinned shared-connection rollback, lost-claim fencing and generated-schema CLI fault probe before component admission.\",\"unresolvedFacts\":[{\"optionId\":\"outside\",\"fact\":\"Supported host compatibility has no validation evidence.\"}],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"outside\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[]},\"archiveBound\":true,\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "823b32569dd5bc95fc168d241a3c5c3f1bc287efbab506dc5fb6d2ee2672d657",
+              "6e5301276ab43baf8006b2a675905c4dc18a4532049061e655899b1fa586bcf0",
+              "99085402962263da9db4573e3fded046297009a67510e8b4befd8f4b604e7caa",
+              "e62055f8a2a763ba0899c0d5fa603857bc6e3899ac70057213a5ac6b9efa8fc6"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T10:53:25.069Z",
+          "reasonCode": "CLIENT_ACTIVITY_REQUIREMENTS_PASS",
+          "prerequisite": "{\"caseId\":\"missing-validation-receipt\",\"componentId\":\"B06\",\"removedRequirementId\":null,\"result\":{\"componentId\":\"B06\",\"comparisonDigest\":\"a02cfcd02164925bd35da3f2f05742b2f5c0a848df4f58d02abd7f0b05909e4c\",\"state\":\"BLOCKED\",\"findings\":[\"VALIDATION_ID_MISSING\"],\"selectedTool\":\"Self-hosted workflow engine\",\"validationPlan\":\"Run the pinned shared-connection rollback, lost-claim fencing and generated-schema CLI fault probe before component admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"outside\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[\"G0:R0:B06\"]},\"archiveBound\":true,\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "c17e18759c9aea3535942ecbbc9d94454cebd838df0bb54069986056ed41e118",
+              "6e5301276ab43baf8006b2a675905c4dc18a4532049061e655899b1fa586bcf0",
+              "99085402962263da9db4573e3fded046297009a67510e8b4befd8f4b604e7caa",
+              "e62055f8a2a763ba0899c0d5fa603857bc6e3899ac70057213a5ac6b9efa8fc6"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "FAIL",
+          "checkedAt": "2026-10-07T10:53:25.191Z",
+          "reasonCode": "CLIENT_ACTIVITY_REQUIREMENTS_FAIL",
+          "prerequisite": "{\"caseId\":\"missing-comparison\",\"componentId\":\"B06\",\"removedRequirementId\":null,\"result\":{\"componentId\":\"B06\",\"comparisonDigest\":null,\"state\":\"BLOCKED\",\"findings\":[\"DECISION_MISSING\",\"REQUIRED_OPTIONS_MISSING\",\"CHOICE_UNSUPPORTED\",\"PRIMARY_EVIDENCE_MISSING\",\"RELEASE_GATE_MISSING\",\"VALIDATION_PLAN_MISSING\",\"ACCEPTANCE_LINK_MISSING\",\"MAPPED_REQUIREMENTS_MISSING\",\"VALIDATION_ID_MISSING\"],\"selectedTool\":null,\"validationPlan\":\"\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":null,\"missingRequirementIds\":[\"0.1\",\"0.2\",\"0.10\"],\"missingSourceIds\":[\"TS\",\"GUI\"],\"missingValidationIds\":[\"G0:R0:B06\"]},\"archiveBound\":true,\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+              "be1356fb34a2e525ce8ab60daf0c547b958bf008fffb49fb3e153b534dcc1f92",
+              "99085402962263da9db4573e3fded046297009a67510e8b4befd8f4b604e7caa",
+              "e62055f8a2a763ba0899c0d5fa603857bc6e3899ac70057213a5ac6b9efa8fc6"
+            ]
+          }
+        }
+      ],
+      "resultState": "NOT_IMPLEMENTED",
+      "complete": false
+    }
+  ],
+  "up": {
+    "exitCode": 0,
+    "path": "build/evidence/R0.08/client-activity-red/up.json",
+    "sha256": "ba0141ecf33f7a96bdab9ebb4d1e7127034b970ce160a27d0e26ca6370d15f50"
+  },
+  "stackId": "d3e14135-1590-4b0b-b7f5-089706da0d6b",
+  "down": {
+    "exitCode": 0,
+    "path": "build/evidence/R0.08/client-activity-red/down.json",
+    "sha256": "9f3c26ea0e5b6a8b66a77814ca431819305365296f413eda8ecc204464d67a04"
+  },
+  "teardown": {
+    "stackId": "d3e14135-1590-4b0b-b7f5-089706da0d6b",
+    "checkpointRefs": [],
+    "fenceRefs": [],
+    "stoppedResourceRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "d3e14135-1590-4b0b-b7f5-089706da0d6b"
+      }
+    ],
+    "retainedArtifactRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "d3e14135-1590-4b0b-b7f5-089706da0d6b"
+      }
+    ],
+    "unresolvedResourceRefs": [],
+    "complete": true
+  }
+}
