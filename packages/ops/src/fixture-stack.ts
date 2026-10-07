@@ -312,7 +312,7 @@ export const FixtureProbe = {
       const profileConsumers = input.caseId === undefined && sourceRegistration?.owner === "hermes" && sourceRegistration.scenarioId === "profile.gateway-consumers";
       const mcpHttp = input.caseId === undefined && sourceRegistration?.owner === "hermes" && sourceRegistration.scenarioId === "profile.mcp-http";
       const accounting = (input.caseId === undefined || input.caseId === "model-admission") && ["AT-ops-49", "AT-ops-51", "AT-ops-52"].includes(input.probeId);
-      const componentComparison = ["AT-authority-60", "AT-attention-66", "AT-obligations-74", "AT-self-improvement-54", "AT-sources-188", "AT-sources-190"].includes(input.probeId) && input.caseId === undefined;
+      const componentComparison = ["AT-authority-60", "AT-attention-66", "AT-obligations-74", "AT-self-improvement-54", "AT-sources-188", "AT-sources-190", "AT-ops-44"].includes(input.probeId) && input.caseId === undefined;
       const dtoRoundtrip = input.probeId === "AT-hermes-config-50" && input.caseId === undefined && sourceRegistration?.owner === "contracts" && sourceRegistration.scenarioId === "contracts.dto-roundtrip";
       const capacityTrial = (input.caseId === undefined || input.caseId === "capacity-trial") && ["AT-ops-47", "AT-self-improvement-59", "AT-self-improvement-60", "AT-RESEARCH-REGISTER-6"].includes(input.probeId);
       const nativeEligibility = ["AT-ops-81", "AT-client-apps-49", "AT-activity-focus-64"].includes(input.probeId) && (input.caseId === "native-release-eligibility" || (input.caseId === undefined && sourceRegistration?.owner === "ops" && sourceRegistration.scenarioId === "native-release-eligibility"));

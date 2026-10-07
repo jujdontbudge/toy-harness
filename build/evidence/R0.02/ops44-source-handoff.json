@@ -1,0 +1,94 @@
+{
+  "schemaVersion": "toy.r0.02.ops44-source-handoff.v1",
+  "assignedAt": "AT-ops-44",
+  "status": "SOURCE_PHASE_STOPPED_UNVERIFIED",
+  "writtenInterface": {
+    "path": "docs/adr/0047-ops-outside-research-probe.md",
+    "sha256": "0092607f95f798b2ea2df739e4e0317dc723a417148e4a965e27a63c8d2cafec"
+  },
+  "sourceAssertion": {
+    "path": "../personal-assistant-harness/specs/ops.md",
+    "line": 1965,
+    "assertionHash": "7a7100f87f1e08f4c6aaa35582495f2984c39ba058b27c14962f0157c8f14804"
+  },
+  "manifestProposal": {
+    "id": "AT-ops-44",
+    "rung": "CLI",
+    "commandId": "probe.run",
+    "owner": "hermes",
+    "scenarioId": "research.component-receipts",
+    "firstRelease": "R0",
+    "kind": "static_gate",
+    "mandatoryCases": [
+      { "id": "outside-selected-with-evidence", "publicOperation": "ModelRoute.delegationReceipt + EngineeringControl.checkResearch", "phase": "outside-selected-with-evidence" },
+      { "id": "outside-without-primary-support", "publicOperation": "EngineeringControl.checkResearch", "phase": "outside-without-primary-support" },
+      { "id": "outside-route-mismatch", "publicOperation": "ModelRoute.delegationReceipt + EngineeringControl.checkResearch", "phase": "outside-route-mismatch" },
+      { "id": "mapped-requirement-removed", "publicOperation": "EngineeringControl.checkResearch", "phase": "mapped-requirement-removed" }
+    ],
+    "faultSeams": {
+      "route": "Existing delegationFixture CodexDelegationExecutor and ResearchSkillResourceReader fakes. The outside-route-mismatch phase maps to its research-route-luna fault, producing an observed wrong model and refused receipt; no live CLI/provider process is invoked.",
+      "primarySupport": "Seeded ResearchComponentComparisonV3 overlay removes the outside option's primaryEvidenceIds; EngineeringControl must report OUTSIDE_OPTION_MISSING and PRIMARY_EVIDENCE_MISSING.",
+      "requirement": "Choose A14 required.missingRequirementIds[0] from the current EngineeringControl baseline, remove only that ID from the overlay, and require exactly that ID in the blocked result."
+    },
+    "component": "A14, selected by ID from current baseline inspection; archive is selected from its reportKeys with non-null originalDigest; all required IDs are source-derived from the same baseline decision."
+  },
+  "changes": {
+    "sourceFiles": [
+      { "path": "docs/adr/0047-ops-outside-research-probe.md", "sha256": "0092607f95f798b2ea2df739e4e0317dc723a417148e4a965e27a63c8d2cafec" },
+      { "path": "packages/hermes/src/model-route-probe.ts", "sha256": "4a5bb378202aad5c29978d85be441b5ed483a3136c7713727e36735469a15075" }
+    ],
+    "planCorrection": {
+      "path": "build/evidence/R0.02/ops44-next-minimum-plan.json",
+      "sha256": "80b35f1edb51926a461f386e26cb61de2e372f864e98404458784770a899fe1c",
+      "correction": "AT-ops-43 is NOT_IMPLEMENTED as an acceptance probe. The corrected mapping only has public CLI regression/generic research proof."
+    },
+    "existingAuthority60": "Its manifest and 17 phase IDs remain unchanged. The M03/CJ case data, route faults, expected codes, and diagnostic detail object retain their prior branch values."
+  },
+  "verificationRequiredFromParent": {
+    "manifestRegistrySource": "tests/registry.yaml, followed by the existing manifest generator; worker did not edit or generate these files.",
+    "sourceAndExecutionHashes": [
+      { "path": "packages/hermes/src/model-route-probe.ts", "sha256": "4a5bb378202aad5c29978d85be441b5ed483a3136c7713727e36735469a15075", "state": "SOURCE_RECORDED" },
+      { "path": "packages/hermes/dist/model-route-probe.js", "sha256": null, "state": "PENDING_PARENT_BUILD" },
+      { "path": "packages/contracts/dist/generated-probe-registry.js", "sha256": null, "state": "PENDING_PARENT_GENERATION_AND_BUILD" },
+      { "path": "packages/hermes/dist/model-route.js", "sha256": null, "state": "PENDING_PARENT_BUILD" },
+      { "path": "cli/dist/main.js", "sha256": null, "state": "PENDING_PARENT_BUILD" }
+    ],
+    "unfilteredCli": {
+      "run": "toy --env test --stack <stack-id> probe run AT-ops-44 --request-id <uuid> --wait-ms 120000 --json",
+      "show": "toy --env test --stack <stack-id> probe show <operation-id> --json",
+      "caseFilter": null,
+      "required": "Run and independent show read back the same four registered cases; preserve their per-case route/decision evidence, zero live provider sends, and full stack teardown."
+    },
+    "wholeAcceptance": false
+  },
+  "sourceEvidenceSha256": {
+    "../personal-assistant-harness/specs/ops.md": "f07aab65088c82e4ff21e4d63edb2f279e2324e6d7e2bbb801e0fd7494104b0b",
+    "tests/acceptance-index.json": "c9b645eab7f55b2ebf35d7db769a534a4837de23ad3dc3d913f3189e781d44fa",
+    "tests/registry.yaml": "9330ff5c49e4683111c0075e39dc241969285d83e15013c2d0ace8f309ed6b23",
+    "packages/contracts/src/engineering-control.ts": "f04b91f3ee915526ed5f5706d18e39b3842cbfa51498ddccb9c230218c8a889c",
+    "packages/contracts/src/model-route.ts": "e95a854b188b67d37aa4b518626428e4de7eb28e1fcb35edc74bdc8a4235dd0d",
+    "packages/contracts/src/generated-probe-registry.ts": "9e9ec5d953d2c22cd04cf17ec6f722abd19a68316135a0d39022718049f006fc",
+    "packages/self-improvement/src/engineering-control.ts": "48df6bfa7c8dd9260f170c1acd6f1f32da1d495f7199d30fc9a851374ca8325a",
+    "packages/hermes/src/model-route.ts": "75bad754c537c53a920762b259d30ee6f89149a8d60d40678214cf5e2dec3962",
+    "packages/hermes/src/public.ts": "ccabd122931e9c879e9be4084cdfae31a6d112490936b2a48bf695293ecdfc86",
+    "packages/self-improvement/src/public.ts": "bd1b1d81adff008150902aa6174f5df7e8cc3b615fbf9408a035aa8a6146a9a3",
+    "build/evidence/R0.03/dashboard90-baseline.json": "aa59b69b0e1312167d9b6458e12bc76304cac1ea40b36f50e113d1e1db3df712",
+    "build/evidence/R0.03/dashboard90-baseline-cli/AT-ops-44-run.json": "bce66264a92e69b15aaeafe49126ef22eccd2c370667adc5e478c15a852f123c",
+    "build/evidence/R0.03/dashboard90-baseline-cli/AT-ops-44-show.json": "d02fceacd4d0417e4f1f1fccdd743b63e2c83ce48cf725eff96178a9d51151df"
+  },
+  "limits": {
+    "fixtureOnly": true,
+    "liveProviderSends": 0,
+    "protectedIdentityVerified": false,
+    "nativeExecutionVerified": false,
+    "hostAssertion": "Exact fixture text only, not generic semantic application-host enforcement.",
+    "wholeATComplete": false,
+    "acceptanceComplete": false,
+    "deferred": ["registry/feature-map/generator integration", "build/typecheck/tests", "unfiltered CLI run/show", "protected/native route and identity proof", "real primary research", "AT-ops-43 49-component whole behavior", "AT-ops-45 and whole R0 acceptance"]
+  },
+  "workerStop": {
+    "sourceEditingStopped": true,
+    "prohibitedOperationsPerformed": [],
+    "status": "HANDOFF_TO_PARENT_FOR_INTEGRATION_AND_VERIFICATION"
+  }
+}

@@ -5014,6 +5014,79 @@ export const registeredCliAcceptanceManifestInventory = [
     "simUnavailableReason": "SIM cannot check generated pre-build schema artifacts or native queue transaction/worker fault boundaries. The CLI drives the real public queue interface in an owned PostgreSQL fixture."
   },
   {
+    "id": "AT-ops-44",
+    "rung": "CLI",
+    "sourceAssertionHash": "7a7100f87f1e08f4c6aaa35582495f2984c39ba058b27c14962f0157c8f14804",
+    "commandId": "probe.run",
+    "scenarioId": "research.component-receipts",
+    "owner": "hermes",
+    "firstRelease": "R0",
+    "kind": "static_gate",
+    "mandatoryCases": [
+      {
+        "id": "outside-selected-with-evidence",
+        "publicOperation": "ModelRoute.delegationReceipt + EngineeringControl.checkResearch",
+        "phase": "outside-selected-with-evidence"
+      },
+      {
+        "id": "outside-without-primary-support",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "outside-without-primary-support"
+      },
+      {
+        "id": "outside-route-mismatch",
+        "publicOperation": "ModelRoute.delegationReceipt + EngineeringControl.checkResearch",
+        "phase": "outside-route-mismatch"
+      },
+      {
+        "id": "mapped-requirement-removed",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "mapped-requirement-removed"
+      }
+    ],
+    "trigger": "Compare the indexed A14 seeded named backup options and primary-supported outside option through the public research receipt and component gate; retain source-derived requirements and fixture Mac-host constraints.",
+    "faultControls": [
+      {
+        "id": "external-ops-comparison-report-faults",
+        "seam": "provider",
+        "affectedPhases": [
+          "outside-without-primary-support",
+          "mapped-requirement-removed"
+        ]
+      },
+      {
+        "id": "external-cli-research-model-mismatch",
+        "seam": "provider",
+        "affectedPhases": [
+          "outside-route-mismatch"
+        ]
+      }
+    ],
+    "observations": [
+      {
+        "id": "indexed-ops-selection-and-requirements",
+        "independentReader": "EngineeringControl.checkResearch: indexed A14 coverage, primary evidence and selection readback",
+        "caseIds": [
+          "outside-selected-with-evidence",
+          "outside-without-primary-support",
+          "outside-route-mismatch",
+          "mapped-requirement-removed"
+        ]
+      },
+      {
+        "id": "public-research-receipt-and-readback",
+        "independentReader": "ModelRoute.delegationReceipt: fake executor route/skill readback; toy probe.show: stored source-bound cases",
+        "caseIds": [
+          "outside-selected-with-evidence",
+          "outside-without-primary-support",
+          "outside-route-mismatch",
+          "mapped-requirement-removed"
+        ]
+      }
+    ],
+    "simUnavailableReason": "SIM cannot choose administrative pre-build comparison records. CLI invokes existing public owners with fixed external report and Codex executor/resource-reader fakes; native protected route and whole acceptance stay pending."
+  },
+  {
     "id": "AT-ops-47",
     "rung": "CLI",
     "sourceAssertionHash": "a5197df8ac45e7cc1e660210288ad85e534204870ede21d629ca12fa19e4e799",

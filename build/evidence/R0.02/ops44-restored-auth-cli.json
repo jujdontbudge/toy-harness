@@ -1,0 +1,876 @@
+{
+  "recordedAt": "2026-10-07T01:52:57.780Z",
+  "rung": "CLI",
+  "unfiltered": true,
+  "wholeATComplete": false,
+  "liveProviderSends": 0,
+  "nativeAttempt": null,
+  "admissionEvidence": "build/evidence/R0.02/ops44-restored-auth-doctor.json",
+  "probes": [
+    {
+      "probeId": "AT-ops-44",
+      "run": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.02/ops44-restored-auth-cli/AT-ops-44-run.json",
+        "sha256": "52082b2dc6059abd73b36c648f0e3d3c4c8d7fa4e884680717453e6cf4a3aa77"
+      },
+      "operationId": "7c066ec4-087f-4bf9-9cb8-ecb951056d63",
+      "show": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.02/ops44-restored-auth-cli/AT-ops-44-show.json",
+        "sha256": "4833589223fead600de1212379d392838793173b810335eb6d0a73d329df87f6"
+      },
+      "sameData": true,
+      "sourceRegistration": {
+        "id": "AT-ops-44",
+        "rung": "CLI",
+        "sourceAssertionHash": "7a7100f87f1e08f4c6aaa35582495f2984c39ba058b27c14962f0157c8f14804",
+        "commandId": "probe.run",
+        "scenarioId": "research.component-receipts",
+        "owner": "hermes",
+        "firstRelease": "R0",
+        "kind": "static_gate",
+        "mandatoryCases": [
+          {
+            "id": "outside-selected-with-evidence",
+            "publicOperation": "ModelRoute.delegationReceipt + EngineeringControl.checkResearch",
+            "phase": "outside-selected-with-evidence"
+          },
+          {
+            "id": "outside-without-primary-support",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "outside-without-primary-support"
+          },
+          {
+            "id": "outside-route-mismatch",
+            "publicOperation": "ModelRoute.delegationReceipt + EngineeringControl.checkResearch",
+            "phase": "outside-route-mismatch"
+          },
+          {
+            "id": "mapped-requirement-removed",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "mapped-requirement-removed"
+          }
+        ],
+        "trigger": "Compare the indexed A14 seeded named backup options and primary-supported outside option through the public research receipt and component gate; retain source-derived requirements and fixture Mac-host constraints.",
+        "faultControls": [
+          {
+            "id": "external-ops-comparison-report-faults",
+            "seam": "provider",
+            "affectedPhases": [
+              "outside-without-primary-support",
+              "mapped-requirement-removed"
+            ]
+          },
+          {
+            "id": "external-cli-research-model-mismatch",
+            "seam": "provider",
+            "affectedPhases": [
+              "outside-route-mismatch"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "indexed-ops-selection-and-requirements",
+            "independentReader": "EngineeringControl.checkResearch: indexed A14 coverage, primary evidence and selection readback",
+            "caseIds": [
+              "outside-selected-with-evidence",
+              "outside-without-primary-support",
+              "outside-route-mismatch",
+              "mapped-requirement-removed"
+            ]
+          },
+          {
+            "id": "public-research-receipt-and-readback",
+            "independentReader": "ModelRoute.delegationReceipt: fake executor route/skill readback; toy probe.show: stored source-bound cases",
+            "caseIds": [
+              "outside-selected-with-evidence",
+              "outside-without-primary-support",
+              "outside-route-mismatch",
+              "mapped-requirement-removed"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot choose administrative pre-build comparison records. CLI invokes existing public owners with fixed external report and Codex executor/resource-reader fakes; native protected route and whole acceptance stay pending."
+      },
+      "registrationExact": true,
+      "cases": [
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T01:52:58.349Z",
+          "reasonCode": "OPS_OUTSIDE_RESEARCH_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"outside-selected-with-evidence\",\"fixtureOnly\":true,\"actualUid\":501,\"archive\":{\"key\":\"TS\",\"originalDigest\":\"de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3\",\"contentDigest\":\"ef5b21728914367b0af2dc100c0e329c3cbb135a80f6a6299c74f445b0e58dca\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"A14\",\"comparisonDigest\":\"d544cf9cceefe5535faeed6a3304aaad1b4c2a98e98551a0bf51130b2e4b591b\",\"state\":\"PASS\",\"findings\":[],\"selectedTool\":\"Seeded outside backup option\",\"validationPlan\":\"Compare the seeded named and outside A14 options under the current requirement and host constraints; verify evidence, route and restore rationale before any real research or adoption.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"outside\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[]},\"execution\":{\"ownerReceiptProduced\":true,\"externalCliSends\":1,\"exportsVerified\":true,\"receiptDigest\":\"4394cae5c37d748f95eb6a1b8df3cfe7f945ec691d808c79496697b986ce8f36\",\"observed\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"medium\",\"serviceTier\":\"priority\"},\"loadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"sourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"nativeExecutionVerified\":false},\"hostClaimIsFixtureTextOnly\":true,\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"acceptanceComplete\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "ef5b21728914367b0af2dc100c0e329c3cbb135a80f6a6299c74f445b0e58dca",
+              "354492664c5375a9ed509ee19c37456ab33665dac3675509b285b668114c389b",
+              "f97d83647c6798d4ddfe9100b9ac3424161d498115afc35106de6ebb020523c9"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T01:52:58.404Z",
+          "reasonCode": "OPS_OUTSIDE_RESEARCH_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"outside-without-primary-support\",\"fixtureOnly\":true,\"actualUid\":501,\"archive\":{\"key\":\"TS\",\"originalDigest\":\"de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3\",\"contentDigest\":\"4462b701732c557f7149f6254a243c9da3f4b3339542513375ec051b75f9dee3\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"A14\",\"comparisonDigest\":\"c8338266acc633f827abc82ceb26e943d25f0b585916c8c42b1b32155969b4eb\",\"state\":\"BLOCKED\",\"findings\":[\"OUTSIDE_OPTION_MISSING\",\"PRIMARY_EVIDENCE_MISSING\"],\"selectedTool\":\"Seeded outside backup option\",\"validationPlan\":\"Compare the seeded named and outside A14 options under the current requirement and host constraints; verify evidence, route and restore rationale before any real research or adoption.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"outside\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[]},\"execution\":{\"ownerReceiptProduced\":true,\"externalCliSends\":1,\"exportsVerified\":true,\"receiptDigest\":\"5f7905f7110d677d28b73d3d012a1daa73f84da96152c4e54f66bf06ff4d15d8\",\"observed\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"medium\",\"serviceTier\":\"priority\"},\"loadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"sourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"nativeExecutionVerified\":false},\"hostClaimIsFixtureTextOnly\":true,\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"acceptanceComplete\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "4462b701732c557f7149f6254a243c9da3f4b3339542513375ec051b75f9dee3",
+              "354492664c5375a9ed509ee19c37456ab33665dac3675509b285b668114c389b",
+              "f97d83647c6798d4ddfe9100b9ac3424161d498115afc35106de6ebb020523c9"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T01:52:58.460Z",
+          "reasonCode": "OPS_OUTSIDE_RESEARCH_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"outside-route-mismatch\",\"fixtureOnly\":true,\"actualUid\":501,\"archive\":{\"key\":\"TS\",\"originalDigest\":\"de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3\",\"contentDigest\":\"908f78e2f873640a02edfa9d50f3f4608994ea27401edcf176261cf31bb6847e\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"A14\",\"comparisonDigest\":\"ff79fa6592619a044879afec6ba910cf851d7516e9047daff20f88ba0dc9a0ee\",\"state\":\"BLOCKED\",\"findings\":[\"VALIDATION_ID_MISSING\"],\"selectedTool\":\"Seeded outside backup option\",\"validationPlan\":\"Compare the seeded named and outside A14 options under the current requirement and host constraints; verify evidence, route and restore rationale before any real research or adoption.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"outside\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[\"ROUTE:R0:A14\"]},\"execution\":{\"ownerReceiptProduced\":true,\"externalCliSends\":1,\"exportsVerified\":true,\"receiptDigest\":\"28110e9947178003c26dddc2a56bb4236ab2d165d8f3f785b7eaa90e8f695708\",\"observed\":{\"model\":\"gpt-6-luna\",\"effort\":\"medium\",\"serviceTier\":\"priority\"},\"loadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"sourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"nativeExecutionVerified\":false},\"hostClaimIsFixtureTextOnly\":true,\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"acceptanceComplete\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "908f78e2f873640a02edfa9d50f3f4608994ea27401edcf176261cf31bb6847e",
+              "354492664c5375a9ed509ee19c37456ab33665dac3675509b285b668114c389b",
+              "f97d83647c6798d4ddfe9100b9ac3424161d498115afc35106de6ebb020523c9"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T01:52:58.513Z",
+          "reasonCode": "OPS_OUTSIDE_RESEARCH_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"mapped-requirement-removed\",\"fixtureOnly\":true,\"actualUid\":501,\"archive\":{\"key\":\"TS\",\"originalDigest\":\"de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3\",\"contentDigest\":\"678efa7f6de516ee26a4b5fb28d71f48c407f87ab40ecd115d5a9b52d0efc9ce\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"A14\",\"comparisonDigest\":\"e96e5ce17719ee8fa003f01729cad15939e36e098ac85aee940359046f310343\",\"state\":\"BLOCKED\",\"findings\":[\"MAPPED_REQUIREMENTS_MISSING\"],\"selectedTool\":\"Seeded outside backup option\",\"validationPlan\":\"Compare the seeded named and outside A14 options under the current requirement and host constraints; verify evidence, route and restore rationale before any real research or adoption.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"outside\",\"missingRequirementIds\":[\"0.1\"],\"missingSourceIds\":[],\"missingValidationIds\":[]},\"execution\":{\"ownerReceiptProduced\":true,\"externalCliSends\":1,\"exportsVerified\":true,\"receiptDigest\":\"8e9dc9401ed1ca86a604ecd2d7bd951c96608a89e59724c379730cce7ef20c7d\",\"observed\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"medium\",\"serviceTier\":\"priority\"},\"loadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"sourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"nativeExecutionVerified\":false},\"hostClaimIsFixtureTextOnly\":true,\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"acceptanceComplete\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "678efa7f6de516ee26a4b5fb28d71f48c407f87ab40ecd115d5a9b52d0efc9ce",
+              "354492664c5375a9ed509ee19c37456ab33665dac3675509b285b668114c389b",
+              "f97d83647c6798d4ddfe9100b9ac3424161d498115afc35106de6ebb020523c9"
+            ]
+          }
+        }
+      ],
+      "resultState": "NOT_IMPLEMENTED",
+      "complete": false
+    },
+    {
+      "probeId": "AT-self-improvement-54",
+      "run": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.02/ops44-restored-auth-cli/AT-self-improvement-54-run.json",
+        "sha256": "48271200e28af9f7bb53a60f84795abbaa0b6acdde791e2f230747da1bb22e29"
+      },
+      "operationId": "5f7bf8d5-5436-49f8-b958-eeef80d33844",
+      "show": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.02/ops44-restored-auth-cli/AT-self-improvement-54-show.json",
+        "sha256": "9dc109bc73b38d9ee97ac0b54e7a994bdf78fc16022318c6ec98a937b7f54b7e"
+      },
+      "sameData": true,
+      "sourceRegistration": {
+        "id": "AT-self-improvement-54",
+        "rung": "CLI",
+        "sourceAssertionHash": "b4141538d262d66d789eb55ef7608df4effefb5dd4c7c6fc801f1c54e41e4c23",
+        "commandId": "probe.run",
+        "scenarioId": "research.component-comparison",
+        "owner": "self-improvement",
+        "firstRelease": "R0",
+        "kind": "static_gate",
+        "mandatoryCases": [
+          {
+            "id": "required-component-absent",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "required-component-absent"
+          },
+          {
+            "id": "required-component-unsupported",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "required-component-unsupported"
+          },
+          {
+            "id": "required-component-incomplete-ids",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "required-component-incomplete-ids"
+          },
+          {
+            "id": "required-component-complete-outside-selected",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "required-component-complete-outside-selected"
+          }
+        ],
+        "trigger": "Check absent, unsupported, incomplete and outside-selected required-component decisions through the real indexed research owner; report exact missing IDs while whole admission remains unresolved.",
+        "faultControls": [
+          {
+            "id": "external-required-decision-omissions",
+            "seam": "provider",
+            "affectedPhases": [
+              "required-component-absent",
+              "required-component-unsupported",
+              "required-component-incomplete-ids"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "indexed-required-component-result",
+            "independentReader": "EngineeringControl.checkResearch: bound archive digests and exact requirement/source/validation IDs",
+            "caseIds": [
+              "required-component-absent",
+              "required-component-unsupported",
+              "required-component-incomplete-ids",
+              "required-component-complete-outside-selected"
+            ]
+          },
+          {
+            "id": "stored-cli-readback",
+            "independentReader": "toy probe.show: persisted exact required-component decisions",
+            "caseIds": [
+              "required-component-absent",
+              "required-component-unsupported",
+              "required-component-incomplete-ids",
+              "required-component-complete-outside-selected"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot invoke administrative pre-build research gates or replace indexed external research documents. The CLI drives the real public owner through its owned document seam."
+      },
+      "registrationExact": true,
+      "cases": [
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T01:52:58.944Z",
+          "reasonCode": "REQUIRED_COMPONENT_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"required-component-absent\",\"actualUid\":501,\"archive\":{\"key\":\"TS\",\"path\":\"research/v2/tool-stack.md\",\"originalDigest\":\"de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3\",\"contentDigest\":\"b6d8323d49be7c1f40e1f46b01b03b0da841cba53c13f740b1dcf671f83d7587\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M02\",\"comparisonDigest\":null,\"state\":\"BLOCKED\",\"findings\":[\"DECISION_MISSING\",\"MAPPED_REQUIREMENTS_MISSING\",\"REQUIRED_OPTIONS_MISSING\",\"CHOICE_UNSUPPORTED\",\"PRIMARY_EVIDENCE_MISSING\",\"RELEASE_GATE_MISSING\",\"VALIDATION_PLAN_MISSING\",\"ACCEPTANCE_LINK_MISSING\",\"VALIDATION_ID_MISSING\"],\"selectedTool\":null,\"validationPlan\":\"\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":null,\"missingRequirementIds\":[\"0.1\",\"0.2\",\"0.10\"],\"missingSourceIds\":[\"TS\",\"AF\"],\"missingValidationIds\":[\"G0:R0:M02\"]},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "b6d8323d49be7c1f40e1f46b01b03b0da841cba53c13f740b1dcf671f83d7587",
+              "faa434baaad02f6340b30848cd470467415c81b1468bef6c51a0cd371ac4f4e4",
+              "29d42b6b46af16555ae0a41e50f045f84c955333c9578f800cfdd3893bd4a18a"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T01:52:59.002Z",
+          "reasonCode": "REQUIRED_COMPONENT_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"required-component-unsupported\",\"actualUid\":501,\"archive\":{\"key\":\"TS\",\"path\":\"research/v2/tool-stack.md\",\"originalDigest\":\"de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3\",\"contentDigest\":\"ecb2a3ae9fca209185313f0761eb4d9bf1b0b36a3a605982c11ee0143207d18d\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M02\",\"comparisonDigest\":\"3719f259526bda8ed72a4394f2dd1c8f0e9697561babb26890719ff61a19dd31\",\"state\":\"BLOCKED\",\"findings\":[\"CHOICE_UNSUPPORTED\",\"PRIMARY_EVIDENCE_MISSING\",\"VALIDATION_ID_MISSING\"],\"selectedTool\":\"Self-hosted workflow engine\",\"validationPlan\":\"Run the pinned shared-connection rollback, lost-claim fencing and generated-schema CLI fault probe before component admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"outside\",\"missingRequirementIds\":[],\"missingSourceIds\":[\"TS\"],\"missingValidationIds\":[\"G0:R0:M02\"]},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "ecb2a3ae9fca209185313f0761eb4d9bf1b0b36a3a605982c11ee0143207d18d",
+              "faa434baaad02f6340b30848cd470467415c81b1468bef6c51a0cd371ac4f4e4",
+              "29d42b6b46af16555ae0a41e50f045f84c955333c9578f800cfdd3893bd4a18a"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T01:52:59.055Z",
+          "reasonCode": "REQUIRED_COMPONENT_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"required-component-incomplete-ids\",\"actualUid\":501,\"archive\":{\"key\":\"TS\",\"path\":\"research/v2/tool-stack.md\",\"originalDigest\":\"de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3\",\"contentDigest\":\"65a69a552f28e9845904213edf670facc44a8eb7c4941d805788db4108481c1e\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M02\",\"comparisonDigest\":\"e3f050b4ffb75013ff7e4aa0e1f2e12f9bac8ebd5c23770ed39bb824669187c5\",\"state\":\"BLOCKED\",\"findings\":[\"MAPPED_REQUIREMENTS_MISSING\",\"PRIMARY_EVIDENCE_MISSING\",\"VALIDATION_ID_MISSING\"],\"selectedTool\":\"Self-hosted workflow engine\",\"validationPlan\":\"Run the pinned shared-connection rollback, lost-claim fencing and generated-schema CLI fault probe before component admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"outside\",\"missingRequirementIds\":[\"0.10\"],\"missingSourceIds\":[\"TS\"],\"missingValidationIds\":[\"G0:R0:M02\"]},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "65a69a552f28e9845904213edf670facc44a8eb7c4941d805788db4108481c1e",
+              "faa434baaad02f6340b30848cd470467415c81b1468bef6c51a0cd371ac4f4e4",
+              "29d42b6b46af16555ae0a41e50f045f84c955333c9578f800cfdd3893bd4a18a"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T01:52:59.105Z",
+          "reasonCode": "REQUIRED_COMPONENT_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"required-component-complete-outside-selected\",\"actualUid\":501,\"archive\":{\"key\":\"TS\",\"path\":\"research/v2/tool-stack.md\",\"originalDigest\":\"de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3\",\"contentDigest\":\"935ed85fc834e4c415a8466e8ff7ce9199f054d2fd06facb04c811c9ff3ac465\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M02\",\"comparisonDigest\":\"2488cd5e4ca64f84083e681bf5e4dcf257c1bb72a47e25f3880942141ed4fc17\",\"state\":\"PASS\",\"findings\":[],\"selectedTool\":\"Self-hosted workflow engine\",\"validationPlan\":\"Run the pinned shared-connection rollback, lost-claim fencing and generated-schema CLI fault probe before component admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"outside\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[]},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "935ed85fc834e4c415a8466e8ff7ce9199f054d2fd06facb04c811c9ff3ac465",
+              "faa434baaad02f6340b30848cd470467415c81b1468bef6c51a0cd371ac4f4e4",
+              "29d42b6b46af16555ae0a41e50f045f84c955333c9578f800cfdd3893bd4a18a"
+            ]
+          }
+        }
+      ],
+      "resultState": "NOT_IMPLEMENTED",
+      "complete": false
+    },
+    {
+      "probeId": "AT-authority-60",
+      "run": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.02/ops44-restored-auth-cli/AT-authority-60-run.json",
+        "sha256": "a8b81ded196d4f1c2d39c08bbf5244750a0a6a5ee9931ca6bf3eef9043e5df87"
+      },
+      "operationId": "0bcdf2df-e8c7-495f-96cc-7f929c26ccb7",
+      "show": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.02/ops44-restored-auth-cli/AT-authority-60-show.json",
+        "sha256": "fabd31b2f96dab3fa33ccf4a60fc6860331839e07a6a0c37650d61f84b590260"
+      },
+      "sameData": true,
+      "sourceRegistration": {
+        "id": "AT-authority-60",
+        "rung": "CLI",
+        "sourceAssertionHash": "6f9730e29aba4b5e9fe10a2999ce36b36f2da2f745d45223d96d8b8b7a055337",
+        "commandId": "probe.run",
+        "scenarioId": "research.component-receipts",
+        "owner": "hermes",
+        "firstRelease": "R0",
+        "kind": "static_gate",
+        "mandatoryCases": [
+          {
+            "id": "missing-decision",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-decision"
+          },
+          {
+            "id": "missing-primary-evidence",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-primary-evidence"
+          },
+          {
+            "id": "unsupported-alternatives",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "unsupported-alternatives"
+          },
+          {
+            "id": "unsupported-selection",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "unsupported-selection"
+          },
+          {
+            "id": "missing-reliability",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-reliability"
+          },
+          {
+            "id": "missing-validation",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-validation"
+          },
+          {
+            "id": "missing-acceptance-link",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-acceptance-link"
+          },
+          {
+            "id": "unrelated-acceptance-link",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "unrelated-acceptance-link"
+          },
+          {
+            "id": "unresolved-selected-assumption",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "unresolved-selected-assumption"
+          },
+          {
+            "id": "ordinary-luna-receipt",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "ordinary-luna-receipt"
+          },
+          {
+            "id": "missing-route-observation",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-route-observation"
+          },
+          {
+            "id": "wrong-observed-model",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "wrong-observed-model"
+          },
+          {
+            "id": "wrong-observed-reasoning",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "wrong-observed-reasoning"
+          },
+          {
+            "id": "wrong-observed-tier",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "wrong-observed-tier"
+          },
+          {
+            "id": "missing-research-skill",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "missing-research-skill"
+          },
+          {
+            "id": "wrong-skill-hash",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "wrong-skill-hash"
+          },
+          {
+            "id": "complete-authority-decision",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "complete-authority-decision"
+          }
+        ],
+        "trigger": "Inspect the indexed Authority M03 decision and public Hermes research receipt; compare primary-supported proven options, reliable selection and validation IDs while all disposable probes remain provisional.",
+        "faultControls": [
+          {
+            "id": "external-authority-report-faults",
+            "seam": "provider",
+            "affectedPhases": [
+              "missing-decision",
+              "missing-primary-evidence",
+              "unsupported-alternatives",
+              "unsupported-selection",
+              "missing-reliability",
+              "missing-validation",
+              "missing-acceptance-link",
+              "unrelated-acceptance-link",
+              "unresolved-selected-assumption"
+            ]
+          },
+          {
+            "id": "external-cli-role-and-route",
+            "seam": "provider",
+            "affectedPhases": [
+              "ordinary-luna-receipt",
+              "missing-route-observation",
+              "wrong-observed-model",
+              "wrong-observed-reasoning",
+              "wrong-observed-tier"
+            ]
+          },
+          {
+            "id": "published-research-artifact-faults",
+            "seam": "os",
+            "affectedPhases": [
+              "missing-research-skill",
+              "wrong-skill-hash"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "indexed-central-authority-decision",
+            "independentReader": "EngineeringControl.checkResearch: indexed archive binding, decision predicates and central route/skill validation IDs",
+            "caseIds": [
+              "missing-decision",
+              "missing-primary-evidence",
+              "unsupported-alternatives",
+              "unsupported-selection",
+              "missing-reliability",
+              "missing-validation",
+              "missing-acceptance-link",
+              "unrelated-acceptance-link",
+              "unresolved-selected-assumption",
+              "ordinary-luna-receipt",
+              "missing-route-observation",
+              "wrong-observed-model",
+              "wrong-observed-reasoning",
+              "wrong-observed-tier",
+              "missing-research-skill",
+              "wrong-skill-hash",
+              "complete-authority-decision"
+            ]
+          },
+          {
+            "id": "public-route-owner-and-readback",
+            "independentReader": "External Codex CLI: task/skill readback; toy probe.show: stored source-bound decision and receipt diagnostics",
+            "caseIds": [
+              "missing-decision",
+              "missing-primary-evidence",
+              "unsupported-alternatives",
+              "unsupported-selection",
+              "missing-reliability",
+              "missing-validation",
+              "missing-acceptance-link",
+              "unrelated-acceptance-link",
+              "unresolved-selected-assumption",
+              "ordinary-luna-receipt",
+              "missing-route-observation",
+              "wrong-observed-model",
+              "wrong-observed-reasoning",
+              "wrong-observed-tier",
+              "missing-research-skill",
+              "wrong-skill-hash",
+              "complete-authority-decision"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot inspect administrative pre-build decisions and research metadata. CLI invokes public owners with fixed external document, Codex CLI and OS artifact fakes."
+      },
+      "registrationExact": true,
+      "cases": [
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T01:52:59.539Z",
+          "reasonCode": "AUTHORITY_RESEARCH_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"missing-decision\",\"actualUid\":501,\"archive\":{\"key\":\"CJ\",\"originalDigest\":\"87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed\",\"contentDigest\":\"cf233a6606690e2a27355999e296981876df3dda42687f5ed7bc49b989fe094b\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M03\",\"comparisonDigest\":null,\"state\":\"BLOCKED\",\"findings\":[\"DECISION_MISSING\",\"MAPPED_REQUIREMENTS_MISSING\",\"REQUIRED_OPTIONS_MISSING\",\"CHOICE_UNSUPPORTED\",\"PRIMARY_EVIDENCE_MISSING\",\"RELEASE_GATE_MISSING\",\"VALIDATION_PLAN_MISSING\",\"ACCEPTANCE_LINK_MISSING\",\"VALIDATION_ID_MISSING\"],\"selectedTool\":null,\"validationPlan\":\"\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":null,\"missingRequirementIds\":[\"0.1\",\"0.2\",\"0.10\"],\"missingSourceIds\":[\"CU\",\"CJ\"],\"missingValidationIds\":[\"G0:R0:M03\"]},\"execution\":{\"ownerReceiptProduced\":true,\"externalCliSends\":1,\"exportsVerified\":true,\"receiptDigest\":\"2afbfabcc6103b0dffae3b7144031954a7fc4ccd7799d7582c2c460ede7c8b36\",\"observed\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"medium\",\"serviceTier\":\"priority\"},\"loadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"sourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"nativeExecutionVerified\":false},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "cf233a6606690e2a27355999e296981876df3dda42687f5ed7bc49b989fe094b",
+              "354492664c5375a9ed509ee19c37456ab33665dac3675509b285b668114c389b",
+              "f97d83647c6798d4ddfe9100b9ac3424161d498115afc35106de6ebb020523c9"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T01:52:59.593Z",
+          "reasonCode": "AUTHORITY_RESEARCH_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"missing-primary-evidence\",\"actualUid\":501,\"archive\":{\"key\":\"CJ\",\"originalDigest\":\"87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed\",\"contentDigest\":\"343acadcfc26b11330d67aea5c7e7536644f62468e181ebb64711884ef019efc\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M03\",\"comparisonDigest\":\"98bfd0d276efaecdd91a7ebd2dd41b1e534bb02cfe0d79c3eb757a50f0a64135\",\"state\":\"BLOCKED\",\"findings\":[\"OUTSIDE_OPTION_MISSING\",\"REQUIRED_OPTIONS_MISSING\",\"PRIMARY_EVIDENCE_MISSING\",\"VALIDATION_ID_MISSING\"],\"selectedTool\":\"protected-adapter\",\"validationPlan\":\"Validate positive, refusal and recovery cases in the owned fixture before dependent live admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"protected-adapter\",\"missingRequirementIds\":[],\"missingSourceIds\":[\"CU\",\"CJ\"],\"missingValidationIds\":[\"G0:R0:M03\"]},\"execution\":{\"ownerReceiptProduced\":true,\"externalCliSends\":1,\"exportsVerified\":true,\"receiptDigest\":\"2a6cc83938b1d14849df896605d2c5bd1d493d9780ed1e6b80e389d10b7cde71\",\"observed\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"medium\",\"serviceTier\":\"priority\"},\"loadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"sourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"nativeExecutionVerified\":false},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "343acadcfc26b11330d67aea5c7e7536644f62468e181ebb64711884ef019efc",
+              "354492664c5375a9ed509ee19c37456ab33665dac3675509b285b668114c389b",
+              "f97d83647c6798d4ddfe9100b9ac3424161d498115afc35106de6ebb020523c9"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T01:52:59.646Z",
+          "reasonCode": "AUTHORITY_RESEARCH_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"unsupported-alternatives\",\"actualUid\":501,\"archive\":{\"key\":\"CJ\",\"originalDigest\":\"87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed\",\"contentDigest\":\"f495ce7a94d91e2b0ab3d4d67bc229e64a73e5103eb38c8ad6cd864fa4e43c56\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M03\",\"comparisonDigest\":\"d765db2deafbd2ebf419ad065dd9f040d32480f182bcb5b3d5d7481039afc7e9\",\"state\":\"BLOCKED\",\"findings\":[\"OUTSIDE_OPTION_MISSING\",\"REQUIRED_OPTIONS_MISSING\"],\"selectedTool\":\"protected-adapter\",\"validationPlan\":\"Validate positive, refusal and recovery cases in the owned fixture before dependent live admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"protected-adapter\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[]},\"execution\":{\"ownerReceiptProduced\":true,\"externalCliSends\":1,\"exportsVerified\":true,\"receiptDigest\":\"b5c4dffafd24ed367abc4e3de89c8b9e08c32fdfbe69ea11de4ee7be0c1cc710\",\"observed\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"medium\",\"serviceTier\":\"priority\"},\"loadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"sourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"nativeExecutionVerified\":false},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "f495ce7a94d91e2b0ab3d4d67bc229e64a73e5103eb38c8ad6cd864fa4e43c56",
+              "354492664c5375a9ed509ee19c37456ab33665dac3675509b285b668114c389b",
+              "f97d83647c6798d4ddfe9100b9ac3424161d498115afc35106de6ebb020523c9"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T01:52:59.699Z",
+          "reasonCode": "AUTHORITY_RESEARCH_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"unsupported-selection\",\"actualUid\":501,\"archive\":{\"key\":\"CJ\",\"originalDigest\":\"87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed\",\"contentDigest\":\"67f68453d1819fd36fec60841a99ee59384b5559f05888519ee453f84c405603\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M03\",\"comparisonDigest\":\"2b65a6834268022c688f61b96a1d5877e9de32feed349fb1cdc10bef389ce48b\",\"state\":\"BLOCKED\",\"findings\":[\"CHOICE_UNSUPPORTED\",\"PRIMARY_EVIDENCE_MISSING\",\"VALIDATION_ID_MISSING\"],\"selectedTool\":null,\"validationPlan\":\"Validate positive, refusal and recovery cases in the owned fixture before dependent live admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"uncompared\",\"missingRequirementIds\":[],\"missingSourceIds\":[\"CU\",\"CJ\"],\"missingValidationIds\":[\"G0:R0:M03\"]},\"execution\":{\"ownerReceiptProduced\":true,\"externalCliSends\":1,\"exportsVerified\":true,\"receiptDigest\":\"35875fd6f9571eead240ca9c529ccdc94883263b1c1c95b51d9efecda1a74f4e\",\"observed\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"medium\",\"serviceTier\":\"priority\"},\"loadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"sourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"nativeExecutionVerified\":false},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "67f68453d1819fd36fec60841a99ee59384b5559f05888519ee453f84c405603",
+              "354492664c5375a9ed509ee19c37456ab33665dac3675509b285b668114c389b",
+              "f97d83647c6798d4ddfe9100b9ac3424161d498115afc35106de6ebb020523c9"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T01:52:59.752Z",
+          "reasonCode": "AUTHORITY_RESEARCH_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"missing-reliability\",\"actualUid\":501,\"archive\":{\"key\":\"CJ\",\"originalDigest\":\"87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed\",\"contentDigest\":\"3ae2fc493bad41a929ab3a98709f2a8b8d7e6a9d17745dfcafd1c25be1e1ef39\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M03\",\"comparisonDigest\":\"ff9077ffab9bc767bf02849dbbc5e49fd60cb5b1ec38397757afda0d704d770c\",\"state\":\"BLOCKED\",\"findings\":[\"TRADEOFFS_MISSING\"],\"selectedTool\":\"protected-adapter\",\"validationPlan\":\"Validate positive, refusal and recovery cases in the owned fixture before dependent live admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"protected-adapter\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[]},\"execution\":{\"ownerReceiptProduced\":true,\"externalCliSends\":1,\"exportsVerified\":true,\"receiptDigest\":\"3f0624f0e7c53435230f4aa3ae7b415934ca460cb7581386ea9cab96151ecbb1\",\"observed\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"medium\",\"serviceTier\":\"priority\"},\"loadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"sourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"nativeExecutionVerified\":false},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "3ae2fc493bad41a929ab3a98709f2a8b8d7e6a9d17745dfcafd1c25be1e1ef39",
+              "354492664c5375a9ed509ee19c37456ab33665dac3675509b285b668114c389b",
+              "f97d83647c6798d4ddfe9100b9ac3424161d498115afc35106de6ebb020523c9"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T01:52:59.816Z",
+          "reasonCode": "AUTHORITY_RESEARCH_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"missing-validation\",\"actualUid\":501,\"archive\":{\"key\":\"CJ\",\"originalDigest\":\"87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed\",\"contentDigest\":\"a8f5966788330cd4650f9f353c93db19dd9113f034a1fedd776df1ea08884360\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M03\",\"comparisonDigest\":\"84bebef4beb8cb480e8635c6af64f09e4428f5e4f196e694e078d3752075d4ac\",\"state\":\"BLOCKED\",\"findings\":[\"VALIDATION_ID_MISSING\"],\"selectedTool\":\"protected-adapter\",\"validationPlan\":\"Validate positive, refusal and recovery cases in the owned fixture before dependent live admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"protected-adapter\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[\"G0:R0:M03\"]},\"execution\":{\"ownerReceiptProduced\":true,\"externalCliSends\":1,\"exportsVerified\":true,\"receiptDigest\":\"335eac0397f00e64eeea8fe2083d35fcf65603c0d210b9fa8cc6f3767b13f6cc\",\"observed\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"medium\",\"serviceTier\":\"priority\"},\"loadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"sourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"nativeExecutionVerified\":false},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "a8f5966788330cd4650f9f353c93db19dd9113f034a1fedd776df1ea08884360",
+              "354492664c5375a9ed509ee19c37456ab33665dac3675509b285b668114c389b",
+              "f97d83647c6798d4ddfe9100b9ac3424161d498115afc35106de6ebb020523c9"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T01:52:59.871Z",
+          "reasonCode": "AUTHORITY_RESEARCH_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"missing-acceptance-link\",\"actualUid\":501,\"archive\":{\"key\":\"CJ\",\"originalDigest\":\"87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed\",\"contentDigest\":\"35e5b768116556c751fee839e5ed72d265003f35fd5ba803d83f5eec3b57e21b\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M03\",\"comparisonDigest\":\"718169d6bbb2abcc30b65d9cce72fb958b733e83db512b7767952850e44d0050\",\"state\":\"BLOCKED\",\"findings\":[\"ACCEPTANCE_LINK_MISSING\",\"VALIDATION_ID_MISSING\"],\"selectedTool\":\"protected-adapter\",\"validationPlan\":\"Validate positive, refusal and recovery cases in the owned fixture before dependent live admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"protected-adapter\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[\"AT-authority-60\",\"G0:R0:M03\"]},\"execution\":{\"ownerReceiptProduced\":true,\"externalCliSends\":1,\"exportsVerified\":true,\"receiptDigest\":\"449b9d73eb7e01ae8a6511ca33637bb883e26dfc62fd1f04a65aa0456ed315c4\",\"observed\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"medium\",\"serviceTier\":\"priority\"},\"loadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"sourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"nativeExecutionVerified\":false},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "35e5b768116556c751fee839e5ed72d265003f35fd5ba803d83f5eec3b57e21b",
+              "354492664c5375a9ed509ee19c37456ab33665dac3675509b285b668114c389b",
+              "f97d83647c6798d4ddfe9100b9ac3424161d498115afc35106de6ebb020523c9"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T01:52:59.922Z",
+          "reasonCode": "AUTHORITY_RESEARCH_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"unrelated-acceptance-link\",\"actualUid\":501,\"archive\":{\"key\":\"CJ\",\"originalDigest\":\"87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed\",\"contentDigest\":\"efa9fad1c8b98a95ba9f224af0050a7130afeff88ed2c4a9980719403fa7b210\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M03\",\"comparisonDigest\":\"1aead33ac6fc25ff9500878a7e5a06d3b0512896ac7aa90d719e5f05539e3f10\",\"state\":\"BLOCKED\",\"findings\":[\"ACCEPTANCE_LINK_MISSING\"],\"selectedTool\":\"protected-adapter\",\"validationPlan\":\"Validate positive, refusal and recovery cases in the owned fixture before dependent live admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"protected-adapter\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[]},\"execution\":{\"ownerReceiptProduced\":true,\"externalCliSends\":1,\"exportsVerified\":true,\"receiptDigest\":\"8d9b35ac575775b86014a2bb0fb54ab990888210e141b40dee690de810ab3c9a\",\"observed\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"medium\",\"serviceTier\":\"priority\"},\"loadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"sourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"nativeExecutionVerified\":false},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "efa9fad1c8b98a95ba9f224af0050a7130afeff88ed2c4a9980719403fa7b210",
+              "354492664c5375a9ed509ee19c37456ab33665dac3675509b285b668114c389b",
+              "f97d83647c6798d4ddfe9100b9ac3424161d498115afc35106de6ebb020523c9"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T01:52:59.975Z",
+          "reasonCode": "AUTHORITY_RESEARCH_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"unresolved-selected-assumption\",\"actualUid\":501,\"archive\":{\"key\":\"CJ\",\"originalDigest\":\"87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed\",\"contentDigest\":\"892554465a81903d67f9ee34e84187204e1b0f56ef3d98aa30ec271b77f411c4\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M03\",\"comparisonDigest\":\"4a0b1b0d8052ed120ba896c7597eca14275f54861ab3a4633f7155e68d2d1601\",\"state\":\"BLOCKED\",\"findings\":[\"SELECTED_FACT_UNRESOLVED\"],\"selectedTool\":\"protected-adapter\",\"validationPlan\":\"Validate positive, refusal and recovery cases in the owned fixture before dependent live admission.\",\"unresolvedFacts\":[{\"optionId\":\"protected-adapter\",\"fact\":\"Selected capability has not been established.\"}],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"protected-adapter\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[]},\"execution\":{\"ownerReceiptProduced\":true,\"externalCliSends\":1,\"exportsVerified\":true,\"receiptDigest\":\"0fd7beaebadba9cdfd56c816ebd50811aa011496c4681eca55f22c6be07d3bf5\",\"observed\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"medium\",\"serviceTier\":\"priority\"},\"loadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"sourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"nativeExecutionVerified\":false},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "892554465a81903d67f9ee34e84187204e1b0f56ef3d98aa30ec271b77f411c4",
+              "354492664c5375a9ed509ee19c37456ab33665dac3675509b285b668114c389b",
+              "f97d83647c6798d4ddfe9100b9ac3424161d498115afc35106de6ebb020523c9"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T01:53:00.026Z",
+          "reasonCode": "AUTHORITY_RESEARCH_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"ordinary-luna-receipt\",\"actualUid\":501,\"archive\":{\"key\":\"CJ\",\"originalDigest\":\"87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed\",\"contentDigest\":\"515fdb39c36cd792104e53ec45fece1e2d74da9971501019ec7687889b3387fa\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M03\",\"comparisonDigest\":\"4bfe1c78959ba7a40dfed0147e1010f4d0d2ae53a8b0a46a00f9de8c36562ea1\",\"state\":\"BLOCKED\",\"findings\":[\"VALIDATION_ID_MISSING\"],\"selectedTool\":\"protected-adapter\",\"validationPlan\":\"Validate positive, refusal and recovery cases in the owned fixture before dependent live admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"protected-adapter\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[\"ROUTE:R0:M03\",\"SKILL:R0:M03\"]},\"execution\":{\"ownerReceiptProduced\":true,\"externalCliSends\":1,\"exportsVerified\":true,\"receiptDigest\":\"ef7520f475bcfea209ed6bf25e7d0141f7bf114a96e8cfb05df2889ea10e07a0\",\"observed\":{\"model\":\"gpt-6-luna\",\"effort\":\"max\",\"serviceTier\":\"priority\"},\"loadedDigest\":null,\"sourceCommit\":null,\"nativeExecutionVerified\":false},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "515fdb39c36cd792104e53ec45fece1e2d74da9971501019ec7687889b3387fa",
+              "354492664c5375a9ed509ee19c37456ab33665dac3675509b285b668114c389b",
+              "f97d83647c6798d4ddfe9100b9ac3424161d498115afc35106de6ebb020523c9"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T01:53:00.078Z",
+          "reasonCode": "AUTHORITY_RESEARCH_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"missing-route-observation\",\"actualUid\":501,\"archive\":{\"key\":\"CJ\",\"originalDigest\":\"87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed\",\"contentDigest\":\"ba519a72d1ce7298682989d6150da2a73cd44a0e50c9c958847c0429619f5ae2\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M03\",\"comparisonDigest\":\"6af54d6573f4df9a78e60d2c1032bf8ae78772df095cb623b21e38a8a1808dea\",\"state\":\"BLOCKED\",\"findings\":[\"VALIDATION_ID_MISSING\"],\"selectedTool\":\"protected-adapter\",\"validationPlan\":\"Validate positive, refusal and recovery cases in the owned fixture before dependent live admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"protected-adapter\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[\"ROUTE:R0:M03\"]},\"execution\":{\"ownerReceiptProduced\":true,\"externalCliSends\":1,\"exportsVerified\":true,\"receiptDigest\":\"59bffa65a96d118acc4d62c8519a5dd3ed6affc5feba06a907c1ca9dc9f15841\",\"observed\":null,\"loadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"sourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"nativeExecutionVerified\":false},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "ba519a72d1ce7298682989d6150da2a73cd44a0e50c9c958847c0429619f5ae2",
+              "354492664c5375a9ed509ee19c37456ab33665dac3675509b285b668114c389b",
+              "f97d83647c6798d4ddfe9100b9ac3424161d498115afc35106de6ebb020523c9"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T01:53:00.129Z",
+          "reasonCode": "AUTHORITY_RESEARCH_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"wrong-observed-model\",\"actualUid\":501,\"archive\":{\"key\":\"CJ\",\"originalDigest\":\"87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed\",\"contentDigest\":\"550da64c1e4c605daae15ea9a374843ef12ab76db42c334efbe142ca3870ff38\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M03\",\"comparisonDigest\":\"e9d86b1091c4afecaa240a596c7cf8f249c27140309c75d6bd24e9dca9d1fcc6\",\"state\":\"BLOCKED\",\"findings\":[\"VALIDATION_ID_MISSING\"],\"selectedTool\":\"protected-adapter\",\"validationPlan\":\"Validate positive, refusal and recovery cases in the owned fixture before dependent live admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"protected-adapter\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[\"ROUTE:R0:M03\"]},\"execution\":{\"ownerReceiptProduced\":true,\"externalCliSends\":1,\"exportsVerified\":true,\"receiptDigest\":\"1398ab47eb2828e70f06fe5c2aa977339973cccec70204e69fdb6ccbc8179545\",\"observed\":{\"model\":\"gpt-6-luna\",\"effort\":\"medium\",\"serviceTier\":\"priority\"},\"loadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"sourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"nativeExecutionVerified\":false},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "550da64c1e4c605daae15ea9a374843ef12ab76db42c334efbe142ca3870ff38",
+              "354492664c5375a9ed509ee19c37456ab33665dac3675509b285b668114c389b",
+              "f97d83647c6798d4ddfe9100b9ac3424161d498115afc35106de6ebb020523c9"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T01:53:00.179Z",
+          "reasonCode": "AUTHORITY_RESEARCH_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"wrong-observed-reasoning\",\"actualUid\":501,\"archive\":{\"key\":\"CJ\",\"originalDigest\":\"87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed\",\"contentDigest\":\"7050cccf184cb8c7c4e768b74003a07062e1d6f91c054208f7ab280ced0a57a3\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M03\",\"comparisonDigest\":\"516e587dd1f3ab0fbb7680d508427edb188e7f44df6ceacc02120540d1f383ec\",\"state\":\"BLOCKED\",\"findings\":[\"VALIDATION_ID_MISSING\"],\"selectedTool\":\"protected-adapter\",\"validationPlan\":\"Validate positive, refusal and recovery cases in the owned fixture before dependent live admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"protected-adapter\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[\"ROUTE:R0:M03\"]},\"execution\":{\"ownerReceiptProduced\":true,\"externalCliSends\":1,\"exportsVerified\":true,\"receiptDigest\":\"7028cff556614f45a66cc90593c77b2fd18abd8cb42817171619984dccf2216f\",\"observed\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"max\",\"serviceTier\":\"priority\"},\"loadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"sourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"nativeExecutionVerified\":false},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "7050cccf184cb8c7c4e768b74003a07062e1d6f91c054208f7ab280ced0a57a3",
+              "354492664c5375a9ed509ee19c37456ab33665dac3675509b285b668114c389b",
+              "f97d83647c6798d4ddfe9100b9ac3424161d498115afc35106de6ebb020523c9"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T01:53:00.230Z",
+          "reasonCode": "AUTHORITY_RESEARCH_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"wrong-observed-tier\",\"actualUid\":501,\"archive\":{\"key\":\"CJ\",\"originalDigest\":\"87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed\",\"contentDigest\":\"d93f65fe03332ca0c2553547eb25ee3b84afb3dc105d319fdda133f2156a4905\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M03\",\"comparisonDigest\":\"51e3e0724451c0b9fc68c0aa0bb34b5b18ea6bc1628c2ebe559224503c5b4b73\",\"state\":\"BLOCKED\",\"findings\":[\"VALIDATION_ID_MISSING\"],\"selectedTool\":\"protected-adapter\",\"validationPlan\":\"Validate positive, refusal and recovery cases in the owned fixture before dependent live admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"protected-adapter\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[\"ROUTE:R0:M03\"]},\"execution\":{\"ownerReceiptProduced\":true,\"externalCliSends\":1,\"exportsVerified\":true,\"receiptDigest\":\"3d525af11d5af687b07ea7865512574589a2df4018c06e6b8199b952a1146451\",\"observed\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"medium\",\"serviceTier\":\"default\"},\"loadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"sourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"nativeExecutionVerified\":false},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "d93f65fe03332ca0c2553547eb25ee3b84afb3dc105d319fdda133f2156a4905",
+              "354492664c5375a9ed509ee19c37456ab33665dac3675509b285b668114c389b",
+              "f97d83647c6798d4ddfe9100b9ac3424161d498115afc35106de6ebb020523c9"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T01:53:00.279Z",
+          "reasonCode": "AUTHORITY_RESEARCH_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"missing-research-skill\",\"actualUid\":501,\"archive\":{\"key\":\"CJ\",\"originalDigest\":\"87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed\",\"contentDigest\":\"498b0c78bc5ebdc2a4cf7c0bee0ce44aec65d8286dfc6bd75f5b956b9c22026d\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M03\",\"comparisonDigest\":\"255f3bbe3ed54249b70990dcdcbb557f993e059e7b9c5d6ad5cd6a827033eb42\",\"state\":\"BLOCKED\",\"findings\":[\"VALIDATION_ID_MISSING\"],\"selectedTool\":\"protected-adapter\",\"validationPlan\":\"Validate positive, refusal and recovery cases in the owned fixture before dependent live admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"protected-adapter\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[\"ROUTE:R0:M03\",\"SKILL:R0:M03\"]},\"execution\":{\"ownerReceiptProduced\":true,\"externalCliSends\":0,\"exportsVerified\":true,\"receiptDigest\":\"5ac7932084e2112017a80cfa3b124f43944301cdfa03c5eae6368949680facc3\",\"observed\":null,\"loadedDigest\":null,\"sourceCommit\":null,\"nativeExecutionVerified\":false},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "498b0c78bc5ebdc2a4cf7c0bee0ce44aec65d8286dfc6bd75f5b956b9c22026d",
+              "354492664c5375a9ed509ee19c37456ab33665dac3675509b285b668114c389b",
+              "f97d83647c6798d4ddfe9100b9ac3424161d498115afc35106de6ebb020523c9"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T01:53:00.327Z",
+          "reasonCode": "AUTHORITY_RESEARCH_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"wrong-skill-hash\",\"actualUid\":501,\"archive\":{\"key\":\"CJ\",\"originalDigest\":\"87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed\",\"contentDigest\":\"3bdde6d15f8339960ec80e468e9a56c65fbd2103bf7a0f8ffa71213b1b741ec2\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M03\",\"comparisonDigest\":\"b96c3924fde3ec9b501407b18a54c8e342d73c26c2948750e068113e40f4bba0\",\"state\":\"BLOCKED\",\"findings\":[\"VALIDATION_ID_MISSING\"],\"selectedTool\":\"protected-adapter\",\"validationPlan\":\"Validate positive, refusal and recovery cases in the owned fixture before dependent live admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"protected-adapter\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[\"ROUTE:R0:M03\",\"SKILL:R0:M03\"]},\"execution\":{\"ownerReceiptProduced\":true,\"externalCliSends\":0,\"exportsVerified\":true,\"receiptDigest\":\"1e58a0f7f79e4dbe4459f90fb126ab60bb135b4fdb88b83c94a26cfb942c50e0\",\"observed\":null,\"loadedDigest\":null,\"sourceCommit\":null,\"nativeExecutionVerified\":false},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "3bdde6d15f8339960ec80e468e9a56c65fbd2103bf7a0f8ffa71213b1b741ec2",
+              "354492664c5375a9ed509ee19c37456ab33665dac3675509b285b668114c389b",
+              "f97d83647c6798d4ddfe9100b9ac3424161d498115afc35106de6ebb020523c9"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T01:53:00.378Z",
+          "reasonCode": "AUTHORITY_RESEARCH_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"complete-authority-decision\",\"actualUid\":501,\"archive\":{\"key\":\"CJ\",\"originalDigest\":\"87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed\",\"contentDigest\":\"6d3df253a842103531bab32c3b498788f66dca01171c6177ff4e5db22aa90ceb\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M03\",\"comparisonDigest\":\"43951df0eca16037ff9e5b91ee74dd30c23a7bb0b61711def27587f95ece8221\",\"state\":\"PASS\",\"findings\":[],\"selectedTool\":\"protected-adapter\",\"validationPlan\":\"Validate positive, refusal and recovery cases in the owned fixture before dependent live admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"protected-adapter\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[]},\"execution\":{\"ownerReceiptProduced\":true,\"externalCliSends\":1,\"exportsVerified\":true,\"receiptDigest\":\"81e7f892a2c427e170ea52047c9c56ed1f08de972d804beaf74cc537a1c40c40\",\"observed\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"medium\",\"serviceTier\":\"priority\"},\"loadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"sourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"nativeExecutionVerified\":false},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "6d3df253a842103531bab32c3b498788f66dca01171c6177ff4e5db22aa90ceb",
+              "354492664c5375a9ed509ee19c37456ab33665dac3675509b285b668114c389b",
+              "f97d83647c6798d4ddfe9100b9ac3424161d498115afc35106de6ebb020523c9"
+            ]
+          }
+        }
+      ],
+      "resultState": "NOT_IMPLEMENTED",
+      "complete": false
+    }
+  ],
+  "up": {
+    "exitCode": 0,
+    "path": "build/evidence/R0.02/ops44-restored-auth-cli/up.json",
+    "sha256": "f4c62738ed972cbfa15a214fcc3f28e34fe23e0c1f5ebd3fb4f353ec028123ca"
+  },
+  "stackId": "6aa365ed-b4fc-498e-a2c7-69f787a6e325",
+  "down": {
+    "exitCode": 0,
+    "path": "build/evidence/R0.02/ops44-restored-auth-cli/down.json",
+    "sha256": "fc7d85b62e1c1fe38c2b022488ff9e70e503a7292191973cacf4444921e62364"
+  },
+  "teardown": {
+    "stackId": "6aa365ed-b4fc-498e-a2c7-69f787a6e325",
+    "checkpointRefs": [],
+    "fenceRefs": [],
+    "stoppedResourceRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "6aa365ed-b4fc-498e-a2c7-69f787a6e325"
+      }
+    ],
+    "retainedArtifactRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "6aa365ed-b4fc-498e-a2c7-69f787a6e325"
+      }
+    ],
+    "unresolvedResourceRefs": [],
+    "complete": true
+  }
+}

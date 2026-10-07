@@ -1,0 +1,108 @@
+{
+  "schemaVersion": "toy.r0.02.ops44-minimum-plan.v1",
+  "status": "PLAN_ONLY",
+  "acceptance": {
+    "id": "AT-ops-44",
+    "source": "../personal-assistant-harness/specs/ops.md:1965",
+    "assertion": "Given a research fixture whose most reliable suitable tool was not named by Johan, When the prescribed research route compares it with the named options, Then the decision record evaluates and can select that tool on evidence without inventing a new application host or weakening his requirements.",
+    "sourceAssertionHash": "7a7100f87f1e08f4c6aaa35582495f2984c39ba058b27c14962f0157c8f14804",
+    "acceptanceIndexRung": "CLI",
+    "requiredEvidence": "static, probe:AT-ops-44"
+  },
+  "currentProof": {
+    "baseline": "build/evidence/R0.03/dashboard90-baseline.json",
+    "baselineSha256": "aa59b69b0e1312167d9b6458e12bc76304cac1ea40b36f50e113d1e1db3df712",
+    "unfiltered": true,
+    "sourceRegistration": null,
+    "result": "NOT_IMPLEMENTED",
+    "complete": false,
+    "run": { "path": "build/evidence/R0.03/dashboard90-baseline-cli/AT-ops-44-run.json", "sha256": "bce66264a92e69b15aaeafe49126ef22eccd2c370667adc5e478c15a852f123c", "exitCode": 5 },
+    "show": { "path": "build/evidence/R0.03/dashboard90-baseline-cli/AT-ops-44-show.json", "sha256": "d02fceacd4d0417e4f1f1fccdd743b63e2c83ce48cf725eff96178a9d51151df", "exitCode": 5 },
+    "runShowSameData": true,
+    "world": { "stackId": "0efb3625-7a68-4ad6-ae62-0d435b004a88", "state": "DOWN", "complete": true, "unresolvedRefs": 0 },
+    "wholeAcceptanceComplete": false
+  },
+  "bindingEvidence": {
+    "opsHostRule": { "path": "../personal-assistant-harness/specs/ops.md", "line": 77, "text": "The Mac holds the authoritative application data. Cloud monitoring and backup services do not become application hosts." },
+    "requirementMapping": [
+      { "path": "../personal-assistant-harness/specs/RESEARCH-REGISTER.md", "line": 33, "text": "README maps 0.1, 0.2 and 0.10 to all specs" },
+      { "path": "../personal-assistant-harness/specs/RESEARCH-REGISTER.md", "line": 45, "text": "2.4, 5.10 ... A03-A06/A11-A19" },
+      { "path": "../personal-assistant-harness/specs/README.md", "lines": [34, 35, 43, 64, 87], "meaning": "0.1, 0.2 and 0.10 are global; 2.4 and 5.10 are Ops requirements" },
+      { "path": "../personal-assistant-harness/specs/RESEARCH-REGISTER.md", "line": 97, "meaning": "A14 is an Ops (P) component in the A11-A19 group; use this one existing inventory row as a narrow fixture target" }
+    ],
+    "scopeChoice": "Use the existing A14 row to bind this fixture to an Ops component with global 0.1/0.2/0.10 and group-mapped 2.4/5.10. Derive the exact required IDs from EngineeringControl's A14 component decision; do not hard-code or infer them from audit labels.",
+    "hostConstraintLimit": "ResearchComponentComparisonV2/V3 has only free-text option.resources and the comparator checks that it is non-empty; it has no typed application-host rule. A fixture can assert its selected A14 record explicitly preserves the Mac host constraint, but that is not a general host-policy validator. Do not claim reusable host enforcement from this probe."
+  },
+  "existingOwners": {
+    "comparison": "EngineeringControl.checkResearch via @toy/self-improvement/public; current V3 ResearchComponentComparison supports executionReceipt, mappedRequirements, source-backed options and decision readback.",
+    "route": "ModelRoute.delegationReceipt via @toy/hermes/public; model-route-probe.ts already has a fixed external Codex executor/resource-reader fake and checks exported pinned skill bytes, exact argv, requested/observed research route, and zero live provider sends.",
+    "integratedPattern": "packages/hermes/src/model-route-probe.ts componentReceiptProbe already feeds a fake ModelRoute receipt to EngineeringControl.checkResearch, but is hard-coded to AT-authority-60 / M03 / CJ. Its existing fixture uses seeded primary evidence and records nativeExecutionVerified:false and wholeATComplete:false.",
+    "nearbyFixture": "AT-self-improvement-54 has four cases (absent, unsupported, incomplete IDs, outside selected) in component-comparison-probe.ts, but targets generic M02 V2 without ModelRoute receipt or Ops 2.4/5.10 scope; it is a pattern only, not AT-ops-44 proof."
+  },
+  "minimumSourcePlan": {
+    "writtenInterfaceFirst": "No new module or DTO is required for route binding: reuse ResearchComponentComparisonV3 and its existing executionReceipt. Before implementation, add the short written AT-ops-44 probe interface/fixture contract to the owning ADR or acceptance notes, spelling out seeded-only claims and the host-rule limitation.",
+    "ownedRuntimeFiles": [
+      "tests/registry.yaml: register AT-ops-44 as owner hermes, scenario research.component-receipts, CLI/static_gate, with mandatory cases below; regenerate the derived probe registry through the existing generator.",
+      "packages/hermes/src/model-route-probe.ts: extend the existing component-receipt owner with an AT-ops-44 branch bound to the indexed A14 component and its current report; build V3 overlay, obtain its receipt from delegationFixture/ModelRoute.delegationReceipt using the existing fake, then call EngineeringControl.checkResearch. Preserve AT-authority-60 unchanged."
+    ],
+    "noChangesNeeded": [
+      "packages/contracts/src/engineering-control.ts: V3 already carries the route receipt and mapped requirements; no schema change for this fixture.",
+      "packages/self-improvement/src/engineering-control.ts: its Ops requirement additions already yield all165 decisions with global 0.1/0.2/0.10 and extra 2.4/5.10 on the canonical 13 A-group rows.",
+      "packages/self-improvement/src/component-comparison-probe.ts: its SI54 V2 owner is not the route-integrated owner and should not be expanded into Ops proof."
+    ],
+    "registeredCaseMatrix": [
+      {
+        "id": "outside-selected-with-evidence",
+        "fixture": "At A14, compare at least two explicitly named options with one outside option (example:null). Give each option its own seeded primary-evidence linkage, tradeoffs and suitability rationale; the fixed fixture oracle identifies the outside option as the strongest suitable choice and checks EngineeringControl selects that exact option.",
+        "assertions": ["state PASS", "selectedOptionId is the outside option", "outside option is viable/proven and primary-supported", "all source-derived A14 mapped requirements are present", "release/acceptance/validation links bind to A14", "V3 receipt is observed research with pinned skill and expected route", "resource claim preserves the existing Mac as authoritative app host", "liveProviderSends=0", "nativeExecutionVerified=false", "wholeATComplete=false"]
+      },
+      {
+        "id": "outside-without-primary-support",
+        "fixture": "Remove the outside option's primary support from the otherwise-complete decision.",
+        "assertions": ["BLOCKED", "outside candidate is not accepted as evidenced selection", "PRIMARY_EVIDENCE_MISSING or OUTSIDE_OPTION_MISSING is observed as appropriate"]
+      },
+      {
+        "id": "outside-route-mismatch",
+        "fixture": "Use the existing external fake's wrong-observed-model (or missing-route) fault in the A14 V3 receipt.",
+        "assertions": ["BLOCKED", "A14 route validation is missing", "no wrong route satisfies the research receipt"]
+      },
+      {
+        "id": "mapped-requirement-removed",
+        "fixture": "Remove one source-derived A14 required ID from the positive decision, selected from EngineeringControl's current A14 missingRequirementIds rather than hard-coded.",
+        "assertions": ["BLOCKED", "missingRequirementIds identifies the removed ID", "other A14/global requirements remain unchanged"]
+      }
+    ],
+    "hostOracle": "The current public report can record the host constraint in option.resources and the A14 row/rationale, but EngineeringControl does not semantically reject a new host stated there. Keep the positive host assertion fixture-specific. If acceptance requires adversarial rejection of any newly proposed host, that is a distinct missing central oracle; stop for a separately scoped written policy before adding a DTO or parsing free text."
+  },
+  "cliProofPlan": {
+    "run": "toy --env test --stack <stack-id> probe run AT-ops-44 --request-id <uuid> --wait-ms 120000 --json",
+    "show": "toy --env test --stack <stack-id> probe show <operation-id> --json",
+    "caseFilter": null,
+    "requiredReadback": ["registered manifest and exact case IDs", "run/show same operation and case data", "all mandatory fixture observations", "A14 decision and route receipt digests", "zero live provider sends", "nativeExecutionVerified=false", "wholeATComplete=false", "stack DOWN with complete teardown"]
+  },
+  "deferred": [
+    "Real primary research and real-world ranking of the outside tool; seeded example.test sources prove fixture mechanics only.",
+    "Protected/native ModelRoute execution and identity proof; the existing external executor is a test fake.",
+    "A general semantic application-host enforcement rule; current V3 free text does not provide that oracle.",
+    "AT-ops-43 full 49-component positive decisions and decision/evidence/plan-build denial matrix; AT-ops-43 remains NOT_IMPLEMENTED as an acceptance probe. The corrected requirement mapping has public CLI regression/generic research proof only.",
+    "AT-ops-45 actual protected-route proof, whole R0 acceptance, and pending root requests."
+  ],
+  "sourceSha256": {
+    "../personal-assistant-harness/specs/ops.md": "f07aab65088c82e4ff21e4d63edb2f279e2324e6d7e2bbb801e0fd7494104b0b",
+    "../personal-assistant-harness/specs/README.md": "2c02bdb4d13abd198231446873eaacfe30177a97f66235158912fd2accd006f4",
+    "../personal-assistant-harness/specs/RESEARCH-REGISTER.md": "e89b3336e0c2458ac204fb0927da30f4541abfab48a9d55735c4655719a3f10d",
+    "../personal-assistant-harness/specs/cli.md": "30d03260c42bbfd15c1986b6012806f2320646de84f7a2d0b1eeb6db48e464d6",
+    "tests/acceptance-index.json": "c9b645eab7f55b2ebf35d7db769a534a4837de23ad3dc3d913f3189e781d44fa",
+    "tests/registry.yaml": "9330ff5c49e4683111c0075e39dc241969285d83e15013c2d0ace8f309ed6b23",
+    "packages/contracts/src/engineering-control.ts": "f04b91f3ee915526ed5f5706d18e39b3842cbfa51498ddccb9c230218c8a889c",
+    "packages/contracts/src/model-route.ts": "e95a854b188b67d37aa4b518626428e4de7eb28e1fcb35edc74bdc8a4235dd0d",
+    "packages/contracts/src/generated-probe-registry.ts": "9e9ec5d953d2c22cd04cf17ec6f722abd19a68316135a0d39022718049f006fc",
+    "packages/self-improvement/src/engineering-control.ts": "48df6bfa7c8dd9260f170c1acd6f1f32da1d495f7199d30fc9a851374ca8325a",
+    "packages/self-improvement/src/component-comparison-probe.ts": "f9d5b8ba69f44b07b58a9a203d92c83d4028a47d22496daf87c36aa9e1ddc713",
+    "packages/self-improvement/src/public.ts": "bd1b1d81adff008150902aa6174f5df7e8cc3b615fbf9408a035aa8a6146a9a3",
+    "packages/hermes/src/model-route.ts": "75bad754c537c53a920762b259d30ee6f89149a8d60d40678214cf5e2dec3962",
+    "packages/hermes/src/model-route-probe.ts": "33df9503f0db32d6d46124835635fc8c95b65828015a26142e1d7a19a4f6cca6",
+    "packages/hermes/src/public.ts": "ccabd122931e9c879e9be4084cdfae31a6d112490936b2a48bf695293ecdfc86",
+    "build/evidence/R0.03/dashboard90-baseline.json": "aa59b69b0e1312167d9b6458e12bc76304cac1ea40b36f50e113d1e1db3df712"
+  }
+}

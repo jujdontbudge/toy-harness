@@ -2,9 +2,9 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-07T01:18:57.122524+00:00",
+  "updatedAt": "2026-10-07T01:53:33.955852+00:00",
   "phase": "R0_FEASIBILITY",
-  "activeCard": "R0.03",
+  "activeCard": "R0.12",
   "cardCount": 87,
   "acceptanceCount": 1447,
   "cards": {
@@ -439,7 +439,8 @@
         "build/evidence/R0.02/ops-scope-rejected.schema.json",
         "build/evidence/R0.02/ops-scope-corrected-cli-test.json",
         "build/evidence/R0.02/ops-scope-corrected-sources-regression.json",
-        "build/evidence/R0.02/ops-scope-corrected-verification.json"
+        "build/evidence/R0.02/ops-scope-corrected-verification.json",
+        "build/evidence/R0.02/ops44-final-verification.json"
       ],
       "requiredATs": [
         "AT-RESEARCH-REGISTER-1",
@@ -642,7 +643,7 @@
         "reviewEvidence": "build/evidence/R0.02/ops44-plan-review.json"
       },
       "ops44Unit": {
-        "state": "BOUNDED_SOURCE_RUNNING",
+        "state": "SOURCE_UNIT_VERIFIED_STOPPED",
         "assignedAT": "AT-ops-44",
         "startedAt": "2026-10-07T01:18:20.766464+00:00",
         "sourceStopAt": "2026-10-07T01:50:00Z",
@@ -653,13 +654,41 @@
         "mandatoryCases": 4,
         "fixtureComponent": "A14",
         "writtenInterface": "docs/adr/0047-ops-outside-research-probe.md",
-        "sourceWorkerStopped": false,
+        "sourceWorkerStopped": true,
         "wholeATComplete": false,
         "acceptanceComplete": false,
-        "nativeAttempts": 0,
+        "nativeAttempts": 1,
         "nativeFailures": 0,
         "newDto": false,
-        "hostPolicyEnforcementClaimed": false
+        "hostPolicyEnforcementClaimed": false,
+        "sourceHandoff": "build/evidence/R0.02/ops44-source-handoff.json",
+        "parentSourceReview": "build/evidence/R0.02/ops44-parent-source-review.json",
+        "sourceReviewPassed": true,
+        "parentIntegration": "build/evidence/R0.02/ops44-parent-integration.json",
+        "registryIntegrated": true,
+        "fixtureGuardIntegrated": true,
+        "featureMetadataIntegrated": true,
+        "canonicalGenerationDone": true,
+        "verification": "build/evidence/R0.02/ops44-final-verification.json",
+        "passedChecks": 4,
+        "affectedRegressionChecks": 21
+      },
+      "opsOutsideResearchUnit": {
+        "state": "STOPPED_FOUR_UNFILTERED_FIXTURE_CASES_VERIFIED_WHOLE_PENDING",
+        "assignedAT": "AT-ops-44",
+        "passedChecks": 4,
+        "sharedResearchChecks": 21,
+        "evidence": "build/evidence/R0.02/ops44-final-verification.json",
+        "strict": "build/evidence/R0.02/ops44-restored-auth-strict.txt",
+        "worldState": "DOWN",
+        "acceptanceComplete": false,
+        "wholeATComplete": false,
+        "stoppedAt": "2026-10-07T01:53:33.955852+00:00",
+        "deferrals": [
+          "Protected research route and actual controller identity",
+          "Real primary-source authentication and reliable comparison",
+          "Generic host semantic policy and canonical affected-build consumer"
+        ]
       }
     },
     "R0.03": {
@@ -1230,7 +1259,7 @@
         "reviewEvidence": "build/evidence/R0.03/dashboard90-plan-review.json"
       },
       "dashboardUnit": {
-        "state": "BOUNDED_SOURCE_RUNNING",
+        "state": "DEFERRED_AFTER_THREE_NATIVE_FAILURES_SOURCE_RESTORED",
         "assignedAT": "AT-hermes-config-90",
         "startedAt": "2026-10-07T01:14:32.092823+00:00",
         "sourceStopAt": "2026-10-07T01:45:00Z",
@@ -1239,12 +1268,32 @@
         "plan": "build/evidence/R0.03/dashboard90-next-minimum-plan.json",
         "sourceReview": "build/evidence/R0.03/dashboard90-plan-review.json",
         "admissionEvidence": "build/evidence/R0.03/dashboard90-source-phase-doctor.json",
-        "nativeAttempts": 0,
-        "nativeFailures": 0,
+        "nativeAttempts": 3,
+        "nativeFailures": 3,
         "writtenInterface": "docs/adr/0046-dashboard-auth-scope-probe.md",
         "wholeATComplete": false,
         "acceptanceComplete": false,
-        "sourceWorkerStopped": false
+        "sourceWorkerStopped": true,
+        "parentReviewFindings": [
+          "Reuse generated HermesAuthFixtureResultV1 for dashboard child; no hand-copied receipt DTO/protocol. Exact operation/phase enum additions may be necessary, parent integration only after source stop.",
+          "Exact sanitized 400 response shape/token hygiene must reject unexpected token material, not just snake-case token keys."
+        ],
+        "newDto": false,
+        "canonicalEnumExtensionMayBeRequired": true,
+        "sourceHandoff": "build/evidence/R0.03/dashboard90-source-handoff.json",
+        "parentReview": "build/evidence/R0.03/dashboard90-parent-source-review.json",
+        "parentIntegration": "build/evidence/R0.03/dashboard90-parent-integration.json",
+        "generatedEnumsAdded": 3,
+        "canonicalGenerationDone": true,
+        "firstFailureReview": "build/evidence/R0.03/dashboard90-native-1-failure-review.json",
+        "recoveryDiagnosis": "Pinned archive excludes ignored dashboard web_dist; --skip-build performs a recovery UI build ifindex missing, before readiness. Candidate .web_ui_build.lock corroborates; prior numericresolverpermit was unrelated.",
+        "boundedRepairPending": "Existing HERMES_WEB_DIST override with owned minimalfixedstaticindex; removeunusedresolverexception; retainallnetworkdenials.",
+        "boundedRepair": "build/evidence/R0.03/dashboard90-bounded-repair-3.json",
+        "recoveryWorkerStopped": true,
+        "sourceRestored": true,
+        "registrationRemoved": true,
+        "deferral": "build/evidence/R0.03/dashboard90-three-failure-deferral.json",
+        "noFourthAttempt": true
       }
     },
     "R0.04": {
@@ -2445,6 +2494,24 @@
         "sourceBindingsVerified": 15,
         "workerStopped": true,
         "planSha256": "b1de63a1cd3c6d619894d2536afe056bf958182541ea874a1363e816a945ca42"
+      },
+      "lifestoreQuoteContractPlanUnit": {
+        "state": "MINIMAL_RECORD_VALIDATION_DESIGN_REVIEWED_SOURCE_ADMISSION_PENDING",
+        "assignedAT": "AT-lifestore-45",
+        "deadline": "2026-10-07T01:35:00Z",
+        "plan": "build/evidence/R0.12/lifestore-quote-v4-minimum-plan.json",
+        "admissionEvidence": "build/evidence/R0.12/lifestore-quote-design-doctor.json",
+        "sourceExecutionStarted": false,
+        "wholeATComplete": false,
+        "sha256": "d6dca5577b50a0668a45a8eb583b3862b3f32cf454ea9c0bed460821c4fee584",
+        "sourceWorkerStopped": true,
+        "parentReview": "build/evidence/R0.12/lifestore-quote-v4-parent-review.json",
+        "stableSourceBindings": 17,
+        "knownParentIntegrationDrift": 2,
+        "quoteAnchorsVerified": 33,
+        "canonicalInventory": 165,
+        "scopedUnion": 136,
+        "sourceMutationAllowed": false
       }
     },
     "R0.13": {
@@ -11067,7 +11134,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Wait for stopped disjoint AT90 auth and AT44 model-route source handoffs; parent must not edit those owners or build/generate/probe during mutations. Review Life Store plan hash correction and retain quote/versioned evidence prerequisite without user permission escalation. Poll root requests; exact ROOT-R004-20261006-02 DONE immediately prioritizes R0.01 after safe cleanup.",
+  "nextAction": "Commit and push verified Ops44 and three-failure dashboard deferral; then admit the accepted 118-component Life45 V4 record-validation source unit. Exact ROOT-R004-20261006-02 DONE immediately prioritizes R0.01. Pending root requests never block the active goal.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -21594,7 +21661,7 @@
     "threadId": "01a109d1-2f67-7643-9677-404a83617cf8",
     "lockFile": "build/coordinator.lock",
     "lockKind": "exclusive session marker; not process-liveness evidence",
-    "checkpoint": "build/checkpoints/2026-10-06-r004-root-request-02"
+    "checkpoint": "build/checkpoints/2026-10-07-ops44-verified-dashboard90-deferred"
   },
   "pullRequest": "https://github.com/JohanSardar/toy-harness/pull/1",
   "lastWorker": {
@@ -21615,8 +21682,8 @@
     "deadline": "2026-10-07T00:25:00Z"
   },
   "continuationAssessment": {
-    "observedAt": "2026-10-06T23:55:04.828886+00:00",
-    "reason": "Six borrowed-root public auth-entry cells and32 shared fixture regressions verified with source-bound exact readbacks and complete teardown. Unit stops; no whole AT/card promotion. Root requests remain pending; source-derived Ops research scope is the next independent work.",
+    "observedAt": "2026-10-07T01:53:33.955852+00:00",
+    "reason": "Ops44 four source-bound CLI cases and 21 shared research checks pass after exact auth restoration; owned world down and strict gates pass. Dashboard90 stopped after three native failures, receipt issue deferred, registration removed. Independent Life45 source preparation continues. Root requests pending.",
     "goalStatus": "active"
   },
   "executionPolicy": {
@@ -21659,23 +21726,19 @@
     "queuedRootReserveAdmissionGate": false
   },
   "latestStaticVerification": {
+    "recordedAt": "2026-10-07T01:53:33.955852+00:00",
     "command": "npm run check",
     "exitCode": 0,
+    "log": "build/evidence/R0.02/ops44-restored-auth-strict.txt",
+    "logSha256": "d65e09c937a7904847860c2bb0bb56285408fad45b5918bdfee38edce880ff4c",
     "artifacts": 385,
     "contracts": 317,
-    "cliManifests": 32,
+    "cliManifests": 33,
     "features": 100,
     "commands": 55,
     "indexedATs": 1447,
     "schemaDigest": "a0c2cef4fe1c805c37d92191a87701cbbf708e7dccc0c22d932dbc3cc0c14c9d",
-    "featureMapState": "PASS",
-    "languages": [
-      "TypeScript",
-      "Python"
-    ],
-    "SwiftDeferredTo": "R3",
-    "evidence": "build/evidence/R0.03/mixed89-strict.txt",
-    "recordedAt": "2026-10-07T01:04:59.043417+00:00"
+    "swiftInvoked": false
   },
   "sourceCheckpointCommit": "3ad57fa",
   "sourceCheckpointPushed": true,
@@ -21717,66 +21780,35 @@
     }
   },
   "resourceAdmission": {
-    "measuredAt": "2026-10-07T01:17:13.918Z",
-    "availableBytes": "2665250816",
+    "measuredAt": "2026-10-07T01:52:26.628Z",
+    "availableBytes": "2866462720",
     "pressure": "normal",
     "strictlyFreeAdmission": false,
     "repairFloorApplied": false,
     "ownedWorldsRunning": 0,
-    "helpersRunning": 2,
+    "helpersRunning": 1,
     "helperNeedBytes": "268435456",
-    "measurementSource": "build/evidence/R0.02/ops44-source-phase-doctor.json",
+    "measurementSource": "build/evidence/R0.02/ops44-restored-auth-doctor.json",
     "marginBytes": "536870912",
     "ownedStackId": null,
     "stackAndNativeChildrenNeedBytes": "0",
-    "jobNeedBytes": "268435456",
-    "requiredAvailableBytes": "805306368",
+    "jobNeedBytes": "1073741824",
+    "requiredAvailableBytes": "1610612736",
     "secondPhysicalFitGate": false,
     "queuedRootReserveGate": false,
     "rule": "Normal OS pressure and available memory at least the current job declared need plus512MiB; no strictly-free, hypothetical reserve, swap or second physical-fit gate"
   },
   "activeWorkers": [
     {
-      "task": "/root/r003_per_generation_refresh_plan",
-      "card": "R0.03",
-      "assignedAT": "AT-hermes-config-90",
-      "state": "SOURCE_RUNNING",
-      "deadline": "2026-10-07T01:45:00Z",
+      "task": "/root/r007_minimum_trial_journal",
+      "card": "R0.12",
+      "kind": "READ_ONLY_SOURCE_PREPARATION",
+      "deadline": "2026-10-07T02:05:00Z",
       "model": "gpt-6-luna",
       "reasoning": "max",
-      "ownedPath": "build/evidence/R0.03/dashboard90-next-minimum-plan.json",
-      "sourceMutationAllowed": true,
-      "admissionEvidence": "build/evidence/R0.03/dashboard90-source-phase-doctor.json",
-      "helperNeedBytes": "268435456",
-      "marginBytes": "536870912",
-      "ownedPaths": [
-        "docs/adr/0046-dashboard-auth-scope-probe.md",
-        "packages/hermes/src/auth-fixture.ts",
-        "packages/hermes/src/auth-probe.ts",
-        "patches/hermes-auth-fixture.patch",
-        "build/evidence/R0.03/dashboard90-source-handoff.json"
-      ]
-    },
-    {
-      "task": "/root/r005_control_probe_review",
-      "card": "R0.02",
-      "assignedAT": "AT-ops-44",
-      "state": "SOURCE_RUNNING",
-      "deadline": "2026-10-07T01:50:00Z",
-      "model": "gpt-6-luna",
-      "reasoning": "max",
-      "ownedPath": "build/evidence/R0.02/ops44-next-minimum-plan.json",
-      "sourceMutationAllowed": true,
-      "admissionEvidence": "build/evidence/R0.02/ops44-source-phase-doctor.json",
-      "helperNeedBytes": "268435456",
-      "marginBytes": "536870912",
-      "ownedPaths": [
-        "docs/adr/0047-ops-outside-research-probe.md",
-        "packages/hermes/src/model-route-probe.ts",
-        "build/evidence/R0.02/ops44-source-handoff.json"
-      ]
+      "sourceMutationAllowed": false
     }
   ],
   "pullRequestUpdatedAt": "2026-10-06T23:56:58.550592+00:00",
-  "continuationCheckpoint": "build/checkpoints/2026-10-07-auth-siblings-ops-mixed-lineage"
+  "continuationCheckpoint": "build/checkpoints/2026-10-07-ops44-verified-dashboard90-deferred"
 }

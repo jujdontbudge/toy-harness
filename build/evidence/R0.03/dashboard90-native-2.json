@@ -1,0 +1,329 @@
+{
+  "recordedAt": "2026-10-07T01:37:27.695Z",
+  "rung": "CLI",
+  "unfiltered": true,
+  "wholeATComplete": false,
+  "liveProviderSends": 0,
+  "nativeAttempt": 2,
+  "admissionEvidence": "build/evidence/R0.03/dashboard90-runtime-doctor-2.json",
+  "probes": [
+    {
+      "probeId": "AT-hermes-config-90",
+      "run": {
+        "exitCode": 1,
+        "path": "build/evidence/R0.03/dashboard90-native-2/AT-hermes-config-90-run.json",
+        "sha256": "2691e4ecc01b3c666e8c25b3ab4ede07b03f81f9a262820d2f1f78233081c81c"
+      },
+      "operationId": "eb044556-9a92-43a9-a68e-cd51b12f11da",
+      "show": {
+        "exitCode": 1,
+        "path": "build/evidence/R0.03/dashboard90-native-2/AT-hermes-config-90-show.json",
+        "sha256": "b733945edda2fffade49203097773444d54074ff5596b1c1f20b21d40d646273"
+      },
+      "sameData": true,
+      "sourceRegistration": {
+        "id": "AT-hermes-config-90",
+        "rung": "CLI",
+        "sourceAssertionHash": "451a0ff28c92fc95629eaafd849b62631a258ef632518d9132c64fa09384c07d",
+        "commandId": "probe.run",
+        "scenarioId": "auth.dashboard-scope",
+        "owner": "hermes",
+        "firstRelease": "R0",
+        "kind": "behavioral",
+        "mandatoryCases": [
+          {
+            "id": "dashboard-profile-success",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "dashboard-profile-success"
+          },
+          {
+            "id": "dashboard-fresh-profile-use",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "dashboard-fresh-profile-use"
+          },
+          {
+            "id": "dashboard-save-failure-400",
+            "publicOperation": "HermesAuthProbe.run",
+            "phase": "dashboard-save-failure-400"
+          }
+        ],
+        "trigger": "Drive two isolated public dashboard profile OAuth flows, then fresh public auth-list/chat readbacks; inject an external OS atomic-replace EIO for the failing profile.",
+        "faultControls": [
+          {
+            "id": "profile-auth-atomic-replace-eio",
+            "seam": "os",
+            "affectedPhases": [
+              "dashboard-save-failure-400"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "dashboard-scoped-persistence",
+            "independentReader": "HermesAuthProbe.run: owned child identity, public HTTP facts, opposite-store readbacks and provider ledger",
+            "caseIds": [
+              "dashboard-profile-success",
+              "dashboard-fresh-profile-use",
+              "dashboard-save-failure-400"
+            ]
+          },
+          {
+            "id": "fresh-public-auth-usability",
+            "independentReader": "Fresh pinned public auth-list and tools-disabled chat process receipts; stored toy probe.show data",
+            "caseIds": [
+              "dashboard-fresh-profile-use",
+              "dashboard-save-failure-400"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot choose administrative dashboard OAuth profile scopes or inject profile-owned atomic-save failures. CLI drives real pinned dashboard/public auth subprocesses through fake external OAuth/model and OS seams."
+      },
+      "registrationExact": true,
+      "cases": [
+        {
+          "id": "auth.native-runtime",
+          "owner": "hermes",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T01:37:28.736Z",
+          "reasonCode": "NATIVE_PUBLIC_CLI_READY_AUTH_PENDING",
+          "prerequisite": "{\"interface\":\"hermes --help\",\"installedCommit\":\"8d5e3e412138342e8bf30443e72bd4e6a9abd057\",\"launcherDigest\":\"307ef6a7792a42083f6e4f71e9500543efd9c707e211068f80b138db76975397\",\"interpreterSource\":\"existing-committed-venv\",\"interpreterDigest\":\"e046691799a36090b5946d8910084f982bf819ed4dfaf27a4bfa5bdf9c8360ee\",\"publicRuntimeCommandDigest\":\"e99338b03dfdad1b660705657d5e8c4273cc8e1b53f2fe6cf995d9cb36e05403\",\"bytecodeWritesDisabled\":true,\"isolatedHome\":true,\"inheritedProviderEnvironment\":false,\"publicHelpObserved\":true,\"childExitCode\":0,\"childSignal\":null,\"outputDigest\":\"1b74616851009c28894dd94adf51fc3064e3d353021e1b37b716a4904b3881e3\",\"errorOutputDigest\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"dependencyEnvironmentUnavailable\":false,\"missingModule\":false,\"repairSuggested\":false,\"sourceUpdateIncomplete\":false,\"authExecuted\":false,\"credentialInspected\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "307ef6a7792a42083f6e4f71e9500543efd9c707e211068f80b138db76975397",
+              "e046691799a36090b5946d8910084f982bf819ed4dfaf27a4bfa5bdf9c8360ee",
+              "7a190d7bf6ace39d5b65e8b1ce90bcd00d8754d5bf8a2dd33dd8818a04b40b30"
+            ]
+          }
+        },
+        {
+          "id": "auth.native-fixture",
+          "owner": "hermes",
+          "state": "FAIL",
+          "checkedAt": "2026-10-07T01:37:42.488Z",
+          "reasonCode": "NATIVE_AUTH_FIXTURE_DASHBOARD_PROFILE_SUCCESS_FAILED",
+          "prerequisite": "{\"caseId\":\"dashboard-profile-success\",\"dashboardCommand\":\"hermes dashboard --host 127.0.0.1 --port 0 --no-open --isolated --skip-build\",\"loopbackHost\":\"127.0.0.1\",\"loopbackBoundPort\":null,\"routes\":\"POST start?profile=success; GET poll/<session_id>?profile=success\",\"portObserved\":false,\"startStatus\":null,\"startSessionPresent\":false,\"pollStatus\":null,\"pollState\":null,\"responseHygiene\":false,\"serverPid\":24880,\"serverPidMatches\":true,\"serverParentPidMatches\":true,\"serverUid\":501,\"serverUidMatches\":true,\"serverGid\":20,\"serverGidMatches\":true,\"httpLedger\":{\"device_code_requests\":0,\"device_code_polls\":0,\"token_exchanges\":0,\"token_refreshes\":0,\"model_catalog_requests\":0,\"model_requests\":0,\"denied_http_requests\":0,\"blocked_socket_events\":1},\"denials\":1,\"storageFaultTriggered\":false,\"serverExitCode\":1,\"serverSignal\":null,\"stdoutDigest\":\"efa0a61acf4624291bdc6db34ae0fb69b2909eb50b63fa50c04d30d2b8ff626f\",\"stderrDigest\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"commandDigest\":\"e089d42c4cf8993002708b7ac4168b3c36ac3b0f3a2a4f14804448e54602caa5\",\"storeDigests\":{\"rootAuth\":[null,null],\"rootEnvUnchanged\":true,\"toyAuth\":[null,null],\"successAuth\":[null,null]},\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "60554c067d107b149109b33741c6a4032a13c42a879d132ef5d0cba0c4954447",
+              "7646652633f7691f79c5ac0144f13b11ac86bdbad912b644c303388ba8c63c95",
+              "f4509ed92351863f58ee9ea85c6c6473d23b86b75e59a0064db26f5d71e28493",
+              "1fabea2310d2b548798242156e8fca5c072d49cd70b02acaa3d614ab94e8f53c",
+              "c6a8ffb773e9c91b8472bfc365ca98e634a5af116f57690cca90f44ccd39a981",
+              "7ae36a921160d598d40f6aa4e654f088d70702977ce259d4a16968c08ca56925",
+              "bf5ec67f7690a22312bf0ca17c569c96111d172ff6438e78d10dd09cb2ce2a34",
+              "3c645dd9f7e7e4c1d516eb2efdabb176b8dacbde70ecd48e98207e7527bff86b",
+              "3d54e51ad535bc7e68477d1e82b42bb84695c6d0e7328e900496b73547fbb4c2",
+              "cd09b30a56a3250579f827e1000270cce6e2315d7d0deda58f84ea811859639c",
+              "abf4ed820a9e42603fcfbeb286d0c1bb72cc27537bd131b398c6e5848e6163c7"
+            ]
+          }
+        }
+      ],
+      "resultState": "NOT_IMPLEMENTED",
+      "complete": false
+    },
+    {
+      "probeId": "AT-ops-44",
+      "run": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.03/dashboard90-native-2/AT-ops-44-run.json",
+        "sha256": "3bb51ff47d630601a82687633b713b84ba083a1d694b61d1393ca9c05b8c2643"
+      },
+      "operationId": "a99251ed-045d-4482-a31e-b8bd9fc2b218",
+      "show": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.03/dashboard90-native-2/AT-ops-44-show.json",
+        "sha256": "ba3e252b4ba383b2868fbe400088095468ed4aa30c94855730320f568e935f11"
+      },
+      "sameData": true,
+      "sourceRegistration": {
+        "id": "AT-ops-44",
+        "rung": "CLI",
+        "sourceAssertionHash": "7a7100f87f1e08f4c6aaa35582495f2984c39ba058b27c14962f0157c8f14804",
+        "commandId": "probe.run",
+        "scenarioId": "research.component-receipts",
+        "owner": "hermes",
+        "firstRelease": "R0",
+        "kind": "static_gate",
+        "mandatoryCases": [
+          {
+            "id": "outside-selected-with-evidence",
+            "publicOperation": "ModelRoute.delegationReceipt + EngineeringControl.checkResearch",
+            "phase": "outside-selected-with-evidence"
+          },
+          {
+            "id": "outside-without-primary-support",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "outside-without-primary-support"
+          },
+          {
+            "id": "outside-route-mismatch",
+            "publicOperation": "ModelRoute.delegationReceipt + EngineeringControl.checkResearch",
+            "phase": "outside-route-mismatch"
+          },
+          {
+            "id": "mapped-requirement-removed",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "mapped-requirement-removed"
+          }
+        ],
+        "trigger": "Compare the indexed A14 seeded named backup options and primary-supported outside option through the public research receipt and component gate; retain source-derived requirements and fixture Mac-host constraints.",
+        "faultControls": [
+          {
+            "id": "external-ops-comparison-report-faults",
+            "seam": "provider",
+            "affectedPhases": [
+              "outside-without-primary-support",
+              "mapped-requirement-removed"
+            ]
+          },
+          {
+            "id": "external-cli-research-model-mismatch",
+            "seam": "provider",
+            "affectedPhases": [
+              "outside-route-mismatch"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "indexed-ops-selection-and-requirements",
+            "independentReader": "EngineeringControl.checkResearch: indexed A14 coverage, primary evidence and selection readback",
+            "caseIds": [
+              "outside-selected-with-evidence",
+              "outside-without-primary-support",
+              "outside-route-mismatch",
+              "mapped-requirement-removed"
+            ]
+          },
+          {
+            "id": "public-research-receipt-and-readback",
+            "independentReader": "ModelRoute.delegationReceipt: fake executor route/skill readback; toy probe.show: stored source-bound cases",
+            "caseIds": [
+              "outside-selected-with-evidence",
+              "outside-without-primary-support",
+              "outside-route-mismatch",
+              "mapped-requirement-removed"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot choose administrative pre-build comparison records. CLI invokes existing public owners with fixed external report and Codex executor/resource-reader fakes; native protected route and whole acceptance stay pending."
+      },
+      "registrationExact": true,
+      "cases": [
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T01:37:45.973Z",
+          "reasonCode": "OPS_OUTSIDE_RESEARCH_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"outside-selected-with-evidence\",\"fixtureOnly\":true,\"actualUid\":501,\"archive\":{\"key\":\"TS\",\"originalDigest\":\"de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3\",\"contentDigest\":\"13633fb56ecdd6ea3dec3b95a85eb7fd156011895d4f3532229200e11ef8151e\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"A14\",\"comparisonDigest\":\"4d1bdcc05fdb28d111ee91166b5dfe47b747762990938b0c1a7cd6762de24705\",\"state\":\"PASS\",\"findings\":[],\"selectedTool\":\"Seeded outside backup option\",\"validationPlan\":\"Compare the seeded named and outside A14 options under the current requirement and host constraints; verify evidence, route and restore rationale before any real research or adoption.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"outside\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[]},\"execution\":{\"ownerReceiptProduced\":true,\"externalCliSends\":1,\"exportsVerified\":true,\"receiptDigest\":\"13c2a8ab5bacf255a25db10ad57be4b749f7c313cb8dfa961b6e9d3c5a299e6d\",\"observed\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"medium\",\"serviceTier\":\"priority\"},\"loadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"sourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"nativeExecutionVerified\":false},\"hostClaimIsFixtureTextOnly\":true,\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"acceptanceComplete\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "13633fb56ecdd6ea3dec3b95a85eb7fd156011895d4f3532229200e11ef8151e",
+              "354492664c5375a9ed509ee19c37456ab33665dac3675509b285b668114c389b",
+              "f97d83647c6798d4ddfe9100b9ac3424161d498115afc35106de6ebb020523c9"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T01:37:46.026Z",
+          "reasonCode": "OPS_OUTSIDE_RESEARCH_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"outside-without-primary-support\",\"fixtureOnly\":true,\"actualUid\":501,\"archive\":{\"key\":\"TS\",\"originalDigest\":\"de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3\",\"contentDigest\":\"a4ebeaf0480ab46b1c03f5d887de60911c5ac185711171388a90cf72581d43ec\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"A14\",\"comparisonDigest\":\"1fdde39584736d9d1c9b4ed820a12f79276e1fcf48b96105999866528ae514b1\",\"state\":\"BLOCKED\",\"findings\":[\"OUTSIDE_OPTION_MISSING\",\"PRIMARY_EVIDENCE_MISSING\"],\"selectedTool\":\"Seeded outside backup option\",\"validationPlan\":\"Compare the seeded named and outside A14 options under the current requirement and host constraints; verify evidence, route and restore rationale before any real research or adoption.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"outside\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[]},\"execution\":{\"ownerReceiptProduced\":true,\"externalCliSends\":1,\"exportsVerified\":true,\"receiptDigest\":\"7f4a1b7c69014f295bcc287bac0b3a2c47a0897414c7267f425af76546c5fd4f\",\"observed\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"medium\",\"serviceTier\":\"priority\"},\"loadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"sourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"nativeExecutionVerified\":false},\"hostClaimIsFixtureTextOnly\":true,\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"acceptanceComplete\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "a4ebeaf0480ab46b1c03f5d887de60911c5ac185711171388a90cf72581d43ec",
+              "354492664c5375a9ed509ee19c37456ab33665dac3675509b285b668114c389b",
+              "f97d83647c6798d4ddfe9100b9ac3424161d498115afc35106de6ebb020523c9"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T01:37:46.079Z",
+          "reasonCode": "OPS_OUTSIDE_RESEARCH_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"outside-route-mismatch\",\"fixtureOnly\":true,\"actualUid\":501,\"archive\":{\"key\":\"TS\",\"originalDigest\":\"de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3\",\"contentDigest\":\"184cef69d305f3e5a0b119974fd2defd67f835f0a0d5d7064dba4750703ce30b\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"A14\",\"comparisonDigest\":\"eebce903ac8b03ce1d73b0e287696e7b4276cf8616e9f8319bb7c6cab05d4566\",\"state\":\"BLOCKED\",\"findings\":[\"VALIDATION_ID_MISSING\"],\"selectedTool\":\"Seeded outside backup option\",\"validationPlan\":\"Compare the seeded named and outside A14 options under the current requirement and host constraints; verify evidence, route and restore rationale before any real research or adoption.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"outside\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[\"ROUTE:R0:A14\"]},\"execution\":{\"ownerReceiptProduced\":true,\"externalCliSends\":1,\"exportsVerified\":true,\"receiptDigest\":\"35b84a19725b7622a9bc44211f4992ede4fd0387e77875082965ad1492983426\",\"observed\":{\"model\":\"gpt-6-luna\",\"effort\":\"medium\",\"serviceTier\":\"priority\"},\"loadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"sourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"nativeExecutionVerified\":false},\"hostClaimIsFixtureTextOnly\":true,\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"acceptanceComplete\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "184cef69d305f3e5a0b119974fd2defd67f835f0a0d5d7064dba4750703ce30b",
+              "354492664c5375a9ed509ee19c37456ab33665dac3675509b285b668114c389b",
+              "f97d83647c6798d4ddfe9100b9ac3424161d498115afc35106de6ebb020523c9"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T01:37:46.131Z",
+          "reasonCode": "OPS_OUTSIDE_RESEARCH_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"mapped-requirement-removed\",\"fixtureOnly\":true,\"actualUid\":501,\"archive\":{\"key\":\"TS\",\"originalDigest\":\"de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3\",\"contentDigest\":\"ea0ea95199e13b9248635efb787704d30b435b6019c722d2c702aea8f3fd8fa9\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"A14\",\"comparisonDigest\":\"d657a36466ac7668e8685c2f9bccfdeb0993faecd6e3090ca1a6b4eb96fe8a0f\",\"state\":\"BLOCKED\",\"findings\":[\"MAPPED_REQUIREMENTS_MISSING\"],\"selectedTool\":\"Seeded outside backup option\",\"validationPlan\":\"Compare the seeded named and outside A14 options under the current requirement and host constraints; verify evidence, route and restore rationale before any real research or adoption.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"outside\",\"missingRequirementIds\":[\"0.1\"],\"missingSourceIds\":[],\"missingValidationIds\":[]},\"execution\":{\"ownerReceiptProduced\":true,\"externalCliSends\":1,\"exportsVerified\":true,\"receiptDigest\":\"c892ab7f15834ccd53bc47db4121d974968701baac3f1ea5d2e0e3cfa628eeb5\",\"observed\":{\"model\":\"gpt-6.1-sol\",\"effort\":\"medium\",\"serviceTier\":\"priority\"},\"loadedDigest\":\"985569f15739c713d6784887c3d186d4ef9ac85bec5ad9c068d25bf0739928e4\",\"sourceCommit\":\"6fd947921b935b7e1e69293a200400f0fdd5c15f\",\"nativeExecutionVerified\":false},\"hostClaimIsFixtureTextOnly\":true,\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"acceptanceComplete\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "ea0ea95199e13b9248635efb787704d30b435b6019c722d2c702aea8f3fd8fa9",
+              "354492664c5375a9ed509ee19c37456ab33665dac3675509b285b668114c389b",
+              "f97d83647c6798d4ddfe9100b9ac3424161d498115afc35106de6ebb020523c9"
+            ]
+          }
+        }
+      ],
+      "resultState": "NOT_IMPLEMENTED",
+      "complete": false
+    }
+  ],
+  "up": {
+    "exitCode": 0,
+    "path": "build/evidence/R0.03/dashboard90-native-2/up.json",
+    "sha256": "30731b28ffd5a03305f4df6b59c1546ff6d368814ef49559bc3bd16277c40446"
+  },
+  "stackId": "7817f5da-575e-423d-906f-b8c4e41682d0",
+  "down": {
+    "exitCode": 0,
+    "path": "build/evidence/R0.03/dashboard90-native-2/down.json",
+    "sha256": "cdef5bd025b2aa4a54389d4f90aa8e8a8e0f6e93cd1f5157187bbe9297c5fc74"
+  },
+  "teardown": {
+    "stackId": "7817f5da-575e-423d-906f-b8c4e41682d0",
+    "checkpointRefs": [],
+    "fenceRefs": [],
+    "stoppedResourceRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "7817f5da-575e-423d-906f-b8c4e41682d0"
+      }
+    ],
+    "retainedArtifactRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "7817f5da-575e-423d-906f-b8c4e41682d0"
+      }
+    ],
+    "unresolvedResourceRefs": [],
+    "complete": true
+  }
+}

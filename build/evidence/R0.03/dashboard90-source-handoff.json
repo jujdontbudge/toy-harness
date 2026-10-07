@@ -1,0 +1,179 @@
+{
+  "schemaVersion": "toy.r0.03.dashboard90-source-handoff.v1",
+  "recordedAt": "2026-10-07T01:29:58.995Z",
+  "assignedAcceptance": {
+    "id": "AT-hermes-config-90",
+    "scenarioId": "auth.dashboard-scope",
+    "rung": "CLI",
+    "assertion": "Given real dashboard subprocesses in separate temporary profile scopes and registered OS save failures, When public scoped auth flows run, Then only the active profile changes, fresh-process usability agrees and save failure returns sanitized 400 with no success claim/token.",
+    "assertionSha256": "451a0ff28c92fc95629eaafd849b62631a258ef632518d9132c64fa09384c07d",
+    "spec": {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/hermes-config.md",
+      "sha256": "d3548fde13180bc750660f306caa0041101832e398ccdabd6cfdac0b3de8f4af",
+      "line": 3054
+    },
+    "baseline": {
+      "path": "build/evidence/R0.03/dashboard90-baseline.json",
+      "status": "NOT_IMPLEMENTED",
+      "sourceRegistration": null,
+      "sameRunShow": true,
+      "world": "0efb3625-7a68-4ad6-ae62-0d435b004a88",
+      "worldState": "DOWN",
+      "teardownComplete": true,
+      "unresolvedResources": 0
+    },
+    "acceptedPlan": {
+      "path": "build/evidence/R0.03/dashboard90-next-minimum-plan.json",
+      "sha256": "d185387e315a74bcf2d321babeadc51af8cdbaf6cc81691d4d14629db46cd294",
+      "parentReview": {
+        "path": "build/evidence/R0.03/dashboard90-plan-review.json",
+        "sha256": "1b7a23416a49ab8c8cb2cadfd38d63837e78e92fd4aa9e79c350083ad7a78eb2",
+        "verdict": "ACCEPTED_BOUNDED_SOURCE_UNIT"
+      }
+    }
+  },
+  "status": "SOURCE_ONLY_HANDOFF",
+  "writtenInterfaceFirst": {
+    "path": "docs/adr/0046-dashboard-auth-scope-probe.md",
+    "sha256": "06c7aa8fa1776989735939345c9c577a7c7f5e4b46827a0c61d3a1be8485e10a",
+    "decision": "Extend the existing HermesAuthProbe/runHermesAuthFixture owner and fixed external OAuth/OS fake to cover the pinned public dashboard CLI through its existing profile-scoped OAuth routes. Use only the existing generated HermesAuthFixtureResultV1 receipt and existing dashboard readiness sentinel."
+  },
+  "sourceChanges": [
+    {
+      "path": "docs/adr/0046-dashboard-auth-scope-probe.md",
+      "sha256": "06c7aa8fa1776989735939345c9c577a7c7f5e4b46827a0c61d3a1be8485e10a"
+    },
+    {
+      "path": "packages/hermes/src/auth-fixture.ts",
+      "sha256": "72efec7daf55cb0098a3aaad50fc5d2f614f43d28a82153e15d6681817a7ddbe"
+    },
+    {
+      "path": "packages/hermes/src/auth-probe.ts",
+      "sha256": "de0889102271447a3c60f313ad7b8c30dc5a238d4a020765bdceeda10b44778f"
+    },
+    {
+      "path": "patches/hermes-auth-fixture.patch",
+      "sha256": "82617dc50fbd8d45d4d39acb6f05540c8bb499a9407d1a265246f34940fe63c4"
+    },
+    {
+      "path": "patches/hermes-auth-dashboard.patch",
+      "sha256": "f4509ed92351863f58ee9ea85c6c6473d23b86b75e59a0064db26f5d71e28493",
+      "changedByWorker": false
+    }
+  ],
+  "fixturePatchBody": {
+    "path": "patches/hermes-auth-fixture.patch",
+    "hunk": "@@ -0,0 +1,798 @@",
+    "addedLineCount": 798,
+    "addedBodySha256": "f768ccbc7bfff7db152937baa349fc81ee749fde36690c6adb1e0e27460fc543",
+    "hunkCountMatchesBody": true
+  },
+  "existingPinnedSourceBindings": [
+    {
+      "path": "/Users/johansardar/.hermes/hermes-agent/hermes_cli/web_server.py",
+      "pinnedCommit": "8d5e3e412138342e8bf30443e72bd4e6a9abd057",
+      "sha256": "4ecf5264dc739dc7781956abb4c9f3702548f990831a1d599a191423a5dfdf57",
+      "lines": "1405-1417",
+      "fact": "The public dashboard branch emits HERMES_DASHBOARD_READY port=<bound-port> to stdout after the server binds. The probe reads this sentinel only from its owned child's stdout."
+    },
+    {
+      "path": "/Users/johansardar/.hermes/hermes-agent/hermes_cli/main.py",
+      "pinnedCommit": "8d5e3e412138342e8bf30443e72bd4e6a9abd057",
+      "sha256": "25f5bc1705b57576d899e15a2816e7f9a54d50044bef931efd2be3047f5eeb38",
+      "lines": "2794-2847",
+      "fact": "The dashboard command defaults to headless_backend=false; `serve` alone sets it true. The real `hermes dashboard` child therefore follows the dashboard sentinel branch."
+    },
+    {
+      "path": "patches/hermes-auth-dashboard.patch",
+      "sha256": "f4509ed92351863f58ee9ea85c6c6473d23b86b75e59a0064db26f5d71e28493",
+      "fact": "Existing profile-scoped OAuth routes return a fixed sanitized HTTP 400 after the registered profile auth save failure. The product patch is unchanged."
+    }
+  ],
+  "existingInterfaceReuse": {
+    "childReceipt": "@toy/contracts HermesAuthFixtureResultV1 and hermesAuthFixtureResultSchema",
+    "localCheck": "Existing CheckViewV1 from HermesAuthProbe.run",
+    "publicDashboardCommand": "hermes dashboard --host 127.0.0.1 --port 0 --no-open --isolated --skip-build",
+    "publicRoutes": [
+      "POST /api/providers/oauth/openai-codex/start?profile=<success|toy>",
+      "GET /api/providers/oauth/openai-codex/poll/<session_id>?profile=<success|toy>"
+    ],
+    "providerSeams": [
+      "existing fake HTTP OAuth/model routes"
+    ],
+    "osFault": {
+      "id": "profile-auth-atomic-replace-eio",
+      "phase": "dashboard-save-failure-400",
+      "target": "HERMES_HOME/profiles/toy/auth.json",
+      "boundary": "existing atomic replace hook in the fixture patch"
+    },
+    "noNewDtoModuleProtocolEndpointService": true,
+    "canonicalGeneratedValuesParentMustAdd": {
+      "childOperation": "dashboard",
+      "childResultPhases": [
+        "dashboard-profile-success",
+        "dashboard-save-failure-400"
+      ],
+      "note": "dashboard-fresh-profile-use is a mandatory manifest case; its fresh child results remain existing list/chat operations."
+    }
+  },
+  "mandatoryCases": [
+    {
+      "id": "dashboard-profile-success",
+      "publicOperation": "HermesAuthProbe.run",
+      "phase": "dashboard-profile-success",
+      "evidence": [
+        "Real pinned public dashboard child, child-reported PID matches the owned process handle, and child-reported parent PID/UID/GID match this probe process.",
+        "The readiness sentinel provides the bound port used only with 127.0.0.1; start and poll use redirect:error.",
+        "Synthetic device grant reaches approved and exactly one device request, poll and token exchange are recorded with no denials.",
+        "Only success-profile auth changes; root and toy-profile auth/environment stores retain their digest."
+      ]
+    },
+    {
+      "id": "dashboard-fresh-profile-use",
+      "publicOperation": "HermesAuthProbe.run",
+      "phase": "dashboard-fresh-profile-use",
+      "evidence": [
+        "Fresh public auth list reads the saved grant.",
+        "Fresh public tools-disabled chat uses the initial synthetic generation, reaches the fake model, and has no fallback or denied HTTP.",
+        "Root and opposite toy-profile stores remain byte-identical; success-profile metadata may change during use."
+      ]
+    },
+    {
+      "id": "dashboard-save-failure-400",
+      "publicOperation": "HermesAuthProbe.run",
+      "phase": "dashboard-save-failure-400",
+      "evidence": [
+        "Registered profile-auth-atomic-replace-eio fires after the fake token response on profiles/toy/auth.json.",
+        "The public poll returns HTTP 400 with exactly the fixed sanitized detail and no success/approved claim.",
+        "Every observed start/poll response is restricted to the existing public field allowlists and scanned for token keys, JWT-shaped data, and synthetic access/refresh/authorization-code material.",
+        "Fresh auth list is empty; fresh tools-disabled chat is unusable and its HTTP ledger is all zero.",
+        "Root and success-profile stores remain byte-identical; no raw response body, session token, session ID, child stream or credential is written to evidence."
+      ]
+    }
+  ],
+  "parentIntegrationAfterSourceStop": [
+    "Register the exact AT90 assertion, three mandatory cases and OS fault binding in canonical acceptance/manifest/generated metadata.",
+    "Add operation `dashboard` and child result phases `dashboard-profile-success` and `dashboard-save-failure-400` to the canonical generated receipt schema; regenerate before typechecking.",
+    "Integrate AT90 with the existing CLI/FixtureProbe/unfiltered route and feature map, then run unfiltered probe.run and same-data probe.show and tear down the owned world."
+  ],
+  "verification": {
+    "staticDiffCheck": "PASS",
+    "fixturePatchHunkCount": "798 added lines; hunk header matches",
+    "sourceHashing": "Machine-computed SHA-256 values recorded above.",
+    "buildOrTypecheck": "NOT RUN",
+    "testsOrCliOrRuntimeProbe": "NOT RUN",
+    "fixturePatchAppliedToCandidate": "NOT RUN",
+    "wholeATComplete": false,
+    "runtimeVerified": false
+  },
+  "openLimits": {
+    "nativeRuntimeProof": "Pending parent verification after canonical registration and generated metadata integration.",
+    "installedHermesOrServiceIdentity": "Not tested; reported child UID/GID describe only the fixture process, never protected service identity.",
+    "protectedControllerAndNativeServiceGates": "Unresolved and outside this source subset.",
+    "wholeAcceptance": "Not claimed complete.",
+    "root02": "PENDING and untouched.",
+    "credentials": "No private credential store or raw provider/process stream was read or exported.",
+    "installedArtifacts": "Hermes installation, profiles, services, accounts, and host dashboard lifecycle remain untouched."
+  },
+  "sourceWorkerStopped": true
+}

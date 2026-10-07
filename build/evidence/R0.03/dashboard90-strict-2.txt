@@ -1,0 +1,51 @@
+
+> toy-harness@1.0.0 check
+> npm run typecheck && node scripts/typecheck-tests.mjs && npm run boundaries && npm run python:check && npm run lint && npm run contracts:check && node cli/dist/main.js feature-map check --json
+
+
+> toy-harness@1.0.0 typecheck
+> tsc -b --pretty false && tsc -p scripts/tsconfig.json --pretty false
+
+
+> toy-harness@1.0.0 boundaries
+> depcruise --config .dependency-cruiser.cjs packages cli tests control
+
+
+✔ no dependency violations found (270 modules, 921 dependencies cruised)
+
+
+> toy-harness@1.0.0 python:check
+> pyright && .venv/bin/ruff check python && PYTHONPATH=python .venv/bin/lint-imports
+
+0 errors, 0 warnings, 0 informations
+All checks passed!
+[1m=============[0m
+[1mImport Linter[0m
+[1m=============[0m
+[22m[0m
+[1m---------[0m
+[1mContracts[0m
+[1m---------[0m
+[22m[0m
+[1mAnalyzed 16 files, 11 dependencies.[0m
+[1m-----------------------------------[0m
+[22m[0m
+[22mHermes adapter cannot import protected controls [0m[32m[22mKEPT[0m[33m[22m[0m[22m[0m
+[22mProtected controls cannot depend on agent implementation [0m[32m[22mKEPT[0m[33m[22m[0m[22m[0m
+[22m[0m
+[22mContracts: 2 kept, 0 broken.[0m
+
+> toy-harness@1.0.0 lint
+> node scripts/run-eslint.mjs && node scripts/check-source-policy.mjs && .venv/bin/python scripts/check-python-policy.py && node scripts/check-contract-ownership.mjs && node scripts/check-contract-pin.mjs && node scripts/check-int-registry.mjs
+
+115 source files passed comment and debt policy
+9 Python source files passed comment and type policy
+86 TypeScript source files passed schema-inventory ownership policy for 317 contracts
+The sole Zod runtime pin is @toy/contracts 4.6.5.
+0 INT entries match 0 internal test files and 34 CLI acceptance registrations satisfy the public contract; 5 total test files declare a rung
+
+> toy-harness@1.0.0 contracts:check
+> tsc -b packages/contracts --pretty false && node scripts/generate-contracts.mjs --check && tsc --noEmit --strict --noUncheckedIndexedAccess --target ES2024 --module NodeNext --moduleResolution NodeNext packages/contracts/generated/types.ts
+
+Verified 385 contract artifacts
+{"schemaVersion":"toy.cli.v1","commandId":"feature-map.check","invocationId":"cd97da89-e3b3-4da0-851a-3915ad2120fc","generatedAt":"2026-10-07T01:37:16.538Z","cliVersion":"1.0.0","contractsVersion":"1.0.0","schemaDigest":"2b5b881ff6e51fc685cdf589a988ef24efb2c56f77611db6c3091f5733a62eb7","environment":{"kind":"prod","instanceId":null,"stackId":null},"meta":{"exitCode":0,"releaseDigest":null,"controlDigest":null,"evaluatedAt":null,"operationId":null,"effectState":"none","recordRefs":[],"evidence":[]},"ok":true,"data":{"sourceDigest":"e36bf114b13f33fb128b7949e210f4201cb6c5c47775a96467784e6026bd5d20","actualMapDigest":"408487e9164638ba05d23260d828ec97c14dd89fc3dbc3a1a1baeb55e09d9c6e","expectedMapDigest":"408487e9164638ba05d23260d828ec97c14dd89fc3dbc3a1a1baeb55e09d9c6e","featureCount":"100","commandCount":"55","atCount":"1447","findings":[],"state":"PASS"}}

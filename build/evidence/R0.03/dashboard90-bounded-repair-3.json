@@ -1,0 +1,41 @@
+{
+  "recordedAt": "2026-10-07T01:47:29.395Z",
+  "recovery": "build/evidence/R0.03/dashboard90-startup-recovery.json",
+  "recoverySha256": "936b32924402b3d045dad62bbfda6417db349bd414949066f7f31276d19492fe",
+  "parentReview": "build/evidence/R0.03/dashboard90-startup-recovery-parent-review.json",
+  "changedFiles": [
+    {
+      "path": "packages/hermes/src/auth-fixture.ts",
+      "sha256": "c15285c1f63eae4174cfc7c62ca38c5853b95884f49399db85e98ec407207f6c"
+    },
+    {
+      "path": "patches/hermes-auth-fixture.patch",
+      "sha256": "51cb4e718b9f611403c2739dce901b8fc4b091efa830473e9716991587229d92"
+    },
+    {
+      "path": "docs/adr/0046-dashboard-auth-scope-probe.md",
+      "sha256": "e7c32a7c0c406c1881c9c8ba893e12d64bbb1e435d95b4dad777a802ea7eaf37"
+    }
+  ],
+  "changes": [
+    "Fixed minimal owned index through existing dashboard-only HERMES_WEB_DIST",
+    "Obsolete resolver permit removed; every network denial remains enabled",
+    "Existing generated origin/denial/CLI marker fields surfaced, no raw output",
+    "SIGINT uses the pinned public clean-return path; bounded SIGKILL fallback"
+  ],
+  "shutdownSources": [
+    {
+      "path": "/Users/johansardar/.hermes/hermes-agent/hermes_cli/web_server.py",
+      "lines": "1510-1525",
+      "sha256": "4ecf5264dc739dc7781956abb4c9f3702548f990831a1d599a191423a5dfdf57"
+    },
+    {
+      "path": "/Users/johansardar/.hermes/hermes-agent/tui_gateway/session_reaper.py",
+      "lines": "151-175",
+      "sha256": "73d7a4fa41ab9888dd7f268257f26ca945785055441efe523c3b96e064b2413e"
+    }
+  ],
+  "nativeFailures": 2,
+  "remainingNativeAttempts": 1,
+  "wholeATComplete": false
+}
