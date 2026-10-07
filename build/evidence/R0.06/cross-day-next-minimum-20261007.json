@@ -1,0 +1,141 @@
+{
+  "recordedAt": "2026-10-07T12:21:24Z",
+  "schemaVersion": "toy.r0.06.cross-day-next-minimum.v1",
+  "card": "R0.06",
+  "assignedAT": "AT-ops-10",
+  "assignedRung": "CLI",
+  "state": "NEXT_MINIMUM_EXISTING_PUBLIC_OWNER",
+  "finding": "A concrete UTC-day rollover gap exists in the public accounting owner. ModelAdmission currently stops listing a denied row once its utc_day is no longer today, and resumePending returns CONFLICT for that row. The owned fake clock and fixed external quota observation seam can reach this behavior through the existing AT-ops-10 probe and disposable PostgreSQL stack without authenticated provider access, root, new infrastructure, or R1 activation. A proper retry must create a current-day attempt and leave the original accounting day and bindings immutable; clock advancement alone cannot prove a quota reset.",
+  "canonicalBasis": {
+    "opsQuotaExhaustion": {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/ops.md",
+      "line": 1612,
+      "requirements": [
+        "Persist the denied attempt and reset information.",
+        "Mark the current review slot deferred_quota.",
+        "Preserve the obligation and cumulative budget.",
+        "Schedule a bounded retry after reset, respecting provider retry timing.",
+        "Resume only after a fresh successful usage/admission check."
+      ]
+    },
+    "contractsCadence": {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/CONTRACTS.md",
+      "threeMinutePolicyLine": 269,
+      "slotIdentityLine": 270,
+      "slotStatesLine": 271,
+      "effect": "Every UTC-day slot remains recorded; a quota-held slot is deferred_quota and cannot count as reviewed."
+    },
+    "assignedAssertion": {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/ops.md",
+      "line": 1930,
+      "sourceAssertionHash": "e281f3fe7221d3ddc551bf73c8fc5e0df616060c8d089af9ee4625930d11ee3f",
+      "text": "Given a 429 or 100% quota observation, When cron/auxiliary/delegate work requests a model call, Then ModelAdmission denies it, records a deferred slot/wake, and makes no paid request."
+    },
+    "assignedRung": {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/TEST-PLAN.md",
+      "line": 456,
+      "assignment": "CLI; stack, probe:AT-ops-10"
+    }
+  },
+  "existingOwnerSurface": {
+    "publicOperations": [
+      "ModelAdmission.inspectPending(accountRef)",
+      "ModelAdmission.resumePending(accountRef, callKey)"
+    ],
+    "currentBehavior": {
+      "source": "packages/self-improvement/src/model-admission.ts",
+      "pendingPredicate": "Filters model_call.utc_day to the fake clock's current UTC date.",
+      "resumePending": "Returns CONFLICT when the stored row's utcDay differs from the fake clock's current UTC date."
+    },
+    "existingRetryAndLinkFields": {
+      "request": "callKey, budgetGroupId, rootContractId, runId, generation, parentCallId, attempt",
+      "decision": "retryAt and quotaSnapshotId",
+      "storedModelCall": "utc_day, parent_call_id, attempt, run_id, generation, budget_group_id",
+      "immutability": "packages/self-improvement/migrations/model-admission.sql protects utc_day and the model-call bindings on update. Preserve the original row; use the existing attempt/link fields for a fresh current-day attempt. No new database field is justified by this assertion."
+    },
+    "testClockAndProviderSeams": "The test stack uses TestClockControl and the fixed-quota-observation provider fault control. ModelAdmission.withTest reads the test clock and exercises the real accounting owner against disposable PostgreSQL. Its decision never issues a provider-send permit.",
+    "cadenceBoundary": {
+      "owner": "DurableCadenceOwner",
+      "existingOperations": [
+        "deferSlot",
+        "admitScheduled",
+        "reviewResult"
+      ],
+      "limitation": "The current floor defers a scheduled slot inside its 180-second window and admits an unbound scheduled slot. It does not re-admit a deferred slot after a reset. This accounting case must not claim canonical cadence slot/wake dispatch or a production native schedule anchor."
+    }
+  },
+  "minimumPublicCliCase": {
+    "reuse": "AT-ops-10 / deferred-restart-recovery; keep the existing stack, probe command, fixed-quota provider seam, PostgreSQL restart, case ID, and assigned CLI rung.",
+    "steps": [
+      "At 23:59 UTC, create the existing denied, uncharged pending call with a normalized exhausted observation whose reset is 00:05 UTC on the next date. Retain its public readback.",
+      "Restart the owned disposable PostgreSQL fixture as the existing phase already does, then advance the existing fake clock to 00:02 UTC. Call resumePending for the old call key while the latest provider observation remains exhausted.",
+      "Assert the old call is not admitted or charged from clock advancement alone; its original utc_day and binding remain unchanged and the pending work remains readable.",
+      "Advance the fake clock past 00:05 UTC, record a fresh authorized normalized available observation through the existing provider seam, then call resumePending for the pending work.",
+      "Assert the returned attempt is on the new UTC day, has a new call ID, preserves account, root/budget group, run, generation, route and work class, and is visible through the public pending/owner readback as appropriate. Repeat the resume/readback to prove idempotency and one current-day charge."
+    ],
+    "observableAssertions": [
+      "Original denied record retains its original UTC day and uncharged decision; it is never re-dated or rebound.",
+      "An exhausted observation before reset leaves the attempt denied/uncharged, even after midnight.",
+      "Only the fresh available observation after reset permits a current-day reservation; the same logical run and cumulative budget group are preserved.",
+      "The reservation is charged at most once to the new UTC-day count.",
+      "No native provider request occurs: nativeSendCount is zero, providerSendPermitIssued is false, and paidRequests is zero."
+    ],
+    "scopeLimit": "This proves local ModelAdmission rollover accounting only. Durable deferred_quota slot/wake dispatch, raw HTTP 429 parsing, authenticated subscription evidence, protected provider execution and whole AT/card acceptance remain pending.",
+    "noNewInfrastructure": true,
+    "noNewPublicCommandOrApi": true,
+    "noNewDatabaseFields": true,
+    "noNewAcceptanceId": true
+  },
+  "sourcePathsIfAdmitted": {
+    "required": [
+      "packages/self-improvement/src/model-admission.ts",
+      "packages/self-improvement/src/accounting-probe.ts"
+    ],
+    "existingRegistryAndMemory": [
+      "tests/registry.yaml",
+      "packages/contracts/src/generated-probe-registry.ts via the existing generator if its trigger/observation manifest changes",
+      "docs/adr/0027-model-admission-accounting.md",
+      "architecture/features.json via the existing feature-map path",
+      "skills/toy-control/FEATURE-MAP.md"
+    ],
+    "not_required_by_AT10_rollover_case": [
+      "a new CLI declaration or command",
+      "a new public DTO or owner interface",
+      "a database migration or extra table/field",
+      "a native provider, protected dispatch activation, root operation, or new fixture infrastructure"
+    ]
+  },
+  "existingEvidencePins": {
+    "latestAt10Readback": {
+      "path": "build/evidence/R0.06/unavailable-quota11-final-cli/AT-ops-10-show.json",
+      "sha256": "e98556e2074fdc7e7f2f859fb38d7038f8037cb840b30e96d04237b66c533dcc",
+      "observation": "Four same-day AT-ops-10 checks passed at the local accounting-owner rung; the record still marks whole acceptance incomplete."
+    },
+    "verification": {
+      "path": "build/evidence/R0.06/unavailable-quota11-final-verification.json",
+      "sha256": "381d907efdaae0aa83791d635dc5ea7e67af3b92c93a5378771b6cdc6dac31f5",
+      "recordedAt": "2026-10-07T09:46:10.034Z",
+      "wholeATsPassed": [],
+      "acceptanceComplete": false,
+      "sourcePinsAtThatRun": {
+        "packages/self-improvement/src/model-admission.ts": "44a36ef026d203f9db9437dcf53c1172224420596d0570353bcc564a758439c7",
+        "packages/self-improvement/src/accounting-probe.ts": "04c6558e19c63ca529888d3ed8887e7e4d1f1d01ea5fa70005ea2b89779dc619",
+        "tests/registry.yaml": "066356fd940257e07f92995bb0a49b80ebcf7a86742f7226f84da2705f51ccf7"
+      }
+    },
+    "existingDeferredScope": {
+      "path": "build/evidence/R0.06/exhausted-pending-source-plan.json",
+      "sha256": "4ab40d509786278f6196891addf9d5036075423af8850c3cc076bb5f33ac5233",
+      "deferred": [
+        "Cross-UTC-day resume contract",
+        "Actual protected provider and slot/wake dispatch"
+      ]
+    },
+    "canonicalSpecHashes": {
+      "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/ops.md": "f07aab65088c82e4ff21e4d63edb2f279e2324e6d7e2bbb801e0fd7494104b0b",
+      "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/CONTRACTS.md": "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d",
+      "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/TEST-PLAN.md": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2"
+    }
+  },
+  "workPerformed": "Read-only inspection of AGENTS.md, the assigned Ops/CONTRACTS/TEST-PLAN clauses, existing public owner contracts and source, registry, and saved CLI evidence. Wrote this bounded next-minimum metadata only. No source/generated files, CLI, build, static check, test, provider, OS, native, browser, root, or process probe was run."
+}

@@ -2,7 +2,7 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-07T11:16:38.254989+00:00",
+  "updatedAt": "2026-10-07T12:30:08.416Z",
   "phase": "R0_FEASIBILITY",
   "activeCard": "R0.06",
   "cardCount": 87,
@@ -2042,6 +2042,16 @@
           "Protected subscription identity/provider observations and actual provider send path",
           "Canonical slot/wake dispatch and release/whole-AT completion"
         ]
+      },
+      "crossDayUnit": {
+        "state": "PLAN_ACCEPTED_TEST_ONLY_SOURCE_PHASE1",
+        "sourceOwner": "/root/r006_cross_day_minimum",
+        "phase": 1,
+        "sourceAdmission": "build/evidence/R0.06/cross-day-plan-parent-review.json",
+        "nativeAttempts": 0,
+        "maximumAssignedAttempts": 3,
+        "deadline": "2026-10-07T14:26:00Z",
+        "wholeATComplete": false
       }
     },
     "R0.07": {
@@ -12011,7 +12021,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Worker owns only AT34 SOURCE/generation/static and stops before parent CLI proof. Parent polls root requests and works on independent read-only planning. Valid ROOT00402 DONE takes R0.01 priority after worker stop/owned cleanup.",
+  "nextAction": "Wait for sole R0.06 phase1 SOURCE STOP, validate handoff and unchanged ModelAdmission/frozen pins, run paved generation/typecheck/map/check, fresh doctor and genuine unfiltered AT-ops-10 CLI RED before any owner edit. Valid ROOT00402 DONE prioritizes R0.01 after owned cleanup.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -22658,7 +22668,8 @@
     "SwiftDeferredTo": "R3",
     "recordedAt": "2026-10-07T12:17:02.886Z",
     "evidenceSha256": "40eddf43731ba3a5647aa3899a566cb10df45b8fc5436146673421bbb050d03d",
-    "historical": false
+    "historical": true,
+    "historicalReason": "Sole cross-day fixture SOURCE admitted; fresh static proof follows source stop"
   },
   "sourceCheckpointCommit": "bf0292f8b1662979f5be4e8ea01c26409d844df5",
   "sourceCheckpointPushed": true,
@@ -22700,12 +22711,12 @@
     }
   },
   "resourceAdmission": {
-    "measuredAt": "2026-10-07T12:10:49.942Z",
-    "availableBytes": "2652585984",
+    "measuredAt": "2026-10-07T12:25:28.761Z",
+    "availableBytes": "2308587520",
     "pressure": "normal",
+    "measurementSource": "build/evidence/R0.06/cross-day-source-memory-20261007.json",
     "jobNeedBytes": "1073741824",
     "marginBytes": "536870912",
-    "measurementSource": "build/evidence/R0.03/first-add34-final-memory.json",
     "strictlyFreeAdmission": false,
     "repairFloorApplied": false,
     "jobOwnDeclaredNeedOnly": true
@@ -22713,22 +22724,31 @@
   "activeWorkers": [
     {
       "name": "/root/r006_cross_day_minimum",
-      "mode": "READ_ONLY_INDEPENDENT_CARD",
+      "mode": "SOLE_SOURCE",
       "card": "R0.06",
-      "sourceMutationAllowed": false,
-      "deadline": "2026-10-07T12:25:00Z",
-      "evidence": "build/evidence/R0.06/cross-day-next-minimum-20261007.json"
+      "unit": "AT-ops-10 rollover phase1 publicCLI reproducer only",
+      "deadline": "2026-10-07T12:45:00Z",
+      "evidence": "build/evidence/R0.06/cross-day-plan-parent-review.json"
     }
   ],
   "pullRequestUpdatedAt": "2026-10-07T11:08:10.716Z",
-  "continuationCheckpoint": "build/checkpoints/2026-10-07-first-add-source-admitted",
+  "continuationCheckpoint": {
+    "path": "build/checkpoints/2026-10-07-cross-day-phase1",
+    "recordedAt": "2026-10-07T12:30:08.416Z",
+    "goalStatus": "active",
+    "sourceOwner": "/root/r006_cross_day_minimum",
+    "sourcePhase": 1,
+    "sourceStopDeadline": "2026-10-07T12:45:00Z"
+  },
   "readOnlyWorkers": [],
   "liveRuntime": {
     "state": "DOWN",
     "stackId": "3ad5aafa-8fbd-449d-add0-9365513fdf35",
     "complete": true,
     "unresolvedResources": 0,
-    "evidence": "build/evidence/R0.03/first-add34-final-summary.json"
+    "evidence": "build/evidence/R0.03/first-add34-final-summary.json",
+    "sourceOwner": "/root/r006_cross_day_minimum",
+    "sourceStopped": false
   },
   "goalStatus": "active",
   "latestSourceCandidate": {

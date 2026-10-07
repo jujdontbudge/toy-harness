@@ -1,0 +1,11 @@
+# Continue Toy R0–R5
+
+Full goal ACTIVE, unbudgeted. Read objective attachment and DEVIN-PROMPT/AGENTS. Partial AT34 source candidate316e2d7 and metadatac5391d1 pushed; AT34 STOP after three failed assigned attempts, NO FOURTH runtime. Two Codex missing-root cells and105 affected legacy checks passed; new provider fixes and positive selected-case admission remain runtime-unverified. Whole AT/card/release incomplete.
+
+SOLE SOURCE owner /root/r006_cross_day_minimum phase1 AT-ops-10 rollover reproducer, deadline12:45UTC/fullunit14:26UTC/max3assignedruns. Accepted plan and review: build/evidence/R0.06/cross-day-next-minimum-20261007.json and cross-day-plan-parent-review.json. Own accounting-probe.ts, tests/registry.yaml, architecture/features.json, writtenADR0061 and sourcehandoff only. ModelAdmission MUST retain44a36ef026d203f9db9437dcf53c1172224420596d0570353bcc564a758439c7 until actual parent CLI RED. Parent no ToyCLI/gen/build/static while worker SOURCE. Preserve existing same-day9-call proof and mandatory4case IDs. No new API/DTO/DB fields/fixture/ATID/command. Local accounting only, no nativeprovider/cadencedispatch claim.
+
+After SOURCE STOP validate handoff and frozen6pins, parent contractsgen→typecheck→featuremapupdate→check sequentially, fresh doctor, then genuine unfiltered AT-ops-10 RED with exact source/run-show and complete ownedteardown. Only actualRED authorizes phase2 owner fix using existing parent/attempt fields and bounded globally unique call_key. Old UTC day/bindings immutable; clock alone never resetsquota. Stop first implementedPASS or3failedassignedattempts.
+
+ROOT00402 and ROOT00501 PENDING; poll build/ROOT-REQUESTS.md. Valid actualUID310/nativeKeychain/read/exactparentrestore DONE prioritizes R0.01 after cleanup. Pending root NEVER blocks goal; no ROOT03 until02terminal and PGinit R1afterR0feasibility. No R1product whiletrialpending; no168htrial/72hsoak started.
+
+AllworldsDOWN, no LIVE. Memory normal pressure + free/inactive/purgeable/speculative; own need+512MiB only, helper256MiB/stackbuild1GiB. No strictlyfree/swap/aggregate/queuedroot/physicalfit veto;1.5GiB floor onlyR5repair. Swift deferredR3. Preserve services/profiles/stores/secrets. Pavedfeaturemaponly. All driving registeredtoyCLI; CLI-only orchestration permitted. Curatedgitadd, preserve unrelateduntracked files.
