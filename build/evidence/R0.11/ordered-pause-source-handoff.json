@@ -1,0 +1,79 @@
+{
+  "schemaVersion": "toy.r0.11-ordered-pause-source-handoff.v1",
+  "status": "SOURCE_COMPLETE_STOPPED",
+  "sourceStoppedAt": "2026-10-07T04:37:26Z",
+  "acceptance": "AT-ops-50 source phases implemented; assigned unfiltered CLI proof and whole R0.11 acceptance remain pending.",
+  "parentInterface": "docs/adr/0053-owner-ordered-admission-pauses.md",
+  "parentInterfaceSha256": "d9de122172337098840fae7e2ceed076103a55bcdee8905d1d8465b92b1d0528",
+  "sourceFiles": [
+    {
+      "path": "packages/contracts/src/model-admission.ts",
+      "sha256": "8803164cb2d4e3b5fe764870f8409f020be0841f2367a86c7cdd062fa3c6262e"
+    },
+    {
+      "path": "packages/self-improvement/src/model-admission.ts",
+      "sha256": "31ae5925b59646c1d73516922e007624a4c22be4d9557ddc3044afcb432f6a48"
+    },
+    {
+      "path": "packages/self-improvement/src/accounting-probe.ts",
+      "sha256": "d23261853cdacc6dd129d45d07a2a4ba39c6097d24521b1a5e77c0d983bb9089"
+    }
+  ],
+  "implementedOwnerBehavior": [
+    "Added inspectPending and resumePending signatures over existing ModelAdmissionRecordV1 types only.",
+    "inspectPending selects same-account/current-UTC-day denied uncharged rows with zero native sends, no terminal acknowledgement, endedAt null, durable retryAt, measured threshold or measured owner-pause reason, and autonomous classes only; SQL orders event/continuation, quiet-tick, repair/replay.",
+    "Fresh eligible lower-priority reserve is persisted as uncharged OPTIONAL_WORK_PAUSED with the measured pending head wake. The mutation statement rechecks the selected pending head after the existing advisory lock; higher or equal-priority work may proceed.",
+    "resumePending returns changed or charged history idempotently before queue checks, refuses wrong heads and noncurrent-day rows, validates the open matching budget binding, re-evaluates the existing ModelAdmissionPolicy, and mutates only the selected same row under the advisory lock and snapshot compare.",
+    "Eligible resume budget counters depend only on the conditional denied-and-uncharged row transition RETURNING. No frozen request, cost, hash, day, native count, or acknowledgement fields are changed. No provider send permit is issued."
+  ],
+  "phaseOrder": [
+    "persist-deferred-work",
+    "owner-queue-readback",
+    "ordered-resume-under-headroom"
+  ],
+  "phaseObservations": {
+    "persist-deferred-work": "Real accounting fixture records baseline unreflected upper-bound reservation, then deliberately inserts repair, event, quiet-tick, continuation at a measured threshold; it checks durable denied records and tier ordering without caller sorting.",
+    "owner-queue-readback": "A separate ModelAdmission.withTest reopen reads the owner queue, proves wrong-head CONFLICT without row or ledger mutation, then attempts a fresh repair at 20/20 with measured costs and existing reservation; the numerical request fits common 60/70 limits, but owner persists OPTIONAL_WORK_PAUSED without charge or lease and preserves prior rows.",
+    "ordered-resume-under-headroom": "A separate reopen resumes the owner-selected event/continuation heads at 58% while repair remains deferred, checks same-row idempotent replay without a second charge, then at 59.998% proves quiet-tick RESERVATION_THRESHOLD from shared usage plus outstanding upper bounds. At 59%, fresh event and continuation requests remain eligible ahead of quiet/repair; final queue retains quiet before repair."
+  },
+  "serializationMeasurement": {
+    "measurement": "Synthetic representative evidence serialized as JSON.stringify({name,evidence}), matching CheckView prerequisite construction; no runtime or test invocation.",
+    "maximumCharacters": 2000,
+    "charactersByPhase": {
+      "persist-deferred-work": 560,
+      "owner-queue-readback": 408,
+      "ordered-resume-under-headroom": 670
+    }
+  },
+  "faultSeamsAndBoundaries": {
+    "accounting": "Existing real disposable PostgreSQL fixture through ModelAdmission.withTest.",
+    "clockAndQuota": "Existing fake TestClockControl and public ModelAdmission.observe quota snapshots.",
+    "terminalAccounting": "Existing public claimSend/settle fake accounting fixture; native counter is accounting-only and providerSendPermitIssued remains false.",
+    "publicProbeCallsOnly": true,
+    "rawSqlInProbe": false,
+    "liveProviderOrCredential": false,
+    "callerQueueSorting": false,
+    "crossDayResume": "Deferred; pending selection and resume remain current-UTC-day only.",
+    "judgeRetirementOrQueueing": "Unchanged and out of scope.",
+    "AT-ops-49-51-52": "Existing phase and case bodies preserved; the source change adds AT-ops-50 dispatch logic only."
+  },
+  "runtimeClaim": null,
+  "verification": {
+    "builds": "Not run by source card.",
+    "generation": "Not run by source card.",
+    "staticChecks": "Not run by source card.",
+    "tests": "Not run by source card.",
+    "cliOrWorldOperations": "Not run by source card.",
+    "parentIntegrationRemaining": [
+      "Register and dispatch source-bound AT-ops-50 phases through existing CLI owner route.",
+      "Run assigned unfiltered CLI proof, inspect retained checks and queue readbacks, then stop the owned fixture stack.",
+      "Complete remaining independent R0.11 gates before whole-release acceptance."
+    ]
+  },
+  "writeScope": [
+    "packages/contracts/src/model-admission.ts",
+    "packages/self-improvement/src/model-admission.ts",
+    "packages/self-improvement/src/accounting-probe.ts",
+    "build/evidence/R0.11/ordered-pause-source-handoff.json"
+  ]
+}

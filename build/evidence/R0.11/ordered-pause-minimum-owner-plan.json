@@ -1,0 +1,238 @@
+{
+  "schemaVersion": "toy.r0.11-ordered-pause-minimum-owner-plan.v1",
+  "status": "FINITE_SAME_DAY_OWNER_INTERFACE_ACCEPTED",
+  "createdAtUtc": "2026-10-07T04:16:09Z",
+  "scope": {
+    "release": "R0.11",
+    "assignedAcceptanceTest": "AT-ops-50",
+    "assignedRung": "CLI",
+    "requiredEvidence": [
+      "stack",
+      "probe:AT-ops-50"
+    ],
+    "acceptance": "Given approaching quota limits, when outstanding reservations and shared-client use reduce headroom, optional repair pauses first, quiet-tick reviews next and event reviews/Continuation last, with durable reason/wake state and no shrinking percentage-of-remainder reserve claim.",
+    "source": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/ops.md:1971",
+    "sourceAssertionHash": "bf08ca7e57784f55768174c9dad4eac4c45d9fb662dec229f9b6240374c65177",
+    "testPlanSource": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/TEST-PLAN.md:468",
+    "boundedOwnerCardMinutes": 120,
+    "rootIndependent": true
+  },
+  "currentSourceFindings": {
+    "existingOwner": "ModelAdmissionApi in packages/self-improvement/src/model-admission.ts owns durable model_call accounting and single-request reserve/claim/settle/observe/inspect. ModelAdmissionPolicy.evaluate in packages/ops/src/model-admission-policy.ts applies the common named-window admission rules.",
+    "existingPendingRows": "Denied toy_si.model_call rows already persist work class, expected upper bounds, reservation state, decision reason and retryAt. The row guard freezes request bindings, settled rows, native send count/acknowledgement and charged reservations; it permits mutable admission decision/state for non-settled rows while reservation charging remains monotonic.",
+    "missingOwnerBehavior": "The public API has no pending-row listing or owner-selected resume operation. inspect returns a single optional record, and reserve handles one request at a time, so a caller could currently determine retry order.",
+    "policyBoundary": "Use only the source order event/Continuation, then quiet-tick, then optional repair/replay. Check actual shared-client window usage plus current unreflected account-wide reservations and the selected row's existing expected upper bounds against the fixed 60% five-hour and 70% weekly limits. Do not add per-class thresholds or a percentage-of-remainder reserve.",
+    "queueBoundary": "Treat eligible denied rows already in toy_si.model_call as the deferred-work set. Add no second queue or migration. Do not include settled, uncertain, charged, native-sent, terminally acknowledged, ended, foreground, or foreground-judge rows in resume candidates.",
+    "priorRejectedApproach": "build/evidence/R0.11/minimum-assigned-at-plan.json rejected caller-sorted requests because they prove caller order, not owner enforcement, and deferred the work. build/evidence/R0.11/run-review-next-minimum-plan.json proposed per-request class-aware preemption but left the pending-order owner absent. This plan replaces both gaps with owner selection over persisted rows; it does not add numeric class cutoffs.",
+    "otherBoundary": "DurableCadenceOwner owns anchored scheduled slots/reviews, not the shared model admission ledger or all AT-ops-50 work classes. Keep the queue and retry decision in ModelAdmission."
+  },
+  "minimumInterface": {
+    "publicMethods": [
+      "ModelAdmissionApi.inspectPending(accountRef: string): Result<readonly ModelAdmissionRecordV1[]> — read eligible deferred rows from toy_si.model_call in owner priority order, with the actual stored decision.reason and decision.retryAt.",
+      "ModelAdmissionApi.resumePending(accountRef: string, callKey: string): Result<ModelAdmissionRecordV1> — re-evaluate only that existing denied row when it is the owner-selected head; a lower-priority callKey is rejected. If the same key is retried after its state changed, return its persisted row idempotently without advancing the queue."
+    ],
+    "ownerOrder": [
+      {
+        "priority": 1,
+        "classes": [
+          "event",
+          "continuation"
+        ]
+      },
+      {
+        "priority": 2,
+        "classes": [
+          "quiet-tick"
+        ]
+      },
+      {
+        "priority": 3,
+        "classes": [
+          "repair",
+          "replay"
+        ]
+      }
+    ],
+    "selection": "Select only current-account, current-UTC-day, uncharged denied rows with native_send_count=0, no terminal acknowledgement, ended_at=NULL, a durable retryAt and the assigned autonomous classes. The owner query, not the probe, applies the class priority; stable tie ordering within a tier is an implementation detail and is not an acceptance claim. Include measured OPTIONAL_WORK_PAUSED with durable retryAt from fresh lower-priority holds; do not drop the work the gate itself pauses.",
+    "retrySemantics": "Re-evaluate the selected row against a fresh quota observation and account-wide ledger. If still blocked, keep the same row denied and persist the current reason/retryAt. If eligible, transition that same row to reserved under the existing global admission lock, set its charge/lease once, and preserve every frozen request/cost field. Do not decrement a charge, create a replacement call, reopen uncertain work, or issue a provider send. A wrong-head request must not mutate any row.",
+    "canonicalTypes": "Add only the two ModelAdmissionApi method signatures using existing ModelAdmissionRecordV1 and string types. No new DTO/schema, generated contract, queue table, migration, work class, or caller-supplied rank is needed. The queue readback is a list of existing canonical record DTOs from the existing durable rows.",
+    "sharedPolicy": "Keep ModelAdmissionPolicy's existing fixed 60%/70% arithmetic unchanged. Each resume re-reads shared-client use and outstanding/unknown reservations; no remaining-budget percentage or class-specific numeric cutoff is introduced."
+  },
+  "assignedCliPhases": [
+    {
+      "phase": "persist-deferred-work",
+      "checks": [
+        "Use the real disposable PostgreSQL accounting fixture and fake quota/clock seams to persist uncharged denied repair, quiet-tick, event and continuation rows with reason/retryAt under shared usage plus an existing reservation.",
+        "Insert requests in a deliberately non-priority order; do not sort in accounting-probe or fixture-stack."
+      ]
+    },
+    {
+      "phase": "owner-queue-readback",
+      "checks": [
+        "After PostgreSQL reopen, public inspectPending returns the exact persisted rows ordered event/continuation, quiet-tick, repair/replay, independently of insertion order.",
+        "A request to resume a lower-priority callKey while a higher-priority pending row exists is rejected with no row or ledger mutation.",
+        "Attempt a fresh lower-priority request that would fit numeric headroom while a higher-priority row remains pending; owner must refuse charge/lease, retain prior rows and persist a durable measured OPTIONAL_WORK_PAUSED reason/wake."
+      ]
+    },
+    {
+      "phase": "ordered-resume-under-headroom",
+      "checks": [
+        "Resume by the owner-selected head and settle only through the existing public fake-provider seam; demonstrate repair remains deferred while higher-priority work can fit, then quiet-tick defers before event/continuation as shared usage and reservations reduce headroom.",
+        "Use the same common 60%/70% thresholds throughout; fixture upper bounds are inputs, not per-class policy constants. Preserve each denied row's durable reason/retryAt and show the head retry is idempotent."
+      ]
+    },
+    {
+      "phase": "unfiltered-cli-proof",
+      "checks": [
+        "Add AT-ops-50 as a source-bound mandatory case and dispatch it through the existing accounting owner; run without --case at the assigned CLI rung.",
+        "Read probe.show and post-reopen owner queue records, then fully stop the owned test stack. Record zero real provider sends and keep whole-release acceptance pending."
+      ]
+    }
+  ],
+  "implementationFiles": [
+    {
+      "path": "docs/adr/0027-model-admission-accounting.md",
+      "change": "Write the pending-row eligibility, owner priority, idempotent same-row retry and fixed shared-window invariant before implementation."
+    },
+    {
+      "path": "packages/contracts/src/model-admission.ts",
+      "change": "Add the two public ModelAdmissionApi signatures over existing canonical record types; add no schema inventory entry."
+    },
+    {
+      "path": "packages/self-improvement/src/model-admission.ts",
+      "change": "Implement priority-selected inspect/resume against persisted toy_si.model_call rows under the existing admission lock and snapshot compare. Extend existing fresh reserve with the same owner priority gate and atomic head recheck; preserve changed-row idempotency and conditional one-time budget counters."
+    },
+    {
+      "path": "packages/self-improvement/src/accounting-probe.ts",
+      "change": "Add the source-bound AT-ops-50 phases using public ModelAdmission APIs, real PostgreSQL and existing fake clock/quota/provider seams."
+    },
+    {
+      "path": "packages/self-improvement/src/public.ts",
+      "change": "Route unfiltered AT-ops-50 through the existing accounting probe."
+    },
+    {
+      "path": "packages/ops/src/fixture-stack.ts",
+      "change": "Allow the existing accounting probe fixture for AT-ops-50."
+    },
+    {
+      "path": "tests/registry.yaml",
+      "change": "Register AT-ops-50 mandatory source-bound CLI phases and regenerate the derived probe registry."
+    },
+    {
+      "path": "packages/contracts/src/generated-probe-registry.ts",
+      "change": "Generated from tests/registry.yaml by the existing generator; do not hand-edit."
+    }
+  ],
+  "explicitlyUnchanged": [
+    "packages/ops/src/model-admission-policy.ts: retain the existing common 60%/70% policy arithmetic.",
+    "packages/self-improvement/migrations/model-admission.sql and packages/self-improvement/src/model-admission-migration.ts: no migration unless a concrete existing-row update guard proves this interface impossible; never bypass immutable bindings or charge monotonicity.",
+    "architecture/features.json and skills/toy-control/FEATURE-MAP.md: the existing AT-ops-50 mapping already identifies ModelAdmission and probe.run.",
+    "cli/src/main.ts: the unfiltered probe.run route already reaches the existing ReplayEnvironment."
+  ],
+  "timebox": {
+    "totalMinutes": 120,
+    "phases": [
+      {
+        "minutes": 15,
+        "work": "Document the written owner interface/invariants and confirm denied-row mutation constraints."
+      },
+      {
+        "minutes": 40,
+        "work": "Implement public pending readback and same-row owner-selected resume in ModelAdmission."
+      },
+      {
+        "minutes": 30,
+        "work": "Add AT-ops-50 public CLI phases and source-bound manifest/dispatch."
+      },
+      {
+        "minutes": 35,
+        "work": "Generate registry and run the assigned unfiltered CLI stack/probe/show/down proof; stop on any immutable-row conflict rather than expanding schema or queue infrastructure."
+      }
+    ],
+    "stopRule": "At 120 minutes, preserve the concrete evidence and report any exact remaining code gate. Do not broaden to adjacent ATs or add a queue table, policy thresholds, fixture-only internal mocks, or speculative infrastructure."
+  },
+  "verificationLimitsAndDeferredGates": {
+    "localProofDependencies": "Existing Toy fake stack, disposable PostgreSQL fixture, fake clock and fake quota/provider seams only. No credentials, service accounts, browser, private database, live provider call, or root operation is required for this assigned CLI diagnostic.",
+    "protectedAuthority": "Eight actual service identities are observed; protected native dispatch and per-AT receipt closure remain pending.",
+    "otherR011Assignments": "AT-ops-47 full 168-hour/3,360-slot trial and its real accepted-review/device/account evidence remain deferred; AT-ops-49/51/52 and AT-self-improvement-59 remain independently assigned gates. AT-ops-50 local CLI PASS does not complete R0.11.",
+    "rootGate": "No R004/root request is needed for this isolated disposable accounting fixture; root/protected authority remains pending for full acceptance.",
+    "acceptanceState": "PENDING until the assigned unfiltered CLI evidence is produced and all other R0.11 gates pass."
+  },
+  "resourceAdmission": {
+    "source": "Parent-provided fresh repair-doctor readback; no new probe performed by this audit.",
+    "availableBytes": 2883125248,
+    "helperBudgetBytes": 268435456,
+    "marginBytes": 536870912,
+    "requiredBytes": 805306368,
+    "admitted": true
+  },
+  "sourceHashes": [
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/ops.md",
+      "sha256": "f07aab65088c82e4ff21e4d63edb2f279e2324e6d7e2bbb801e0fd7494104b0b"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/TEST-PLAN.md",
+      "sha256": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2"
+    },
+    {
+      "path": "packages/contracts/src/model-admission.ts",
+      "sha256": "13482e15d4ad97b3bd73ec76c2aeeb040c28fbafd46c57b99f6e993d0c7da794"
+    },
+    {
+      "path": "packages/ops/src/model-admission-policy.ts",
+      "sha256": "553eb6805c9779c924d16c3bdb8eeac9a92727086b64a673d317f9dddcbc2c95"
+    },
+    {
+      "path": "packages/self-improvement/src/model-admission.ts",
+      "sha256": "ba0a8b822c0782689caf8c42f93d0f75eca0df6d5eb560a2c16c2a7a06e0fb8e"
+    },
+    {
+      "path": "packages/self-improvement/src/accounting-probe.ts",
+      "sha256": "c59baa27da9dcfee8e503a0ad3aa9d0cf825e9fd25fd46180696e9548f76a933"
+    },
+    {
+      "path": "packages/self-improvement/src/public.ts",
+      "sha256": "4614af4e1e556a2a8756b5b5170bef3fdd10a0e724e1b0b40749ad497b1e8f38"
+    },
+    {
+      "path": "packages/self-improvement/migrations/model-admission.sql",
+      "sha256": "aeda7e6b9c5a9cf3c5a97ae5d547fb38dda95b4587303dc730787d349d2c3bbc"
+    },
+    {
+      "path": "tests/registry.yaml",
+      "sha256": "160a3f98e1605a1b3014ffabf0592b6b5ecfe46e78f707f74a0e0491624ecaa1"
+    },
+    {
+      "path": "build/evidence/R0.11/minimum-assigned-at-plan.json",
+      "sha256": "04f8ee48d9254d1816bc9b8b69a30efb9d1542f3ab4b0b6ad0ef8d48ee132763"
+    },
+    {
+      "path": "build/evidence/R0.11/run-review-next-minimum-plan.json",
+      "sha256": "d9c7e0f47ff3118bc3f3cf8f10e2086708fcd20a64851bda91c145518f64d3d0"
+    }
+  ],
+  "writeScope": "This audit wrote only build/evidence/R0.11/ordered-pause-minimum-owner-plan.json. No source, tests, builds, generators, CLI operations, accounts, credentials or external services were touched.",
+  "parentInterface": "docs/adr/0053-owner-ordered-admission-pauses.md",
+  "parentInterfaceSha256": "d9de122172337098840fae7e2ceed076103a55bcdee8905d1d8465b92b1d0528",
+  "startedAt": "2026-10-07T04:23:40.315Z",
+  "deadlineUtc": "2026-10-07T06:23:40.315Z",
+  "sourceStopAt": "2026-10-07T05:10:00Z",
+  "parentCorrections": [
+    "Fresh lower-priority reserve must not bypass higher-priority pending rows; owner enforces it and mutation rechecks head under existing lock.",
+    "The eight canonical service accounts exist and are observed. Protected provider dispatch/authority remains pending.",
+    "Interface is ADR0053; preserve the historical ADR0027 and byte-identical existing migrations."
+  ],
+  "independentReview": "build/evidence/R0.11/ordered-pause-interface-review.json",
+  "reviewClosure": {
+    "freshReserveBypass": "Existing reserve path must reject and persist lower-priority new work as measured OPTIONAL_WORK_PAUSED with a durable wake; guard head under advisory mutation lock and public CLI case proves no charge/prior-row mutation.",
+    "crossDay": "Scope explicitly same UTC day; preserve immutable old rows/reason/wake, no old-day charge or resume; canonical new attempt relationship deferred R0.06.",
+    "chargedDenied": "Already charged rows in any state replay unchanged; budget increments only from a conditional previously denied-and-uncharged RETURNING transition."
+  },
+  "deferred": [
+    {
+      "owner": "R0.06",
+      "work": "Cross-day retry requires a new canonical attempt relationship; this same-day unit cannot change immutable utc_day."
+    }
+  ]
+}

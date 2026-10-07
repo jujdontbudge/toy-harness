@@ -1,7 +1,7 @@
 import { createHash, randomUUID } from "node:crypto";
 import { spawnSync } from "node:child_process";
 import { lstatSync, readFileSync } from "node:fs";
-import { checkViewSchema, modelAdmissionClaimSchema, modelAdmissionInputSchema, modelAdmissionRecordSchema, modelAdmissionRequestSchema, modelAdmissionRuntimeSchema, modelAdmissionSettlementSchema, modelAdmissionStoreViewSchema, modelQuotaObservationSchema, opsErrorMessages, uuidSchema } from "@toy/contracts";
+import { checkViewSchema, modelAdmissionClaimSchema, modelAdmissionDecisionSchema, modelAdmissionInputSchema, modelAdmissionRecordSchema, modelAdmissionRequestSchema, modelAdmissionRuntimeSchema, modelAdmissionSettlementSchema, modelAdmissionStoreViewSchema, modelQuotaObservationSchema, opsErrorMessages, uuidSchema } from "@toy/contracts";
 import type { CheckViewV1, ModelAdmissionApi, ModelAdmissionRecordV1, ModelAdmissionRuntimeV1, ModelAdmissionStoreViewV1, OpsControlContextV1, OpsErrorCode, Result } from "@toy/contracts";
 import { ModelAdmissionPolicy, OpsTestStack, TestClockControl } from "@toy/ops/public";
 import { AccountingFailure, accountingQuery, accountingTestConnection, sqlJson, sqlText, withAccountingFixture } from "./accounting-postgres.js";
@@ -26,6 +26,23 @@ const recordJson = (alias: string): string => `jsonb_build_object(
   'usage', CASE WHEN ${alias}.actual_input IS NOT NULL AND ${alias}.actual_output IS NOT NULL AND ${alias}.actual_reasoning IS NOT NULL
     THEN jsonb_build_object('inputTokens', ${alias}.actual_input, 'outputTokens', ${alias}.actual_output, 'reasoningTokens', ${alias}.actual_reasoning) ELSE NULL END,
   'reportedTotalTokens', ${alias}.actual_total::text, 'startedAt', ${stamp(alias + ".started_at")}, 'endedAt', ${stamp(alias + ".ended_at")})`;
+const queuePriority = (workClass: string): number | null => workClass === "event" || workClass === "continuation" ? 1
+  : workClass === "quiet-tick" ? 2 : workClass === "repair" || workClass === "replay" ? 3 : null;
+const pendingPredicate = (accountRef: string, now: string, alias = "c"): string => `${alias}.account_ref=${sqlText(accountRef)} AND ${alias}.utc_day=${sqlText(now.slice(0,10))}::date
+  AND ${alias}.state='denied' AND NOT ${alias}.reservation_charged AND ${alias}.native_send_count=0 AND NOT ${alias}.native_terminal_acknowledged AND ${alias}.ended_at IS NULL
+  AND ${alias}.decision->>'retryAt' IS NOT NULL AND ${alias}.decision->>'mode'='measured'
+  AND (( ${alias}.decision->>'reason' IN ('FIVE_HOUR_THRESHOLD','WEEKLY_THRESHOLD','RESERVATION_THRESHOLD')) OR ${alias}.decision->>'reason'='OPTIONAL_WORK_PAUSED')
+  AND ${alias}.purpose IN ('event','continuation','quiet-tick','repair','replay')`;
+const pendingOrder = (alias = "c"): string => `CASE WHEN ${alias}.purpose IN ('event','continuation') THEN 1 WHEN ${alias}.purpose='quiet-tick' THEN 2 ELSE 3 END, ${alias}.started_at, ${alias}.id`;
+const pendingHeadCtes = (accountRef: string, now: string, expected: ModelAdmissionRecordV1 | null): string => {
+  const match = expected === null ? "NOT EXISTS (SELECT 1 FROM pending_head)"
+    : `EXISTS (SELECT 1 FROM pending_head WHERE id=${sqlText(expected.id)}::uuid AND call_key=${sqlText(expected.callKey)} AND retry_at=${sqlText(expected.decision.retryAt ?? "")})`;
+  return `pending_head AS (SELECT c.id,c.call_key,c.decision->>'retryAt' AS retry_at FROM toy_si.model_call c WHERE ${pendingPredicate(accountRef,now)} ORDER BY ${pendingOrder("c")} LIMIT 1),
+    pending_guard AS (SELECT 1 FROM unchanged WHERE ${match})`;
+};
+const pendingRowsSql = (accountRef: string, now: string): string => `SELECT COALESCE(jsonb_agg(queued.record ORDER BY queued.priority,queued.started_at,queued.id),'[]'::jsonb)
+  FROM (SELECT ${recordJson("c")} AS record,CASE WHEN c.purpose IN ('event','continuation') THEN 1 WHEN c.purpose='quiet-tick' THEN 2 ELSE 3 END AS priority,c.started_at,c.id
+    FROM toy_si.model_call c WHERE ${pendingPredicate(accountRef,now)}) queued`;
 const snapshotSql = (accountRef: string, now: string, policyDigest: string, recordPredicate = "FALSE", budgetId: string | null = null, ignoreId: string | null = null): string => {
   const account = sqlText(accountRef);
   const day = sqlText(now.slice(0, 10)) + "::date";
@@ -52,6 +69,11 @@ const openOwner = (runtime: ModelAdmissionRuntimeV1, clock: () => string, guard:
     const raw = query(`SELECT COALESCE((SELECT ${recordJson("c")} FROM toy_si.model_call c WHERE id=${sqlText(callId)}::uuid),'null'::jsonb);`);
     return raw === null ? null : modelAdmissionRecordSchema.parse(raw);
   };
+  const readCallByKey = (accountRef: string, callKey: string): ModelAdmissionRecordV1 | null => {
+    const raw = query(`SELECT COALESCE((SELECT ${recordJson("c")} FROM toy_si.model_call c WHERE c.account_ref=${sqlText(accountRef)} AND c.call_key=${sqlText(callKey)}),'null'::jsonb);`);
+    return raw === null ? null : modelAdmissionRecordSchema.parse(raw);
+  };
+  const readPending = (accountRef: string, now: string): readonly ModelAdmissionRecordV1[] => modelAdmissionRecordSchema.array().parse(query(pendingRowsSql(accountRef,now) + ";"));
   const readSnapshot = (accountRef: string, now: string, predicate = "FALSE", budgetId: string | null = null, ignoreId: string | null = null): ModelAdmissionStoreViewV1 =>
     modelAdmissionStoreViewSchema.parse(query(snapshotSql(accountRef, now, runtime.policyDigest, predicate, budgetId, ignoreId) + ";"));
   const compare = (snapshot: string, expected: ModelAdmissionStoreViewV1, statements: string): unknown => query(`
@@ -78,9 +100,17 @@ const openOwner = (runtime: ModelAdmissionRuntimeV1, clock: () => string, guard:
               || parent.runId !== request.runId || parent.generation !== request.generation || parent.work.class !== "foreground"
               || parent.work.authenticatedRequestId !== request.work.authenticatedRequestId) return denied("UNAUTHORIZED");
           }
-          const decision = ModelAdmissionPolicy.evaluate(modelAdmissionInputSchema.parse({ now, accountRef: request.accountRef, requested: request.requested,
+          const baseDecision = ModelAdmissionPolicy.evaluate(modelAdmissionInputSchema.parse({ now, accountRef: request.accountRef, requested: request.requested,
             work: request.work, ledger: state.ledger, observation: state.observation, expectedFiveHourUpperPercent: request.expectedFiveHourUpperPercent,
             expectedWeeklyUpperPercent: request.expectedWeeklyUpperPercent }));
+          const requestPriority = queuePriority(request.work.class);
+          const pending = requestPriority === null ? [] : readPending(request.accountRef,now);
+          const pendingHead = pending[0] ?? null;
+          const headPriority = pendingHead === null ? null : queuePriority(pendingHead.work.class);
+          const pausedByOwner = baseDecision.eligible && requestPriority !== null && pendingHead !== null && headPriority !== null
+            && requestPriority > headPriority && pendingHead.decision.retryAt !== null;
+          const decision = pausedByOwner && pendingHead !== null ? modelAdmissionDecisionSchema.parse({...baseDecision,eligible:false,mode:pendingHead.decision.mode,quotaSnapshotId:pendingHead.decision.quotaSnapshotId,
+            reason:"OPTIONAL_WORK_PAUSED",retryAt:pendingHead.decision.retryAt}) : baseDecision;
           const admittedForeground = request.work.class === "foreground"
             ? { purpose: request.work.class, authenticatedRequestId: request.work.authenticatedRequestId }
             : null;
@@ -88,14 +118,16 @@ const openOwner = (runtime: ModelAdmissionRuntimeV1, clock: () => string, guard:
           const authenticatedRequestId = admittedForeground?.authenticatedRequestId ?? "";
           const encodedRequest = sqlJson(request);
           const encodedDecision = sqlJson(decision);
+          const queueCtes = requestPriority === null ? "pending_guard AS (SELECT 1 FROM unchanged)" : pendingHeadCtes(request.accountRef,now,pendingHead);
           const data = compare(snapshotSql(request.accountRef, now, runtime.policyDigest, predicate, request.budgetGroupId), state, `
+            ${queueCtes},
             root_budget AS (INSERT INTO toy_si.budget_group (id,root_contract_id,account_ref,policy_hash,updated_at,model_iterations,unreported_calls,started_at)
-              SELECT ${sqlText(request.budgetGroupId)}::uuid,${sqlText(request.rootContractId)}::uuid,${sqlText(request.accountRef)},${sqlText(request.requested.policyDigest)},${sqlText(now)}::timestamptz,${decision.eligible?1:0},${decision.eligible?1:0},${decision.eligible?sqlText(now)+"::timestamptz":"NULL"} FROM unchanged
+              SELECT ${sqlText(request.budgetGroupId)}::uuid,${sqlText(request.rootContractId)}::uuid,${sqlText(request.accountRef)},${sqlText(request.requested.policyDigest)},${sqlText(now)}::timestamptz,${decision.eligible?1:0},${decision.eligible?1:0},${decision.eligible?sqlText(now)+"::timestamptz":"NULL"} FROM pending_guard
               ON CONFLICT (id) DO NOTHING RETURNING id),
             call_insert AS (INSERT INTO toy_si.model_call (id,run_id,budget_group_id,call_key,parent_call_id,purpose,requested_route,attempt,state,reserved_input,reserved_output,quota_snapshot_id,started_at,account_ref,policy_hash,generation,utc_day,request_hash,work,decision,reservation_charged,send_lease_active,expected_five_hour_upper_percent,expected_weekly_upper_percent)
               SELECT ${sqlText(id)}::uuid,(${encodedRequest}->>'runId')::uuid,${sqlText(request.budgetGroupId)}::uuid,${sqlText(request.callKey)},(${encodedRequest}->>'parentCallId')::uuid,${sqlText(request.work.class)},${sqlJson(request.requested)},${request.attempt},${sqlText(decision.eligible ? "reserved" : "denied")},${request.reservedInputTokens},4096,
                 (${encodedDecision}->>'quotaSnapshotId')::uuid,${sqlText(now)}::timestamptz,${sqlText(request.accountRef)},${sqlText(request.requested.policyDigest)},${sqlText(request.generation)}::bigint,${sqlText(now.slice(0,10))}::date,${sqlText(requestHash)},${sqlJson(request.work)},${encodedDecision},${decision.eligible},${decision.eligible},
-                (${encodedRequest}->>'expectedFiveHourUpperPercent')::numeric,(${encodedRequest}->>'expectedWeeklyUpperPercent')::numeric FROM unchanged LEFT JOIN root_budget ON TRUE RETURNING *),
+                (${encodedRequest}->>'expectedFiveHourUpperPercent')::numeric,(${encodedRequest}->>'expectedWeeklyUpperPercent')::numeric FROM pending_guard LEFT JOIN root_budget ON TRUE RETURNING *),
             foreground_waiter_retire AS (UPDATE toy_si.model_call prior_call SET ended_at=${sqlText(now)}::timestamptz
               WHERE ${admittedForeground !== null} AND prior_call.purpose=${sqlText(foregroundPurpose)} AND prior_call.work->>'authenticatedRequestId'=${sqlText(authenticatedRequestId)}
                 AND prior_call.state='denied' AND NOT prior_call.reservation_charged AND prior_call.decision->>'reason'='PROVIDER_BUSY'
@@ -183,6 +215,56 @@ const openOwner = (runtime: ModelAdmissionRuntimeV1, clock: () => string, guard:
     inspect(accountRef) {
       if (!modelAdmissionInputSchema.shape.accountRef.safeParse(accountRef).success) return denied("INVALID_INPUT");
       try { return {ok:true,data:readSnapshot(accountRef,clock())}; } catch (error) { return unavailable(error,"none",diagnostic); }
+    },
+    inspectPending(accountRef) {
+      if (!modelAdmissionInputSchema.shape.accountRef.safeParse(accountRef).success) return denied("INVALID_INPUT");
+      try { return {ok:true,data:readPending(accountRef,clock())}; } catch (error) { return unavailable(error,"none",diagnostic); }
+    },
+    resumePending(accountRef,callKey) {
+      if (!modelAdmissionInputSchema.shape.accountRef.safeParse(accountRef).success || !modelAdmissionRequestSchema.shape.callKey.safeParse(callKey).success) return denied("INVALID_INPUT");
+      try {
+        for (let attempt=0;attempt<3;attempt+=1) {
+          const target=readCallByKey(accountRef,callKey);
+          if (target===null) return denied("INVALID_INPUT");
+          if (target.state!=="denied" || target.reservationCharged || target.nativeSendCount!==0 || target.nativeTerminalAcknowledged || target.endedAt!==null) return {ok:true,data:target};
+          const now=clock();
+          if (target.utcDay!==now.slice(0,10) || queuePriority(target.work.class)===null) return denied("CONFLICT");
+          const predicate="account_ref="+sqlText(accountRef)+" AND call_key="+sqlText(callKey);
+          const state=readSnapshot(accountRef,now,predicate,target.budgetGroupId);
+          const binding=state.budgetBinding;
+          if (binding===null || binding.accountRef!==accountRef || binding.policyDigest!==target.requested.policyDigest
+            || binding.policyDigest!==runtime.policyDigest || binding.state!=="open") return denied("CONFLICT");
+          const pending=readPending(accountRef,now);
+          const head=pending[0]??null;
+          if (head===null || head.id!==target.id || head.callKey!==target.callKey) return denied("CONFLICT");
+          const decision=ModelAdmissionPolicy.evaluate(modelAdmissionInputSchema.parse({now,accountRef,requested:target.requested,work:target.work,ledger:state.ledger,observation:state.observation,
+            expectedFiveHourUpperPercent:target.expectedFiveHourUpperPercent,expectedWeeklyUpperPercent:target.expectedWeeklyUpperPercent}));
+          const encodedDecision=sqlJson(decision);
+          const guardCtes=`${pendingHeadCtes(accountRef,now,head)},
+            budget_guard AS (SELECT 1 FROM toy_si.budget_group b CROSS JOIN unchanged WHERE b.id=${sqlText(target.budgetGroupId)}::uuid
+              AND b.root_contract_id=${sqlText(binding.rootContractId)}::uuid AND b.account_ref=${sqlText(accountRef)} AND b.policy_hash=${sqlText(runtime.policyDigest)} AND b.state='open')`;
+          const data=decision.eligible
+            ? compare(snapshotSql(accountRef,now,runtime.policyDigest,predicate,target.budgetGroupId),state,`
+              ${guardCtes},
+              pending_budget_guard AS (SELECT 1 FROM pending_guard JOIN budget_guard ON TRUE),
+              resume_row AS (UPDATE toy_si.model_call c SET state='reserved',reservation_charged=true,send_lease_active=true,decision=${encodedDecision},quota_snapshot_id=(${encodedDecision}->>'quotaSnapshotId')::uuid
+                WHERE c.id=${sqlText(target.id)}::uuid AND c.account_ref=${sqlText(accountRef)} AND c.call_key=${sqlText(callKey)} AND c.state='denied' AND NOT c.reservation_charged
+                  AND c.native_send_count=0 AND NOT c.native_terminal_acknowledged AND c.ended_at IS NULL AND EXISTS (SELECT 1 FROM pending_budget_guard) RETURNING c.*),
+              budget_charge AS (UPDATE toy_si.budget_group b SET model_iterations=b.model_iterations+1,unreported_calls=b.unreported_calls+1,
+                started_at=COALESCE(b.started_at,${sqlText(now)}::timestamptz),updated_at=${sqlText(now)}::timestamptz FROM resume_row r
+                WHERE b.id=r.budget_group_id AND r.state='reserved' AND r.reservation_charged RETURNING b.id)
+              SELECT COALESCE((SELECT ${recordJson("c")} FROM resume_row c),'null'::jsonb);`)
+            : compare(snapshotSql(accountRef,now,runtime.policyDigest,predicate,target.budgetGroupId),state,`
+              ${guardCtes},
+              pending_budget_guard AS (SELECT 1 FROM pending_guard JOIN budget_guard ON TRUE),
+              resumed_row AS (UPDATE toy_si.model_call c SET decision=${encodedDecision},quota_snapshot_id=(${encodedDecision}->>'quotaSnapshotId')::uuid
+                WHERE c.id=${sqlText(target.id)}::uuid AND c.account_ref=${sqlText(accountRef)} AND c.call_key=${sqlText(callKey)} AND c.state='denied' AND NOT c.reservation_charged
+                  AND c.native_send_count=0 AND NOT c.native_terminal_acknowledged AND c.ended_at IS NULL AND EXISTS (SELECT 1 FROM pending_budget_guard) RETURNING c.*)
+              SELECT COALESCE((SELECT ${recordJson("c")} FROM resumed_row c),'null'::jsonb);`);
+          if (data!==null) return {ok:true,data:modelAdmissionRecordSchema.parse(data)};
+        }
+        return denied("DEPENDENCY_UNAVAILABLE");
+      } catch (error) { return unavailable(error,"unknown",diagnostic); }
     }
   };
 };

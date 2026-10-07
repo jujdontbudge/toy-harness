@@ -1,0 +1,85 @@
+{
+  "schemaVersion": "toy.r0.11-ordered-pause-interface-review.v1",
+  "reviewedAtUtc": "2026-10-07T04:26:00Z",
+  "outcome": "PLAN_CLOSURE_REQUIRED_BEFORE_SOURCE",
+  "reviewedSources": [
+    {
+      "path": "docs/adr/0053-owner-ordered-admission-pauses.md",
+      "sha256": "25150d8dba2e3cc35116f55335bbe5f3fc141542b439a3c191c0765b28229c53"
+    },
+    {
+      "path": "build/evidence/R0.11/ordered-pause-minimum-owner-plan.json",
+      "sha256": "56ab93771bd5ca5006e0c40ff8b006f4b27cceb05b90f9d8afe7bc8ddb542a3f"
+    },
+    {
+      "path": "packages/contracts/src/model-admission.ts",
+      "sha256": "13482e15d4ad97b3bd73ec76c2aeeb040c28fbafd46c57b99f6e993d0c7da794"
+    },
+    {
+      "path": "packages/self-improvement/src/model-admission.ts",
+      "sha256": "ba0a8b822c0782689caf8c42f93d0f75eca0df6d5eb560a2c16c2a7a06e0fb8e"
+    },
+    {
+      "path": "packages/self-improvement/migrations/model-admission.sql",
+      "sha256": "aeda7e6b9c5a9cf3c5a97ae5d547fb38dda95b4587303dc730787d349d2c3bbc"
+    },
+    {
+      "path": "packages/self-improvement/src/model-admission-migration.ts",
+      "sha256": "c517c58e822f5aad03928a460a457d8a9c847c608bbc549ee6950b564bb3aaee"
+    }
+  ],
+  "checks": {
+    "proposedApi": {
+      "status": "PASS",
+      "details": "inspectPending(accountRef): Result<readonly ModelAdmissionRecordV1[]> and resumePending(accountRef, callKey): Result<ModelAdmissionRecordV1> are additive methods on ModelAdmissionApi using existing public DTOs. The current API has no pending-list/resume methods; no new schema or DTO is needed for these signatures."
+    },
+    "queueEligibility": {
+      "status": "PASS_WITH_DAY_BOUNDARY_LIMIT",
+      "details": "Scope resume candidates to current-account/current-day, uncharged denied rows with native_send_count=0, no terminal acknowledgement, ended_at=NULL, durable retryAt, measured-threshold hold reasons (five-hour, weekly or reservation threshold), and assigned autonomous classes. This excludes uncertain, sending, settled, charged history and foreground work from re-admission. Charged rows, including charged-denied history, remain readable/idempotent but never resume candidates. Owner SQL binds accountRef and ranks internally; caller input cannot select or sort the head."
+    },
+    "sameRowDeniedToReserved": {
+      "status": "PASS_CONDITIONALLY",
+      "details": "Existing table checks permit denied/unleased/uncharged to become reserved/leased/charged with native_send_count still zero. The guard freezes request identity/bindings/costs and utc_day, blocks edits to settled rows and blocks charged=true to false, but does not freeze decision/state or false-to-true charge. No migration is needed for a same-day retry that preserves all frozen columns."
+    },
+    "exactlyOnceCharge": {
+      "status": "IMPLEMENTATION_INVARIANT",
+      "details": "The existing guard makes charges monotonic but does not itself prevent a duplicate budget counter increment. The resume mutation must update only a still-denied, uncharged head, and increment its existing budget counters only when that conditional row transition returns a row. A changed-row replay must return the persisted row without rerunning the charge CTE."
+    },
+    "idempotencyAndUncertain": {
+      "status": "PASS_IF_ORDERED_AS_ADR",
+      "details": "Check the addressed row before queue-head evaluation: if the same callKey is already reserved, sending, uncertain, settled, or any charged state including denied-but-charged, return its persisted record without mutation or queue advancement. Only an uncharged denied measured-threshold row may be re-evaluated. Uncertain/charged rows are never re-admitted; the guard also refuses charge reclamation."
+    },
+    "mutationConcurrency": {
+      "status": "PASS_IF_ORDERED_AS_ADR",
+      "details": "The existing accounting mutation obtains pg_advisory_xact_lock(18374691). Recheck the selected pending head and snapshot inside the same mutation statement after that lock; a pre-lock read alone is insufficient."
+    }
+  },
+  "findings": [
+    {
+      "id": "FRESH_RESERVE_CAN_BYPASS_PENDING_HEAD",
+      "severity": "BLOCKING_PLAN_GAP",
+      "details": "The updated plan's implementation description and CLI phases cover inspectPending/resumePending and wrong-head retries, but do not explicitly change or test the existing fresh reserve path. Current ModelAdmission.reserve reads the ledger and evaluates one request; it does not inspect higher-priority denied rows. A fresh repair/quiet request can therefore reserve while a higher-priority event/continuation row is pending, bypassing ADR-0053's explicit fresh-reserve rule.",
+      "requiredClosure": "Add the existing reserve path to the owner change: under the same advisory mutation lock, check for higher-priority measured-threshold pending work and prevent a lower-priority fresh request from taking the lease or charging ahead of it. Add a public CLI assertion for that fresh-reserve attempt, including that no prior row or budget charge is changed. Keep deferred measured-threshold work durable with reason/retryAt; never reopen charged history."
+    },
+    {
+      "id": "CURRENT_DAY_FILTER_LOSES_LATER_WAKE_FROM_PENDING_VIEW",
+      "severity": "SCOPE_LIMIT",
+      "details": "The proposed queue eligibility filters to current UTC day, while measured-window retryAt is a quota-window reset and can fall on a later day. The row's utc_day is immutable. Such a denied weekly-window row will disappear from inspectPending after midnight and cannot be resumed by this same-row API later without either violating day-bound accounting or adding a new retry-record relationship.",
+      "requiredClosure": "Scope this card and its proof explicitly to same-UTC-day measured-threshold resumes, or define how a later-day retry is represented and charged without mutating the old row or weakening the no-reclamation rule. Do not claim general cross-day durable resume or broaden this into a second queue."
+    }
+  ],
+  "conclusion": "The same-row transition and existing guard support a same-day measured-threshold retry; budget charging still needs a conditional transition CTE. Charged-denied rows must be idempotent readbacks only, never resume candidates. ADR-0053 is directionally sound, but the implementation plan must explicitly close the fresh-reserve bypass and state the cross-day wake limit before source work.",
+  "writeScope": "Only build/evidence/R0.11/ordered-pause-interface-review.json was written. No source, build, tests, generator, CLI, account, credential or external service was touched.",
+  "resourceAdmission": {
+    "source": "Parent-provided fresh doctor observation at 2026-10-07T04:23:16Z.",
+    "availableBytes": 2502524928,
+    "helperBudgetBytes": 268435456,
+    "marginBytes": 536870912,
+    "requiredBytes": 805306368,
+    "admitted": true
+  },
+  "acceptance": {
+    "wholeR011": "PENDING",
+    "protectedAuthority": "PENDING"
+  }
+}

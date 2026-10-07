@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "toy.r0.11-ordered-pause-source-review.v1",
+  "reviewedAtUtc": "2026-10-07T04:41:06Z",
+  "outcome": "OWNER_INVARIANTS_PASS_PROBE_ASSERTIONS_INCOMPLETE",
+  "assignment": {
+    "id": "AT-ops-50",
+    "source": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/ops.md:1971",
+    "assertionHash": "bf08ca7e57784f55768174c9dad4eac4c45d9fb662dec229f9b6240374c65177",
+    "rung": "CLI",
+    "requiredEvidence": ["stack", "probe:AT-ops-50"]
+  },
+  "reviewedHashes": [
+    { "path": "packages/contracts/src/model-admission.ts", "sha256": "8803164cb2d4e3b5fe764870f8409f020be0841f2367a86c7cdd062fa3c6262e" },
+    { "path": "packages/self-improvement/src/model-admission.ts", "sha256": "31ae5925b59646c1d73516922e007624a4c22be4d9557ddc3044afcb432f6a48" },
+    { "path": "packages/self-improvement/src/accounting-probe.ts", "sha256": "d23261853cdacc6dd129d45d07a2a4ba39c6097d24521b1a5e77c0d983bb9089" },
+    { "path": "build/evidence/R0.11/ordered-pause-source-handoff.json", "sha256": "811fa538cdeea812fd69b21eec6b3924b34cf54c7a0971c51116e89ab2267685" },
+    { "path": "docs/adr/0053-owner-ordered-admission-pauses.md", "sha256": "d9de122172337098840fae7e2ceed076103a55bcdee8905d1d8465b92b1d0528" }
+  ],
+  "ownerReview": {
+    "api": "PASS. The two methods use existing canonical types: inspectPending(accountRef) returns readonly ModelAdmissionRecordV1 rows; resumePending(accountRef, callKey) returns one existing record. No new DTO, queue table or migration is introduced.",
+    "eligibleRows": "PASS FOR ADR SCOPE. pendingPredicate restricts to same-account/current-UTC-day uncharged denied rows with zero native sends, no terminal acknowledgement, no end time, non-null retryAt, measured threshold/OPTIONAL_WORK_PAUSED reason, and event/continuation/quiet-tick/repair/replay classes. SQL orders event/continuation, quiet-tick, repair/replay.",
+    "sameRowTransition": "PASS. resume_row updates only the selected denied, uncharged, unended row with native_send_count=0 to reserved/charged/leased while preserving frozen request/cost/hash/day and native fields. Existing constraints allow reserved only with lease active and native count zero; the guard permits false-to-true charge but prohibits uncharging, settled mutation and binding changes.",
+    "budgetCharge": "PASS. budget_charge consumes only resume_row RETURNING. The conditional denied-and-uncharged update is the sole transition that makes that row chargeable; changed-row retries return the persisted record before mutation, so they cannot increment again.",
+    "replayAndUncertain": "PASS. The early return covers reserved, sending, uncertain, settled, and any charged row including charged-denied; these are readbacks only. Uncertain/charged rows are excluded from pending selection and no charge can be reclaimed.",
+    "atomicHeadGuard": "PASS. Both fresh-reserve and resume paths recheck the expected pending head in the mutation CTE under the existing pg_advisory_xact_lock(18374691), together with snapshot/budget guards. Fresh lower-priority reserve is persisted as uncharged OPTIONAL_WORK_PAUSED with the pending head retryAt."
+  },
+  "probeFindings": [
+    {
+      "id": "QUIET_ELIGIBILITY_WHILE_REPAIR_HELD_NOT_ASSERTED",
+      "severity": "ACCEPTANCE_GAP",
+      "source": "packages/self-improvement/src/accounting-probe.ts:123-158",
+      "detail": "At 58%, the phase resumes and settles only event/continuation, then observes 59.998% and proves quiet-tick is vetoed while repair remains denied. It never resumes quiet-tick at a headroom state where quiet-tick is eligible and repair stays held. Thus the repair-first part is inferred from queue order, not shown as quiet work proceeding while repair pauses."
+    },
+    {
+      "id": "EVENT_CONTINUATION_PAUSE_LAST_NOT_ASSERTED",
+      "severity": "ACCEPTANCE_GAP",
+      "source": "packages/self-improvement/src/accounting-probe.ts:158-175",
+      "detail": "Fresh event and continuation are checked as eligible at 59%; the phase ends with quiet/repair pending. It never checks a later common-window headroom where event and continuation are themselves deferred after quiet/repair remain held. The phase has no final high-priority denial, uncharged/no-lease/native-count-zero/wake assertion. Add final event and continuation attempts whose existing shared usage, outstanding upper bounds and request bounds reach the common 60/70 equality veto, then read back their deferred rows ahead of quiet/repair."
+    },
+    {
+      "id": "PRIOR_RECORD_READBACK_COMPARISON_IS_NOT_FULL_DTO",
+      "severity": "EVIDENCE_GAP",
+      "source": "packages/self-improvement/src/accounting-probe.ts:91-120",
+      "detail": "Wrong-head noWrongMutation compares only call IDs and ledger; fresh-hold preserved checks only that previous IDs remain, plus fallbackJobsReserved. A same-ID decision/retryAt/charge/lease/native-field mutation could pass. Compare each preexisting canonical ModelAdmissionRecordV1 with its post-operation readback (exact array equality for wrong-head, by-ID full-record equality for the fresh reserve), alongside the ledger."
+    }
+  ],
+  "scopeNotes": {
+    "policy": "No new per-class percentages or reserve fractions found. The owner reuses ModelAdmissionPolicy and measured request bounds.",
+    "dayBoundary": "ADR explicitly scopes this proof to same-UTC-day measured-threshold retries; cross-day retry relationships remain deferred because utc_day is immutable.",
+    "verification": "Source review only. No build, generator, tests, CLI/world operation, or external service was run. Whole AT-ops-50 CLI evidence and whole R0.11/protected authority remain pending."
+  },
+  "writeScope": "Only build/evidence/R0.11/ordered-pause-source-review.json was written."
+}

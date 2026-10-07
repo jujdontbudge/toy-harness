@@ -5675,6 +5675,83 @@ export const registeredCliAcceptanceManifestInventory = [
     "simUnavailableReason": "SIM cannot inspect pre-build admission counters or drive the native PostgreSQL restart boundary. The CLI exercises the real accounting owner with fixed external quota and clock observations."
   },
   {
+    "id": "AT-ops-50",
+    "rung": "CLI",
+    "sourceAssertionHash": "bf08ca7e57784f55768174c9dad4eac4c45d9fb662dec229f9b6240374c65177",
+    "commandId": "probe.run",
+    "scenarioId": "accounting.model-admission",
+    "owner": "self-improvement",
+    "firstRelease": "R0",
+    "kind": "behavioral",
+    "mandatoryCases": [
+      {
+        "id": "persist-deferred-work",
+        "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+        "phase": "persist-deferred-work"
+      },
+      {
+        "id": "owner-queue-readback",
+        "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+        "phase": "owner-queue-readback"
+      },
+      {
+        "id": "ordered-resume-under-headroom",
+        "publicOperation": "ReplayEnvironment.runRegisteredProbe",
+        "phase": "ordered-resume-under-headroom"
+      }
+    ],
+    "trigger": "Owner-selected same-day measured work pauses repair before quiet-tick and event/Continuation. Public pending readbacks, retries and fresh-reserve guards preserve durable reason/wake and charges at common quota ceilings; protected and cross-day acceptance stays pending.",
+    "faultControls": [
+      {
+        "id": "fixed-quota-observation",
+        "seam": "provider",
+        "affectedPhases": [
+          "persist-deferred-work",
+          "owner-queue-readback",
+          "ordered-resume-under-headroom"
+        ]
+      },
+      {
+        "id": "native-postgresql-reopen",
+        "seam": "os",
+        "affectedPhases": [
+          "owner-queue-readback",
+          "ordered-resume-under-headroom"
+        ]
+      }
+    ],
+    "observations": [
+      {
+        "id": "public-pending-work",
+        "independentReader": "ModelAdmission.inspectPending: real stored owner priority, reasons, wakes and complete prior record readbacks",
+        "caseIds": [
+          "persist-deferred-work",
+          "owner-queue-readback",
+          "ordered-resume-under-headroom"
+        ]
+      },
+      {
+        "id": "durable-accounting-state",
+        "independentReader": "ModelAdmission.inspect/resumePending: real PostgreSQL reopen, conditional charges and fixed headroom decisions",
+        "caseIds": [
+          "persist-deferred-work",
+          "owner-queue-readback",
+          "ordered-resume-under-headroom"
+        ]
+      },
+      {
+        "id": "stored-cli-readback",
+        "independentReader": "toy probe.show and stack.down: exact persisted operation and complete owned-world teardown",
+        "caseIds": [
+          "persist-deferred-work",
+          "owner-queue-readback",
+          "ordered-resume-under-headroom"
+        ]
+      }
+    ],
+    "simUnavailableReason": "SIM cannot inspect pre-build durable admission order or native PostgreSQL reopen. The assigned CLI exercises the real accounting owner with fake external quota and clock."
+  },
+  {
     "id": "AT-ops-51",
     "rung": "CLI",
     "sourceAssertionHash": "ea41b9bcca501eb9ae00aa97b991ea915a418bc288913850f49b0e7c15555f26",

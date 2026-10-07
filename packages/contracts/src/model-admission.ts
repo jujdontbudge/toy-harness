@@ -93,6 +93,8 @@ export type ModelAdmissionApi = {
   settle: (settlement: ModelAdmissionSettlementV1) => Result<ModelAdmissionRecordV1>;
   observe: (observation: ModelQuotaObservationV1) => Result<ModelQuotaObservationV1>;
   inspect: (accountRef: string) => Result<ModelAdmissionStoreViewV1>;
+  inspectPending: (accountRef: string) => Result<readonly ModelAdmissionRecordV1[]>;
+  resumePending: (accountRef: string, callKey: string) => Result<ModelAdmissionRecordV1>;
 };
 export const modelAdmissionSchemaInventory = {
   ModelQuotaWindowV1: modelQuotaWindowSchema, ModelQuotaObservationV1: modelQuotaObservationSchema,

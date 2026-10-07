@@ -41,9 +41,9 @@ const finish = (owner: ModelAdmissionApi, record: ModelAdmissionRecordV1, known:
 };
 
 export const accountingProbe = async (input: RegisteredProbeInputV1, context: OpsControlContextV1): Promise<Result<RegisteredProbeOperationV1>> => {
-  if ((input.caseId !== undefined && input.caseId !== "model-admission") || !["AT-ops-49","AT-ops-51","AT-ops-52"].includes(input.probeId))
+  if ((input.caseId !== undefined && input.caseId !== "model-admission") || !["AT-ops-49","AT-ops-50","AT-ops-51","AT-ops-52"].includes(input.probeId))
     return {ok:false,error:{module:"ops",code:"INVALID_INPUT",message:opsErrorMessages.INVALID_INPUT,retryable:false,effectState:"none"}};
-  const phases = input.probeId === "AT-ops-49" ? ["named-window-equality-0", "named-window-equality-1", "named-window-equality-2", "foreground-contention-recovery"] : input.probeId === "AT-ops-51" ? ["eight-durable-background-reservations", "restart-new-goal-ninth-refused-foreground-exempt"] : ["fresh-known-veto-0", "fresh-known-veto-1", "fresh-known-veto-2", "fresh-known-veto-3"];
+  const phases = input.probeId === "AT-ops-49" ? ["named-window-equality-0", "named-window-equality-1", "named-window-equality-2", "foreground-contention-recovery"] : input.probeId === "AT-ops-50" ? ["persist-deferred-work","owner-queue-readback","ordered-resume-under-headroom"] : input.probeId === "AT-ops-51" ? ["eight-durable-background-reservations", "restart-new-goal-ninth-refused-foreground-exempt"] : ["fresh-known-veto-0", "fresh-known-veto-1", "fresh-known-veto-2", "fresh-known-veto-3"];
   const manifest = registeredCliAcceptanceManifestInventory.find(entry => entry.id === input.probeId);
   if (!manifest || manifest.scenarioId !== "accounting.model-admission" || JSON.stringify(manifest.mandatoryCases) !== JSON.stringify(phases.map(phase => ({ id: phase, publicOperation: "ReplayEnvironment.runRegisteredProbe", phase })))) return {ok:false,error:{module:"ops",code:"ATTESTATION_INVALID",message:opsErrorMessages.ATTESTATION_INVALID,retryable:false,effectState:"none"}};
   try {
@@ -61,7 +61,7 @@ export const accountingProbe = async (input: RegisteredProbeInputV1, context: Op
       ...(fiveHour===null?[]:[{bucketId:"primary",durationMinutes:300,usedPercent:fiveHour,resetAt:new Date(Date.parse(now)+18000000).toISOString()}]),
       ...(weekly===null?[]:[{bucketId:"secondary",durationMinutes:10080,usedPercent:weekly,resetAt:new Date(Date.parse(now)+604800000).toISOString()}])
     ];
-    const observe = (owner: ModelAdmissionApi, accountRef: string, key: string, values: ModelQuotaWindowV1[], unavailable = false): void => {
+        const observe = (owner: ModelAdmissionApi, accountRef: string, key: string, values: ModelQuotaWindowV1[], unavailable = false): void => {
       take(owner.observe(modelQuotaObservationSchema.parse({id:identity(key+":quota"),provider:"siwc_responses",accountRef,reportedAt:now,sourceAuthorized:true,schemaValid:!unavailable,status:unavailable?"unavailable":"available",windows:values,bodyRef:"fixed-external-quota-fixture:"+key})));
     };
     const checks: CheckViewV1[] = [];
@@ -70,7 +70,129 @@ export const accountingProbe = async (input: RegisteredProbeInputV1, context: Op
       checks.push(check("public-accounting-interface-refused",false,{errorCode:error.code,effectState:error.effectState}));
       return TestProbeControl.run(input,context,checks);
     };
-    if (input.probeId === "AT-ops-49") {
+    if (input.probeId === "AT-ops-50") {
+      const accountRef="fixture.ordered-pause."+prefix;
+      const key=prefix+":ordered-pause";
+      const phaseOne=await ModelAdmission.withTest(context,policyDigest,owner=>exercise(()=>{
+        observe(owner,accountRef,key,windows(10,20));
+        const baseline=take(owner.reserve(request(accountRef,key+":baseline",{class:"event"},"background",true)));
+        const baselineTerminal=finish(owner,baseline,true);
+        observe(owner,accountRef,key+":blocked",windows(60,20));
+        const inserted:ModelAdmissionRecordV1[]=[];
+        for (const workClass of ["repair","event","quiet-tick","continuation"] as const) inserted.push(take(owner.reserve(request(accountRef,key+":"+workClass,{class:workClass},"background",true))));
+        const pending=take(owner.inspectPending(accountRef));
+        const ledger=take(owner.inspect(accountRef)).ledger;
+        const tier=(record:ModelAdmissionRecordV1):number=>record.work.class==="event"||record.work.class==="continuation"?1:record.work.class==="quiet-tick"?2:3;
+        const ordered=pending.every((record,index)=>index===0||tier(pending[index-1]??record)<=tier(record));
+        const exact=pending.length===4&&new Set(pending.map(record=>record.callKey)).size===4&&["event","continuation","quiet-tick","repair"].every(workClass=>pending.some(record=>record.work.class===workClass));
+        const denied=inserted.every(record=>record.state==="denied"&&!record.reservationCharged&&!record.leaseActive&&record.nativeSendCount===0
+          &&!record.nativeTerminalAcknowledged&&record.endedAt===null&&!record.decision.eligible&&record.decision.retryAt!==null
+          &&(record.decision.reason==="FIVE_HOUR_THRESHOLD"||record.decision.reason==="WEEKLY_THRESHOLD"||record.decision.reason==="RESERVATION_THRESHOLD"));
+        const passed=baselineTerminal.state==="settled"&&baselineTerminal.reservationCharged&&ledger.fallbackJobsReserved===1&&ledger.unreflectedFiveHourUpperPercent!==null
+          &&ledger.unreflectedFiveHourUpperPercent>=0.001&&ordered&&exact&&denied;
+        checks.push(check("persist-deferred-work",passed,{f:["eligible","reason","retryAt","charged","lease","native","ack","ended"],inserted:inserted.map(record=>[record.work.class,record.decision.reason,record.decision.retryAt!==null,record.reservationCharged,record.nativeSendCount]),pending:pending.map(record=>[record.work.class,record.decision.reason]),baseline:[baselineTerminal.state,baselineTerminal.reservationCharged],ledger:[ledger.fallbackJobsReserved,ledger.unreflectedFiveHourUpperPercent,ledger.unreflectedWeeklyUpperPercent],order:ordered,exact}));
+      }));
+      if(!phaseOne.ok)return reportFailure(phaseOne.error);
+      const phaseTwo=await ModelAdmission.withTest(context,policyDigest,owner=>exercise(()=>{
+        const before=take(owner.inspectPending(accountRef));
+        const beforeLedger=take(owner.inspect(accountRef)).ledger;
+        const repair=before.find(record=>record.work.class==="repair");
+        const wrong=repair===undefined?null:owner.resumePending(accountRef,repair.callKey);
+        const wrongConflict=wrong!==null&&!wrong.ok&&wrong.error.code==="CONFLICT";
+        const afterWrong=take(owner.inspectPending(accountRef));
+        const afterWrongLedger=take(owner.inspect(accountRef)).ledger;
+        observe(owner,accountRef,key+":headroom",windows(20,20));
+        const fresh=take(owner.reserve(request(accountRef,key+":fresh-repair",{class:"repair"},"background",true)));
+        const afterFresh=take(owner.inspectPending(accountRef));
+        const afterFreshLedger=take(owner.inspect(accountRef)).ledger;
+        const beforeIds=before.map(record=>record.id);
+        const afterFreshIds=afterFresh.map(record=>record.id);
+        const preserved=before.length===4&&before.every(record=>JSON.stringify(record)===JSON.stringify(afterFresh.find(candidate=>candidate.id===record.id)));
+        const noWrongMutation=JSON.stringify(before)===JSON.stringify(afterWrong)&&JSON.stringify(beforeLedger)===JSON.stringify(afterWrongLedger);
+        const freshHold=fresh.state==="denied"&&!fresh.decision.eligible&&fresh.decision.mode==="measured"&&fresh.decision.reason==="OPTIONAL_WORK_PAUSED"
+          &&fresh.decision.retryAt!==null&&!fresh.reservationCharged&&!fresh.leaseActive&&fresh.nativeSendCount===0&&!fresh.nativeTerminalAcknowledged&&fresh.endedAt===null;
+        const numericFit=beforeLedger.unreflectedFiveHourUpperPercent!==null&&beforeLedger.unreflectedWeeklyUpperPercent!==null
+          &&20+beforeLedger.unreflectedFiveHourUpperPercent+(fresh.expectedFiveHourUpperPercent??100)<60
+          &&20+beforeLedger.unreflectedWeeklyUpperPercent+(fresh.expectedWeeklyUpperPercent??100)<70;
+        const chargeStable=afterFreshLedger.fallbackJobsReserved===beforeLedger.fallbackJobsReserved;
+        checks.push(check("owner-queue-readback",before.length===4&&before.every((record,index)=>index===0||((before[index-1]?.work.class==="event"||before[index-1]?.work.class==="continuation"?1:before[index-1]?.work.class==="quiet-tick"?2:3)<=(record.work.class==="event"||record.work.class==="continuation"?1:record.work.class==="quiet-tick"?2:3)))
+          &&wrongConflict&&noWrongMutation&&preserved&&freshHold&&numericFit&&chargeStable,{reopen:true,queue:before.map(record=>[record.work.class,record.decision.reason,record.decision.retryAt!==null]),wrong:[wrongConflict,noWrongMutation],fresh:[fresh.work.class,fresh.decision.reason,fresh.decision.retryAt!==null,fresh.state,fresh.reservationCharged,fresh.leaseActive,fresh.nativeSendCount],numericFit:[20,beforeLedger.unreflectedFiveHourUpperPercent,fresh.expectedFiveHourUpperPercent,beforeLedger.unreflectedWeeklyUpperPercent,fresh.expectedWeeklyUpperPercent,numericFit],kept:preserved,charges:[beforeLedger.fallbackJobsReserved,afterWrongLedger.fallbackJobsReserved,afterFreshLedger.fallbackJobsReserved],ids:[beforeIds.length,afterFreshIds.length]}));
+      }));
+      if(!phaseTwo.ok)return reportFailure(phaseTwo.error);
+      const phaseThree=await ModelAdmission.withTest(context,policyDigest,owner=>exercise(()=>{
+        const history:Array<readonly (string|number|boolean|null)[]> = [];
+        const initial=take(owner.inspectPending(accountRef));
+        const initialLedger=take(owner.inspect(accountRef)).ledger;
+        observe(owner,accountRef,key+":resume-headroom",windows(59.9955,20));
+        let highCount=0;
+        let idempotent=true;
+        for(let index=0;index<2;index+=1){
+          const queued=take(owner.inspectPending(accountRef));
+          const head=queued[0];
+          if(head===undefined||head.work.class!=="event"&&head.work.class!=="continuation")break;
+          const resumed=take(owner.resumePending(accountRef,head.callKey));
+          const chargeBefore=take(owner.inspect(accountRef)).ledger.fallbackJobsReserved;
+          const replay=take(owner.resumePending(accountRef,head.callKey));
+          const chargeAfter=take(owner.inspect(accountRef)).ledger.fallbackJobsReserved;
+          const same=replay.id===resumed.id&&replay.state===resumed.state&&replay.reservationCharged===resumed.reservationCharged&&chargeBefore===chargeAfter;
+          idempotent=idempotent&&same;
+          const admitted=resumed.state==="reserved"&&resumed.reservationCharged&&resumed.leaseActive&&resumed.nativeSendCount===0&&resumed.decision.eligible&&!resumed.decision.providerSendPermitIssued;
+          history.push([head.work.class,resumed.decision.reason,resumed.decision.retryAt!==null,admitted,same]);
+          if(admitted){finish(owner,resumed,true);highCount+=1;}
+          else break;
+        }
+        const afterHigh=take(owner.inspectPending(accountRef));
+        const repair=afterHigh.find(record=>record.work.class==="repair");
+        const quiet=afterHigh.find(record=>record.work.class==="quiet-tick");
+        const repairStillDenied=repair!==undefined&&repair.state==="denied"&&!repair.reservationCharged&&repair.decision.retryAt!==null;
+        const quietFirst=quiet===undefined?null:take(owner.resumePending(accountRef,quiet.callKey));
+        const quietTerminal=quietFirst!==null&&quietFirst.decision.eligible?finish(owner,quietFirst,true):quietFirst;
+        const quietInitiallyEligible=quietTerminal!==null&&quietTerminal.state==="settled"&&quietTerminal.nativeSendCount===1&&quietTerminal.nativeTerminalAcknowledged;
+        const repairHead=take(owner.inspectPending(accountRef))[0];
+        const repairRetry=repairHead?.work.class==="repair"?take(owner.resumePending(accountRef,repairHead.callKey)):null;
+        const repairPausedFirst=repairRetry!==null&&repairRetry.state==="denied"&&!repairRetry.reservationCharged&&!repairRetry.leaseActive
+          &&repairRetry.nativeSendCount===0&&repairRetry.decision.reason==="RESERVATION_THRESHOLD"&&repairRetry.decision.retryAt!==null;
+        observe(owner,accountRef,key+":quiet-veto",windows(59.9957,20));
+        const beforeQuietLedger=take(owner.inspect(accountRef)).ledger;
+        const quietRetry=take(owner.reserve(request(accountRef,key+":quiet-next",{class:"quiet-tick"},"background",true)));
+        const quietFitsNoLonger=beforeQuietLedger.unreflectedFiveHourUpperPercent!==null
+          &&59.9957+beforeQuietLedger.unreflectedFiveHourUpperPercent+(quietRetry.expectedFiveHourUpperPercent??100)>=60;
+        const quietPaused=quietRetry.state==="denied"&&!quietRetry.reservationCharged&&!quietRetry.leaseActive&&quietRetry.decision.reason==="RESERVATION_THRESHOLD"&&quietRetry.decision.retryAt!==null;
+        const pausedReadback=take(owner.inspectPending(accountRef));
+        const pausedHead=pausedReadback[0];
+        const quietHead=pausedHead?.id===quietRetry.id;
+        const eventRequest=modelAdmissionRequestSchema.parse({...request(accountRef,key+":late-event",{class:"event"},"background",true),expectedFiveHourUpperPercent:0.0001,expectedWeeklyUpperPercent:0.0001});
+        const continuationRequest=modelAdmissionRequestSchema.parse({...request(accountRef,key+":late-continuation",{class:"continuation"},"background",true),expectedFiveHourUpperPercent:0.0001,expectedWeeklyUpperPercent:0.0001});
+        const freshEvent=take(owner.reserve(eventRequest));
+        const eventEligible=freshEvent.decision.eligible&&freshEvent.state==="reserved"&&freshEvent.reservationCharged&&freshEvent.leaseActive;
+        if(eventEligible)finish(owner,freshEvent,true);
+        const freshContinuation=take(owner.reserve(continuationRequest));
+        const continuationEligible=freshContinuation.decision.eligible&&freshContinuation.state==="reserved"&&freshContinuation.reservationCharged&&freshContinuation.leaseActive;
+        if(continuationEligible)finish(owner,freshContinuation,true);
+        const beforeFinalLedger=take(owner.inspect(accountRef)).ledger;
+        observe(owner,accountRef,key+":final-veto",windows(59.996,20));
+        const finalEvent=take(owner.reserve(modelAdmissionRequestSchema.parse({...eventRequest,callKey:key+":final-event",budgetGroupId:identity(key+":final-event:budget"),rootContractId:identity(key+":final-event:root"),runId:identity(key+":final-event:run")})));
+        const finalContinuation=take(owner.reserve(modelAdmissionRequestSchema.parse({...continuationRequest,callKey:key+":final-continuation",budgetGroupId:identity(key+":final-continuation:budget"),rootContractId:identity(key+":final-continuation:root"),runId:identity(key+":final-continuation:run")})));
+        const finalPaused=[finalEvent,finalContinuation].every(record=>record.state==="denied"&&!record.decision.eligible&&record.decision.reason==="RESERVATION_THRESHOLD"
+          &&record.decision.retryAt!==null&&!record.reservationCharged&&!record.leaseActive&&record.nativeSendCount===0&&!record.nativeTerminalAcknowledged);
+        const finalQueue=take(owner.inspectPending(accountRef));
+        const finalLedger=take(owner.inspect(accountRef)).ledger;
+        const repairStillLast=finalQueue.some(record=>record.id===repair?.id)&&finalQueue.some(record=>record.id===quietRetry?.id)
+          &&finalQueue.findIndex(record=>record.id===quietRetry?.id)<finalQueue.findIndex(record=>record.id===repair?.id);
+        const ledgerProjection=(ledger:typeof initialLedger):readonly (number|string|null|boolean)[]=>[ledger.fallbackJobsReserved,ledger.unreflectedFiveHourUpperPercent,ledger.unreflectedWeeklyUpperPercent,ledger.providerLeaseActive,ledger.foregroundWaiting];
+        history.push(["quiet-tick",quietRetry?.decision.reason??null,quietRetry!==null&&quietRetry.decision.retryAt!==null,quietPaused,quietHead]);
+        history.push(["late-event",freshEvent.decision.reason,eventEligible,freshEvent.decision.providerSendPermitIssued]);
+        history.push(["late-continuation",freshContinuation.decision.reason,continuationEligible,freshContinuation.decision.providerSendPermitIssued]);
+        history.push(["quiet-first",quietInitiallyEligible,"repair-first",repairPausedFirst]);
+        history.push(["event-last",finalEvent.decision.reason,finalEvent.reservationCharged,finalEvent.nativeSendCount,finalEvent.decision.retryAt!==null]);
+        history.push(["continuation-last",finalContinuation.decision.reason,finalContinuation.reservationCharged,finalContinuation.nativeSendCount,finalContinuation.decision.retryAt!==null]);
+        const passed=initial.length===5&&initialLedger.unreflectedFiveHourUpperPercent!==null&&highCount===2&&idempotent&&repairStillDenied&&quietFitsNoLonger&&quietPaused&&quietHead
+          &&quietInitiallyEligible&&repairPausedFirst&&eventEligible&&continuationEligible&&repairStillLast&&finalPaused
+          &&finalLedger.fallbackJobsReserved===beforeFinalLedger.fallbackJobsReserved&&!finalLedger.providerLeaseActive&&finalQueue.length===5;
+        checks.push(check("ordered-resume-under-headroom",passed,{order:initial.map(record=>record.work.class),history,firstHeadroom:[59.9955,initialLedger.unreflectedFiveHourUpperPercent],afterPriority:[highCount,repairStillDenied,quietInitiallyEligible,repairPausedFirst],quiet:[59.9957,beforeQuietLedger.unreflectedFiveHourUpperPercent,quietRetry.expectedFiveHourUpperPercent,quietFitsNoLonger,quietRetry.state,quietRetry.decision.reason,quietRetry.decision.retryAt!==null,quietHead],higher:[freshEvent.decision.reason,eventEligible,!freshEvent.decision.providerSendPermitIssued,freshContinuation.decision.reason,continuationEligible,!freshContinuation.decision.providerSendPermitIssued],last:[59.996,beforeFinalLedger.unreflectedFiveHourUpperPercent,finalPaused],tail:finalQueue.map(record=>record.work.class),ledger:[ledgerProjection(initialLedger),ledgerProjection(finalLedger)],counterScope:"accounting-fixture"}));
+      }));
+      if(!phaseThree.ok)return reportFailure(phaseThree.error);
+    } else if (input.probeId === "AT-ops-49") {
       const run = await ModelAdmission.withTest(context,policyDigest,owner => exercise(() => {
         for (const [index,pair] of [[59.9,69.9],[60,20],[20,70]].entries()) {
           const accountRef = "fixture.threshold."+prefix+":"+index;

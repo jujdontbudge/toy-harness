@@ -1,0 +1,29 @@
+{
+  "review": "R0.11 AT-ops-50 final bounded source and probe adequacy review",
+  "reviewedAtUtc": "2026-10-07T04:47:50Z",
+  "scope": "Read-only review of the assigned AT-ops-50 probe phases and public ModelAdmission owner implementation. No CLI, build, generation, static check, or world operation was run.",
+  "assignedAssertion": {
+    "source": "personal-assistant-harness/specs/ops.md:1971",
+    "acceptance": "Persist deferred work and owner-readback order; under common measured 60/70 thresholds, pause repair first, then quiet work, while event/continuation remain highest priority, with durable denial reason and retryAt."
+  },
+  "sourceHashes": {
+    "packages/contracts/src/model-admission.ts": "8803164cb2d4e3b5fe764870f8409f020be0841f2367a86c7cdd062fa3c6262e",
+    "packages/self-improvement/src/model-admission.ts": "dd91a7d5b3484bcf0adbba70887695f0ea39d8cca172b8b6f9b4e095f4b0c302",
+    "packages/self-improvement/src/accounting-probe.ts": "274b9ed95116b7ef72efc8040d04fe7d9e0422c2e79f9d1692593c0a7040ea07",
+    "docs/adr/0053-owner-ordered-admission-pauses.md": "d9de122172337098840fae7e2ceed076103a55bcdee8905d1d8465b92b1d0528"
+  },
+  "verdict": "PASS_SOURCE_AND_PROBE_ADEQUACY",
+  "findings": [],
+  "verified": [
+    "Phase two compares every prior canonical record DTO in full after a wrong-head resume and again after a fresh lower-priority reservation; it also compares the full ledger after the wrong-head attempt. The fresh reservation is asserted denied, uncharged, lease-free, unsent, unacknowledged, and durably paused with retryAt.",
+    "Phase three resumes and terminally settles the two highest-priority rows, admits and terminally settles quiet work, then verifies repair remains denied with RESERVATION_THRESHOLD and retryAt. A fresh quiet request is denied next while the queued quiet row remains the head.",
+    "The probe then admits two tiny measured event/continuation reservations under the same policy evaluation and verifies fresh event and continuation reservations are denied at the final 59.996 observation. Both final rows retain retryAt and have no charge, lease, or native send; the reserved-job count remains unchanged, there is no active provider lease, and the queue retains quiet ahead of repair.",
+    "The owner derives ordering from durable same-account, same-UTC-day denied rows with eligible deferred reasons and orders event/continuation before quiet-tick before repair/replay. Fresh lower-priority reservations inherit OPTIONAL_WORK_PAUSED and the head retryAt. Resume requires the durable row to be the current head and rechecks that head in the guarded mutation transaction.",
+    "Successful resume charges the budget only from the row returned by the denied-to-reserved update. Already charged or non-denied history returns its readback before eligibility evaluation, preserving idempotency and preventing charge reclamation. The public API uses existing generated contract DTOs; no new queue or migration is required by this implementation."
+  ],
+  "limits": [
+    "The ordered pending set is intentionally same-account and same-UTC-day; cross-day continuation remains deferred by ADR-0053 because the persisted row's UTC day is immutable.",
+    "This is source/probe adequacy only. Whole AT-ops-50 runtime acceptance and protected-principal gates remain pending; this review does not certify them."
+  ],
+  "writeScope": ["build/evidence/R0.11/ordered-pause-final-source-review.json"]
+}
