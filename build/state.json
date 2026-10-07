@@ -2,7 +2,7 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-07T13:02:08.594Z",
+  "updatedAt": "2026-10-07T13:05:56.304Z",
   "phase": "R0_FEASIBILITY",
   "activeCard": "R0.03",
   "cardCount": 87,
@@ -1554,10 +1554,10 @@
         "registeredCasePositiveRuntimeVerified": false
       },
       "manualLineageNextUnit": {
-        "state": "PLAN_ACCEPTED_QUEUED_NO_SOURCE_ADMISSION",
-        "review": "build/evidence/R0.03/manual-lineage35-parent-review-20261007.json",
-        "plan": "build/evidence/R0.03/manual-lineage35-next-minimum-20261007.json",
-        "sourceAdmitted": false,
+        "state": "AT35_SOLE_SOURCE_ADMITTED_AFTER_UNSUPPORTED_PUBLIC_BASELINE",
+        "sourceOwner": "/root/r006_cross_day_minimum",
+        "admission": "build/evidence/R0.03/manual-lineage35-source-admission.json",
+        "attemptsUsed": 1,
         "wholeATComplete": false
       }
     },
@@ -12040,7 +12040,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Fresh doctor, exact unfiltered AT35 CLI baseline and complete teardown; rebind accepted twelve-case plan before any sole SOURCE admission. Valid ROOT00402 DONE preemptsR001.",
+  "nextAction": "Wait AT35 soleSOURCESTOP, validatehand off/pins; parentpavedgen/typecheck/map/strict/freshdoctor/assignedCLI. Source/representation/timebox failure→STOPlogindependentwork. ValidROOT00402DONEpreemptsR001afterownedcleanup.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -22690,12 +22690,13 @@
     ],
     "SwiftDeferredTo": "R3",
     "recordedAt": "2026-10-07T12:58:46.385Z",
-    "historical": false,
+    "historical": true,
     "postVerificationFeatureMap": {
       "path": "build/evidence/R0.06/cross-day-final-map-check.json",
       "sha256": "04d432146895db9d49c74e011d7a7ea1b69f30b6dddc07b0ddf118528c22edb2"
     },
-    "postVerificationMetadataOnly": true
+    "postVerificationMetadataOnly": true,
+    "historicalReason": "AT35 soleSOURCE admitted; fresh statics followSTOP."
   },
   "sourceCheckpointCommit": "bf0292f8b1662979f5be4e8ea01c26409d844df5",
   "sourceCheckpointPushed": true,
@@ -22747,38 +22748,28 @@
     "repairFloorApplied": false,
     "jobOwnDeclaredNeedOnly": true
   },
-  "activeWorkers": [],
+  "activeWorkers": [
+    {
+      "name": "/root/r006_cross_day_minimum",
+      "card": "R0.03",
+      "mode": "SOLE_SOURCE_AT35",
+      "deadline": "2026-10-07T13:50:00Z"
+    }
+  ],
   "pullRequestUpdatedAt": "2026-10-07T11:08:10.716Z",
   "continuationCheckpoint": {
-    "path": "build/checkpoints/2026-10-07-cross-day-verified",
-    "recordedAt": "2026-10-07T13:00:28.549Z",
+    "path": "build/checkpoints/2026-10-07-manual-lineage-source",
+    "recordedAt": "2026-10-07T13:05:56.304Z",
+    "sourceOwner": "/root/r006_cross_day_minimum",
     "goalStatus": "active",
-    "sourceOwner": null,
-    "ownedWorldsDown": true
+    "card": "R0.03",
+    "AT": "AT-hermes-config-35"
   },
   "readOnlyWorkers": [],
   "liveRuntime": {
     "state": "STOPPED",
     "ownedWorldsDown": true,
-    "ownedWorlds": [
-      {
-        "stackId": "f445b49a-5b13-49ba-a0fa-7f2d2371c335",
-        "teardown": "build/evidence/R0.06/cross-day-red-cli/down.json",
-        "complete": true,
-        "unresolvedResources": 0
-      },
-      {
-        "stackId": "aca3711f-c81f-4ca8-86b7-d12c495025b8",
-        "teardown": {
-          "exitCode": 0,
-          "path": "build/evidence/R0.06/cross-day-green-cli/down.json",
-          "sha256": "6e69a27423ed547aab88bd28202199ea64b1c77a6795b70e3b3f720372b1a749"
-        },
-        "complete": true,
-        "unresolvedResources": 0
-      }
-    ],
-    "evidence": "build/evidence/R0.06/cross-day-final-verification.json"
+    "latestWorld": "d461e322-5163-4aa2-bb23-d267cbd22ce0"
   },
   "goalStatus": "active",
   "latestSourceCandidate": {
