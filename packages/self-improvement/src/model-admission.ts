@@ -249,7 +249,7 @@ const openOwner = (runtime: ModelAdmissionRuntimeV1, clock: () => string, guard:
           const now=clock();
           if (queuePriority(target.work.class)===null) return denied("CONFLICT");
           if (target.utcDay!==now.slice(0,10)) {
-            if (target.decision.retryAt===null || Date.parse(now)<Date.parse(target.decision.retryAt)) return {ok:true,data:target};
+            if (target.decision.retryAt!==null && Date.parse(now)<Date.parse(target.decision.retryAt)) return {ok:true,data:target};
             const predicate="account_ref="+sqlText(accountRef)+" AND call_key="+sqlText(callKey);
             const state=readSnapshot(accountRef,now,predicate,target.budgetGroupId);
             const binding=state.budgetBinding;
@@ -259,9 +259,12 @@ const openOwner = (runtime: ModelAdmissionRuntimeV1, clock: () => string, guard:
             const head=pending[0]??null;
             if (head===null || head.id!==target.id || head.callKey!==target.callKey) return denied("CONFLICT");
             const observation=state.observation;
+            const reportedAt=observation===null?null:Date.parse(observation.reportedAt);
+            const recoveryObservationValid=reportedAt!==null && (target.decision.retryAt===null
+              ? reportedAt>Date.parse(target.startedAt)
+              : reportedAt>=Date.parse(target.decision.retryAt)) && reportedAt<=Date.parse(now);
             const verifiedAvailable=observation!==null && observation.sourceAuthorized && observation.schemaValid && observation.status==="available"
-              && observation.accountRef===accountRef && Date.parse(observation.reportedAt)>=Date.parse(target.decision.retryAt)
-              && Date.parse(observation.reportedAt)<=Date.parse(now);
+              && observation.accountRef===accountRef && recoveryObservationValid;
             const decision=ModelAdmissionPolicy.evaluate(modelAdmissionInputSchema.parse({now,accountRef,requested:target.requested,work:target.work,ledger:state.ledger,observation,
               expectedFiveHourUpperPercent:target.expectedFiveHourUpperPercent,expectedWeeklyUpperPercent:target.expectedWeeklyUpperPercent}));
             if (!verifiedAvailable || !decision.eligible || decision.mode!=="measured") return {ok:true,data:target};

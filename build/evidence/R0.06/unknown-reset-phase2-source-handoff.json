@@ -1,0 +1,92 @@
+{
+  "schemaVersion": "toy.r006.unknown-reset-phase2-source-handoff.v1",
+  "recordedAt": "2026-10-07T13:57:38Z",
+  "card": "R0.06",
+  "AT": "AT-ops-10",
+  "state": "PHASE2_SOURCE_STOP_VERIFICATION_PENDING",
+  "sourceOwner": "/root/r006_cross_day_minimum",
+  "admission": {
+    "path": "build/evidence/R0.06/unknown-reset-phase2-source-admission.json",
+    "sha256": "7fdde2dd10440d4e8c3b87ecd18b9e2d3d95a5f557c10c4b411ba4db13d7be64",
+    "phase2SourceStopBy": "2026-10-07T14:15:38.919645Z",
+    "fullUnitDeadline": "2026-10-07T15:44:39.910742Z",
+    "assignedAttemptsUsedBeforePhase2": 1,
+    "maximumAssignedAttempts": 3,
+    "stopOnFirstImplementationPass": true
+  },
+  "actualRed": {
+    "path": "build/evidence/R0.06/unknown-reset-red-verification.json",
+    "sha256": "69719f972873ba13ae5f81d3548c484c6a10c7f270de1f8848d05267413322f6",
+    "commit": "b38232d",
+    "publicCliRunAndShowBothFailed": true,
+    "knownResetAndSameDayNineRecoveriesPassed": true,
+    "unknownResetFreshRetryAndIdempotenceFailedWithoutCharges": true,
+    "worldDownAndTeardownComplete": true
+  },
+  "frozenReproducer": {
+    "path": "packages/self-improvement/src/accounting-probe.ts",
+    "sha256": "559ad8006265c63b87d7e9dd2e8f7fdfaaaf4b0d8d06f1433e7f1e6ec3f57a71"
+  },
+  "changedSourcePins": [
+    {
+      "path": "docs/adr/0061-cross-day-model-admission.md",
+      "sha256": "cc5f23bcf0af03376138e14b02c3f8fbd5056e1c9f9d146b337c11c18fb9222f"
+    },
+    {
+      "path": "packages/self-improvement/src/model-admission.ts",
+      "sha256": "e938ae2c18bbf34af9c863283dd853c2aff109c3eac0fc08962979458c39a630"
+    }
+  ],
+  "scopePinsPreserved": [
+    {
+      "path": "tests/registry.yaml",
+      "sha256": "aba82b88c425775407e858fe6f81d16d21e43eaa3ce68e330561f9511b8fca36"
+    },
+    {
+      "path": "packages/contracts/src/generated-probe-registry.ts",
+      "sha256": "4e69cdc645727027ff66ecac7318f7534a82c44d12d2440914cf9a1f21306b9a"
+    },
+    {
+      "path": "packages/contracts/src/generated-bundle.ts",
+      "sha256": "d086b83a29fecafc5471e3ef6e670b45dd05805fac949cc04fb469331bbe0ab2"
+    },
+    {
+      "path": "architecture/features.json",
+      "sha256": "d50f4c7beb984490297a4d92bb365b78ea38eaf692d7e7c220b3122a276dbcc4"
+    },
+    {
+      "path": "skills/toy-control/FEATURE-MAP.md",
+      "sha256": "454190c692974db6e9b46540ba7e04cd7b6b2c550adf41106657cf0b367f4ce6"
+    }
+  ],
+  "ownedPaths": [
+    "docs/adr/0061-cross-day-model-admission.md",
+    "packages/self-improvement/src/model-admission.ts",
+    "build/evidence/R0.06/unknown-reset-phase2-source-handoff.json"
+  ],
+  "correction": {
+    "existingPath": "old-day branch of public ModelAdmission.resumePending",
+    "unknownReset": "Do not return solely because retryAt is null. Require the latest snapshot observation to be authorized, schema-valid, available for the same account, reported strictly after original startedAt and no later than the current virtual wall. Existing policy evaluation still enforces freshness, measured mode, and eligibility.",
+    "knownReset": "Preserve the elapsed retryAt guard and require the available observation to be reported at or after retryAt.",
+    "preservedGuards": "Queue-head, open budget/root/account/policy binding, snapshot comparison, bounded globally unique current-day retry key, canonical request hash, immutable original, same-key idempotence, charge, and terminal no-send cleanup logic are unchanged.",
+    "surfaceChanges": "None: no public method, DTO, database shape, schema, module, protocol, fixture infrastructure, acceptance case, registry, generated output, or feature map change."
+  },
+  "phase2Result": {
+    "sourceCorrectionWritten": true,
+    "postChangeCliRun": false,
+    "postChangeAcceptanceVerified": false,
+    "wholeATComplete": false,
+    "nextGate": "Parent performs the admitted assigned CLI verification; stop the unit on its first implementation PASS."
+  },
+  "actionsNotRunBySourceOwner": {
+    "toyCli": true,
+    "build": true,
+    "generation": true,
+    "staticChecks": true,
+    "tests": true,
+    "runtime": true,
+    "nativeProviderOrOS": true,
+    "browserOrRoot": true,
+    "backgroundProcessesStarted": false
+  }
+}

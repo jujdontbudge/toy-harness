@@ -2,9 +2,9 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-07T13:56:29.644417+00:00",
+  "updatedAt": "2026-10-07T14:02:43.942410+00:00",
   "phase": "R0_FEASIBILITY",
-  "activeCard": "R0.06",
+  "activeCard": "R0.03",
   "cardCount": 87,
   "acceptanceCount": 1447,
   "cards": {
@@ -1839,7 +1839,8 @@
         "build/evidence/R0.06/unavailable-quota11-final-verification.json",
         "build/evidence/R0.06/ops9-route-final-verification.json",
         "build/evidence/R0.06/cross-day-final-verification.json",
-        "build/evidence/R0.06/unknown-reset-cross-day-next-minimum-20261007.json"
+        "build/evidence/R0.06/unknown-reset-cross-day-next-minimum-20261007.json",
+        "build/evidence/R0.06/unknown-reset-final-verification.json"
       ],
       "requiredATs": [
         "AT-hermes-config-59",
@@ -2105,7 +2106,7 @@
       },
       "unknownResetCrossDayUnit": {
         "recordedAt": "2026-10-07T13:44:39.910742+00:00",
-        "state": "SOLE_SOURCE_PHASE2_EXISTING_OWNER_CORRECTION_ADMITTED_AFTER_ACTUAL_RED",
+        "state": "UNKNOWN_RESET_CROSS_DAY_UNIT_VERIFIED_AND_STOPPED_FIRST_IMPLEMENTATION_PASS",
         "card": "R0.06",
         "AT": "AT-ops-10",
         "assignedAttemptsUsed": 0,
@@ -2178,7 +2179,7 @@
         "priorityOnValidRoot02Done": "Clean current SOURCE/LIVE then R0.01",
         "sourceOwnerStopped": true,
         "sourceHandoff": "build/evidence/R0.06/unknown-reset-phase1-source-handoff.json",
-        "attemptsUsed": 1,
+        "attemptsUsed": 2,
         "staticReady": "build/evidence/R0.06/unknown-reset-phase1-static-ready.json",
         "runtimeRefusal": "build/evidence/R0.06/unknown-reset-red-runtime-refusal.json",
         "stackStarted": false,
@@ -2188,7 +2189,21 @@
         "worldDown": true,
         "phase2Admission": "build/evidence/R0.06/unknown-reset-phase2-source-admission.json",
         "redCommit": "b38232d",
-        "redPushed": true
+        "redPushed": true,
+        "phase2Handoff": "build/evidence/R0.06/unknown-reset-phase2-source-handoff.json",
+        "phase2SourceOwnerStopped": true,
+        "implementationAttempts": 1,
+        "noThirdRun": true,
+        "checksPassed": 18,
+        "groups": 6,
+        "maximumProjectionBytes": 1790,
+        "cardAcceptanceComplete": false,
+        "finalVerification": "build/evidence/R0.06/unknown-reset-final-verification.json",
+        "allOwnedWorldsDown": true,
+        "worldIds": [
+          "49afcf0c-ced8-447d-ab76-e12e03bd472b",
+          "bcec9f40-5d15-4032-a6d7-0749b0296de1"
+        ]
       }
     },
     "R0.07": {
@@ -12158,7 +12173,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Metadata/read-only only until soleR006phase2SOURCESTOP; then parentreview/strictchecks + firstimplementation assignedAT10 and affected11/49/50/51/52. STOPfirstPASS or3failedassignedattempts; validROOT02DONEprioritizesR001aftercleanup.",
+  "nextAction": "STOPverifiedR006unknownreset/knownreset units; no thirdrun. Review independentAT36/ops14 next-minimumexistingpublicseam plan; no SOURCE yet. Valid ROOT00402nativeDONEprioritizesR001 aftercleanup; nevergoalblock forpendingroot.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -22722,7 +22737,7 @@
     "threadId": "01a109d1-2f67-7643-9677-404a83617cf8",
     "lockFile": "build/coordinator.lock",
     "lockKind": "exclusive session marker; not process-liveness evidence",
-    "checkpoint": "build/checkpoints/2026-10-07-unknown-reset-owner"
+    "checkpoint": "build/checkpoints/2026-10-07-unknown-reset-verified"
   },
   "pullRequest": {
     "number": 1,
@@ -22780,7 +22795,7 @@
       "pendingRootDoesNotBlockGoal": true,
       "pollWhileIndependentWork": true,
       "exactRegisteredCommandOrRepoScriptRequired": true,
-      "lastPollAt": "2026-10-07T13:43:25.954553+00:00",
+      "lastPollAt": "2026-10-07T14:02:43.942410+00:00",
       "pendingRequests": [
         "ROOT-R004-20261006-02",
         "ROOT-R005-20261006-01"
@@ -22866,20 +22881,21 @@
     "repairFloorApplied": false,
     "jobOwnDeclaredNeedOnly": true
   },
-  "activeWorkers": [
+  "activeWorkers": [],
+  "pullRequestUpdatedAt": "2026-10-07T13:44:39.910742+00:00",
+  "continuationCheckpoint": "build/checkpoints/2026-10-07-unknown-reset-verified",
+  "readOnlyWorkers": [
     {
       "agent": "/root/r006_cross_day_minimum",
-      "card": "R0.06",
-      "phase": "SOURCE_PHASE2_OWNER_FIX",
-      "admission": "build/evidence/R0.06/unknown-reset-phase2-source-admission.json"
+      "card": "R0.03",
+      "scope": "AT36/ops14 public seam readiness plan only; no source/runtime",
+      "evidence": "build/evidence/R0.03/independent-scopes36-next-minimum-20261007.json"
     }
   ],
-  "pullRequestUpdatedAt": "2026-10-07T13:44:39.910742+00:00",
-  "continuationCheckpoint": "build/checkpoints/2026-10-07-unknown-reset-owner",
-  "readOnlyWorkers": [],
   "liveRuntime": {
     "state": "ALL_OWNED_WORLDS_DOWN",
-    "sourceOwner": "/root/r006_cross_day_minimum"
+    "sourceOwner": "STOPPED",
+    "lastProof": "build/evidence/R0.06/unknown-reset-final-verification.json"
   },
   "goalStatus": "active",
   "latestSourceCandidate": {
