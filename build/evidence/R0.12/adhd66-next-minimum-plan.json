@@ -1,0 +1,232 @@
+{
+  "schemaVersion": "toy.r0.12-adhd66-readonly-minimum-plan.v1",
+  "recordedAt": "2026-10-07 09:07:10Z",
+  "status": "SOURCE_NOT_ADMITTED",
+  "decision": "Do not add an M08-only AT-adhd-features-66 probe. Existing required-component diagnostics already exercise absent, unsupported, and incomplete-link semantics; an M08 replay would duplicate those checks and still could not close AT-adhd-features-66.",
+  "assignment": {
+    "acceptanceId": "AT-adhd-features-66",
+    "source": "../personal-assistant-harness/specs/adhd-features.md",
+    "sourceLine": 2365,
+    "sourceAssertion": "- **AT-adhd-features-66 [R0]** Given README's all-spec research requirements and each feature decision, When the pre-build register is checked, Then each entry links requirement/quote/grill IDs, compared proven options, primary evidence, reliability/resource tradeoffs, selection, unresolved facts, release gate and acceptance IDs; a missing or unsupported entry blocks the feature.",
+    "sourceAssertionHash": "1ac96bab8cb10271674619a870cb00e4d92799697832e570ff5fdb7df30a5487",
+    "sourceDigest": "5e85be6346da1a9e8dd4795232c30205a9b9556b00b3cde52ee9788d6b5697ad",
+    "rung": "CLI",
+    "requiredEvidence": "stack, probe:AT-adhd-features-66",
+    "currentRecordedState": "NOT_IMPLEMENTED"
+  },
+  "existingOwnerFinding": {
+    "publicOwner": "EngineeringControl.checkResearch through ReplayEnvironment.runRegisteredProbe and the existing research.component-comparison CLI manifest",
+    "currentM08Scope": {
+      "registerRow": "../personal-assistant-harness/specs/RESEARCH-REGISTER.md:284",
+      "rowDigest": "e281b5b0b03f737e88ee71d7566e92b0fb23b87b9a7ff5c0e8dc67256eec1904",
+      "namedComponent": "M08 ADHD planning facade",
+      "reportKeys": [
+        "AF",
+        "PF"
+      ],
+      "priorSavedReadback": "build/evidence/R0.02/ops43-scope-baseline-cli/research.json",
+      "priorSavedReadbackSha256": "aeaa0bbcd8de7bb8acafbc80ba90bb249d0356294a2d4531e49e3833898be73b",
+      "priorReadbackRecordedAt": "2026-10-06T23:55:45.537Z",
+      "observedM08Decision": {
+        "state": "BLOCKED",
+        "selectedTool": null,
+        "missingRequirementIds": [
+          "0.1",
+          "0.2",
+          "0.10"
+        ],
+        "missingSourceIds": [
+          "AF",
+          "PF"
+        ],
+        "missingValidationIds": [
+          "G0:R0:M08"
+        ],
+        "admission": "BLOCKED",
+        "acceptanceComplete": false,
+        "wholeATsPassed": []
+      }
+    },
+    "semanticExpectation": "The owner can report the source-derived M08 component as BLOCKED and retain exact missing requirement/source/validation IDs. Its inspection result remains globally BLOCKED with acceptanceComplete=false and wholeATsPassed empty. This is an owner readback, not proof that a downstream feature build consumer rejects each ADHD feature.",
+    "redundancyAssessment": "AT-self-improvement-54 already registers required-component-absent, required-component-unsupported, required-component-incomplete-ids, and required-component-complete-outside-selected against the same EngineeringControl.checkResearch owner. The first three cover the proposed negative cases. The existing synthetic complete case uses test report material and cannot prove actual primary research. Re-targeting the generic matrix at M08 would pin one aggregate row but would not add the missing feature-wide assertion.",
+    "ownerBoundary": "The current report contract indexes component IDs such as M08 and M08 aggregates ADHD planning. It does not emit independent F00-F16 decision records or per-feature requirement/quote/grill links. The existing CLI inspection surface also does not establish a downstream per-feature build-veto consumer."
+  },
+  "exactRemainingDependency": [
+    "A source-derived trace for every ADHD feature F00-F16 that binds each feature decision to requirement, original-quote and grill IDs; its report/section and verified primary evidence; proven options and tradeoffs; selection, unresolved facts, release gate, and validating acceptance IDs. RESEARCH-REGISTER.md §6.1 currently states these as feature rows, while the existing ResearchComponentComparison DTO/checkResearch path reports aggregate M08.",
+    "A public pre-build consumer whose behavior is to block the affected feature when its per-feature decision is missing or unsupported, with CLI evidence of that veto. The current M08 BLOCKED inspection does not prove this consumer."
+  ],
+  "sourceAdmission": {
+    "admitted": false,
+    "sourcePathAllowlist": [],
+    "reason": "No source change is justified for a diagnostic that repeats the already registered generic required-component failure matrix and does not satisfy the original every-feature/build-veto assertion. If the exact dependencies above are addressed later, scope and source admission must be reviewed after ROOT02 to R001 priority is handled."
+  },
+  "candidateCasesNotAdmitted": [
+    {
+      "caseId": "required-component-absent",
+      "reachability": "Already registered by AT-self-improvement-54 through EngineeringControl.checkResearch.",
+      "M08BaselineExpectation": "BLOCKED; missing requirements 0.1/0.2/0.10, sources AF/PF, validation G0:R0:M08."
+    },
+    {
+      "caseId": "required-component-unsupported",
+      "reachability": "Already registered by AT-self-improvement-54 through an owned external-report overlay.",
+      "M08BaselineExpectation": "An unsupported option remains BLOCKED; this diagnostic does not authenticate research or primary evidence."
+    },
+    {
+      "caseId": "required-component-incomplete-ids",
+      "reachability": "Already registered by AT-self-improvement-54 through an owned external-report overlay.",
+      "M08BaselineExpectation": "Missing mapped requirements/source/validation IDs remain visible and BLOCKED."
+    }
+  ],
+  "publicProjection": {
+    "status": "NO_NEW_PROJECTION_ADMITTED",
+    "maximumUtf8BytesIfLaterSeparatelyAuthorized": 1999,
+    "fieldsOnly": [
+      "caseId",
+      "componentId",
+      "decisionState",
+      "findingCodes",
+      "missingRequirementIds",
+      "missingSourceIds",
+      "missingValidationIds",
+      "reportKeyAndDigests",
+      "reportOrigin",
+      "admission",
+      "acceptanceComplete",
+      "wholeATComplete"
+    ],
+    "excluded": "Report markdown, quote text, primary-source URLs, authentication material, provider receipts, and any asserted positive research outcome."
+  },
+  "sourcePins": [
+    {
+      "path": "../personal-assistant-harness/specs/README.md",
+      "sha256": "2c02bdb4d13abd198231446873eaacfe30177a97f66235158912fd2accd006f4"
+    },
+    {
+      "path": "../personal-assistant-harness/specs/PRINCIPLES.md",
+      "sha256": "828bd798692b9f0c2acf3f7d51d5a244ee54dfe5c3bd3e88488788c77e53368b"
+    },
+    {
+      "path": "../personal-assistant-harness/specs/CONTRACTS.md",
+      "sha256": "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d"
+    },
+    {
+      "path": "../personal-assistant-harness/specs/TEST-PLAN.md",
+      "sha256": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2",
+      "assignment": "AT-adhd-features-66, line 377, CLI / stack / probe"
+    },
+    {
+      "path": "../personal-assistant-harness/specs/adhd-features.md",
+      "sha256": "5e85be6346da1a9e8dd4795232c30205a9b9556b00b3cde52ee9788d6b5697ad",
+      "assertionLine": 2365,
+      "assertionHash": "1ac96bab8cb10271674619a870cb00e4d92799697832e570ff5fdb7df30a5487"
+    },
+    {
+      "path": "../personal-assistant-harness/specs/RESEARCH-REGISTER.md",
+      "sha256": "e89b3336e0c2458ac204fb0927da30f4541abfab48a9d55735c4655719a3f10d",
+      "scope": "M08 row 284 and ADHD feature rows F00-F16 in section 6.1"
+    },
+    {
+      "path": "../personal-assistant-harness/research/v2/adhd-features.md",
+      "sha256": "bc0c7359b09596697361ee68cf3c6e25a653b1715c641a450d7d5685c9bd3c48",
+      "reportKey": "AF"
+    },
+    {
+      "path": "../personal-assistant-harness/research/productivity-founders.md",
+      "sha256": "9fabecd96737de50eb19f0ec53519d0c2e87e33034b332b1facc94a4b573370e",
+      "reportKey": "PF"
+    },
+    {
+      "path": "tests/acceptance-index.json",
+      "sha256": "c9b645eab7f55b2ebf35d7db769a534a4837de23ad3dc3d913f3189e781d44fa"
+    },
+    {
+      "path": "tests/registry.yaml",
+      "sha256": "a005f61d09e08510e33805763a49056e26503c3798bba962073e6f40c39bd3c7",
+      "finding": "AT-adhd-features-66 and -67 have no registry entries; AT-self-improvement-54 already owns the generic required-component matrix."
+    },
+    {
+      "path": "packages/contracts/src/engineering-control.ts",
+      "sha256": "d95ddc3891ae2b865473c00cb0eb6cb58c16bb9191523ab63f6b26937a88ae30",
+      "interface": "ResearchDocumentOverlayV1, ResearchComponentComparisonV2, ResearchRegisterInspectionV3"
+    },
+    {
+      "path": "packages/self-improvement/src/engineering-control.ts",
+      "sha256": "725aa4735e25b86c4c25092e9481580a501025e84f7493ee093060b584b3bbdd",
+      "publicMethod": "EngineeringControl.checkResearch at line 1084"
+    },
+    {
+      "path": "packages/self-improvement/src/component-comparison-probe.ts",
+      "sha256": "e2dc9fc1aec758251f074869da25496e90f6f9cf66a35bf01b1090f977aa04a1",
+      "existingProbe": "requiredComponentProbe at line 302; four registered required-component cases"
+    },
+    {
+      "path": "packages/self-improvement/src/public.ts",
+      "sha256": "83fa5e8ad4cedfa535cfcf3b428c0e8101b6d458303191b3a4ac802fd6a44251",
+      "route": "componentComparisonProbe dispatch at line 28"
+    },
+    {
+      "path": "cli/src/main.ts",
+      "sha256": "5623125eec41f7dbd1c9874f0778151b1527bca488ba26aa663512c7fefdb97c",
+      "route": "generic probe command calls ReplayEnvironment.runRegisteredProbe at line 244"
+    },
+    {
+      "path": "packages/ops/src/fixture-stack.ts",
+      "sha256": "55649a763c14b168bfe183385544f128f314de4ded2d313269b8682bf052fbcc",
+      "relevance": "existing owned fake-stack/report overlay boundary; no change is admitted"
+    },
+    {
+      "path": "skills/toy-control/FEATURE-MAP.md",
+      "sha256": "c9dfdf76a815b1cec3750c4f6b11c4e6e95aad79cae2ba4bae5fabdcf13a0957",
+      "relevance": "existing behavior.adhd-features entry already references AT-adhd-features-66"
+    },
+    {
+      "path": "build/evidence/R0.12/adhd66-readonly-admission.json",
+      "sha256": "a3f4fdda6c0b934f1633fcf7b3e5dc23bbd07f16a9e5baf0089ed476d585db9c"
+    }
+  ],
+  "existingAffectedGroups": {
+    "sharedComponentComparisonDispatchToPreserve": [
+      "AT-obligations-74",
+      "AT-self-improvement-54",
+      "AT-sources-188",
+      "AT-sources-190",
+      "AT-lifestore-45",
+      "AT-workflows-1"
+    ],
+    "separateADHDGateNotConflated": "AT-adhd-features-106",
+    "distinctAttentionIdNotConflated": "AT-attention-66"
+  },
+  "resourceAdmission": {
+    "evidence": "build/evidence/R0.12/adhd66-readonly-admission.json",
+    "normalPressure": true,
+    "minimumAvailableBytes": "2797076480",
+    "ownNeedBytes": "268435456",
+    "marginBytes": "536870912",
+    "sourceMutationAllowed": false,
+    "secondPhysicalFitGate": false
+  },
+  "preservationAndStop": {
+    "root02": "PENDING; do not claim UID 310/native restoration. Only a valid canonical DONE for ROOT-R004-20261006-02 triggers the native prerequisite and R001 priority.",
+    "rootQueueObservation": {
+      "path": "build/ROOT-REQUESTS.md",
+      "sha256": "6bdca8b36154b5ec87875c5a1fe0e5d5f9a8a0b6d172c26c7d99ad9f2dd6307e",
+      "requestId": "049154d9-4ed1-4db0-97e5-69b5a79190d9",
+      "request": "ROOT-R004-20261006-02",
+      "status": "PENDING",
+      "parentPollAt": "2026-10-07T09:08:47Z"
+    },
+    "parentUpdate": "752f925 pushed dashboard/M11 unit proofs; all worlds DOWN; no SOURCE owner.",
+    "frozenRootInputs": "Preserve all six parent-designated frozen inputs, build/ROOT-REQUESTS.md, auth87 evidence, and dashboard artifacts.",
+    "sequencing": "No R1 product work or Swift before R3.",
+    "protectedAndNative": "No protected/native/account/auth operation, provider login, or AT-adhd-features-67 route.",
+    "deadline": "2026-10-07T09:13:00Z",
+    "stopNow": true
+  },
+  "workPerformed": "Read AGENTS.md; README, PRINCIPLES, CONTRACTS, exact AT-66 and TEST-PLAN assignment; M08 register row and AF/PF report pins; written public interfaces and existing component-comparison registration; saved source-derived M08 readback and admission. Wrote only this plan. No source/gen/build/static/CLI/system/browser/network probe or root/auth/dashboard operation was performed.",
+  "deferred": [
+    "Full AT-adhd-features-66 every-feature F00-F16 coverage and actual downstream build veto.",
+    "AT-adhd-features-67 authenticated model/provider/skill route, device/account evidence, and no-paid-fallback proof.",
+    "Primary research authenticity and positive research proof.",
+    "Protected/native acceptance, whole R0 acceptance, and any R1 product/Swift work."
+  ]
+}
