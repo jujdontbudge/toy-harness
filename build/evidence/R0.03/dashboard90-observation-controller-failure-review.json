@@ -1,0 +1,62 @@
+{
+  "schemaVersion": "toy.r0.03.dashboard90-controller-failure-review.v1",
+  "recordedAt": "2026-10-07T08:38:29.994Z",
+  "state": "ACTUAL_CLI_CONTROLLER_REFUSAL_REPAIRED_SOURCE_STATIC_PENDING",
+  "actualRun": {
+    "path": "build/evidence/R0.03/dashboard90-observation-diagnostic-cli/AT-hermes-config-90-run.json",
+    "sha256": "925cbfe3e03a3bd66d8ab87b7f2fae40b1f017d15d92f20b819eab8665d615d7",
+    "exitCode": 2,
+    "error": {
+      "module": "ops",
+      "code": "INVALID_INPUT",
+      "message": "The invocation does not match the registered command schema.",
+      "retryable": false,
+      "retryAt": null,
+      "effectState": "none",
+      "currentRevision": null,
+      "currentGeneration": null,
+      "operationRef": null,
+      "requiredInteraction": null
+    }
+  },
+  "worldId": "d6907b91-57cf-4623-b32b-9d6e819a660d",
+  "teardown": {
+    "stackId": "d6907b91-57cf-4623-b32b-9d6e819a660d",
+    "checkpointRefs": [],
+    "fenceRefs": [],
+    "stoppedResourceRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "d6907b91-57cf-4623-b32b-9d6e819a660d"
+      }
+    ],
+    "retainedArtifactRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "d6907b91-57cf-4623-b32b-9d6e819a660d"
+      }
+    ],
+    "unresolvedResourceRefs": [],
+    "complete": true
+  },
+  "sourceCause": {
+    "path": "packages/ops/src/fixture-stack.ts",
+    "unfilteredNativeAuthAllowedIdsOmittedAT90": true,
+    "nonemptyAuthChecksRefusedBeforeOperationReceipt": true
+  },
+  "boundedRepair": {
+    "unfilteredClassification": "verified behavioral Hermes sourceRegistration with mandatory publicOperation HermesAuthProbe.run",
+    "explicitCaseCompatibilityUnchanged": true,
+    "checkIdAndOwnerRestrictionUnchanged": true,
+    "newModuleOrProtocol": false
+  },
+  "sourceSha256": "9102701974a0a6deb3f777035eac4b80bbd0cce4911487c58046e1bec896ba4b",
+  "changedDiagnosticAttemptsUsed": 1,
+  "maximumChangedAttempts": 3,
+  "receiptChannelCauseStillUnproven": true,
+  "producerRepairAdmitted": false,
+  "wholeATComplete": false,
+  "next": "Parent build/strict then one changed diagnostic run. Actual wiring failure counts; no unchanged retry."
+}

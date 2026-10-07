@@ -5829,6 +5829,7 @@ HermesAuthFixtureResultV1Operation = Literal[
     "priority",
     "remove",
     "reset",
+    "dashboard",
 ]
 
 HermesAuthFixtureResultV1MarkersItem = Literal[
@@ -5897,6 +5898,8 @@ HermesAuthFixtureResultV1ObservationsPhase = Literal[
     "priority-restored",
     "remove",
     "reset",
+    "dashboard-profile-success",
+    "dashboard-save-failure-400",
 ]
 
 HermesAuthFixtureResultV1ObservationsNetworkdenialsItem = Literal[

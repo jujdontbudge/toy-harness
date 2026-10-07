@@ -1,0 +1,114 @@
+{
+  "schemaVersion": "toy.r0.02.workflow-prerequisites-source-handoff.v1",
+  "recordedAt": "2026-10-07T08:48:33Z",
+  "card": "R0.02",
+  "state": "SOURCE_STOPPED_UNVERIFIED",
+  "sourceOwner": "/root/r002_workflow_prerequisite_minimum",
+  "admission": {
+    "path": "build/evidence/R0.02/workflow-prerequisites-source-admission.json",
+    "sha256": "6980546490925fbe145ad51f9879c7a8a55e34f744ddecc7ef46feee81fd6237",
+    "sourceDeadline": "2026-10-07T09:00:00Z"
+  },
+  "sourcePins": [
+    {
+      "path": "packages/self-improvement/src/component-comparison-probe.ts",
+      "sha256": "e2dc9fc1aec758251f074869da25496e90f6f9cf66a35bf01b1090f977aa04a1"
+    },
+    {
+      "path": "packages/self-improvement/src/public.ts",
+      "sha256": "83fa5e8ad4cedfa535cfcf3b428c0e8101b6d458303191b3a4ac802fd6a44251"
+    },
+    {
+      "path": "packages/ops/src/fixture-stack.ts",
+      "sha256": "ac5f6d54538a018d2afaa421801f7539d015cef7861d7a02f19fd0bb882be859"
+    },
+    {
+      "path": "tests/registry.yaml",
+      "sha256": "9cb8310273c11fdcf5c6203c35a093be6a3a939bd785e2d2d08d9be6e9c1a59e"
+    },
+    {
+      "path": "architecture/features.json",
+      "sha256": "6d54e4738dc7bc3ca607fc97ef4e5272bf3fc7bab12a8378e77b7c5c10a33b8e"
+    }
+  ],
+  "sourceChange": {
+    "acceptanceTest": "AT-workflows-1",
+    "scenario": "m11-incomplete-comparison",
+    "behavior": "One registered static CLI case seeds an incomplete M11 ResearchComponentComparisonV2 through the existing report overlay and EngineeringControl.checkResearch owner. It requires a component-specific BLOCKED decision, the four comparison-cell gaps plus the owner's derived VALIDATION_ID_MISSING, the M11 register blocker, and exact PF/AF report bindings. It emits a bounded CheckView prerequisite projection below 2000 bytes when passing.",
+    "paths": [
+      "packages/self-improvement/src/component-comparison-probe.ts",
+      "packages/self-improvement/src/public.ts",
+      "packages/ops/src/fixture-stack.ts",
+      "tests/registry.yaml",
+      "architecture/features.json"
+    ],
+    "invariants": [
+      "No owner implementation, CLI code, generated DTO, public method, or module was added or changed.",
+      "The existing generic ReplayEnvironment route is reused; generated registry and FEATURE-MAP generation are parent-owned.",
+      "The static case reports wholeATComplete:false, candidateWriteReadOnlyInputsProven:false, atWorkflows2Proven:false, protectedAuthenticatedProof:false."
+    ]
+  },
+  "concurrentStatePreserved": {
+    "dashboardManifest": "AT-hermes-config-90 remains appended in tests/registry.yaml with its three dashboard cases.",
+    "dashboardFeature": "architecture/features.json dashboard feature description, paths, and AT-hermes-config-90 entry remain intact.",
+    "nativeAuthClassification": "packages/ops/src/fixture-stack.ts retains the sourceRegistration-derived nativeAuth classification, including AT-hermes-config-87 compatibility; no stale-snapshot restore was performed.",
+    "untouchedHermesAndPatches": [
+      "packages/hermes source and auth patches were not edited.",
+      "patches/hermes-auth-fixture.patch retained admission pin 596ef80693f878be15b1e80333636db962af5b8b91c4f4c69ef522e9c904c06c.",
+      "patches/hermes-profile-auth.patch retained admission pin 814f13752d5132dbc175fb1864229dead2988f9eaa8f76af1481457f2b406b30."
+    ]
+  },
+  "immutableAdmissionBindingsNotEdited": [
+    {
+      "path": "scripts/probe-siwc-control-runtime.mts",
+      "sha256": "96e1fd2d98469772c3d0d203386c3f7aa56af57db025c420fa93f1f4ecd7e70d"
+    },
+    {
+      "path": "scripts/stage-siwc-control-runtime.mts",
+      "sha256": "13ff53e341ab7670dbed967ce810d5aa2834df7a47ffe1620f037ff1da3ee0d4"
+    },
+    {
+      "path": "control/dist/bootstrap/siwc-runtime-probe.js",
+      "sha256": "06870b8dd41d2ffc093cc04680ba56c4570f07b4aa0a27a9ab70796cdd8204bd"
+    },
+    {
+      "path": "scripts/probe-unfiltered-control-denials.mts",
+      "sha256": "1cb93d375df931a482d946170e31549450d8efb71d6a251f5d2bcea8c5b92529"
+    },
+    {
+      "path": "packages/ops/dist/role-control-probe.js",
+      "sha256": "1764a98e5ae45694118007c242320711a7bd9e0d021b7c6d6ee0cbb8cff73ec2"
+    },
+    {
+      "path": "control/dist/bootstrap/denial-probe.js",
+      "sha256": "7fda1824ec7bc308cac97d07c7c92cadd5527e87e89d79b410d33d95d1b30672"
+    }
+  ],
+  "parentVerification": {
+    "generatedAfterStop": [
+      "packages/contracts/src/generated-probe-registry.ts",
+      "skills/toy-control/FEATURE-MAP.md"
+    ],
+    "cli": "Run AT-workflows-1 and probe.show readback in fresh fake R0 world; preserve exact M11/PF/AF bindings and teardown evidence.",
+    "rerunSharedComponentComparisonCases": [
+      "AT-obligations-74",
+      "AT-self-improvement-54",
+      "AT-sources-188",
+      "AT-sources-190",
+      "AT-lifestore-45"
+    ],
+    "reason": "These existing cases share component-comparison-probe.ts/public.ts code paths changed by this source card. Other fixture-stack componentComparison allowlist members were not behaviorally altered.",
+    "verificationNotRunBySourceOwner": [
+      "No CLI invocation or probe world was run.",
+      "No generator, build, static check, or test was run.",
+      "No host, account, auth, or artifact-store probe was run."
+    ]
+  },
+  "deferred": [
+    "AT-workflows-1 candidate_write/read-only-input and complete bounded-report proof",
+    "AT-workflows-2 route adequacy and denial non-escalation",
+    "Whole protected/authenticated workflow proof"
+  ],
+  "wholeATComplete": false,
+  "nextAction": "Parent generation and combined final verification after this SOURCE STOP."
+}

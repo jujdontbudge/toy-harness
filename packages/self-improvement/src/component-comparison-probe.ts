@@ -28,6 +28,7 @@ export const componentComparisonProbe = (input: RegisteredProbeInputV1, context:
   if (input.probeId === "AT-lifestore-45") return lifeStoreQuoteProbe(input, context);
   if (["AT-sources-188", "AT-sources-190"].includes(input.probeId)) return sourcesComponentProbe(input, context);
   if (input.probeId === "AT-self-improvement-54") return requiredComponentProbe(input, context);
+  if (input.probeId === "AT-workflows-1") return workflowsPrerequisiteProbe(input, context);
   if (input.probeId !== "AT-obligations-74" || input.caseId !== undefined) return { ok: false, error: { module: "ops", code: "INVALID_INPUT", message: opsErrorMessages.INVALID_INPUT, retryable: false } };
   const manifest = registeredCliAcceptanceManifestInventory.find(entry => entry.id === input.probeId);
   const cases = ["missing-primary-evidence", "unsupported-choice", "missing-acceptance-link", "complete-outside-comparison"];
@@ -61,6 +62,75 @@ export const componentComparisonProbe = (input: RegisteredProbeInputV1, context:
     }));
   }
   return TestProbeControl.run(input, context, checks);
+};
+const workflowsPrerequisiteProbe = (input: RegisteredProbeInputV1, context: OpsControlContextV1): Result<RegisteredProbeOperationV1> => {
+  if (input.caseId !== undefined) return { ok: false, error: { module: "ops", code: "INVALID_INPUT", message: opsErrorMessages.INVALID_INPUT, retryable: false } };
+  const cases = ["m11-incomplete-comparison"];
+  const manifest = registeredCliAcceptanceManifestInventory.find(entry => entry.id === input.probeId);
+  if (!manifest || manifest.scenarioId !== "research.component-comparison" || JSON.stringify(manifest.mandatoryCases.map(entry => entry.id)) !== JSON.stringify(cases)) return { ok: false, error: { module: "ops", code: "ATTESTATION_INVALID", message: opsErrorMessages.ATTESTATION_INVALID, retryable: false } };
+  const baseline = EngineeringControl.checkResearch({ release: "R0" }, context);
+  if (!baseline.ok) return baseline;
+  const component = baseline.data.components.find(entry => entry.id === "M11");
+  const absent = baseline.data.componentDecisions.find(entry => entry.componentId === "M11");
+  const planningArchive = baseline.data.reports.find(entry => entry.key === "PF");
+  const outcomeArchive = baseline.data.reports.find(entry => entry.key === "AF");
+  const reportKeys = ["PF", "AF"];
+  if (!component || !absent || absent.comparisonDigest !== null || component.reportKeys.length !== reportKeys.length || !reportKeys.every(key => component.reportKeys.includes(key)) || !planningArchive?.originalDigest || !planningArchive.digest || !outcomeArchive?.originalDigest || !outcomeArchive.digest) return { ok: false, error: { module: "ops", code: "ARTIFACT_MISMATCH", message: opsErrorMessages.ARTIFACT_MISMATCH, retryable: false } };
+  const template = completeReport();
+  const report = researchComponentComparisonV2Schema.parse({
+    ...template,
+    scope: "required-component",
+    componentId: component.id,
+    mappedRequirements: absent.missingRequirementIds,
+    options: [{ id: "workflow-option", tool: "Unspecified workflow option", example: "unspecified", viable: true, support: "proven", primaryEvidenceIds: [], reliability: "", maintenance: "", resources: "" }],
+    evidence: [],
+    selectedOptionId: "workflow-option",
+    unresolvedFacts: [],
+    acceptanceIds: ["AT-workflows-1"],
+    validationPlan: "",
+    releaseGate: component.releaseGate,
+    validations: []
+  });
+  const markdown = "# Seeded M11 workflow prerequisite report\n\n```ResearchComponentComparisonV2\n" + JSON.stringify(report) + "\n```\n";
+  const contentDigest = digest(markdown);
+  const inspection = EngineeringControl.checkResearch({ release: "R0" }, context, [{ reportKey: planningArchive.key, originalDigest: planningArchive.originalDigest, contentDigest, markdown }]);
+  if (!inspection.ok) return inspection;
+  const observed = inspection.data.componentDecisions.find(entry => entry.componentId === "M11");
+  const inspectedComponent = inspection.data.components.find(entry => entry.id === "M11");
+  const inspectedPlanningArchive = inspection.data.reports.find(entry => entry.key === "PF");
+  const inspectedOutcomeArchive = inspection.data.reports.find(entry => entry.key === "AF");
+  if (!observed || !inspectedComponent || !inspectedPlanningArchive || !inspectedOutcomeArchive) return { ok: false, error: { module: "ops", code: "ARTIFACT_MISMATCH", message: opsErrorMessages.ARTIFACT_MISMATCH, retryable: false } };
+  const expectedFindings = ["REQUIRED_OPTIONS_MISSING", "PRIMARY_EVIDENCE_MISSING", "TRADEOFFS_MISSING", "VALIDATION_PLAN_MISSING", "VALIDATION_ID_MISSING"];
+  const exact = (actual: readonly string[], expected: readonly string[]): boolean => JSON.stringify([...actual].sort()) === JSON.stringify([...expected].sort());
+  const registerBlocked = inspection.data.admission === "BLOCKED" && inspection.data.findings.some(finding => finding.componentId === "M11" && finding.code === "COMPONENT_COMPARISON_BLOCKED");
+  const archiveBound = inspectedComponent.reportKeys.length === reportKeys.length && reportKeys.every(key => inspectedComponent.reportKeys.includes(key))
+    && inspectedPlanningArchive.path === planningArchive.path && inspectedPlanningArchive.originalDigest === planningArchive.originalDigest && inspectedPlanningArchive.digest === contentDigest && inspectedPlanningArchive.origin === "seeded_document"
+    && inspectedOutcomeArchive.path === outcomeArchive.path && inspectedOutcomeArchive.originalDigest === outcomeArchive.originalDigest && inspectedOutcomeArchive.digest === outcomeArchive.digest && inspectedOutcomeArchive.origin === "planning_archive";
+  const passed = observed.state === "BLOCKED" && exact(observed.findings, expectedFindings) && observed.missingRequirementIds.length === 0
+    && exact(observed.missingSourceIds, reportKeys) && exact(observed.missingValidationIds, ["G0:R0:M11"])
+    && observed.comparisonDigest === digest(JSON.stringify(report)) && registerBlocked && archiveBound;
+  const prerequisite = JSON.stringify({
+    caseId: cases[0],
+    actualUid: process.getuid?.() ?? null,
+    register: { path: inspection.data.registerPath, digest: inspection.data.registerDigest, component: { id: inspectedComponent.id, sourceLine: inspectedComponent.sourceLine, rowDigest: inspectedComponent.rowDigest, reportKeys: inspectedComponent.reportKeys }, admission: inspection.data.admission },
+    decision: { componentId: observed.componentId, state: observed.state, findings: observed.findings, missingRequirementIds: observed.missingRequirementIds, missingSourceIds: observed.missingSourceIds, missingValidationIds: observed.missingValidationIds },
+    archives: [
+      { key: inspectedPlanningArchive.key, path: inspectedPlanningArchive.path, originalDigest: inspectedPlanningArchive.originalDigest, contentDigest: inspectedPlanningArchive.digest, origin: inspectedPlanningArchive.origin },
+      { key: inspectedOutcomeArchive.key, path: inspectedOutcomeArchive.path, originalDigest: inspectedOutcomeArchive.originalDigest, contentDigest: inspectedOutcomeArchive.digest, origin: inspectedOutcomeArchive.origin }
+    ],
+    registerBlocked,
+    liveProviderSends: 0,
+    candidateWriteReadOnlyInputsProven: false,
+    atWorkflows2Proven: false,
+    protectedAuthenticatedProof: false,
+    wholeATComplete: false
+  });
+  const bounded = Buffer.byteLength(prerequisite, "utf8") < 2000;
+  const state = passed && bounded ? "PASS" : "FAIL";
+  return TestProbeControl.run(input, context, [checkViewSchema.parse({
+    id: "research.component-comparison", owner: "self-improvement", state, checkedAt: new Date().toISOString(), reasonCode: state === "PASS" ? "WORKFLOW_M11_PREREQUISITE_PASS" : "WORKFLOW_M11_PREREQUISITE_FAIL",
+    prerequisite, nextCommandId: "probe.show", links: { recordRefs: [], observations: [], artifactDigests: [digest(markdown), digest(JSON.stringify(report)), digest(readFileSync(new URL("./component-comparison-probe.js", import.meta.url))), digest(readFileSync(new URL("./engineering-control.js", import.meta.url)))] }
+  })]);
 };
 const lifeStoreCases = ["positive-all-required-quotes", "missing-component", "missing-requirement-quote", "unsupported-choice", "missing-version", "wrong-version", "wrong-digest", "wrong-primary-quote", "wrong-requirement-quote", "missing-validation"] as const;
 type LifeStoreReport = ResearchRegisterInspectionV3["reports"][number];

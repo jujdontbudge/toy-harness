@@ -1,6 +1,6 @@
 --- /dev/null
 +++ b/tests/fixtures/toy_auth_httpx_fixture.py
-@@ -0,0 +1,889 @@
+@@ -0,0 +1,925 @@
 +from __future__ import annotations
 +
 +import base64
@@ -28,7 +28,7 @@
 +_QUOTA_CHECK_COUNT = 0
 +_CONCURRENCY_BARRIER_STATE = "not-used"
 +_REFRESH_EFFECTS: list[dict[str, str]] = []
-+_ADD_PHASES = {"add", "add-enospc", "add-replace-fault"}
++_ADD_PHASES = {"add", "add-enospc", "add-replace-fault", "dashboard-profile-success", "dashboard-save-failure-400"}
 +_DENIALS: list[str] = []
 +_COUNTS = {
 +    "device_code_requests": 0,
@@ -507,7 +507,16 @@
 +
 +def _storage_replace_target(destination: object) -> bool:
 +    home = os.environ.get("HERMES_HOME")
-+    return _PHASE == "add" and _TOKEN_RESPONSE_ISSUED and isinstance(home, str) and bool(home) and os.path.abspath(os.fsdecode(os.fspath(destination))) == os.path.abspath(os.path.join(home, "auth.json"))
++    if not isinstance(home, str) or not home or not _TOKEN_RESPONSE_ISSUED:
++        return False
++    if _PHASE == "add":
++        target = os.path.join(home, "auth.json")
++    elif _PHASE == "dashboard-save-failure-400":
++        profile = os.environ.get("TOY_AUTH_DASHBOARD_PROFILE", "")
++        target = os.path.join(home, "profiles", profile, "auth.json")
++    else:
++        return False
++    return os.path.abspath(os.fsdecode(os.fspath(destination))) == os.path.abspath(target)
 +
 +
 +def _hold_storage_cut(cut: str) -> None:
@@ -538,11 +547,12 @@
 +    global _SOCKET_ORIGIN, _STORAGE_FAULT_TRIGGERED
 +    if event == "os.rename" and os.environ.get("TOY_AUTH_STORAGE_CUT") == "before-replace" and len(args) > 1 and _storage_replace_target(args[1]):
 +        _hold_storage_cut("before-replace")
-+    if event == "os.rename" and _PHASE in {"add-enospc", "add-replace-fault"} and _TOKEN_RESPONSE_ISSUED and not _STORAGE_FAULT_TRIGGERED and len(args) > 1:
++    if event == "os.rename" and _PHASE in {"add-enospc", "add-replace-fault", "dashboard-save-failure-400"} and _TOKEN_RESPONSE_ISSUED and not _STORAGE_FAULT_TRIGGERED and len(args) > 1:
 +        home = os.environ.get("HERMES_HOME")
 +        if isinstance(home, str) and home:
 +            destination = os.path.abspath(os.fsdecode(os.fspath(args[1])))
-+            auth_path = os.path.abspath(os.path.join(home, "auth.json"))
++            profile = os.environ.get("TOY_AUTH_DASHBOARD_PROFILE", "")
++            auth_path = os.path.abspath(os.path.join(home, "profiles", profile, "auth.json")) if _PHASE == "dashboard-save-failure-400" else os.path.abspath(os.path.join(home, "auth.json"))
 +            if destination == auth_path:
 +                _STORAGE_FAULT_TRIGGERED = True
 +                code = errno.ENOSPC if _PHASE == "add-enospc" else errno.EIO
@@ -578,7 +588,8 @@
 +
 +
 +def _public_argv(operation: str) -> list[str]:
-+    prefix = ["hermes"] if os.environ.get("TOY_AUTH_STORE_SCOPE") == "root" else ["hermes", "--profile", "toy"]
++    profile = os.environ.get("TOY_AUTH_PROFILE", "toy")
++    prefix = ["hermes"] if os.environ.get("TOY_AUTH_STORE_SCOPE") == "root" else ["hermes", "--profile", profile]
 +    if operation == "add":
 +        actor = os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR", "")
 +        label = ["--label", _fixture_label()] if actor == "auth-add" or actor.startswith("sibling-") or actor.startswith("lifecycle-") or actor in _MIXED_LINEAGE_LABELS else []
@@ -833,7 +844,7 @@
 +
 +def main() -> int:
 +    global _OPERATION, _PHASE, _CONCURRENCY_BARRIER_STATE
-+    if len(sys.argv) != 2 or sys.argv[1] not in {"add", "list", "chat", "chat-expired", "chat-reloaded", "add-enospc", "add-replace-fault", "list-after-fault", "chat-after-fault", "siwc-unbound", "priority-added", "priority-restored", "remove", "reset"}:
++    if len(sys.argv) != 2 or sys.argv[1] not in {"add", "list", "chat", "chat-expired", "chat-reloaded", "add-enospc", "add-replace-fault", "list-after-fault", "chat-after-fault", "siwc-unbound", "priority-added", "priority-restored", "remove", "reset", "dashboard-server"}:
 +        print(
 +            json.dumps(
 +                {
@@ -846,7 +857,8 @@
 +            )
 +        )
 +        return 2
-+    _PHASE = sys.argv[1]
++    _PHASE = os.environ.get("TOY_AUTH_DASHBOARD_PHASE", "") if sys.argv[1] == "dashboard-server" else sys.argv[1]
++    dashboard_server = sys.argv[1] == "dashboard-server"
 +    _OPERATION = {
 +        "add-enospc": "add",
 +        "add-replace-fault": "add",
@@ -856,6 +868,8 @@
 +        "priority-added": "priority",
 +        "priority-restored": "priority",
 +    }.get(_PHASE, "chat" if _PHASE.startswith("chat") else _PHASE)
++    if dashboard_server:
++        _OPERATION = "dashboard"
 +    if _PHASE == "siwc-unbound":
 +        os.environ["OPENAI_API_KEY"] = _PAID_KEY
 +    if _PHASE == "chat-expired":
@@ -867,6 +881,28 @@
 +    httpx.AsyncClient.send = _async_send
 +    sys.addaudithook(_deny_socket)
 +    _install_storage_replace_cut()
++    if dashboard_server:
++        receipt_stdout = sys.stdout
++        saved_argv = sys.argv
++        server_exit = 0
++        server_markers: list[str] = []
++        try:
++            sys.argv = ["hermes", "dashboard", "--host", "127.0.0.1", "--port", "0", "--no-open", "--isolated", "--skip-build"]
++            from hermes_cli.main import main as hermes_main
++
++            hermes_main()
++        except SystemExit as exc:
++            server_exit = exc.code if isinstance(exc.code, int) else 1
++            if server_exit != 0:
++                server_markers.append("CLI_EXIT_NONZERO")
++        except Exception:
++            server_exit = 1
++            server_markers.append("CLI_EXCEPTION")
++        finally:
++            sys.argv = saved_argv
++            result = {"schema": "toy.hermes-httpx-auth-fixture.v1", "operation": "dashboard", "public_argv": ["hermes", "dashboard", "--host", "127.0.0.1", "--port", "0", "--no-open", "--isolated", "--skip-build"], "exit_code": server_exit, "markers": server_markers, "processIdentity": {"pid": os.getpid(), "parentPid": os.getppid(), "uid": os.getuid(), "gid": os.getgid()}, "observations": {"provider": "openai-codex", "phase": _PHASE, "access_generation": None, "catalog_access_generation": None, "storage_fault_triggered": _STORAGE_FAULT_TRIGGERED, "token_hygiene": True, "success_claim_absent": _PHASE == "dashboard-save-failure-400", "fallback_attempted": False, "network_denials": list(_DENIALS), "socket_origin": _SOCKET_ORIGIN}, "http_ledger": dict(_COUNTS), "network_audit": "socket-audit-hook-installed"}
++            print(json.dumps(result, sort_keys=True), file=receipt_stdout, flush=True)
++        return server_exit
 +    _hold_refresh_lock()
 +    exit_code, stdout, stderr, failure = _run_cli(argv)
 +    if os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR") == "auth-add":

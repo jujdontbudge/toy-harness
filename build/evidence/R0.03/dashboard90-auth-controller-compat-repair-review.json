@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "toy.r0.03.auth-controller-compat-repair.v1",
+  "recordedAt": "2026-10-07T08:55:00.086Z",
+  "worldId": "5ac20b24-a711-4544-b25d-f9b5f51ba2ce",
+  "summary": {
+    "path": "build/evidence/R0.03/dashboard90-workflow-final-summary.json",
+    "sha256": "523b5954649e10e65146a29f2d8287b5f47094748b2ee7d289777c3c0a773d8a"
+  },
+  "dashboardOriginalCasesPassed": true,
+  "dashboardChangedAttemptsUsed": 3,
+  "dashboardRunAgainAllowed": false,
+  "actualRefusal": {
+    "path": "build/evidence/R0.03/dashboard90-workflow-final-cli/AT-hermes-config-84-run.json",
+    "sha256": "5bd5fb9202e8acd3777411325ea9a0ba2b7838864fc03ba4a4aba76b8ceb7a7c",
+    "exitCode": 2,
+    "operationMissing": true
+  },
+  "cause": "AT84/85 validated auth manifests use concrete public Hermes commands rather than HermesAuthProbe.run annotations; old every-public-operation classifier excluded their actual results.",
+  "sourceRepair": {
+    "path": "packages/ops/src/fixture-stack.ts",
+    "sha256": "55649a763c14b168bfe183385544f128f314de4ded2d313269b8682bf052fbcc",
+    "rule": "Verified behavioral Hermes auth scenario classifies unfiltered native auth",
+    "explicitCompatibilityUnchanged": true,
+    "checkIdOwnerRestrictionsUnchanged": true,
+    "dashboardClassificationTrueBeforeAndAfter": true,
+    "hermesOwnerUnchanged": true
+  },
+  "teardown": {
+    "stackId": "5ac20b24-a711-4544-b25d-f9b5f51ba2ce",
+    "checkpointRefs": [],
+    "fenceRefs": [],
+    "stoppedResourceRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "5ac20b24-a711-4544-b25d-f9b5f51ba2ce"
+      }
+    ],
+    "retainedArtifactRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "5ac20b24-a711-4544-b25d-f9b5f51ba2ce"
+      }
+    ],
+    "unresolvedResourceRefs": [],
+    "complete": true
+  },
+  "wholeATComplete": false,
+  "next": "Build/map/strict then fresh world for seven auth regressions, ATworkflows1 and five shared comparison groups only. No dashboard retry."
+}

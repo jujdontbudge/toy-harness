@@ -1,0 +1,285 @@
+{
+  "schemaVersion": "toy.r0.03.dashboard90-observation-repair-source-handoff.v1",
+  "recordedAt": "2026-10-07T08:33:57.742566Z",
+  "status": "SOURCE_STOP_GENERATION_STATIC_AND_ONE_DIAGNOSTIC_PENDING",
+  "sourceOwner": "/root/r003_dashboard_causal_replan",
+  "sourceOwnershipSTOP": "2026-10-07T08:33:57.742566Z",
+  "sourceDeadline": "2026-10-07T08:55:00Z",
+  "fullCardStopAt": "2026-10-07T10:26:00Z",
+  "admission": {
+    "path": "build/evidence/R0.03/dashboard90-replan-source-admission.json",
+    "sha256": "884800056c17108fe53235032625c2badcd3db30f4de779abcfac71fcc3a3386"
+  },
+  "causalReplan": {
+    "path": "build/evidence/R0.03/dashboard90-causal-replan-after-deferral.json",
+    "sha256": "337c2014b364f2484d06be00ed63604e8f5ca0660f98b857e70a2629b2ef9fb2"
+  },
+  "assignedAcceptance": {
+    "id": "AT-hermes-config-90",
+    "rung": "CLI",
+    "scenarioId": "auth.dashboard-scope",
+    "assertion": "Given real dashboard subprocesses in separate temporary profile scopes and registered OS save failures, When public scoped auth flows run, Then only the active profile changes, fresh-process usability agrees and save failure returns sanitized 400 with no success claim/token.",
+    "sourceAssertionSha256": "451a0ff28c92fc95629eaafd849b62631a258ef632518d9132c64fa09384c07d",
+    "mandatoryCases": [
+      "dashboard-profile-success",
+      "dashboard-fresh-profile-use",
+      "dashboard-save-failure-400"
+    ],
+    "registration": "Original saved third-attempt exact sourceRegistration was selectively restored; no new case or diagnostic acceptance ID was introduced.",
+    "wholeATComplete": false,
+    "cardComplete": false
+  },
+  "writtenInterfaceFirst": {
+    "path": "docs/adr/0046-dashboard-auth-scope-probe.md",
+    "sha256": "87e6eb653b7065015be85f643f7454c4bad4adb757e8a3b26d826613e50d9bdb",
+    "reviewedSource": "build/evidence/R0.03/dashboard90-failed-interface.md",
+    "restoredBeforeOtherSourceEdits": true,
+    "addition": "Terminal receipt observation, safety and stdout-only acceptance constraints documented before source implementation."
+  },
+  "changedSourcePins": [
+    {
+      "path": "packages/hermes/src/auth-fixture.ts",
+      "sha256": "b8ed0a9ecd7de80dbe29b315d89d3a15bd972ee463b8adc8ad54f3b70a428cd5"
+    },
+    {
+      "path": "packages/hermes/src/auth-probe.ts",
+      "sha256": "16f0d54f74f47418a54967f768eca222d7f338a60eb1ee88e01ed1f29f081782"
+    },
+    {
+      "path": "patches/hermes-auth-fixture.patch",
+      "sha256": "08875a52036428614c39aea1b44c8f127d9edf9560428a2905ebbd3febc2d8e4"
+    },
+    {
+      "path": "packages/contracts/src/hermes-runtime.ts",
+      "sha256": "30b422f67fdb1a6dcd6d67b980157ca6fd32c2a85736499c79b685e59b7e9fb7"
+    },
+    {
+      "path": "cli/src/main.ts",
+      "sha256": "5623125eec41f7dbd1c9874f0778151b1527bca488ba26aa663512c7fefdb97c"
+    },
+    {
+      "path": "tests/registry.yaml",
+      "sha256": "d0921561e78440b84739b84ccacc4ccd81e1d7819bca7c4e1c36e5030062c97c"
+    },
+    {
+      "path": "architecture/features.json",
+      "sha256": "0f2796c0bff68fb4a1dc165eddcbe5a0765cf7295b358aee509e28011283d83e"
+    },
+    {
+      "path": "docs/adr/0046-dashboard-auth-scope-probe.md",
+      "sha256": "87e6eb653b7065015be85f643f7454c4bad4adb757e8a3b26d826613e50d9bdb"
+    }
+  ],
+  "sourceChanges": [
+    {
+      "path": "packages/hermes/src/auth-fixture.ts",
+      "change": "Restore dashboard-only mode/owned readiness and original three case flow onto current lifecycle/single-grant auth87 owner; classify expected strict-generated receipt candidates from both bounded owned streams in memory; retain original stdout parser and success/failure acceptance expressions; publish separate case-linked diagnostics and actual owned process close facts."
+    },
+    {
+      "path": "packages/hermes/src/auth-probe.ts",
+      "change": "Add only AT90 to existing allowed/unfiltered HermesAuthProbe route, require original exact three mandatory cases and atomic-replace OS fault, invoke dashboard mode; current auth87 extra contention path remains."
+    },
+    {
+      "path": "patches/hermes-auth-fixture.patch",
+      "change": "Restore only dashboard producer branch, scoped profile selection, dashboard OAuth fake phase allowlist and registered toy-profile atomic-replace EIO handling; terminal generated receipt still uses original bare print. No producer-output repair."
+    },
+    {
+      "path": "packages/contracts/src/hermes-runtime.ts",
+      "change": "Add dashboard operation and dashboard-profile-success/dashboard-save-failure-400 phases to current canonical enums. Keep all current lifecycle enums, auth87 markers and required refreshDispositions unchanged."
+    },
+    {
+      "path": "cli/src/main.ts",
+      "change": "Add AT90 to existing unfiltered thin auth owner route alongside current AT91; no new command or CLI logic."
+    },
+    {
+      "path": "tests/registry.yaml",
+      "change": "Append only exact original AT90 CLI manifest; all three cases, original source assertion and fault binding retained."
+    },
+    {
+      "path": "architecture/features.json",
+      "change": "Add AT90, ADR0046 and unchanged dashboard patch to existing native auth feature; append bounded observation description. Global acceptance inventory and all other features remain."
+    },
+    {
+      "path": "docs/adr/0046-dashboard-auth-scope-probe.md",
+      "change": "Selectively restore original interface and document observation repair."
+    }
+  ],
+  "diagnosticPublicShape": {
+    "existingCheckId": "auth.native-fixture",
+    "owner": "hermes",
+    "originalCaseBinding": "Diagnostic record reuses dashboard-profile-success or dashboard-save-failure-400 caseId; it is not a fourth manifest case.",
+    "reasonCodeSuffix": "_DIAGNOSTIC",
+    "state": "Exactly the same PASS/FAIL as the actual original case; valid stderr match never makes the original case pass.",
+    "wholeATComplete": false,
+    "fields": [
+      "caseId",
+      "observationsOnly",
+      "receiptObservation.classification",
+      "receiptObservation.stdout",
+      "receiptObservation.stderr",
+      "ownedProcess.pid",
+      "ownedProcess.exitCode",
+      "ownedProcess.signal",
+      "ownedProcess.timedOut",
+      "ownedProcess.oversized",
+      "ownedProcess.spawnError",
+      "stdoutReceiptExitCode",
+      "wholeATComplete"
+    ],
+    "streamFields": [
+      "schemaCandidates",
+      "schemaRejected",
+      "expectedReceipts",
+      "phaseOrOperationMismatches",
+      "ownedIdentityMatches",
+      "schemaIssues.code",
+      "schemaIssues.path"
+    ],
+    "classificationValues": [
+      "AMBIGUOUS",
+      "MATCHED_STDOUT",
+      "MATCHED_STDERR",
+      "SCHEMA_REJECTED",
+      "PHASE_OR_OPERATION_MISMATCH",
+      "MISSING"
+    ],
+    "matching": "Expected schema discriminator; full existing generated strict schema validation; expected dashboard operation and phase. Diagnostic ownedIdentityMatches compares receipt identity to the actual process handle/parent/UID/GID.",
+    "closeFactsIndependent": "ownedProcess reads the actual ConcurrentChildResult generated from the owned Node child close event, including status/signal and timeout/oversize/spawn-error booleans. Original case serverExitCode now also reads actual child.status; stdoutReceiptExitCode remains separately child-derived from the unchanged stdout-only parser.",
+    "bounds": {
+      "captureBytesPerStream": 65536,
+      "countsCappedAt": 2,
+      "issueFactsPerStream": 4,
+      "issueFactsTotalMaximum": 8,
+      "issueCodeCharactersMaximum": 32,
+      "canonicalPathCharactersMaximum": 96,
+      "canonicalPathSegmentsMaximum": 8,
+      "unknownPath": "OTHER",
+      "oversizedCode": "OTHER",
+      "checkViewPrerequisiteCharactersMaximum": 2000
+    },
+    "serializedPrerequisiteSizes": "Not measured; no source check or runtime was executed. Split uses the existing CheckView to keep the original case facts separate from bounded issue/close diagnostics, preserving the 2000-character contract. Parent must measure actual registered-run serialized sizes after SOURCE STOP.",
+    "splitAdmission": "Parent follow-up explicitly admitted a second bounded existing CheckView for the same original case with identical state and wholeATfalse.",
+    "forbiddenOutputAbsentByConstruction": [
+      "raw stdout/stderr",
+      "token-bearing DTO dumps",
+      "validation messages",
+      "expected/received values",
+      "unrecognized key names",
+      "unknown path segments",
+      "line previews",
+      "exception text or traceback",
+      "HTTP response bodies",
+      "session IDs/tokens"
+    ],
+    "stderrReceiptDiagnosticOnly": true,
+    "stdoutOnlyAcceptanceChanged": false,
+    "producerOutputFixApplied": false
+  },
+  "retainedFixtureBoundaries": {
+    "pinnedCommit": "8d5e3e412138342e8bf30443e72bd4e6a9abd057",
+    "publicDashboardCommand": "hermes dashboard --host 127.0.0.1 --port 0 --no-open --isolated --skip-build",
+    "publicRoutes": [
+      "POST /api/providers/oauth/openai-codex/start?profile=<success|toy>",
+      "GET /api/providers/oauth/openai-codex/poll/<owned-session-id>?profile=<success|toy>"
+    ],
+    "webPrerequisite": "Fixed minimal index.html inside checked owned private scratch; existing HERMES_WEB_DIST set only for owned dashboard child.",
+    "readiness": "Owned fd1 HERMES_DASHBOARD_READY port sentinel.",
+    "shutdown": "Owned SIGINT, 3000ms bounded join and SIGKILL fallback; no dashboard --stop/status or host lifecycle command.",
+    "redirectPolicy": "error",
+    "osFault": {
+      "id": "profile-auth-atomic-replace-eio",
+      "phase": "dashboard-save-failure-400",
+      "target": "owned HERMES_HOME/profiles/toy/auth.json"
+    },
+    "providers": "Existing fixed HTTP fake responses only; external socket/network denials unchanged; no resolver permit.",
+    "freshProcessUse": "Original successful-profile list/chat and failed-profile empty list/negative chat with zero accepted effects remain mandatory.",
+    "stores": "Only selected temporary profile may change; root/opposite temporary store digests are checked. No real auth store is opened by this worker."
+  },
+  "fixturePatchBody": {
+    "path": "patches/hermes-auth-fixture.patch",
+    "hunk": "@@ -0,0 +1,924 @@",
+    "addedLineCount": 924,
+    "addedBodySha256": "4f5352bd2d51259a7dbca1664fc552957a642e5bb0bb9be82ae8822b63b79d93",
+    "headerUpdatedDuringSourceEdit": true,
+    "candidateApplication": "NOT_RUN"
+  },
+  "preservation": {
+    "unchangedPatchPins": [
+      {
+        "path": "patches/hermes-profile-auth.patch",
+        "sha256": "814f13752d5132dbc175fb1864229dead2988f9eaa8f76af1481457f2b406b30"
+      },
+      {
+        "path": "patches/hermes-auth-dashboard.patch",
+        "sha256": "f4509ed92351863f58ee9ea85c6c6473d23b86b75e59a0064db26f5d71e28493"
+      }
+    ],
+    "auth87": "Manual exact pool-row resync patch is untouched; current owner single-grant contention/refreshDispositions producer/parser/required schema fields and cases were preserved by additive dashboard-only edits.",
+    "savedArchive": "Only matching dashboard-specific source hunks were restored. Current lifecycle/manual refresh source differences were merged selectively, never overwritten with the whole archived diff.",
+    "frozenRootBindings": "Parent admission verified all six; worker did not read or change frozen root artifacts.",
+    "rootPending": [
+      "ROOT-R004-20261006-02",
+      "ROOT-R005-20261006-01"
+    ],
+    "rootQueueSha256": "6bdca8b36154b5ec87875c5a1fe0e5d5f9a8a0b6d172c26c7d99ad9f2dd6307e",
+    "separateR002": "Independent read-only helper remains outside source ownership."
+  },
+  "requiredParentGeneration": [
+    "Regenerate canonical contracts and schema inventories from current hermes-runtime.ts, preserving required auth87 refreshDispositions and all current fields.",
+    "Regenerate registered CLI acceptance metadata/inventories from tests/registry.yaml including exact AT90.",
+    "Run paved build and toy feature-map update from architecture/features.json; worker made no derived-map or generated changes."
+  ],
+  "requiredParentReviewAndVerification": [
+    "Review source hash pins and the exact selective dashboard delta against current auth87 baseline before generation/checks.",
+    "Run normal required build/static checks after generation; preserve all six frozen root pins and unchanged profile/dashboard patches.",
+    "Measure actual prerequisite lengths against unchanged generated 2000-character cap and inspect diagnostic safety from fresh public receipts.",
+    "Fresh per-process normal-pressure available-memory admission under own need plus512MiB; no aggregate/strictly-free/R5 repair-floor veto.",
+    "Exactly one newly instrumented unfiltered AT90 diagnostic through toy in one owned R0 fake world, same-data probe.show and complete teardown.",
+    "Expected likely separator is MATCHED_STDERR plus matching owned identity and real clean close; historical cause stays UNPROVEN until public evidence exists.",
+    "STOP and review the changed diagnosis before any producer-output repair or another acceptance run. The original three cases and whole AT remain pending if the first case still fails."
+  ],
+  "verification": {
+    "generation": "NOT_RUN",
+    "build": "NOT_RUN",
+    "static": "NOT_RUN",
+    "tests": "NOT_RUN",
+    "toyCLI": "NOT_RUN",
+    "runtime": "NOT_RUN",
+    "sourceHashes": "Machine-computed source/evidence SHA-256 pins only; no acceptance claim.",
+    "wholeATComplete": false,
+    "cardComplete": false
+  },
+  "scope": {
+    "sourcePathsTouched": [
+      "packages/hermes/src/auth-fixture.ts",
+      "packages/hermes/src/auth-probe.ts",
+      "patches/hermes-auth-fixture.patch",
+      "packages/contracts/src/hermes-runtime.ts",
+      "cli/src/main.ts",
+      "tests/registry.yaml",
+      "architecture/features.json",
+      "docs/adr/0046-dashboard-auth-scope-probe.md"
+    ],
+    "additionalSourcePathsTouched": [],
+    "derivedFeatureMapEdits": 0,
+    "generatedArtifactEdits": 0,
+    "testsBuildsGeneratorsStaticChecks": 0,
+    "CLIOrRuntimeOrMachineProbes": 0,
+    "hostArtifactOrInstalledAuthReads": 0,
+    "accountOrServiceOperations": 0,
+    "childrenSpawned": 0,
+    "internetCalls": 0,
+    "commitsCreated": 0,
+    "rawChildStreamsRead": false,
+    "credentialsRead": false,
+    "ownedOutput": "build/evidence/R0.03/dashboard90-observation-repair-source-handoff.json"
+  },
+  "STOP": {
+    "sourceOwnershipReleased": true,
+    "sourceEditsFinished": true,
+    "parentMayReviewAndGenerate": true,
+    "runtimeOrProducerRepairPerformed": false,
+    "wholeATComplete": false,
+    "cardComplete": false
+  }
+}

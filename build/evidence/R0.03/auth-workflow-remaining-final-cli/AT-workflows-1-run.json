@@ -1,0 +1,123 @@
+{
+  "schemaVersion": "toy.cli.v1",
+  "commandId": "probe.run",
+  "invocationId": "a5f3034f-fd31-4510-96d3-12f57364ea66",
+  "generatedAt": "2026-10-07T09:01:29.976Z",
+  "cliVersion": "1.0.0",
+  "contractsVersion": "1.0.0",
+  "schemaDigest": "ec7a67e32a800c455daac36fa5566d3b786d6f8bb76742a66a72cb79cf267648",
+  "environment": {
+    "kind": "test",
+    "instanceId": null,
+    "stackId": "02f28832-672f-448b-9736-b296ccc08a64"
+  },
+  "meta": {
+    "exitCode": 0,
+    "releaseDigest": null,
+    "controlDigest": null,
+    "evaluatedAt": null,
+    "operationId": null,
+    "effectState": "confirmed",
+    "recordRefs": [],
+    "evidence": []
+  },
+  "ok": true,
+  "data": {
+    "operation": {
+      "operationId": "489878c4-b5a2-4388-b150-1555332803ee",
+      "state": "succeeded",
+      "acceptedAt": "2026-10-07T09:01:29.974Z"
+    },
+    "requestId": "b5f37971-9af5-46b3-bf8f-2d3e0ccb7bdf",
+    "stackId": "02f28832-672f-448b-9736-b296ccc08a64",
+    "result": {
+      "probeId": "AT-workflows-1",
+      "caseManifestDigest": "5d26ba2a89659533d282876df0cff27672d3e53f3cb05aa9cbccb36ad5f69e8b",
+      "cases": [
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T09:01:29.973Z",
+          "reasonCode": "WORKFLOW_M11_PREREQUISITE_PASS",
+          "prerequisite": "{\"caseId\":\"m11-incomplete-comparison\",\"actualUid\":501,\"register\":{\"path\":\"specs/RESEARCH-REGISTER.md\",\"digest\":\"e89b3336e0c2458ac204fb0927da30f4541abfab48a9d55735c4655719a3f10d\",\"component\":{\"id\":\"M11\",\"sourceLine\":287,\"rowDigest\":\"4521bc2710ea60522c25225c36f125d477f4a3f3829a50dc51b67106b315a9c3\",\"reportKeys\":[\"AF\",\"PF\"]},\"admission\":\"BLOCKED\"},\"decision\":{\"componentId\":\"M11\",\"state\":\"BLOCKED\",\"findings\":[\"REQUIRED_OPTIONS_MISSING\",\"TRADEOFFS_MISSING\",\"PRIMARY_EVIDENCE_MISSING\",\"VALIDATION_PLAN_MISSING\",\"VALIDATION_ID_MISSING\"],\"missingRequirementIds\":[],\"missingSourceIds\":[\"AF\",\"PF\"],\"missingValidationIds\":[\"G0:R0:M11\"]},\"archives\":[{\"key\":\"PF\",\"path\":\"research/productivity-founders.md\",\"originalDigest\":\"9fabecd96737de50eb19f0ec53519d0c2e87e33034b332b1facc94a4b573370e\",\"contentDigest\":\"71f5c9e3fde72e97b0d6fc14dc8584b0f370d1da4a52be2116dd4fb84e55b5e3\",\"origin\":\"seeded_document\"},{\"key\":\"AF\",\"path\":\"research/v2/adhd-features.md\",\"originalDigest\":\"bc0c7359b09596697361ee68cf3c6e25a653b1715c641a450d7d5685c9bd3c48\",\"contentDigest\":\"bc0c7359b09596697361ee68cf3c6e25a653b1715c641a450d7d5685c9bd3c48\",\"origin\":\"planning_archive\"}],\"registerBlocked\":true,\"liveProviderSends\":0,\"candidateWriteReadOnlyInputsProven\":false,\"atWorkflows2Proven\":false,\"protectedAuthenticatedProof\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "71f5c9e3fde72e97b0d6fc14dc8584b0f370d1da4a52be2116dd4fb84e55b5e3",
+              "cdde79e99d83ae4212812ae2c9d757fd2f3108160393e9ab00648afc155005d7",
+              "fa0d2a9bb35fed22afe1f807f44fe356fb275e4f6e1de4982c3b3fa92db097b5",
+              "0606ab8e2ccda810bdf50352cc517478977f7658696105d35d88d1e1dfb5142d"
+            ]
+          }
+        }
+      ],
+      "state": "NOT_IMPLEMENTED",
+      "complete": false,
+      "links": {
+        "recordRefs": [],
+        "observations": [],
+        "artifactDigests": []
+      },
+      "sourceRegistration": {
+        "id": "AT-workflows-1",
+        "rung": "CLI",
+        "sourceAssertionHash": "2d9d6ef5164a15368e1091dc1e98524ea763f89b554f8b34a5db4fb94825abf6",
+        "commandId": "probe.run",
+        "scenarioId": "research.component-comparison",
+        "owner": "self-improvement",
+        "firstRelease": "R0",
+        "kind": "static_gate",
+        "mandatoryCases": [
+          {
+            "id": "m11-incomplete-comparison",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "m11-incomplete-comparison"
+          }
+        ],
+        "trigger": "Seed one incomplete M11 workflow comparison through the indexed report seam; require the M11-specific blocked decision and exact PF/AF archive binding while whole register admission remains blocked.",
+        "faultControls": [
+          {
+            "id": "external-m11-comparison-omissions",
+            "seam": "provider",
+            "affectedPhases": [
+              "m11-incomplete-comparison"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "indexed-m11-prerequisite-decision",
+            "independentReader": "EngineeringControl.checkResearch: M11 gaps, register blocker and exact PF/AF archive binding",
+            "caseIds": [
+              "m11-incomplete-comparison"
+            ]
+          },
+          {
+            "id": "stored-cli-readback",
+            "independentReader": "toy probe.show: persisted M11 static gate result and PF/AF archive bindings",
+            "caseIds": [
+              "m11-incomplete-comparison"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot substitute indexed administrative pre-build research reports or assert their register binding; the assigned CLI reaches the real research owner through its bounded report overlay."
+      }
+    },
+    "links": {
+      "recordRefs": [],
+      "observations": [],
+      "artifactDigests": []
+    },
+    "probeId": "AT-workflows-1",
+    "binding": {
+      "releaseDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+      "controlDigest": "65a37285b0dad23cef1b0bd0b0c649de287ae95a5a5b3fe166b70de88a1b2c9f",
+      "schemaDigest": "ec7a67e32a800c455daac36fa5566d3b786d6f8bb76742a66a72cb79cf267648",
+      "fixtureDigest": "375a39674fafae84ab444d5b9a9dae57b813fb4497750e3ca769a04fa8ed953b"
+    },
+    "caseManifestDigest": "5d26ba2a89659533d282876df0cff27672d3e53f3cb05aa9cbccb36ad5f69e8b"
+  }
+}

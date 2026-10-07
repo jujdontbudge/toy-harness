@@ -1,0 +1,636 @@
+{
+  "schemaVersion": "toy.r0.03.dashboard-final-verification.v1",
+  "recordedAt": "2026-10-07T09:03:47.711Z",
+  "state": "BOUNDED_DASHBOARD_AND_AUTH_REGRESSION_UNIT_VERIFIED_STOPPED",
+  "rung": "CLI",
+  "unfiltered": true,
+  "proofSources": [
+    {
+      "path": "build/evidence/R0.03/dashboard90-workflow-final-summary.json",
+      "sha256": "523b5954649e10e65146a29f2d8287b5f47094748b2ee7d289777c3c0a773d8a"
+    },
+    {
+      "path": "build/evidence/R0.03/auth-workflow-remaining-final-summary.json",
+      "sha256": "f9f89806ced0fce917a13024db981c4216a11a572277cec84be0a368b759b328"
+    }
+  ],
+  "changedDashboardAttemptsUsed": 3,
+  "maximumChangedDashboardAttempts": 3,
+  "dashboardRunAgainAllowed": false,
+  "dashboardOriginalCases": [
+    "dashboard-profile-success",
+    "dashboard-fresh-profile-use",
+    "dashboard-save-failure-400"
+  ],
+  "dashboardChecks": 6,
+  "affectedAuthChecks": 99,
+  "passedAuthChecks": 105,
+  "dashboardFacts": [
+    {
+      "state": "PASS",
+      "reasonCode": "NATIVE_PUBLIC_CLI_READY_AUTH_PENDING",
+      "prerequisiteBytes": 913,
+      "facts": {
+        "interface": "hermes --help",
+        "installedCommit": "8d5e3e412138342e8bf30443e72bd4e6a9abd057",
+        "launcherDigest": "307ef6a7792a42083f6e4f71e9500543efd9c707e211068f80b138db76975397",
+        "interpreterSource": "existing-committed-venv",
+        "interpreterDigest": "e046691799a36090b5946d8910084f982bf819ed4dfaf27a4bfa5bdf9c8360ee",
+        "publicRuntimeCommandDigest": "e99338b03dfdad1b660705657d5e8c4273cc8e1b53f2fe6cf995d9cb36e05403",
+        "bytecodeWritesDisabled": true,
+        "isolatedHome": true,
+        "inheritedProviderEnvironment": false,
+        "publicHelpObserved": true,
+        "childExitCode": 0,
+        "childSignal": null,
+        "outputDigest": "1b74616851009c28894dd94adf51fc3064e3d353021e1b37b716a4904b3881e3",
+        "errorOutputDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "dependencyEnvironmentUnavailable": false,
+        "missingModule": false,
+        "repairSuggested": false,
+        "sourceUpdateIncomplete": false,
+        "authExecuted": false,
+        "credentialInspected": false,
+        "wholeATComplete": false
+      }
+    },
+    {
+      "state": "PASS",
+      "reasonCode": "NATIVE_AUTH_FIXTURE_DASHBOARD_PROFILE_SUCCESS_OBSERVED",
+      "prerequisiteBytes": 1328,
+      "facts": {
+        "caseId": "dashboard-profile-success",
+        "dashboardCommand": "hermes dashboard --host 127.0.0.1 --port 0 --no-open --isolated --skip-build",
+        "loopbackHost": "127.0.0.1",
+        "loopbackBoundPort": 56592,
+        "routes": "POST start?profile=success; GET poll/<session_id>?profile=success",
+        "portObserved": true,
+        "startStatus": 200,
+        "startSessionPresent": true,
+        "pollStatus": 200,
+        "pollState": "approved",
+        "responseHygiene": true,
+        "serverPid": 81140,
+        "serverPidMatches": true,
+        "serverParentPidMatches": true,
+        "serverUid": 501,
+        "serverUidMatches": true,
+        "serverGid": 20,
+        "serverGidMatches": true,
+        "httpLedger": {
+          "device_code_requests": 1,
+          "device_code_polls": 1,
+          "token_exchanges": 1,
+          "token_refreshes": 0,
+          "model_catalog_requests": 0,
+          "model_requests": 0,
+          "denied_http_requests": 0,
+          "blocked_socket_events": 0
+        },
+        "denials": 0,
+        "networkDenials": [],
+        "socketOrigin": null,
+        "childMarkers": [],
+        "storageFaultTriggered": false,
+        "serverExitCode": 0,
+        "serverSignal": null,
+        "stdoutDigest": "bb4d20bb3207de3a023530c3f6e59836bbbe8aa945c39f3fa904150bfcbaaab3",
+        "stderrDigest": "609e7bbe3b9421c98844c767ee551eb67c96a7483b4078c63d0091c84a4620f4",
+        "commandDigest": "3597e4ad7c0132d61547d053123bff00cb2490f6069c523b0278333f54e3c21a",
+        "storeDigests": {
+          "rootAuth": [
+            null,
+            null
+          ],
+          "rootEnvUnchanged": true,
+          "toyAuth": [
+            null,
+            null
+          ],
+          "successAuth": [
+            null,
+            "2b22978c3b440d5725af1a63e3bfc1909d0d5fecc216192e630de5858aac33eb"
+          ]
+        },
+        "wholeATComplete": false
+      }
+    },
+    {
+      "state": "PASS",
+      "reasonCode": "NATIVE_AUTH_FIXTURE_DASHBOARD_PROFILE_SUCCESS_DIAGNOSTIC",
+      "prerequisiteBytes": 578,
+      "facts": {
+        "caseId": "dashboard-profile-success",
+        "observationsOnly": true,
+        "receiptObservation": {
+          "classification": "MATCHED_STDOUT",
+          "stdout": {
+            "schemaCandidates": 1,
+            "schemaRejected": 0,
+            "expectedReceipts": 1,
+            "phaseOrOperationMismatches": 0,
+            "ownedIdentityMatches": true,
+            "schemaIssues": []
+          },
+          "stderr": {
+            "schemaCandidates": 0,
+            "schemaRejected": 0,
+            "expectedReceipts": 0,
+            "phaseOrOperationMismatches": 0,
+            "ownedIdentityMatches": false,
+            "schemaIssues": []
+          }
+        },
+        "ownedProcess": {
+          "pid": 81140,
+          "exitCode": 0,
+          "signal": null,
+          "timedOut": false,
+          "oversized": false,
+          "spawnError": false
+        },
+        "stdoutReceiptExitCode": 0,
+        "wholeATComplete": false
+      }
+    },
+    {
+      "state": "PASS",
+      "reasonCode": "NATIVE_AUTH_FIXTURE_DASHBOARD_FRESH_PROFILE_USE_OBSERVED",
+      "prerequisiteBytes": 807,
+      "facts": {
+        "caseId": "dashboard-fresh-profile-use",
+        "authListExit": 0,
+        "authListCount": 1,
+        "authListPidMatches": true,
+        "authListStdoutDigest": "c38b51104f899682b1132bc5ee8238d366de28495907c194c75c1277e6a5d784",
+        "chatExit": 0,
+        "chatGeneration": "initial",
+        "catalogGeneration": "initial",
+        "chatHttpLedger": {
+          "device_code_requests": 0,
+          "device_code_polls": 0,
+          "token_exchanges": 0,
+          "token_refreshes": 0,
+          "model_catalog_requests": 1,
+          "model_requests": 1,
+          "denied_http_requests": 0,
+          "blocked_socket_events": 0
+        },
+        "chatPidMatches": true,
+        "chatStdoutDigest": "14aee4d06e6d3bae159d043b4c9bfd7e52fbbd8e33d30088a0127df4a636be55",
+        "rootStable": true,
+        "toyAuthStable": true,
+        "storeDigests": {
+          "rootAuth": [
+            null,
+            null
+          ],
+          "rootEnvUnchanged": true,
+          "toyAuth": [
+            null,
+            null
+          ],
+          "successAuthAfter": "2b22978c3b440d5725af1a63e3bfc1909d0d5fecc216192e630de5858aac33eb"
+        },
+        "wholeATComplete": false
+      }
+    },
+    {
+      "state": "PASS",
+      "reasonCode": "NATIVE_AUTH_FIXTURE_DASHBOARD_SAVE_FAILURE_400_OBSERVED",
+      "prerequisiteBytes": 1701,
+      "facts": {
+        "caseId": "dashboard-save-failure-400",
+        "dashboardCommand": "hermes dashboard --host 127.0.0.1 --port 0 --no-open --isolated --skip-build",
+        "loopbackHost": "127.0.0.1",
+        "loopbackBoundPort": 56600,
+        "routes": "POST start?profile=toy; GET poll/<session_id>?profile=toy",
+        "portObserved": true,
+        "startStatus": 200,
+        "startSessionPresent": true,
+        "pollStatus": 400,
+        "sanitizedFailure": true,
+        "responseHygiene": true,
+        "serverPid": 81152,
+        "serverPidMatches": true,
+        "serverParentPidMatches": true,
+        "serverUid": 501,
+        "serverUidMatches": true,
+        "serverGid": 20,
+        "serverGidMatches": true,
+        "osFaultId": "profile-auth-atomic-replace-eio",
+        "faultPhase": "dashboard-save-failure-400",
+        "storageFaultTriggered": true,
+        "httpLedger": {
+          "device_code_requests": 1,
+          "device_code_polls": 1,
+          "token_exchanges": 1,
+          "token_refreshes": 0,
+          "model_catalog_requests": 0,
+          "model_requests": 0,
+          "denied_http_requests": 0,
+          "blocked_socket_events": 0
+        },
+        "denials": 0,
+        "networkDenials": [],
+        "socketOrigin": null,
+        "childMarkers": [],
+        "serverExitCode": 0,
+        "serverSignal": null,
+        "stdoutDigest": "6f5939b196529d83166dab93cce2dc05b4f8be2aeb0180d3432c95223634488c",
+        "stderrDigest": "4b065128207b1c946a7a3c27f4221815037f86a44516c68ca00bc19083efca22",
+        "authListEmpty": true,
+        "negativeChatNoAcceptedEffects": true,
+        "authListDigest": "18a6a35fcbe0a81d2dd15cbcf7a4c77113e4351a516bc18d4e09b0bd6e39fc7b",
+        "negativeChatDigest": "f96af31bbb809faaeef0421c9f680d83f5e8e9b5705ef18ac489185da8a7b9bd",
+        "commandDigest": "3597e4ad7c0132d61547d053123bff00cb2490f6069c523b0278333f54e3c21a",
+        "storeDigests": {
+          "rootAuth": [
+            null,
+            null
+          ],
+          "rootEnvUnchanged": true,
+          "successAuth": [
+            "2b22978c3b440d5725af1a63e3bfc1909d0d5fecc216192e630de5858aac33eb",
+            "2b22978c3b440d5725af1a63e3bfc1909d0d5fecc216192e630de5858aac33eb"
+          ],
+          "toyAuth": [
+            null,
+            null
+          ]
+        },
+        "wholeATComplete": false
+      }
+    },
+    {
+      "state": "PASS",
+      "reasonCode": "NATIVE_AUTH_FIXTURE_DASHBOARD_SAVE_FAILURE_400_DIAGNOSTIC",
+      "prerequisiteBytes": 579,
+      "facts": {
+        "caseId": "dashboard-save-failure-400",
+        "observationsOnly": true,
+        "receiptObservation": {
+          "classification": "MATCHED_STDOUT",
+          "stdout": {
+            "schemaCandidates": 1,
+            "schemaRejected": 0,
+            "expectedReceipts": 1,
+            "phaseOrOperationMismatches": 0,
+            "ownedIdentityMatches": true,
+            "schemaIssues": []
+          },
+          "stderr": {
+            "schemaCandidates": 0,
+            "schemaRejected": 0,
+            "expectedReceipts": 0,
+            "phaseOrOperationMismatches": 0,
+            "ownedIdentityMatches": false,
+            "schemaIssues": []
+          }
+        },
+        "ownedProcess": {
+          "pid": 81152,
+          "exitCode": 0,
+          "signal": null,
+          "timedOut": false,
+          "oversized": false,
+          "spawnError": false
+        },
+        "stdoutReceiptExitCode": 0,
+        "wholeATComplete": false
+      }
+    }
+  ],
+  "groups": [
+    {
+      "id": "AT-hermes-config-90",
+      "operationId": "06446fe9-8be0-4606-a1a7-d9541eba635c",
+      "run": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.03/dashboard90-workflow-final-cli/AT-hermes-config-90-run.json",
+        "sha256": "28599e77cb326284c2454801e12f364f30f5533e34984729ec66d6bd46cf0d62"
+      },
+      "show": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.03/dashboard90-workflow-final-cli/AT-hermes-config-90-show.json",
+        "sha256": "7b386d46b7703165371219a91e3cf1e35c88e3653ee0e9e3eeca9ef68d19b7de"
+      },
+      "checks": 6,
+      "registrationExact": true,
+      "runShowDataExact": true
+    },
+    {
+      "id": "AT-hermes-config-84",
+      "operationId": "7949cb20-54d5-49ee-bcd3-11e4d50fad08",
+      "run": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.03/auth-workflow-remaining-final-cli/AT-hermes-config-84-run.json",
+        "sha256": "fa053da848e52e60a0cc8dbc067ca1adc682a9628ed2258a043a5924ea365c93"
+      },
+      "show": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.03/auth-workflow-remaining-final-cli/AT-hermes-config-84-show.json",
+        "sha256": "3c5bbd9cfda1918c3ca225331622b180d7875d8af77e75e5e7331fa0f8e8ece4"
+      },
+      "checks": 7,
+      "registrationExact": true,
+      "runShowDataExact": true
+    },
+    {
+      "id": "AT-hermes-config-85",
+      "operationId": "47be1f87-fe50-4bda-b4b1-7c953b8a614d",
+      "run": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.03/auth-workflow-remaining-final-cli/AT-hermes-config-85-run.json",
+        "sha256": "af813b65fdfba150410606d84826abec74685d0949775cc0b33d1e29975e696c"
+      },
+      "show": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.03/auth-workflow-remaining-final-cli/AT-hermes-config-85-show.json",
+        "sha256": "ba3c0280e2c245cf2386d3e652fb93cc786b3df8213bbddcd13537a5af0c728a"
+      },
+      "checks": 6,
+      "registrationExact": true,
+      "runShowDataExact": true
+    },
+    {
+      "id": "AT-hermes-config-86",
+      "operationId": "a9217a26-8ed4-49c6-bc36-0b07f923772b",
+      "run": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.03/auth-workflow-remaining-final-cli/AT-hermes-config-86-run.json",
+        "sha256": "5d8a135173a4ef78561968a4055763cf15c6eb0697fe0ed05c4455a95ac253a1"
+      },
+      "show": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.03/auth-workflow-remaining-final-cli/AT-hermes-config-86-show.json",
+        "sha256": "5fecbf2c984276d50e46a8463578f4b07e0348f9644981ccd4a0e4984bc047e4"
+      },
+      "checks": 17,
+      "registrationExact": true,
+      "runShowDataExact": true
+    },
+    {
+      "id": "AT-hermes-config-87",
+      "operationId": "2a9d4cf6-f44d-4036-975d-e33bdae8b303",
+      "run": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.03/auth-workflow-remaining-final-cli/AT-hermes-config-87-run.json",
+        "sha256": "3dd0bafb03c373e6d8c64bd646a7f513cbd078ced9fe4dcfb4fec43b49bacad5"
+      },
+      "show": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.03/auth-workflow-remaining-final-cli/AT-hermes-config-87-show.json",
+        "sha256": "f61e5a59cb5b86bc25ab8b3732d257159abd42f97c4c9d0569aef534c55d95ec"
+      },
+      "checks": 34,
+      "registrationExact": true,
+      "runShowDataExact": true
+    },
+    {
+      "id": "AT-hermes-config-88",
+      "operationId": "eb71d24f-faaf-4af3-a8bd-a06049916e00",
+      "run": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.03/auth-workflow-remaining-final-cli/AT-hermes-config-88-run.json",
+        "sha256": "d8e32e88530041a9ec2c0b6ca3511cf446a2576018dcef786a63f93ff3adb408"
+      },
+      "show": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.03/auth-workflow-remaining-final-cli/AT-hermes-config-88-show.json",
+        "sha256": "4493ac02b87654fb30fac7cc2acedf98fcf611ceac051ff01ddf90fd6c2b916a"
+      },
+      "checks": 7,
+      "registrationExact": true,
+      "runShowDataExact": true
+    },
+    {
+      "id": "AT-hermes-config-89",
+      "operationId": "72c572b7-59f4-46a0-acd8-a5da1b96e0b9",
+      "run": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.03/auth-workflow-remaining-final-cli/AT-hermes-config-89-run.json",
+        "sha256": "f2c1879040376182c1e4aa15e3a03c18494c4d5056b1b3a660ea1bded92e68d7"
+      },
+      "show": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.03/auth-workflow-remaining-final-cli/AT-hermes-config-89-show.json",
+        "sha256": "8b1b58fbaaeb375bfaf543f3518fb337e84d2de517100c7b24bb9c5638410d7d"
+      },
+      "checks": 11,
+      "registrationExact": true,
+      "runShowDataExact": true
+    },
+    {
+      "id": "AT-hermes-config-91",
+      "operationId": "7279de71-2bf1-40ab-9a97-6995866783b0",
+      "run": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.03/auth-workflow-remaining-final-cli/AT-hermes-config-91-run.json",
+        "sha256": "ae8eb41a0ce313028e8f3908dce9f8059faff3e493189b79d04373546b10de5b"
+      },
+      "show": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.03/auth-workflow-remaining-final-cli/AT-hermes-config-91-show.json",
+        "sha256": "a8e922ca82fb57162b9b8824527a91b4b1391ad615c204070b9397303b822ca1"
+      },
+      "checks": 17,
+      "registrationExact": true,
+      "runShowDataExact": true
+    }
+  ],
+  "preservedFailure": "First summary retains AT84 publication refusal after dashboard PASS; one compatibility repair then fresh remaining groups, no AT90 retry.",
+  "controllerCompatibility": {
+    "review": {
+      "path": "build/evidence/R0.03/dashboard90-auth-controller-compat-repair-review.json",
+      "sha256": "cd3f30f1ae7e4d6d4e8ebdfe2dbf8da237c92a5fb870a54b108bf5d9345e63d7"
+    },
+    "dashboardClassificationTrueBeforeAndAfter": true,
+    "dashboardOwnerAndFixtureUnchanged": true
+  },
+  "static": {
+    "path": "build/evidence/R0.03/dashboard90-auth-controller-compat-check.txt",
+    "sha256": "22ef0d02edf2e41d6d40977188b7b6b0c44092746abbcd6293c89b1f11927e6c",
+    "exitCode": 0,
+    "artifacts": 403,
+    "contracts": 335,
+    "cliManifests": 45,
+    "features": 106,
+    "commands": 55,
+    "indexedATs": 1447,
+    "schemaDigest": "ec7a67e32a800c455daac36fa5566d3b786d6f8bb76742a66a72cb79cf267648",
+    "swiftInvoked": false
+  },
+  "latestFeatureMap": {
+    "path": "build/evidence/R0.03/dashboard-workflow-verified-map-check.json",
+    "sha256": "cff26b4c6f1148e6a0e57fc313bdb33c0877c4de7278de49726f006cf10f747f"
+  },
+  "sources": [
+    {
+      "path": "architecture/features.json",
+      "sha256": "2ae7b31046f85966cb54479d94553dbfce88d9c758cfa6d6871be6484af64c7c"
+    },
+    {
+      "path": "cli/src/main.ts",
+      "sha256": "5623125eec41f7dbd1c9874f0778151b1527bca488ba26aa663512c7fefdb97c"
+    },
+    {
+      "path": "packages/contracts/src/hermes-runtime.ts",
+      "sha256": "30b422f67fdb1a6dcd6d67b980157ca6fd32c2a85736499c79b685e59b7e9fb7"
+    },
+    {
+      "path": "packages/contracts/src/generated-probe-registry.ts",
+      "sha256": "834c3dd9896decc33b93be17327e09f8dad99c32d3ef197355b9fb60e6d2db9c"
+    },
+    {
+      "path": "packages/hermes/src/auth-fixture.ts",
+      "sha256": "b8ed0a9ecd7de80dbe29b315d89d3a15bd972ee463b8adc8ad54f3b70a428cd5"
+    },
+    {
+      "path": "packages/hermes/src/auth-probe.ts",
+      "sha256": "16f0d54f74f47418a54967f768eca222d7f338a60eb1ee88e01ed1f29f081782"
+    },
+    {
+      "path": "packages/ops/src/fixture-stack.ts",
+      "sha256": "55649a763c14b168bfe183385544f128f314de4ded2d313269b8682bf052fbcc"
+    },
+    {
+      "path": "packages/self-improvement/src/component-comparison-probe.ts",
+      "sha256": "e2dc9fc1aec758251f074869da25496e90f6f9cf66a35bf01b1090f977aa04a1"
+    },
+    {
+      "path": "packages/self-improvement/src/public.ts",
+      "sha256": "83fa5e8ad4cedfa535cfcf3b428c0e8101b6d458303191b3a4ac802fd6a44251"
+    },
+    {
+      "path": "patches/hermes-auth-fixture.patch",
+      "sha256": "596ef80693f878be15b1e80333636db962af5b8b91c4f4c69ef522e9c904c06c"
+    },
+    {
+      "path": "patches/hermes-profile-auth.patch",
+      "sha256": "814f13752d5132dbc175fb1864229dead2988f9eaa8f76af1481457f2b406b30"
+    },
+    {
+      "path": "patches/hermes-auth-dashboard.patch",
+      "sha256": "f4509ed92351863f58ee9ea85c6c6473d23b86b75e59a0064db26f5d71e28493"
+    },
+    {
+      "path": "tests/registry.yaml",
+      "sha256": "a005f61d09e08510e33805763a49056e26503c3798bba962073e6f40c39bd3c7"
+    },
+    {
+      "path": "skills/toy-control/FEATURE-MAP.md",
+      "sha256": "c9dfdf76a815b1cec3750c4f6b11c4e6e95aad79cae2ba4bae5fabdcf13a0957"
+    }
+  ],
+  "frozenBindings": [
+    {
+      "path": "scripts/probe-siwc-control-runtime.mts",
+      "sha256": "96e1fd2d98469772c3d0d203386c3f7aa56af57db025c420fa93f1f4ecd7e70d",
+      "observedSha256": "96e1fd2d98469772c3d0d203386c3f7aa56af57db025c420fa93f1f4ecd7e70d",
+      "matches": true
+    },
+    {
+      "path": "scripts/stage-siwc-control-runtime.mts",
+      "sha256": "13ff53e341ab7670dbed967ce810d5aa2834df7a47ffe1620f037ff1da3ee0d4",
+      "observedSha256": "13ff53e341ab7670dbed967ce810d5aa2834df7a47ffe1620f037ff1da3ee0d4",
+      "matches": true
+    },
+    {
+      "path": "control/dist/bootstrap/siwc-runtime-probe.js",
+      "sha256": "06870b8dd41d2ffc093cc04680ba56c4570f07b4aa0a27a9ab70796cdd8204bd",
+      "observedSha256": "06870b8dd41d2ffc093cc04680ba56c4570f07b4aa0a27a9ab70796cdd8204bd",
+      "matches": true
+    },
+    {
+      "path": "scripts/probe-unfiltered-control-denials.mts",
+      "sha256": "1cb93d375df931a482d946170e31549450d8efb71d6a251f5d2bcea8c5b92529",
+      "observedSha256": "1cb93d375df931a482d946170e31549450d8efb71d6a251f5d2bcea8c5b92529",
+      "matches": true
+    },
+    {
+      "path": "packages/ops/dist/role-control-probe.js",
+      "sha256": "1764a98e5ae45694118007c242320711a7bd9e0d021b7c6d6ee0cbb8cff73ec2",
+      "observedSha256": "1764a98e5ae45694118007c242320711a7bd9e0d021b7c6d6ee0cbb8cff73ec2",
+      "matches": true
+    },
+    {
+      "path": "control/dist/bootstrap/denial-probe.js",
+      "sha256": "7fda1824ec7bc308cac97d07c7c92cadd5527e87e89d79b410d33d95d1b30672",
+      "observedSha256": "7fda1824ec7bc308cac97d07c7c92cadd5527e87e89d79b410d33d95d1b30672",
+      "matches": true
+    }
+  ],
+  "worlds": [
+    {
+      "stackId": "5ac20b24-a711-4544-b25d-f9b5f51ba2ce",
+      "down": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.03/dashboard90-workflow-final-cli/down.json",
+        "sha256": "a408dae7378896bf76d6b725dfc0526def5af0c7d141396c678488149c2b995d"
+      },
+      "teardown": {
+        "stackId": "5ac20b24-a711-4544-b25d-f9b5f51ba2ce",
+        "checkpointRefs": [],
+        "fenceRefs": [],
+        "stoppedResourceRefs": [
+          {
+            "module": "ops",
+            "kind": "test_world",
+            "id": "5ac20b24-a711-4544-b25d-f9b5f51ba2ce"
+          }
+        ],
+        "retainedArtifactRefs": [
+          {
+            "module": "ops",
+            "kind": "test_world",
+            "id": "5ac20b24-a711-4544-b25d-f9b5f51ba2ce"
+          }
+        ],
+        "unresolvedResourceRefs": [],
+        "complete": true
+      }
+    },
+    {
+      "stackId": "02f28832-672f-448b-9736-b296ccc08a64",
+      "down": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.03/auth-workflow-remaining-final-cli/down.json",
+        "sha256": "2860c526e310819ce146177320dfc4b57ebf0de683fc701f69f7849236f731e1"
+      },
+      "teardown": {
+        "stackId": "02f28832-672f-448b-9736-b296ccc08a64",
+        "checkpointRefs": [],
+        "fenceRefs": [],
+        "stoppedResourceRefs": [
+          {
+            "module": "ops",
+            "kind": "test_world",
+            "id": "02f28832-672f-448b-9736-b296ccc08a64"
+          }
+        ],
+        "retainedArtifactRefs": [
+          {
+            "module": "ops",
+            "kind": "test_world",
+            "id": "02f28832-672f-448b-9736-b296ccc08a64"
+          }
+        ],
+        "unresolvedResourceRefs": [],
+        "complete": true
+      }
+    }
+  ],
+  "actualCallerUid": 501,
+  "actualCallerGid": 20,
+  "liveProviderSends": 0,
+  "protectedServiceIdentityProven": false,
+  "installedReleaseProven": false,
+  "wholeATComplete": false,
+  "acceptanceComplete": false,
+  "deferred": [
+    "Literal stale response delivery/rejection",
+    "Canonical protected-role and installed release/controller proof",
+    "Remaining whole R0.03 assertions"
+  ]
+}

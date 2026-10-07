@@ -1,0 +1,643 @@
+{
+  "schemaVersion": "toy.r0.03.dashboard90-causal-replan.v1",
+  "recordedAt": "2026-10-07T08:24:19.674645Z",
+  "verdict": "SOURCE_CHANNEL_GAP_IDENTIFIED_HISTORICAL_CAUSE_UNPROVEN_DIAGNOSTIC_PLAN_ONLY",
+  "assignedAT": "AT-hermes-config-90",
+  "sourceOwnerAssigned": false,
+  "executionAuthorizedByThisArtifact": false,
+  "head": {
+    "commit": "5df6f36",
+    "provenance": "Parent supplied; this read-only replan did not run git or inspect the installed host."
+  },
+  "bindingAcceptance": {
+    "spec": {
+      "path": "../personal-assistant-harness/specs/hermes-config.md",
+      "sha256": "d3548fde13180bc750660f306caa0041101832e398ccdabd6cfdac0b3de8f4af",
+      "line": 3054
+    },
+    "testPlan": {
+      "path": "../personal-assistant-harness/specs/TEST-PLAN.md",
+      "sha256": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2",
+      "line": 438
+    },
+    "rung": "CLI",
+    "scenarioId": "auth.dashboard-scope",
+    "assertion": "Given real dashboard subprocesses in separate temporary profile scopes and registered OS save failures, When public scoped auth flows run, Then only the active profile changes, fresh-process usability agrees and save failure returns sanitized 400 with no success claim/token.",
+    "assertionSha256": "451a0ff28c92fc95629eaafd849b62631a258ef632518d9132c64fa09384c07d",
+    "simLimit": "User SIM ingress cannot invoke the administrative dashboard surface, choose profile auth scopes, or inject profile-owned atomic-save faults. Do not relabel this CLI AT as SIM or use private-helper tests.",
+    "mandatoryCases": [
+      "dashboard-profile-success",
+      "dashboard-fresh-profile-use",
+      "dashboard-save-failure-400"
+    ],
+    "osFault": {
+      "id": "profile-auth-atomic-replace-eio",
+      "phase": "dashboard-save-failure-400",
+      "target": "owned HERMES_HOME/profiles/toy/auth.json"
+    },
+    "wholeATComplete": false,
+    "acceptanceComplete": false
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "run": {
+        "path": "build/evidence/R0.03/dashboard90-native-1/AT-hermes-config-90-run.json",
+        "sha256": "0a6ee13439a34eb8cb48983ea045fcf2c08b350211b03e80b6980a033cb90ad4"
+      },
+      "show": {
+        "path": "build/evidence/R0.03/dashboard90-native-1/AT-hermes-config-90-show.json",
+        "sha256": "3c54c74f452132b44573d1f4cfec50dbf1cd7d847b9c3f87120d1a06af112060"
+      },
+      "runExitCode": 1,
+      "showExitCode": 1,
+      "sameData": true,
+      "caseManifestDigest": "4518d13c9f5ad4e521041f7749367a4996e03e1ee180ea3aa0d2b7bd29a5fe61",
+      "reasonCode": "NATIVE_AUTH_FIXTURE_DASHBOARD_PROFILE_SUCCESS_FAILED",
+      "caseId": "dashboard-profile-success",
+      "safeFacts": {
+        "portObserved": false,
+        "startStatus": null,
+        "startSessionPresent": false,
+        "pollStatus": null,
+        "pollState": null,
+        "responseHygiene": false,
+        "serverExitCode": 1,
+        "serverSignal": null,
+        "serverPidMatches": true,
+        "serverParentPidMatches": true,
+        "serverUidMatches": true,
+        "serverGidMatches": true,
+        "httpLedger": {
+          "device_code_requests": 0,
+          "device_code_polls": 0,
+          "token_exchanges": 0,
+          "token_refreshes": 0,
+          "model_catalog_requests": 0,
+          "model_requests": 0,
+          "denied_http_requests": 0,
+          "blocked_socket_events": 1
+        },
+        "denials": 1,
+        "networkDenials": null,
+        "socketOrigin": null,
+        "childMarkers": null,
+        "storageFaultTriggered": false,
+        "stdoutDigest": "20ea5edbd0961b64ace32b16259200d8174eb4de606eabfa3074fbe9de0b0c04",
+        "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "commandDigest": "87bb92e15fde70c692cac92bfd3220f2a32e28aa68c648b5aeb7178f1a115bcf",
+        "storeDigests": {
+          "rootAuth": [
+            null,
+            null
+          ],
+          "rootEnvUnchanged": true,
+          "toyAuth": [
+            null,
+            null
+          ],
+          "successAuth": [
+            null,
+            null
+          ]
+        }
+      },
+      "down": {
+        "path": "build/evidence/R0.03/dashboard90-native-1/down.json",
+        "sha256": "db77472d00c228ebd0acff36842d11686644bdd7d8ef113de8ee5405ea59a858"
+      },
+      "teardownEvidence": {
+        "stackId": "ad374650-bd25-4996-ad58-6c65cfc96c6b",
+        "ready": false,
+        "teardown": {
+          "stackId": "ad374650-bd25-4996-ad58-6c65cfc96c6b",
+          "checkpointRefs": [],
+          "fenceRefs": [],
+          "stoppedResourceRefs": [
+            {
+              "module": "ops",
+              "kind": "test_world",
+              "id": "ad374650-bd25-4996-ad58-6c65cfc96c6b"
+            }
+          ],
+          "retainedArtifactRefs": [
+            {
+              "module": "ops",
+              "kind": "test_world",
+              "id": "ad374650-bd25-4996-ad58-6c65cfc96c6b"
+            }
+          ],
+          "unresolvedResourceRefs": [],
+          "complete": true
+        }
+      }
+    },
+    {
+      "attempt": 2,
+      "run": {
+        "path": "build/evidence/R0.03/dashboard90-native-2/AT-hermes-config-90-run.json",
+        "sha256": "2691e4ecc01b3c666e8c25b3ab4ede07b03f81f9a262820d2f1f78233081c81c"
+      },
+      "show": {
+        "path": "build/evidence/R0.03/dashboard90-native-2/AT-hermes-config-90-show.json",
+        "sha256": "b733945edda2fffade49203097773444d54074ff5596b1c1f20b21d40d646273"
+      },
+      "runExitCode": 1,
+      "showExitCode": 1,
+      "sameData": true,
+      "caseManifestDigest": "986565af868cca377fad66cba3d6abc54a6b30033da9e2074ea1c6044a747833",
+      "reasonCode": "NATIVE_AUTH_FIXTURE_DASHBOARD_PROFILE_SUCCESS_FAILED",
+      "caseId": "dashboard-profile-success",
+      "safeFacts": {
+        "portObserved": false,
+        "startStatus": null,
+        "startSessionPresent": false,
+        "pollStatus": null,
+        "pollState": null,
+        "responseHygiene": false,
+        "serverExitCode": 1,
+        "serverSignal": null,
+        "serverPidMatches": true,
+        "serverParentPidMatches": true,
+        "serverUidMatches": true,
+        "serverGidMatches": true,
+        "httpLedger": {
+          "device_code_requests": 0,
+          "device_code_polls": 0,
+          "token_exchanges": 0,
+          "token_refreshes": 0,
+          "model_catalog_requests": 0,
+          "model_requests": 0,
+          "denied_http_requests": 0,
+          "blocked_socket_events": 1
+        },
+        "denials": 1,
+        "networkDenials": null,
+        "socketOrigin": null,
+        "childMarkers": null,
+        "storageFaultTriggered": false,
+        "stdoutDigest": "efa0a61acf4624291bdc6db34ae0fb69b2909eb50b63fa50c04d30d2b8ff626f",
+        "stderrDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "commandDigest": "e089d42c4cf8993002708b7ac4168b3c36ac3b0f3a2a4f14804448e54602caa5",
+        "storeDigests": {
+          "rootAuth": [
+            null,
+            null
+          ],
+          "rootEnvUnchanged": true,
+          "toyAuth": [
+            null,
+            null
+          ],
+          "successAuth": [
+            null,
+            null
+          ]
+        }
+      },
+      "down": {
+        "path": "build/evidence/R0.03/dashboard90-native-2/down.json",
+        "sha256": "cdef5bd025b2aa4a54389d4f90aa8e8a8e0f6e93cd1f5157187bbe9297c5fc74"
+      },
+      "teardownEvidence": {
+        "stackId": "7817f5da-575e-423d-906f-b8c4e41682d0",
+        "ready": false,
+        "teardown": {
+          "stackId": "7817f5da-575e-423d-906f-b8c4e41682d0",
+          "checkpointRefs": [],
+          "fenceRefs": [],
+          "stoppedResourceRefs": [
+            {
+              "module": "ops",
+              "kind": "test_world",
+              "id": "7817f5da-575e-423d-906f-b8c4e41682d0"
+            }
+          ],
+          "retainedArtifactRefs": [
+            {
+              "module": "ops",
+              "kind": "test_world",
+              "id": "7817f5da-575e-423d-906f-b8c4e41682d0"
+            }
+          ],
+          "unresolvedResourceRefs": [],
+          "complete": true
+        }
+      }
+    },
+    {
+      "attempt": 3,
+      "run": {
+        "path": "build/evidence/R0.03/dashboard90-native-3/AT-hermes-config-90-run.json",
+        "sha256": "8558c4db48f20dad52bd38324a3950aae4c665089d05c89630a7af2af5604397"
+      },
+      "show": {
+        "path": "build/evidence/R0.03/dashboard90-native-3/AT-hermes-config-90-show.json",
+        "sha256": "96bd052cab6f77289aa3da268d443cbe4fbb4cecddfcb9e63a6993f885f2af81"
+      },
+      "runExitCode": 1,
+      "showExitCode": 1,
+      "sameData": true,
+      "caseManifestDigest": "31e531d31b8b25d46b97ea67a135ef97adf91a510e3373745de8c3a6c9d93b7a",
+      "reasonCode": "NATIVE_AUTH_FIXTURE_DASHBOARD_PROFILE_SUCCESS_FAILED",
+      "caseId": "dashboard-profile-success",
+      "safeFacts": {
+        "portObserved": true,
+        "startStatus": 200,
+        "startSessionPresent": true,
+        "pollStatus": 200,
+        "pollState": "approved",
+        "responseHygiene": true,
+        "serverExitCode": null,
+        "serverSignal": null,
+        "serverPidMatches": false,
+        "serverParentPidMatches": false,
+        "serverUidMatches": false,
+        "serverGidMatches": false,
+        "httpLedger": null,
+        "denials": null,
+        "networkDenials": null,
+        "socketOrigin": null,
+        "childMarkers": null,
+        "storageFaultTriggered": null,
+        "stdoutDigest": "55e1b6f3a676a29d5f3e8a3ac7955cdfdf2e2c8951383c997272070fbc38870d",
+        "stderrDigest": "5b9887bf422dd319adfdbc8d07c79e8c6ec1dfab39f3b56f56ab91fbe395875e",
+        "commandDigest": "b4effeda9ebbe2fb9a4afd7e797a811e5ab40f00c5a878fa4053eedfeaf6e786",
+        "storeDigests": {
+          "rootAuth": [
+            null,
+            null
+          ],
+          "rootEnvUnchanged": true,
+          "toyAuth": [
+            null,
+            null
+          ],
+          "successAuth": [
+            null,
+            "d14f54c4a99f179bc74a13175861e6a82adafa6962a8b401f0909bdf4aa994ec"
+          ]
+        }
+      },
+      "down": {
+        "path": "build/evidence/R0.03/dashboard90-native-3/down.json",
+        "sha256": "cf5f74a689aaad9f3270a6a87a46b596f23efc642418114f49a3e9b011b620e6"
+      },
+      "teardownEvidence": {
+        "stackId": "d85b7eac-4aa5-4569-a5e2-6a9a7e3e5176",
+        "ready": false,
+        "teardown": {
+          "stackId": "d85b7eac-4aa5-4569-a5e2-6a9a7e3e5176",
+          "checkpointRefs": [],
+          "fenceRefs": [],
+          "stoppedResourceRefs": [
+            {
+              "module": "ops",
+              "kind": "test_world",
+              "id": "d85b7eac-4aa5-4569-a5e2-6a9a7e3e5176"
+            }
+          ],
+          "retainedArtifactRefs": [
+            {
+              "module": "ops",
+              "kind": "test_world",
+              "id": "d85b7eac-4aa5-4569-a5e2-6a9a7e3e5176"
+            }
+          ],
+          "unresolvedResourceRefs": [],
+          "complete": true
+        }
+      }
+    }
+  ],
+  "priorAttemptAttribution": {
+    "attempt1": "No bound port, one blocked socket event, zero provider effects. The initial loopback resolver explanation was later rejected; it is not the cause now.",
+    "attempt2": "The resolver allowance did not change the result. Existing saved-candidate recovery established missing ignored web_dist/index.html entered recovery-build before server startup.",
+    "attempt3": "Fixed owned minimal HERMES_WEB_DIST and SIGINT shutdown path reached real loopback start/poll approved, response hygiene and success-store creation. The owner returned at its first mandatory case because its final parsed child receipt was null. Fresh use and the failure scope were not reached.",
+    "causalityLimit": "The receipts do not distinguish absent final emission, rejected schema, wrong stream, wrong phase, hard termination, output overflow or timeout. Null child-derived fields are missing observations, not evidence that the owned child lacked identity, ledgers or an exit status.",
+    "noFourthUnchangedRun": true
+  },
+  "currentSourcePins": [
+    {
+      "path": "packages/hermes/src/auth-fixture.ts",
+      "sha256": "f5bf2fd160be71e428f311952f7ff661b23401e704400ee20d28f54bcd62cf51"
+    },
+    {
+      "path": "packages/hermes/src/auth-probe.ts",
+      "sha256": "56ab48a0a9b0d75ae54df93cec16cc72473d54ec8e8d66b1ef0a003c22b3fbf1"
+    },
+    {
+      "path": "packages/contracts/src/hermes-runtime.ts",
+      "sha256": "a525d41df7079e2e2d603111cf65ba68315b73b5a0f73ad27be5ff17884907fd"
+    },
+    {
+      "path": "patches/hermes-auth-fixture.patch",
+      "sha256": "b5f17d9daa362019be4dd2bee0ad7f31633b1104887737e11f09f588550f0387"
+    },
+    {
+      "path": "patches/hermes-profile-auth.patch",
+      "sha256": "814f13752d5132dbc175fb1864229dead2988f9eaa8f76af1481457f2b406b30"
+    },
+    {
+      "path": "patches/hermes-auth-dashboard.patch",
+      "sha256": "f4509ed92351863f58ee9ea85c6c6473d23b86b75e59a0064db26f5d71e28493"
+    },
+    {
+      "path": "cli/src/main.ts",
+      "sha256": "e206e722c5a9159626ffd609f822739cf3b3cfb6b7a5c45095a4f3bd0c550ebe"
+    },
+    {
+      "path": "tests/registry.yaml",
+      "sha256": "92d031df4181852d4709fe01a460727d7b61d473d2f11d69380a95da9b0f9fe5"
+    },
+    {
+      "path": "skills/toy-control/FEATURE-MAP.md",
+      "sha256": "009756ba183d97781a4f48776bfadbaa268f536426337f451c836de232d24387"
+    }
+  ],
+  "candidateSource": {
+    "pinnedHermesCommit": "8d5e3e412138342e8bf30443e72bd4e6a9abd057",
+    "scope": "Only immutable source files in the saved owned attempt3 candidate were inspected. No installed Hermes, real profile, credential bytes, raw child streams, service/account or host dashboard artifact was read.",
+    "files": [
+      {
+        "path": "build/.toy-r0-fixtures/d85b7eac-4aa5-4569-a5e2-6a9a7e3e5176/native-auth-runtime-m8iy1i/candidate/hermes_cli/main.py",
+        "sha256": "25f5bc1705b57576d899e15a2816e7f9a54d50044bef931efd2be3047f5eeb38"
+      },
+      {
+        "path": "build/.toy-r0-fixtures/d85b7eac-4aa5-4569-a5e2-6a9a7e3e5176/native-auth-runtime-m8iy1i/candidate/hermes_cli/main_dashboard.py",
+        "sha256": "0aae55aefa88d74e840c2cd861129271612bda33321fcee7e5899e802f8000ee"
+      },
+      {
+        "path": "build/.toy-r0-fixtures/d85b7eac-4aa5-4569-a5e2-6a9a7e3e5176/native-auth-runtime-m8iy1i/candidate/hermes_cli/web_server.py",
+        "sha256": "4ecf5264dc739dc7781956abb4c9f3702548f990831a1d599a191423a5dfdf57"
+      },
+      {
+        "path": "build/.toy-r0-fixtures/d85b7eac-4aa5-4569-a5e2-6a9a7e3e5176/native-auth-runtime-m8iy1i/candidate/hermes_cli/web_routers/oauth.py",
+        "sha256": "7ae36a921160d598d40f6aa4e654f088d70702977ce259d4a16968c08ca56925"
+      },
+      {
+        "path": "build/.toy-r0-fixtures/d85b7eac-4aa5-4569-a5e2-6a9a7e3e5176/native-auth-runtime-m8iy1i/candidate/tui_gateway/server.py",
+        "sha256": "34ef682ae88406b6b356d11ec6ddbddfb2e54f5bd147f4c7412a9eb48f170901"
+      },
+      {
+        "path": "build/.toy-r0-fixtures/d85b7eac-4aa5-4569-a5e2-6a9a7e3e5176/native-auth-runtime-m8iy1i/candidate/tests/fixtures/toy_auth_httpx_fixture.py",
+        "sha256": "844017eebaba21032a7f3c709f92cd29cef7152c3be63bb4a536aacb1a97b310"
+      }
+    ],
+    "publicPath": [
+      {
+        "file": "hermes_cli/main.py",
+        "lines": "2794-2847",
+        "fact": "Real dashboard command uses headless_backend=false, prepares runtime, and calls start_server with fixed loopback/port0/no-open/isolated settings."
+      },
+      {
+        "file": "hermes_cli/web_server.py",
+        "lines": "221, 1405-1417, 1510-1525",
+        "fact": "Dashboard startup imports tui_gateway.server; readiness is written to fd1; SIGINT/KeyboardInterrupt has a clean-return path."
+      },
+      {
+        "file": "hermes_cli/web_routers/oauth.py",
+        "lines": "798-824, 505-532, 289-342, 864-889",
+        "fact": "Public profile-specific start dispatches the Codex worker; worker saves within captured profile scope, marks approved only after save, and the existing product patch maps save faults to fixed sanitized 400 in poll."
+      }
+    ],
+    "fixedPublicDashboardCommand": "hermes dashboard --host 127.0.0.1 --port 0 --no-open --isolated --skip-build",
+    "fixedPublicRoutes": [
+      "POST /api/providers/oauth/openai-codex/start?profile=<success|toy>",
+      "GET /api/providers/oauth/openai-codex/poll/<owned-session-id>?profile=<success|toy>"
+    ],
+    "sourceChannelGap": [
+      {
+        "file": "hermes_cli/web_server.py",
+        "line": 221,
+        "fact": "Startup imports tui_gateway.server before readiness."
+      },
+      {
+        "file": "tui_gateway/server.py",
+        "lines": "207-208",
+        "fact": "Import captures real stdout then reassigns sys.stdout = sys.stderr."
+      },
+      {
+        "file": "tests/fixtures/toy_auth_httpx_fixture.py",
+        "lines": "775-778",
+        "fact": "After hermes_main returns, the dashboard finally block prints its generated terminal receipt through current sys.stdout without an explicit file."
+      },
+      {
+        "archive": "build/evidence/R0.03/dashboard90-failed-source-archive.diff",
+        "lines": "307-316, 393-403",
+        "fact": "Owner parses only server.stdout and silently returns null for every parse/schema/matching failure."
+      },
+      {
+        "archive": "build/evidence/R0.03/dashboard90-failed-source-archive.diff",
+        "line": 431,
+        "fact": "Published serverExitCode comes from parsed receipt.exit_code rather than independent owned process.status; timeout/overflow/spawn-error facts are also omitted."
+      }
+    ],
+    "established": "There is a concrete producer/consumer output-channel gap and a separate public attribution gap in the archived source.",
+    "notEstablished": "No saved public classification proves that attempt3 actually emitted a matching generated receipt on stderr, that shutdown returned cleanly, or that schema validation passed. Do not label stream redirection as the proven historical runtime cause."
+  },
+  "hypotheses": [
+    {
+      "rank": 1,
+      "id": "terminal-receipt-redirected-to-stderr",
+      "status": "SOURCE_SUPPORTED_RUNTIME_UNPROVEN",
+      "prediction": "Owned stdout has no expected terminal receipt, owned stderr contains exactly one fully strict-schema-valid dashboard receipt with the expected phase/identity, and actual child close status is zero without timeout/overflow/spawn error."
+    },
+    {
+      "rank": 2,
+      "id": "terminal-receipt-schema-rejected",
+      "status": "UNPROVEN",
+      "prediction": "An expected-schema candidate is present in either bounded stream, but strict validation rejects it with bounded safe canonical issue code/path facts; actual process close can still be zero."
+    },
+    {
+      "rank": 3,
+      "id": "terminal-receipt-never-emitted-or-lost",
+      "status": "UNPROVEN",
+      "prediction": "Neither stream contains an expected receipt; independent close status/signal/timedOut/oversized/spawnError separates abnormal termination or clipping from normal return without final emission."
+    }
+  ],
+  "nextBoundedUnit": {
+    "purpose": "Diagnose final generated receipt null through the existing public owner, without changing product OAuth behavior or broadening receipt acceptance.",
+    "owner": "Parent integration owner after independent review and explicit admission; no SOURCE owner currently exists.",
+    "maxMinutes": 110,
+    "stages": [
+      {
+        "minutes": 15,
+        "action": "Use current auth87-preserving source pins as base. Review selective dashboard restoration from the archived failed source; do not apply the whole archive because it contains unrelated changes and predates current lifecycle/manual refresh serialization. Retain interface-first ADR content from the saved interface archive."
+      },
+      {
+        "minutes": 40,
+        "action": "Extend only dashboard public result attribution in the existing HermesAuthProbe/runHermesAuthFixture path. Classify expected generated receipt candidates in both already bounded owned streams in memory. Publish only fixed classification enums/capped counts and generated-schema issue codes with canonical schema-path allowlists, never messages, arbitrary keys/values, rejected JSON, line previews or raw streams. Publish actual owned child.status/signal/timedOut/oversized/spawnError independently of receipt parsing. Keep stdout-only acceptance unchanged for this diagnostic unit."
+      },
+      {
+        "minutes": 25,
+        "action": "Restore exact original AT90 registration, three mandatory cases, existing OS fault binding, current thin CLI route and feature map as additive changes. Add only dashboard operation/phases to current canonical generated receipt enums while retaining all current auth87 fields. Retain pinned public command, fd1 readiness, owned fixed minimal index/HERMES_WEB_DIST, redirect:error, fixed fake provider routes, no socket resolver permit and bounded SIGINT/SIGKILL cleanup. Parent runs the normal required contracts/build/static checks and pins source stop before runtime."
+      },
+      {
+        "minutes": 20,
+        "action": "After fresh per-process admission, create one owned R0 test world through toy; run the newly instrumented unfiltered registered AT90 once, read the same result through toy probe.show, and tear the world down through toy. Save only public receipts and exact source/evidence pins. This is a changed diagnostic run and may remain FAIL at its first cell; do not treat it as whole AT proof."
+      },
+      {
+        "minutes": 10,
+        "action": "Compare the safe classification with the three predictions. STOP after the one diagnostic result and teardown, even if inconclusive. Parent reviews the changed diagnosis before any producer repair or further acceptance attempt."
+      }
+    ],
+    "sourceAllowlist": [
+      "packages/hermes/src/auth-fixture.ts",
+      "packages/hermes/src/auth-probe.ts",
+      "patches/hermes-auth-fixture.patch",
+      "packages/contracts/src/hermes-runtime.ts",
+      "cli/src/main.ts",
+      "tests/registry.yaml",
+      "architecture/features.json",
+      "skills/toy-control/FEATURE-MAP.md",
+      "docs/adr/0046-dashboard-auth-scope-probe.md",
+      "corresponding normal generated contract/registry outputs"
+    ],
+    "doNotChange": [
+      "patches/hermes-profile-auth.patch",
+      "patches/hermes-auth-dashboard.patch",
+      "auth87 public owner cases, manual-row pool resync, refresh serialization and schema fields",
+      "six frozen root inputs",
+      "installed Hermes, profiles, services, accounts, Chrome and real credential stores",
+      "protected Authority/graders/release rules",
+      "ROOT-R004-20261006-02 and ROOT-R005-20261006-01 pending disposition"
+    ],
+    "receiptDiagnosticRules": [
+      "Only classify values in the two already captured bounded child streams in memory; no sidecar output channel, endpoint, service, new module, generic protocol or raw stream storage.",
+      "Match schema discriminator, dashboard operation and expected phase before considering a candidate. Preserve full existing strict generated validation and identity checks; duplicates/ambiguity remain failure.",
+      "Schema diagnostics export codes and at most eight canonical allowlisted paths only. Never export validation messages, expected/received values or unrecognized key names; noncanonical paths collapse to a fixed OTHER category.",
+      "Capped counts and enums identify MISSING, SCHEMA_REJECTED, PHASE_OR_OPERATION_MISMATCH, MATCHED_STDOUT, MATCHED_STDERR or AMBIGUOUS. A matching stderr record is diagnostic evidence only in this unit.",
+      "Actual OS-process close status/signal plus timeout, overflow and spawn-error booleans come from the owned process handle, not the child JSON. Keep child receipt exit code as a separately named fact.",
+      "Do not fabricate a parent-authored child receipt, make HTTP approved substitute for child ledgers, loosen schema, bypass shutdown, or remove fresh-process/failed-scope requirements."
+    ],
+    "diagnosticAcceptance": [
+      "Instrumented source/registration is pinned and preserves current auth87 patches/fields.",
+      "One newly instrumented CLI result yields a safe separating classification plus independent owned process termination facts.",
+      "probe.run/probe.show data match exactly; owned world teardown is complete with zero unresolved resources.",
+      "The actual AT remains FAIL/PENDING unless all three original mandatory cells pass at CLI; diagnostic success never asserts whole acceptance."
+    ],
+    "conditionalFollowupOnly": {
+      "requires": "Parent review of fresh public diagnostic evidence; not authorized or performed by this replan.",
+      "ifStreamMismatchProven": "One minimal dashboard fixture producer repair can capture its receipt output stream before importing Hermes and emit the final generated receipt explicitly to that preserved stream. Do not globally restore sys.stdout or change upstream dashboard HTTP behavior. Then run original unfiltered full AT90 and affected public auth regressions through toy with fresh source pins.",
+      "ifSchemaRejected": "Repair only the producer field shown by canonical safe issue code/path after checking current generated schema; do not weaken the validator.",
+      "ifNoReceipt": "Use independent close/timeout/overflow facts to choose a new bounded diagnosis; do not retry blind or infer cause from stream digests."
+    }
+  },
+  "admission": {
+    "provenance": "Parent supplied fresh toy doctor readback, not collected by this agent.",
+    "measuredAt": "2026-10-07T08:19:13Z",
+    "pressure": "normal",
+    "availableBytes": "2620801024",
+    "ownDeclaredNeedBytes": "268435456",
+    "requiredMarginBytes": "536870912",
+    "admittedForOwnProcess": true,
+    "rule": "normal pressure and available memory >= this process declared need + 512 MiB; no aggregate/hypothetical reserve, strictly-free or R5 repair-floor veto. Runtime admission must be fresh when parent executes."
+  },
+  "preservation": {
+    "auth87Evidence": {
+      "path": "build/evidence/R0.03/auth87-owner-serialization-final-verification.json",
+      "sha256": "6ed8eea2ac54759a8864faa867d82b8bd7003f65bba3c9c996b3569a4904135a"
+    },
+    "auth87CurrentSourcePinsMatchVerifiedCoreBindings": true,
+    "manualPoolResyncPatchLines": "patches/hermes-profile-auth.patch:74-90",
+    "frozenRootInputsPriorEvidenceOnly": [
+      {
+        "path": "scripts/probe-siwc-control-runtime.mts",
+        "expected": "96e1fd2d98469772c3d0d203386c3f7aa56af57db025c420fa93f1f4ecd7e70d",
+        "actual": "96e1fd2d98469772c3d0d203386c3f7aa56af57db025c420fa93f1f4ecd7e70d"
+      },
+      {
+        "path": "scripts/stage-siwc-control-runtime.mts",
+        "expected": "13ff53e341ab7670dbed967ce810d5aa2834df7a47ffe1620f037ff1da3ee0d4",
+        "actual": "13ff53e341ab7670dbed967ce810d5aa2834df7a47ffe1620f037ff1da3ee0d4"
+      },
+      {
+        "path": "control/dist/bootstrap/siwc-runtime-probe.js",
+        "expected": "06870b8dd41d2ffc093cc04680ba56c4570f07b4aa0a27a9ab70796cdd8204bd",
+        "actual": "06870b8dd41d2ffc093cc04680ba56c4570f07b4aa0a27a9ab70796cdd8204bd"
+      },
+      {
+        "path": "scripts/probe-unfiltered-control-denials.mts",
+        "expected": "1cb93d375df931a482d946170e31549450d8efb71d6a251f5d2bcea8c5b92529",
+        "actual": "1cb93d375df931a482d946170e31549450d8efb71d6a251f5d2bcea8c5b92529"
+      },
+      {
+        "path": "packages/ops/dist/role-control-probe.js",
+        "expected": "1764a98e5ae45694118007c242320711a7bd9e0d021b7c6d6ee0cbb8cff73ec2",
+        "actual": "1764a98e5ae45694118007c242320711a7bd9e0d021b7c6d6ee0cbb8cff73ec2"
+      },
+      {
+        "path": "control/dist/bootstrap/denial-probe.js",
+        "expected": "7fda1824ec7bc308cac97d07c7c92cadd5527e87e89d79b410d33d95d1b30672",
+        "actual": "7fda1824ec7bc308cac97d07c7c92cadd5527e87e89d79b410d33d95d1b30672"
+      }
+    ],
+    "frozenInputsReReadOrChangedByThisAgent": false,
+    "rootPending": [
+      "ROOT-R004-20261006-02",
+      "ROOT-R005-20261006-01"
+    ],
+    "ownedWorldState": "All three inspected prior owned worlds are DOWN per saved teardown receipts; this agent started no world.",
+    "separateR002": "Parent has a separate read-only workflow helper plan; no source owner or shared mutation is implied."
+  },
+  "evidencePins": [
+    {
+      "path": "build/evidence/R0.03/dashboard90-source-handoff.json",
+      "sha256": "aa4bc9b7f39abb1aaa53175b97519d4832bd15e8ce170f7a4c475d91ad1dfe87"
+    },
+    {
+      "path": "build/evidence/R0.03/dashboard90-three-failure-deferral.json",
+      "sha256": "4db1ed8f1bfcb6258a264d7f1503018109c07fbf93c1870d3997bceab180cc01"
+    },
+    {
+      "path": "build/evidence/R0.03/dashboard90-failed-source-archive.diff",
+      "sha256": "0a37f1b08276b815e4dafc4039e2cb5378e13a6d5759eb9d43b11dd3d49fcb29"
+    },
+    {
+      "path": "build/evidence/R0.03/dashboard90-failed-interface.md",
+      "sha256": "e7c32a7c0c406c1881c9c8ba893e12d64bbb1e435d95b4dad777a802ea7eaf37"
+    },
+    {
+      "path": "build/evidence/R0.03/dashboard90-startup-recovery.json",
+      "sha256": "936b32924402b3d045dad62bbfda6417db349bd414949066f7f31276d19492fe"
+    },
+    {
+      "path": "build/evidence/R0.03/dashboard90-bounded-repair-3.json",
+      "sha256": "74daf5114aa727a8a5e4048e5977409655139401742d399a2c58eb6a001f4f87"
+    },
+    {
+      "path": "build/evidence/R0.03/auth87-owner-serialization-final-verification.json",
+      "sha256": "6ed8eea2ac54759a8864faa867d82b8bd7003f65bba3c9c996b3569a4904135a"
+    },
+    {
+      "path": "build/evidence/R0.03/dashboard90-root-pins.json",
+      "sha256": "e4c7a07e31ec001a2083ea1e6a2d70e90c0de050146d9f877e01c3c05776d876"
+    }
+  ],
+  "skill": {
+    "name": "get-fable:fable-recover",
+    "path": "/Users/johansardar/.codex/plugins/cache/openai-curated-remote/get-fable/1.5.1/skills/fable-recover/SKILL.md"
+  },
+  "scope": {
+    "ownedOutput": "build/evidence/R0.03/dashboard90-causal-replan-after-deferral.json",
+    "sourceMutations": 0,
+    "runtimeCLIInvocations": 0,
+    "testWorldsStarted": 0,
+    "buildsGeneratorsStaticChecks": 0,
+    "networkOrSystemProbes": 0,
+    "internetCalls": 0,
+    "childrenSpawned": 0,
+    "commitsCreated": 0,
+    "installedArtifactReads": 0,
+    "credentialsRead": false,
+    "rawChildStreamsRead": false,
+    "rootOrAccountOrServiceOperations": 0
+  },
+  "STOP": {
+    "readOnlyReplanComplete": true,
+    "sourceUnitNotStarted": true,
+    "nextAction": "Parent review the evidence pins and diagnostic source-observation plan; assign/admit a bounded source unit only if justified. Do not run anything from this artifact automatically.",
+    "wholeATComplete": false
+  }
+}

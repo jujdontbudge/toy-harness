@@ -2,9 +2,9 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-07T08:18:17.583Z",
+  "updatedAt": "2026-10-07T09:03:47.711Z",
   "phase": "R0_FEASIBILITY",
-  "activeCard": "R0.02",
+  "activeCard": "R0.12",
   "cardCount": 87,
   "acceptanceCount": 1447,
   "cards": {
@@ -737,15 +737,42 @@
         "knownPinDrift": "tests/registry.yaml changed only by current parent Ops45 registration; relevant public owner/source pins remain exact"
       },
       "workflowPrerequisitePlan": {
-        "state": "READ_ONLY_LUNA_PLANNING",
+        "state": "AT1_ONLY_SOURCE_ADMITTED",
         "startedAt": "2026-10-07T08:18:17.583Z",
         "deadline": "2026-10-07T08:32:00Z",
-        "sourceAdmission": false,
+        "sourceAdmission": "build/evidence/R0.02/workflow-prerequisites-source-admission.json",
         "assignedATs": [
           "AT-workflows-1",
           "AT-workflows-2"
         ],
-        "wholeATComplete": false
+        "wholeATComplete": false,
+        "baseline": "build/evidence/R0.02/workflow-prerequisites-baseline-summary.json",
+        "baselineWorldId": "f423f6ef-1dec-4442-9296-89fadb2c0b54",
+        "baselineUnsupported": true,
+        "baselineRuns": 1,
+        "teardownComplete": true,
+        "plan": "build/evidence/R0.02/workflow-prerequisites-next-minimum-plan.json",
+        "refinement": "build/evidence/R0.02/workflow-prerequisites-plan-refinement.json",
+        "parentReview": "build/evidence/R0.02/workflow-prerequisites-parent-plan-review.json",
+        "sourceOwner": "/root/r002_workflow_prerequisite_minimum",
+        "sourceDeadline": "2026-10-07T09:00:00Z",
+        "fullCardStopAt": "2026-10-07T10:43:00Z",
+        "sourceAdmissionGranted": true
+      },
+      "workflowPrerequisiteStaticUnit": {
+        "state": "AT1_M11_STATIC_SOURCE_UNIT_VERIFIED_STOPPED",
+        "startedAt": "2026-10-07T08:43:26.311Z",
+        "stoppedAt": "2026-10-07T09:03:47.711Z",
+        "evidence": "build/evidence/R0.02/workflow-prerequisites-final-verification.json",
+        "nativeAttempts": 1,
+        "assignedChecks": 1,
+        "sharedComparisonChecks": 35,
+        "wholeATComplete": false,
+        "deferred": [
+          "AT-workflows-1 candidate_write/read-only-input and complete bounded-report proof",
+          "AT-workflows-2 route adequacy and denial non-escalation",
+          "Whole protected/authenticated workflow proof"
+        ]
       }
     },
     "R0.03": {
@@ -1454,6 +1481,37 @@
             "work": "Canonical protected identities/controller/installed-release and source-bound whole dispatch proof."
           }
         ]
+      },
+      "dashboardCausalReplan": {
+        "state": "BOUNDED_DASHBOARD_AND_AUTH_REGRESSION_UNIT_VERIFIED_STOPPED",
+        "startedAt": "2026-10-07T08:20:23.487Z",
+        "deadline": "2026-10-07T08:37:00Z",
+        "model": "gpt-6.1-sol",
+        "reasoning": "xhigh",
+        "sourceAdmission": "build/evidence/R0.03/dashboard90-replan-source-admission.json",
+        "fourthUnchangedAttemptAllowed": false,
+        "wholeATComplete": false,
+        "sourceDeadline": "2026-10-07T08:55:00Z",
+        "targetStopAt": "2026-10-07T10:26:00Z",
+        "newDiagnosticRunsAdmitted": 1,
+        "newDiagnosticRuns": 3,
+        "producerRepairAdmitted": true,
+        "sourceMutationAllowed": false,
+        "sourceStoppedAt": "2026-10-07T08:33:57.742566Z",
+        "handoff": "build/evidence/R0.03/dashboard90-observation-repair-source-handoff.json",
+        "maximumChangedRuns": 3,
+        "controllerFailureReview": "build/evidence/R0.03/dashboard90-observation-controller-failure-review.json",
+        "diagnosticReview": "build/evidence/R0.03/dashboard90-measured-channel-repair-review.json",
+        "channelMismatchObserved": true,
+        "producerSourceStopped": true,
+        "finalAssignedRunRemaining": 0,
+        "finalDashboardEvidence": "build/evidence/R0.03/dashboard90-workflow-final-summary.json",
+        "compatibilityReview": "build/evidence/R0.03/dashboard90-auth-controller-compat-repair-review.json",
+        "stoppedAt": "2026-10-07T09:03:47.711Z",
+        "evidence": "build/evidence/R0.03/dashboard90-final-verification.json",
+        "changedRuns": 3,
+        "passedAuthChecks": 105,
+        "originalDashboardCasesPassed": 3
       }
     },
     "R0.04": {
@@ -2679,6 +2737,11 @@
           "protectedResearchAdmitted": false,
           "wholeATComplete": false
         }
+      },
+      "remainingCliAudit": {
+        "state": "STOP_NO_INDEPENDENT_CLI_CELL",
+        "path": "build/evidence/R0.10/remaining-cli-next-minimum-plan.json",
+        "wholeATComplete": false
       }
     },
     "R0.11": {
@@ -11732,7 +11795,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Review bounded workflow prerequisite plan; implement only a missing public static gate if present, otherwise reuse existing source proof and move to the next independent R0 gap. PostgreSQL init source deferred to the R1 installation gate. Poll roots; valid ROOT02 DONE immediately prioritizes R0.01 after owned cleanup.",
+  "nextAction": "Commit/push verified dashboard+M11 CLI source units, update draftPR and checkpoint. Continue bounded readonlyATadhd66 plan; no SOURCEuntilaccepted freshadmission. ROOT02 validDONE immediately prioritizes R001; rootpending never blocks goal.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -12543,7 +12606,9 @@
       "rung": "CLI",
       "firstRelease": "R0",
       "sourceAssertionHash": "c3002739bea88d5199c702493f348084adb65b3042fc8f9b679925ffc0d13726",
-      "evidence": []
+      "evidence": [
+        "build/evidence/R0.03/dashboard90-final-verification.json"
+      ]
     },
     "AT-hermes-config-85": {
       "state": "NOT_IMPLEMENTED",
@@ -12553,7 +12618,8 @@
       "evidence": [
         "build/evidence/R0.03/native-runtime-fixture-verification.json",
         "build/evidence/R0.03/httpx-fixture-source-preparation.json",
-        "build/evidence/R0.03/auth-fresh-process-fixture-verification.json"
+        "build/evidence/R0.03/auth-fresh-process-fixture-verification.json",
+        "build/evidence/R0.03/dashboard90-final-verification.json"
       ],
       "runtimeAvailabilitySubset": {
         "rung": "CLI",
@@ -12578,42 +12644,54 @@
       "rung": "CLI",
       "firstRelease": "R0",
       "sourceAssertionHash": "b90fe8a1790499442d9052465aa54ac50d5d880ce806dfef3979ff450b422725",
-      "evidence": []
+      "evidence": [
+        "build/evidence/R0.03/dashboard90-final-verification.json"
+      ]
     },
     "AT-hermes-config-87": {
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
       "firstRelease": "R0",
       "sourceAssertionHash": "b8ba9587534e2983742157a3ab9ae8911da4928e48e3ab0894944914bb91e6bb",
-      "evidence": []
+      "evidence": [
+        "build/evidence/R0.03/dashboard90-final-verification.json"
+      ]
     },
     "AT-hermes-config-88": {
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
       "firstRelease": "R0",
       "sourceAssertionHash": "44f05ed1596b043197fd5efdc8aeaee582e2b9c25dac2f03db41b25a682961ed",
-      "evidence": []
+      "evidence": [
+        "build/evidence/R0.03/dashboard90-final-verification.json"
+      ]
     },
     "AT-hermes-config-89": {
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
       "firstRelease": "R0",
       "sourceAssertionHash": "7027112b5e07bbbfc9a3a98f5b643373faa7ba79ecd3558d8fe8b1bf96116e85",
-      "evidence": []
+      "evidence": [
+        "build/evidence/R0.03/dashboard90-final-verification.json"
+      ]
     },
     "AT-hermes-config-90": {
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
       "firstRelease": "R0",
       "sourceAssertionHash": "451a0ff28c92fc95629eaafd849b62631a258ef632518d9132c64fa09384c07d",
-      "evidence": []
+      "evidence": [
+        "build/evidence/R0.03/dashboard90-final-verification.json"
+      ]
     },
     "AT-hermes-config-91": {
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
       "firstRelease": "R0",
       "sourceAssertionHash": "2e360a60d70a821aac4885911b96da67b582f1799ea2c383071aa786978a5887",
-      "evidence": []
+      "evidence": [
+        "build/evidence/R0.03/dashboard90-final-verification.json"
+      ]
     },
     "AT-hermes-config-100": {
       "state": "NOT_IMPLEMENTED",
@@ -12645,7 +12723,9 @@
       "rung": "CLI",
       "firstRelease": "R0",
       "sourceAssertionHash": "5b3088d82a6c550f5abb3104d6a258c6108a2f3efacd6212f5f6f31b806f4846",
-      "evidence": []
+      "evidence": [
+        "build/evidence/R0.02/workflow-prerequisites-final-verification.json"
+      ]
     },
     "AT-lifestore-47": {
       "state": "NOT_IMPLEMENTED",
@@ -12673,7 +12753,9 @@
       "rung": "CLI",
       "firstRelease": "R0",
       "sourceAssertionHash": "36411038b27cdb5922439aa3c32c12816bdf12ecfa39a5e46892e13158066ccb",
-      "evidence": [],
+      "evidence": [
+        "build/evidence/R0.02/workflow-prerequisites-final-verification.json"
+      ],
       "diagnosticVerification": {
         "evidence": "build/evidence/R0.12/decision-verification.json",
         "unfiltered": true,
@@ -12887,7 +12969,9 @@
       "rung": "CLI",
       "firstRelease": "R0",
       "sourceAssertionHash": "b4141538d262d66d789eb55ef7608df4effefb5dd4c7c6fc801f1c54e41e4c23",
-      "evidence": [],
+      "evidence": [
+        "build/evidence/R0.02/workflow-prerequisites-final-verification.json"
+      ],
       "diagnosticVerification": {
         "evidence": "build/evidence/R0.12/decision-verification.json",
         "unfiltered": true,
@@ -12945,14 +13029,18 @@
       "rung": "CLI",
       "firstRelease": "R0",
       "sourceAssertionHash": "a48e7e62ba9db3bb04742ebe1f7784943ad1a9353aaf5b878fe8a71df0d5b456",
-      "evidence": []
+      "evidence": [
+        "build/evidence/R0.02/workflow-prerequisites-final-verification.json"
+      ]
     },
     "AT-sources-190": {
       "state": "NOT_IMPLEMENTED",
       "rung": "CLI",
       "firstRelease": "R0",
       "sourceAssertionHash": "dfc4c143354044cd88c82c6868b2f0b3fc6ab39a9fe45aa595692bf881f9831a",
-      "evidence": []
+      "evidence": [
+        "build/evidence/R0.02/workflow-prerequisites-final-verification.json"
+      ]
     },
     "AT-sources-208": {
       "state": "NOT_IMPLEMENTED",
@@ -12994,7 +13082,9 @@
       "rung": "CLI",
       "firstRelease": "R0",
       "sourceAssertionHash": "2d9d6ef5164a15368e1091dc1e98524ea763f89b554f8b34a5db4fb94825abf6",
-      "evidence": []
+      "evidence": [
+        "build/evidence/R0.02/workflow-prerequisites-final-verification.json"
+      ]
     },
     "AT-workflows-2": {
       "state": "NOT_IMPLEMENTED",
@@ -22314,7 +22404,7 @@
       "pendingRootDoesNotBlockGoal": true,
       "pollWhileIndependentWork": true,
       "exactRegisteredCommandOrRepoScriptRequired": true,
-      "lastPollAt": "2026-10-07T05:08:51.425359+00:00",
+      "lastPollAt": "2026-10-07T09:03:47.711Z",
       "pendingRequests": [
         "ROOT-R004-20261006-02",
         "ROOT-R005-20261006-01"
@@ -22325,19 +22415,23 @@
     "queuedRootReserveAdmissionGate": false
   },
   "latestStaticVerification": {
-    "path": "build/evidence/R0.04/pg-artifact-descriptor-second-check.txt",
-    "sha256": "fccd90d8de72ac76eb067cd3ee2411318dbc4f5c396612acd7f79d8b87b8c23f",
+    "path": "build/evidence/R0.03/dashboard90-auth-controller-compat-check.txt",
+    "sha256": "22ef0d02edf2e41d6d40977188b7b6b0c44092746abbcd6293c89b1f11927e6c",
     "exitCode": 0,
     "artifacts": 403,
     "contracts": 335,
-    "cliManifests": 43,
+    "cliManifests": 45,
     "features": 106,
     "commands": 55,
     "indexedATs": 1447,
-    "schemaDigest": "779e71109bfe7b8386d416292981e8538ee7363cc2fe3bda4e6280dbcb101e16",
-    "recordedAt": "2026-10-07T08:16:37.227Z",
+    "schemaDigest": "ec7a67e32a800c455daac36fa5566d3b786d6f8bb76742a66a72cb79cf267648",
+    "swiftInvoked": false,
+    "recordedAt": "2026-10-07T09:03:47.711Z",
     "command": "npm run check",
-    "swiftInvoked": false
+    "featureMapAfterMetadataUpdate": {
+      "path": "build/evidence/R0.03/dashboard-workflow-verified-map-check.json",
+      "sha256": "cff26b4c6f1148e6a0e57fc313bdb33c0877c4de7278de49726f006cf10f747f"
+    }
   },
   "sourceCheckpointCommit": "1d4fb2b",
   "sourceCheckpointPushed": true,
@@ -22379,48 +22473,46 @@
     }
   },
   "resourceAdmission": {
-    "measuredAt": "2026-10-07T08:15:10.154Z",
-    "availableBytes": "2785951744",
+    "measuredAt": "2026-10-07T08:43:26.187Z",
+    "availableBytes": "2797076480",
     "pressure": "normal",
     "strictlyFreeAdmission": false,
     "repairFloorApplied": false,
     "ownedWorldsRunning": 0,
     "helpersRunning": 1,
     "helperNeedBytes": "268435456",
-    "measurementSource": "build/evidence/R0.04/pg-artifact-descriptor-second-doctor.json",
+    "measurementSource": "build/evidence/R0.03/auth-workflow-remaining-final-admission.json",
     "marginBytes": "536870912",
     "ownedStackId": null,
     "stackAndNativeChildrenNeedBytes": "0",
-    "jobNeedBytes": "268435456",
+    "jobNeedBytes": "1073741824",
     "requiredAvailableBytes": "805306368",
     "secondPhysicalFitGate": false,
     "queuedRootReserveGate": false,
     "rule": "Normal OS pressure and available memory at least the current job declared need plus512MiB; no strictly-free, hypothetical reserve, swap or second physical-fit gate",
-    "measurementHistorical": true
+    "measurementHistorical": true,
+    "jobOwnDeclaredNeedOnly": true
   },
-  "activeWorkers": [
+  "activeWorkers": [],
+  "pullRequestUpdatedAt": "2026-10-07T08:04:41.025Z",
+  "continuationCheckpoint": "build/checkpoints/2026-10-07-dashboard-channel-fixed-workflow-source",
+  "readOnlyWorkers": [
     {
-      "task": "/root/r002_workflow_prerequisite_minimum",
-      "card": "R0.02",
-      "state": "READ_ONLY_PLANNING",
+      "task": "/root/r012_adhd66_minimum_plan",
+      "card": "R0.12",
+      "state": "READ_ONLY_AT66_PLAN",
       "sourceMutationAllowed": false,
-      "deadline": "2026-10-07T08:32:00Z"
+      "deadline": "2026-10-07T09:13:00Z",
+      "admission": "build/evidence/R0.12/adhd66-readonly-admission.json"
     }
   ],
-  "pullRequestUpdatedAt": "2026-10-07T08:04:41.025Z",
-  "continuationCheckpoint": {
-    "recordedAt": "2026-10-07T08:11:25.294Z",
-    "state": "FIRST_CLI_VERSION_NOT_OBSERVED_BOUNDED_SOURCE_REPAIR",
-    "wholeGoal": "ACTIVE",
-    "sourceMutator": "/root/r004_pg_native_minimum_plan",
-    "ownedWorldsRunning": 0,
-    "rootQueueSha256": "6bdca8b36154b5ec87875c5a1fe0e5d5f9a8a0b6d172c26c7d99ad9f2dd6307e",
-    "rootPinsUnchanged": true,
-    "rootPending": [
-      "ROOT-R004-20261006-02",
-      "ROOT-R005-20261006-01"
+  "liveRuntime": {
+    "state": "DOWN",
+    "worlds": [
+      "5ac20b24-a711-4544-b25d-f9b5f51ba2ce",
+      "02f28832-672f-448b-9736-b296ccc08a64"
     ],
-    "next": "AfterparserrepairSOURCESTOP, parentbuild/strict then2ndactualCLImeasurement; atmost3total. No root03while02pending."
-  },
-  "readOnlyWorkers": []
+    "driverSessionId": null,
+    "teardownRequired": false
+  }
 }

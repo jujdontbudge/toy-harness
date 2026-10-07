@@ -16,8 +16,14 @@ export const HermesAuthProbe = {
   async run(input: RegisteredProbeInputV1, context: OpsControlContextV1): Promise<Result<RegisteredProbeOperationV1>> {
     const started = process.hrtime.bigint();
     const invalid: Result<RegisteredProbeOperationV1> = { ok: false, error: { module: "ops", code: "INVALID_INPUT", message: opsErrorMessages.INVALID_INPUT, retryable: false } };
-    const unfilteredAuth = ["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-86", "AT-hermes-config-87", "AT-hermes-config-88", "AT-hermes-config-89", "AT-hermes-config-91"].includes(input.probeId) && input.caseId === undefined;
-    if (!registeredProbeInputSchema.safeParse(input).success || (!unfilteredAuth && input.caseId !== "native-auth-cli") || !["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-86", "AT-hermes-config-87", "AT-hermes-config-88", "AT-hermes-config-89", "AT-hermes-config-91", "AT-hermes-config-78", "AT-ops-55"].includes(input.probeId)) return Promise.resolve(invalid);
+    const unfilteredAuth = ["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-86", "AT-hermes-config-87", "AT-hermes-config-88", "AT-hermes-config-89", "AT-hermes-config-90", "AT-hermes-config-91"].includes(input.probeId) && input.caseId === undefined;
+    if (!registeredProbeInputSchema.safeParse(input).success || (!unfilteredAuth && input.caseId !== "native-auth-cli") || !["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-86", "AT-hermes-config-87", "AT-hermes-config-88", "AT-hermes-config-89", "AT-hermes-config-90", "AT-hermes-config-91", "AT-hermes-config-78", "AT-ops-55"].includes(input.probeId)) return Promise.resolve(invalid);
+    if (input.probeId === "AT-hermes-config-90") {
+      const manifest = registeredCliAcceptanceManifestInventory.find(entry => entry.id === input.probeId);
+      const mandatoryCases = ["dashboard-profile-success", "dashboard-fresh-profile-use", "dashboard-save-failure-400"].map(id => ({ id, publicOperation: "HermesAuthProbe.run", phase: id }));
+      const faultControls = [{ id: "profile-auth-atomic-replace-eio", seam: "os", affectedPhases: ["dashboard-save-failure-400"] }];
+      if (!manifest || manifest.owner !== "hermes" || manifest.scenarioId !== "auth.dashboard-scope" || manifest.kind !== "behavioral" || JSON.stringify(manifest.mandatoryCases) !== JSON.stringify(mandatoryCases) || JSON.stringify(manifest.faultControls) !== JSON.stringify(faultControls)) return Promise.resolve({ ok: false, error: { module: "ops", code: "ATTESTATION_INVALID", message: opsErrorMessages.ATTESTATION_INVALID, retryable: false } });
+    }
     if (input.probeId === "AT-hermes-config-86") {
       const manifest = registeredCliAcceptanceManifestInventory.find(entry => entry.id === input.probeId);
       const cases = ["root-add-one", "root-add-two", "root-readback-one", "root-readback-two", "profile-add-one", "profile-add-two", "profile-add-new", "profile-readback-one", "profile-readback-two", "profile-readback-new", "profile-priority-one", "profile-use-one", "profile-priority-two", "profile-use-two", "profile-priority-new", "profile-use-new"];
@@ -108,6 +114,7 @@ export const HermesAuthProbe = {
       if (publicHelpObserved && fixtureBudgetMs > 0 && input.probeId === "AT-hermes-config-86") checks.push(...await runHermesAuthFixture(interpreter, home, hermesHome, fixtureBudgetMs, "add", "profile-siblings"));
       if (publicHelpObserved && fixtureBudgetMs > 0 && input.probeId === "AT-hermes-config-88") checks.push(...await runHermesAuthFixture(interpreter, home, hermesHome, fixtureBudgetMs, "add", "borrowed-root"));
       if (publicHelpObserved && fixtureBudgetMs > 0 && input.probeId === "AT-hermes-config-89") checks.push(...await runHermesAuthFixture(interpreter, home, hermesHome, fixtureBudgetMs, "add", "mixed-lineage"));
+      if (publicHelpObserved && fixtureBudgetMs > 0 && input.probeId === "AT-hermes-config-90") checks.push(...await runHermesAuthFixture(interpreter, home, hermesHome, fixtureBudgetMs, "add", "dashboard-scope"));
       if (publicHelpObserved && fixtureBudgetMs > 0 && input.probeId === "AT-hermes-config-91") checks.push(...await runHermesAuthFixture(interpreter, home, hermesHome, fixtureBudgetMs, "add", "lifecycle"));
       if (publicHelpObserved && fixtureBudgetMs > 0 && input.probeId === "AT-hermes-config-87") {
         checks.push(...await runHermesAuthFixture(interpreter, home, hermesHome, fixtureBudgetMs, "concurrent-refresh-add"));

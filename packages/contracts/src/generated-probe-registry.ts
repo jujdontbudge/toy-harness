@@ -5150,6 +5150,63 @@ export const registeredCliAcceptanceManifestInventory = [
     "simUnavailableReason": "SIM cannot seed or reload copied OAuth ownership lineage or administrative auth-add. CLI drives the pinned public entries with fake external OAuth/model/clock and the fixed synthetic OS copy."
   },
   {
+    "id": "AT-hermes-config-90",
+    "rung": "CLI",
+    "sourceAssertionHash": "451a0ff28c92fc95629eaafd849b62631a258ef632518d9132c64fa09384c07d",
+    "commandId": "probe.run",
+    "scenarioId": "auth.dashboard-scope",
+    "owner": "hermes",
+    "firstRelease": "R0",
+    "kind": "behavioral",
+    "mandatoryCases": [
+      {
+        "id": "dashboard-profile-success",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "dashboard-profile-success"
+      },
+      {
+        "id": "dashboard-fresh-profile-use",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "dashboard-fresh-profile-use"
+      },
+      {
+        "id": "dashboard-save-failure-400",
+        "publicOperation": "HermesAuthProbe.run",
+        "phase": "dashboard-save-failure-400"
+      }
+    ],
+    "trigger": "Drive two isolated public dashboard profile OAuth flows, then fresh public auth-list/chat readbacks; inject an external OS atomic-replace EIO for the failing profile.",
+    "faultControls": [
+      {
+        "id": "profile-auth-atomic-replace-eio",
+        "seam": "os",
+        "affectedPhases": [
+          "dashboard-save-failure-400"
+        ]
+      }
+    ],
+    "observations": [
+      {
+        "id": "dashboard-scoped-persistence",
+        "independentReader": "HermesAuthProbe.run: owned child identity, public HTTP facts, opposite-store readbacks and provider ledger",
+        "caseIds": [
+          "dashboard-profile-success",
+          "dashboard-fresh-profile-use",
+          "dashboard-save-failure-400"
+        ]
+      },
+      {
+        "id": "fresh-public-auth-usability",
+        "independentReader": "Fresh pinned public auth-list and tools-disabled chat process receipts; stored toy probe.show data",
+        "caseIds": [
+          "dashboard-fresh-profile-use",
+          "dashboard-save-failure-400"
+        ]
+      }
+    ],
+    "simUnavailableReason": "SIM cannot choose administrative dashboard OAuth profile scopes or inject profile-owned atomic-save failures. CLI drives real pinned dashboard/public auth subprocesses through fake external OAuth/model and OS seams."
+  },
+  {
     "id": "AT-hermes-config-91",
     "rung": "CLI",
     "sourceAssertionHash": "2e360a60d70a821aac4885911b96da67b582f1799ea2c383071aa786978a5887",
@@ -7323,6 +7380,50 @@ export const registeredCliAcceptanceManifestInventory = [
       }
     ],
     "simUnavailableReason": "SIM cannot inspect this administrative pre-build capacity inventory. CLI exercises the public owner with fixed external storage/growth inputs; no real destination or restore is claimed."
+  },
+  {
+    "id": "AT-workflows-1",
+    "rung": "CLI",
+    "sourceAssertionHash": "2d9d6ef5164a15368e1091dc1e98524ea763f89b554f8b34a5db4fb94825abf6",
+    "commandId": "probe.run",
+    "scenarioId": "research.component-comparison",
+    "owner": "self-improvement",
+    "firstRelease": "R0",
+    "kind": "static_gate",
+    "mandatoryCases": [
+      {
+        "id": "m11-incomplete-comparison",
+        "publicOperation": "EngineeringControl.checkResearch",
+        "phase": "m11-incomplete-comparison"
+      }
+    ],
+    "trigger": "Seed one incomplete M11 workflow comparison through the indexed report seam; require the M11-specific blocked decision and exact PF/AF archive binding while whole register admission remains blocked.",
+    "faultControls": [
+      {
+        "id": "external-m11-comparison-omissions",
+        "seam": "provider",
+        "affectedPhases": [
+          "m11-incomplete-comparison"
+        ]
+      }
+    ],
+    "observations": [
+      {
+        "id": "indexed-m11-prerequisite-decision",
+        "independentReader": "EngineeringControl.checkResearch: M11 gaps, register blocker and exact PF/AF archive binding",
+        "caseIds": [
+          "m11-incomplete-comparison"
+        ]
+      },
+      {
+        "id": "stored-cli-readback",
+        "independentReader": "toy probe.show: persisted M11 static gate result and PF/AF archive bindings",
+        "caseIds": [
+          "m11-incomplete-comparison"
+        ]
+      }
+    ],
+    "simUnavailableReason": "SIM cannot substitute indexed administrative pre-build research reports or assert their register binding; the assigned CLI reaches the real research owner through its bounded report overlay."
   }
 ] as const;
 export const acceptanceSourceDigest = "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2";

@@ -1,0 +1,186 @@
+{
+  "record": "R0.02",
+  "planId": "workflow-prerequisites-next-minimum",
+  "status": "PROPOSED_FOR_PARENT_REVIEW",
+  "sourceOwner": null,
+  "sourceAdmission": "NOT_ADMITTED",
+  "scope": {
+    "assignedAcceptanceTests": [
+      "AT-workflows-1",
+      "AT-workflows-2"
+    ],
+    "selectedMinimum": "Register and implement one AT-workflows-1 static CLI case using the existing EngineeringControl.checkResearch owner and component-comparison probe pattern.",
+    "wholeAcceptanceComplete": false
+  },
+  "specification": {
+    "workflowAssertionsPath": "specs/workflows.md",
+    "workflowAssertionsSha256": "977f8c153b93af78470b63424e444da9816c298623bac5b3ccd9da7832b41d8c",
+    "atWorkflows1": {
+      "line": 1003,
+      "required": "A choice missing compared alternatives, primary evidence, reliability/resource tradeoffs, or validation criteria is blocked by the pre-build gate with missing evidence and a named register entry; isolated candidate_write research with read-only inputs and bounded report export remains possible."
+    },
+    "atWorkflows2": {
+      "line": 1004,
+      "required": "For an uncertain effect with an official API, proven protected browser option, and unreviewed script, route research selects a supported least-fragile adequate route, cites current primary evidence, and never treats denial as permission for another route."
+    },
+    "testPlanPath": "specs/TEST-PLAN.md",
+    "testPlanSha256": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2",
+    "assignedRung": "CLI",
+    "assignedProbe": "probe:AT-workflows-1/2"
+  },
+  "baseline": {
+    "path": "build/evidence/R0.02/workflow-prerequisites-baseline-summary.json",
+    "sha256": "74924cd778b09fba614638c76896bb2ebeb9d412c98ad2cbad87a0fdb6817ee3",
+    "worldId": "f423f6ef-1dec-4442-9296-89fadb2c0b54",
+    "result": "Both registered CLI invocations returned NOT_IMPLEMENTED / REGISTERED_CASE_NOT_IMPLEMENTED, sourceRegistration:null, and no exact case result. The disposable world shut down successfully with zero unresolved references.",
+    "caseEvidence": [
+      {
+        "acceptanceTest": "AT-workflows-1",
+        "runSha256": "12ce3e8394ee0e0768405942cabeaf959b6d549813d18ca0382ff5f216f54112",
+        "showSha256": "1e4e568b6e889845bdf4f24ce57232afd8782749d3cebd44a10c44182e97afcc",
+        "exitCode": 5,
+        "resultState": "NOT_IMPLEMENTED"
+      },
+      {
+        "acceptanceTest": "AT-workflows-2",
+        "runSha256": "a9b537f238bd0f0b6b7e5df03ad597dd7337871e12ba765850aefdb65118fddc",
+        "showSha256": "0e003bfda02cfdf6754b83e7fd31e9a2c4749929c407fa8bef27da66abdf8779",
+        "exitCode": 5,
+        "resultState": "NOT_IMPLEMENTED"
+      }
+    ],
+    "interpretation": "This proves the missing CLI registration/case path only; it did not test or falsify checkResearch behavior."
+  },
+  "publicOwnerAndContracts": {
+    "ownerPath": "packages/self-improvement/src/engineering-control.ts",
+    "owner": "EngineeringControl.checkResearch(input: MapCheckInputV1, context: OpsControlContextV1, testDocuments: ResearchDocumentOverlayV1[] = [])",
+    "publicInput": "Generated MapCheckInputV1 and OpsControlContextV1; existing bounded ResearchDocumentOverlayV1 seam can supply the incomplete M11 comparison fixture.",
+    "publicOutput": "Generated ResearchRegisterInspectionV3 with componentDecisions and findings.",
+    "namedRegisterEntry": "M11 — Goals/workflows/connector lifecycle/outcome metric, specs/RESEARCH-REGISTER.md:287",
+    "comparisonContract": "ResearchComponentComparisonV2 and ResearchComponentComparisonCheckV2 in packages/contracts/src/engineering-control.ts",
+    "existingProbePattern": "packages/self-improvement/src/component-comparison-probe.ts",
+    "reuse": "Keep checkResearch as sole decision owner. Assert its output using one incomplete M11-linked comparison overlay. Change owner logic only if that public fixture demonstrates a concrete failed cell; do not duplicate the validator or add generic research/report infrastructure."
+  },
+  "sourceCard": {
+    "title": "Register M11 incomplete-comparison workflow gate at the CLI rung",
+    "expectedEffort": "Approximately two hours, excluding unrelated generator or environment failure",
+    "implementationPaths": [
+      "tests/registry.yaml",
+      "packages/self-improvement/src/public.ts",
+      "packages/self-improvement/src/component-comparison-probe.ts",
+      "skills/toy-control/FEATURE-MAP.md"
+    ],
+    "generatedPaths": [
+      "packages/contracts/src/generated-probe-registry.ts",
+      "architecture/features.json"
+    ],
+    "change": "Add one truthful AT-workflows-1 static CLI manifest case and dispatch it through the existing component-comparison probe. Target the named M11 register/report material with one incomplete ResearchComponentComparisonV2 record: one option only, no primary evidence, no reliability/maintenance/resource tradeoff evidence, and no valid validation plan. Reuse generated contracts and the current owner. Update feature-map facts via the established generation path.",
+    "exactCases": [
+      "The public inspection identifies the exact M11 register row/component decision and report/archive binding; overall admission BLOCKED alone does not pass.",
+      "The M11 decision is BLOCKED with the missing cells REQUIRED_OPTIONS_MISSING, PRIMARY_EVIDENCE_MISSING, TRADEOFFS_MISSING, and VALIDATION_PLAN_MISSING.",
+      "The probe result names M11 and the missing-evidence identifiers; persisted probe.show returns the same case result and archive binding.",
+      "Only the static gate scenario passes; neither complete AT-workflows-1 nor AT-workflows-2 is claimed complete."
+    ],
+    "prohibit": [
+      "A second research validator or generic research/report infrastructure.",
+      "Hand-copied DTOs or manual edits to generated registry artifacts.",
+      "Synthetic flags or fixture prose claiming route adequacy, permission, denial semantics, or protected/authenticated proof."
+    ]
+  },
+  "currentGap": {
+    "missing": "The workflow AT IDs are present in generated CLI acceptance inventory, but the registered CLI manifest has no source registration for either. Baseline reaches only the generic not-implemented path.",
+    "ownerBehavior": "Not yet observed for the M11 workflow fixture. Existing checkResearch capability does not itself establish these workflow-specific cells."
+  },
+  "reuse": [
+    {
+      "evidence": "AT-self-improvement-56 result-reference export probe in packages/hermes/src/model-route-probe.ts",
+      "measured": [
+        "Bounded markdown result-reference size and digest",
+        "Empty input_observations for that result path",
+        "Path confinement and symlink-path denial"
+      ],
+      "limitation": "This reuse covers only the measured export properties; it does not prove AT-workflows-1 candidate_write mode or read-only input paths."
+    }
+  ],
+  "deferrals": [
+    {
+      "acceptanceTest": "AT-workflows-1",
+      "portion": "candidate_write research with read-only inputs while the implementation gate blocks, and the full bounded-report behavior.",
+      "reason": "AT-self-improvement-56 covers bounded result-reference properties only. Exact candidate_write/read-only-input behavior has no source-covered proof in the inspected assigned-rung interface.",
+      "status": "DEFERRED; do not claim whole AT-workflows-1 complete."
+    },
+    {
+      "acceptanceTest": "AT-workflows-2",
+      "portion": "Adequate least-fragile selection across official API, protected browser, and unreviewed script; current primary evidence; denial non-escalation.",
+      "reason": "The current public research comparison interface provides no observed public Authority/decision transport or real denial receipt for these route classes. Flags or fixture text would fabricate adequacy/authorization evidence.",
+      "status": "DEFERRED pending a real public decision/denial interface and its assigned-rung proof; no AT-workflows-2 registration in this minimum card."
+    },
+    {
+      "acceptanceTest": "Protected/authenticated workflow proof",
+      "status": "FALSE / NOT PROVEN"
+    }
+  ],
+  "verificationAfterAdmission": {
+    "rung": "CLI in a fresh disposable fake R0 world",
+    "commands": [
+      "toy probe run AT-workflows-1 --json",
+      "toy probe show <operation-id> --json"
+    ],
+    "evidence": [
+      "Exact source registration and named static case result",
+      "M11-specific blocked decision with the exact missing cells and archive binding",
+      "Persisted show readback matching the run result",
+      "Zero live sends and successful world teardown"
+    ],
+    "evidenceDirectory": "build/evidence/R0.02/",
+    "stopConditions": [
+      "If the public fixture does not produce the M11-specific missing cells, stop and send the observed owner output for parent review; do not duplicate validator logic.",
+      "If exact M11 report binding or overlay setup cannot be demonstrated within the bounded card, stop before adding report infrastructure.",
+      "No CLI run or source mutation until parent reviews the plan and assigns SOURCE ownership."
+    ]
+  },
+  "sourcePins": [
+    {
+      "path": "specs/workflows.md",
+      "sha256": "977f8c153b93af78470b63424e444da9816c298623bac5b3ccd9da7832b41d8c"
+    },
+    {
+      "path": "specs/RESEARCH-REGISTER.md",
+      "sha256": "e89b3336e0c2458ac204fb0927da30f4541abfab48a9d55735c4655719a3f10d"
+    },
+    {
+      "path": "packages/contracts/src/engineering-control.ts",
+      "sha256": "d95ddc3891ae2b865473c00cb0eb6cb58c16bb9191523ab63f6b26937a88ae30"
+    },
+    {
+      "path": "packages/self-improvement/src/engineering-control.ts",
+      "sha256": "725aa4735e25b86c4c25092e9481580a501025e84f7493ee093060b584b3bbdd"
+    },
+    {
+      "path": "packages/self-improvement/src/component-comparison-probe.ts",
+      "sha256": "bc601b87340ed6612e8555469cd863ccea22575a851f22e0f041aab5ef8dd0d0"
+    },
+    {
+      "path": "packages/hermes/src/model-route-probe.ts",
+      "sha256": "eaf5ef4359ffd4fdb4ae748e61ce0fc48f5a4ee2ac7d7286f1087de51c8b4864"
+    },
+    {
+      "path": "packages/ops/src/fixture-stack.ts",
+      "sha256": "034efe6e08a76fcba1d7a49cfaccd99372e99920ae5eddd999cc693797828120"
+    },
+    {
+      "path": "build/evidence/R0.02/workflow-prerequisites-baseline-summary.json",
+      "sha256": "74924cd778b09fba614638c76896bb2ebeb9d412c98ad2cbad87a0fdb6817ee3"
+    }
+  ],
+  "mutableSharedMetadata": {
+    "paths": [
+      "tests/registry.yaml",
+      "skills/toy-control/FEATURE-MAP.md",
+      "architecture/features.json",
+      "packages/contracts/src/generated-probe-registry.ts",
+      "packages/self-improvement/src/public.ts"
+    ],
+    "pinStatus": "Not pinned as current because the dashboard SOURCE phase may change shared registration/feature metadata. Parent must re-read and rebind these pins after that SOURCE phase stops."
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "schemaVersion": "toy.r0.03.dashboard90-measured-channel-repair.v1",
+  "recordedAt": "2026-10-07T08:42:22.962Z",
+  "state": "MEASURED_CHANNEL_CAUSE_PRODUCER_SOURCE_REPAIRED_STOP",
+  "summary": {
+    "path": "build/evidence/R0.03/dashboard90-second-diagnostic-summary.json",
+    "sha256": "a3f405bc1fb28fd909b8ea324ee0ef1a91e36938b16bf8ea8d3f40f8c6c561e9"
+  },
+  "actualOperationId": "fd9d678a-e7c0-40b5-9319-574aeb033227",
+  "registrationExact": true,
+  "runShowDataExact": true,
+  "worldId": "bbee1424-c163-40f6-b725-f8eaeffafd56",
+  "teardown": {
+    "stackId": "bbee1424-c163-40f6-b725-f8eaeffafd56",
+    "checkpointRefs": [],
+    "fenceRefs": [],
+    "stoppedResourceRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "bbee1424-c163-40f6-b725-f8eaeffafd56"
+      }
+    ],
+    "retainedArtifactRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "bbee1424-c163-40f6-b725-f8eaeffafd56"
+      }
+    ],
+    "unresolvedResourceRefs": [],
+    "complete": true
+  },
+  "actualDiagnostic": {
+    "caseId": "dashboard-profile-success",
+    "observationsOnly": true,
+    "receiptObservation": {
+      "classification": "MATCHED_STDERR",
+      "stdout": {
+        "schemaCandidates": 0,
+        "schemaRejected": 0,
+        "expectedReceipts": 0,
+        "phaseOrOperationMismatches": 0,
+        "ownedIdentityMatches": false,
+        "schemaIssues": []
+      },
+      "stderr": {
+        "schemaCandidates": 1,
+        "schemaRejected": 0,
+        "expectedReceipts": 1,
+        "phaseOrOperationMismatches": 0,
+        "ownedIdentityMatches": true,
+        "schemaIssues": []
+      }
+    },
+    "ownedProcess": {
+      "pid": 79946,
+      "exitCode": 0,
+      "signal": null,
+      "timedOut": false,
+      "oversized": false,
+      "spawnError": false
+    },
+    "stdoutReceiptExitCode": null,
+    "wholeATComplete": false
+  },
+  "maximumActualPrerequisiteLength": 1159,
+  "causalObservation": "Exactly one strict generated expected dashboard receipt with owned identity on stderr, none on stdout, actual clean close. Stdout-only consumer has no receipt.",
+  "sourceRepair": {
+    "path": "patches/hermes-auth-fixture.patch",
+    "beforeSha256": "08875a52036428614c39aea1b44c8f127d9edf9560428a2905ebbd3febc2d8e4",
+    "afterSha256": "596ef80693f878be15b1e80333636db962af5b8b91c4f4c69ef522e9c904c06c",
+    "addedLines": 1,
+    "totalFixtureLines": 925,
+    "receiptCapturedBeforeHermesImport": true,
+    "explicitReceiptOutputStream": true,
+    "globalStdoutUnchanged": true,
+    "consumerAcceptanceUnchanged": true,
+    "authBehaviorUnchanged": true
+  },
+  "sourceOwnerStopped": true,
+  "changedAttemptsUsed": 2,
+  "maxChangedAttempts": 3,
+  "finalAssignedRunRemaining": 1,
+  "wholeATComplete": false,
+  "acceptanceComplete": false,
+  "next": "Serialize queued AT1 source if admitted; parent final build/map/strict then last unfiltered full AT90 and affected auth regressions, exact readbacks/teardown. No fourth changed AT90 run."
+}
