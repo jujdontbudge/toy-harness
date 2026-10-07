@@ -1,0 +1,145 @@
+{
+  "binding": {
+    "acceptanceId": "AT-hermes-config-87",
+    "registry": {
+      "path": "tests/registry.yaml",
+      "registeredCases": [
+        "add-first",
+        "refresh-first",
+        "before-replace",
+        "after-replace"
+      ],
+      "sha256": "2663144fc449981d21d35f08fefd22c6b93bae39f45b8b302a2dab585332457c"
+    },
+    "rung": "CLI",
+    "scenarioId": "auth.concurrent-refresh-add",
+    "sourceAssertionHash": "b8ba9587534e2983742157a3ab9ae8911da4928e48e3ab0894944914bb91e6bb",
+    "specification": {
+      "assertionRow": 3051,
+      "path": "../personal-assistant-harness/specs/hermes-config.md",
+      "requiredOutcome": "Latest accepted refresh generation and the independent added grant both work in fresh processes, without lost update or duplicate rotation; independent root stays unchanged.",
+      "scenarioRow": 3040,
+      "sha256": "d3548fde13180bc750660f306caa0041101832e398ccdabd6cfdac0b3de8f4af"
+    },
+    "testPlan": {
+      "path": "../personal-assistant-harness/specs/TEST-PLAN.md",
+      "rung": "CLI",
+      "sha256": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2"
+    }
+  },
+  "constraints": {
+    "additionalCaseIdOrDTO": false,
+    "additionalProbeRunsDuringPlanning": 0,
+    "newProtocolEndpointInfrastructureOrPrivateMock": false,
+    "sourceBuildGenerationCheckCliWorldProviderOperationsDuringPlanning": 0,
+    "wholeATClaimed": false
+  },
+  "currentEvidence": {
+    "priorCoverageReview": {
+      "path": "build/evidence/R0.03/auth87-required-observable-coverage-review.json",
+      "sha256": "af487547f2b08373863e924b611e80bc90f2c2645bc9b46f9ee9dacc169eeebc"
+    },
+    "run": {
+      "checks": "26 PASS",
+      "complete": false,
+      "path": "build/evidence/R0.03/lifecycle91-regression-cli/AT-hermes-config-87-run.json",
+      "resultState": "NOT_IMPLEMENTED",
+      "sha256": "89c9864eb708ea32c7c0297d6b44e738abebde99ff8e407ade3b25867a90ae0f"
+    },
+    "show": {
+      "checks": "26 PASS",
+      "complete": false,
+      "path": "build/evidence/R0.03/lifecycle91-regression-cli/AT-hermes-config-87-show.json",
+      "resultState": "NOT_IMPLEMENTED",
+      "sha256": "b060665e102ea64d0cac095268e02ad1e5527707416d0f8a28dd392a92658854"
+    }
+  },
+  "feasibility": {
+    "lateStaleResponseBranch": {
+      "evidence": "The fake provider maps a given refresh-token generation deterministically to one next generation (rotated\u2192stale). Two children sending the same refresh token therefore receive the same labeled result; each child maintains its own HTTP ledger. Existing barrier directories can delay each child but cannot distinguish an older response from a newer accepted response for that same token without additional shared response sequencing. No new scheduler/protocol is allowed in this card.",
+      "status": "not_demonstrable_with_current_fake_response_mapping"
+    },
+    "serializationBranch": {
+      "evidence": "The current owner already launches real Hermes chat children, uses a fake-provider refresh-response barrier, captures each child's canonical http_ledger and access_generation, and performs fresh public list/chat readbacks. Existing actor fresh-refresh-reload with phase chat-expired is accepted by the current result schema and parser: it expects zero refreshEffects/token_refreshes, the order's latest generation, and freshProcessUse=usable.",
+      "status": "demonstrable_with_existing_public_seams"
+    }
+  },
+  "futureVerification": {
+    "assignedRung": "CLI",
+    "commands": [
+      "toy --env test --stack <stack-id> probe run AT-hermes-config-87 --request-id <UUID> --json",
+      "toy --env test --stack <stack-id> probe show <operation-id> --json"
+    ],
+    "currentTurnLimit": "Plan only; no source admission, run, or acceptance claim. Full AT/protected dispatcher identity remains pending.",
+    "evidenceRequired": "Source-bound public run/show receipts must contain the serialized contender's actual child result, same-grant refresh sum, final fresh generation, added grant usability, unchanged independent root, and preserved before/after-replace cuts."
+  },
+  "pins": [
+    {
+      "path": "packages/hermes/src/auth-fixture.ts",
+      "sha256": "a4b7739da7b909ca8fe854bb460a12b4a590dd8cab5545bab69f2cd793fd4898"
+    },
+    {
+      "path": "packages/hermes/src/auth-probe.ts",
+      "sha256": "58b2df70f3cba853b1993be85fb6e2c4732301c841e0edbe1ae78331c5335d0d"
+    },
+    {
+      "path": "packages/contracts/src/hermes-runtime.ts",
+      "sha256": "698774355295d8bc9f090205f4b49fbb43f6745be6b837bd9fced3497c42b7a5"
+    },
+    {
+      "path": "patches/hermes-auth-fixture.patch",
+      "sha256": "edcdcf963730b74aba7e77bb544119bff55829f48204e138aedbbd06af965e96"
+    },
+    {
+      "observedStatus": "R004-02 PENDING; R005-01 PENDING",
+      "path": "build/ROOT-REQUESTS.md",
+      "sha256": "6bdca8b36154b5ec87875c5a1fe0e5d5f9a8a0b6d172c26c7d99ad9f2dd6307e"
+    }
+  ],
+  "planId": "auth87-stale-response-minimum",
+  "recordedAt": "2026-10-07T06:45:05Z",
+  "schemaVersion": 1,
+  "scope": "Read-only minimum design for the AT-hermes-config-87 stale-response/duplicate-refresh predicate. No source, build, generator, check, probe, CLI, world, provider, or system operation was performed.",
+  "status": "bounded-design-ready-for-parent-review",
+  "workCard": {
+    "boundedSequence": [
+      "Run the existing primary real Hermes chat-expired child in refresh-first and wait for its existing fake-provider refresh-response-pending marker; keep its release-refresh-token withheld.",
+      "Before releasing the primary response or committing auth-add, launch one second real Hermes chat-expired child against the same temporary profile and fake clock, using the already-supported fresh-refresh-reload actor and a per-child barrier directory. Record that its PID was started during the held-response interval.",
+      "Keep the original real auth-add child in the refresh-first pair. Its provider token response remains unreleased until the same-grant contender has completed, so it cannot introduce the independent added grant into that contender's store view.",
+      "Release the primary refresh response and complete the existing public chat/crash-cut sequence. Then collect the contender result before releasing the add token response; allow the existing refresh-first case to finish its add and final readbacks.",
+      "Retain the existing fresh public auth list, primary-generation chat, added-grant chat, priority restoration, and final list checks."
+    ],
+    "canonicalOutputAndRegistration": "Add the contender's existing HermesAuthFixtureResultV1 fields and the derived same-grant refresh count to the existing refresh-first CheckViewV1 prerequisite JSON, preferably its existing NATIVE_AUTH_CONCURRENCY_FRESH_REFRESH_RELOAD_OBSERVED evidence. No new case ID, CLI command, reason-code schema, contract DTO, generated artifact, fixture endpoint, or feature-map entry is required.",
+    "case": "Extend the existing AT-hermes-config-87 registered refresh-first case only. Keep add-first, refresh-first, before-replace, and after-replace registrations unchanged.",
+    "contenderCall": {
+      "existingConcurrencyActor": "fresh-refresh-reload",
+      "existingFixturePhase": "chat-expired",
+      "expectedCrashCut": "none",
+      "publicOperation": "HermesAuthProbe.run child: hermes --profile toy chat --provider openai-codex --model gpt-6.1-sol --toolsets none -q <fixed fixture prompt>",
+      "whyExistingParserFits": "parseConcurrentChild already expects no refreshEffects/token_refreshes for fresh-refresh-reload, the order's expected generation (stale for refresh-first), a successful fresh chat, and freshProcessUse=usable. No actor enum or DTO change is needed."
+    },
+    "negativeAcceptance": "If the contender records a refresh request/effect or fails to use the primary accepted generation, the serialization proof fails. Do not treat two identical stale-labeled responses as proof that an older response was rejected; the current provider mapping cannot distinguish their order.",
+    "noFlockRequirement": "Do not inspect or report flock/syscall acquisition. The positive proof is process identity/public argv plus fake-provider HTTP ledger and fresh public generation readback.",
+    "objective": "Prove through public behavior that a second same-grant chat started while the first refresh response is held cannot send a duplicate refresh request and, after the first refresh is accepted, reloads and uses that generation.",
+    "ownedSourceFilesIfAdmitted": [
+      "packages/hermes/src/auth-fixture.ts"
+    ],
+    "owner": "HermesAuthProbe fixture owner; parent owns source admission, registry/build/evidence integration, and any later acceptance run.",
+    "positiveAcceptance": [
+      "Primary refresh child has exactly one token_refreshes entry and refreshEffects=[rotated\u2192stale].",
+      "The contender was launched before the primary response release and returns successful public chat output with token_refreshes=0, refreshEffects=[], and access_generation=stale; sum of same-grant primary plus contender refresh sends is exactly one.",
+      "The existing final fresh public chat still reads/uses stale; the final public list retains expected count 3; the separate added grant remains usable at added-rotated; the root store remains unchanged.",
+      "The existing add child retains token_exchanges=1 and token_refreshes=0. Later added\u2192added-rotated refresh evidence is kept separate from the primary same-grant refresh count."
+    ],
+    "sameGrantVersusAddedGrant": "The contender starts against the same temporary Hermes profile before auth-add commits. Its generation must equal the primary refresh's stale generation. The separate auth-add is a new credential: its token_exchanges count is not a refresh, and its later added\u2192added-rotated refresh is not included in the same-grant duplicate count.",
+    "unchangedFiles": [
+      "packages/contracts/src/hermes-runtime.ts",
+      "patches/hermes-auth-fixture.patch",
+      "tests/registry.yaml",
+      "tests/acceptance-index.json",
+      "CLI declarations",
+      "generated contracts",
+      "feature map"
+    ]
+  }
+}

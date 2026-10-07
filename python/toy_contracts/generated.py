@@ -806,6 +806,7 @@ RegisteredCheckIdV1 = Literal[
     "cadence.reader-write-denials",
     "cadence.source-gate",
     "cadence.coverage-distinction",
+    "build.source-inventory",
     "contracts.dto-roundtrip",
     "engineering.map",
     "engineering.static",

@@ -4085,6 +4085,39 @@
       "atIds": [
         "AT-adhd-features-106"
       ]
+    },
+    {
+      "id": "build.source-inventory",
+      "description": "Validate actual workspace pins, lock integrities, canonical runtime entries, startup downloads and maintained RFC8785 vectors; keep missing plugin/auth/adapters and protected installed release pending.",
+      "implementation": "built",
+      "requirementIds": [
+        "spec:authority",
+        "spec:ops"
+      ],
+      "entry": "docs/adr/0055-source-build-inventory.md",
+      "owner": "ops",
+      "publicInterface": "OpsControlRead.validateBuildInventory",
+      "paths": [
+        "packages/ops/src/build-inventory.ts",
+        "packages/self-improvement/src/build-inventory-probe.ts",
+        "packages/ops/src/public.ts",
+        "packages/self-improvement/src/engineering-control.ts",
+        "packages/self-improvement/src/public.ts",
+        "packages/ops/src/fixture-stack.ts",
+        "packages/contracts/src/ops-registry.ts",
+        "behavior/rfc8785-vectors.json",
+        "tests/registry.yaml"
+      ],
+      "firstRelease": "R0",
+      "commands": [
+        "doctor",
+        "probe.run",
+        "probe.show"
+      ],
+      "atIds": [
+        "AT-authority-61",
+        "AT-adhd-features-106"
+      ]
     }
   ],
   "requirements": [
@@ -4647,6 +4680,11 @@
       "id": "EngineeringControl.validateLeastFragileTools",
       "owner": "self-improvement",
       "path": "packages/self-improvement/src/public.ts"
+    },
+    {
+      "id": "OpsControlRead.validateBuildInventory",
+      "owner": "ops",
+      "path": "packages/ops/src/public.ts"
     }
   ],
   "commands": [

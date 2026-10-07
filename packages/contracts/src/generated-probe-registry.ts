@@ -4075,6 +4075,117 @@ export const registeredCliAcceptanceManifestInventory = [
     "simUnavailableReason": "SIM cannot inspect administrative pre-build decisions and research metadata. CLI invokes public owners with fixed external document, Codex CLI and OS artifact fakes."
   },
   {
+    "id": "AT-authority-61",
+    "rung": "CLI",
+    "sourceAssertionHash": "2aba96db8aea4665745bfc8229c0b6d9adb79b43ccbcd294712f25a93b79d6c0",
+    "commandId": "probe.run",
+    "scenarioId": "build.source-inventory",
+    "owner": "ops",
+    "firstRelease": "R0",
+    "kind": "static_gate",
+    "mandatoryCases": [
+      {
+        "id": "application-lock",
+        "publicOperation": "OpsControlRead.validateBuildInventory",
+        "phase": "application-lock"
+      },
+      {
+        "id": "rfc8785-vectors",
+        "publicOperation": "OpsControlRead.validateBuildInventory",
+        "phase": "rfc8785-vectors"
+      },
+      {
+        "id": "mismatched-lock",
+        "publicOperation": "OpsControlRead.validateBuildInventory",
+        "phase": "mismatched-lock"
+      },
+      {
+        "id": "homemade-serializer",
+        "publicOperation": "OpsControlRead.validateBuildInventory",
+        "phase": "homemade-serializer"
+      },
+      {
+        "id": "writable-runtime-import",
+        "publicOperation": "OpsControlRead.validateBuildInventory",
+        "phase": "writable-runtime-import"
+      },
+      {
+        "id": "startup-package-download",
+        "publicOperation": "OpsControlRead.validateBuildInventory",
+        "phase": "startup-package-download"
+      },
+      {
+        "id": "lock-integrity",
+        "publicOperation": "OpsControlRead.validateBuildInventory",
+        "phase": "lock-integrity"
+      },
+      {
+        "id": "required-runtime-artifacts",
+        "publicOperation": "OpsControlRead.validateBuildInventory",
+        "phase": "required-runtime-artifacts"
+      }
+    ],
+    "trigger": "Validate the actual source lock and maintained RFC8785 implementation through the public Ops owner; retain absent canonical plugin/auth/adapter artifacts and installed-release transport as BLOCKED.",
+    "faultControls": [
+      {
+        "id": "source-filesystem-mutation",
+        "seam": "os",
+        "affectedPhases": [
+          "mismatched-lock",
+          "homemade-serializer",
+          "writable-runtime-import",
+          "startup-package-download",
+          "lock-integrity"
+        ]
+      }
+    ],
+    "observations": [
+      {
+        "id": "actual-owner-inventory",
+        "independentReader": "OpsControlRead.validateBuildInventory: source hashes, exact lock/pin/integrity/entry/vector readbacks",
+        "caseIds": [
+          "application-lock",
+          "rfc8785-vectors",
+          "mismatched-lock",
+          "homemade-serializer",
+          "writable-runtime-import",
+          "startup-package-download",
+          "lock-integrity",
+          "required-runtime-artifacts"
+        ]
+      },
+      {
+        "id": "original-file-readback",
+        "independentReader": "BuildInventoryProbe.exercise: independent reread of original package-lock and Ops manifest",
+        "caseIds": [
+          "application-lock",
+          "rfc8785-vectors",
+          "mismatched-lock",
+          "homemade-serializer",
+          "writable-runtime-import",
+          "startup-package-download",
+          "lock-integrity",
+          "required-runtime-artifacts"
+        ]
+      },
+      {
+        "id": "protected-release-status",
+        "independentReader": "OpsControlRead.status: genuine read.release NOT_IMPLEMENTED owner transport remains pending",
+        "caseIds": [
+          "application-lock",
+          "rfc8785-vectors",
+          "mismatched-lock",
+          "homemade-serializer",
+          "writable-runtime-import",
+          "startup-package-download",
+          "lock-integrity",
+          "required-runtime-artifacts"
+        ]
+      }
+    ],
+    "simUnavailableReason": "The assigned AT is a static source build and protected installation gate. Public CLI reaches source artifacts and owner status; no SIM conversation can certify runtime file modes or absent installed-release transport."
+  },
+  {
     "id": "AT-client-apps-49",
     "rung": "CLI",
     "sourceAssertionHash": "f4caef7202502076f80e1ebc139f0f25d5f81cc2964c5ac722bf29ba4fce7fb2",

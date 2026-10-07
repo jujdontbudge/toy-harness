@@ -2,9 +2,9 @@
   "schemaVersion": "toy.build.v1",
   "objective": "Build all Toy R0 through R5; every card and assigned-rung AT verified, authorized deployment verified, final build/DONE report",
   "planningRoot": "/Users/johansardar/Documents/Codex/personal-assistant-harness",
-  "updatedAt": "2026-10-07T06:44:47.608Z",
+  "updatedAt": "2026-10-07T06:55:44.569Z",
   "phase": "R0_FEASIBILITY",
-  "activeCard": "R0.12",
+  "activeCard": "R0.10",
   "cardCount": 87,
   "acceptanceCount": 1447,
   "cards": {
@@ -787,7 +787,8 @@
         "build/evidence/R0.03/mixed89-first-verification.json",
         "build/evidence/R0.03/mixed89-regression-verification.json",
         "build/evidence/R0.03/mixed89-parent-verification.json",
-        "build/evidence/R0.03/lifecycle91-final-verification.json"
+        "build/evidence/R0.03/lifecycle91-final-verification.json",
+        "build/evidence/R0.03/auth87-stale-response-minimum-plan.json"
       ],
       "requiredATs": [
         "AT-hermes-config-34",
@@ -1366,6 +1367,15 @@
         "sharedAuthRegressionChecksPassed": 74,
         "evidence": "build/evidence/R0.03/lifecycle91-final-verification.json",
         "evidenceSha256": "e2e8505c513cbafbb152ab1a3cd5141c6b03b27618168ab0d8845b5c4d106861"
+      },
+      "auth87SerializationPlan": {
+        "state": "READ_ONLY_MINIMUM_PLAN_AVAILABLE_REVIEW_RUNNING",
+        "path": "build/evidence/R0.03/auth87-stale-response-minimum-plan.json",
+        "sha256": "9c7d9039304a593f08d36521a313af9e435b6748f6238bdd45607bf8b4634a56",
+        "oldObserverFailuresPreserved": 3,
+        "privateObserverRequired": false,
+        "sourceExecutionStarted": false,
+        "wholeATComplete": false
       }
     },
     "R0.04": {
@@ -2102,7 +2112,10 @@
         "build/evidence/R0.10/cadence-owner-independent-receipt-review.json",
         "build/evidence/R0.10/cadence-owner-final-root-pins.json",
         "build/evidence/R0.10/profile-allow-all-final-verification.json",
-        "build/evidence/R0.10/authority61-required-owner-interface-plan.json"
+        "build/evidence/R0.10/authority61-required-owner-interface-plan.json",
+        "build/evidence/R0.10/authority61-final-verification.json",
+        "build/evidence/R0.10/authority61-source-review.json",
+        "build/evidence/R0.10/authority61-source-admission.json"
       ],
       "requiredATs": [
         "AT-activity-focus-86",
@@ -2488,6 +2501,53 @@
         "internalOwnerGapActionable": true,
         "sourceExecutionStarted": false,
         "wholeATComplete": false
+      },
+      "authority61SourceUnit": {
+        "recordedAt": "2026-10-07T06:47:33.845Z",
+        "card": "R0.10",
+        "assignedAT": "AT-authority-61",
+        "sourceOwner": "/root",
+        "state": "BOUNDED_SOURCE_UNIT_VERIFIED_AND_STOPPED_RUNTIME_ARTIFACTS_PENDING",
+        "writtenInterface": "docs/adr/0055-source-build-inventory.md",
+        "helperNeedBytes": "268435456",
+        "marginBytes": "536870912",
+        "measurementEvidence": "build/evidence/R0.10/authority61-baseline-doctor.json",
+        "availableBytes": "2308341760",
+        "pressure": "normal",
+        "sourceDeadline": "2026-10-07T07:27:33.849Z",
+        "fullUnitDeadline": "2026-10-07T08:47:33.849Z",
+        "nativeRuns": 2,
+        "nativeUnsupportedBaselines": 1,
+        "sourcePlanRefinement": "Actual shared lock and maintained canonicalization predicates first; absent plugin/adapters/auth/protected inventory remains visibly BLOCKED without substitute creation.",
+        "knownCompletedADHD106Drift": [
+          "tests/registry.yaml",
+          "packages/contracts/src/generated-probe-registry.ts",
+          "packages/self-improvement/src/engineering-control.ts"
+        ],
+        "wholeATComplete": false,
+        "acceptanceComplete": false,
+        "verificationPending": false,
+        "sourceStoppedAt": "2026-10-07T06:51:31.245Z",
+        "sourceMutationAllowed": false,
+        "stoppedAt": "2026-10-07T06:55:03.040Z",
+        "verification": "build/evidence/R0.10/authority61-final-verification.json",
+        "sourceReview": "build/evidence/R0.10/authority61-source-review.json",
+        "assignedChecksPassed": 7,
+        "assignedRuntimeArtifactChecksBlocked": 1,
+        "affectedRegressionChecksPassed": 14,
+        "separateReadinessChecksPassed": 1,
+        "totalChecksPassed": 22,
+        "nativeAcceptanceAttempts": 1,
+        "nativeAcceptanceFailures": 0,
+        "worldId": "a9ef40d8-d35c-4f62-8032-a77818435885",
+        "teardownComplete": true,
+        "deferralOwner": "Builder: R0.10 source plugin/auth/official-adapter integration and R0.04/R0.05 protected installed-release owner",
+        "deferrals": [
+          "Canonical toy plugin/toolset and single toy-interact skill artifacts, including duplicate-tool/skill negative controls",
+          "Maintained BetterAuth/passkey/WebAuthn package artifacts and typed official adapter inventory",
+          "Genuine protected installed-service manifest, identity/maintenance enforcement, protected runtime import mode and startup behavior proof",
+          "Complete AT-authority-61 and R0.10 acceptance; passing source cells do not admit a protected release"
+        ]
       }
     },
     "R0.11": {
@@ -11541,7 +11601,7 @@
       "net.johansardar.assistant.core"
     ]
   },
-  "nextAction": "Commit/push this verified unit and update PR1, then actual AT-authority-61 source inventory baseline and exact package resolution. Valid ROOT-R004-20261006-02 DONE immediately prioritizes R0.01 after safe cleanup.",
+  "nextAction": "Commit/push R0.10 source inventory and update PR1; review the finite R0.03 serialization plan, then execute that public normative gap without restoring failed flock observers. Valid ROOT-R004-20261006-02 DONE immediately prioritizes R0.01 after cleanup.",
   "previousTurnClassification": "PROGRESS",
   "failures": [
     {
@@ -12031,7 +12091,10 @@
       "rung": "CLI",
       "firstRelease": "R0",
       "sourceAssertionHash": "2aba96db8aea4665745bfc8229c0b6d9adb79b43ccbcd294712f25a93b79d6c0",
-      "evidence": []
+      "evidence": [
+        "build/evidence/R0.10/authority61-final-verification.json"
+      ],
+      "diagnosticAvailability": "SOURCE_LOCK_CANONICALIZATION_VERIFIED_CANONICAL_RUNTIME_ARTIFACTS_AND_PROTECTED_RELEASE_PENDING"
     },
     "AT-authority-69": {
       "state": "NOT_IMPLEMENTED",
@@ -22131,21 +22194,22 @@
     "queuedRootReserveAdmissionGate": false
   },
   "latestStaticVerification": {
-    "command": "npm run check",
+    "path": "build/evidence/R0.10/authority61-strict-check.log",
+    "sha256": "27e93956efa86f57479c90ffbb691aeeb7a324c6c6e5a6de68e7ec71f662bdad",
     "exitCode": 0,
-    "log": "build/evidence/R0.12/adhd106-resolution-repaired-strict-check.log",
-    "sha256": "39440144737fdf221d8f44f2bee70eb0860cba5dc15168a921d8e953a0bc221b",
     "artifacts": 403,
     "contracts": 335,
-    "cliManifests": 42,
-    "features": 104,
+    "cliManifests": 43,
+    "features": 105,
     "commands": 55,
     "indexedATs": 1447,
-    "schemaDigest": "5b00b21899c63adb3f7f36bb5d0f8d921da284529d1d8ba0afbc2a20bb2e4925",
-    "recordedAt": "2026-10-07T06:35:09.615Z",
+    "schemaDigest": "3e0b8f7f6b1024f1c3bcdde8ee0816a971f4e22f722228426468bb08c426bfd7",
+    "log": "build/evidence/R0.10/authority61-strict-check.log",
+    "recordedAt": "2026-10-07T06:53:09.085Z",
+    "command": "npm run check",
     "swiftInvoked": false
   },
-  "sourceCheckpointCommit": "c2afe5d",
+  "sourceCheckpointCommit": "126b330",
   "sourceCheckpointPushed": false,
   "rootRequests": {
     "ROOT-R004-20261006-01": {
@@ -22185,15 +22249,15 @@
     }
   },
   "resourceAdmission": {
-    "measuredAt": "2026-10-07T06:34:41.590Z",
-    "availableBytes": "2547712000",
+    "measuredAt": "2026-10-07T06:53:27.198Z",
+    "availableBytes": "2916024320",
     "pressure": "normal",
     "strictlyFreeAdmission": false,
     "repairFloorApplied": false,
     "ownedWorldsRunning": 0,
     "helpersRunning": 1,
     "helperNeedBytes": "268435456",
-    "measurementSource": "build/evidence/R0.12/adhd106-final-native-doctor.json",
+    "measurementSource": "build/evidence/R0.10/authority61-pre-native-doctor.json",
     "marginBytes": "536870912",
     "ownedStackId": null,
     "stackAndNativeChildrenNeedBytes": "0",
@@ -22205,32 +22269,31 @@
     "measurementHistorical": true
   },
   "activeWorkers": [],
-  "pullRequestUpdatedAt": "2026-10-07T05:10:45.269493+00:00",
+  "pullRequestUpdatedAt": "2026-10-07T06:45:33.126Z",
   "continuationCheckpoint": {
-    "recordedAt": "2026-10-07T06:44:47.608Z",
-    "state": "ADHD106_UNIT_VERIFIED_SOURCE_CHECKPOINT_PENDING",
+    "recordedAt": "2026-10-07T06:55:44.569Z",
+    "state": "AUTHORITY61_BOUNDED_SOURCE_VERIFIED_CHECKPOINT_PENDING",
     "wholeGoal": "ACTIVE",
     "sourceMutator": null,
     "ownedWorldsRunning": 0,
-    "verification": "build/evidence/R0.12/adhd106-final-verification.json",
     "rootQueueSha256": "6bdca8b36154b5ec87875c5a1fe0e5d5f9a8a0b6d172c26c7d99ad9f2dd6307e",
+    "rootPinsUnchanged": true,
     "rootPending": [
       "ROOT-R004-20261006-02",
       "ROOT-R005-20261006-01"
     ],
-    "rootPinsUnchanged": true,
-    "next": "Commit/push this verified unit and update PR1, then actual AT-authority-61 source inventory baseline and exact package resolution. Valid ROOT-R004-20261006-02 DONE immediately prioritizes R0.01 after safe cleanup."
+    "next": "Commit/push R0.10 source inventory and update PR1; review the finite R0.03 serialization plan, then execute that public normative gap without restoring failed flock observers. Valid ROOT-R004-20261006-02 DONE immediately prioritizes R0.01 after cleanup."
   },
   "readOnlyWorkers": [
     {
-      "task": "/root/r012_next_assigned_gate",
+      "task": "/root/r010_local_gate_audit",
       "card": "R0.03",
+      "state": "READ_ONLY_SERIALIZATION_PLAN_REVIEW_RUNNING",
       "model": "gpt-6-luna",
       "reasoning": "max",
-      "state": "READ_ONLY_STALE_RESPONSE_MINIMUM_PLAN_RUNNING",
-      "ownedPath": "build/evidence/R0.03/auth87-stale-response-minimum-plan.json",
-      "deadline": "2026-10-07T07:00:00Z",
-      "sourceMutationAllowed": false
+      "sourceMutationAllowed": false,
+      "ownedPath": "build/evidence/R0.03/auth87-serialization-plan-review.json",
+      "deadline": "2026-10-07T07:05:00Z"
     }
   ]
 }

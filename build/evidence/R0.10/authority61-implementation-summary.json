@@ -1,0 +1,1385 @@
+{
+  "recordedAt": "2026-10-07T06:54:00.994Z",
+  "rung": "CLI",
+  "unfiltered": true,
+  "wholeATComplete": false,
+  "liveProviderSends": 0,
+  "nativeAttempt": 2,
+  "admissionEvidence": "build/evidence/R0.10/authority61-pre-native-doctor.json",
+  "probes": [
+    {
+      "probeId": "AT-authority-61",
+      "run": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.10/authority61-implementation-cli/AT-authority-61-run.json",
+        "sha256": "aebe02afbbb75cef6383c95a6a1dc07fd46563c6e896825add88a954f8d8a370"
+      },
+      "operationId": "0e85b23f-a1e7-47ad-a5c7-99e5dd5bd5d4",
+      "show": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.10/authority61-implementation-cli/AT-authority-61-show.json",
+        "sha256": "e52f6eab3507d94c58d5a7e412cb48807fe726acd2beb2eecf39d058c208e0a1"
+      },
+      "sameData": true,
+      "sourceRegistration": {
+        "id": "AT-authority-61",
+        "rung": "CLI",
+        "sourceAssertionHash": "2aba96db8aea4665745bfc8229c0b6d9adb79b43ccbcd294712f25a93b79d6c0",
+        "commandId": "probe.run",
+        "scenarioId": "build.source-inventory",
+        "owner": "ops",
+        "firstRelease": "R0",
+        "kind": "static_gate",
+        "mandatoryCases": [
+          {
+            "id": "application-lock",
+            "publicOperation": "OpsControlRead.validateBuildInventory",
+            "phase": "application-lock"
+          },
+          {
+            "id": "rfc8785-vectors",
+            "publicOperation": "OpsControlRead.validateBuildInventory",
+            "phase": "rfc8785-vectors"
+          },
+          {
+            "id": "mismatched-lock",
+            "publicOperation": "OpsControlRead.validateBuildInventory",
+            "phase": "mismatched-lock"
+          },
+          {
+            "id": "homemade-serializer",
+            "publicOperation": "OpsControlRead.validateBuildInventory",
+            "phase": "homemade-serializer"
+          },
+          {
+            "id": "writable-runtime-import",
+            "publicOperation": "OpsControlRead.validateBuildInventory",
+            "phase": "writable-runtime-import"
+          },
+          {
+            "id": "startup-package-download",
+            "publicOperation": "OpsControlRead.validateBuildInventory",
+            "phase": "startup-package-download"
+          },
+          {
+            "id": "lock-integrity",
+            "publicOperation": "OpsControlRead.validateBuildInventory",
+            "phase": "lock-integrity"
+          },
+          {
+            "id": "required-runtime-artifacts",
+            "publicOperation": "OpsControlRead.validateBuildInventory",
+            "phase": "required-runtime-artifacts"
+          }
+        ],
+        "trigger": "Validate the actual source lock and maintained RFC8785 implementation through the public Ops owner; retain absent canonical plugin/auth/adapter artifacts and installed-release transport as BLOCKED.",
+        "faultControls": [
+          {
+            "id": "source-filesystem-mutation",
+            "seam": "os",
+            "affectedPhases": [
+              "mismatched-lock",
+              "homemade-serializer",
+              "writable-runtime-import",
+              "startup-package-download",
+              "lock-integrity"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "actual-owner-inventory",
+            "independentReader": "OpsControlRead.validateBuildInventory: source hashes, exact lock/pin/integrity/entry/vector readbacks",
+            "caseIds": [
+              "application-lock",
+              "rfc8785-vectors",
+              "mismatched-lock",
+              "homemade-serializer",
+              "writable-runtime-import",
+              "startup-package-download",
+              "lock-integrity",
+              "required-runtime-artifacts"
+            ]
+          },
+          {
+            "id": "original-file-readback",
+            "independentReader": "BuildInventoryProbe.exercise: independent reread of original package-lock and Ops manifest",
+            "caseIds": [
+              "application-lock",
+              "rfc8785-vectors",
+              "mismatched-lock",
+              "homemade-serializer",
+              "writable-runtime-import",
+              "startup-package-download",
+              "lock-integrity",
+              "required-runtime-artifacts"
+            ]
+          },
+          {
+            "id": "protected-release-status",
+            "independentReader": "OpsControlRead.status: genuine read.release NOT_IMPLEMENTED owner transport remains pending",
+            "caseIds": [
+              "application-lock",
+              "rfc8785-vectors",
+              "mismatched-lock",
+              "homemade-serializer",
+              "writable-runtime-import",
+              "startup-package-download",
+              "lock-integrity",
+              "required-runtime-artifacts"
+            ]
+          }
+        ],
+        "simUnavailableReason": "The assigned AT is a static source build and protected installation gate. Public CLI reaches source artifacts and owner status; no SIM conversation can certify runtime file modes or absent installed-release transport."
+      },
+      "registrationExact": true,
+      "cases": [
+        {
+          "id": "build.source-inventory",
+          "owner": "ops",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:54:01.642Z",
+          "reasonCode": "SOURCE_INVENTORY_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"application-lock\",\"phase\":\"application-lock\",\"expectedReason\":null,\"ownerState\":\"PASS\",\"ownerReadback\":\"{\\\"phase\\\":\\\"application-lock\\\",\\\"failures\\\":[],\\\"sourceInventoryDigest\\\":\\\"b36f4ff21c71d29e04b4bf6314f96e79d6ad456d3810261ec1bee50322e71ee8\\\",\\\"sourceCount\\\":21,\\\"dependencyRows\\\":33,\\\"declaredServiceCount\\\":19,\\\"canonicalizerPin\\\":\\\"5.1.0\\\",\\\"numberVectors\\\":26,\\\"sourceOverlays\\\":0,\\\"filesWritten\\\":false,\\\"installedServicesVerified\\\":false,\\\"nativeAdmissionVerified\\\":false,\\\"wholeATComplete\\\":false}\",\"sourceOverlays\":0,\"originalsUnchanged\":true,\"filesWritten\":false,\"protectedReleaseState\":\"NOT_IMPLEMENTED\",\"protectedReleaseReason\":\"OWNER_TRANSPORT_NOT_IMPLEMENTED\",\"installedServicesVerified\":false,\"nativeAdmissionVerified\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "471be3528e3702e11f84abb29aee4320ffec7f6acaecb77142073f82672f88a7",
+              "947c6ff9727f6c9f89a596f7ab27b46529305e8595b2e0fbbbb4b080162175dd",
+              "570e921735ed76778864746ef954875cbac9431bf3862f70d38bf69533190b93",
+              "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d",
+              "0127fd6e992c94bb512af83d507e107431426d2d4a09885d1a420119f2d530be",
+              "cb940fdd04a1fd8f3ccda07383b59ca279da8ffdacc6da239e501a183ea3fc05",
+              "58548a27ebef1188bc6ddf4349ec1a46b9cec328a49bace60d65ff09c1516178",
+              "517fe6e96e5a60306c24af43de025b31c91d1c235ca1884c8ed1810c8ea93262",
+              "b473376e473c822ca930b5f62d9cd8dbca72a600364e0cfeb4e6049823e8b481",
+              "c03337cf45b4566a09a1bed5c4a55a3548466ba6f10eca0af8c67f1cc299d707",
+              "77544f2cf942219e5eb052dad12738f1981e0deb6609b283a75d5b5149e1c66f",
+              "a5a7aa698052ad52006e806e0af65034e600cdeb57db25108a33c9e22affd47b",
+              "526b4f967454f88823d0aaa461d1af185186ff0a16f309187d4773814f7bc3c8",
+              "3798c44244de6a4e7259793d8f03dcc6f596415cd27e80352632e0b6c94d2474",
+              "b823967b9b3ffabe4da53343c1205ca12fe73f708b638149995118ec9e7d781f",
+              "bc8630f618dbe2e20e30673f3893eebbd7ec6779931dcb9800728d7685d61257",
+              "1520e5a2e3d5f5d72e4373da951570abe9b55fd6c90d5770fd7baf4c9a12d7c5",
+              "4f181c9f85ed5a823a2801416c2e47ac7d2d50cb137a4c67462f969e4dcd5488",
+              "ca7454aac0f76429b5d56bbc3bd61fa706fb1088a19f45d64cf38e055fbf4670",
+              "c1d0195af2a0748454b06af8f218e5c90415c19d39154d0058fee8229c12d859",
+              "7b984b4fe448e062ad07e12f4ea410d974f1e6b9a1c5a0a0474f96c78dbefbe5",
+              "9e553e76af3980ed3f2610376bbce71863a4d64caf6e1632246b89e454cc1a1f",
+              "53a34d9c66e7c3abc294a13bf1031ae309777fe9758d023c2742e44d89d095c1"
+            ]
+          }
+        },
+        {
+          "id": "build.source-inventory",
+          "owner": "ops",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:54:01.646Z",
+          "reasonCode": "SOURCE_INVENTORY_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"rfc8785-vectors\",\"phase\":\"canonicalization\",\"expectedReason\":null,\"ownerState\":\"PASS\",\"ownerReadback\":\"{\\\"phase\\\":\\\"canonicalization\\\",\\\"failures\\\":[],\\\"sourceInventoryDigest\\\":\\\"b36f4ff21c71d29e04b4bf6314f96e79d6ad456d3810261ec1bee50322e71ee8\\\",\\\"sourceCount\\\":21,\\\"dependencyRows\\\":33,\\\"declaredServiceCount\\\":19,\\\"canonicalizerPin\\\":\\\"5.1.0\\\",\\\"numberVectors\\\":26,\\\"sourceOverlays\\\":0,\\\"filesWritten\\\":false,\\\"installedServicesVerified\\\":false,\\\"nativeAdmissionVerified\\\":false,\\\"wholeATComplete\\\":false}\",\"sourceOverlays\":0,\"originalsUnchanged\":true,\"filesWritten\":false,\"protectedReleaseState\":\"NOT_IMPLEMENTED\",\"protectedReleaseReason\":\"OWNER_TRANSPORT_NOT_IMPLEMENTED\",\"installedServicesVerified\":false,\"nativeAdmissionVerified\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "471be3528e3702e11f84abb29aee4320ffec7f6acaecb77142073f82672f88a7",
+              "947c6ff9727f6c9f89a596f7ab27b46529305e8595b2e0fbbbb4b080162175dd",
+              "570e921735ed76778864746ef954875cbac9431bf3862f70d38bf69533190b93",
+              "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d",
+              "0127fd6e992c94bb512af83d507e107431426d2d4a09885d1a420119f2d530be",
+              "cb940fdd04a1fd8f3ccda07383b59ca279da8ffdacc6da239e501a183ea3fc05",
+              "58548a27ebef1188bc6ddf4349ec1a46b9cec328a49bace60d65ff09c1516178",
+              "517fe6e96e5a60306c24af43de025b31c91d1c235ca1884c8ed1810c8ea93262",
+              "b473376e473c822ca930b5f62d9cd8dbca72a600364e0cfeb4e6049823e8b481",
+              "c03337cf45b4566a09a1bed5c4a55a3548466ba6f10eca0af8c67f1cc299d707",
+              "77544f2cf942219e5eb052dad12738f1981e0deb6609b283a75d5b5149e1c66f",
+              "a5a7aa698052ad52006e806e0af65034e600cdeb57db25108a33c9e22affd47b",
+              "526b4f967454f88823d0aaa461d1af185186ff0a16f309187d4773814f7bc3c8",
+              "3798c44244de6a4e7259793d8f03dcc6f596415cd27e80352632e0b6c94d2474",
+              "b823967b9b3ffabe4da53343c1205ca12fe73f708b638149995118ec9e7d781f",
+              "bc8630f618dbe2e20e30673f3893eebbd7ec6779931dcb9800728d7685d61257",
+              "1520e5a2e3d5f5d72e4373da951570abe9b55fd6c90d5770fd7baf4c9a12d7c5",
+              "4f181c9f85ed5a823a2801416c2e47ac7d2d50cb137a4c67462f969e4dcd5488",
+              "ca7454aac0f76429b5d56bbc3bd61fa706fb1088a19f45d64cf38e055fbf4670",
+              "c1d0195af2a0748454b06af8f218e5c90415c19d39154d0058fee8229c12d859",
+              "7b984b4fe448e062ad07e12f4ea410d974f1e6b9a1c5a0a0474f96c78dbefbe5",
+              "9e553e76af3980ed3f2610376bbce71863a4d64caf6e1632246b89e454cc1a1f",
+              "53a34d9c66e7c3abc294a13bf1031ae309777fe9758d023c2742e44d89d095c1"
+            ]
+          }
+        },
+        {
+          "id": "build.source-inventory",
+          "owner": "ops",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:54:01.649Z",
+          "reasonCode": "SOURCE_INVENTORY_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"mismatched-lock\",\"phase\":\"application-lock\",\"expectedReason\":\"DEPENDENCY_LOCK_MISMATCH:pg\",\"ownerState\":\"FAIL\",\"ownerReadback\":\"{\\\"phase\\\":\\\"application-lock\\\",\\\"failures\\\":[\\\"DEPENDENCY_LOCK_MISMATCH:pg\\\"],\\\"sourceInventoryDigest\\\":\\\"69ec02dfe9bb798072a77f0e63f902262c8e3cceb2e10b827b99dec30e812a7f\\\",\\\"sourceCount\\\":21,\\\"dependencyRows\\\":33,\\\"declaredServiceCount\\\":19,\\\"canonicalizerPin\\\":\\\"5.1.0\\\",\\\"numberVectors\\\":26,\\\"sourceOverlays\\\":1,\\\"filesWritten\\\":false,\\\"installedServicesVerified\\\":false,\\\"nativeAdmissionVerified\\\":false,\\\"wholeATComplete\\\":false}\",\"sourceOverlays\":1,\"originalsUnchanged\":true,\"filesWritten\":false,\"protectedReleaseState\":\"NOT_IMPLEMENTED\",\"protectedReleaseReason\":\"OWNER_TRANSPORT_NOT_IMPLEMENTED\",\"installedServicesVerified\":false,\"nativeAdmissionVerified\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "471be3528e3702e11f84abb29aee4320ffec7f6acaecb77142073f82672f88a7",
+              "947c6ff9727f6c9f89a596f7ab27b46529305e8595b2e0fbbbb4b080162175dd",
+              "570e921735ed76778864746ef954875cbac9431bf3862f70d38bf69533190b93",
+              "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d",
+              "0127fd6e992c94bb512af83d507e107431426d2d4a09885d1a420119f2d530be",
+              "cb940fdd04a1fd8f3ccda07383b59ca279da8ffdacc6da239e501a183ea3fc05",
+              "7322fa1b2e4c478234f76f81ca15182a422bf138f7a825cb4b505db294e49f40",
+              "58548a27ebef1188bc6ddf4349ec1a46b9cec328a49bace60d65ff09c1516178",
+              "517fe6e96e5a60306c24af43de025b31c91d1c235ca1884c8ed1810c8ea93262",
+              "b473376e473c822ca930b5f62d9cd8dbca72a600364e0cfeb4e6049823e8b481",
+              "c03337cf45b4566a09a1bed5c4a55a3548466ba6f10eca0af8c67f1cc299d707",
+              "77544f2cf942219e5eb052dad12738f1981e0deb6609b283a75d5b5149e1c66f",
+              "a5a7aa698052ad52006e806e0af65034e600cdeb57db25108a33c9e22affd47b",
+              "526b4f967454f88823d0aaa461d1af185186ff0a16f309187d4773814f7bc3c8",
+              "3798c44244de6a4e7259793d8f03dcc6f596415cd27e80352632e0b6c94d2474",
+              "b823967b9b3ffabe4da53343c1205ca12fe73f708b638149995118ec9e7d781f",
+              "bc8630f618dbe2e20e30673f3893eebbd7ec6779931dcb9800728d7685d61257",
+              "1520e5a2e3d5f5d72e4373da951570abe9b55fd6c90d5770fd7baf4c9a12d7c5",
+              "4f181c9f85ed5a823a2801416c2e47ac7d2d50cb137a4c67462f969e4dcd5488",
+              "ca7454aac0f76429b5d56bbc3bd61fa706fb1088a19f45d64cf38e055fbf4670",
+              "c1d0195af2a0748454b06af8f218e5c90415c19d39154d0058fee8229c12d859",
+              "7b984b4fe448e062ad07e12f4ea410d974f1e6b9a1c5a0a0474f96c78dbefbe5",
+              "9e553e76af3980ed3f2610376bbce71863a4d64caf6e1632246b89e454cc1a1f",
+              "53a34d9c66e7c3abc294a13bf1031ae309777fe9758d023c2742e44d89d095c1"
+            ]
+          }
+        },
+        {
+          "id": "build.source-inventory",
+          "owner": "ops",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:54:01.652Z",
+          "reasonCode": "SOURCE_INVENTORY_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"homemade-serializer\",\"phase\":\"canonicalization\",\"expectedReason\":\"MAINTAINED_CANONICALIZER_PIN_MISMATCH\",\"ownerState\":\"FAIL\",\"ownerReadback\":\"{\\\"phase\\\":\\\"canonicalization\\\",\\\"failures\\\":[\\\"MAINTAINED_CANONICALIZER_PIN_MISMATCH\\\"],\\\"sourceInventoryDigest\\\":\\\"45b8e60c290d6ba1485b5b8a1d818bd22f00230dbbb88fad0b3e6f7ec78b5e2d\\\",\\\"sourceCount\\\":21,\\\"dependencyRows\\\":33,\\\"declaredServiceCount\\\":19,\\\"canonicalizerPin\\\":\\\"5.1.0\\\",\\\"numberVectors\\\":26,\\\"sourceOverlays\\\":1,\\\"filesWritten\\\":false,\\\"installedServicesVerified\\\":false,\\\"nativeAdmissionVerified\\\":false,\\\"wholeATComplete\\\":false}\",\"sourceOverlays\":1,\"originalsUnchanged\":true,\"filesWritten\":false,\"protectedReleaseState\":\"NOT_IMPLEMENTED\",\"protectedReleaseReason\":\"OWNER_TRANSPORT_NOT_IMPLEMENTED\",\"installedServicesVerified\":false,\"nativeAdmissionVerified\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "471be3528e3702e11f84abb29aee4320ffec7f6acaecb77142073f82672f88a7",
+              "947c6ff9727f6c9f89a596f7ab27b46529305e8595b2e0fbbbb4b080162175dd",
+              "570e921735ed76778864746ef954875cbac9431bf3862f70d38bf69533190b93",
+              "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d",
+              "0127fd6e992c94bb512af83d507e107431426d2d4a09885d1a420119f2d530be",
+              "cb940fdd04a1fd8f3ccda07383b59ca279da8ffdacc6da239e501a183ea3fc05",
+              "58548a27ebef1188bc6ddf4349ec1a46b9cec328a49bace60d65ff09c1516178",
+              "517fe6e96e5a60306c24af43de025b31c91d1c235ca1884c8ed1810c8ea93262",
+              "b473376e473c822ca930b5f62d9cd8dbca72a600364e0cfeb4e6049823e8b481",
+              "c03337cf45b4566a09a1bed5c4a55a3548466ba6f10eca0af8c67f1cc299d707",
+              "77544f2cf942219e5eb052dad12738f1981e0deb6609b283a75d5b5149e1c66f",
+              "a5a7aa698052ad52006e806e0af65034e600cdeb57db25108a33c9e22affd47b",
+              "526b4f967454f88823d0aaa461d1af185186ff0a16f309187d4773814f7bc3c8",
+              "3798c44244de6a4e7259793d8f03dcc6f596415cd27e80352632e0b6c94d2474",
+              "b823967b9b3ffabe4da53343c1205ca12fe73f708b638149995118ec9e7d781f",
+              "bc8630f618dbe2e20e30673f3893eebbd7ec6779931dcb9800728d7685d61257",
+              "1520e5a2e3d5f5d72e4373da951570abe9b55fd6c90d5770fd7baf4c9a12d7c5",
+              "0b012a918ee9bd2df7ec08d07dea86c0761f1380f6b12d8b1bc164803f59bec0",
+              "4f181c9f85ed5a823a2801416c2e47ac7d2d50cb137a4c67462f969e4dcd5488",
+              "ca7454aac0f76429b5d56bbc3bd61fa706fb1088a19f45d64cf38e055fbf4670",
+              "c1d0195af2a0748454b06af8f218e5c90415c19d39154d0058fee8229c12d859",
+              "7b984b4fe448e062ad07e12f4ea410d974f1e6b9a1c5a0a0474f96c78dbefbe5",
+              "9e553e76af3980ed3f2610376bbce71863a4d64caf6e1632246b89e454cc1a1f",
+              "53a34d9c66e7c3abc294a13bf1031ae309777fe9758d023c2742e44d89d095c1"
+            ]
+          }
+        },
+        {
+          "id": "build.source-inventory",
+          "owner": "ops",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:54:01.655Z",
+          "reasonCode": "SOURCE_INVENTORY_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"writable-runtime-import\",\"phase\":\"application-lock\",\"expectedReason\":\"WORKSPACE_PUBLIC_ENTRY_REFUSED:packages/ops\",\"ownerState\":\"FAIL\",\"ownerReadback\":\"{\\\"phase\\\":\\\"application-lock\\\",\\\"failures\\\":[\\\"WORKSPACE_PUBLIC_ENTRY_REFUSED:packages/ops\\\"],\\\"sourceInventoryDigest\\\":\\\"8b6f190589fab9846906af4069ec78c506a549224108c6dd99a29ea5a88e747d\\\",\\\"sourceCount\\\":21,\\\"dependencyRows\\\":33,\\\"declaredServiceCount\\\":19,\\\"canonicalizerPin\\\":\\\"5.1.0\\\",\\\"numberVectors\\\":26,\\\"sourceOverlays\\\":1,\\\"filesWritten\\\":false,\\\"installedServicesVerified\\\":false,\\\"nativeAdmissionVerified\\\":false,\\\"wholeATComplete\\\":false}\",\"sourceOverlays\":1,\"originalsUnchanged\":true,\"filesWritten\":false,\"protectedReleaseState\":\"NOT_IMPLEMENTED\",\"protectedReleaseReason\":\"OWNER_TRANSPORT_NOT_IMPLEMENTED\",\"installedServicesVerified\":false,\"nativeAdmissionVerified\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "471be3528e3702e11f84abb29aee4320ffec7f6acaecb77142073f82672f88a7",
+              "947c6ff9727f6c9f89a596f7ab27b46529305e8595b2e0fbbbb4b080162175dd",
+              "570e921735ed76778864746ef954875cbac9431bf3862f70d38bf69533190b93",
+              "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d",
+              "0127fd6e992c94bb512af83d507e107431426d2d4a09885d1a420119f2d530be",
+              "cb940fdd04a1fd8f3ccda07383b59ca279da8ffdacc6da239e501a183ea3fc05",
+              "58548a27ebef1188bc6ddf4349ec1a46b9cec328a49bace60d65ff09c1516178",
+              "517fe6e96e5a60306c24af43de025b31c91d1c235ca1884c8ed1810c8ea93262",
+              "b473376e473c822ca930b5f62d9cd8dbca72a600364e0cfeb4e6049823e8b481",
+              "c03337cf45b4566a09a1bed5c4a55a3548466ba6f10eca0af8c67f1cc299d707",
+              "77544f2cf942219e5eb052dad12738f1981e0deb6609b283a75d5b5149e1c66f",
+              "a5a7aa698052ad52006e806e0af65034e600cdeb57db25108a33c9e22affd47b",
+              "526b4f967454f88823d0aaa461d1af185186ff0a16f309187d4773814f7bc3c8",
+              "3798c44244de6a4e7259793d8f03dcc6f596415cd27e80352632e0b6c94d2474",
+              "b823967b9b3ffabe4da53343c1205ca12fe73f708b638149995118ec9e7d781f",
+              "bc8630f618dbe2e20e30673f3893eebbd7ec6779931dcb9800728d7685d61257",
+              "1520e5a2e3d5f5d72e4373da951570abe9b55fd6c90d5770fd7baf4c9a12d7c5",
+              "9fbe20bf4d33c65fde24809be2e13936e8073ae96935f5c723991f2cbb7758ee",
+              "4f181c9f85ed5a823a2801416c2e47ac7d2d50cb137a4c67462f969e4dcd5488",
+              "ca7454aac0f76429b5d56bbc3bd61fa706fb1088a19f45d64cf38e055fbf4670",
+              "c1d0195af2a0748454b06af8f218e5c90415c19d39154d0058fee8229c12d859",
+              "7b984b4fe448e062ad07e12f4ea410d974f1e6b9a1c5a0a0474f96c78dbefbe5",
+              "9e553e76af3980ed3f2610376bbce71863a4d64caf6e1632246b89e454cc1a1f",
+              "53a34d9c66e7c3abc294a13bf1031ae309777fe9758d023c2742e44d89d095c1"
+            ]
+          }
+        },
+        {
+          "id": "build.source-inventory",
+          "owner": "ops",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:54:01.658Z",
+          "reasonCode": "SOURCE_INVENTORY_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"startup-package-download\",\"phase\":\"application-lock\",\"expectedReason\":\"STARTUP_DOWNLOAD_REFUSED:packages/ops:start\",\"ownerState\":\"FAIL\",\"ownerReadback\":\"{\\\"phase\\\":\\\"application-lock\\\",\\\"failures\\\":[\\\"STARTUP_DOWNLOAD_REFUSED:packages/ops:start\\\"],\\\"sourceInventoryDigest\\\":\\\"011acb03f275cc4fae11c1050a6a07405ce6f4310761bff142f8cd1620cb98e2\\\",\\\"sourceCount\\\":21,\\\"dependencyRows\\\":33,\\\"declaredServiceCount\\\":19,\\\"canonicalizerPin\\\":\\\"5.1.0\\\",\\\"numberVectors\\\":26,\\\"sourceOverlays\\\":1,\\\"filesWritten\\\":false,\\\"installedServicesVerified\\\":false,\\\"nativeAdmissionVerified\\\":false,\\\"wholeATComplete\\\":false}\",\"sourceOverlays\":1,\"originalsUnchanged\":true,\"filesWritten\":false,\"protectedReleaseState\":\"NOT_IMPLEMENTED\",\"protectedReleaseReason\":\"OWNER_TRANSPORT_NOT_IMPLEMENTED\",\"installedServicesVerified\":false,\"nativeAdmissionVerified\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "471be3528e3702e11f84abb29aee4320ffec7f6acaecb77142073f82672f88a7",
+              "947c6ff9727f6c9f89a596f7ab27b46529305e8595b2e0fbbbb4b080162175dd",
+              "570e921735ed76778864746ef954875cbac9431bf3862f70d38bf69533190b93",
+              "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d",
+              "0127fd6e992c94bb512af83d507e107431426d2d4a09885d1a420119f2d530be",
+              "cb940fdd04a1fd8f3ccda07383b59ca279da8ffdacc6da239e501a183ea3fc05",
+              "58548a27ebef1188bc6ddf4349ec1a46b9cec328a49bace60d65ff09c1516178",
+              "517fe6e96e5a60306c24af43de025b31c91d1c235ca1884c8ed1810c8ea93262",
+              "b473376e473c822ca930b5f62d9cd8dbca72a600364e0cfeb4e6049823e8b481",
+              "c03337cf45b4566a09a1bed5c4a55a3548466ba6f10eca0af8c67f1cc299d707",
+              "77544f2cf942219e5eb052dad12738f1981e0deb6609b283a75d5b5149e1c66f",
+              "a5a7aa698052ad52006e806e0af65034e600cdeb57db25108a33c9e22affd47b",
+              "526b4f967454f88823d0aaa461d1af185186ff0a16f309187d4773814f7bc3c8",
+              "3798c44244de6a4e7259793d8f03dcc6f596415cd27e80352632e0b6c94d2474",
+              "b823967b9b3ffabe4da53343c1205ca12fe73f708b638149995118ec9e7d781f",
+              "bc8630f618dbe2e20e30673f3893eebbd7ec6779931dcb9800728d7685d61257",
+              "1520e5a2e3d5f5d72e4373da951570abe9b55fd6c90d5770fd7baf4c9a12d7c5",
+              "a8df75797c3f6569b700499ab5523e9579eabc9cf22101514fa69d371a3cd08c",
+              "4f181c9f85ed5a823a2801416c2e47ac7d2d50cb137a4c67462f969e4dcd5488",
+              "ca7454aac0f76429b5d56bbc3bd61fa706fb1088a19f45d64cf38e055fbf4670",
+              "c1d0195af2a0748454b06af8f218e5c90415c19d39154d0058fee8229c12d859",
+              "7b984b4fe448e062ad07e12f4ea410d974f1e6b9a1c5a0a0474f96c78dbefbe5",
+              "9e553e76af3980ed3f2610376bbce71863a4d64caf6e1632246b89e454cc1a1f",
+              "53a34d9c66e7c3abc294a13bf1031ae309777fe9758d023c2742e44d89d095c1"
+            ]
+          }
+        },
+        {
+          "id": "build.source-inventory",
+          "owner": "ops",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:54:01.661Z",
+          "reasonCode": "SOURCE_INVENTORY_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"lock-integrity\",\"phase\":\"application-lock\",\"expectedReason\":\"DEPENDENCY_INTEGRITY_MISSING:canonicalize\",\"ownerState\":\"FAIL\",\"ownerReadback\":\"{\\\"phase\\\":\\\"application-lock\\\",\\\"failures\\\":[\\\"DEPENDENCY_INTEGRITY_MISSING:canonicalize\\\"],\\\"sourceInventoryDigest\\\":\\\"837953a12bbdfcdf0d05badb2b7749b9c7571ed48d9481637bc749169d68d792\\\",\\\"sourceCount\\\":21,\\\"dependencyRows\\\":33,\\\"declaredServiceCount\\\":19,\\\"canonicalizerPin\\\":\\\"5.1.0\\\",\\\"numberVectors\\\":26,\\\"sourceOverlays\\\":1,\\\"filesWritten\\\":false,\\\"installedServicesVerified\\\":false,\\\"nativeAdmissionVerified\\\":false,\\\"wholeATComplete\\\":false}\",\"sourceOverlays\":1,\"originalsUnchanged\":true,\"filesWritten\":false,\"protectedReleaseState\":\"NOT_IMPLEMENTED\",\"protectedReleaseReason\":\"OWNER_TRANSPORT_NOT_IMPLEMENTED\",\"installedServicesVerified\":false,\"nativeAdmissionVerified\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "471be3528e3702e11f84abb29aee4320ffec7f6acaecb77142073f82672f88a7",
+              "947c6ff9727f6c9f89a596f7ab27b46529305e8595b2e0fbbbb4b080162175dd",
+              "570e921735ed76778864746ef954875cbac9431bf3862f70d38bf69533190b93",
+              "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d",
+              "0127fd6e992c94bb512af83d507e107431426d2d4a09885d1a420119f2d530be",
+              "cb940fdd04a1fd8f3ccda07383b59ca279da8ffdacc6da239e501a183ea3fc05",
+              "99cfde5f92ebb58781397e5541493ae1f48e9e644c7e437b6283a957f61c824d",
+              "58548a27ebef1188bc6ddf4349ec1a46b9cec328a49bace60d65ff09c1516178",
+              "517fe6e96e5a60306c24af43de025b31c91d1c235ca1884c8ed1810c8ea93262",
+              "b473376e473c822ca930b5f62d9cd8dbca72a600364e0cfeb4e6049823e8b481",
+              "c03337cf45b4566a09a1bed5c4a55a3548466ba6f10eca0af8c67f1cc299d707",
+              "77544f2cf942219e5eb052dad12738f1981e0deb6609b283a75d5b5149e1c66f",
+              "a5a7aa698052ad52006e806e0af65034e600cdeb57db25108a33c9e22affd47b",
+              "526b4f967454f88823d0aaa461d1af185186ff0a16f309187d4773814f7bc3c8",
+              "3798c44244de6a4e7259793d8f03dcc6f596415cd27e80352632e0b6c94d2474",
+              "b823967b9b3ffabe4da53343c1205ca12fe73f708b638149995118ec9e7d781f",
+              "bc8630f618dbe2e20e30673f3893eebbd7ec6779931dcb9800728d7685d61257",
+              "1520e5a2e3d5f5d72e4373da951570abe9b55fd6c90d5770fd7baf4c9a12d7c5",
+              "4f181c9f85ed5a823a2801416c2e47ac7d2d50cb137a4c67462f969e4dcd5488",
+              "ca7454aac0f76429b5d56bbc3bd61fa706fb1088a19f45d64cf38e055fbf4670",
+              "c1d0195af2a0748454b06af8f218e5c90415c19d39154d0058fee8229c12d859",
+              "7b984b4fe448e062ad07e12f4ea410d974f1e6b9a1c5a0a0474f96c78dbefbe5",
+              "9e553e76af3980ed3f2610376bbce71863a4d64caf6e1632246b89e454cc1a1f",
+              "53a34d9c66e7c3abc294a13bf1031ae309777fe9758d023c2742e44d89d095c1"
+            ]
+          }
+        },
+        {
+          "id": "build.source-inventory",
+          "owner": "ops",
+          "state": "BLOCKED",
+          "checkedAt": "2026-10-07T06:54:01.663Z",
+          "reasonCode": "REQUIRED_RUNTIME_ARTIFACTS_PENDING",
+          "prerequisite": "{\"caseId\":\"required-runtime-artifacts\",\"phase\":\"required-runtime-artifacts\",\"expectedReason\":null,\"ownerState\":\"BLOCKED\",\"ownerReadback\":\"{\\\"phase\\\":\\\"required-runtime-artifacts\\\",\\\"failures\\\":[\\\"AUTH_ARTIFACT_MISSING:better-auth\\\",\\\"AUTH_ARTIFACT_MISSING:@better-auth/passkey\\\",\\\"AUTH_ARTIFACT_MISSING:@simplewebauthn/server\\\",\\\"AUTH_ARTIFACT_MISSING:@simplewebauthn/browser\\\",\\\"CANONICAL_PLUGIN_ARTIFACT_MISSING:plugins/toy/plugin.yaml\\\",\\\"CANONICAL_PLUGIN_ARTIFACT_MISSING:plugins/toy/authority_tools.py\\\",\\\"CANONICAL_PLUGIN_ARTIFACT_MISSING:plugins/toy/authority_schemas.py\\\",\\\"CANONICAL_PLUGIN_ARTIFACT_MISSING:behavior/skills/toy-interact/SKILL.md\\\",\\\"OFFICIAL_TYPED_ADAPTER_INVENTORY_UNVERIFIED\\\",\\\"PROTECTED_INSTALLED_RELEASE_TRANSPORT_UNVERIFIED\\\"],\\\"sourceInventoryDigest\\\":\\\"b36f4ff21c71d29e04b4bf6314f96e79d6ad456d3810261ec1bee50322e71ee8\\\",\\\"sourceCount\\\":21,\\\"dependencyRows\\\":33,\\\"declaredServiceCount\\\":19,\\\"canonicalizerPin\\\":\\\"5.1.0\\\",\\\"numberVectors\\\":26,\\\"sourceOverlays\\\":0,\\\"filesWritten\\\":false,\\\"installedServicesVerified\\\":false,\\\"nativeAdmissionVerified\\\":false,\\\"wholeATComplete\\\":false}\",\"sourceOverlays\":0,\"originalsUnchanged\":true,\"filesWritten\":false,\"protectedReleaseState\":\"NOT_IMPLEMENTED\",\"protectedReleaseReason\":\"OWNER_TRANSPORT_NOT_IMPLEMENTED\",\"installedServicesVerified\":false,\"nativeAdmissionVerified\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "471be3528e3702e11f84abb29aee4320ffec7f6acaecb77142073f82672f88a7",
+              "947c6ff9727f6c9f89a596f7ab27b46529305e8595b2e0fbbbb4b080162175dd",
+              "570e921735ed76778864746ef954875cbac9431bf3862f70d38bf69533190b93",
+              "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d",
+              "0127fd6e992c94bb512af83d507e107431426d2d4a09885d1a420119f2d530be",
+              "cb940fdd04a1fd8f3ccda07383b59ca279da8ffdacc6da239e501a183ea3fc05",
+              "58548a27ebef1188bc6ddf4349ec1a46b9cec328a49bace60d65ff09c1516178",
+              "517fe6e96e5a60306c24af43de025b31c91d1c235ca1884c8ed1810c8ea93262",
+              "b473376e473c822ca930b5f62d9cd8dbca72a600364e0cfeb4e6049823e8b481",
+              "c03337cf45b4566a09a1bed5c4a55a3548466ba6f10eca0af8c67f1cc299d707",
+              "77544f2cf942219e5eb052dad12738f1981e0deb6609b283a75d5b5149e1c66f",
+              "a5a7aa698052ad52006e806e0af65034e600cdeb57db25108a33c9e22affd47b",
+              "526b4f967454f88823d0aaa461d1af185186ff0a16f309187d4773814f7bc3c8",
+              "3798c44244de6a4e7259793d8f03dcc6f596415cd27e80352632e0b6c94d2474",
+              "b823967b9b3ffabe4da53343c1205ca12fe73f708b638149995118ec9e7d781f",
+              "bc8630f618dbe2e20e30673f3893eebbd7ec6779931dcb9800728d7685d61257",
+              "1520e5a2e3d5f5d72e4373da951570abe9b55fd6c90d5770fd7baf4c9a12d7c5",
+              "4f181c9f85ed5a823a2801416c2e47ac7d2d50cb137a4c67462f969e4dcd5488",
+              "ca7454aac0f76429b5d56bbc3bd61fa706fb1088a19f45d64cf38e055fbf4670",
+              "c1d0195af2a0748454b06af8f218e5c90415c19d39154d0058fee8229c12d859",
+              "7b984b4fe448e062ad07e12f4ea410d974f1e6b9a1c5a0a0474f96c78dbefbe5",
+              "9e553e76af3980ed3f2610376bbce71863a4d64caf6e1632246b89e454cc1a1f",
+              "53a34d9c66e7c3abc294a13bf1031ae309777fe9758d023c2742e44d89d095c1"
+            ]
+          }
+        }
+      ],
+      "resultState": "NOT_IMPLEMENTED",
+      "complete": false
+    },
+    {
+      "probeId": "AT-adhd-features-106",
+      "run": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.10/authority61-implementation-cli/AT-adhd-features-106-run.json",
+        "sha256": "dccb684ab3899b39a21acf2e441819434edb36300ebbf846ce1e99f2b6142ab9"
+      },
+      "operationId": "515c160b-a892-4459-bbd0-bfa28ae87aac",
+      "show": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.10/authority61-implementation-cli/AT-adhd-features-106-show.json",
+        "sha256": "17ed20f5b2b58b12286de995234704c68c896408aeab59df8aff6dbfd9918ea2"
+      },
+      "sameData": true,
+      "sourceRegistration": {
+        "id": "AT-adhd-features-106",
+        "rung": "CLI",
+        "sourceAssertionHash": "0cf48737cb30e7053dad160595d3da029af0cbaee251692ae1465878a39fa6f9",
+        "commandId": "probe.run",
+        "scenarioId": "engineering.least-fragile-tools",
+        "owner": "self-improvement",
+        "firstRelease": "R0",
+        "kind": "static_gate",
+        "mandatoryCases": [
+          {
+            "id": "actual-lock-and-owners",
+            "publicOperation": "EngineeringControl.validateLeastFragileTools",
+            "phase": "actual-lock-and-owners"
+          },
+          {
+            "id": "mismatched-lock",
+            "publicOperation": "EngineeringControl.validateLeastFragileTools",
+            "phase": "mismatched-lock"
+          },
+          {
+            "id": "feature-scheduler",
+            "publicOperation": "EngineeringControl.validateLeastFragileTools",
+            "phase": "feature-scheduler"
+          },
+          {
+            "id": "feature-blocker",
+            "publicOperation": "EngineeringControl.validateLeastFragileTools",
+            "phase": "feature-blocker"
+          },
+          {
+            "id": "feature-credentials",
+            "publicOperation": "EngineeringControl.validateLeastFragileTools",
+            "phase": "feature-credentials"
+          },
+          {
+            "id": "runtime-download",
+            "publicOperation": "EngineeringControl.validateLeastFragileTools",
+            "phase": "runtime-download"
+          },
+          {
+            "id": "startup-package-download",
+            "publicOperation": "EngineeringControl.validateLeastFragileTools",
+            "phase": "startup-package-download"
+          },
+          {
+            "id": "private-owner-import",
+            "publicOperation": "EngineeringControl.validateLeastFragileTools",
+            "phase": "private-owner-import"
+          },
+          {
+            "id": "private-public-entry",
+            "publicOperation": "EngineeringControl.validateLeastFragileTools",
+            "phase": "private-public-entry"
+          },
+          {
+            "id": "unproven-alternative",
+            "publicOperation": "EngineeringControl.validateLeastFragileTools",
+            "phase": "unproven-alternative"
+          }
+        ],
+        "trigger": "Validate actual application lock, canonical pins, ADHD public-owner capabilities and actual M08 blocked research readback; isolate failing external OS inputs without writing files.",
+        "faultControls": [
+          {
+            "id": "external-source-overlay",
+            "seam": "os",
+            "affectedPhases": [
+              "mismatched-lock",
+              "feature-scheduler",
+              "feature-blocker",
+              "feature-credentials",
+              "runtime-download",
+              "startup-package-download",
+              "private-owner-import",
+              "private-public-entry"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "owner-source-validation",
+            "independentReader": "EngineeringControl public readback: source inventory digest, three check states and finite rejection reasons",
+            "caseIds": [
+              "actual-lock-and-owners",
+              "mismatched-lock",
+              "feature-scheduler",
+              "feature-blocker",
+              "feature-credentials",
+              "runtime-download",
+              "startup-package-download",
+              "private-owner-import",
+              "private-public-entry",
+              "unproven-alternative"
+            ]
+          },
+          {
+            "id": "real-m08-decision",
+            "independentReader": "EngineeringControl.checkResearch: M08 BLOCKED, null choice, missing G0 validation and release admission",
+            "caseIds": [
+              "actual-lock-and-owners",
+              "mismatched-lock",
+              "feature-scheduler",
+              "feature-blocker",
+              "feature-credentials",
+              "runtime-download",
+              "startup-package-download",
+              "private-owner-import",
+              "private-public-entry",
+              "unproven-alternative"
+            ]
+          },
+          {
+            "id": "unchanged-application-lock",
+            "independentReader": "Retained toy probe run/show and independent filesystem readback of original application lock digest",
+            "caseIds": [
+              "actual-lock-and-owners",
+              "mismatched-lock",
+              "feature-scheduler",
+              "feature-blocker",
+              "feature-credentials",
+              "runtime-download",
+              "startup-package-download",
+              "private-owner-import",
+              "private-public-entry",
+              "unproven-alternative"
+            ]
+          }
+        ],
+        "simUnavailableReason": "TEST-PLAN assigns this prebuild source/lock compatibility check to CLI; a user conversation cannot introduce isolated dependency or OS-source mutations."
+      },
+      "registrationExact": true,
+      "cases": [
+        {
+          "id": "engineering.least-fragile-tools",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:54:02.362Z",
+          "reasonCode": "LEAST_FRAGILE_TOOLS_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"actual-lock-and-owners\",\"expectedFailurePhase\":null,\"ownerStates\":[{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"},{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"},{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"}],\"observedFailures\":[],\"sourceOverlays\":0,\"externalSeam\":\"actual_sources\",\"filesWritten\":false,\"actualLockUnchanged\":true,\"researchDecision\":{\"componentId\":\"M08\",\"state\":\"BLOCKED\",\"selectedTool\":null,\"missingValidationIds\":[\"G0:R0:M08\"]},\"researchAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"nativeAdmissionVerified\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "471be3528e3702e11f84abb29aee4320ffec7f6acaecb77142073f82672f88a7",
+              "570e921735ed76778864746ef954875cbac9431bf3862f70d38bf69533190b93",
+              "1520e5a2e3d5f5d72e4373da951570abe9b55fd6c90d5770fd7baf4c9a12d7c5",
+              "526a993a0f22b2d2176444178c414f42c768f462b82b16554caba0490f539d62",
+              "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d",
+              "0127fd6e992c94bb512af83d507e107431426d2d4a09885d1a420119f2d530be",
+              "cb940fdd04a1fd8f3ccda07383b59ca279da8ffdacc6da239e501a183ea3fc05",
+              "58548a27ebef1188bc6ddf4349ec1a46b9cec328a49bace60d65ff09c1516178",
+              "517fe6e96e5a60306c24af43de025b31c91d1c235ca1884c8ed1810c8ea93262",
+              "b473376e473c822ca930b5f62d9cd8dbca72a600364e0cfeb4e6049823e8b481",
+              "c03337cf45b4566a09a1bed5c4a55a3548466ba6f10eca0af8c67f1cc299d707",
+              "77544f2cf942219e5eb052dad12738f1981e0deb6609b283a75d5b5149e1c66f",
+              "a5a7aa698052ad52006e806e0af65034e600cdeb57db25108a33c9e22affd47b",
+              "526b4f967454f88823d0aaa461d1af185186ff0a16f309187d4773814f7bc3c8",
+              "3798c44244de6a4e7259793d8f03dcc6f596415cd27e80352632e0b6c94d2474",
+              "b823967b9b3ffabe4da53343c1205ca12fe73f708b638149995118ec9e7d781f",
+              "bc8630f618dbe2e20e30673f3893eebbd7ec6779931dcb9800728d7685d61257",
+              "947c6ff9727f6c9f89a596f7ab27b46529305e8595b2e0fbbbb4b080162175dd",
+              "4f181c9f85ed5a823a2801416c2e47ac7d2d50cb137a4c67462f969e4dcd5488",
+              "ca7454aac0f76429b5d56bbc3bd61fa706fb1088a19f45d64cf38e055fbf4670",
+              "c1d0195af2a0748454b06af8f218e5c90415c19d39154d0058fee8229c12d859",
+              "7b984b4fe448e062ad07e12f4ea410d974f1e6b9a1c5a0a0474f96c78dbefbe5",
+              "e89b3336e0c2458ac204fb0927da30f4541abfab48a9d55735c4655719a3f10d",
+              "de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3",
+              "014b3b659391a46492cbdb2b16acfecdcea99bf1db0ade281ed5b3b780c031e0",
+              "4f4e1e038da0edd8e94789a66f6fa54488618f1211026f5bceeb8738d0ee7c13",
+              "1d05eb45ac19b66832681b21c20d014b443a90239a31b2bd96e7ec3298a325a0",
+              "087ee59a3db9407e7d099ebe1de03e60b1093b8ee4f279a64a8212fb97ba97d4",
+              "817397eb64804b1733b8078854583b2d15a7fd16e3c839e65703698892180235",
+              "bc0c7359b09596697361ee68cf3c6e25a653b1715c641a450d7d5685c9bd3c48",
+              "9dd9abecb68e044d0be3cede12784ae92b76d24590d74b860e1b8f40decf3670",
+              "87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed",
+              "148786c9813e819f52c31ea5c8529d2d47308a845dad0840daa965691f5308b5",
+              "69a1d774e0f1f7c5ab66036d3e00b55a5849be7aa680352d42359f67d937357a",
+              "e31f71139a843840cb714a0c85a42786bb308295d67c0585756924473de4a87c",
+              "b1552fe69af229003621293cae8981b2dac6d5107354629b7d5b610c874a40d4",
+              "9fabecd96737de50eb19f0ec53519d0c2e87e33034b332b1facc94a4b573370e",
+              "e9a2805429d979a01ebdae2e6ac4b7f4f65b6ddd68522736e21a85d7391372a8",
+              "5d8f4a275e4d6dff4d40fbf57add6267d7dd55b8fa12560b3eef973c0e50d6c2",
+              "0606ab8e2ccda810bdf50352cc517478977f7658696105d35d88d1e1dfb5142d"
+            ]
+          }
+        },
+        {
+          "id": "engineering.least-fragile-tools",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:54:02.475Z",
+          "reasonCode": "LEAST_FRAGILE_TOOLS_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"mismatched-lock\",\"expectedFailurePhase\":\"canonical-lock\",\"ownerStates\":[{\"state\":\"FAIL\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_FAIL\"},{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"},{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"}],\"observedFailures\":[\"{\\\"phase\\\":\\\"canonical-lock\\\",\\\"failures\\\":[\\\"DEPENDENCY_LOCK_MISMATCH:pg\\\"],\\\"sourceInventoryDigest\\\":\\\"4cde7045d27a7cb52029d1fa53ed084e0ff9fe85d897dfea54067999ca302611\\\",\\\"sourceCount\\\":3,\\\"researchDecision\\\":{\\\"componentId\\\":\\\"M08\\\",\\\"state\\\":\\\"BLOCKED\\\",\\\"selectedTool\\\":null,\\\"missingValidationIds\\\":[\\\"G0:R0:M08\\\"]},\\\"researchAdmission\\\":\\\"BLOCKED\\\",\\\"researchAcceptanceComplete\\\":false,\\\"sourceOverlays\\\":1,\\\"filesWritten\\\":false,\\\"nativeAdmissionVerified\\\":false,\\\"wholeATComplete\\\":false}\"],\"sourceOverlays\":1,\"externalSeam\":\"OS\",\"filesWritten\":false,\"actualLockUnchanged\":true,\"researchDecision\":{\"componentId\":\"M08\",\"state\":\"BLOCKED\",\"selectedTool\":null,\"missingValidationIds\":[\"G0:R0:M08\"]},\"researchAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"nativeAdmissionVerified\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "471be3528e3702e11f84abb29aee4320ffec7f6acaecb77142073f82672f88a7",
+              "570e921735ed76778864746ef954875cbac9431bf3862f70d38bf69533190b93",
+              "1520e5a2e3d5f5d72e4373da951570abe9b55fd6c90d5770fd7baf4c9a12d7c5",
+              "526a993a0f22b2d2176444178c414f42c768f462b82b16554caba0490f539d62",
+              "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d",
+              "0127fd6e992c94bb512af83d507e107431426d2d4a09885d1a420119f2d530be",
+              "cb940fdd04a1fd8f3ccda07383b59ca279da8ffdacc6da239e501a183ea3fc05",
+              "7322fa1b2e4c478234f76f81ca15182a422bf138f7a825cb4b505db294e49f40",
+              "58548a27ebef1188bc6ddf4349ec1a46b9cec328a49bace60d65ff09c1516178",
+              "517fe6e96e5a60306c24af43de025b31c91d1c235ca1884c8ed1810c8ea93262",
+              "b473376e473c822ca930b5f62d9cd8dbca72a600364e0cfeb4e6049823e8b481",
+              "c03337cf45b4566a09a1bed5c4a55a3548466ba6f10eca0af8c67f1cc299d707",
+              "77544f2cf942219e5eb052dad12738f1981e0deb6609b283a75d5b5149e1c66f",
+              "a5a7aa698052ad52006e806e0af65034e600cdeb57db25108a33c9e22affd47b",
+              "526b4f967454f88823d0aaa461d1af185186ff0a16f309187d4773814f7bc3c8",
+              "3798c44244de6a4e7259793d8f03dcc6f596415cd27e80352632e0b6c94d2474",
+              "b823967b9b3ffabe4da53343c1205ca12fe73f708b638149995118ec9e7d781f",
+              "bc8630f618dbe2e20e30673f3893eebbd7ec6779931dcb9800728d7685d61257",
+              "947c6ff9727f6c9f89a596f7ab27b46529305e8595b2e0fbbbb4b080162175dd",
+              "4f181c9f85ed5a823a2801416c2e47ac7d2d50cb137a4c67462f969e4dcd5488",
+              "ca7454aac0f76429b5d56bbc3bd61fa706fb1088a19f45d64cf38e055fbf4670",
+              "c1d0195af2a0748454b06af8f218e5c90415c19d39154d0058fee8229c12d859",
+              "7b984b4fe448e062ad07e12f4ea410d974f1e6b9a1c5a0a0474f96c78dbefbe5",
+              "e89b3336e0c2458ac204fb0927da30f4541abfab48a9d55735c4655719a3f10d",
+              "de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3",
+              "014b3b659391a46492cbdb2b16acfecdcea99bf1db0ade281ed5b3b780c031e0",
+              "4f4e1e038da0edd8e94789a66f6fa54488618f1211026f5bceeb8738d0ee7c13",
+              "1d05eb45ac19b66832681b21c20d014b443a90239a31b2bd96e7ec3298a325a0",
+              "087ee59a3db9407e7d099ebe1de03e60b1093b8ee4f279a64a8212fb97ba97d4",
+              "817397eb64804b1733b8078854583b2d15a7fd16e3c839e65703698892180235",
+              "bc0c7359b09596697361ee68cf3c6e25a653b1715c641a450d7d5685c9bd3c48",
+              "9dd9abecb68e044d0be3cede12784ae92b76d24590d74b860e1b8f40decf3670",
+              "87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed",
+              "148786c9813e819f52c31ea5c8529d2d47308a845dad0840daa965691f5308b5",
+              "69a1d774e0f1f7c5ab66036d3e00b55a5849be7aa680352d42359f67d937357a",
+              "e31f71139a843840cb714a0c85a42786bb308295d67c0585756924473de4a87c",
+              "b1552fe69af229003621293cae8981b2dac6d5107354629b7d5b610c874a40d4",
+              "9fabecd96737de50eb19f0ec53519d0c2e87e33034b332b1facc94a4b573370e",
+              "e9a2805429d979a01ebdae2e6ac4b7f4f65b6ddd68522736e21a85d7391372a8",
+              "5d8f4a275e4d6dff4d40fbf57add6267d7dd55b8fa12560b3eef973c0e50d6c2",
+              "0606ab8e2ccda810bdf50352cc517478977f7658696105d35d88d1e1dfb5142d"
+            ]
+          }
+        },
+        {
+          "id": "engineering.least-fragile-tools",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:54:02.585Z",
+          "reasonCode": "LEAST_FRAGILE_TOOLS_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"feature-scheduler\",\"expectedFailurePhase\":\"owner-capabilities\",\"ownerStates\":[{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"},{\"state\":\"FAIL\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_FAIL\"},{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"}],\"observedFailures\":[\"{\\\"phase\\\":\\\"owner-capabilities\\\",\\\"failures\\\":[\\\"FEATURE_AMBIENT_CAPABILITY_REFUSED:packages/adhd/src/at106-external-os-fixture.ts\\\"],\\\"sourceInventoryDigest\\\":\\\"48319110f9e3d023af6e09bf69e6c999ef9d26876e17570c6a32af1a40049b60\\\",\\\"sourceCount\\\":4,\\\"researchDecision\\\":{\\\"componentId\\\":\\\"M08\\\",\\\"state\\\":\\\"BLOCKED\\\",\\\"selectedTool\\\":null,\\\"missingValidationIds\\\":[\\\"G0:R0:M08\\\"]},\\\"researchAdmission\\\":\\\"BLOCKED\\\",\\\"researchAcceptanceComplete\\\":false,\\\"sourceOverlays\\\":1,\\\"filesWritten\\\":false,\\\"nativeAdmissionVerified\\\":false,\\\"wholeATComplete\\\":false}\"],\"sourceOverlays\":1,\"externalSeam\":\"OS\",\"filesWritten\":false,\"actualLockUnchanged\":true,\"researchDecision\":{\"componentId\":\"M08\",\"state\":\"BLOCKED\",\"selectedTool\":null,\"missingValidationIds\":[\"G0:R0:M08\"]},\"researchAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"nativeAdmissionVerified\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "471be3528e3702e11f84abb29aee4320ffec7f6acaecb77142073f82672f88a7",
+              "570e921735ed76778864746ef954875cbac9431bf3862f70d38bf69533190b93",
+              "1520e5a2e3d5f5d72e4373da951570abe9b55fd6c90d5770fd7baf4c9a12d7c5",
+              "526a993a0f22b2d2176444178c414f42c768f462b82b16554caba0490f539d62",
+              "9431953152722d6d35c357bced98789ace3bb3a11bafdce8460928ead2b50ab3",
+              "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d",
+              "0127fd6e992c94bb512af83d507e107431426d2d4a09885d1a420119f2d530be",
+              "cb940fdd04a1fd8f3ccda07383b59ca279da8ffdacc6da239e501a183ea3fc05",
+              "58548a27ebef1188bc6ddf4349ec1a46b9cec328a49bace60d65ff09c1516178",
+              "517fe6e96e5a60306c24af43de025b31c91d1c235ca1884c8ed1810c8ea93262",
+              "b473376e473c822ca930b5f62d9cd8dbca72a600364e0cfeb4e6049823e8b481",
+              "c03337cf45b4566a09a1bed5c4a55a3548466ba6f10eca0af8c67f1cc299d707",
+              "77544f2cf942219e5eb052dad12738f1981e0deb6609b283a75d5b5149e1c66f",
+              "a5a7aa698052ad52006e806e0af65034e600cdeb57db25108a33c9e22affd47b",
+              "526b4f967454f88823d0aaa461d1af185186ff0a16f309187d4773814f7bc3c8",
+              "3798c44244de6a4e7259793d8f03dcc6f596415cd27e80352632e0b6c94d2474",
+              "b823967b9b3ffabe4da53343c1205ca12fe73f708b638149995118ec9e7d781f",
+              "bc8630f618dbe2e20e30673f3893eebbd7ec6779931dcb9800728d7685d61257",
+              "947c6ff9727f6c9f89a596f7ab27b46529305e8595b2e0fbbbb4b080162175dd",
+              "4f181c9f85ed5a823a2801416c2e47ac7d2d50cb137a4c67462f969e4dcd5488",
+              "ca7454aac0f76429b5d56bbc3bd61fa706fb1088a19f45d64cf38e055fbf4670",
+              "c1d0195af2a0748454b06af8f218e5c90415c19d39154d0058fee8229c12d859",
+              "7b984b4fe448e062ad07e12f4ea410d974f1e6b9a1c5a0a0474f96c78dbefbe5",
+              "e89b3336e0c2458ac204fb0927da30f4541abfab48a9d55735c4655719a3f10d",
+              "de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3",
+              "014b3b659391a46492cbdb2b16acfecdcea99bf1db0ade281ed5b3b780c031e0",
+              "4f4e1e038da0edd8e94789a66f6fa54488618f1211026f5bceeb8738d0ee7c13",
+              "1d05eb45ac19b66832681b21c20d014b443a90239a31b2bd96e7ec3298a325a0",
+              "087ee59a3db9407e7d099ebe1de03e60b1093b8ee4f279a64a8212fb97ba97d4",
+              "817397eb64804b1733b8078854583b2d15a7fd16e3c839e65703698892180235",
+              "bc0c7359b09596697361ee68cf3c6e25a653b1715c641a450d7d5685c9bd3c48",
+              "9dd9abecb68e044d0be3cede12784ae92b76d24590d74b860e1b8f40decf3670",
+              "87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed",
+              "148786c9813e819f52c31ea5c8529d2d47308a845dad0840daa965691f5308b5",
+              "69a1d774e0f1f7c5ab66036d3e00b55a5849be7aa680352d42359f67d937357a",
+              "e31f71139a843840cb714a0c85a42786bb308295d67c0585756924473de4a87c",
+              "b1552fe69af229003621293cae8981b2dac6d5107354629b7d5b610c874a40d4",
+              "9fabecd96737de50eb19f0ec53519d0c2e87e33034b332b1facc94a4b573370e",
+              "e9a2805429d979a01ebdae2e6ac4b7f4f65b6ddd68522736e21a85d7391372a8",
+              "5d8f4a275e4d6dff4d40fbf57add6267d7dd55b8fa12560b3eef973c0e50d6c2",
+              "0606ab8e2ccda810bdf50352cc517478977f7658696105d35d88d1e1dfb5142d"
+            ]
+          }
+        },
+        {
+          "id": "engineering.least-fragile-tools",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:54:02.692Z",
+          "reasonCode": "LEAST_FRAGILE_TOOLS_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"feature-blocker\",\"expectedFailurePhase\":\"owner-capabilities\",\"ownerStates\":[{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"},{\"state\":\"FAIL\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_FAIL\"},{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"}],\"observedFailures\":[\"{\\\"phase\\\":\\\"owner-capabilities\\\",\\\"failures\\\":[\\\"FEATURE_OWNER_IMPORT_REFUSED:node:child_process\\\"],\\\"sourceInventoryDigest\\\":\\\"3e77fa0aa2514b4094d8e9f5a97a863f07b631106f8f6aa30eb918873a9b622a\\\",\\\"sourceCount\\\":4,\\\"researchDecision\\\":{\\\"componentId\\\":\\\"M08\\\",\\\"state\\\":\\\"BLOCKED\\\",\\\"selectedTool\\\":null,\\\"missingValidationIds\\\":[\\\"G0:R0:M08\\\"]},\\\"researchAdmission\\\":\\\"BLOCKED\\\",\\\"researchAcceptanceComplete\\\":false,\\\"sourceOverlays\\\":1,\\\"filesWritten\\\":false,\\\"nativeAdmissionVerified\\\":false,\\\"wholeATComplete\\\":false}\"],\"sourceOverlays\":1,\"externalSeam\":\"OS\",\"filesWritten\":false,\"actualLockUnchanged\":true,\"researchDecision\":{\"componentId\":\"M08\",\"state\":\"BLOCKED\",\"selectedTool\":null,\"missingValidationIds\":[\"G0:R0:M08\"]},\"researchAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"nativeAdmissionVerified\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "471be3528e3702e11f84abb29aee4320ffec7f6acaecb77142073f82672f88a7",
+              "570e921735ed76778864746ef954875cbac9431bf3862f70d38bf69533190b93",
+              "1520e5a2e3d5f5d72e4373da951570abe9b55fd6c90d5770fd7baf4c9a12d7c5",
+              "526a993a0f22b2d2176444178c414f42c768f462b82b16554caba0490f539d62",
+              "1f4dda1b7c084f1fb27ccfccb216ef954ac6dcd7b60537b959342ba6977e0809",
+              "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d",
+              "0127fd6e992c94bb512af83d507e107431426d2d4a09885d1a420119f2d530be",
+              "cb940fdd04a1fd8f3ccda07383b59ca279da8ffdacc6da239e501a183ea3fc05",
+              "58548a27ebef1188bc6ddf4349ec1a46b9cec328a49bace60d65ff09c1516178",
+              "517fe6e96e5a60306c24af43de025b31c91d1c235ca1884c8ed1810c8ea93262",
+              "b473376e473c822ca930b5f62d9cd8dbca72a600364e0cfeb4e6049823e8b481",
+              "c03337cf45b4566a09a1bed5c4a55a3548466ba6f10eca0af8c67f1cc299d707",
+              "77544f2cf942219e5eb052dad12738f1981e0deb6609b283a75d5b5149e1c66f",
+              "a5a7aa698052ad52006e806e0af65034e600cdeb57db25108a33c9e22affd47b",
+              "526b4f967454f88823d0aaa461d1af185186ff0a16f309187d4773814f7bc3c8",
+              "3798c44244de6a4e7259793d8f03dcc6f596415cd27e80352632e0b6c94d2474",
+              "b823967b9b3ffabe4da53343c1205ca12fe73f708b638149995118ec9e7d781f",
+              "bc8630f618dbe2e20e30673f3893eebbd7ec6779931dcb9800728d7685d61257",
+              "947c6ff9727f6c9f89a596f7ab27b46529305e8595b2e0fbbbb4b080162175dd",
+              "4f181c9f85ed5a823a2801416c2e47ac7d2d50cb137a4c67462f969e4dcd5488",
+              "ca7454aac0f76429b5d56bbc3bd61fa706fb1088a19f45d64cf38e055fbf4670",
+              "c1d0195af2a0748454b06af8f218e5c90415c19d39154d0058fee8229c12d859",
+              "7b984b4fe448e062ad07e12f4ea410d974f1e6b9a1c5a0a0474f96c78dbefbe5",
+              "e89b3336e0c2458ac204fb0927da30f4541abfab48a9d55735c4655719a3f10d",
+              "de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3",
+              "014b3b659391a46492cbdb2b16acfecdcea99bf1db0ade281ed5b3b780c031e0",
+              "4f4e1e038da0edd8e94789a66f6fa54488618f1211026f5bceeb8738d0ee7c13",
+              "1d05eb45ac19b66832681b21c20d014b443a90239a31b2bd96e7ec3298a325a0",
+              "087ee59a3db9407e7d099ebe1de03e60b1093b8ee4f279a64a8212fb97ba97d4",
+              "817397eb64804b1733b8078854583b2d15a7fd16e3c839e65703698892180235",
+              "bc0c7359b09596697361ee68cf3c6e25a653b1715c641a450d7d5685c9bd3c48",
+              "9dd9abecb68e044d0be3cede12784ae92b76d24590d74b860e1b8f40decf3670",
+              "87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed",
+              "148786c9813e819f52c31ea5c8529d2d47308a845dad0840daa965691f5308b5",
+              "69a1d774e0f1f7c5ab66036d3e00b55a5849be7aa680352d42359f67d937357a",
+              "e31f71139a843840cb714a0c85a42786bb308295d67c0585756924473de4a87c",
+              "b1552fe69af229003621293cae8981b2dac6d5107354629b7d5b610c874a40d4",
+              "9fabecd96737de50eb19f0ec53519d0c2e87e33034b332b1facc94a4b573370e",
+              "e9a2805429d979a01ebdae2e6ac4b7f4f65b6ddd68522736e21a85d7391372a8",
+              "5d8f4a275e4d6dff4d40fbf57add6267d7dd55b8fa12560b3eef973c0e50d6c2",
+              "0606ab8e2ccda810bdf50352cc517478977f7658696105d35d88d1e1dfb5142d"
+            ]
+          }
+        },
+        {
+          "id": "engineering.least-fragile-tools",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:54:02.797Z",
+          "reasonCode": "LEAST_FRAGILE_TOOLS_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"feature-credentials\",\"expectedFailurePhase\":\"owner-capabilities\",\"ownerStates\":[{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"},{\"state\":\"FAIL\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_FAIL\"},{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"}],\"observedFailures\":[\"{\\\"phase\\\":\\\"owner-capabilities\\\",\\\"failures\\\":[\\\"FEATURE_OWNER_IMPORT_REFUSED:node:fs\\\"],\\\"sourceInventoryDigest\\\":\\\"f3c5dc0ca9412bb0bfad0b095478b4442f58a799b9fa0b4fd829a68ac50ddb72\\\",\\\"sourceCount\\\":4,\\\"researchDecision\\\":{\\\"componentId\\\":\\\"M08\\\",\\\"state\\\":\\\"BLOCKED\\\",\\\"selectedTool\\\":null,\\\"missingValidationIds\\\":[\\\"G0:R0:M08\\\"]},\\\"researchAdmission\\\":\\\"BLOCKED\\\",\\\"researchAcceptanceComplete\\\":false,\\\"sourceOverlays\\\":1,\\\"filesWritten\\\":false,\\\"nativeAdmissionVerified\\\":false,\\\"wholeATComplete\\\":false}\"],\"sourceOverlays\":1,\"externalSeam\":\"OS\",\"filesWritten\":false,\"actualLockUnchanged\":true,\"researchDecision\":{\"componentId\":\"M08\",\"state\":\"BLOCKED\",\"selectedTool\":null,\"missingValidationIds\":[\"G0:R0:M08\"]},\"researchAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"nativeAdmissionVerified\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "471be3528e3702e11f84abb29aee4320ffec7f6acaecb77142073f82672f88a7",
+              "570e921735ed76778864746ef954875cbac9431bf3862f70d38bf69533190b93",
+              "1520e5a2e3d5f5d72e4373da951570abe9b55fd6c90d5770fd7baf4c9a12d7c5",
+              "526a993a0f22b2d2176444178c414f42c768f462b82b16554caba0490f539d62",
+              "85f0476d221642be1fcfe733af6d63b619bfafafb6bfd26c1efe6a7e0d5a09d3",
+              "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d",
+              "0127fd6e992c94bb512af83d507e107431426d2d4a09885d1a420119f2d530be",
+              "cb940fdd04a1fd8f3ccda07383b59ca279da8ffdacc6da239e501a183ea3fc05",
+              "58548a27ebef1188bc6ddf4349ec1a46b9cec328a49bace60d65ff09c1516178",
+              "517fe6e96e5a60306c24af43de025b31c91d1c235ca1884c8ed1810c8ea93262",
+              "b473376e473c822ca930b5f62d9cd8dbca72a600364e0cfeb4e6049823e8b481",
+              "c03337cf45b4566a09a1bed5c4a55a3548466ba6f10eca0af8c67f1cc299d707",
+              "77544f2cf942219e5eb052dad12738f1981e0deb6609b283a75d5b5149e1c66f",
+              "a5a7aa698052ad52006e806e0af65034e600cdeb57db25108a33c9e22affd47b",
+              "526b4f967454f88823d0aaa461d1af185186ff0a16f309187d4773814f7bc3c8",
+              "3798c44244de6a4e7259793d8f03dcc6f596415cd27e80352632e0b6c94d2474",
+              "b823967b9b3ffabe4da53343c1205ca12fe73f708b638149995118ec9e7d781f",
+              "bc8630f618dbe2e20e30673f3893eebbd7ec6779931dcb9800728d7685d61257",
+              "947c6ff9727f6c9f89a596f7ab27b46529305e8595b2e0fbbbb4b080162175dd",
+              "4f181c9f85ed5a823a2801416c2e47ac7d2d50cb137a4c67462f969e4dcd5488",
+              "ca7454aac0f76429b5d56bbc3bd61fa706fb1088a19f45d64cf38e055fbf4670",
+              "c1d0195af2a0748454b06af8f218e5c90415c19d39154d0058fee8229c12d859",
+              "7b984b4fe448e062ad07e12f4ea410d974f1e6b9a1c5a0a0474f96c78dbefbe5",
+              "e89b3336e0c2458ac204fb0927da30f4541abfab48a9d55735c4655719a3f10d",
+              "de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3",
+              "014b3b659391a46492cbdb2b16acfecdcea99bf1db0ade281ed5b3b780c031e0",
+              "4f4e1e038da0edd8e94789a66f6fa54488618f1211026f5bceeb8738d0ee7c13",
+              "1d05eb45ac19b66832681b21c20d014b443a90239a31b2bd96e7ec3298a325a0",
+              "087ee59a3db9407e7d099ebe1de03e60b1093b8ee4f279a64a8212fb97ba97d4",
+              "817397eb64804b1733b8078854583b2d15a7fd16e3c839e65703698892180235",
+              "bc0c7359b09596697361ee68cf3c6e25a653b1715c641a450d7d5685c9bd3c48",
+              "9dd9abecb68e044d0be3cede12784ae92b76d24590d74b860e1b8f40decf3670",
+              "87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed",
+              "148786c9813e819f52c31ea5c8529d2d47308a845dad0840daa965691f5308b5",
+              "69a1d774e0f1f7c5ab66036d3e00b55a5849be7aa680352d42359f67d937357a",
+              "e31f71139a843840cb714a0c85a42786bb308295d67c0585756924473de4a87c",
+              "b1552fe69af229003621293cae8981b2dac6d5107354629b7d5b610c874a40d4",
+              "9fabecd96737de50eb19f0ec53519d0c2e87e33034b332b1facc94a4b573370e",
+              "e9a2805429d979a01ebdae2e6ac4b7f4f65b6ddd68522736e21a85d7391372a8",
+              "5d8f4a275e4d6dff4d40fbf57add6267d7dd55b8fa12560b3eef973c0e50d6c2",
+              "0606ab8e2ccda810bdf50352cc517478977f7658696105d35d88d1e1dfb5142d"
+            ]
+          }
+        },
+        {
+          "id": "engineering.least-fragile-tools",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:54:02.898Z",
+          "reasonCode": "LEAST_FRAGILE_TOOLS_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"runtime-download\",\"expectedFailurePhase\":\"owner-capabilities\",\"ownerStates\":[{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"},{\"state\":\"FAIL\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_FAIL\"},{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"}],\"observedFailures\":[\"{\\\"phase\\\":\\\"owner-capabilities\\\",\\\"failures\\\":[\\\"FEATURE_AMBIENT_CAPABILITY_REFUSED:packages/adhd/src/at106-external-os-fixture.ts\\\"],\\\"sourceInventoryDigest\\\":\\\"5462b9d002b9eb453d4ea5b77b117c8ff934d10f154b797b6c6ff74e64ec745d\\\",\\\"sourceCount\\\":4,\\\"researchDecision\\\":{\\\"componentId\\\":\\\"M08\\\",\\\"state\\\":\\\"BLOCKED\\\",\\\"selectedTool\\\":null,\\\"missingValidationIds\\\":[\\\"G0:R0:M08\\\"]},\\\"researchAdmission\\\":\\\"BLOCKED\\\",\\\"researchAcceptanceComplete\\\":false,\\\"sourceOverlays\\\":1,\\\"filesWritten\\\":false,\\\"nativeAdmissionVerified\\\":false,\\\"wholeATComplete\\\":false}\"],\"sourceOverlays\":1,\"externalSeam\":\"OS\",\"filesWritten\":false,\"actualLockUnchanged\":true,\"researchDecision\":{\"componentId\":\"M08\",\"state\":\"BLOCKED\",\"selectedTool\":null,\"missingValidationIds\":[\"G0:R0:M08\"]},\"researchAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"nativeAdmissionVerified\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "471be3528e3702e11f84abb29aee4320ffec7f6acaecb77142073f82672f88a7",
+              "570e921735ed76778864746ef954875cbac9431bf3862f70d38bf69533190b93",
+              "1520e5a2e3d5f5d72e4373da951570abe9b55fd6c90d5770fd7baf4c9a12d7c5",
+              "526a993a0f22b2d2176444178c414f42c768f462b82b16554caba0490f539d62",
+              "e340db36f6c405d9e6461e8f5d30027b21d0533b6070d1a1fa5f239737789866",
+              "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d",
+              "0127fd6e992c94bb512af83d507e107431426d2d4a09885d1a420119f2d530be",
+              "cb940fdd04a1fd8f3ccda07383b59ca279da8ffdacc6da239e501a183ea3fc05",
+              "58548a27ebef1188bc6ddf4349ec1a46b9cec328a49bace60d65ff09c1516178",
+              "517fe6e96e5a60306c24af43de025b31c91d1c235ca1884c8ed1810c8ea93262",
+              "b473376e473c822ca930b5f62d9cd8dbca72a600364e0cfeb4e6049823e8b481",
+              "c03337cf45b4566a09a1bed5c4a55a3548466ba6f10eca0af8c67f1cc299d707",
+              "77544f2cf942219e5eb052dad12738f1981e0deb6609b283a75d5b5149e1c66f",
+              "a5a7aa698052ad52006e806e0af65034e600cdeb57db25108a33c9e22affd47b",
+              "526b4f967454f88823d0aaa461d1af185186ff0a16f309187d4773814f7bc3c8",
+              "3798c44244de6a4e7259793d8f03dcc6f596415cd27e80352632e0b6c94d2474",
+              "b823967b9b3ffabe4da53343c1205ca12fe73f708b638149995118ec9e7d781f",
+              "bc8630f618dbe2e20e30673f3893eebbd7ec6779931dcb9800728d7685d61257",
+              "947c6ff9727f6c9f89a596f7ab27b46529305e8595b2e0fbbbb4b080162175dd",
+              "4f181c9f85ed5a823a2801416c2e47ac7d2d50cb137a4c67462f969e4dcd5488",
+              "ca7454aac0f76429b5d56bbc3bd61fa706fb1088a19f45d64cf38e055fbf4670",
+              "c1d0195af2a0748454b06af8f218e5c90415c19d39154d0058fee8229c12d859",
+              "7b984b4fe448e062ad07e12f4ea410d974f1e6b9a1c5a0a0474f96c78dbefbe5",
+              "e89b3336e0c2458ac204fb0927da30f4541abfab48a9d55735c4655719a3f10d",
+              "de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3",
+              "014b3b659391a46492cbdb2b16acfecdcea99bf1db0ade281ed5b3b780c031e0",
+              "4f4e1e038da0edd8e94789a66f6fa54488618f1211026f5bceeb8738d0ee7c13",
+              "1d05eb45ac19b66832681b21c20d014b443a90239a31b2bd96e7ec3298a325a0",
+              "087ee59a3db9407e7d099ebe1de03e60b1093b8ee4f279a64a8212fb97ba97d4",
+              "817397eb64804b1733b8078854583b2d15a7fd16e3c839e65703698892180235",
+              "bc0c7359b09596697361ee68cf3c6e25a653b1715c641a450d7d5685c9bd3c48",
+              "9dd9abecb68e044d0be3cede12784ae92b76d24590d74b860e1b8f40decf3670",
+              "87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed",
+              "148786c9813e819f52c31ea5c8529d2d47308a845dad0840daa965691f5308b5",
+              "69a1d774e0f1f7c5ab66036d3e00b55a5849be7aa680352d42359f67d937357a",
+              "e31f71139a843840cb714a0c85a42786bb308295d67c0585756924473de4a87c",
+              "b1552fe69af229003621293cae8981b2dac6d5107354629b7d5b610c874a40d4",
+              "9fabecd96737de50eb19f0ec53519d0c2e87e33034b332b1facc94a4b573370e",
+              "e9a2805429d979a01ebdae2e6ac4b7f4f65b6ddd68522736e21a85d7391372a8",
+              "5d8f4a275e4d6dff4d40fbf57add6267d7dd55b8fa12560b3eef973c0e50d6c2",
+              "0606ab8e2ccda810bdf50352cc517478977f7658696105d35d88d1e1dfb5142d"
+            ]
+          }
+        },
+        {
+          "id": "engineering.least-fragile-tools",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:54:02.999Z",
+          "reasonCode": "LEAST_FRAGILE_TOOLS_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"startup-package-download\",\"expectedFailurePhase\":\"owner-capabilities\",\"ownerStates\":[{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"},{\"state\":\"FAIL\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_FAIL\"},{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"}],\"observedFailures\":[\"{\\\"phase\\\":\\\"owner-capabilities\\\",\\\"failures\\\":[\\\"FEATURE_LIFECYCLE_SCRIPT_REFUSED\\\"],\\\"sourceInventoryDigest\\\":\\\"b8456d417f58df96288de7b9a767bf866254411d9e73fed4ec90c99e05257d30\\\",\\\"sourceCount\\\":3,\\\"researchDecision\\\":{\\\"componentId\\\":\\\"M08\\\",\\\"state\\\":\\\"BLOCKED\\\",\\\"selectedTool\\\":null,\\\"missingValidationIds\\\":[\\\"G0:R0:M08\\\"]},\\\"researchAdmission\\\":\\\"BLOCKED\\\",\\\"researchAcceptanceComplete\\\":false,\\\"sourceOverlays\\\":1,\\\"filesWritten\\\":false,\\\"nativeAdmissionVerified\\\":false,\\\"wholeATComplete\\\":false}\"],\"sourceOverlays\":1,\"externalSeam\":\"OS\",\"filesWritten\":false,\"actualLockUnchanged\":true,\"researchDecision\":{\"componentId\":\"M08\",\"state\":\"BLOCKED\",\"selectedTool\":null,\"missingValidationIds\":[\"G0:R0:M08\"]},\"researchAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"nativeAdmissionVerified\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "471be3528e3702e11f84abb29aee4320ffec7f6acaecb77142073f82672f88a7",
+              "570e921735ed76778864746ef954875cbac9431bf3862f70d38bf69533190b93",
+              "5be4bbc93a5c93e1bcd4e760f400e51335f052c6b8ec2da45164377926b07b4b",
+              "526a993a0f22b2d2176444178c414f42c768f462b82b16554caba0490f539d62",
+              "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d",
+              "0127fd6e992c94bb512af83d507e107431426d2d4a09885d1a420119f2d530be",
+              "cb940fdd04a1fd8f3ccda07383b59ca279da8ffdacc6da239e501a183ea3fc05",
+              "58548a27ebef1188bc6ddf4349ec1a46b9cec328a49bace60d65ff09c1516178",
+              "517fe6e96e5a60306c24af43de025b31c91d1c235ca1884c8ed1810c8ea93262",
+              "b473376e473c822ca930b5f62d9cd8dbca72a600364e0cfeb4e6049823e8b481",
+              "c03337cf45b4566a09a1bed5c4a55a3548466ba6f10eca0af8c67f1cc299d707",
+              "77544f2cf942219e5eb052dad12738f1981e0deb6609b283a75d5b5149e1c66f",
+              "a5a7aa698052ad52006e806e0af65034e600cdeb57db25108a33c9e22affd47b",
+              "526b4f967454f88823d0aaa461d1af185186ff0a16f309187d4773814f7bc3c8",
+              "3798c44244de6a4e7259793d8f03dcc6f596415cd27e80352632e0b6c94d2474",
+              "b823967b9b3ffabe4da53343c1205ca12fe73f708b638149995118ec9e7d781f",
+              "bc8630f618dbe2e20e30673f3893eebbd7ec6779931dcb9800728d7685d61257",
+              "1520e5a2e3d5f5d72e4373da951570abe9b55fd6c90d5770fd7baf4c9a12d7c5",
+              "947c6ff9727f6c9f89a596f7ab27b46529305e8595b2e0fbbbb4b080162175dd",
+              "4f181c9f85ed5a823a2801416c2e47ac7d2d50cb137a4c67462f969e4dcd5488",
+              "ca7454aac0f76429b5d56bbc3bd61fa706fb1088a19f45d64cf38e055fbf4670",
+              "c1d0195af2a0748454b06af8f218e5c90415c19d39154d0058fee8229c12d859",
+              "7b984b4fe448e062ad07e12f4ea410d974f1e6b9a1c5a0a0474f96c78dbefbe5",
+              "e89b3336e0c2458ac204fb0927da30f4541abfab48a9d55735c4655719a3f10d",
+              "de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3",
+              "014b3b659391a46492cbdb2b16acfecdcea99bf1db0ade281ed5b3b780c031e0",
+              "4f4e1e038da0edd8e94789a66f6fa54488618f1211026f5bceeb8738d0ee7c13",
+              "1d05eb45ac19b66832681b21c20d014b443a90239a31b2bd96e7ec3298a325a0",
+              "087ee59a3db9407e7d099ebe1de03e60b1093b8ee4f279a64a8212fb97ba97d4",
+              "817397eb64804b1733b8078854583b2d15a7fd16e3c839e65703698892180235",
+              "bc0c7359b09596697361ee68cf3c6e25a653b1715c641a450d7d5685c9bd3c48",
+              "9dd9abecb68e044d0be3cede12784ae92b76d24590d74b860e1b8f40decf3670",
+              "87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed",
+              "148786c9813e819f52c31ea5c8529d2d47308a845dad0840daa965691f5308b5",
+              "69a1d774e0f1f7c5ab66036d3e00b55a5849be7aa680352d42359f67d937357a",
+              "e31f71139a843840cb714a0c85a42786bb308295d67c0585756924473de4a87c",
+              "b1552fe69af229003621293cae8981b2dac6d5107354629b7d5b610c874a40d4",
+              "9fabecd96737de50eb19f0ec53519d0c2e87e33034b332b1facc94a4b573370e",
+              "e9a2805429d979a01ebdae2e6ac4b7f4f65b6ddd68522736e21a85d7391372a8",
+              "5d8f4a275e4d6dff4d40fbf57add6267d7dd55b8fa12560b3eef973c0e50d6c2",
+              "0606ab8e2ccda810bdf50352cc517478977f7658696105d35d88d1e1dfb5142d"
+            ]
+          }
+        },
+        {
+          "id": "engineering.least-fragile-tools",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:54:03.100Z",
+          "reasonCode": "LEAST_FRAGILE_TOOLS_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"private-owner-import\",\"expectedFailurePhase\":\"owner-capabilities\",\"ownerStates\":[{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"},{\"state\":\"FAIL\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_FAIL\"},{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"}],\"observedFailures\":[\"{\\\"phase\\\":\\\"owner-capabilities\\\",\\\"failures\\\":[\\\"FEATURE_LOCAL_IMPORT_REFUSED:../../self-improvement/src/model-admission.js\\\"],\\\"sourceInventoryDigest\\\":\\\"deac28da8cc93305e665f01c0a5d1c3241e544f68a738aba08c4b3923850454a\\\",\\\"sourceCount\\\":4,\\\"researchDecision\\\":{\\\"componentId\\\":\\\"M08\\\",\\\"state\\\":\\\"BLOCKED\\\",\\\"selectedTool\\\":null,\\\"missingValidationIds\\\":[\\\"G0:R0:M08\\\"]},\\\"researchAdmission\\\":\\\"BLOCKED\\\",\\\"researchAcceptanceComplete\\\":false,\\\"sourceOverlays\\\":1,\\\"filesWritten\\\":false,\\\"nativeAdmissionVerified\\\":false,\\\"wholeATComplete\\\":false}\"],\"sourceOverlays\":1,\"externalSeam\":\"OS\",\"filesWritten\":false,\"actualLockUnchanged\":true,\"researchDecision\":{\"componentId\":\"M08\",\"state\":\"BLOCKED\",\"selectedTool\":null,\"missingValidationIds\":[\"G0:R0:M08\"]},\"researchAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"nativeAdmissionVerified\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "471be3528e3702e11f84abb29aee4320ffec7f6acaecb77142073f82672f88a7",
+              "570e921735ed76778864746ef954875cbac9431bf3862f70d38bf69533190b93",
+              "1520e5a2e3d5f5d72e4373da951570abe9b55fd6c90d5770fd7baf4c9a12d7c5",
+              "526a993a0f22b2d2176444178c414f42c768f462b82b16554caba0490f539d62",
+              "386bb9b497bc68934374e5769c8dca5d3b584f45c6ce345e8e3871022fb4d283",
+              "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d",
+              "0127fd6e992c94bb512af83d507e107431426d2d4a09885d1a420119f2d530be",
+              "cb940fdd04a1fd8f3ccda07383b59ca279da8ffdacc6da239e501a183ea3fc05",
+              "58548a27ebef1188bc6ddf4349ec1a46b9cec328a49bace60d65ff09c1516178",
+              "517fe6e96e5a60306c24af43de025b31c91d1c235ca1884c8ed1810c8ea93262",
+              "b473376e473c822ca930b5f62d9cd8dbca72a600364e0cfeb4e6049823e8b481",
+              "c03337cf45b4566a09a1bed5c4a55a3548466ba6f10eca0af8c67f1cc299d707",
+              "77544f2cf942219e5eb052dad12738f1981e0deb6609b283a75d5b5149e1c66f",
+              "a5a7aa698052ad52006e806e0af65034e600cdeb57db25108a33c9e22affd47b",
+              "526b4f967454f88823d0aaa461d1af185186ff0a16f309187d4773814f7bc3c8",
+              "3798c44244de6a4e7259793d8f03dcc6f596415cd27e80352632e0b6c94d2474",
+              "b823967b9b3ffabe4da53343c1205ca12fe73f708b638149995118ec9e7d781f",
+              "bc8630f618dbe2e20e30673f3893eebbd7ec6779931dcb9800728d7685d61257",
+              "947c6ff9727f6c9f89a596f7ab27b46529305e8595b2e0fbbbb4b080162175dd",
+              "4f181c9f85ed5a823a2801416c2e47ac7d2d50cb137a4c67462f969e4dcd5488",
+              "ca7454aac0f76429b5d56bbc3bd61fa706fb1088a19f45d64cf38e055fbf4670",
+              "c1d0195af2a0748454b06af8f218e5c90415c19d39154d0058fee8229c12d859",
+              "7b984b4fe448e062ad07e12f4ea410d974f1e6b9a1c5a0a0474f96c78dbefbe5",
+              "e89b3336e0c2458ac204fb0927da30f4541abfab48a9d55735c4655719a3f10d",
+              "de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3",
+              "014b3b659391a46492cbdb2b16acfecdcea99bf1db0ade281ed5b3b780c031e0",
+              "4f4e1e038da0edd8e94789a66f6fa54488618f1211026f5bceeb8738d0ee7c13",
+              "1d05eb45ac19b66832681b21c20d014b443a90239a31b2bd96e7ec3298a325a0",
+              "087ee59a3db9407e7d099ebe1de03e60b1093b8ee4f279a64a8212fb97ba97d4",
+              "817397eb64804b1733b8078854583b2d15a7fd16e3c839e65703698892180235",
+              "bc0c7359b09596697361ee68cf3c6e25a653b1715c641a450d7d5685c9bd3c48",
+              "9dd9abecb68e044d0be3cede12784ae92b76d24590d74b860e1b8f40decf3670",
+              "87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed",
+              "148786c9813e819f52c31ea5c8529d2d47308a845dad0840daa965691f5308b5",
+              "69a1d774e0f1f7c5ab66036d3e00b55a5849be7aa680352d42359f67d937357a",
+              "e31f71139a843840cb714a0c85a42786bb308295d67c0585756924473de4a87c",
+              "b1552fe69af229003621293cae8981b2dac6d5107354629b7d5b610c874a40d4",
+              "9fabecd96737de50eb19f0ec53519d0c2e87e33034b332b1facc94a4b573370e",
+              "e9a2805429d979a01ebdae2e6ac4b7f4f65b6ddd68522736e21a85d7391372a8",
+              "5d8f4a275e4d6dff4d40fbf57add6267d7dd55b8fa12560b3eef973c0e50d6c2",
+              "0606ab8e2ccda810bdf50352cc517478977f7658696105d35d88d1e1dfb5142d"
+            ]
+          }
+        },
+        {
+          "id": "engineering.least-fragile-tools",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:54:03.201Z",
+          "reasonCode": "LEAST_FRAGILE_TOOLS_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"private-public-entry\",\"expectedFailurePhase\":\"owner-capabilities\",\"ownerStates\":[{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"},{\"state\":\"FAIL\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_FAIL\"},{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"}],\"observedFailures\":[\"{\\\"phase\\\":\\\"owner-capabilities\\\",\\\"failures\\\":[\\\"FEATURE_PUBLIC_ENTRY_REFUSED\\\"],\\\"sourceInventoryDigest\\\":\\\"0687128c61356dd0388a8425662aecd252c1df4033f30031b56f7eb8fdf17e99\\\",\\\"sourceCount\\\":3,\\\"researchDecision\\\":{\\\"componentId\\\":\\\"M08\\\",\\\"state\\\":\\\"BLOCKED\\\",\\\"selectedTool\\\":null,\\\"missingValidationIds\\\":[\\\"G0:R0:M08\\\"]},\\\"researchAdmission\\\":\\\"BLOCKED\\\",\\\"researchAcceptanceComplete\\\":false,\\\"sourceOverlays\\\":1,\\\"filesWritten\\\":false,\\\"nativeAdmissionVerified\\\":false,\\\"wholeATComplete\\\":false}\"],\"sourceOverlays\":1,\"externalSeam\":\"OS\",\"filesWritten\":false,\"actualLockUnchanged\":true,\"researchDecision\":{\"componentId\":\"M08\",\"state\":\"BLOCKED\",\"selectedTool\":null,\"missingValidationIds\":[\"G0:R0:M08\"]},\"researchAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"nativeAdmissionVerified\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "471be3528e3702e11f84abb29aee4320ffec7f6acaecb77142073f82672f88a7",
+              "570e921735ed76778864746ef954875cbac9431bf3862f70d38bf69533190b93",
+              "b23a14b56e98958eaf711898901a665984bce8480cd97f02e3d3fa1d7a81e66c",
+              "526a993a0f22b2d2176444178c414f42c768f462b82b16554caba0490f539d62",
+              "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d",
+              "0127fd6e992c94bb512af83d507e107431426d2d4a09885d1a420119f2d530be",
+              "cb940fdd04a1fd8f3ccda07383b59ca279da8ffdacc6da239e501a183ea3fc05",
+              "58548a27ebef1188bc6ddf4349ec1a46b9cec328a49bace60d65ff09c1516178",
+              "517fe6e96e5a60306c24af43de025b31c91d1c235ca1884c8ed1810c8ea93262",
+              "b473376e473c822ca930b5f62d9cd8dbca72a600364e0cfeb4e6049823e8b481",
+              "c03337cf45b4566a09a1bed5c4a55a3548466ba6f10eca0af8c67f1cc299d707",
+              "77544f2cf942219e5eb052dad12738f1981e0deb6609b283a75d5b5149e1c66f",
+              "a5a7aa698052ad52006e806e0af65034e600cdeb57db25108a33c9e22affd47b",
+              "526b4f967454f88823d0aaa461d1af185186ff0a16f309187d4773814f7bc3c8",
+              "3798c44244de6a4e7259793d8f03dcc6f596415cd27e80352632e0b6c94d2474",
+              "b823967b9b3ffabe4da53343c1205ca12fe73f708b638149995118ec9e7d781f",
+              "bc8630f618dbe2e20e30673f3893eebbd7ec6779931dcb9800728d7685d61257",
+              "1520e5a2e3d5f5d72e4373da951570abe9b55fd6c90d5770fd7baf4c9a12d7c5",
+              "947c6ff9727f6c9f89a596f7ab27b46529305e8595b2e0fbbbb4b080162175dd",
+              "4f181c9f85ed5a823a2801416c2e47ac7d2d50cb137a4c67462f969e4dcd5488",
+              "ca7454aac0f76429b5d56bbc3bd61fa706fb1088a19f45d64cf38e055fbf4670",
+              "c1d0195af2a0748454b06af8f218e5c90415c19d39154d0058fee8229c12d859",
+              "7b984b4fe448e062ad07e12f4ea410d974f1e6b9a1c5a0a0474f96c78dbefbe5",
+              "e89b3336e0c2458ac204fb0927da30f4541abfab48a9d55735c4655719a3f10d",
+              "de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3",
+              "014b3b659391a46492cbdb2b16acfecdcea99bf1db0ade281ed5b3b780c031e0",
+              "4f4e1e038da0edd8e94789a66f6fa54488618f1211026f5bceeb8738d0ee7c13",
+              "1d05eb45ac19b66832681b21c20d014b443a90239a31b2bd96e7ec3298a325a0",
+              "087ee59a3db9407e7d099ebe1de03e60b1093b8ee4f279a64a8212fb97ba97d4",
+              "817397eb64804b1733b8078854583b2d15a7fd16e3c839e65703698892180235",
+              "bc0c7359b09596697361ee68cf3c6e25a653b1715c641a450d7d5685c9bd3c48",
+              "9dd9abecb68e044d0be3cede12784ae92b76d24590d74b860e1b8f40decf3670",
+              "87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed",
+              "148786c9813e819f52c31ea5c8529d2d47308a845dad0840daa965691f5308b5",
+              "69a1d774e0f1f7c5ab66036d3e00b55a5849be7aa680352d42359f67d937357a",
+              "e31f71139a843840cb714a0c85a42786bb308295d67c0585756924473de4a87c",
+              "b1552fe69af229003621293cae8981b2dac6d5107354629b7d5b610c874a40d4",
+              "9fabecd96737de50eb19f0ec53519d0c2e87e33034b332b1facc94a4b573370e",
+              "e9a2805429d979a01ebdae2e6ac4b7f4f65b6ddd68522736e21a85d7391372a8",
+              "5d8f4a275e4d6dff4d40fbf57add6267d7dd55b8fa12560b3eef973c0e50d6c2",
+              "0606ab8e2ccda810bdf50352cc517478977f7658696105d35d88d1e1dfb5142d"
+            ]
+          }
+        },
+        {
+          "id": "engineering.least-fragile-tools",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:54:03.299Z",
+          "reasonCode": "LEAST_FRAGILE_TOOLS_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"unproven-alternative\",\"expectedFailurePhase\":null,\"ownerStates\":[{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"},{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"},{\"state\":\"PASS\",\"reasonCode\":\"LEAST_FRAGILE_TOOLS_SOURCE_PASS\"}],\"observedFailures\":[],\"sourceOverlays\":0,\"externalSeam\":\"actual_sources\",\"filesWritten\":false,\"actualLockUnchanged\":true,\"researchDecision\":{\"componentId\":\"M08\",\"state\":\"BLOCKED\",\"selectedTool\":null,\"missingValidationIds\":[\"G0:R0:M08\"]},\"researchAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"nativeAdmissionVerified\":false,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "471be3528e3702e11f84abb29aee4320ffec7f6acaecb77142073f82672f88a7",
+              "570e921735ed76778864746ef954875cbac9431bf3862f70d38bf69533190b93",
+              "1520e5a2e3d5f5d72e4373da951570abe9b55fd6c90d5770fd7baf4c9a12d7c5",
+              "526a993a0f22b2d2176444178c414f42c768f462b82b16554caba0490f539d62",
+              "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d",
+              "0127fd6e992c94bb512af83d507e107431426d2d4a09885d1a420119f2d530be",
+              "cb940fdd04a1fd8f3ccda07383b59ca279da8ffdacc6da239e501a183ea3fc05",
+              "58548a27ebef1188bc6ddf4349ec1a46b9cec328a49bace60d65ff09c1516178",
+              "517fe6e96e5a60306c24af43de025b31c91d1c235ca1884c8ed1810c8ea93262",
+              "b473376e473c822ca930b5f62d9cd8dbca72a600364e0cfeb4e6049823e8b481",
+              "c03337cf45b4566a09a1bed5c4a55a3548466ba6f10eca0af8c67f1cc299d707",
+              "77544f2cf942219e5eb052dad12738f1981e0deb6609b283a75d5b5149e1c66f",
+              "a5a7aa698052ad52006e806e0af65034e600cdeb57db25108a33c9e22affd47b",
+              "526b4f967454f88823d0aaa461d1af185186ff0a16f309187d4773814f7bc3c8",
+              "3798c44244de6a4e7259793d8f03dcc6f596415cd27e80352632e0b6c94d2474",
+              "b823967b9b3ffabe4da53343c1205ca12fe73f708b638149995118ec9e7d781f",
+              "bc8630f618dbe2e20e30673f3893eebbd7ec6779931dcb9800728d7685d61257",
+              "947c6ff9727f6c9f89a596f7ab27b46529305e8595b2e0fbbbb4b080162175dd",
+              "4f181c9f85ed5a823a2801416c2e47ac7d2d50cb137a4c67462f969e4dcd5488",
+              "ca7454aac0f76429b5d56bbc3bd61fa706fb1088a19f45d64cf38e055fbf4670",
+              "c1d0195af2a0748454b06af8f218e5c90415c19d39154d0058fee8229c12d859",
+              "7b984b4fe448e062ad07e12f4ea410d974f1e6b9a1c5a0a0474f96c78dbefbe5",
+              "e89b3336e0c2458ac204fb0927da30f4541abfab48a9d55735c4655719a3f10d",
+              "de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3",
+              "014b3b659391a46492cbdb2b16acfecdcea99bf1db0ade281ed5b3b780c031e0",
+              "4f4e1e038da0edd8e94789a66f6fa54488618f1211026f5bceeb8738d0ee7c13",
+              "1d05eb45ac19b66832681b21c20d014b443a90239a31b2bd96e7ec3298a325a0",
+              "087ee59a3db9407e7d099ebe1de03e60b1093b8ee4f279a64a8212fb97ba97d4",
+              "817397eb64804b1733b8078854583b2d15a7fd16e3c839e65703698892180235",
+              "bc0c7359b09596697361ee68cf3c6e25a653b1715c641a450d7d5685c9bd3c48",
+              "9dd9abecb68e044d0be3cede12784ae92b76d24590d74b860e1b8f40decf3670",
+              "87847de28695c20fcde4884774a4a5b9f1c70341c03288cd33a8271cc53ef9ed",
+              "148786c9813e819f52c31ea5c8529d2d47308a845dad0840daa965691f5308b5",
+              "69a1d774e0f1f7c5ab66036d3e00b55a5849be7aa680352d42359f67d937357a",
+              "e31f71139a843840cb714a0c85a42786bb308295d67c0585756924473de4a87c",
+              "b1552fe69af229003621293cae8981b2dac6d5107354629b7d5b610c874a40d4",
+              "9fabecd96737de50eb19f0ec53519d0c2e87e33034b332b1facc94a4b573370e",
+              "e9a2805429d979a01ebdae2e6ac4b7f4f65b6ddd68522736e21a85d7391372a8",
+              "5d8f4a275e4d6dff4d40fbf57add6267d7dd55b8fa12560b3eef973c0e50d6c2",
+              "0606ab8e2ccda810bdf50352cc517478977f7658696105d35d88d1e1dfb5142d"
+            ]
+          }
+        }
+      ],
+      "resultState": "NOT_IMPLEMENTED",
+      "complete": false
+    },
+    {
+      "probeId": "AT-self-improvement-54",
+      "run": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.10/authority61-implementation-cli/AT-self-improvement-54-run.json",
+        "sha256": "984d14708b26ce68b1cc8800c3c54faa3dc780a84935d71653d98660bbde7333"
+      },
+      "operationId": "59a4c49c-29ed-4539-a1ef-8c39579bfd0d",
+      "show": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.10/authority61-implementation-cli/AT-self-improvement-54-show.json",
+        "sha256": "913f313d753e044d7bacb2d013f99c08a36d25f6bba1eb2bce61924f3b1030c3"
+      },
+      "sameData": true,
+      "sourceRegistration": {
+        "id": "AT-self-improvement-54",
+        "rung": "CLI",
+        "sourceAssertionHash": "b4141538d262d66d789eb55ef7608df4effefb5dd4c7c6fc801f1c54e41e4c23",
+        "commandId": "probe.run",
+        "scenarioId": "research.component-comparison",
+        "owner": "self-improvement",
+        "firstRelease": "R0",
+        "kind": "static_gate",
+        "mandatoryCases": [
+          {
+            "id": "required-component-absent",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "required-component-absent"
+          },
+          {
+            "id": "required-component-unsupported",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "required-component-unsupported"
+          },
+          {
+            "id": "required-component-incomplete-ids",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "required-component-incomplete-ids"
+          },
+          {
+            "id": "required-component-complete-outside-selected",
+            "publicOperation": "EngineeringControl.checkResearch",
+            "phase": "required-component-complete-outside-selected"
+          }
+        ],
+        "trigger": "Check absent, unsupported, incomplete and outside-selected required-component decisions through the real indexed research owner; report exact missing IDs while whole admission remains unresolved.",
+        "faultControls": [
+          {
+            "id": "external-required-decision-omissions",
+            "seam": "provider",
+            "affectedPhases": [
+              "required-component-absent",
+              "required-component-unsupported",
+              "required-component-incomplete-ids"
+            ]
+          }
+        ],
+        "observations": [
+          {
+            "id": "indexed-required-component-result",
+            "independentReader": "EngineeringControl.checkResearch: bound archive digests and exact requirement/source/validation IDs",
+            "caseIds": [
+              "required-component-absent",
+              "required-component-unsupported",
+              "required-component-incomplete-ids",
+              "required-component-complete-outside-selected"
+            ]
+          },
+          {
+            "id": "stored-cli-readback",
+            "independentReader": "toy probe.show: persisted exact required-component decisions",
+            "caseIds": [
+              "required-component-absent",
+              "required-component-unsupported",
+              "required-component-incomplete-ids",
+              "required-component-complete-outside-selected"
+            ]
+          }
+        ],
+        "simUnavailableReason": "SIM cannot invoke administrative pre-build research gates or replace indexed external research documents. The CLI drives the real public owner through its owned document seam."
+      },
+      "registrationExact": true,
+      "cases": [
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:54:03.968Z",
+          "reasonCode": "REQUIRED_COMPONENT_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"required-component-absent\",\"actualUid\":501,\"archive\":{\"key\":\"TS\",\"path\":\"research/v2/tool-stack.md\",\"originalDigest\":\"de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3\",\"contentDigest\":\"b6d8323d49be7c1f40e1f46b01b03b0da841cba53c13f740b1dcf671f83d7587\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M02\",\"comparisonDigest\":null,\"state\":\"BLOCKED\",\"findings\":[\"DECISION_MISSING\",\"REQUIRED_OPTIONS_MISSING\",\"CHOICE_UNSUPPORTED\",\"PRIMARY_EVIDENCE_MISSING\",\"RELEASE_GATE_MISSING\",\"VALIDATION_PLAN_MISSING\",\"ACCEPTANCE_LINK_MISSING\",\"MAPPED_REQUIREMENTS_MISSING\",\"VALIDATION_ID_MISSING\"],\"selectedTool\":null,\"validationPlan\":\"\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":null,\"missingRequirementIds\":[\"0.1\",\"0.2\",\"0.10\"],\"missingSourceIds\":[\"TS\",\"AF\"],\"missingValidationIds\":[\"G0:R0:M02\"]},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "b6d8323d49be7c1f40e1f46b01b03b0da841cba53c13f740b1dcf671f83d7587",
+              "e28a19d3562195f1c2ab121c93e9f2e3c24434230df6f89fac517e490da3478a",
+              "0606ab8e2ccda810bdf50352cc517478977f7658696105d35d88d1e1dfb5142d"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:54:04.022Z",
+          "reasonCode": "REQUIRED_COMPONENT_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"required-component-unsupported\",\"actualUid\":501,\"archive\":{\"key\":\"TS\",\"path\":\"research/v2/tool-stack.md\",\"originalDigest\":\"de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3\",\"contentDigest\":\"ecb2a3ae9fca209185313f0761eb4d9bf1b0b36a3a605982c11ee0143207d18d\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M02\",\"comparisonDigest\":\"3719f259526bda8ed72a4394f2dd1c8f0e9697561babb26890719ff61a19dd31\",\"state\":\"BLOCKED\",\"findings\":[\"CHOICE_UNSUPPORTED\",\"PRIMARY_EVIDENCE_MISSING\",\"VALIDATION_ID_MISSING\"],\"selectedTool\":\"Self-hosted workflow engine\",\"validationPlan\":\"Run the pinned shared-connection rollback, lost-claim fencing and generated-schema CLI fault probe before component admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"outside\",\"missingRequirementIds\":[],\"missingSourceIds\":[\"TS\"],\"missingValidationIds\":[\"G0:R0:M02\"]},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "ecb2a3ae9fca209185313f0761eb4d9bf1b0b36a3a605982c11ee0143207d18d",
+              "e28a19d3562195f1c2ab121c93e9f2e3c24434230df6f89fac517e490da3478a",
+              "0606ab8e2ccda810bdf50352cc517478977f7658696105d35d88d1e1dfb5142d"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:54:04.075Z",
+          "reasonCode": "REQUIRED_COMPONENT_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"required-component-incomplete-ids\",\"actualUid\":501,\"archive\":{\"key\":\"TS\",\"path\":\"research/v2/tool-stack.md\",\"originalDigest\":\"de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3\",\"contentDigest\":\"65a69a552f28e9845904213edf670facc44a8eb7c4941d805788db4108481c1e\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M02\",\"comparisonDigest\":\"e3f050b4ffb75013ff7e4aa0e1f2e12f9bac8ebd5c23770ed39bb824669187c5\",\"state\":\"BLOCKED\",\"findings\":[\"PRIMARY_EVIDENCE_MISSING\",\"MAPPED_REQUIREMENTS_MISSING\",\"VALIDATION_ID_MISSING\"],\"selectedTool\":\"Self-hosted workflow engine\",\"validationPlan\":\"Run the pinned shared-connection rollback, lost-claim fencing and generated-schema CLI fault probe before component admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"outside\",\"missingRequirementIds\":[\"0.10\"],\"missingSourceIds\":[\"TS\"],\"missingValidationIds\":[\"G0:R0:M02\"]},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "65a69a552f28e9845904213edf670facc44a8eb7c4941d805788db4108481c1e",
+              "e28a19d3562195f1c2ab121c93e9f2e3c24434230df6f89fac517e490da3478a",
+              "0606ab8e2ccda810bdf50352cc517478977f7658696105d35d88d1e1dfb5142d"
+            ]
+          }
+        },
+        {
+          "id": "research.component-comparison",
+          "owner": "self-improvement",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:54:04.132Z",
+          "reasonCode": "REQUIRED_COMPONENT_DIAGNOSTIC_PASS",
+          "prerequisite": "{\"caseId\":\"required-component-complete-outside-selected\",\"actualUid\":501,\"archive\":{\"key\":\"TS\",\"path\":\"research/v2/tool-stack.md\",\"originalDigest\":\"de40121f25a50bae0f675ad8e42c730c98ceb65d9b3a148dc9a57b554275fbe3\",\"contentDigest\":\"935ed85fc834e4c415a8466e8ff7ce9199f054d2fd06facb04c811c9ff3ac465\",\"origin\":\"seeded_document\"},\"result\":{\"componentId\":\"M02\",\"comparisonDigest\":\"2488cd5e4ca64f84083e681bf5e4dcf257c1bb72a47e25f3880942141ed4fc17\",\"state\":\"PASS\",\"findings\":[],\"selectedTool\":\"Self-hosted workflow engine\",\"validationPlan\":\"Run the pinned shared-connection rollback, lost-claim fencing and generated-schema CLI fault probe before component admission.\",\"unresolvedFacts\":[],\"scope\":\"component_comparison\",\"researchAttestationVerified\":false,\"acceptanceComplete\":false,\"selectedOptionId\":\"outside\",\"missingRequirementIds\":[],\"missingSourceIds\":[],\"missingValidationIds\":[]},\"registerAdmission\":\"BLOCKED\",\"liveProviderSends\":0,\"wholeATComplete\":false}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": [
+              "935ed85fc834e4c415a8466e8ff7ce9199f054d2fd06facb04c811c9ff3ac465",
+              "e28a19d3562195f1c2ab121c93e9f2e3c24434230df6f89fac517e490da3478a",
+              "0606ab8e2ccda810bdf50352cc517478977f7658696105d35d88d1e1dfb5142d"
+            ]
+          }
+        }
+      ],
+      "resultState": "NOT_IMPLEMENTED",
+      "complete": false
+    },
+    {
+      "probeId": "AT-cli-4",
+      "run": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.10/authority61-implementation-cli/AT-cli-4-run.json",
+        "sha256": "44ce2f3217ebf76ff35e23242791b7f66cddfe6b6730dc87e5fdfa72e403e45c"
+      },
+      "operationId": "036e7e69-a851-4580-b844-f77ad1f52053",
+      "show": {
+        "exitCode": 0,
+        "path": "build/evidence/R0.10/authority61-implementation-cli/AT-cli-4-show.json",
+        "sha256": "e788741d9bb65c340b17943d584ca5805204d8bf7714005b05616de0c4e9d8f7"
+      },
+      "sameData": true,
+      "sourceRegistration": null,
+      "registrationExact": false,
+      "cases": [
+        {
+          "id": "bootstrap.fixture-runtime",
+          "owner": "ops",
+          "state": "PASS",
+          "checkedAt": "2026-10-07T06:54:04.667Z",
+          "reasonCode": "TRUSTED_FIXTURE_LIFECYCLE_SUBSET",
+          "prerequisite": "{\"stackId\":\"a9ef40d8-d35c-4f62-8032-a77818435885\",\"nonce\":\"0c56542c-a28f-4af7-b2f6-554e2a5bbb63\",\"pid\":67812,\"state\":\"running\",\"checkedAt\":\"2026-10-07T06:54:04.649Z\",\"heartbeatCount\":\"33\"}",
+          "nextCommandId": "probe.show",
+          "links": {
+            "recordRefs": [],
+            "observations": [],
+            "artifactDigests": []
+          }
+        }
+      ],
+      "resultState": "NOT_IMPLEMENTED",
+      "complete": false
+    }
+  ],
+  "up": {
+    "exitCode": 0,
+    "path": "build/evidence/R0.10/authority61-implementation-cli/up.json",
+    "sha256": "ef8cb1ec281ff9805e71f1ea86bff938ed78d7cd4a66e56d10ed9aeb84ce7d74"
+  },
+  "stackId": "a9ef40d8-d35c-4f62-8032-a77818435885",
+  "down": {
+    "exitCode": 0,
+    "path": "build/evidence/R0.10/authority61-implementation-cli/down.json",
+    "sha256": "b3296c1e1bb42c22a851a7a1b62ccd5f5a82bb84c4c23d1bae7f4725722171a0"
+  },
+  "teardown": {
+    "stackId": "a9ef40d8-d35c-4f62-8032-a77818435885",
+    "checkpointRefs": [],
+    "fenceRefs": [],
+    "stoppedResourceRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "a9ef40d8-d35c-4f62-8032-a77818435885"
+      }
+    ],
+    "retainedArtifactRefs": [
+      {
+        "module": "ops",
+        "kind": "test_world",
+        "id": "a9ef40d8-d35c-4f62-8032-a77818435885"
+      }
+    ],
+    "unresolvedResourceRefs": [],
+    "complete": true
+  }
+}

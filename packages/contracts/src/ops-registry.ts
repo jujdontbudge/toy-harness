@@ -220,6 +220,7 @@ export const durableCadenceCheckInventory = [
 ] as const;
 export const testStackCheckInventory = [
   ...durableCadenceCheckInventory,
+  declaration("build.source-inventory", "ops", "probe.run"),
   declaration("contracts.dto-roundtrip", "contracts", "probe.run"),
   declaration("engineering.map", "self-improvement", "feature-map.check"), declaration("engineering.static", "self-improvement", "gardener.run"), declaration("engineering.least-fragile-tools", "self-improvement", "gardener.run"),
   declaration("accounting.model-admission", "self-improvement", "probe.run"),

@@ -12,6 +12,7 @@ import { componentComparisonProbe } from "./component-comparison-probe.js";
 import { capacityTrialProbe } from "./capacity-trial-probe.js";
 import { durableCadenceProbe } from "./durable-cadence-probe.js";
 import { dtoRoundtripProbe } from "./dto-roundtrip-probe.js";
+import { BuildInventoryProbe } from "./build-inventory-probe.js";
 import { leastFragileToolsProbe } from "./least-fragile-tools-probe.js";
 import { accountingTestConnection, withAccountingFixture } from "./accounting-postgres.js";
 
@@ -20,6 +21,7 @@ export const ReplayEnvironment = {
     const owned = OpsTestStack.inspect(context);
     if (!owned.ok) return owned;
     if (!registeredProbeInputSchema.safeParse(input).success) return { ok: false, error: { module: "ops", code: "INVALID_INPUT", message: opsErrorMessages.INVALID_INPUT, retryable: false } };
+    if (input.probeId === "AT-authority-61") return BuildInventoryProbe.exercise(input, context);
     if (input.probeId === "AT-hermes-config-50") return dtoRoundtripProbe(input, context);
     if (input.probeId === "AT-adhd-features-106") return leastFragileToolsProbe(input, context);
     if (["AT-hermes-config-69", "AT-activity-focus-86"].includes(input.probeId)) return durableCadenceProbe(input, context);

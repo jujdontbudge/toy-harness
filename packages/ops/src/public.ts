@@ -10,12 +10,13 @@ import {
 } from "@toy/contracts";
 import type {
   CheckViewV1, ControlStatusInputV1, ControlStatusV1, DoctorInputV1, DoctorReportV1, OpsControlContextV1, OpsErrorCode, Release,
-  Result, TestStackDownInputV1, TestStackOperationV1, TestStackUpInputV1
+  FilePatchV1, Result, TestStackDownInputV1, TestStackOperationV1, TestStackUpInputV1
 } from "@toy/contracts";
 export type { ModuleId } from "@toy/contracts";
 export { trustedCheckoutRoot, trustedToolEnvironment } from "./checkout-root.js";
 export { RoleIdentityBootstrap } from "./identity-bootstrap.js";
 import { inspectBootstrapJournal } from "./bootstrap-journal.js";
+import { inspectBuildInventory } from "./build-inventory.js";
 import { inspectCodexProtocol } from "./codex-protocol.js";
 import { measureBootstrapResources } from "./bootstrap-resources.js";
 import { inspectRoleIdentities } from "./role-identities.js";
@@ -65,6 +66,9 @@ const unavailableSnapshot = (release: Release, context: OpsControlContextV1): Co
 };
 
 export const OpsControlRead = {
+  validateBuildInventory(context: OpsControlContextV1, testSources: readonly FilePatchV1[] = []): Result<CheckViewV1[]> {
+    return inspectBuildInventory(context, testSources);
+  },
   status(input: ControlStatusInputV1, context: OpsControlContextV1): Promise<ControlStatusV1> {
     const request = controlStatusInputSchema.parse(input);
     const snapshot = unavailableSnapshot(request.release ?? "R0", context);
@@ -90,6 +94,9 @@ export const OpsControlRead = {
       if (fixture.ok && fixture.data.result) checks.push(...fixture.data.result.components);
     }
     if (request.deep) {
+      const inventory = inspectBuildInventory(context, []);
+      if (inventory.ok) checks.push(...inventory.data);
+      else checks.push(checkViewSchema.parse({ id: "build.source-inventory", owner: "ops", state: "FAIL", checkedAt: new Date().toISOString(), reasonCode: inventory.error.code, prerequisite: "Actual source inventory could not be validated.", nextCommandId: "probe.run", links: { recordRefs: [], observations: [], artifactDigests: [] } }));
       const runtime = inspectCodexRuntime(context.timeoutMs - Number((process.hrtime.bigint() - started) / 1000000n));
       const runtimeIndex = checks.findIndex((check) => check.id === "read.model-route");
       if (runtimeIndex >= 0) checks[runtimeIndex] = runtime;
@@ -151,3 +158,4 @@ export { BackupCapacityProbe } from "./backup-capacity-probe.js";
 
 export { RoleControlProbe } from "./role-control-probe.js";
 export { QueueFaultProbe } from "./queue-fault-probe.js";
+
