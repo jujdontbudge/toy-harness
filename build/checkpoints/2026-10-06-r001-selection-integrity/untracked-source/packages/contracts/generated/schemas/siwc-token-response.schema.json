@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "access_token": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 32768
+    },
+    "refresh_token": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 32768
+    },
+    "id_token": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 65536
+    },
+    "token_type": {
+      "type": "string",
+      "const": "Bearer"
+    },
+    "expires_in": {
+      "type": "integer",
+      "exclusiveMinimum": 0,
+      "maximum": 31536000
+    },
+    "scope": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048
+    }
+  },
+  "required": [
+    "access_token",
+    "refresh_token",
+    "id_token",
+    "token_type",
+    "expires_in",
+    "scope"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:SiwcTokenResponse"
+}

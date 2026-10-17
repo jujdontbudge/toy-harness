@@ -1,0 +1,137 @@
+{
+  "schemaVersion": "toy.r004-role-inventory-preparation.v1",
+  "recordedAt": "2026-10-06T05:46:26.347306+00:00",
+  "interface": "OpsControlRead.doctor",
+  "command": "toy doctor --deep --json",
+  "sourceHashes": {
+    "packages/ops/src/role-identities.ts": "49f303a5b06d8c0dc89136c1333da379bcb27e13465c1b6a2a8dfb325ee785b1",
+    "packages/ops/src/public.ts": "483b9223f60d66b463805617b6156576f44c0ff0e4800984b81be6d3e0e8f522",
+    "packages/contracts/src/test-control.ts": "7fd7ba0218e65d133207a5432319bd6754cb623106fec889f2f51ed5fe110299",
+    "packages/contracts/src/ops-registry.ts": "5ca9ad736cc132f7f9d729011a6cf918263f9cbc2fef9855bb865aced84020f0",
+    "docs/adr/0025-role-identity-inventory.md": "699dbdbe5a71d2a7048abc523ba8641fe69e67ec64b041a037d2feaaf226fed8"
+  },
+  "wholeAssignedATsPassed": false,
+  "identityGateVerified": false,
+  "serviceAccountsCreated": false,
+  "installedRuntimeBound": false,
+  "cliCases": [
+    {
+      "case": "real default deep doctor",
+      "exitCode": 5,
+      "roleCount": 8,
+      "missing": 8,
+      "evidence": "identity-inventory-doctor.json"
+    },
+    {
+      "case": "minimum valid 1000 ms deadline",
+      "exitCode": 5,
+      "roleCount": 8,
+      "observedCommandWallSeconds": 0.2455085,
+      "evidence": "identity-inventory-minimum-deadline-doctor.json"
+    },
+    {
+      "case": "below-minimum deadline refused before owner execution",
+      "exitCode": 2,
+      "evidence": "identity-inventory-deadline-doctor.json"
+    },
+    {
+      "case": "caller UID override refused",
+      "exitCode": 2,
+      "evidence": "identity-inventory-override-rejected.json"
+    }
+  ],
+  "fullCheck": {
+    "exitCode": 0,
+    "evidence": "identity-inventory-full-check-output.txt",
+    "generatedArtifacts": 290,
+    "contracts": 225,
+    "features": 83,
+    "commands": 54,
+    "ATs": 1447,
+    "swiftInvoked": false
+  },
+  "policyRegression": {
+    "exitCode": 0,
+    "publicCliInvocations": 3,
+    "evidence": "identity-inventory-policy-regression-output.txt"
+  },
+  "actualObservations": {
+    "schemaVersion": "toy.service-role-identity-inventory.v1",
+    "observedAt": "2026-10-06T05:43:31.717Z",
+    "roles": [
+      {
+        "role": "_toy_agent",
+        "state": "missing",
+        "uid": null,
+        "gid": null,
+        "groupNames": [],
+        "adminGroupObserved": null
+      },
+      {
+        "role": "_toy_control",
+        "state": "missing",
+        "uid": null,
+        "gid": null,
+        "groupNames": [],
+        "adminGroupObserved": null
+      },
+      {
+        "role": "_toy_review",
+        "state": "missing",
+        "uid": null,
+        "gid": null,
+        "groupNames": [],
+        "adminGroupObserved": null
+      },
+      {
+        "role": "_toy_repair",
+        "state": "missing",
+        "uid": null,
+        "gid": null,
+        "groupNames": [],
+        "adminGroupObserved": null
+      },
+      {
+        "role": "_toy_evaluator",
+        "state": "missing",
+        "uid": null,
+        "gid": null,
+        "groupNames": [],
+        "adminGroupObserved": null
+      },
+      {
+        "role": "_toy_pg",
+        "state": "missing",
+        "uid": null,
+        "gid": null,
+        "groupNames": [],
+        "adminGroupObserved": null
+      },
+      {
+        "role": "_toy_app",
+        "state": "missing",
+        "uid": null,
+        "gid": null,
+        "groupNames": [],
+        "adminGroupObserved": null
+      },
+      {
+        "role": "_toy_ops",
+        "state": "missing",
+        "uid": null,
+        "gid": null,
+        "groupNames": [],
+        "adminGroupObserved": null
+      }
+    ],
+    "allExpectedIdentitiesObserved": false,
+    "identityGateVerified": false,
+    "maintenanceIdentityVerified": false
+  },
+  "pending": [
+    "Concrete canonical protected bootstrap and independent maintenance/recovery identity",
+    "Actual numeric service UIDs, protected parents, role/socket/credential manifest",
+    "Actual-UID shell/filesystem/MCP/IPC/GUI and privilege/secret denial matrix",
+    "Protected SIWC hosting, real Keychain, browser and native provider binding"
+  ]
+}

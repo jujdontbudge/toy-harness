@@ -1,0 +1,111 @@
+{
+  "schemaVersion": "toy.r001-post-stream40-next-minimum-review.v1",
+  "recordedAt": "2026-10-07T15:20:20Z",
+  "card": "R0.01",
+  "state": "READ_ONLY_REVIEW_COMPLETE_STOP",
+  "sourceAdmission": "SOURCE_NOT_ADMITTED",
+  "runtimeExecuted": false,
+  "wholeATsPassed": [],
+  "wholeCardAcceptance": false,
+  "memoryAdmission": {
+    "path": "build/evidence/R0.01/post-stream40-next-minimum-memory.json",
+    "sha256": "1cdec256f83547a8032061f18edd6e858e5762a825e48b6a6af86f2405bc4d10",
+    "measuredAt": "2026-10-07T15:13:42.330Z",
+    "pressure": "normal",
+    "availableBytes": 2264825856,
+    "ownHelperBytes": 268435456,
+    "ownHeadroomBytes": 536870912,
+    "ownRequiredBytes": 805306368,
+    "admitted": true
+  },
+  "reviewInputs": {
+    "priorRoutePlan": {"path": "build/evidence/R0.01/independent-route-next-minimum-20261007.json", "sha256": "acc1a36b4f515b93788b5a28f8dca400af92253d467fd1dfad49d1a3183f3fa3"},
+    "nativeOwnerLoadReadiness": {"path": "build/evidence/R0.01/native-owner-load-readiness-review-20261007.json", "sha256": "27a29be3232d8f1491220733c39a5388e8d1fd24ed83127f2c6a3c98771effa2"},
+    "AT40Proof": {
+      "path": "build/evidence/R0.01/stream40-final-verification.json",
+      "sha256": "7753e733955f8d413f46611bda35394967308dba09f0319499bed78692958752",
+      "state": "STREAM_AND_DURABLE_RESERVATION_UNIT_VERIFIED_STOPPED_FIRST_IMPLEMENTATION_PASS",
+      "checksPassed": 6,
+      "sourceRegistrationExact": true,
+      "runShowExact": true,
+      "worldsDown": ["e5881b6c-b4cd-4564-ad23-0ffc4b72c0e0", "dc736793-98c3-471a-b636-3964ff4d9726"],
+      "allWorldTeardownsComplete": true,
+      "zeroUnresolvedResources": true,
+      "providerSendPermitIssued": false,
+      "nativeAcceptance": false,
+      "accountAcceptance": false,
+      "wholeATComplete": false,
+      "wholeCardComplete": false
+    },
+    "existingRoleRouteProbe": {
+      "manifest": "tests/registry.yaml: AT-ops-9 / model-route.roles",
+      "caseSet": ["foreground-original-route", "ordinary-child-route", "research-pinned-skill", "background-arm-isolation"],
+      "savedShow": "build/evidence/R0.06/ops9-route-final-cli/AT-ops-9-show.json",
+      "savedShowSha256": "f700253f55904bfc99acbdd53a3e028400ba5dd476ad9f46839ce8cf2c124813",
+      "savedRun": "build/evidence/R0.06/ops9-route-final-cli/AT-ops-9-run.json",
+      "savedRunSha256": "b098bb9338e6a33eb4ea74da5075ec1071b42eacec5e7915cc51d7472bd0eb7a",
+      "readback": "Four case views are PASS, but the overall operation remains NOT_IMPLEMENTED and complete=false; preserve the existing manifest/proof without claiming whole AT-ops-9 PASS.",
+      "exactChecksAlreadyInSource": "ModelRouteProbe.roleRouteProbe checks requested and observed model/effort/tier for foreground Sol/max/Fast, child Luna/max/Fast, research Sol/medium/Fast, and background original Sol/max/Fast before and after experimental Sol/high/Standard; it also checks stable policy identity and refuses the experimental foreground arm."
+    }
+  },
+  "recommendedNextMinimum": {
+    "title": "Extend the existing role-policy probes to assigned Hermes assertions without duplicating AT-ops-9 checks",
+    "assignedAssertions": [
+      {"id": "AT-hermes-config-1", "source": "specs/hermes-config.md:3320", "hash": "28ffe470515eea00afa9a42575215987ee674518518a27f98083750c721e9634", "rung": "CLI"},
+      {"id": "AT-hermes-config-76", "source": "specs/hermes-config.md:645", "hash": "2795cec5272c1d8dbe6971e89c0dd9123ae51b0e3a888e317f254afea4a4e0d8", "rung": "CLI"},
+      {"id": "AT-hermes-config-77", "source": "specs/hermes-config.md:646", "hash": "19a97d80ae843f92894a26fad4e0f05212b57cf28e8c99cf838d3fefb1931bd2", "rung": "CLI"}
+    ],
+    "existingCoverage": "The registered AT-ops-9 model-route.roles path already uses roleRouteProbe's exact requested/observed route checks for foreground, child, research, and background original/experimental isolation. Its fixed four-case manifest must remain unchanged. A saved AT-ops-9 run/show produced four PASS case views but overall NOT_IMPLEMENTED/complete=false, so that evidence is not whole-AT PASS. Separately, the case-scoped AT-hermes-config-76 policy probe produced nine PASS check views but its public show also remained NOT_IMPLEMENTED/complete=false. No HC-1/76/77 manifest exists.",
+    "exactGap": "roleRouteProbe covers the exact original/experimental settings needed by AT-76/77 and should be reused for those IDs. Its fixed four-case AT-ops-9 manifest does not include AT-1's cron, auxiliary, or continuation roles. The existing case-scoped AT-1 policy branch already calls the fixed fake provider for every modelRoleSchema role, including those three, but its original-role pass predicate does not compare requested/observed values with the expected role mapping. Current unfiltered dispatch restricts roleRouteProbe to AT-ops-9 and the policy branch to an explicit case.",
+    "smallestReachableImplementation": {
+      "publicPath": "toy probe.run/show -> existing roleRouteProbe and role-policy branch -> ModelRoute.select/invoke -> fixed fake HTTP/SSE/provider seams",
+      "sourcePaths": ["tests/registry.yaml", "cli/src/main.ts", "packages/ops/src/fixture-stack.ts", "packages/hermes/src/model-route-probe.ts"],
+      "work": [
+        "Keep the AT-ops-9 manifest and its four-case proof byte-for-byte intact. Register AT-76/77 with the same model-route.roles case set and narrowly admit those exact IDs to roleRouteProbe, reusing its existing exact foreground/research/background and experimental-isolation checks.",
+        "Register AT-1 on the existing all-role policy path. Preserve its existing direct fake-provider calls and add exact requested/observed role-setting predicates for foreground/cron/auxiliary/continuation/research. Reuse the exact route predicate established in roleRouteProbe for overlapping roles and leave its four-case AT-ops-9 manifest/proof untouched; do not add another fixture or duplicate assertions.",
+        "Add owner/ID/scenario-checked unfiltered dispatch for these registered assignments. Keep each assigned ID bound to its own run/show. No new command, API, DTO, DB object, fixture system or provider permission is required."
+      ],
+      "preMutationRequirement": "A future source card must first capture an actual unfiltered public CLI RED/readback for the selected exact registered ID; the prior case-scoped NOT_IMPLEMENTED readback is not that baseline.",
+      "limits": "This fake route-policy unit does not establish account consent, protected grant binding, live inference, provider permission, or whole-AT acceptance. The existing feature map already lists these AT IDs, so no new feature is implied. Preserve AT-ops-9's existing four-case manifest and saved evidence; do not relabel its current NOT_IMPLEMENTED operation as whole-AT PASS."
+    }
+  },
+  "otherCandidates": [
+    {
+      "ids": ["AT-hermes-config-39", "AT-ops-46", "AT-self-improvement-57"],
+      "disposition": "DEFER",
+      "reason": "The current gate and ADR0021 select direct SIWC Responses for Hermes and reserve Codex exec/app-server for delegated agents. These assertions require a first-party CLI/app-server compatibility/authentication path, including refresh/restart and account-dependent checks; the existing delegation executor is not that subprocess seam. Do not fabricate authorization or switch routes to satisfy the older wording."
+    },
+    {
+      "ids": ["AT-hermes-config-78", "AT-ops-55"],
+      "disposition": "PARTIAL_DIAGNOSTIC_ONLY",
+      "reason": "The saved unbound-SIWC public CLI diagnostic has exact run/show readbacks but both operations remain NOT_IMPLEMENTED. Its checks show an unauthorized synthetic grant and no fallback; they do not create an auxiliary task or exercise exhausted usage, durable obligations, reset/top-up actions, or provider availability. It is not either assigned AT."
+    },
+    {
+      "ids": ["AT-self-improvement-58"],
+      "disposition": "BEHAVIOR_OVERLAP_WITH_AT40; OWN_ASSIGNED_ID_UNPROVEN",
+      "reason": "The current AT40 proof already covers a cancelled-after-output stream, local 4096 estimate, pending/uncertain usage, null provider cap, actual HTTP close/cancel, and retained/read-back durable charge. ModelRouteProbe's fixed request guard rejects max_output_tokens in the external request. The separate AT58 assertion is not registered or independently run, but no second stream fixture or accounting implementation is justified by this review."
+    }
+  ],
+  "nativeBoundary": {
+    "rootRequest02": {"id": "049154d9-4ed1-4db0-97e5-69b5a79190d9", "state": "PENDING"},
+    "effect": "No native owner.load or ROOT03 work is admitted before valid ROOT02 terminal DONE and the readiness review's exact restoration checks. That prerequisite does not block the recommended fake ModelRoute policy unit.",
+    "noNativeAuthProviderOSBrowserOrRootAction": true
+  },
+  "sourcePins": [
+    {"path": "tests/acceptance-index.json", "sha256": "c9b645eab7f55b2ebf35d7db769a534a4837de23ad3dc3d913f3189e781d44fa"},
+    {"path": "tests/registry.yaml", "sha256": "2952c2a7bc3b66752de58360f3525957aa18fe6701d900427cf8f5df643f4004"},
+    {"path": "packages/hermes/src/model-route-probe.ts", "sha256": "820862303d2471517e4474440d697dc0bf3f043a4960dff680ea0fee6b605489"},
+    {"path": "packages/hermes/src/model-route.ts", "sha256": "7c56f64981df351db6b8cd72237334369a86ffe9cb6d721c37c9dd2e2be945dc"},
+    {"path": "packages/hermes/src/responses.ts", "sha256": "ec749e56e048a410a081d745697fdd19e8463a0dd2d6c15c0b9130b0b93b063f"},
+    {"path": "cli/src/main.ts", "sha256": "2186840498e12e39156877da9e3e3431d86045af87108cbf2fd236105a1f2db5"},
+    {"path": "packages/ops/src/fixture-stack.ts", "sha256": "4311ee0309bfa3dbc2a9c6eff3c07b55bdaca4e1e2ad41ff1e2334595560dda6"},
+    {"path": "architecture/features.json", "sha256": "3e469736ecdc2bc30683a46e37a902e4dc153e2a2dff0ba2747505c438f8e94d"},
+    {"path": "skills/toy-control/FEATURE-MAP.md", "sha256": "c3a69db03e5716c98623f4f3e6eb4a64cdfbd3a200f29f482724f1e673675eb3"},
+    {"path": "specs/TEST-PLAN.md", "sha256": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2"},
+    {"path": "specs/hermes-config.md", "sha256": "d3548fde13180bc750660f306caa0041101832e398ccdabd6cfdac0b3de8f4af"},
+    {"path": "specs/ops.md", "sha256": "f07aab65088c82e4ff21e4d63edb2f279e2324e6d7e2bbb801e0fd7494104b0b"},
+    {"path": "specs/self-improvement.md", "sha256": "23e69b258189148328f029acd3ec7c4c125544bf49d670757eee2bf071ab7014"},
+    {"path": "specs/gates/R0-research.md", "sha256": "f53d2261f7ceee0144e920b784865bc8ba097c8c2581efd47410374d25d26029"},
+    {"path": "docs/adr/0021-supported-model-route.md", "sha256": "93b4d8b57829c05cca510e44d7b2637c8ab2f66ec32febd48a21eb77ed3f6f55"}
+  ]
+}

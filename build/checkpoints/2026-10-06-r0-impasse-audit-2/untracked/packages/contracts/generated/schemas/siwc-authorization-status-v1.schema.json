@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "state": {
+      "type": "string",
+      "enum": [
+        "idle",
+        "starting",
+        "waiting",
+        "exchanging",
+        "saved",
+        "refused",
+        "cancelled"
+      ]
+    },
+    "code": {
+      "type": "string",
+      "enum": [
+        "authorization_required",
+        "attempt_active",
+        "waiting_for_browser",
+        "validating_authorization",
+        "authorization_saved",
+        "authorization_denied",
+        "callback_invalid",
+        "registration_invalid",
+        "token_exchange_failed",
+        "identity_invalid",
+        "credential_owner_unavailable",
+        "credential_readback_failed",
+        "attempt_expired",
+        "cancelled"
+      ]
+    },
+    "planPermissionGranted": {
+      "type": "boolean"
+    },
+    "zeroCreditVerified": {
+      "type": "boolean",
+      "const": false
+    },
+    "inferencePermitted": {
+      "type": "boolean",
+      "const": false
+    }
+  },
+  "required": [
+    "state",
+    "code",
+    "planPermissionGranted",
+    "zeroCreditVerified",
+    "inferencePermitted"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:SiwcAuthorizationStatusV1"
+}

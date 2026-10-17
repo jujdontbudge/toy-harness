@@ -1,0 +1,154 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "kind": {
+      "type": "string",
+      "enum": [
+        "connector",
+        "tool",
+        "skill",
+        "migration"
+      ]
+    },
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{0,63}(?![\\s\\S])"
+    },
+    "owner": {
+      "type": "string",
+      "enum": [
+        "contracts",
+        "obligations",
+        "attention",
+        "authority",
+        "sources",
+        "lifestore",
+        "hermes",
+        "client",
+        "hands",
+        "self-improvement",
+        "adhd",
+        "ops"
+      ]
+    },
+    "templateDigest": {
+      "type": "string",
+      "minLength": 64,
+      "maxLength": 64,
+      "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+    },
+    "patches": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 240,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._/-]*(?![\\s\\S])"
+          },
+          "beforeDigest": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 64,
+                "maxLength": 64,
+                "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "afterDigest": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 64,
+                "maxLength": 64,
+                "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "create",
+              "update"
+            ]
+          },
+          "mediaType": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "patch": {
+            "type": "string",
+            "maxLength": 2097152
+          }
+        },
+        "required": [
+          "path",
+          "beforeDigest",
+          "afterDigest",
+          "kind",
+          "mediaType",
+          "patch"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "featureIds": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "requiredAtIds": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "prerequisites": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "applied": {
+      "type": "boolean"
+    },
+    "beforeInventoryDigest": {
+      "type": "string",
+      "minLength": 64,
+      "maxLength": 64,
+      "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+    },
+    "afterInventoryDigest": {
+      "type": "string",
+      "minLength": 64,
+      "maxLength": 64,
+      "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+    }
+  },
+  "required": [
+    "kind",
+    "name",
+    "owner",
+    "templateDigest",
+    "patches",
+    "featureIds",
+    "requiredAtIds",
+    "prerequisites",
+    "applied",
+    "beforeInventoryDigest",
+    "afterInventoryDigest"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:GeneratorPlanV1"
+}

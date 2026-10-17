@@ -1,0 +1,51 @@
+
+> toy-harness@1.0.0 check
+> npm run typecheck && node scripts/typecheck-tests.mjs && npm run boundaries && npm run python:check && npm run lint && npm run contracts:check && node cli/dist/main.js feature-map check --json
+
+
+> toy-harness@1.0.0 typecheck
+> tsc -b --pretty false && tsc -p scripts/tsconfig.json --pretty false
+
+
+> toy-harness@1.0.0 boundaries
+> depcruise --config .dependency-cruiser.cjs packages cli tests control
+
+
+✔ no dependency violations found (155 modules, 445 dependencies cruised)
+
+
+> toy-harness@1.0.0 python:check
+> pyright && .venv/bin/ruff check python && PYTHONPATH=python .venv/bin/lint-imports
+
+0 errors, 0 warnings, 0 informations
+All checks passed!
+[1m=============[0m
+[1mImport Linter[0m
+[1m=============[0m
+[22m[0m
+[1m---------[0m
+[1mContracts[0m
+[1m---------[0m
+[22m[0m
+[1mAnalyzed 13 files, 9 dependencies.[0m
+[1m----------------------------------[0m
+[22m[0m
+[22mHermes adapter cannot import protected controls [0m[32m[22mKEPT[0m[33m[22m[0m[22m[0m
+[22mProtected controls cannot depend on agent implementation [0m[32m[22mKEPT[0m[33m[22m[0m[22m[0m
+[22m[0m
+[22mContracts: 2 kept, 0 broken.[0m
+
+> toy-harness@1.0.0 lint
+> node scripts/run-eslint.mjs && node scripts/check-source-policy.mjs && .venv/bin/python scripts/check-python-policy.py && node scripts/check-contract-ownership.mjs && node scripts/check-contract-pin.mjs && node scripts/check-int-registry.mjs
+
+71 source files passed comment and debt policy
+8 Python source files passed comment and type policy
+46 TypeScript source files passed schema-inventory ownership policy for 222 contracts
+The sole Zod runtime pin is @toy/contracts 4.6.5.
+0 registry-only INT entries match 0 internal test files; 3 total test files declare a rung
+
+> toy-harness@1.0.0 contracts:check
+> tsc -b packages/contracts --pretty false && node scripts/generate-contracts.mjs --check && tsc --ignoreConfig --noEmit --strict --noUncheckedIndexedAccess --target ES2024 --module NodeNext --moduleResolution NodeNext packages/contracts/generated/types.ts
+
+Verified 287 contract artifacts
+{"schemaVersion":"toy.cli.v1","commandId":"feature-map.check","invocationId":"551f64fb-9a58-474f-ad78-b9475f1b2e35","generatedAt":"2026-10-06T05:38:29.736Z","cliVersion":"1.0.0","contractsVersion":"1.0.0","schemaDigest":"0a1805defc012d3c2f42a4192dadb9d1a944a0341fda24bf90cf3a7f7bd3b795","environment":{"kind":"prod","instanceId":null,"stackId":null},"meta":{"exitCode":0,"releaseDigest":null,"controlDigest":null,"evaluatedAt":null,"operationId":null,"effectState":"none","recordRefs":[],"evidence":[]},"ok":true,"data":{"sourceDigest":"601aa6b65508faa994e8420cdbb79adf7a2179f104083290e2ed431a57ad7379","actualMapDigest":"6d09b106bab16b9a6b65f411b780599df6629adb463e9b32e1fb027d4e18a484","expectedMapDigest":"6d09b106bab16b9a6b65f411b780599df6629adb463e9b32e1fb027d4e18a484","featureCount":"82","commandCount":"54","atCount":"1447","findings":[],"state":"PASS"}}

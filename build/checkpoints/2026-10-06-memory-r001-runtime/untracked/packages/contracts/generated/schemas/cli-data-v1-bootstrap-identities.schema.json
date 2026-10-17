@@ -1,0 +1,284 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "toy.role-identity-bootstrap.v1"
+    },
+    "requestId": {
+      "type": "string",
+      "minLength": 36,
+      "maxLength": 36,
+      "format": "uuid",
+      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+    },
+    "observedAt": {
+      "type": "string",
+      "minLength": 24,
+      "maxLength": 24,
+      "format": "date-time",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "plan",
+        "apply"
+      ]
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "planned",
+        "blocked",
+        "created",
+        "partial"
+      ]
+    },
+    "reasonCode": {
+      "type": "string",
+      "enum": [
+        "PLAN_READY",
+        "ROOT_CALLER_REQUIRED",
+        "SNAPSHOT_CHANGED",
+        "DIRECTORY_QUERY_UNAVAILABLE",
+        "DIRECTORY_QUERY_DENIED",
+        "DIRECTORY_QUERY_TIMEOUT",
+        "DIRECTORY_QUERY_INVALID",
+        "ROLE_NAME_CONFLICT",
+        "ID_POOL_EXHAUSTED",
+        "PATH_CONFLICT",
+        "OS_CHANGE_FAILED",
+        "ROLE_IDENTITIES_CREATED"
+      ]
+    },
+    "snapshotDigest": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 64,
+          "maxLength": 64,
+          "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "allocationMethod": {
+      "type": "string",
+      "const": "observed_vacancy"
+    },
+    "callerUid": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 4294967295
+    },
+    "roles": {
+      "minItems": 8,
+      "maxItems": 8,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "observation": {
+            "type": "object",
+            "properties": {
+              "role": {
+                "type": "string",
+                "enum": [
+                  "_toy_agent",
+                  "_toy_control",
+                  "_toy_review",
+                  "_toy_repair",
+                  "_toy_evaluator",
+                  "_toy_pg",
+                  "_toy_app",
+                  "_toy_ops"
+                ]
+              },
+              "state": {
+                "type": "string",
+                "enum": [
+                  "observed",
+                  "missing",
+                  "unknown"
+                ]
+              },
+              "uid": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 4294967295
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "gid": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 4294967295
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "adminGroupObserved": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "role",
+              "state",
+              "uid",
+              "gid",
+              "adminGroupObserved"
+            ],
+            "additionalProperties": false
+          },
+          "candidateUid": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 300,
+                "maximum": 499
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "candidateGid": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 300,
+                "maximum": 499
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "observation",
+          "candidateUid",
+          "candidateGid"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "directories": {
+      "minItems": 13,
+      "maxItems": 13,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "enum": [
+              "/Library/Application Support/Toy",
+              "/Library/Application Support/Toy/control",
+              "/Library/Application Support/Toy/state",
+              "/Library/Application Support/Toy/state/homes",
+              "/Library/Application Support/Toy/run",
+              "/Library/Application Support/Toy/state/homes/_toy_agent",
+              "/Library/Application Support/Toy/state/homes/_toy_control",
+              "/Library/Application Support/Toy/state/homes/_toy_review",
+              "/Library/Application Support/Toy/state/homes/_toy_repair",
+              "/Library/Application Support/Toy/state/homes/_toy_evaluator",
+              "/Library/Application Support/Toy/state/homes/_toy_pg",
+              "/Library/Application Support/Toy/state/homes/_toy_app",
+              "/Library/Application Support/Toy/state/homes/_toy_ops"
+            ]
+          },
+          "owner": {
+            "type": "string",
+            "enum": [
+              "root",
+              "_toy_agent",
+              "_toy_control",
+              "_toy_review",
+              "_toy_repair",
+              "_toy_evaluator",
+              "_toy_pg",
+              "_toy_app",
+              "_toy_ops"
+            ]
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "0700",
+              "0711",
+              "0755"
+            ]
+          }
+        },
+        "required": [
+          "path",
+          "owner",
+          "mode"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "accountsVerified": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 8
+    },
+    "effectState": {
+      "type": "string",
+      "enum": [
+        "none",
+        "confirmed",
+        "unknown"
+      ]
+    },
+    "identityGateVerified": {
+      "type": "boolean",
+      "const": false
+    },
+    "maintenanceIdentityVerified": {
+      "type": "boolean",
+      "const": false
+    },
+    "servicesActivated": {
+      "type": "boolean",
+      "const": false
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "requestId",
+    "observedAt",
+    "mode",
+    "state",
+    "reasonCode",
+    "snapshotDigest",
+    "allocationMethod",
+    "callerUid",
+    "roles",
+    "directories",
+    "accountsVerified",
+    "effectState",
+    "identityGateVerified",
+    "maintenanceIdentityVerified",
+    "servicesActivated"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:CliDataV1:bootstrap.identities"
+}

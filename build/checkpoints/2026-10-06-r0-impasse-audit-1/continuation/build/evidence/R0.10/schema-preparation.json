@@ -1,0 +1,469 @@
+{
+  "schemaVersion": "toy.r0.10-schema-preparation.v1",
+  "capturedAtUtc": "2026-10-05T16:10:34Z",
+  "status": "READ_ONLY_PREPARATION_ONLY",
+  "disposition": {
+    "gate": "R0.10",
+    "implementation": "NOT_IMPLEMENTED",
+    "acceptance": "PENDING",
+    "acceptanceComplete": false,
+    "assignedATsExecuted": false,
+    "summary": "This card inventories source pins, lock metadata, and currently present generated outputs only. No compatibility, generated-drift, configuration, transaction, or AT gate was run."
+  },
+  "buildLedgerSnapshot": {
+    "R0.02": {
+      "implementation": "NOT_IMPLEMENTED",
+      "acceptance": "PENDING",
+      "evidence": [],
+      "sourceRowHash": "64fec579eb4943748e507927904712ccad25bdb21948238340b4a7b7e324699e"
+    },
+    "R0.05": {
+      "implementation": "NOT_IMPLEMENTED",
+      "acceptance": "PENDING",
+      "evidence": [
+        "build/evidence/R0.05/launcher-design.json"
+      ],
+      "preparation": {
+        "status": "DESIGN_ONLY",
+        "runtimeVerified": false
+      },
+      "sourceRowHash": "f1a96d2fabbb1a47de62e6e58dccfe5e216282392a439b741003eba228e7c180"
+    },
+    "R0.10": {
+      "implementation": "NOT_IMPLEMENTED",
+      "acceptance": "PENDING",
+      "dependsOn": [
+        "R0.02",
+        "R0.05"
+      ],
+      "evidence": [],
+      "requiredATs": [
+        "AT-obligations-74",
+        "AT-obligations-75",
+        "AT-obligations-76",
+        "AT-hermes-config-50",
+        "AT-hermes-config-69",
+        "AT-hermes-config-75",
+        "AT-hermes-config-81",
+        "AT-authority-60",
+        "AT-authority-61",
+        "AT-activity-focus-86"
+      ],
+      "sourceRowHash": "bd835ecc193c682aa06edf7b25defd2d6a23d0c8a4cda1144a1a9a82c4f90315"
+    }
+  },
+  "criteriaAndSourceReferences": {
+    "buildPlan": {
+      "reference": "specs/BUILD-PLAN.md:56",
+      "sourceRowHash": "bd835ecc193c682aa06edf7b25defd2d6a23d0c8a4cda1144a1a9a82c4f90315",
+      "summary": "R0.10 revalidates exact dependency pins, including the stable Zod 4.x selected at R0.K2 and recorded in Research Register B02; checks generated type/ownership/config inventory; and requires pg-boss schema-44 transaction, claim, and recurrence probes. It depends on R0.02 and R0.05."
+    },
+    "researchRegisterB02": {
+      "reference": "specs/RESEARCH-REGISTER.md:112",
+      "summary": "The planning row requires Ajv 8.17.1 and the latest stable Zod 4.x, with exact selection evidence recorded in B02 and a sole pin in packages/contracts/package.json. The register prose remains generic, but specs/gates/B02-R0-selection.json records the exact zod@4.6.5 selection, owner, registry artifact integrity and shasum, selectionVerdict PASS, lockMatchesRegistry, and original plus current implementation dependency digests. That selection record does not establish runtime compatibility or complete R0.10/R1 acceptance."
+    },
+    "obligations": {
+      "references": [
+        "specs/obligations.md:139-166",
+        "specs/obligations.md:2729-2734",
+        "specs/obligations.md:2675-2677"
+      ],
+      "summary": "Section 3 marks Node/PostgreSQL/pg-boss/pg/Ajv and recurrence pins as proposed, not installed or compatibility-tested; Ops owns the one shared runtime/queue lock and migration. Section 20 step 2 is the exact pg-boss transaction/worker/claim-loss/recurrence spike and requires disposable PostgreSQL fault-test evidence. BUILD-PLAN cites this as Obligations §20.2; the target content is the second row of §20's step table, not a separately headed subsection."
+    },
+    "contracts": {
+      "references": [
+        "specs/CONTRACTS.md:1-18",
+        "specs/CONTRACTS.md:232-240",
+        "specs/CONTRACTS.md:307"
+      ],
+      "summary": "CONTRACTS is authoritative for canonical names/owners. It pins Node 24.21.0, PostgreSQL 17.11, pg-boss 12.36.0/schema 44, and pg 8.23.1; the M04 amendment puts the single Zod pin in @toy/contracts and forbids module-local Zod pins."
+    }
+  },
+  "assignedAcceptanceTests": [
+    {
+      "id": "AT-obligations-74",
+      "definition": "specs/obligations.md:2675",
+      "testPlan": "specs/TEST-PLAN.md:424",
+      "rung": "CLI static/probe",
+      "scope": "The pre-build register blocks on missing primary evidence, unsupported choices, or missing acceptance links; the full option comparison and validation plan are required.",
+      "result": "NOT RUN"
+    },
+    {
+      "id": "AT-obligations-75",
+      "definition": "specs/obligations.md:2676",
+      "testPlan": "specs/TEST-PLAN.md:425",
+      "rung": "CLI stack/probe",
+      "scope": "Research receipts prove Sol/medium/Fast and resolved research-skill version/hash while ordinary delegation keeps its distinct route.",
+      "result": "NOT RUN"
+    },
+    {
+      "id": "AT-obligations-76",
+      "definition": "specs/obligations.md:2677",
+      "testPlan": "specs/TEST-PLAN.md:426",
+      "rung": "CLI static/stack/probe",
+      "scope": "Application and native pg-boss transactions exercise rollback and lost-claim fencing through executeSql; five schemas validate with declared dialects and there is one queue-schema owner.",
+      "result": "NOT RUN"
+    },
+    {
+      "id": "AT-hermes-config-50",
+      "definition": "specs/hermes-config.md:3395",
+      "testPlan": "specs/TEST-PLAN.md:396",
+      "rung": "CLI static/stack/probe",
+      "scope": "Principal and large-bigint values round-trip exactly through tool/client/Python/Swift DTOs with canonical decimal strings and immutable UTF-8 observation text.",
+      "result": "NOT RUN"
+    },
+    {
+      "id": "AT-hermes-config-69",
+      "definition": "specs/hermes-config.md:3433",
+      "testPlan": "specs/TEST-PLAN.md:399",
+      "rung": "CLI static/stack/probe",
+      "scope": "Generated cadence contracts keep the single Durable admission/Turn Review owner and canonical states; duplicate writers and noncanonical enums fail.",
+      "result": "NOT RUN"
+    },
+    {
+      "id": "AT-hermes-config-75",
+      "definition": "specs/hermes-config.md:634",
+      "testPlan": "specs/TEST-PLAN.md:400",
+      "rung": "CLI static/probe",
+      "scope": "Generated profile keys are consumed by intended subsystems; unsupported or ignored keys fail validation.",
+      "result": "NOT RUN"
+    },
+    {
+      "id": "AT-hermes-config-81",
+      "definition": "specs/hermes-config.md:640",
+      "testPlan": "specs/TEST-PLAN.md:406",
+      "rung": "CLI stack/probe",
+      "scope": "Life Store HTTP and the pinned MCP loader connect using supported transport without an unsupported override.",
+      "result": "NOT RUN"
+    },
+    {
+      "id": "AT-authority-60",
+      "definition": "specs/authority.md:2160",
+      "testPlan": "specs/TEST-PLAN.md:365",
+      "rung": "CLI static/probe",
+      "scope": "The research gate requires compared proven options, primary evidence, reliability decisions, validation IDs, and the prescribed research-route receipt.",
+      "result": "NOT RUN"
+    },
+    {
+      "id": "AT-authority-61",
+      "definition": "specs/authority.md:2162",
+      "testPlan": "specs/TEST-PLAN.md:366",
+      "rung": "CLI static/probe",
+      "scope": "Registry and protected-release validation enforce shared pins, pg-boss schema 44, one toolset, typed adapters, and maintained crypto/authentication.",
+      "result": "NOT RUN"
+    },
+    {
+      "id": "AT-activity-focus-86",
+      "definition": "specs/activity-focus.md:2269",
+      "testPlan": "specs/TEST-PLAN.md:353",
+      "rung": "CLI static/probe",
+      "scope": "Generated cadence contracts leave cadence_slot/run/review writes with Durable admission/Turn Review and distinguish swept from accepted AI-reviewed coverage.",
+      "result": "NOT RUN"
+    }
+  ],
+  "pinSnapshot": {
+    "captureTimeUtc": "2026-10-05T16:10:01Z",
+    "packageLockVersion": 3,
+    "repositoryManifests": {
+      "package.json": {
+        "name": "toy-harness",
+        "nodeEngine": "24.21.0",
+        "npmEngine": "11.19.0",
+        "typescriptDevDependency": "6.0.3"
+      },
+      "packages/contracts/package.json": {
+        "name": "@toy/contracts",
+        "directDependencies": {
+          "zod": "4.6.5"
+        },
+        "publicExport": {
+          "import": "./dist/public.js",
+          "types": "./dist/public.d.ts"
+        },
+        "publishedFiles": [
+          "dist",
+          "generated/schemas"
+        ]
+      },
+      "packages/ops/package.json": {
+        "name": "@toy/ops",
+        "directDependencies": {
+          "@toy/contracts": "1.0.0"
+        }
+      },
+      "packages/obligations/package.json": {
+        "name": "@toy/obligations",
+        "directDependencies": {
+          "@toy/contracts": "1.0.0"
+        }
+      }
+    },
+    "resolvedLockEntries": {
+      "node": "24.21.0 from node --version; matches the root Node engine",
+      "zod": [
+        "node_modules/zod@4.6.5"
+      ],
+      "ajv": [
+        "node_modules/ajv@6.15.0"
+      ],
+      "typescript": [
+        "node_modules/typescript@6.0.3"
+      ],
+      "pg": [],
+      "pg-boss": [],
+      "rrule-temporal": [],
+      "@opentelemetry/api": [],
+      "@js-temporal/polyfill": []
+    },
+    "declaredRuntimePinStatus": {
+      "Node 24.21.0": "Matches root engine and observed node --version.",
+      "PostgreSQL 17.11": "Canonical spec pin; not present in npm lock because it is a system runtime; no server or binary version queried.",
+      "pg 8.23.1": "Canonical spec pin and pg-boss upstream range accepts it; no resolved package entry in package-lock.json.",
+      "pg-boss 12.36.0/schema 44": "Canonical spec pin and exact upstream tag confirms it; no resolved package entry in package-lock.json.",
+      "rrule-temporal 2.2.8 / @opentelemetry/api 1.9.0": "Specified for the queue/recurrence path; neither has a resolved package-lock entry.",
+      "Zod": "The exact 4.6.5 selection and registry/implementation evidence are present in specs/gates/B02-R0-selection.json; the planning register prose remains generic. This is selection evidence only; R0.10 runtime compatibility and R1 validation remain pending.",
+      "Ajv": "The only resolved entry is ajv 6.15.0, transitively required by the root ESLint 10.12.0 development dependency (lock metadata declares ajv ^6.14.0). No workspace manifest directly declares Ajv. The specification's Ajv 8.17.1 owner-validator dependency is uninstalled/unverified; the tooling transitive entry is not an implementation downgrade.",
+      "TypeScript": "Obligations §3 and Research B01 specify 5.9.3; root package.json and package-lock resolve 6.0.3. This remains an unresolved source/lock mismatch."
+    },
+    "upstreamPgBossClosure": {
+      "tag": "12.36.0",
+      "nodeEngine": ">=22.12.0",
+      "postgresMinimum": "13",
+      "dependencies": {
+        "pg": "^8.23.1",
+        "rrule-temporal": "^2.2.8"
+      },
+      "peerDependencies": {
+        "@opentelemetry/api": "^1.9.0"
+      },
+      "schema": 44,
+      "applicability": "This supports version-metadata consistency only. The resolved app lock, PostgreSQL runtime, pg-boss transactions, worker claim fencing, recurrence behavior, and declared five-schema validation remain unverified."
+    },
+    "zodSelectionEvidence": {
+      "source": "specs/gates/B02-R0-selection.json",
+      "sourceSha256": "e880bd7b7fbb13ca8f8be28e49ca24474673c130af6d55776235753c7ce54b14",
+      "selectedVersion": "4.6.5",
+      "owner": "@toy/contracts",
+      "solePinPath": "packages/contracts/package.json",
+      "registryTag": "latest",
+      "integrity": "sha512-v5l/aFXZQeai4awLbOpSoHecE9UiMrnfx75tEXLjNonXVARxQ5mOeipTjROUchszUNCqnE+hqAMujRsRHsut2Q==",
+      "shasum": "e3af3edbdc260239c52f73caad05dbbffe6e82cd",
+      "selectionVerdict": "PASS",
+      "lockMatchesRegistry": true,
+      "runtimeCompatibilityVerdict": "PENDING_R0.10_AND_R1",
+      "currentImplementationEvidence": {
+        "generatedAt": "2026-10-05T16:10:43.780Z",
+        "attemptId": "2026-10-05T16-07-56-101Z-619e510a-2309-4ee1-afcf-a06ebe774b2e",
+        "dependencyDigests": {
+          "packages/contracts/package.json": "5d04fd1e5d465fa46ffa05cc753f7dcaa2fcb572fbf2ad7678a3e1ce3cfa9973",
+          "package-lock.json": "2ba552b74aa22b38008b96f8c72a7d0245b9185dc8993f1fd9144bd9c3d531d2",
+          "packages/contracts/src/public.ts": "3fbd2fa9f839ff9b30b5cbc01a0cfc7213c6113716681409ff31d6e448941948",
+          "scripts/generate-contracts.mjs": "f533b334f264391e2dc2d98243d0b3f69188251622c35f276005a2b4f8714f03"
+        }
+      }
+    },
+    "ajvLockProvenance": {
+      "resolvedPackage": "node_modules/ajv@6.15.0",
+      "declaringParent": "root devDependency eslint@10.12.0",
+      "parentLockRange": "^6.14.0",
+      "directWorkspaceAjvDeclarations": [],
+      "specValidator": "Ajv 8.17.1",
+      "specValidatorStatus": "UNINSTALLED_UNVERIFIED",
+      "interpretation": "The 6.x package is an ESLint tooling transitive dependency and does not satisfy or contradict an owner-declared 8.17.1 runtime validator pin. The intended direct validator owner and resolved 8.17.1 closure still need source/lock verification."
+    }
+  },
+  "generatedContractSnapshot": {
+    "captureTimeUtc": "2026-10-05T16:10:01Z",
+    "consistency": "TRANSIENT_NON_RELEASE_SNAPSHOT; root is adding native contracts and may change source/output counts or digests after capture.",
+    "counts": {
+      "packages/contracts/generated/files": 174,
+      "packages/contracts/generated/schemas/*.schema.json": 173,
+      "packages/contracts/generated/types.ts": 1,
+      "python/toy_contracts/generated.py": 1,
+      "swift/ToyContracts/Contracts.swift": 1
+    },
+    "currentNativeContractExamples": [
+      "NativeBuildManifestV2",
+      "NativeEntryReceiptV2",
+      "NativeSupervisorRequestV1"
+    ],
+    "declaredSchemaBundleDigest": "83fb36cb5977d18f74216b992a7b23b84ffc4532693af4619ab6819846aadb5e",
+    "generatedDirectoryDigest": {
+      "algorithm": "SHA-256 over sorted relative paths, NUL byte, exact file bytes, NUL byte for each file",
+      "value": "e599e629d99ab7acdd6ea16cc72958e55c3195bc29a80064fb3120212b6cf826"
+    },
+    "artifactDigests": {
+      "packages/contracts/generated/types.ts": {
+        "bytes": 11563,
+        "sha256": "48875b6a444cc8a5a4b3618f653c5d43d0856479d7cc2eda43196b2b434dd575"
+      },
+      "python/toy_contracts/generated.py": {
+        "bytes": 64643,
+        "sha256": "0ffc34e0e65d70970fe66591296f8e994dbc7d495133678be29fcd2e7a0e3dde"
+      },
+      "swift/ToyContracts/Contracts.swift": {
+        "bytes": 411123,
+        "sha256": "8ad5b986bdf8dcdfdf929b4b4dc4e515975b22c90a73f72f83a55cad7a7f6859"
+      }
+    },
+    "ownershipInventory": {
+      "canonicalOwner": "packages/contracts/src and @toy/contracts",
+      "generator": "scripts/generate-contracts.mjs",
+      "sourceRegistryFiles": [
+        "packages/contracts/src/ops-registry.ts",
+        "packages/contracts/src/generated-probe-registry.ts",
+        "packages/contracts/src/cli-declarations.ts",
+        "packages/contracts/src/public.ts"
+      ],
+      "packageExports": "@toy/contracts exposes dist/public.js and dist/public.d.ts; packages/contracts/package.json lists dist and generated/schemas for publication.",
+      "consumerDependencySnapshot": "@toy/ops and @toy/obligations declare only @toy/contracts among these inspected owner packages; no module-local Zod pin was found in the workspace package manifests inspected."
+    },
+    "verificationStatus": "The generated counts, digest strings, and files were read only. contracts:check, contracts:generate, TypeScript/Swift compilation, output-vs-source drift checks, and schema validation were not run."
+  },
+  "upstreamPrimarySources": [
+    {
+      "url": "https://raw.githubusercontent.com/timgit/pg-boss/12.36.0/package.json",
+      "retrievedOn": "2026-10-05",
+      "supports": "Exact pg-boss 12.36.0 tag, Node >=22.12, pg ^8.23.1, rrule-temporal ^2.2.8, @opentelemetry/api peer ^1.9.0, and schema 44 in package metadata."
+    },
+    {
+      "url": "https://github.com/timgit/pg-boss/releases/tag/12.36.0",
+      "retrievedOn": "2026-10-05",
+      "supports": "Release 12.36.0 identifies schema version 44 and describes its migration on upgrade."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/timgit/pg-boss/12.36.0/README.md",
+      "retrievedOn": "2026-10-05",
+      "supports": "The pinned tag states Node 22.12+ and PostgreSQL 13+ requirements."
+    },
+    {
+      "url": "https://www.postgresql.org/docs/release/17.11/",
+      "retrievedOn": "2026-10-05",
+      "supports": "Official PostgreSQL 17.11 release notes; the source lists release date 2026-08-13. Does not establish the locally installed server version."
+    },
+    {
+      "url": "https://www.npmjs.com/package/pg?activeTab=versions",
+      "retrievedOn": "2026-10-05",
+      "supports": "Official registry shows pg 8.23.1 as a published node-postgres package version. Does not establish a resolved workspace dependency."
+    },
+    {
+      "url": "https://nodejs.org/en/blog/release/v24.21.0",
+      "retrievedOn": "2026-10-05",
+      "supports": "Official Node.js 24.21.0 LTS release page, dated 2026-09-08."
+    },
+    {
+      "url": "https://nodejs.org/en/download/archive/v24.21.0",
+      "retrievedOn": "2026-10-05",
+      "supports": "Official Node.js archive lists v24.21.0 and bundled npm 11.19.0, matching the repository's declared engines."
+    },
+    {
+      "url": "https://www.npmjs.com/package/zod?activeTab=versions",
+      "retrievedOn": "2026-10-05",
+      "supports": "Official registry's latest tag was 4.6.5 at observation time, matching packages/contracts/package.json and package-lock.json."
+    },
+    {
+      "url": "https://github.com/colinhacks/zod/releases/tag/v4.6.5",
+      "retrievedOn": "2026-10-05",
+      "supports": "Official upstream Zod v4.6.5 release record."
+    },
+    {
+      "url": "https://github.com/ajv-validator/ajv/releases/tag/v8.17.1",
+      "retrievedOn": "2026-10-05",
+      "supports": "Official upstream Ajv v8.17.1 release record; the workspace lock does not resolve this version."
+    },
+    {
+      "url": "https://github.com/brianc/node-postgres/blob/master/packages/pg/package.json",
+      "retrievedOn": "2026-10-05",
+      "supports": "Official upstream package metadata identifies pg 8.23.1 and its Node engine; no local runtime compatibility claim is made."
+    }
+  ],
+  "readOnlyCommandSnapshot": {
+    "commands": [
+      {
+        "argv": [
+          "node",
+          "--version"
+        ],
+        "exitCode": 0,
+        "stdout": "v24.21.0"
+      },
+      {
+        "operation": "Read package.json, workspace manifests, package-lock.json, build/state.json, generated file paths, and exact selected file bytes with Python JSON/pathlib/hashlib; no files written.",
+        "exitCode": 0
+      },
+      {
+        "operation": "rg -n source lookups in BUILD-PLAN, RESEARCH-REGISTER, CONTRACTS, Obligations, TEST-PLAN and assigned owner specs; rg --files inventory for Contracts/Python/Swift outputs.",
+        "exitCode": 0
+      },
+      {
+        "argv": [
+          "shasum",
+          "-a",
+          "256",
+          "specs/gates/B02-R0-selection.json"
+        ],
+        "exitCode": 0,
+        "stdout": "e880bd7b7fbb13ca8f8be28e49ca24474673c130af6d55776235753c7ce54b14  specs/gates/B02-R0-selection.json"
+      },
+      {
+        "operation": "Read-only JSON inspection of package-lock.json and workspace manifests traced node_modules/ajv@6.15.0 to ESLint 10.12.0 devDependency range ajv ^6.14.0; no workspace package directly declares Ajv.",
+        "exitCode": 0
+      }
+    ],
+    "notRun": [
+      "npm install, npm ls, npm run contracts:check, npm run contracts:generate, tsc, swiftc, Python test/type/lint gates, or any codegen.",
+      "PostgreSQL or pg-boss runtime/version commands, SQL, DB/service startup, migrations, or transactions.",
+      "Credential, account, provider, or secret queries."
+    ]
+  },
+  "sourceDigests": {
+    "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/BUILD-PLAN.md": "f35e7a18911b12e8c0b89130e3f62db4aa7344a80c7807ee164192fc70c36ad8",
+    "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/CONTRACTS.md": "ef4b5d18fe3a1adcf9eb28d55da734892795e103894210ed0aea61c911fd70f8",
+    "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/RESEARCH-REGISTER.md": "8ebbcfb9e2e63041fd004dd55787a02473d36d9bcaa733eb4d322722b1ae4942",
+    "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/obligations.md": "5379f943578b4248dc21379a029acead930047c091316deb796fae0d49f4eb0f",
+    "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/TEST-PLAN.md": "766aa798a4e980ebf5e4522363c8b038da4fdf66efaa507676d4d970fe0d11f3",
+    "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/hermes-config.md": "771a27d272514104b1e207bc0342c65214977d2df2c632dfb9a60f8cd0e52cdf",
+    "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/authority.md": "0127fd6e992c94bb512af83d507e107431426d2d4a09885d1a420119f2d530be",
+    "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/activity-focus.md": "95419ee43fbc5c4367e2109efc17eb0c08527b1355fea71fd170650adf4afa81",
+    "package.json": "d28b67df5289f5cc8da9d8efed0e9e2253413f164cbc10c29023b238513bf360",
+    "package-lock.json": "2ba552b74aa22b38008b96f8c72a7d0245b9185dc8993f1fd9144bd9c3d531d2",
+    "packages/contracts/package.json": "5d04fd1e5d465fa46ffa05cc753f7dcaa2fcb572fbf2ad7678a3e1ce3cfa9973",
+    "packages/contracts/tsconfig.json": "65830141c9e37d6d5a604ae796c5fe8b9258040f9e1f29547c0b238829b989d6",
+    "packages/ops/package.json": "b6e5377205e129dcae276e48d0b13f8656f075d6e2d0f558df0929ad31dede9d",
+    "packages/obligations/package.json": "517fe6e96e5a60306c24af43de025b31c91d1c235ca1884c8ed1810c8ea93262",
+    "scripts/generate-contracts.mjs": "f533b334f264391e2dc2d98243d0b3f69188251622c35f276005a2b4f8714f03",
+    "packages/contracts/src/attention.ts": "0987ab0f7c9e2d352261fcf608c1f7b9a6d42d75a495f6b1c5ea24cf1a77f59a",
+    "packages/contracts/src/cli-declarations.ts": "446fe85514738305566cb46eafee922bc190f7ead9aa3a17737e3cc0c1b63a2c",
+    "packages/contracts/src/cli.ts": "3d8c4fcb8235e53849f1ccf0e60feea2f448cf59628f9a0a3c63af323842aff5",
+    "packages/contracts/src/control-evidence.ts": "5708640e11fd64752b5f6d3a662566618684c66d3d981fb0eaf8da952b9bc32c",
+    "packages/contracts/src/generated-bundle.ts": "20828d43ba2781f5b01d055029f0f9f3444a8b0e950d54e9ba1a85aeecd7a7e8",
+    "packages/contracts/src/generated-probe-registry.ts": "46d322ff1a1c5ae98567994c6b679cee93754c006ecc3d86ebcebeefbb99c436",
+    "packages/contracts/src/ops-registry.ts": "aaae268d8549ee17da4dd41925cd2d003249b8da8a8c0d2411f0b7d54822154b",
+    "packages/contracts/src/ops.ts": "76ec1b57073671ea0b10ce37c35ecc1760dc6b546b038c904755142d0c12adfa",
+    "packages/contracts/src/primitives.ts": "7fa67d881b9d9c17bca3d7768ede37da6e35aabf8e9c1ae906a3674b6e9d4bb1",
+    "packages/contracts/src/public.ts": "3fbd2fa9f839ff9b30b5cbc01a0cfc7213c6113716681409ff31d6e448941948",
+    "packages/contracts/src/publisher.ts": "f0b96f0b187e285f7ef2b815c170481287dd8abe87a2e0a29343908ab1eb09f6",
+    "packages/contracts/src/sources.ts": "511061b71338ade9344c1977d122f52bf5cc6b3eee364c67a0a5b76dc0655867",
+    "packages/contracts/src/test-control.ts": "8298cfead15c0eadef87b6241efd236f0ad16648844e12a33492b49628ced65f",
+    "packages/contracts/generated/types.ts": "48875b6a444cc8a5a4b3618f653c5d43d0856479d7cc2eda43196b2b434dd575",
+    "python/toy_contracts/generated.py": "0ffc34e0e65d70970fe66591296f8e994dbc7d495133678be29fcd2e7a0e3dde",
+    "swift/ToyContracts/Contracts.swift": "8ad5b986bdf8dcdfdf929b4b4dc4e515975b22c90a73f72f83a55cad7a7f6859",
+    "build/cards.json": "dfe71eab5b7884d17d2d7f5bc4d3979a68d97fb1c0a3b590a0e3b759a4ad7e0b",
+    "build/state.json": "de0c6e4d38f95533f9ac27fc259835aa712b13b74a85d38a1c6abca7047aec06",
+    "specs/gates/B02-R0-selection.json": "e880bd7b7fbb13ca8f8be28e49ca24474673c130af6d55776235753c7ce54b14"
+  },
+  "unresolvedPrerequisites": [
+    "R0.02 research register and R0.05 actual-identity acceptance are pending; R0.10 cannot be accepted ahead of these dependencies.",
+    "Reconcile TypeScript 5.9.3 in source specifications with TypeScript 6.0.3 in package.json/package-lock.json.",
+    "Resolve the single Ops-owned locked closure for PostgreSQL/pg/pg-boss/recurrence/OpenTelemetry; those runtime packages are absent from the current npm lock snapshot.",
+    "Run the assigned static/owner/config/schema checks and disposable PostgreSQL transaction/worker/recurrence probes through their declared public CLI/probe interfaces after dependencies are available.",
+    "Identify and resolve the intended owner dependency for the specified Ajv 8.17.1 validator. The only current Ajv lock entry is ESLint tooling's transitive development dependency, ajv 6.15.0; it is not an implemented owner-validator downgrade.",
+    "Cross-language validator agreement and run-level compatibility for selected Zod 4.6.5 remain unverified; the exact selection and artifact evidence already exist in specs/gates/B02-R0-selection.json even though the planning register wording remains generic."
+  ],
+  "acceptanceLimit": "No implementation pin was changed; no gate or AT was run. The current schema counts and digests are transient inventory values, not a release manifest or compatibility result. All R0.10 acceptance and assigned ATs remain pending.",
+  "clarification": {
+    "capturedAtUtc": "2026-10-05T16:16:35.020716Z",
+    "scope": "R0.10 evidence-card correction only; no pin, spec, implementation, or gate changes.",
+    "summary": "Corrected the Zod record/evidence distinction and traced Ajv 6.15.0 to ESLint tooling. TypeScript 5.9.3 versus 6.0.3 remains an explicit source/lock mismatch; runtime compatibility, dependencies, and all assigned ATs remain pending."
+  }
+}

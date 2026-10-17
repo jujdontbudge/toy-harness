@@ -1,0 +1,79 @@
+import { spawnSync } from "node:child_process";
+import { createHash } from "node:crypto";
+import { mkdtempSync, mkdirSync, readFileSync, realpathSync, statSync } from "node:fs";
+import { isAbsolute, join, relative } from "node:path";
+import { checkViewSchema, hermesPublicRuntimeCommandSchema, installedHermesDependencyRecordSchema, opsErrorMessages, registeredProbeInputSchema } from "@toy/contracts";
+import type { OpsControlContextV1, RegisteredProbeInputV1, RegisteredProbeOperationV1, Result } from "@toy/contracts";
+import { OpsTestStack, TestProbeControl, trustedCheckoutRoot, trustedToolEnvironment } from "@toy/ops/public";
+import { runHermesAuthFixture } from "./auth-fixture.js";
+
+const installedRoot = "/Users/johansardar/.hermes/hermes-agent";
+const installedCommit = "8d5e3e412138342e8bf30443e72bd4e6a9abd057";
+const launcher = join(installedRoot, ".hermes/bin/hermes");
+const digest = (bytes: string | Buffer): string => createHash("sha256").update(bytes).digest("hex");
+
+export const HermesAuthProbe = {
+  run(input: RegisteredProbeInputV1, context: OpsControlContextV1): Promise<Result<RegisteredProbeOperationV1>> {
+    const started = process.hrtime.bigint();
+    const invalid: Result<RegisteredProbeOperationV1> = { ok: false, error: { module: "ops", code: "INVALID_INPUT", message: opsErrorMessages.INVALID_INPUT, retryable: false } };
+    if (!registeredProbeInputSchema.safeParse(input).success || input.caseId !== "native-auth-cli" || !["AT-hermes-config-84", "AT-hermes-config-85"].includes(input.probeId)) return Promise.resolve(invalid);
+    const owned = OpsTestStack.inspect(context);
+    if (!owned.ok) return Promise.resolve(owned);
+    const snapshot = owned.data.result;
+    if (!snapshot?.ready || snapshot.release !== "R0" || snapshot.clock !== "fake" || snapshot.model !== "fake") return Promise.resolve(invalid);
+    try {
+      const home = mkdtempSync(join(trustedCheckoutRoot(), "build/.toy-r0-fixtures", snapshot.stackId, "native-auth-runtime-"));
+      const hermesHome = join(home, "hermes");
+      const scratch = join(home, "scratch");
+      mkdirSync(hermesHome, { mode: 0o700 });
+      mkdirSync(scratch, { mode: 0o700 });
+      const environment = { ...trustedToolEnvironment(), HOME: home, HERMES_HOME: hermesHome, TMPDIR: scratch };
+      const pin = spawnSync("/usr/bin/git", ["-C", installedRoot, "rev-parse", "HEAD"], { encoding: "utf8", timeout: Math.min(context.timeoutMs, 3000), maxBuffer: 4096, env: environment, cwd: home });
+      if (pin.error || pin.status !== 0 || pin.stdout.trim() !== installedCommit) return Promise.resolve({ ok: false, error: { module: "ops", code: "ATTESTATION_INVALID", message: opsErrorMessages.ATTESTATION_INVALID, retryable: false } });
+      const launcherDigest = digest(readFileSync(launcher));
+      const installState = join("/Users/johansardar/.hermes/installs", digest(realpathSync(installedRoot)).slice(0, 16));
+      const facts: unknown = JSON.parse(readFileSync(join(installState, "facts.json"), "utf8"));
+      const record = installedHermesDependencyRecordSchema.parse(facts);
+      const generation = realpathSync(record.packages.venv.environment);
+      const generationRoot = realpathSync(join(installState, "environments"));
+      const generationRelative = relative(generationRoot, generation);
+      if (!generationRelative || generationRelative.startsWith("..") || isAbsolute(generationRelative) || !statSync(join(generation, "pyvenv.cfg")).isFile()) return Promise.resolve({ ok: false, error: { module: "ops", code: "ATTESTATION_INVALID", message: opsErrorMessages.ATTESTATION_INVALID, retryable: false } });
+      const interpreter = join(generation, "bin/python3");
+      const interpreterDigest = digest(readFileSync(interpreter));
+      const commandBudgetMs = context.timeoutMs - Number((process.hrtime.bigint() - started) / 1000000n);
+      if (commandBudgetMs <= 0) return Promise.resolve({ ok: false, error: { module: "ops", code: "DEPENDENCY_UNAVAILABLE", message: opsErrorMessages.DEPENDENCY_UNAVAILABLE, retryable: true } });
+      const command = spawnSync(launcher, ["--print-runtime-command", "--", "--help"], { encoding: "utf8", timeout: Math.min(commandBudgetMs, 3000), maxBuffer: 32768, env: environment, cwd: home });
+      if (command.error || command.status !== 0) return Promise.resolve({ ok: false, error: { module: "ops", code: "ATTESTATION_INVALID", message: opsErrorMessages.ATTESTATION_INVALID, retryable: false } });
+      const rawCommand: unknown = JSON.parse(command.stdout);
+      const publicCommand = hermesPublicRuntimeCommandSchema.parse(rawCommand);
+      if (publicCommand.length !== 5 || publicCommand[1] !== "-I" || publicCommand[2] !== "-c" || publicCommand[4] !== "--help") return Promise.resolve({ ok: false, error: { module: "ops", code: "ATTESTATION_INVALID", message: opsErrorMessages.ATTESTATION_INVALID, retryable: false } });
+      const remainingMs = context.timeoutMs - Number((process.hrtime.bigint() - started) / 1000000n);
+      const child = remainingMs > 0 ? spawnSync(interpreter, ["-B", ...publicCommand.slice(1)], { encoding: "utf8", timeout: Math.min(remainingMs, 10000), maxBuffer: 32768, env: environment, cwd: home }) : null;
+      const publicHelpObserved = child !== null && child.status === 0 && !child.error && /^usage:\s+hermes\b/m.test(child.stdout);
+      const permissionDenied = /PermissionError|Operation not permitted|Permission denied|install state is not writable/.test(child?.stderr ?? "");
+      const dependencyEnvironmentUnavailable = /dependency environment|site-packages|managed Python|preparing dependencies/.test(child?.stderr ?? "");
+      const missingModule = /ModuleNotFoundError: No module named/.test(child?.stderr ?? "");
+      const repairSuggested = /run `hermes pm repair`/.test(child?.stderr ?? "");
+      const sourceUpdateIncomplete = /source-update completion failed|source update.*unfinished|source update completion failed/.test(child?.stderr ?? "");
+      const reasonCode = publicHelpObserved ? "NATIVE_PUBLIC_CLI_READY_AUTH_PENDING" : permissionDenied ? "NATIVE_CLI_PERMISSION_DENIED" : dependencyEnvironmentUnavailable ? "NATIVE_DEPENDENCY_ENVIRONMENT_UNAVAILABLE" : missingModule ? "NATIVE_MODULE_UNAVAILABLE" : child === null || child.error ? "NATIVE_CLI_EXECUTION_UNAVAILABLE" : "NATIVE_PUBLIC_CLI_HELP_NOT_OBSERVED";
+      const check = checkViewSchema.parse({
+        id: "auth.native-runtime", owner: "hermes", state: publicHelpObserved ? "PASS" : "BLOCKED", checkedAt: new Date().toISOString(), reasonCode, nextCommandId: "probe.show",
+        prerequisite: JSON.stringify({ interface: "hermes --help", installedCommit, launcherDigest, interpreterSource: "existing-committed-venv", interpreterDigest, publicRuntimeCommandDigest: digest(command.stdout), bytecodeWritesDisabled: true, isolatedHome: true, inheritedProviderEnvironment: false, publicHelpObserved, childExitCode: child?.status ?? null, childSignal: child?.signal ?? null, outputDigest: digest(child?.stdout ?? ""), errorOutputDigest: digest(child?.stderr ?? ""), dependencyEnvironmentUnavailable, missingModule, repairSuggested, sourceUpdateIncomplete, authExecuted: false, credentialInspected: false, wholeATComplete: false }),
+        links: { recordRefs: [], observations: [], artifactDigests: [launcherDigest, interpreterDigest, digest(readFileSync(new URL("./auth-probe.js", import.meta.url)))] }
+      });
+      const fixtureBudgetMs = context.timeoutMs - Number((process.hrtime.bigint() - started) / 1000000n);
+      const checks = [check];
+      if (publicHelpObserved && fixtureBudgetMs > 0 && input.probeId === "AT-hermes-config-85") checks.push(...runHermesAuthFixture(interpreter, home, hermesHome, fixtureBudgetMs));
+      if (publicHelpObserved && input.probeId === "AT-hermes-config-84") {
+        for (const phase of ["add-enospc", "add-replace-fault"] as const) {
+          const storageHome = mkdtempSync(join(home, "storage-fault-"));
+          const storageHermesHome = join(storageHome, "hermes");
+          mkdirSync(storageHermesHome, { mode: 0o700 });
+          const storageBudgetMs = context.timeoutMs - Number((process.hrtime.bigint() - started) / 1000000n);
+          checks.push(...runHermesAuthFixture(interpreter, storageHome, storageHermesHome, storageBudgetMs, phase));
+        }
+      }
+      return Promise.resolve(TestProbeControl.run(input, context, checks));
+    } catch { return Promise.resolve({ ok: false, error: { module: "ops", code: "ATTESTATION_INVALID", message: opsErrorMessages.ATTESTATION_INVALID, retryable: false } }); }
+  }
+};

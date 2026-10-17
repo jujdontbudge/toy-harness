@@ -1,0 +1,328 @@
+--- /dev/null
++++ b/tests/fixtures/toy_auth_httpx_fixture.py
+@@ -0,0 +1,325 @@
++from __future__ import annotations
++
++import base64
++import io
++import json
++import sys
++from pathlib import Path
++
++import httpx
++
++_OPERATION = ""
++_COUNTS = {
++    "device_code_requests": 0,
++    "device_code_polls": 0,
++    "token_exchanges": 0,
++    "token_refreshes": 0,
++    "model_requests": 0,
++    "denied_http_requests": 0,
++    "blocked_socket_events": 0,
++}
++_CHAT_MARKER = "TOY_FIXTURE_CHAT_OK"
++_EXPECTED_MODEL = "gpt-6.1-sol"
++_PROMPT = "Return the fixed fixture marker."
++
++
++class _FixtureAsyncStream(httpx.AsyncByteStream):
++    def __init__(self, content: bytes) -> None:
++        self._content = content
++
++    async def __aiter__(self):
++        yield self._content
++
++    async def aclose(self) -> None:
++        return None
++
++
++def _access_token(expiration: int) -> str:
++    header = base64.urlsafe_b64encode(b'{"alg":"none","typ":"JWT"}').rstrip(b"=").decode()
++    claims = {
++        "exp": expiration,
++        "sub": "toy-fixture-subject",
++        "https://api.openai.com/auth": {"chatgpt_account_id": "toy-fixture-account"},
++    }
++    payload = base64.urlsafe_b64encode(
++        json.dumps(claims, separators=(",", ":")).encode()
++    ).rstrip(b"=").decode()
++    return f"{header}.{payload}.fixture"
++
++
++def _response(
++    request: httpx.Request,
++    content: bytes,
++    content_type: str,
++    asynchronous: bool,
++) -> httpx.Response:
++    headers = {"content-type": content_type}
++    if asynchronous:
++        return httpx.Response(
++            200,
++            headers=headers,
++            stream=_FixtureAsyncStream(content),
++            request=request,
++        )
++    return httpx.Response(200, headers=headers, content=content, request=request)
++
++
++def _json_response(
++    request: httpx.Request,
++    value: dict[str, object],
++    asynchronous: bool,
++) -> httpx.Response:
++    content = json.dumps(value, separators=(",", ":")).encode()
++    return _response(request, content, "application/json", asynchronous)
++
++
++def _event_stream_response(request: httpx.Request, asynchronous: bool) -> httpx.Response:
++    events = (
++        (
++            "response.output_text.delta",
++            {"type": "response.output_text.delta", "delta": _CHAT_MARKER},
++        ),
++        (
++            "response.completed",
++            {
++                "type": "response.completed",
++                "response": {
++                    "id": "resp_toy_fixture",
++                    "status": "completed",
++                    "usage": {
++                        "input_tokens": 1,
++                        "output_tokens": 1,
++                        "total_tokens": 2,
++                    },
++                },
++            },
++        ),
++    )
++    body = "".join(
++        f"event: {name}\ndata: {json.dumps(value, separators=(',', ':'))}\n\n"
++        for name, value in events
++    ).encode()
++    return _response(request, body, "text/event-stream", asynchronous)
++
++
++def _model_response(request: httpx.Request, asynchronous: bool) -> httpx.Response:
++    try:
++        payload = json.loads(request.read())
++    except Exception:
++        payload = {}
++    if not isinstance(payload, dict) or payload.get("model") != _EXPECTED_MODEL:
++        return _deny_request()
++    if request.headers.get("authorization") != "Bearer " + _access_token(4102444800):
++        return _deny_request()
++    if payload.get("stream") is not False:
++        return _event_stream_response(request, asynchronous)
++    return _json_response(
++        request,
++        {
++            "id": "resp_toy_fixture",
++            "object": "response",
++            "created_at": 0,
++            "model": _EXPECTED_MODEL,
++            "status": "completed",
++            "output": [
++                {
++                    "id": "msg_toy_fixture",
++                    "type": "message",
++                    "status": "completed",
++                    "role": "assistant",
++                    "content": [{"type": "output_text", "text": _CHAT_MARKER}],
++                }
++            ],
++            "usage": {"input_tokens": 1, "output_tokens": 1, "total_tokens": 2},
++        },
++        asynchronous,
++    )
++
++
++def _deny_request() -> None:
++    _COUNTS["denied_http_requests"] += 1
++    raise RuntimeError("fixture denied an unregistered HTTPX request")
++
++
++def _route(request: httpx.Request, asynchronous: bool = False) -> httpx.Response:
++    if request.url.scheme != "https":
++        return _deny_request()
++    host = request.url.host.lower()
++    path = request.url.path
++    method = request.method.upper()
++    if host == "auth.openai.com" and method == "POST" and path == "/api/accounts/deviceauth/usercode":
++        _COUNTS["device_code_requests"] += 1
++        return _json_response(
++            request,
++            {
++                "device_auth_id": "toy-fixture-device-auth-id",
++                "user_code": "TOY-FIXTURE-CODE",
++                "interval": 3,
++                "expires_in": 300,
++            },
++            asynchronous,
++        )
++    if host == "auth.openai.com" and method == "POST" and path == "/api/accounts/deviceauth/token":
++        _COUNTS["device_code_polls"] += 1
++        return _json_response(
++            request,
++            {
++                "authorization_code": "toy-fixture-authorization-code",
++                "code_verifier": "toy-fixture-code-verifier",
++            },
++            asynchronous,
++        )
++    if host == "auth.openai.com" and method == "POST" and path == "/oauth/token":
++        if _OPERATION == "add":
++            _COUNTS["token_exchanges"] += 1
++            return _json_response(
++                request,
++                {
++                    "access_token": _access_token(1),
++                    "refresh_token": "toy-fixture-refresh-initial",
++                    "expires_in": 1,
++                    "token_type": "Bearer",
++                },
++                asynchronous,
++            )
++        if _OPERATION == "chat":
++            _COUNTS["token_refreshes"] += 1
++            return _json_response(
++                request,
++                {
++                    "access_token": _access_token(4102444800),
++                    "refresh_token": "toy-fixture-refresh-rotated",
++                    "expires_in": 3600,
++                    "token_type": "Bearer",
++                },
++                asynchronous,
++            )
++        return _deny_request()
++    if (
++        _OPERATION == "chat"
++        and host == "chatgpt.com"
++        and method == "POST"
++        and path == "/backend-api/codex/responses"
++    ):
++        _COUNTS["model_requests"] += 1
++        return _model_response(request, asynchronous)
++    return _deny_request()
++
++
++def _sync_send(self, request, *args, **kwargs):
++    return _route(request)
++
++
++async def _async_send(self, request, *args, **kwargs):
++    return _route(request, asynchronous=True)
++
++
++def _deny_socket(event: str, args: tuple[object, ...]) -> None:
++    if event in {"socket.connect", "socket.getaddrinfo", "socket.gethostbyname"}:
++        _COUNTS["blocked_socket_events"] += 1
++        raise RuntimeError("fixture socket access is disabled")
++
++
++def _public_argv(operation: str) -> list[str]:
++    prefix = ["hermes", "--profile", "toy"]
++    if operation == "add":
++        return [*prefix, "auth", "add", "openai-codex", "--type", "oauth", "--no-browser"]
++    if operation == "list":
++        return [*prefix, "auth", "list", "openai-codex"]
++    return [*prefix, "chat", "--provider", "openai-codex", "--model", _EXPECTED_MODEL, "-q", _PROMPT]
++
++
++def _run_cli(argv: list[str]) -> tuple[int, str, str]:
++    saved_argv = sys.argv
++    saved_stdout, saved_stderr = sys.stdout, sys.stderr
++    captured_stdout, captured_stderr = io.StringIO(), io.StringIO()
++    result = 0
++    failure = ""
++    try:
++        sys.argv = argv[:]
++        sys.stdout, sys.stderr = captured_stdout, captured_stderr
++        from hermes_cli.main import main as hermes_main
++
++        hermes_main()
++    except SystemExit as exc:
++        result = exc.code if isinstance(exc.code, int) else 1
++        if result:
++            failure = "CLI_EXIT_NONZERO"
++    except Exception:
++        result = 1
++        failure = "CLI_EXCEPTION"
++    finally:
++        sys.argv = saved_argv
++        sys.stdout, sys.stderr = saved_stdout, saved_stderr
++    return result, captured_stdout.getvalue(), failure
++
++
++def _safe_result(
++    operation: str,
++    argv: list[str],
++    exit_code: int,
++    output: str,
++    failure: str,
++) -> dict[str, object]:
++    markers: list[str] = []
++    observations: dict[str, object] = {"provider": "openai-codex"}
++    if operation == "add":
++        added = exit_code == 0 and "Added openai-codex OAuth credential #" in output
++        markers.append("AUTH_ADD_OK" if added else "AUTH_ADD_NOT_CONFIRMED")
++    elif operation == "list":
++        count = 0
++        for line in output.splitlines():
++            if line.startswith("openai-codex (") and line.endswith(" credentials):"):
++                raw = line[len("openai-codex (") : -len(" credentials):")]
++                if raw.isdecimal():
++                    count = int(raw)
++                    break
++        observations["credential_count"] = count
++        markers.append("AUTH_LIST_READBACK_OK" if count > 0 else "AUTH_LIST_EMPTY")
++    else:
++        replied = exit_code == 0 and _CHAT_MARKER in output
++        markers.append("CHAT_RESPONSE_OK" if replied else "CHAT_RESPONSE_NOT_CONFIRMED")
++    if failure:
++        markers.append(failure)
++    return {
++        "schema": "toy.hermes-httpx-auth-fixture.v1",
++        "operation": operation,
++        "public_argv": argv,
++        "exit_code": exit_code,
++        "markers": markers,
++        "observations": observations,
++        "http_ledger": dict(_COUNTS),
++        "network_audit": "socket-audit-hook-installed",
++    }
++
++
++def main() -> int:
++    global _OPERATION
++    if len(sys.argv) != 2 or sys.argv[1] not in {"add", "list", "chat"}:
++        print(
++            json.dumps(
++                {
++                    "schema": "toy.hermes-httpx-auth-fixture.v1",
++                    "operation": "invalid",
++                    "exit_code": 2,
++                    "markers": ["INVALID_FIXTURE_OPERATION"],
++                },
++                sort_keys=True,
++            )
++        )
++        return 2
++    _OPERATION = sys.argv[1]
++    argv = _public_argv(_OPERATION)
++    httpx.Client.send = _sync_send
++    httpx.AsyncClient.send = _async_send
++    sys.addaudithook(_deny_socket)
++    exit_code, output, failure = _run_cli(argv)
++    result = _safe_result(_OPERATION, argv, exit_code, output, failure)
++    print(json.dumps(result, sort_keys=True))
++    return exit_code
++
++
++if __name__ == "__main__":
++    source_root = Path(__file__).resolve().parents[2]
++    sys.path.insert(0, str(source_root))
++    raise SystemExit(main())

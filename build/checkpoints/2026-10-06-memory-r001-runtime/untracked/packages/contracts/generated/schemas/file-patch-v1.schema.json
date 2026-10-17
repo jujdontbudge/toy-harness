@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "path": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 240,
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._/-]*(?![\\s\\S])"
+    },
+    "beforeDigest": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 64,
+          "maxLength": 64,
+          "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "afterDigest": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 64,
+          "maxLength": 64,
+          "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "create",
+        "update"
+      ]
+    },
+    "mediaType": {
+      "type": "string",
+      "maxLength": 80
+    },
+    "patch": {
+      "type": "string",
+      "maxLength": 2097152
+    }
+  },
+  "required": [
+    "path",
+    "beforeDigest",
+    "afterDigest",
+    "kind",
+    "mediaType",
+    "patch"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:FilePatchV1"
+}

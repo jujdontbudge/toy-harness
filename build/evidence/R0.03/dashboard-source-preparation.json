@@ -1,0 +1,57 @@
+{
+  "schemaVersion": "toy.r003-dashboard-source-preparation.v1",
+  "installedSourceCommit": "8d5e3e412138342e8bf30443e72bd4e6a9abd057",
+  "patch": "patches/hermes-auth-dashboard.patch",
+  "patchSha256": "f4509ed92351863f58ee9ea85c6c6473d23b86b75e59a0064db26f5d71e28493",
+  "files": [
+    {
+      "path": "hermes_cli/web_routers/ops.py",
+      "baseSha256": "285424cc919eaef2eaea25fb36148cac6bad6c897afda09536e4daf2e4b70e2e",
+      "candidateSha256": "c934f185431b8ac219c7a7a7b7573901b975ad3313c739223711f89db011400b",
+      "pythonSyntax": "PASS"
+    },
+    {
+      "path": "hermes_cli/web_routers/oauth.py",
+      "baseSha256": "fe4daead9163157c61a5ee25e81acf250cc603c0eac7239da1695090d06da418",
+      "candidateSha256": "7ae36a921160d598d40f6aa4e654f088d70702977ce259d4a16968c08ca56925",
+      "pythonSyntax": "PASS"
+    },
+    {
+      "path": "hermes_cli/web_server_oauth.py",
+      "baseSha256": "b7bde43493499cfd5ffab94e605a2467e7cfc4f47bd1fca5befaa5da5520c0fb",
+      "candidateSha256": "333f4107daef4d1f016592530f14055d6415a067484796df9649dd6ddd534346",
+      "pythonSyntax": "PASS"
+    }
+  ],
+  "syntaxVerified": true,
+  "runtimeVerified": false,
+  "installedSourceChanged": false,
+  "wholeAssignedATsPassed": [],
+  "behavior": "Fixed sanitized HTTP 400 for credential pool add and AuthError/OSError OAuth start/worker failures; preserve scoped state/cancellation; affected logs contain class names rather than exception text",
+  "pending": [
+    "Real public dashboard subprocesses in two sealed profiles with fake external OAuth responses and OS save faults",
+    "Fresh public auth/chat usability, root/profile digests and fake-provider ledgers",
+    "Actual identity/launcher cells and separate live supported-grant attestation"
+  ],
+  "observedAt": "2026-10-06T06:17:19.790778+00:00",
+  "verdict": "INCOMPLETE",
+  "patchAppliesToPinnedSource": true,
+  "combinedPatchApplicability": {
+    "command": "git apply --check hermes-profile-auth.patch hermes-auth-dashboard.patch hermes-siwc.patch",
+    "exitCode": 0,
+    "mutatingApplyExecuted": false
+  },
+  "installedWorktreeCleanAfterCheck": true,
+  "featureMap": {
+    "command": "toy feature-map check --json",
+    "exitCode": 0,
+    "featureCount": 84,
+    "commandCount": 55,
+    "ATCount": 1447,
+    "evidence": "build/evidence/R0.03/dashboard-map-check.json"
+  },
+  "runtimeTestsExecuted": false,
+  "newInfrastructure": false,
+  "newDependencies": false,
+  "swiftInvoked": false
+}

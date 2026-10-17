@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "pythonExecutable": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 4096
+    },
+    "pythonDigest": {
+      "type": "string",
+      "minLength": 64,
+      "maxLength": 64,
+      "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+    },
+    "helperDigest": {
+      "type": "string",
+      "minLength": 64,
+      "maxLength": 64,
+      "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+    }
+  },
+  "required": [
+    "pythonExecutable",
+    "pythonDigest",
+    "helperDigest"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:SiwcKeychainLauncherV1"
+}

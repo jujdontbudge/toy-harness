@@ -1,0 +1,41 @@
+{
+  "generatedAt": "2026-10-06T08:21:25.283Z",
+  "card": "R0.03",
+  "worker": "r003_cli_fixture",
+  "model": "gpt-6-luna",
+  "reasoning": "max",
+  "status": "BLOCKED_BEFORE_IMPLEMENTATION",
+  "scope": "AT-hermes-config-85 native public auth-add/fresh-process fixture",
+  "reason": "PATCHED_OAUTH_PATH_HAS_NO_PUBLIC_FAKE_ORIGIN",
+  "facts": [
+    "Candidate patch changes the native OpenAI Codex manual PKCE credential path",
+    "Authorize and token URLs are fixed at auth.openai.com",
+    "HERMES_CODEX_BASE_URL selects inference only; public portal/inference flags are Nous-specific",
+    "No existing fixed local OAuth fake was established in this bounded scope"
+  ],
+  "sourceDigests": [
+    {
+      "path": "/Users/johansardar/.hermes/hermes-agent/hermes_cli/auth_codex_browser.py",
+      "sha256": "07ef1319f3ee14b317fe240a9a4a0c1701512364d976113b369b4ceee00070f7"
+    },
+    {
+      "path": "/Users/johansardar/.hermes/hermes-agent/hermes_cli/auth_constants.py",
+      "sha256": "013aefc7b82452728cfd654d3acb08f0250b38168f15ab6f4460e09c79a5a3c2"
+    },
+    {
+      "path": "/Users/johansardar/.hermes/hermes-agent/hermes_cli/auth_codex.py",
+      "sha256": "85c4644c052f5f5b3d4dc0f862592b5f13f286bf48d4d239015c3c74ae3f8e91"
+    },
+    {
+      "path": "/Users/johansardar/.hermes/hermes-agent/hermes_cli/subcommands/auth.py",
+      "sha256": "6f8aa71d61b00dcdeffa277035bb558ef9f3210248a80a467f19ceab19707288"
+    }
+  ],
+  "sourceWritten": false,
+  "nativeHermesExecuted": false,
+  "networkExecuted": false,
+  "credentialAccessed": false,
+  "wholeATsPassed": [],
+  "deferredOwner": "R0.03",
+  "deferred": "Assigned CLI OAuth/fresh-process proof needs an external OAuth fake seam in the isolated candidate; defer extra TLS/proxy infrastructure rather than expand this kitchen unit. Actual protected live auth remains dependent on R0.04\u201305."
+}

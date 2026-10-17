@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "connection": {
+      "type": "object",
+      "properties": {
+        "socketDirectory": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 4096,
+          "pattern": "^\\/"
+        },
+        "database": {
+          "type": "string",
+          "pattern": "^[a-z_][a-z0-9_]{0,62}(?![\\s\\S])"
+        },
+        "peerRole": {
+          "type": "string",
+          "pattern": "^[a-z_][a-z0-9_]{0,62}(?![\\s\\S])"
+        },
+        "clientDigest": {
+          "type": "string",
+          "minLength": 64,
+          "maxLength": 64,
+          "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+        }
+      },
+      "required": [
+        "socketDirectory",
+        "database",
+        "peerRole",
+        "clientDigest"
+      ],
+      "additionalProperties": false
+    },
+    "policyDigest": {
+      "type": "string",
+      "minLength": 64,
+      "maxLength": 64,
+      "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+    }
+  },
+  "required": [
+    "connection",
+    "policyDigest"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:ModelAdmissionRuntimeV1"
+}

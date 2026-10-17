@@ -1,0 +1,279 @@
+diff --git a/agent/auxiliary_client.py b/agent/auxiliary_client.py
+--- a/agent/auxiliary_client.py
++++ b/agent/auxiliary_client.py
+@@ -4507,6 +4507,11 @@
+     """Top-level main-agent fallback chain for a ``provider: auto`` auxiliary call: auto tasks honour the
+     user's main fallback policy before the built-in discovery chain; read via ``get_fallback_chain`` so
+     ``fallback_providers`` and legacy ``fallback_model`` keep the main agent's order."""
++    from providers import get_provider_profile
++
++    profile = get_provider_profile(failed_provider)
++    if profile is not None and not profile.allows_fallback:
++        return None, None, ""
+     try:
+         from hermes_cli.config import load_config_readonly
+         from hermes_cli.fallback_config import get_fallback_chain
+diff --git a/agent/codex_responses_adapter.py b/agent/codex_responses_adapter.py
+--- a/agent/codex_responses_adapter.py
++++ b/agent/codex_responses_adapter.py
+@@ -771,9 +771,13 @@
+         raise ValueError(f"Codex Responses input[{idx}] function_call is missing call_id.")
+     if not _nonblank(name):
+         raise ValueError(f"Codex Responses input[{idx}] function_call is missing name.")
++    namespace = item.get("namespace")
++    if namespace is not None and not _nonblank(namespace):
++        raise ValueError(f"Responses input[{idx}] function_call namespace is invalid.")
+     return {
+         "type": "function_call", "call_id": call_id.strip(), "name": coerce_tool_name(name, fallback="fn"),
+         "arguments": ctx.sanitize_text(_coerce_arguments(item.get("arguments", "{}"))),
++        **({"namespace": namespace.strip()} if namespace is not None else {}),
+     }
+ 
+ 
+@@ -905,6 +909,17 @@
+     if not isinstance(tool, dict):
+         raise ValueError(f"Codex Responses tools[{idx}] must be an object.")
+     tool_type = tool.get("type")
++    if tool_type == "namespace":
++        name, children = tool.get("name"), tool.get("tools")
++        if not _nonblank(name) or not isinstance(children, list) or not children:
++            raise ValueError(f"Responses tools[{idx}] has an invalid namespace.")
++        if any(not isinstance(child, dict) or child.get("type") != "function" for child in children):
++            raise ValueError(f"Responses tools[{idx}] namespace requires function tools.")
++        return {
++            "type": "namespace", "name": name.strip(),
++            "description": _str_or_empty(tool.get("description", "")),
++            "tools": [_preflight_tool(child, idx) for child in children],
++        }
+     if tool_type in _RESPONSES_BUILTIN_TOOL_TYPES:  # provider-executed built-ins carry no name/parameters
+         return dict(tool)
+     if tool_type != "function":
+diff --git a/agent/transports/codex.py b/agent/transports/codex.py
+--- a/agent/transports/codex.py
++++ b/agent/transports/codex.py
+@@ -819,7 +819,10 @@
+             kwargs["extra_body"].setdefault("prompt_cache_key", kwargs.get("prompt_cache_key", cache_key))
+ 
+         _bound_prompt_cache_key_field(kwargs.get("extra_body"))
+-        return kwargs
++        from providers import get_provider_profile
++
++        profile = get_provider_profile(params.get("provider") or "")
++        return profile.prepare_responses_kwargs(kwargs) if profile is not None else kwargs
+ 
+     def normalize_response(self, response: Any, **kwargs) -> NormalizedResponse:
+         """Normalize Codex Responses API response to NormalizedResponse."""
+diff --git a/agent/turn_api_call.py b/agent/turn_api_call.py
+--- a/agent/turn_api_call.py
++++ b/agent/turn_api_call.py
+@@ -49,6 +49,11 @@
+     checks); disabled on provider signal, ACP providers (``acp://`` scheme or an
+     external-process provider profile), MoA without a display consumer, or Mock clients in
+     tests (SimpleNamespace, not stream iterators)."""
++    from providers import get_provider_profile
++
++    profile = get_provider_profile(getattr(agent, "provider", ""))
++    if profile is not None and profile.requires_streaming:
++        return True
+     if getattr(agent, "_disable_streaming", False):
+         return False
+     _base = str(agent.base_url or "").lower()
+diff --git a/hermes_cli/cli_agent_setup_mixin.py b/hermes_cli/cli_agent_setup_mixin.py
+--- a/hermes_cli/cli_agent_setup_mixin.py
++++ b/hermes_cli/cli_agent_setup_mixin.py
+@@ -369,6 +369,11 @@
+         from hermes_cli.auth import AuthError, primary_failure_wording
+         from hermes_cli.runtime_provider import resolve_runtime_provider
+         if not isinstance(primary_exc, AuthError):
++            return None
++        from providers import get_provider_profile
++
++        profile = get_provider_profile(self.requested_provider)
++        if profile is not None and not profile.allows_fallback:
+             return None
+         _fb_chain = self._fallback_model if isinstance(self._fallback_model, list) else []
+         for _fb in _fb_chain:
+diff --git a/hermes_cli/runtime_provider.py b/hermes_cli/runtime_provider.py
+--- a/hermes_cli/runtime_provider.py
++++ b/hermes_cli/runtime_provider.py
+@@ -999,6 +999,20 @@
+     OpenCode Zen/Go where different models route through different API surfaces)."""
+     requested_provider = resolve_requested_provider(requested)
+     _raise_if_provider_disabled(requested_provider)
++    from providers import get_provider_profile
++
++    profile = get_provider_profile(requested_provider)
++    if profile is not None:
++        owned = profile.resolve_runtime_credentials(
++            explicit_api_key=explicit_api_key, explicit_base_url=explicit_base_url,
++            target_model=target_model,
++        )
++        if owned is not None:
++            return _runtime(
++                profile.name, profile.api_mode, profile.base_url, owned.get("api_key", ""),
++                source=owned.get("source", "provider-owned"), requested_provider=requested_provider,
++                expires_at=owned.get("expires_at"),
++            )
+     # Same alias expansion the auxiliary client applies, so ``provider: openai`` means one thing on
+     # every path (background review, curator, MoA slots, delegation) instead of "Unknown provider".
+     # The pre-expansion name is what the codex_app_server overlay judges: ``openai`` is eligible,
+@@ -1109,6 +1123,11 @@
+         return resolve_runtime_provider(requested=requested, target_model=target_model,
+                                         explicit_base_url=explicit_base_url, explicit_api_key=explicit_api_key), None
+     except AuthError as primary_exc:
++        from providers import get_provider_profile
++
++        profile = get_provider_profile(primary_exc.provider or requested or "")
++        if profile is not None and not profile.allows_fallback:
++            raise
+         from hermes_cli.fallback_config import effective_runtime_provider, get_fallback_chain, resolve_entry_api_key
+         for entry in get_fallback_chain(config):
+             provider = (entry.get("provider") or "").strip().lower()
+diff --git a/plugins/model-providers/openai-chatgpt/__init__.py b/plugins/model-providers/openai-chatgpt/__init__.py
+new file mode 100644
+--- /dev/null
++++ b/plugins/model-providers/openai-chatgpt/__init__.py
+@@ -0,0 +1,106 @@
++from __future__ import annotations
++
++import math
++import time
++from typing import Any, Callable
++
++from providers import register_provider
++from providers.base import OMIT_TEMPERATURE, ProviderProfile
++
++
++class ChatGPTPlanProfile(ProviderProfile):
++    def __init__(self, read_grant: Callable[[], dict[str, Any] | None] | None = None):
++        super().__init__(
++            name="openai-chatgpt", aliases=("siwc_responses",), api_mode="codex_responses",
++            env_vars=(), base_url="https://api.openai.com/v1", auth_type="oauth_external",
++            requires_streaming=True, allows_fallback=False,
++            fixed_temperature=OMIT_TEMPERATURE, supports_vision=True,
++        )
++        self._read_grant = read_grant
++
++    def _access_token(self) -> str:
++        from hermes_cli.auth import AuthError
++
++        try:
++            grant = self._read_grant() if self._read_grant is not None else None
++        except Exception:
++            raise AuthError("ChatGPT plan authorization could not be read.",
++                            provider=self.name, code="siwc_authorization_required") from None
++        if not isinstance(grant, dict):
++            raise AuthError("Independent ChatGPT plan authorization is required.",
++                            provider=self.name, code="siwc_authorization_required")
++        expires = grant.get("expires_at")
++        scopes = grant.get("scope")
++        client_id = grant.get("client_id")
++        token = grant.get("access_token")
++        valid = (
++            isinstance(expires, (int, float)) and not isinstance(expires, bool)
++            and math.isfinite(expires) and expires > time.time()
++            and isinstance(scopes, str)
++            and {"resource.invoke", "chatgpt.tokens.use.direct"}.issubset(scopes.split())
++            and isinstance(client_id, str) and bool(client_id)
++            and client_id != "dynamic_agent_client"
++            and isinstance(token, str) and bool(token)
++            and grant.get("identity_verified") is True
++            and grant.get("zero_credit_verified") is True
++            and grant.get("audience") == "https://api.openai.com/v1"
++        )
++        if not valid:
++            raise AuthError("ChatGPT plan authorization is unavailable or unverified.",
++                            provider=self.name, code="siwc_authorization_required")
++        return token
++
++    def resolve_runtime_credentials(self, **context: Any) -> dict[str, Any]:
++        from hermes_cli.auth import AuthError
++
++        if context.get("explicit_api_key") or context.get("explicit_base_url"):
++            raise AuthError("The ChatGPT plan route requires its independent grant and public endpoint.",
++                            provider=self.name, code="siwc_route_override_refused")
++        return {"api_key": self._access_token(), "source": "independent-siwc"}
++
++    def create_client(self, **client_kwargs: Any) -> Any:
++        from openai import OpenAI
++
++        client_kwargs["api_key"] = self._access_token()
++        client_kwargs["base_url"] = self.base_url
++        client_kwargs["max_retries"] = 0
++        return OpenAI(**client_kwargs)
++
++    def supported_reasoning_efforts(self, model: str | None) -> tuple[str, ...]:
++        from agent.reasoning_effort import codex_supported_efforts
++
++        return codex_supported_efforts(model)
++
++    def prepare_responses_kwargs(self, kwargs: dict[str, Any]) -> dict[str, Any]:
++        allowed = {
++            "model", "instructions", "input", "tools", "reasoning", "service_tier", "text",
++            "include", "store", "prompt_cache_key", "tool_choice", "parallel_tool_calls", "timeout",
++        }
++        request = {key: value for key, value in kwargs.items() if key in allowed}
++        request["store"] = False
++        tools = request.get("tools") or []
++        if not isinstance(tools, list) or any(
++            not isinstance(tool, dict) or tool.get("type") != "function" for tool in tools
++        ):
++            raise ValueError("ChatGPT plan requests require Hermes function tools.")
++        request["tools"] = ([{
++            "type": "namespace", "name": "hermes", "description": "Hermes approved tools",
++            "tools": tools,
++        }] if tools else [])
++        inputs = request.get("input")
++        if not isinstance(inputs, list):
++            raise ValueError("ChatGPT plan requests require full input history.")
++        normalized = []
++        for item in inputs:
++            if not isinstance(item, dict) or item.get("role") == "system":
++                raise ValueError("ChatGPT plan input is invalid.")
++            if item.get("type") == "function_call":
++                if item.get("namespace") not in (None, "hermes"):
++                    raise ValueError("ChatGPT plan tool namespace does not match.")
++                item = {**item, "namespace": "hermes"}
++            normalized.append(item)
++        request["input"] = normalized
++        return request
++
++
++register_provider(ChatGPTPlanProfile())
+diff --git a/plugins/model-providers/openai-chatgpt/plugin.yaml b/plugins/model-providers/openai-chatgpt/plugin.yaml
+new file mode 100644
+--- /dev/null
++++ b/plugins/model-providers/openai-chatgpt/plugin.yaml
+@@ -0,0 +1,5 @@
++name: openai-chatgpt-provider
++kind: model-provider
++version: 1.0.0
++description: Sign in with ChatGPT public Responses provider
++author: Toy
+diff --git a/providers/base.py b/providers/base.py
+--- a/providers/base.py
++++ b/providers/base.py
+@@ -60,6 +60,8 @@
+     supports_health_check: bool = True  # False → doctor skips /models probe for this provider
+     # False → fetch_models returns None without a network call (catalog comes from an SDK/subprocess).
+     supports_model_listing: bool = True
++    requires_streaming: bool = False
++    allows_fallback: bool = True
+ 
+     # ── Provider-owned auth (optional; non-api-key plugins) ──────────
+     # ``auth_handler(action, args) -> bool``: ``hermes auth add|status|logout|refresh <name>`` calls it
+@@ -144,6 +146,14 @@
+     model_capabilities: dict[str, dict[str, Any]] = field(default_factory=dict)
+ 
+     # ── Hooks (override in subclass for complex providers) ───
++
++    def resolve_runtime_credentials(self, **context: Any) -> dict[str, Any] | None:
++        """Optional provider-owned credential resolution; refusal must raise rather than fall back."""
++        return None
++
++    def prepare_responses_kwargs(self, kwargs: dict[str, Any]) -> dict[str, Any]:
++        """Shape this provider's Responses request after shared history/tool conversion."""
++        return kwargs
+ 
+     def fetch_account_usage(
+         self, *, base_url: str | None = None, api_key: str | None = None

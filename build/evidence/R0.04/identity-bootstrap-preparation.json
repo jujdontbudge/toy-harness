@@ -1,0 +1,129 @@
+{
+  "schemaVersion": "toy.r004-bootstrap-preparation.v1",
+  "observedAt": "2026-10-06T06:11:44.787205+00:00",
+  "verdict": "INCOMPLETE",
+  "interface": "docs/adr/0026-role-identity-bootstrap.md",
+  "source": [
+    {
+      "path": "packages/contracts/src/identity-bootstrap.ts",
+      "sha256": "65140b84c722a9b28a84aaeb74b58303d2e217c47aeeeffdc2e34b52df7ed70c"
+    },
+    {
+      "path": "packages/contracts/src/ops.ts",
+      "sha256": "f99adefbea806be7fe4a4ddd50e37bde156d4edbae55b8d68f80b08678dddf1d"
+    },
+    {
+      "path": "packages/contracts/src/cli.ts",
+      "sha256": "653bea353e7d1cd17898775f0a15cd25bc3f3fefeabfaef2c8c12237df0138a2"
+    },
+    {
+      "path": "packages/contracts/src/cli-declarations.ts",
+      "sha256": "fb717dd8d450353f64b3c12a0667da554c6d59e20533724a082009a499fc9dbe"
+    },
+    {
+      "path": "packages/contracts/src/public.ts",
+      "sha256": "f3b4b88978eb1bd7e580f923f999ececf127d6c7412756ef84ba0e451e3ce8d6"
+    },
+    {
+      "path": "control/bootstrap/main.ts",
+      "sha256": "11782b2d2eb77b788c8874f61403eef0e7b18533c904abcbcb44dba5097e9397"
+    },
+    {
+      "path": "packages/ops/src/identity-bootstrap.ts",
+      "sha256": "6ec1a45bb5f78f772d1d8606b61bb06730e9fef3690cace4fa1eae444b86ba1c"
+    },
+    {
+      "path": "packages/ops/src/public.ts",
+      "sha256": "5e92935431d716ecc736be7201d65cc0d6b0492a05062f0ec096d070cab60ec5"
+    },
+    {
+      "path": "cli/src/main.ts",
+      "sha256": "b8b55ed9e2a2e7863e48a9799538931e513edbb618af3e5dc1cf608b51c21192"
+    },
+    {
+      "path": "tests/cli/identity-bootstrap.cli.test.ts",
+      "sha256": "f51c1851ba3b761b0cd1fcba517c166735fa52b669893ecaaf8bb5df45b4ac9c"
+    },
+    {
+      "path": "architecture/features.json",
+      "sha256": "3667e0dc14a3b9335d2d7278f8985b8881b54aafc664426f37d4285f9a33b2b4"
+    },
+    {
+      "path": "docs/adr/0026-role-identity-bootstrap.md",
+      "sha256": "80b49f98aa804238d273b7fcfc302ea121d0e8ac12e5a67a780593dd35030b39"
+    }
+  ],
+  "canonicalRoles": 8,
+  "rootApplyExecuted": false,
+  "accountsCreated": 0,
+  "servicesActivated": false,
+  "identityGateVerified": false,
+  "maintenanceIdentityVerified": false,
+  "wholeAssignedATsPassed": [],
+  "cli": {
+    "command": "node --test tests/cli/identity-bootstrap.cli.test.ts",
+    "exitCode": 0,
+    "invocations": 8,
+    "receipt": "build/evidence/R0.04/attempts/2026-10-06T06-09-28.438Z-d2d30490-5785-4a26-8bca-3cd153b8dccd/identity-bootstrap-receipts.json",
+    "output": "build/evidence/R0.04/identity-bootstrap-cli-output.txt",
+    "planState": "blocked",
+    "planReason": "DIRECTORY_QUERY_UNAVAILABLE",
+    "snapshotDigest": null,
+    "effectState": "none",
+    "claims": [
+      "Real fixed Directory Service query fails closed without proposed or invented IDs",
+      "Already-root apply requirement, invalid/missing snapshot and UID/path override refusals",
+      "Disposable test environment cannot provision host identities"
+    ]
+  },
+  "static": {
+    "command": "npm run check",
+    "exitCode": 0,
+    "artifacts": 299,
+    "contracts": 231,
+    "featureCount": 84,
+    "commandCount": 55,
+    "ATCount": 1447,
+    "swiftInvoked": false,
+    "output": "build/evidence/R0.04/identity-bootstrap-full-check-output.txt"
+  },
+  "regression": {
+    "command": "node --test tests/cli/model-route.cli.test.ts",
+    "exitCode": 0,
+    "policyCliInvocations": 3,
+    "modelsRestored": true,
+    "output": "build/evidence/R0.04/identity-bootstrap-policy-regression-output.txt"
+  },
+  "admission": {
+    "availableBytes": "4076339200",
+    "headroomSatisfied": true,
+    "normalPressureObserved": false,
+    "reasons": [
+      "MEASUREMENT_UNAVAILABLE",
+      "NORMAL_PRESSURE_REQUIRED",
+      "PRESSURE_QUERY_DENIED"
+    ],
+    "evidence": "build/evidence/R0.04/identity-bootstrap-resource-preflight.json",
+    "activityMonitorAttempt": "Computer Use was not approved to use Activity Monitor; no repeat or alternate app access attempted",
+    "newStackOrHelperAdmitted": false
+  },
+  "limitations": [
+    "Root apply and Directory Service readback unavailable in this managed session",
+    "Protected paths cannot be installed from the workspace-only permission scope",
+    "Independent maintenance identity, complete manifest and actual-UID positive/denial matrix remain pending",
+    "No browser, Keychain, grant collection, provider request or service activation executed",
+    "Git metadata is read-only; no commit or push attempted"
+  ],
+  "deferred": [
+    "Existing/partial installation maintenance and recovery belong to the protected maintenance owner",
+    "Runtime installation and actual identity gates precede R0.01 live sign-in",
+    "Kitchen extras are closed; Swift remains deferred to R3"
+  ],
+  "verificationCorrections": [
+    {
+      "failure": "Test incorrectly expected command identity on an unknown flag rejected by the common parser",
+      "resolution": "Assert public INVALID_INPUT and effect-free refusal; all eight CLI cases rerun against the final schema",
+      "unchangedFailures": 1
+    }
+  ]
+}

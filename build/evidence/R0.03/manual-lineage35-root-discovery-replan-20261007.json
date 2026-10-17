@@ -1,0 +1,370 @@
+{
+  "schemaVersion": "toy.r003-root-discovery-readonly-replan.v1",
+  "recordedAt": "2026-10-07T15:13:25.768227+00:00",
+  "card": "R0.03",
+  "AT": "AT-hermes-config-35",
+  "rung": "CLI",
+  "state": "READ_ONLY_STOP_SOURCE_CONFIGURATION_GAP_IDENTIFIED_RUNTIME_GATE_UNOBSERVED",
+  "sourceAdmitted": false,
+  "runtimeAdmitted": false,
+  "sourceOwnership": "STOP",
+  "sourceHeadObserved": "d9a2d66bc2e3d69ba82d2daf58dd9b42d9f8619d",
+  "memoryAdmission": {
+    "evidence": {
+      "path": "/Users/johansardar/Documents/Codex/toy-harness/build/evidence/R0.03/manual-lineage35-root-discovery-readonly-memory.json",
+      "sha256": "29c8e8dd3dae97d4b43c7ed4d6366a61c6fdc31e40c4f49ee9312233c76a3100"
+    },
+    "measuredAt": "2026-10-07T15:04:25.342Z",
+    "pressure": "normal",
+    "availableBytes": 2190262272,
+    "ownHelperBytes": 268435456,
+    "ownHeadroomBytes": 536870912,
+    "ownRequiredBytes": 805306368,
+    "ownAdmitted": true,
+    "aggregateVetoApplied": false
+  },
+  "assignedAssertion": {
+    "id": "AT-hermes-config-35",
+    "source": "specs/hermes-config.md",
+    "sourceLine": 3388,
+    "firstRelease": "R0",
+    "sourceAssertion": "- **AT-hermes-config-35 [R0]** Given root\u2019s Anthropic singleton and a fresh manual profile login, When real login exits and fresh profile chat subprocesses reload/refresh against fake provider endpoints through the registered CLI probe, Then the independent profile grant remains usable and root digest is unchanged; genuine copied lineage still heals to its root owner.",
+    "sourceAssertionHash": "7e69a039d367ed6ffa27c762c76cad43ad78a65c3ca5c91552a1f7adef47c2aa",
+    "sourceDigest": "d3548fde13180bc750660f306caa0041101832e398ccdabd6cfdac0b3de8f4af",
+    "indexedSourceLine": 3388,
+    "rung": "CLI",
+    "requiredEvidence": "stack, device/account, probe:AT-hermes-config-35"
+  },
+  "actualPublicEvidence": {
+    "baseline": {
+      "path": "/Users/johansardar/Documents/Codex/toy-harness/build/evidence/R0.03/manual-lineage35-catalog-stopped-verification.json",
+      "sha256": "7463f34b0a3abb2b198a4930bd0b09a42b2f60281e04468717ec525c64322b94"
+    },
+    "run": {
+      "path": "/Users/johansardar/Documents/Codex/toy-harness/build/evidence/R0.03/manual-lineage35-catalog-cli/AT-hermes-config-35-run.json",
+      "sha256": "ebaa2e2a55096a3a0df5e090924bc9acb963185f54344a68ae128331406e8f49"
+    },
+    "show": {
+      "path": "/Users/johansardar/Documents/Codex/toy-harness/build/evidence/R0.03/manual-lineage35-catalog-cli/AT-hermes-config-35-show.json",
+      "sha256": "6b4a1ee087e9032bc5ce523e70383da59978067d8f775d53c6817fc04512cb03"
+    },
+    "runShowDataExact": true,
+    "operationId": "7519ff84-4116-4fd1-94e8-5923ff80c7f9",
+    "cliExitCode": 1,
+    "state": "NOT_IMPLEMENTED",
+    "complete": false,
+    "checksPassed": 15,
+    "checksFailed": 2,
+    "independentManualCasesAllPassed": [
+      "independent-manual-add",
+      "independent-profile-readback",
+      "independent-profile-use",
+      "independent-profile-reload-before-expiry",
+      "independent-profile-refresh",
+      "independent-profile-reload"
+    ],
+    "independentManualResult": "Actual public profile login, list, two fresh uses, expiry refresh to added-rotated and fresh reload passed. Root auth/.env/singleton digests stayed unchanged during these phases.",
+    "rootDiscovery": {
+      "caseId": "root-lineage-readback",
+      "publicArgv": [
+        "hermes",
+        "auth",
+        "list",
+        "anthropic"
+      ],
+      "exitCode": 0,
+      "markers": [
+        "AUTH_LIST_EMPTY"
+      ],
+      "credentialCount": 0,
+      "targetLabelPresent": false,
+      "httpCallsAllZero": true,
+      "tokenHygiene": true,
+      "fallbackAttempted": false,
+      "rootAuthDigestUnchanged": true,
+      "rootSingletonDigestUnchanged": true,
+      "singletonSetupReady": true,
+      "singletonSetupReason": "PUBLIC_ROOT_ANTHROPIC_GRANT_PROJECTED"
+    },
+    "copiedCasesExecuted": 0,
+    "copiedCases": [
+      "copied-lineage-heal",
+      "copied-lineage-use",
+      "copied-lineage-refresh",
+      "copied-lineage-reload"
+    ],
+    "genuineCopiedLineageVerified": false,
+    "worldDownComplete": true,
+    "zeroUnresolvedResources": true,
+    "historicalAssignedAttempts": 5,
+    "catalogueUnitAssignedAttempts": 1,
+    "priorUnitState": "STOPPED"
+  },
+  "pinnedPublicDiscoveryContract": [
+    {
+      "source": "hermes_cli/auth_commands.py:509-522",
+      "fact": "auth list anthropic filters the provider, then calls load_pool and lists its entries. The filter is not a provider-configuration or consent signal."
+    },
+    {
+      "source": "agent/credential_pool.py:2587-2594",
+      "fact": "Anthropic singleton discovery returns before reading any singleton when is_provider_explicitly_configured(anthropic) is false."
+    },
+    {
+      "source": "hermes_cli/auth.py:1221-1359",
+      "fact": "Explicit configuration can come from active_provider, actual model/auxiliary/MoA configuration, a usable explicit env credential or an existing explicitly added pool row. Singleton existence and a list-command filter do not qualify by themselves."
+    },
+    {
+      "source": "hermes_cli/auth_commands.py:228,246-253,435-440",
+      "fact": "Anthropic public auth-add creates manual:hermes_pkce and leaves activate_first at false. Unlike first Codex/xAI adds, it does not activate the provider."
+    },
+    {
+      "source": "agent/anthropic_credentials.py:732-733,809-812; agent/credential_pool.py:2623-2637",
+      "fact": "The reader uses active HERMES_HOME/.anthropic_oauth.json, accepts accessToken, and the seeder transfers accessToken/refreshToken/expiresAt into its own genuine hermes_pkce pool row."
+    },
+    {
+      "source": "agent/credential_pool.py:320-326,2632-2637",
+      "fact": "The seeded label comes from token identity claims or the hermes_pkce fallback. The original manually chosen pool label is not carried by the singleton schema."
+    }
+  ],
+  "diagnosis": {
+    "filenameMismatch": "Not supported by the pinned source: both fixture and public reader use .anthropic_oauth.json inside the owned Hermes home.",
+    "shapeMismatch": "Not supported by the pinned source and setup receipt: the actual-public-grant projection emits the reader/seeder camelCase keys, and its saved bounded receipt reports the exact projection gate succeeded. No store or token bytes were inspected by this review.",
+    "sourceConfigurationGap": "ensureAnthropicSingleton removes the one manual:hermes_pkce row after projecting that actual public-minted grant. This removes an explicit pool-configuration signal. createAnthropicProfile configures model.provider=anthropic only for named profiles; the Anthropic path has no equivalent public root configuration before root-lineage-readback.",
+    "sufficientCauseConditional": "If no other explicit root signal is present, the untouched public consent gate returns before singleton reading. That alone explains AUTH_LIST_EMPTY and unchanged root auth/singleton digests. The fixture omission and conditional return are source-grounded; the actual runtime predicate was not reported in bounded evidence.",
+    "unobservedPredicates": [
+      "Actual root model/auxiliary/MoA configuration and active-provider state",
+      "The consent predicate result in the failing child",
+      "Suppression state for hermes_pkce",
+      "Whether the singleton reader would run and accept the grant after a real public root configuration",
+      "Actual materialized root row id/source/label and eligibility of the four unexecuted copied phases"
+    ],
+    "predictedLabelOracleGap": "After successful permitted discovery, the pinned fixed opaque synthetic grant has no token identity claims, so the public seeded fallback label is hermes_pkce. The external fixture still expects toy-fixture-mixed-root for root and copied list actors. This is a source inference about a future result; the current zero-row receipt does not observe a seeded label.",
+    "trueIneligibility": "Not established. Frozen healing code retains the actual-root-counterpart branch and its source contract permits proven copied lineage to heal. The manual-row exclusion added by the product patch is confined to the no-root-pool singleton branch. Actual copied-row counterpart matching and all four copied public phases remain unexecuted."
+  },
+  "smallestDeferredNextUnit": {
+    "title": "Prepare public root Anthropic configuration and match the actual public discovery label",
+    "maximumElapsedMinutes": 120,
+    "maximumNewChangedDiagnosticRuns": 1,
+    "sourceAdmissionRequired": true,
+    "minimumFutureOwnedPaths": [
+      "packages/hermes/src/auth-fixture.ts",
+      "patches/hermes-auth-fixture.patch",
+      "docs/adr/0045-mixed-auth-lineage-probe.md"
+    ],
+    "steps": [
+      "Preserve the validated public root-add and actual-grant-only OS projection. Preserve the six already verified independent manual cases and their root digest invariants.",
+      "Immediately before root-lineage-readback, use the existing candidate public-admin launcher to run root hermes config set model.provider anthropic, then root hermes config get model.provider --json. Parse only that fixed nonsecret JSON value, require the actual string anthropic and successful actual exits, and retain only bounded booleans/command/output digests. Do not inject a configured/consent flag, mock the predicate or weaken the product gate.",
+      "Preserve root auth/.env/singleton digests around those setup commands. Keep root-list materialization as the actual public operation that may change root auth; keep the singleton unchanged. If a public setup command touches those credential stores or fails readback, stop with a bounded failure.",
+      "In the existing external fixture only, scope the root-list/copy-list label expectation to the exact Anthropic variant and its two list actors. Match the pinned seeder fallback label hermes_pkce for this existing fixed opaque fake grant. Leave manual-add/independent labels, all other providers, all existing HTTP fakes and network denials unchanged. Do not write or relabel any product row/id/source or call a private labeling helper.",
+      "Require root public list to produce exactly one actual credential, a positive native label observation, the expected root auth digest change and unchanged singleton. Only then create the second profile and retain the existing exact byte-for-byte copy of the genuinely materialized root auth store.",
+      "Retain the four original copied cases and existing equal-copy digests, native list/heal, initial use, root-owner refresh to rotated, fresh reload, healed-profile stability and independent-grant isolation checks. Never replace them with a Codex-shaped grant or a fabricated copied-row receipt."
+    ],
+    "publicConfigOutputContract": "Pinned config get with --json prints json.dumps(value); readback is restricted to model.provider. No raw output, arbitrary config object or credential value enters evidence.",
+    "labelBoundary": "The proposed label change corrects an external oracle to the existing public seeder output for the existing fixed fake. It is not a provenance relabel or a product credential mutation. If parent declines the external-fixture path or exact public-label contract cannot be retained, DEFER rather than drop the positive label requirement.",
+    "noNewProtocolOrInfrastructure": true,
+    "newDTOs": 0,
+    "newManifestCases": 0,
+    "newCLICommands": 0,
+    "productSourceChanges": 0,
+    "frozenProductPatch": "patches/hermes-profile-auth.patch must stay byte-identical at 814f13752d5132dbc175fb1864229dead2988f9eaa8f76af1481457f2b406b30; preserve all auth87/manual-resync/refreshDispositions guards.",
+    "patchIntegrity": "The external fixture remains an exact existing added-file patch; update only its necessary fixed label expectation and header line count. Do not apply an archived whole-product diff or modify provider endpoints/token formats/network permissions.",
+    "baseline": "Use the saved actual catalogue run/show as the pre-change public RED, with exact matching current source pins. Do not run an unchanged sixth baseline.",
+    "parentVerification": "After separately admitted source STOP, parent generates existing artifacts/map and performs required build/strict checks while preserving frozen inputs. Parent admits one newly changed unfiltered original AT35 diagnostic, actual stored show and complete owned teardown, then STOP/review regardless of outcome.",
+    "firstImplementedPASSStop": "Stop on the first actual original twelve-case fake-world PASS set with correct copied-owner persistence and complete teardown. Whole AT/card/protected/native-account acceptance remains false.",
+    "failureStop": "If correct public root configuration still yields zero rows, if a positive actual public label readback fails, or if genuine copied lineage does not heal, save bounded actual facts and stop. Do not invent missing predicates, mutate sources/grants or run unchanged again."
+  },
+  "pinClarification": {
+    "taskAbbreviatedF17Context": "Parent confirmed stale context. Actual profile-auth product patch is the frozen 814f pin matching the saved admission/receipt. f17bd5386e5f12028217bb2f093fc48e04ad313159af4268156b2cf738ea0dfd is the existing external hermes-auth-fixture.patch, not permission to change either file in this review."
+  },
+  "preserved": {
+    "frozenSourcePinsFromStoppedReceipt": [
+      {
+        "path": "patches/hermes-profile-auth.patch",
+        "sha256": "814f13752d5132dbc175fb1864229dead2988f9eaa8f76af1481457f2b406b30"
+      },
+      {
+        "path": "packages/hermes/src/auth-probe.ts",
+        "sha256": "b26c56b0841953b9b071db8940f7efdbbce6ee44be3a922b940e2b235e151226"
+      },
+      {
+        "path": "packages/self-improvement/src/model-admission.ts",
+        "sha256": "e938ae2c18bbf34af9c863283dd853c2aff109c3eac0fc08962979458c39a630"
+      },
+      {
+        "path": "packages/self-improvement/src/accounting-probe.ts",
+        "sha256": "559ad8006265c63b87d7e9dd2e8f7fdfaaaf4b0d8d06f1433e7f1e6ec3f57a71"
+      },
+      {
+        "path": "packages/hermes/src/model-route-probe.ts",
+        "sha256": "820862303d2471517e4474440d697dc0bf3f043a4960dff680ea0fee6b605489"
+      },
+      {
+        "path": "packages/hermes/src/model-route.ts",
+        "sha256": "7c56f64981df351db6b8cd72237334369a86ffe9cb6d721c37c9dd2e2be945dc"
+      },
+      {
+        "path": "tests/registry.yaml",
+        "sha256": "2952c2a7bc3b66752de58360f3525957aa18fe6701d900427cf8f5df643f4004"
+      },
+      {
+        "path": "cli/src/main.ts",
+        "sha256": "2186840498e12e39156877da9e3e3431d86045af87108cbf2fd236105a1f2db5"
+      },
+      {
+        "path": "packages/ops/src/fixture-stack.ts",
+        "sha256": "4311ee0309bfa3dbc2a9c6eff3c07b55bdaca4e1e2ad41ff1e2334595560dda6"
+      }
+    ],
+    "allSixFrozenRootInputsFromStoppedReceipt": [
+      {
+        "path": "scripts/probe-siwc-control-runtime.mts",
+        "sha256": "96e1fd2d98469772c3d0d203386c3f7aa56af57db025c420fa93f1f4ecd7e70d",
+        "unchanged": true
+      },
+      {
+        "path": "scripts/stage-siwc-control-runtime.mts",
+        "sha256": "13ff53e341ab7670dbed967ce810d5aa2834df7a47ffe1620f037ff1da3ee0d4",
+        "unchanged": true
+      },
+      {
+        "path": "control/dist/bootstrap/siwc-runtime-probe.js",
+        "sha256": "06870b8dd41d2ffc093cc04680ba56c4570f07b4aa0a27a9ab70796cdd8204bd",
+        "unchanged": true
+      },
+      {
+        "path": "scripts/probe-unfiltered-control-denials.mts",
+        "sha256": "1cb93d375df931a482d946170e31549450d8efb71d6a251f5d2bcea8c5b92529",
+        "unchanged": true
+      },
+      {
+        "path": "packages/ops/dist/role-control-probe.js",
+        "sha256": "1764a98e5ae45694118007c242320711a7bd9e0d021b7c6d6ee0cbb8cff73ec2",
+        "unchanged": true
+      },
+      {
+        "path": "control/dist/bootstrap/denial-probe.js",
+        "sha256": "7fda1824ec7bc308cac97d07c7c92cadd5527e87e89d79b410d33d95d1b30672",
+        "unchanged": true
+      }
+    ],
+    "AT40AndR006AndRootPayloadsTouched": false,
+    "profilesServicesAccountsTouched": false,
+    "credentialStoreReads": false,
+    "rawChildStreamReads": false,
+    "tokenBearingDTODumps": false,
+    "rootQueueState": {
+      "ROOT-R004-20261006-02": "PENDING",
+      "ROOT-R005-20261006-01": "PENDING",
+      "provenance": "Parent continuation status at 2026-10-07 15:12 UTC; no queue file or root action was performed by this review."
+    }
+  },
+  "acceptance": {
+    "independentManualPublicSubsetVerified": true,
+    "genuineCopiedLineageVerified": false,
+    "actualProtectedNativeAccountAcceptance": false,
+    "wholeATAcceptance": false,
+    "wholeCardAcceptance": false,
+    "goalBlockedByRootPending": false
+  },
+  "pins": {
+    "upstreamGitSource": [
+      {
+        "repository": "/Users/johansardar/.hermes/hermes-agent",
+        "commit": "8d5e3e412138342e8bf30443e72bd4e6a9abd057",
+        "path": "hermes_cli/auth_commands.py",
+        "sha256": "16c18f21402ac9940815450a41854cfeaadad6a34bffeb98d27de648df749d1a"
+      },
+      {
+        "repository": "/Users/johansardar/.hermes/hermes-agent",
+        "commit": "8d5e3e412138342e8bf30443e72bd4e6a9abd057",
+        "path": "hermes_cli/auth.py",
+        "sha256": "99d04d861b6437927aee2e6976d02be2c0e4875a8fc8c4dcc51485c909eb7b0e"
+      },
+      {
+        "repository": "/Users/johansardar/.hermes/hermes-agent",
+        "commit": "8d5e3e412138342e8bf30443e72bd4e6a9abd057",
+        "path": "agent/credential_pool.py",
+        "sha256": "111d8e0d990630341a42dc2fa4a740f16746d5963e8d6900cfd25c54d109da66"
+      },
+      {
+        "repository": "/Users/johansardar/.hermes/hermes-agent",
+        "commit": "8d5e3e412138342e8bf30443e72bd4e6a9abd057",
+        "path": "agent/anthropic_credentials.py",
+        "sha256": "8726b54b55b2676e80497f62bf68fe98f057362fdc89d04c48199499ffd51ca8"
+      },
+      {
+        "repository": "/Users/johansardar/.hermes/hermes-agent",
+        "commit": "8d5e3e412138342e8bf30443e72bd4e6a9abd057",
+        "path": "hermes_cli/auth_oauth_grants.py",
+        "sha256": "7100477ebe886e6a833168373f77092c7dec10eeec90b3befb88965a268a65c0"
+      },
+      {
+        "repository": "/Users/johansardar/.hermes/hermes-agent",
+        "commit": "8d5e3e412138342e8bf30443e72bd4e6a9abd057",
+        "path": "hermes_cli/config.py",
+        "sha256": "a029ad91cc9c15604d7985452053fcb9f6c7ff19549803024ee76829d927d487"
+      }
+    ],
+    "currentLocalSource": [
+      {
+        "path": "/Users/johansardar/Documents/Codex/toy-harness/packages/hermes/src/auth-fixture.ts",
+        "sha256": "fbb8df8494ae9ac8410a68a4d7b3f03ae5392f9e70b994fc78d44f196ed1c7c2"
+      },
+      {
+        "path": "/Users/johansardar/Documents/Codex/toy-harness/patches/hermes-profile-auth.patch",
+        "sha256": "814f13752d5132dbc175fb1864229dead2988f9eaa8f76af1481457f2b406b30"
+      },
+      {
+        "path": "/Users/johansardar/Documents/Codex/toy-harness/patches/hermes-auth-fixture.patch",
+        "sha256": "f17bd5386e5f12028217bb2f093fc48e04ad313159af4268156b2cf738ea0dfd"
+      },
+      {
+        "path": "/Users/johansardar/Documents/Codex/toy-harness/docs/adr/0045-mixed-auth-lineage-probe.md",
+        "sha256": "5d3872846121a2b97e341fc7989a15deccc8168587d9f2f48de7d69d8a0ab42c"
+      },
+      {
+        "path": "/Users/johansardar/Documents/Codex/toy-harness/tests/acceptance-index.json",
+        "sha256": "c9b645eab7f55b2ebf35d7db769a534a4837de23ad3dc3d913f3189e781d44fa"
+      }
+    ],
+    "canonicalSpec": [
+      {
+        "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/hermes-config.md",
+        "sha256": "d3548fde13180bc750660f306caa0041101832e398ccdabd6cfdac0b3de8f4af"
+      },
+      {
+        "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/TEST-PLAN.md",
+        "sha256": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2"
+      }
+    ],
+    "evidence": [
+      {
+        "path": "/Users/johansardar/Documents/Codex/toy-harness/build/evidence/R0.03/manual-lineage35-catalog-stopped-verification.json",
+        "sha256": "7463f34b0a3abb2b198a4930bd0b09a42b2f60281e04468717ec525c64322b94"
+      },
+      {
+        "path": "/Users/johansardar/Documents/Codex/toy-harness/build/evidence/R0.03/manual-lineage35-root-discovery-readonly-memory.json",
+        "sha256": "29c8e8dd3dae97d4b43c7ed4d6366a61c6fdc31e40c4f49ee9312233c76a3100"
+      },
+      {
+        "path": "/Users/johansardar/Documents/Codex/toy-harness/build/evidence/R0.03/manual-lineage35-catalog-cli/AT-hermes-config-35-run.json",
+        "sha256": "ebaa2e2a55096a3a0df5e090924bc9acb963185f54344a68ae128331406e8f49"
+      },
+      {
+        "path": "/Users/johansardar/Documents/Codex/toy-harness/build/evidence/R0.03/manual-lineage35-catalog-cli/AT-hermes-config-35-show.json",
+        "sha256": "6b4a1ee087e9032bc5ce523e70383da59978067d8f775d53c6817fc04512cb03"
+      }
+    ]
+  },
+  "scope": {
+    "onlyWrittenPath": "/Users/johansardar/Documents/Codex/toy-harness/build/evidence/R0.03/manual-lineage35-root-discovery-replan-20261007.json",
+    "sourceEdits": 0,
+    "runtimeCLIOrBuildGenStaticTests": 0,
+    "OSBrowserProviderRootActions": 0,
+    "helpers": 0,
+    "commits": 0,
+    "sourceAdmitted": false,
+    "runtimeAdmitted": false,
+    "ownershipSTOP": true
+  }
+}

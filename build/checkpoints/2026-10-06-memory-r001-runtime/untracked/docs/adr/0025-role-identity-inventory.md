@@ -1,0 +1,11 @@
+# Read-only service identity inventory
+
+R0.01's protected SIWC host requires actual service identities. R0.04 resolves those identities and proves enforcement; source-only credential work cannot substitute for that prerequisite.
+
+The existing `OpsControlRead.doctor` interface gains a deep `bootstrap.role-identities` observation. `toy doctor --deep --json` queries only the eight service names in Ops §4: `_toy_agent`, `_toy_control`, `_toy_review`, `_toy_repair`, `_toy_evaluator`, `_toy_pg`, `_toy_app` and `_toy_ops`. The adapter invokes the fixed `/usr/bin/id` executable without a shell for UID, primary GID and group names. Neither names, executable, argv nor identity can be supplied through CLI input. It uses the doctor's remaining deadline and a bounded output buffer.
+
+Canonical contracts contain the fixed role enum, one observation per role and the aggregate inventory. A successful observation records numeric UID/GID and measured admin-group membership. A recognized no-such-user response records `missing`; denied, malformed, timed-out and unsupported-platform queries record `unknown`. Group names are consumed privately to determine admin membership; they are not exported. This keeps all eight observations within the existing 2,000-character doctor detail contract for every canonical UID/GID. No stderr, credential, home content, process environment, sudo policy or service configuration is returned.
+
+This is prerequisite evidence, not an identity-gate attestation. The aggregate has `identityGateVerified: false` and `maintenanceIdentityVerified: false`; it cannot enable a live lane. An observed admin-group service identity produces a failing diagnostic. Otherwise the check stays blocked pending R0.04's complete actual-UID enforcement matrix, even if every identity exists.
+
+The bounded preparation is complete when the real public CLI returns all eight canonical observations, reports missing/unknown precisely, and fresh type, boundary, source-policy, generated-contract and feature-map checks pass. It creates or changes no account, group, ownership, ACL, service, database, secret or existing profile. The full card remains pending its assigned ATs. Unknown query results are not retried into an assumed identity. No new module, protocol, package or Swift artifact is added.

@@ -1,0 +1,255 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schema": {
+      "type": "string",
+      "const": "toy.hermes-httpx-auth-fixture.v1"
+    },
+    "operation": {
+      "type": "string",
+      "enum": [
+        "add",
+        "list",
+        "chat"
+      ]
+    },
+    "public_argv": {
+      "minItems": 2,
+      "maxItems": 16,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 200
+      }
+    },
+    "exit_code": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 255
+    },
+    "markers": {
+      "maxItems": 8,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "AUTH_ADD_OK",
+          "AUTH_ADD_NOT_CONFIRMED",
+          "AUTH_SAVE_DENIED",
+          "AUTH_SAVE_FAULT_NOT_CONFIRMED",
+          "AUTH_LIST_READBACK_OK",
+          "AUTH_LIST_EMPTY",
+          "AUTH_LIST_NOT_CONFIRMED",
+          "CHAT_RESPONSE_OK",
+          "CHAT_RESPONSE_NOT_CONFIRMED",
+          "CHAT_GRANT_UNUSABLE",
+          "CHAT_GRANT_USABILITY_NOT_CONFIRMED",
+          "CLI_EXIT_NONZERO",
+          "CLI_EXCEPTION"
+        ]
+      }
+    },
+    "processIdentity": {
+      "type": "object",
+      "properties": {
+        "pid": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "parentPid": {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        "uid": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "gid": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "pid",
+        "parentPid",
+        "uid",
+        "gid"
+      ],
+      "additionalProperties": false
+    },
+    "observations": {
+      "type": "object",
+      "properties": {
+        "provider": {
+          "type": "string",
+          "const": "openai-codex"
+        },
+        "phase": {
+          "type": "string",
+          "enum": [
+            "add",
+            "list",
+            "chat",
+            "chat-expired",
+            "chat-reloaded",
+            "add-enospc",
+            "add-replace-fault",
+            "list-after-fault",
+            "chat-after-fault"
+          ]
+        },
+        "credential_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000
+        },
+        "access_generation": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "initial",
+                "rotated"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "storage_fault_triggered": {
+          "type": "boolean"
+        },
+        "token_hygiene": {
+          "type": "boolean"
+        },
+        "success_claim_absent": {
+          "type": "boolean"
+        },
+        "network_denials": {
+          "maxItems": 16,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "model-mismatch",
+              "authorization-mismatch",
+              "grant-mismatch",
+              "device-grant-outside-add",
+              "device-poll-outside-add",
+              "model-request-outside-chat",
+              "model-catalog-outside-chat",
+              "codex-model-discovery",
+              "openai-model-discovery",
+              "unregistered-http",
+              "tokenizer-download",
+              "unregistered-socket"
+            ]
+          }
+        },
+        "socket_origin": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 120,
+              "pattern": "^[a-z_][a-z0-9_]*(?:\\.[a-z_][a-z0-9_]*)*$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "provider",
+        "phase",
+        "access_generation",
+        "storage_fault_triggered",
+        "token_hygiene",
+        "success_claim_absent",
+        "network_denials",
+        "socket_origin"
+      ],
+      "additionalProperties": false
+    },
+    "http_ledger": {
+      "type": "object",
+      "properties": {
+        "device_code_requests": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000
+        },
+        "device_code_polls": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000
+        },
+        "token_exchanges": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000
+        },
+        "token_refreshes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000
+        },
+        "model_catalog_requests": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000
+        },
+        "model_requests": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000
+        },
+        "denied_http_requests": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000
+        },
+        "blocked_socket_events": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000
+        }
+      },
+      "required": [
+        "device_code_requests",
+        "device_code_polls",
+        "token_exchanges",
+        "token_refreshes",
+        "model_catalog_requests",
+        "model_requests",
+        "denied_http_requests",
+        "blocked_socket_events"
+      ],
+      "additionalProperties": false
+    },
+    "network_audit": {
+      "type": "string",
+      "const": "socket-audit-hook-installed"
+    }
+  },
+  "required": [
+    "schema",
+    "operation",
+    "public_argv",
+    "exit_code",
+    "markers",
+    "processIdentity",
+    "observations",
+    "http_ledger",
+    "network_audit"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:HermesAuthFixtureResultV1"
+}

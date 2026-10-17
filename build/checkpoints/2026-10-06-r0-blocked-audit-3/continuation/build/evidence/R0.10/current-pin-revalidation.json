@@ -1,0 +1,220 @@
+{
+  "schemaVersion": "toy.r0.10-current-pin-revalidation.v1",
+  "generatedAt": "2026-10-06T10:26:15Z",
+  "gate": "R0.10",
+  "result": "PREPARATION_ONLY_ALL_ASSIGNED_ATS_PENDING",
+  "revalidationOf": "build/evidence/R0.10/schema-preparation.json",
+  "scope": "Read-only revalidation of the R0.10 selected dependency source, package manifests, lock entries, existing source/strict receipt, and exact assigned AT routing. This artifact does not claim implementation compatibility or acceptance.",
+  "sourceHashes": [
+    {"path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/CONTRACTS.md", "sha256": "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d"},
+    {"path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/RESEARCH-REGISTER.md", "sha256": "8ebbcfb9e2e63041fd004dd55787a02473d36d9bcaa733eb4d322722b1ae4942"},
+    {"path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/BUILD-PLAN.md", "sha256": "aa84eb600e53bc65e6c6b1ed4fce45870ead861e0d18bf00d81613ff2595f49a"},
+    {"path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/TEST-PLAN.md", "sha256": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2"},
+    {"path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/obligations.md", "sha256": "5379f943578b4248dc21379a029acead930047c091316deb796fae0d49f4eb0f"},
+    {"path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/hermes-config.md", "sha256": "d3548fde13180bc750660f306caa0041101832e398ccdabd6cfdac0b3de8f4af"},
+    {"path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/authority.md", "sha256": "0127fd6e992c94bb512af83d507e107431426d2d4a09885d1a420119f2d530be"},
+    {"path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/activity-focus.md", "sha256": "95419ee43fbc5c4367e2109efc17eb0c08527b1355fea71fd170650adf4afa81"},
+    {"path": "specs/gates/B02-R0-selection.json", "sha256": "8909d6a535f670d9ff09bb6bfbe6520bd8c5ad21a900e1613fb9fe500998040d"},
+    {"path": "package.json", "sha256": "367a0e7d681c5c6ae26f2d5c68b7161dc0dd6ae372d542adcc295605e9c320c9"},
+    {"path": "package-lock.json", "sha256": "df9aaf44c7a95730510a2363b5919b4bf0ccdc5071ad9d95b4c9d44318f00909"},
+    {"path": "packages/contracts/package.json", "sha256": "5d04fd1e5d465fa46ffa05cc753f7dcaa2fcb572fbf2ad7678a3e1ce3cfa9973"},
+    {"path": "packages/ops/package.json", "sha256": "fb92660b8037afcac84139b827f863d9897a489753e90faab6279a24598aa8d0"},
+    {"path": "packages/obligations/package.json", "sha256": "517fe6e96e5a60306c24af43de025b31c91d1c235ca1884c8ed1810c8ea93262"},
+    {"path": "cli/package.json", "sha256": "4f181c9f85ed5a823a2801416c2e47ac7d2d50cb137a4c67462f969e4dcd5488"},
+    {"path": "build/evidence/R0.01-native-refusal-check.txt", "sha256": "cb081d897aa756d39ad4d77cf5927f71064be58ac65729054f09c60574704408"}
+  ],
+  "currentPins": [
+    {
+      "name": "Node.js",
+      "canonicalSource": "CONTRACTS.md canonical dependencies",
+      "canonicalVersion": "24.21.0",
+      "manifestVersion": "24.21.0",
+      "lockVersion": "24.21.0",
+      "verdict": "DECLARATION_MATCH; installed runtime not inspected"
+    },
+    {
+      "name": "TypeScript",
+      "canonicalSource": "RESEARCH-REGISTER.md B01",
+      "canonicalVersion": "5.9.3",
+      "manifestVersion": "6.0.3",
+      "lockVersion": "6.0.3",
+      "verdict": "SOURCE_MISMATCH_REMAINS; manifest and lock agree with each other, not with B01"
+    },
+    {
+      "name": "Zod",
+      "canonicalSource": "RESEARCH-REGISTER.md B02 and CONTRACTS amendment M04",
+      "canonicalVersion": "4.6.5, recorded in specs/gates/B02-R0-selection.json",
+      "owner": "@toy/contracts",
+      "manifestVersion": "4.6.5",
+      "lockVersion": "4.6.5",
+      "lockIntegrity": "sha512-v5l/aFXZQeai4awLbOpSoHecE9UiMrnfx75tEXLjNonXVARxQ5mOeipTjROUchszUNCqnE+hqAMujRsRHsut2Q==",
+      "verdict": "PIN_AND_LOCK_MATCH_RECORDED_SELECTION; B02 current-source digest bindings need refresh; runtime compatibility remains pending"
+    },
+    {
+      "name": "Ajv",
+      "canonicalSource": "RESEARCH-REGISTER.md B02",
+      "canonicalVersion": "8.17.1",
+      "directWorkspaceDeclaration": null,
+      "lockEntryForCanonicalVersion": false,
+      "otherLockEntry": {
+        "version": "6.15.0",
+        "provenance": "ESLint 10.12.0 development dependency range ajv ^6.14.0",
+        "devOnly": true
+      },
+      "verdict": "B02_OWNER_VALIDATOR_PIN_UNRESOLVED; ESLint transitive Ajv 6 is tooling, not an owner-validator downgrade"
+    },
+    {
+      "name": "PostgreSQL server",
+      "canonicalSource": "CONTRACTS.md canonical dependencies and RESEARCH-REGISTER.md A08",
+      "canonicalVersion": "17.11",
+      "npmManifestOrLockApplies": false,
+      "runtimeVersionEvidence": "NOT_COLLECTED; task context states the PostgreSQL runtime remains unavailable",
+      "verdict": "DECLARED_PIN_ONLY; no runtime compatibility claim"
+    },
+    {
+      "name": "pg",
+      "canonicalSource": "CONTRACTS.md canonical dependencies and RESEARCH-REGISTER.md A08",
+      "canonicalVersion": "8.23.1",
+      "directWorkspaceDeclaration": null,
+      "lockEntry": null,
+      "staticImportSearch": "No exact double-quoted from-import for pg was found in packages/ or cli/.",
+      "verdict": "SHARED_APPLICATION_CLIENT_PIN_NOT_YET_DECLARED_OR_LOCKED"
+    },
+    {
+      "name": "pg-boss",
+      "canonicalSource": "CONTRACTS.md canonical dependencies and RESEARCH-REGISTER.md A09",
+      "canonicalVersion": "12.36.0",
+      "schema": "44",
+      "directWorkspaceDeclaration": null,
+      "lockEntry": null,
+      "verdict": "OPS_SHARED_QUEUE_PIN_NOT_YET_DECLARED_OR_LOCKED"
+    }
+  ],
+  "b02DigestRevalidation": {
+    "recordedSelection": {
+      "version": "4.6.5",
+      "owner": "@toy/contracts",
+      "recordedRegistryTag": "latest",
+      "recordedIntegrity": "sha512-v5l/aFXZQeai4awLbOpSoHecE9UiMrnfx75tEXLjNonXVARxQ5mOeipTjROUchszUNCqnE+hqAMujRsRHsut2Q==",
+      "selectionVerdict": "PASS",
+      "runtimeCompatibilityVerdict": "PENDING_R0.10_AND_R1"
+    },
+    "digestComparisons": [
+      {"file": "packages/contracts/package.json", "recordedCurrentImplementationSha256": "5d04fd1e5d465fa46ffa05cc753f7dcaa2fcb572fbf2ad7678a3e1ce3cfa9973", "currentSha256": "5d04fd1e5d465fa46ffa05cc753f7dcaa2fcb572fbf2ad7678a3e1ce3cfa9973", "verdict": "MATCH"},
+      {"file": "package-lock.json", "recordedCurrentImplementationSha256": "2ba552b74aa22b38008b96f8c72a7d0245b9185dc8993f1fd9144bd9c3d531d2", "currentSha256": "df9aaf44c7a95730510a2363b5919b4bf0ccdc5071ad9d95b4c9d44318f00909", "verdict": "STALE_BINDING"},
+      {"file": "CONTRACTS.md", "recordedConsumingSpecSha256": "ef4b5d18fe3a1adcf9eb28d55da734892795e103894210ed0aea61c911fd70f8", "currentSha256": "8bf48b63f32c86552b0856025d35736305d1826732f03e7e53e88a541b88940d", "verdict": "STALE_BINDING"},
+      {"file": "RESEARCH-REGISTER.md", "recordedConsumingSpecSha256": "8ebbcfb9e2e63041fd004dd55787a02473d36d9bcaa733eb4d322722b1ae4942", "currentSha256": "8ebbcfb9e2e63041fd004dd55787a02473d36d9bcaa733eb4d322722b1ae4942", "verdict": "MATCH"}
+    ],
+    "currentLockStillMatchesRecordedZodArtifact": true,
+    "conclusion": "The exact Zod 4.6.5 selection remains represented consistently by the current contracts manifest and lock entry, with the same integrity recorded by B02. The B02 evidence digest bindings do not describe the current package-lock or current CONTRACTS source and should be refreshed before being used as current evidence. No fresh registry query was performed."
+  },
+  "availableSourceStrictEvidence": {
+    "path": "build/evidence/R0.01-native-refusal-check.txt",
+    "sha256": "cb081d897aa756d39ad4d77cf5927f71064be58ac65729054f09c60574704408",
+    "observedCommand": "npm run check",
+    "recordedResult": "PASS",
+    "recordedAt": "2026-10-06T10:13:51.895Z",
+    "schemaDigest": "638af754ddd8b6bbbd07261a70ad576eca9e1a97d5a0216d66dcc15bd46b2a60",
+    "sourceDigest": "4813b0241cc2c49855e0e8e6de5fc7fb89dab84f083a6d29dba9cc8d7c841502",
+    "interpretation": "Historical source/strict checks and feature-map check passed for the receipt's tested source snapshot. This is not an R0.10 registered AT run, does not validate current runtime compatibility, and does not prove PostgreSQL/pg-boss behavior."
+  },
+  "card": {
+    "source": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/BUILD-PLAN.md#R0.10",
+    "summary": "Revalidate exact kitchen dependency pins, validate generated type/ownership/config inventory, and run pg-boss schema-44 transaction/claim/recurrence probes.",
+    "dependsOn": ["R0.02", "R0.05"],
+    "acceptanceState": "PENDING"
+  },
+  "assignedAcceptance": {
+    "source": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/TEST-PLAN.md acceptance index",
+    "rung": "CLI for all assigned ATs",
+    "tests": [
+      {
+        "id": "AT-obligations-74",
+        "source": "obligations.md:2675",
+        "requiredEvidence": "static, probe:AT-obligations-74",
+        "definition": "Given Obligations' mapped requirements and component decisions When the pre-build register checker finds missing primary evidence, an unsupported choice, or a missing acceptance link Then that build step is blocked; a complete comparison including a viable option outside Johan's examples passes with the selected proven tool and its validation plan.",
+        "status": "PENDING"
+      },
+      {
+        "id": "AT-obligations-75",
+        "source": "obligations.md:2676",
+        "requiredEvidence": "stack, probe:AT-obligations-75",
+        "definition": "Given an Obligations research request and ordinary implementation delegation When the protected delegation adapter emits each receipt Then research records Sol/medium/Fast and the resolved mattpocock research skill version/hash, rejects a missing/wrong route, and preserves the separate ordinary Luna route without a module-local model override.",
+        "status": "PENDING"
+      },
+      {
+        "id": "AT-obligations-76",
+        "source": "obligations.md:2677",
+        "requiredEvidence": "static, stack, probe:AT-obligations-76",
+        "definition": "Given the pinned shared queue and generated `@toy/contracts` artifacts When both checked-out application transactions and native pg-boss worker transactions run the fault spike Then job/domain rollback and lost-claim fencing pass through `executeSql`, the five schemas validate with their declared dialect, and no homemade polling queue or second schema owner is needed.",
+        "status": "PENDING"
+      },
+      {
+        "id": "AT-hermes-config-50",
+        "source": "hermes-config.md:3420",
+        "requiredEvidence": "static, stack, probe:AT-hermes-config-50",
+        "definition": "Given a principal and bigint value exceeding JavaScript's safe integer range, When tool/client/Python/Swift DTOs round-trip it, Then UUID actor mapping, canonical decimal revision/generation/sequence/watermark, focusGeneration UUID and immutable UTF-8 observation quote remain exact.",
+        "status": "PENDING"
+      },
+      {
+        "id": "AT-hermes-config-69",
+        "source": "hermes-config.md:3458",
+        "requiredEvidence": "static, stack, probe:AT-hermes-config-69",
+        "definition": "Given the amended cadence registry and generated contracts, When schema/role cutover validation runs, Then `toy_si.cadence_slot`, `toy_si.run`, and `toy_si.review` have one Durable admission/Turn Review owner, Obligations reads a read-only projection, all canonical states including swept agree, and duplicate writers or noncanonical slot enums fail the gate.",
+        "status": "PENDING"
+      },
+      {
+        "id": "AT-hermes-config-75",
+        "source": "hermes-config.md:644",
+        "requiredEvidence": "static, probe:AT-hermes-config-75",
+        "definition": "Given the generated profile and locked source, When configuration consumers load it, Then every native key is consumed by its intended subsystem and unsupported/ignored keys fail validation.",
+        "status": "PENDING"
+      },
+      {
+        "id": "AT-hermes-config-81",
+        "source": "hermes-config.md:650",
+        "requiredEvidence": "stack, probe:AT-hermes-config-81",
+        "definition": "Given Life Store's HTTP endpoint and pinned MCP loader, When the connection opens, Then normal HTTP transport works without an unsupported override.",
+        "status": "PENDING"
+      },
+      {
+        "id": "AT-authority-60",
+        "source": "authority.md:2160",
+        "requiredEvidence": "static, probe:AT-authority-60",
+        "definition": "Given an Authority component/adaptor decision or an unsupported external assumption, When the pre-build research gate inspects `specs/RESEARCH-REGISTER.md` and Hermes' research receipt, Then it requires compared proven options, primary evidence, the reliability decision, validation IDs, and Sol/medium/Fast with the resolved mattpocock research-skill hash; missing records, ordinary Luna routing, or a missing skill fail the gate while disposable probes remain provisional. (Requirements: 0.1, 0.10; findings: G5, G11.)",
+        "status": "PENDING"
+      },
+      {
+        "id": "AT-authority-61",
+        "source": "authority.md:2162",
+        "requiredEvidence": "static, probe:AT-authority-61",
+        "definition": "Given the canonical dependency/tool/service registry and RFC canonicalization vectors, When the build inventory and protected release are validated, Then shared pins, pg-boss schema `44`, one plugin/toolset, official typed adapters, and maintained authentication/cryptography are used; mismatched locks, duplicate tools/skills, a homemade serializer, writable runtime imports, or startup package downloads fail admission. (Requirement: 0.2; findings: B02, M04, M07, M12.)",
+        "status": "PENDING"
+      },
+      {
+        "id": "AT-activity-focus-86",
+        "source": "activity-focus.md:2269",
+        "requiredEvidence": "static, probe:AT-activity-focus-86",
+        "definition": "Given amended generated cadence contracts, When the pre-build schema/caller gate exercises Activity-Focus and Obligations projections, Then only Durable admission/Turn Review writes `toy_si.cadence_slot`, `toy_si.run`, and `toy_si.review`, projection writes and alternative owners fail, and swept is distinct from accepted AI-reviewed coverage.",
+        "status": "PENDING"
+      }
+    ]
+  },
+  "runtimeAndAcceptanceLimits": {
+    "wholeCardStatus": "PENDING",
+    "allTenAssignedATs": "PENDING",
+    "reason": "Every assigned AT is routed through the CLI and requires its registered probe. The tests marked stack also need a real local stack with faked external providers. Task context says no fake stack is running and protected actual identities/PostgreSQL runtime remain unavailable. The existing npm run check receipt is source/strict evidence only.",
+    "nextPrerequisites": [
+      "Satisfy and record R0.02 and R0.05 prerequisites from BUILD-PLAN before R0.10 acceptance; actual protected-identity evidence remains unavailable in this task context.",
+      "Reconcile Research Register B01 TypeScript 5.9.3 with the root manifest/lock 6.0.3, then bind current source and lock digests into evidence.",
+      "Resolve the B02 Ajv 8.17.1 owner declaration and lock entry; the ESLint-transitive Ajv 6.15.0 entry does not satisfy it.",
+      "Add the Ops-owned pg 8.23.1 and pg-boss 12.36.0/schema-44 closure to the shared application lock and verify the pinned PostgreSQL 17.11 runtime without disturbing protected services.",
+      "Refresh B02 digest evidence for the current CONTRACTS.md and package-lock.json while preserving the existing Zod 4.6.5 artifact identity.",
+      "With a disposable fake-provider stack available, run each of the ten assigned registered CLI probes and save its receipts/readbacks, including transaction rollback, lost-claim fencing, recurrence, schema, and transport assertions."
+    ]
+  },
+  "actionsNotTaken": [
+    "No install, build, code generation, database start, SQL, PostgreSQL initialization, migration, network research, credential read, or UI/OS operation was performed.",
+    "No code, package manifest, lock, specification, planning state, prior evidence, or generated artifact inventory was modified."
+  ]
+}

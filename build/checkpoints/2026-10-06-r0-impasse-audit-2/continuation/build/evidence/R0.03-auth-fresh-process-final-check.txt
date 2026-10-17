@@ -1,0 +1,32 @@
+
+> toy-harness@1.0.0 check
+> npm run typecheck && node scripts/typecheck-tests.mjs && npm run boundaries && npm run python:check && npm run lint && npm run contracts:check && node cli/dist/main.js feature-map check --json
+
+
+> toy-harness@1.0.0 typecheck
+> tsc -b --pretty false && tsc -p scripts/tsconfig.json --pretty false
+
+
+> toy-harness@1.0.0 boundaries
+> depcruise --config .dependency-cruiser.cjs packages cli tests control
+
+
+✔ no dependency violations found (204 modules, 642 dependencies cruised)
+
+
+> toy-harness@1.0.0 python:check
+> pyright && .venv/bin/ruff check python && PYTHONPATH=python .venv/bin/lint-imports
+
+0 errors, 0 warnings, 0 informations
+E501 Line too long (110 > 100)
+    --> python/toy_contracts/generated.py:4865:101
+     |
+4863 |     phase: "HermesAuthFixtureResultV1ObservationsPhase"
+4864 |     credential_count: NotRequired[int]
+4865 |     accepted_access_generation: Optional["HermesAuthFixtureResultV1ObservationsAcceptedaccessgenerationValue"]
+     |                                                                                                     ^^^^^^^^^^
+4866 |     network_denials: list["HermesAuthFixtureResultV1ObservationsNetworkdenialsItem"]
+4867 |     socket_origin: Optional[str]
+     |
+
+Found 1 error.

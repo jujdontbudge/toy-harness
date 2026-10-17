@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "state": {
+      "type": "string",
+      "enum": [
+        "observed",
+        "unavailable"
+      ]
+    },
+    "schemaDigest": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 64,
+          "maxLength": 64,
+          "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "experimentalIncluded": {
+      "type": "boolean"
+    },
+    "threadFields": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "maxLength": 100
+      }
+    },
+    "turnFields": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "maxLength": 100
+      }
+    },
+    "dynamicToolFields": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "maxLength": 100
+      }
+    },
+    "defaultToolsCanBeDisabled": {
+      "type": "boolean"
+    },
+    "inferenceAttested": {
+      "type": "boolean",
+      "const": false
+    },
+    "authorizationInspected": {
+      "type": "boolean",
+      "const": false
+    }
+  },
+  "required": [
+    "state",
+    "schemaDigest",
+    "experimentalIncluded",
+    "threadFields",
+    "turnFields",
+    "dynamicToolFields",
+    "defaultToolsCanBeDisabled",
+    "inferenceAttested",
+    "authorizationInspected"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:CodexProtocolInspectionV1"
+}

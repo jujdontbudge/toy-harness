@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "eligible": {
+      "type": "boolean"
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "foreground",
+        "measured",
+        "fixed-count",
+        "unavailable"
+      ]
+    },
+    "reason": {
+      "type": "string",
+      "enum": [
+        "ELIGIBLE",
+        "ACCOUNTING_UNAVAILABLE",
+        "POLICY_CHANGED",
+        "PROVIDER_BUSY",
+        "FOREGROUND_WAITING",
+        "RESTORE_UNRECONCILED",
+        "QUOTA_EXHAUSTED",
+        "FIVE_HOUR_THRESHOLD",
+        "WEEKLY_THRESHOLD",
+        "OPTIONAL_WORK_PAUSED",
+        "DAILY_JOB_CEILING",
+        "RESERVATION_UNKNOWN",
+        "RESERVATION_THRESHOLD"
+      ]
+    },
+    "retryAt": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 24,
+          "maxLength": 24,
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "quotaSnapshotId": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 36,
+          "maxLength": 36,
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "foregroundInputAccepted": {
+      "type": "boolean",
+      "const": true
+    },
+    "providerSendPermitIssued": {
+      "type": "boolean",
+      "const": false
+    },
+    "paidFallbackPermitted": {
+      "type": "boolean",
+      "const": false
+    }
+  },
+  "required": [
+    "eligible",
+    "mode",
+    "reason",
+    "retryAt",
+    "quotaSnapshotId",
+    "foregroundInputAccepted",
+    "providerSendPermitIssued",
+    "paidFallbackPermitted"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:ModelAdmissionDecisionV1"
+}

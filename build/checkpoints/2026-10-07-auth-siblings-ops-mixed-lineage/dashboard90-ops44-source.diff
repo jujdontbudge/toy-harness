@@ -1,0 +1,759 @@
+diff --git a/packages/hermes/src/auth-fixture.ts b/packages/hermes/src/auth-fixture.ts
+index 3268e2a..4212eb4 100644
+--- a/packages/hermes/src/auth-fixture.ts
++++ b/packages/hermes/src/auth-fixture.ts
+@@ -1,5 +1,5 @@
+ import { spawn, spawnSync } from "node:child_process";
+-import { createHash } from "node:crypto";
++import { createHash, randomBytes } from "node:crypto";
+ import { existsSync, lstatSync, mkdirSync, readFileSync, realpathSync, statSync, writeFileSync } from "node:fs";
+ import { isAbsolute, join, relative, sep } from "node:path";
+ import { checkViewSchema, hermesAuthFixtureResultSchema, hermesPublicRuntimeCommandSchema } from "@toy/contracts";
+@@ -12,8 +12,10 @@ const maxArchiveBytes = 268435456;
+ const maxChildBytes = 65536;
+ const fixtureModule = "tests.fixtures.toy_auth_httpx_fixture";
+ type FixtureOperation = HermesAuthFixtureResultV1["observations"]["phase"];
+-type AuthFixtureMode = "standard" | "borrowed-root" | "profile-siblings" | "mixed-lineage";
++type AuthFixtureMode = "standard" | "borrowed-root" | "profile-siblings" | "mixed-lineage" | "dashboard-scope";
+ type FixtureStoreDigest = { exists: boolean; digest: string | null };
++type DashboardHttpLedger = HermesAuthFixtureResultV1["http_ledger"];
++type DashboardFlowResult = { portObserved: boolean; boundPort: number | null; startStatus: number | null; startSessionPresent: boolean; pollStatus: number | null; pollState: string | null; sanitizedFailure: boolean; responseHygiene: boolean; server: ConcurrentChildResult | null; result: HermesAuthFixtureResultV1 | null; commandDigest: string | null };
+ type AuthFixtureStep = {
+   caseId: string;
+   operation: FixtureOperation;
+@@ -58,6 +60,7 @@ const mixedLineageSteps: readonly AuthFixtureStep[] = [
+ ];
+ 
+ const digest = (value: string | Buffer): string => createHash("sha256").update(value).digest("hex");
++const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === "object" && value !== null && !Array.isArray(value);
+ const isWithin = (base: string, target: string): boolean => {
+   const path = relative(base, target);
+   return path === "" || (!isAbsolute(path) && path !== ".." && !path.startsWith(`..${sep}`));
+@@ -83,9 +86,9 @@ type ConcurrentChildResult = {
+   oversized: boolean;
+ };
+ 
+-type ConcurrentChildHandle = { pid: number | null; kill: () => boolean; isRunning: () => boolean; result: Promise<ConcurrentChildResult> };
++type ConcurrentChildHandle = { pid: number | null; kill: (signal?: NodeJS.Signals) => boolean; isRunning: () => boolean; waitForDashboardPort: (timeoutMs: number) => Promise<number | null>; result: Promise<ConcurrentChildResult> };
+ 
+-const runConcurrentChild = (file: string, args: string[], cwd: string, env: NodeJS.ProcessEnv, timeoutMs: number): ConcurrentChildHandle => {
++const runConcurrentChild = (file: string, args: string[], cwd: string, env: NodeJS.ProcessEnv, timeoutMs: number, observeDashboardPort = false): ConcurrentChildHandle => {
+   const child = spawn(file, args, { cwd, env, stdio: ["ignore", "pipe", "pipe"] });
+   const stdoutParts: Buffer[] = [];
+   const stderrParts: Buffer[] = [];
+@@ -95,6 +98,21 @@ const runConcurrentChild = (file: string, args: string[], cwd: string, env: Node
+   let timedOut = false;
+   let oversized = false;
+   let closed = false;
++  let dashboardPort: number | null = null;
++  let dashboardPortResolve: ((port: number | null) => void) | null = null;
++  const dashboardPortPromise = new Promise<number | null>((resolve) => { dashboardPortResolve = resolve; });
++  const scanDashboardPort = (): void => {
++    if (!observeDashboardPort || dashboardPort !== null) return;
++    const text = Buffer.concat(stdoutParts).toString("utf8");
++    const match = /HERMES_DASHBOARD_READY port=(\d+)/.exec(text);
++    if (match?.[1]) {
++      const port = Number(match[1]);
++      if (Number.isInteger(port) && port > 0 && port <= 65535) {
++        dashboardPort = port;
++        dashboardPortResolve?.(port);
++      }
++    }
++  };
+   const collect = (parts: Buffer[], chunk: Buffer, currentBytes: number): number => {
+     if (currentBytes + chunk.byteLength > maxChildBytes) {
+       oversized = true;
+@@ -102,16 +120,18 @@ const runConcurrentChild = (file: string, args: string[], cwd: string, env: Node
+       return currentBytes;
+     }
+     parts.push(chunk);
++    if (parts === stdoutParts) scanDashboardPort();
+     return currentBytes + chunk.byteLength;
+   };
+   child.stdout?.on("data", (chunk: Buffer) => { stdoutBytes = collect(stdoutParts, chunk, stdoutBytes); });
+   child.stderr?.on("data", (chunk: Buffer) => { stderrBytes = collect(stderrParts, chunk, stderrBytes); });
+-  child.on("error", () => { spawnError = true; });
++  child.on("error", () => { spawnError = true; dashboardPortResolve?.(null); });
+   const timer = setTimeout(() => { timedOut = true; child.kill("SIGKILL"); }, timeoutMs);
+   const result = new Promise<ConcurrentChildResult>((resolve) => {
+     child.on("close", (status, signal) => {
+       closed = true;
+       clearTimeout(timer);
++      dashboardPortResolve?.(null);
+       resolve({
+         pid: child.pid ?? null,
+         status,
+@@ -124,7 +144,21 @@ const runConcurrentChild = (file: string, args: string[], cwd: string, env: Node
+       });
+     });
+   });
+-  return { pid: child.pid ?? null, kill: () => child.kill("SIGKILL"), isRunning: () => !closed, result };
++  return {
++    pid: child.pid ?? null,
++    kill: (signal = "SIGKILL") => child.kill(signal),
++    isRunning: () => !closed,
++    waitForDashboardPort: async (waitMs) => {
++      if (!observeDashboardPort) return null;
++      if (dashboardPort !== null) return dashboardPort;
++      let timeout: NodeJS.Timeout | undefined;
++      const wait = new Promise<null>(resolve => { timeout = setTimeout(() => resolve(null), waitMs); });
++      const port = await Promise.race([dashboardPortPromise, wait]);
++      if (timeout) clearTimeout(timeout);
++      return port;
++    },
++    result
++  };
+ };
+ 
+ const waitForFixtureMarker = async (path: string, timeoutMs: number): Promise<boolean> => {
+@@ -168,6 +202,11 @@ const privateStoreDigests = (hermesHome: string): { rootAuth: { exists: boolean;
+   };
+ };
+ 
++const profileAuthDigest = (hermesHome: string, profile: string): FixtureStoreDigest => {
++  const privateRoot = realpathSync(hermesHome);
++  return storeDigest(join(hermesHome, "profiles", profile, "auth.json"), privateRoot);
++};
++
+ const check = (state: CheckViewV1["state"], reasonCode: string, prerequisite: unknown, artifactDigests: string[]): CheckViewV1 => checkViewSchema.parse({
+   id: "auth.native-fixture",
+   owner: "hermes",
+@@ -198,10 +237,11 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
+     const borrowedRoot = mode === "borrowed-root";
+     const profileSiblings = mode === "profile-siblings";
+     const mixedLineage = mode === "mixed-lineage";
++    const dashboardScope = mode === "dashboard-scope";
+     if (borrowedRoot && firstOperation !== "add") return fail("BLOCKED", "NATIVE_AUTH_FIXTURE_OPERATION_INVALID");
+     if (profileSiblings && firstOperation !== "add") return fail("BLOCKED", "NATIVE_AUTH_FIXTURE_OPERATION_INVALID");
+     if (mixedLineage && firstOperation !== "add") return fail("BLOCKED", "NATIVE_AUTH_FIXTURE_OPERATION_INVALID");
+-    const operations: readonly FixtureOperation[] = borrowedRoot ? ["add", "list", "chat", "chat-expired", "chat-reloaded", "chat-reloaded"] : profileSiblings ? profileSiblingSteps.map(step => step.operation) : mixedLineage ? mixedLineageSteps.map(step => step.operation) : siwcUnbound ? [firstOperation] : saveFault ? [firstOperation, "list-after-fault", "chat-after-fault"] : concurrentRun ? ["add", "list"] : ["add", "list", "chat", "chat-expired", "chat-reloaded"];
++    const operations: readonly FixtureOperation[] = dashboardScope ? [] : borrowedRoot ? ["add", "list", "chat", "chat-expired", "chat-reloaded", "chat-reloaded"] : profileSiblings ? profileSiblingSteps.map(step => step.operation) : mixedLineage ? mixedLineageSteps.map(step => step.operation) : siwcUnbound ? [firstOperation] : saveFault ? [firstOperation, "list-after-fault", "chat-after-fault"] : concurrentRun ? ["add", "list"] : ["add", "list", "chat", "chat-expired", "chat-reloaded"];
+     if (!Number.isInteger(timeoutMs) || timeoutMs < 1 || timeoutMs > 120000) return fail("BLOCKED", "NATIVE_AUTH_FIXTURE_TIMEOUT_INVALID");
+     const homeRoot = realpathSync(home);
+     const hermesRoot = realpathSync(hermesHome);
+@@ -209,14 +249,16 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
+     const checkout = trustedCheckoutRoot();
+     const profilePatch = join(checkout, siwcUnbound ? "patches/hermes-siwc.patch" : "patches/hermes-profile-auth.patch");
+     const fixturePatch = join(checkout, "patches/hermes-auth-fixture.patch");
++    const dashboardPatch = join(checkout, "patches/hermes-auth-dashboard.patch");
+     const profilePatchDigest = digest(readFileSync(profilePatch));
+     const fixturePatchDigest = digest(readFileSync(fixturePatch));
++    const dashboardPatchDigest = dashboardScope ? digest(readFileSync(dashboardPatch)) : null;
+     const fixturePatchLines = readFileSync(fixturePatch, "utf8").split("\n");
+     const fixtureAddedLines = fixturePatchLines.slice(3);
+     if (fixtureAddedLines.at(-1) === "") fixtureAddedLines.pop();
+     if (fixturePatchLines[0] !== "--- /dev/null" || fixturePatchLines[1] !== "+++ b/tests/fixtures/toy_auth_httpx_fixture.py" || fixturePatchLines[2] !== `@@ -0,0 +1,${fixtureAddedLines.length} @@` || fixtureAddedLines.some(line => !line.startsWith("+"))) return fail("FAIL", "NATIVE_AUTH_FIXTURE_PATCH_CONTENT_INVALID");
+     const expectedFixtureDigest = digest(fixtureAddedLines.map(line => line.slice(1)).join("\n") + "\n");
+-    artifacts = [profilePatchDigest, fixturePatchDigest, digest(readFileSync(new URL("./auth-fixture.js", import.meta.url)))];
++    artifacts = [profilePatchDigest, fixturePatchDigest, ...(dashboardPatchDigest ? [dashboardPatchDigest] : []), digest(readFileSync(new URL("./auth-fixture.js", import.meta.url)))];
+     const scratch = join(homeRoot, "scratch");
+     mkdirSync(scratch, { recursive: true, mode: 0o700 });
+     const environment = {
+@@ -252,7 +294,7 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
+     if (!isWithin(homeRoot, candidateRoot) || archiveBytes.length > maxArchiveBytes) return fail("BLOCKED", "NATIVE_AUTH_FIXTURE_ARCHIVE_INVALID", { installedCommit, archiveDigest });
+     const extracted = bounded("/usr/bin/tar", ["-x", "-f", "-", "-C", candidateRoot, "--no-same-owner", "--no-same-permissions"], maxChildBytes, 15000, archiveBytes);
+     if (extracted.timedOut || !extracted.result || extracted.result.error || extracted.result.status !== 0) return fail("BLOCKED", "NATIVE_AUTH_FIXTURE_ARCHIVE_EXTRACTION_FAILED", { installedCommit, archiveDigest });
+-    for (const patchPath of [profilePatch, fixturePatch]) {
++    for (const patchPath of [profilePatch, ...(dashboardScope ? [dashboardPatch] : []), fixturePatch]) {
+       const applied = bounded("/usr/bin/patch", ["-p1", "--forward", "--input", patchPath], maxChildBytes, 10000, undefined, candidateRoot);
+       if (applied.timedOut || !applied.result || applied.result.error || applied.result.status !== 0) return fail("FAIL", "NATIVE_AUTH_FIXTURE_PATCH_REJECTED", { installedCommit, archiveDigest });
+     }
+@@ -260,6 +302,7 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
+     const fixtureSource = lstatSync(fixtureSourcePath);
+     if (!fixtureSource.isFile() || fixtureSource.isSymbolicLink() || digest(readFileSync(fixtureSourcePath)) !== expectedFixtureDigest) return fail("FAIL", "NATIVE_AUTH_FIXTURE_PATCH_CONTENT_MISMATCH", { installedCommit, archiveDigest });
+     artifacts.push(expectedFixtureDigest);
++    if (dashboardScope) artifacts.push(digest(readFileSync(join(candidateRoot, "hermes_cli", "web_routers", "oauth.py"))));
+     const candidateStore = join(candidateRoot, "hermes_cli", "_launchers.py");
+     if (!statSync(candidateStore).isFile()) return fail("FAIL", "NATIVE_AUTH_FIXTURE_PUBLIC_LAUNCHER_MISSING", { installedCommit, archiveDigest });
+     const storesBefore = privateStoreDigests(hermesRoot);
+@@ -285,10 +328,25 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
+     const profileStat = lstatSync(privateProfilePath);
+     if (!profileStat.isDirectory() || profileStat.isSymbolicLink() || !isWithin(hermesRoot, realpathSync(privateProfilePath))) return fail("FAIL", "NATIVE_AUTH_FIXTURE_PROFILE_CREATE_UNVERIFIED", { installedCommit, archiveDigest, profileCreateDigest });
+     const profileAuthAfterCreate = privateStoreDigests(hermesRoot).profileAuth;
++    if (dashboardScope) {
++      const successProfileCreateArgs = ["profile", "create", "success", "--no-skills"];
++      const createRequest = bounded(interpreter, ["-B", "-I", candidateStore, "--print-runtime-command", "--module", "hermes_cli.main", "--", ...successProfileCreateArgs], maxChildBytes, 5000);
++      if (createRequest.timedOut || !createRequest.result || createRequest.result.error || createRequest.result.status !== 0) return fail("BLOCKED", "NATIVE_AUTH_FIXTURE_DASHBOARD_PROFILE_CREATE_COMMAND_UNAVAILABLE", { installedCommit, archiveDigest });
++      const successProfileCommand = hermesPublicRuntimeCommandSchema.parse(JSON.parse(createRequest.result.stdout.toString("utf8")));
++      if (successProfileCommand.length !== 4 + successProfileCreateArgs.length || successProfileCommand[0] === undefined || realpathSync(successProfileCommand[0]) !== realpathSync(interpreter) || successProfileCommand[1] !== "-I" || successProfileCommand[2] !== "-c" || !successProfileCommand[3]?.includes("hermes_cli.main") || !successProfileCommand[3]?.includes(candidateRoot) || successProfileCreateArgs.some((argument, index) => successProfileCommand[index + 4] !== argument)) return fail("FAIL", "NATIVE_AUTH_FIXTURE_DASHBOARD_PROFILE_CREATE_COMMAND_INVALID", { installedCommit, archiveDigest });
++      const successProfileCreateDigest = digest(JSON.stringify(successProfileCommand));
++      const successProfileCreate = bounded(interpreter, ["-B", ...successProfileCommand.slice(1)], maxChildBytes, 30000);
++      if (successProfileCreate.timedOut || !successProfileCreate.result || successProfileCreate.result.error || successProfileCreate.result.status !== 0) return fail("FAIL", "NATIVE_AUTH_FIXTURE_DASHBOARD_PROFILE_CREATE_FAILED", { installedCommit, archiveDigest, successProfileCreateDigest });
++      const successProfilePath = join(hermesRoot, "profiles", "success");
++      const successProfileStat = lstatSync(successProfilePath);
++      if (!successProfileStat.isDirectory() || successProfileStat.isSymbolicLink() || !isWithin(hermesRoot, realpathSync(successProfilePath))) return fail("FAIL", "NATIVE_AUTH_FIXTURE_DASHBOARD_PROFILE_CREATE_UNVERIFIED", { installedCommit, archiveDigest, successProfileCreateDigest });
++      artifacts.push(successProfileCreateDigest);
++    }
+     const fallback = [{ provider: "openai", model: "gpt-6.1-sol" }];
+     const profileConfigCommands = [["--profile", "toy", "config", "set", "auxiliary.title_generation.enabled", "false"]];
+     if (borrowedRoot) profileConfigCommands.push(["config", "set", "auxiliary.title_generation.enabled", "false"]);
+-    if (borrowedRoot || profileSiblings || mixedLineage) profileConfigCommands.push(["--profile", "toy", "config", "set", "model.provider", "openai-codex"]);
++    if (borrowedRoot || profileSiblings || mixedLineage || dashboardScope) profileConfigCommands.push(["--profile", "toy", "config", "set", "model.provider", "openai-codex"]);
++    if (dashboardScope) profileConfigCommands.push(["--profile", "success", "config", "set", "auxiliary.title_generation.enabled", "false"], ["--profile", "success", "config", "set", "model.provider", "openai-codex"]);
+     if (siwcUnbound) profileConfigCommands.push(["--profile", "toy", "config", "set", "fallback_model", JSON.stringify(fallback)], ["--profile", "toy", "config", "get", "fallback_model", "--json"]);
+     for (const profileConfigArgs of profileConfigCommands) {
+       const profileConfigRequest = bounded(interpreter, ["-B", "-I", candidateStore, "--print-runtime-command", "--module", "hermes_cli.main", "--", ...profileConfigArgs], maxChildBytes, 5000);
+@@ -311,6 +369,161 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
+       }
+       artifacts.push(digest(JSON.stringify(profileConfigCommand)));
+     }
++    if (dashboardScope) {
++      const dashboardChecks: CheckViewV1[] = [];
++      const snapshotStores = () => ({
++        rootAuth: storeDigest(join(hermesRoot, "auth.json"), realpathSync(hermesRoot)),
++        rootEnv: storeDigest(join(hermesRoot, ".env"), realpathSync(hermesRoot)),
++        toyAuth: profileAuthDigest(hermesRoot, "toy"),
++        successAuth: profileAuthDigest(hermesRoot, "success")
++      });
++      const parseDashboardResult = (stdout: Buffer, phase: string): HermesAuthFixtureResultV1 | null => {
++        for (const line of stdout.toString("utf8").split("\n").reverse()) {
++          let value: unknown;
++          try { value = JSON.parse(line); } catch { continue; }
++          const parsed = hermesAuthFixtureResultSchema.safeParse(value);
++          if (parsed.success && parsed.data.operation === "dashboard" && parsed.data.observations.phase === phase) return parsed.data;
++        }
++        return null;
++      };
++      const dashboardIdentity = (flow: DashboardFlowResult): { matches: boolean; pidMatches: boolean; parentPidMatches: boolean; uidMatches: boolean; gidMatches: boolean } => {
++        const result = flow.result;
++        const serverPid = flow.server?.pid;
++        const uid = typeof process.getuid === "function" ? process.getuid() : null;
++        const gid = typeof process.getgid === "function" ? process.getgid() : null;
++        const pidMatches = result !== null && serverPid !== null && serverPid === result.processIdentity.pid;
++        const parentPidMatches = result !== null && result.processIdentity.parentPid === process.pid;
++        const uidMatches = result !== null && uid !== null && result.processIdentity.uid === uid;
++        const gidMatches = result !== null && gid !== null && result.processIdentity.gid === gid;
++        return { matches: pidMatches && parentPidMatches && uidMatches && gidMatches, pidMatches, parentPidMatches, uidMatches, gidMatches };
++      };
++      const driveDashboard = async (phase: string, profile: "success" | "toy"): Promise<DashboardFlowResult> => {
++        const commandRequest = bounded(interpreter, ["-B", "-I", candidateStore, "--print-runtime-command", "--module", fixtureModule, "--", "dashboard-server"], maxChildBytes, 5000);
++        if (commandRequest.timedOut || !commandRequest.result || commandRequest.result.error || commandRequest.result.status !== 0) return { portObserved: false, boundPort: null, startStatus: null, startSessionPresent: false, pollStatus: null, pollState: null, sanitizedFailure: false, responseHygiene: false, server: null, result: null, commandDigest: null };
++        const publicCommand = hermesPublicRuntimeCommandSchema.parse(JSON.parse(commandRequest.result.stdout.toString("utf8")));
++        const bootstrap = publicCommand[3];
++        if (publicCommand.length !== 5 || publicCommand[0] === undefined || realpathSync(publicCommand[0]) !== realpathSync(interpreter) || publicCommand[1] !== "-I" || publicCommand[2] !== "-c" || bootstrap === undefined || !bootstrap.includes(fixtureModule) || !bootstrap.includes(candidateRoot) || publicCommand[4] !== "dashboard-server") return { portObserved: false, boundPort: null, startStatus: null, startSessionPresent: false, pollStatus: null, pollState: null, sanitizedFailure: false, responseHygiene: false, server: null, result: null, commandDigest: digest(JSON.stringify(publicCommand)) };
++        const commandDigest = digest(JSON.stringify(publicCommand));
++        const sessionToken = randomBytes(32).toString("hex");
++        const childEnvironment: NodeJS.ProcessEnv = { ...environment, TOY_AUTH_DASHBOARD_PHASE: phase, TOY_AUTH_DASHBOARD_PROFILE: profile, HERMES_DASHBOARD_SESSION_TOKEN: sessionToken };
++        const serverChild = runConcurrentChild(interpreter, ["-B", ...publicCommand.slice(1)], homeRoot, childEnvironment, Math.max(1, Math.min(remainingMs(), 60000)), true);
++        let port: number | null = null;
++        let startStatus: number | null = null;
++        let startSessionPresent = false;
++        let pollStatus: number | null = null;
++        let pollState: string | null = null;
++        let sanitizedFailure = false;
++        let responseHygiene = false;
++        let server: ConcurrentChildResult | null = null;
++        try {
++          port = await serverChild.waitForDashboardPort(Math.max(1, Math.min(remainingMs(), 12000)));
++          if (port !== null) {
++            const baseUrl = `http://127.0.0.1:${port}`;
++            const headers = { "X-Hermes-Session-Token": sessionToken };
++            const startResponse = await fetch(`${baseUrl}/api/providers/oauth/openai-codex/start?profile=${profile}`, { method: "POST", headers, redirect: "error", signal: AbortSignal.timeout(Math.max(1, Math.min(remainingMs(), 8000))) });
++            startStatus = startResponse.status;
++            const startText = await startResponse.text();
++            let startPayload: Record<string, unknown> | null = null;
++            try {
++              const parsed: unknown = JSON.parse(startText);
++              if (isRecord(parsed)) startPayload = parsed;
++            } catch {}
++            const sessionId = typeof startPayload?.session_id === "string" ? startPayload.session_id : null;
++            startSessionPresent = sessionId !== null;
++            let responseText = startText;
++            const observedResponseTexts = [startText];
++            const responseFieldsAllowed = [startPayload !== null && Object.keys(startPayload).every(key => ["session_id", "flow", "user_code", "verification_url", "expires_in", "poll_interval"].includes(key))];
++            if (sessionId !== null) {
++              for (let attempt = 0; attempt < 100 && remainingMs() > 0; attempt += 1) {
++                const pollResponse = await fetch(`${baseUrl}/api/providers/oauth/openai-codex/poll/${encodeURIComponent(sessionId)}?profile=${profile}`, { headers, redirect: "error", signal: AbortSignal.timeout(Math.max(1, Math.min(remainingMs(), 5000))) });
++                pollStatus = pollResponse.status;
++                responseText = await pollResponse.text();
++                observedResponseTexts.push(responseText);
++                let pollPayload: Record<string, unknown> | null = null;
++                try {
++                  const parsed: unknown = JSON.parse(responseText);
++                  if (isRecord(parsed)) pollPayload = parsed;
++                } catch {}
++                responseFieldsAllowed.push(pollPayload !== null && Object.keys(pollPayload).every(key => pollStatus === 400 ? key === "detail" : ["session_id", "status", "error_message", "expires_at", "reason", "account_email", "model", "retryable", "retry_after"].includes(key)));
++                pollState = typeof pollPayload?.status === "string" ? pollPayload.status : null;
++                if (pollResponse.status === 400 || (pollResponse.status === 200 && pollState === "approved")) break;
++                await new Promise<void>(resolve => setTimeout(resolve, 100));
++              }
++            }
++            const tokenMaterialPattern = /(?:[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_.-]{4,}|toy-fixture-(?:access|refresh|authorization-code|code-verifier)-[A-Za-z0-9-]+)/i;
++            const allResponseText = observedResponseTexts.join("");
++            responseHygiene = responseFieldsAllowed.length > 1 && responseFieldsAllowed.every(Boolean) && !/(?:access_token|refresh_token|id_token|session_token|fixture storage fault|PermissionError|OSError)/i.test(allResponseText) && !tokenMaterialPattern.test(allResponseText);
++            const failureText = "Sign-in failed. Check this profile's credentials before starting another login.";
++            let failurePayload: Record<string, unknown> | null = null;
++            try {
++              const parsed: unknown = JSON.parse(responseText);
++              if (isRecord(parsed)) failurePayload = parsed;
++            } catch {}
++            sanitizedFailure = pollStatus === 400 && failurePayload?.detail === failureText && responseHygiene && !/(?:approved|logged\s+in|authentication successful|login successful)/i.test(startText + responseText);
++          }
++        } catch {
++          responseHygiene = false;
++        } finally {
++          if (serverChild.isRunning()) serverChild.kill("SIGTERM");
++          const stopped = await Promise.race([serverChild.result, new Promise<null>(resolve => setTimeout(() => resolve(null), 3000))]);
++          if (stopped === null && serverChild.isRunning()) serverChild.kill("SIGKILL");
++          server = stopped ?? await serverChild.result;
++        }
++        const result = server ? parseDashboardResult(server.stdout, phase) : null;
++        return { portObserved: port !== null, boundPort: port, startStatus, startSessionPresent, pollStatus, pollState, sanitizedFailure, responseHygiene, server, result, commandDigest };
++      };
++      const launchFreshFixture = (operation: FixtureOperation, profile: "success" | "toy"): { result: HermesAuthFixtureResultV1; pidMatches: boolean; stdoutDigest: string; stderrDigest: string } | null => {
++        const request = bounded(interpreter, ["-B", "-I", candidateStore, "--print-runtime-command", "--module", fixtureModule, "--", operation], maxChildBytes, 5000);
++        if (request.timedOut || !request.result || request.result.error || request.result.status !== 0) return null;
++        const publicCommand = hermesPublicRuntimeCommandSchema.parse(JSON.parse(request.result.stdout.toString("utf8")));
++        const bootstrap = publicCommand[3];
++        if (publicCommand.length !== 5 || publicCommand[0] === undefined || realpathSync(publicCommand[0]) !== realpathSync(interpreter) || publicCommand[1] !== "-I" || publicCommand[2] !== "-c" || bootstrap === undefined || !bootstrap.includes(fixtureModule) || !bootstrap.includes(candidateRoot) || publicCommand[4] !== operation) return null;
++        const childEnvironment: NodeJS.ProcessEnv = { ...environment, TOY_AUTH_PROFILE: profile };
++        const child = bounded(interpreter, ["-B", ...publicCommand.slice(1)], maxChildBytes, 30000, undefined, homeRoot, childEnvironment);
++        if (child.timedOut || !child.result || child.result.error || child.result.status === null) return null;
++        let rawResult: unknown;
++        try { rawResult = JSON.parse(child.result.stdout.toString("utf8").trim()); } catch { return null; }
++        const parsed = hermesAuthFixtureResultSchema.safeParse(rawResult);
++        if (!parsed.success) return null;
++        return { result: parsed.data, pidMatches: child.result.pid !== undefined && parsed.data.processIdentity.pid === child.result.pid && parsed.data.processIdentity.parentPid === process.pid, stdoutDigest: digest(child.result.stdout), stderrDigest: digest(child.result.stderr) };
++      };
++      const zeroLedger = (ledger: DashboardHttpLedger): boolean => Object.values(ledger).every(count => count === 0);
++      const expectedDashboardLedger: DashboardHttpLedger = { device_code_requests: 1, device_code_polls: 1, token_exchanges: 1, token_refreshes: 0, model_catalog_requests: 0, model_requests: 0, denied_http_requests: 0, blocked_socket_events: 0 };
++      const rootStable = (before: ReturnType<typeof snapshotStores>, after: ReturnType<typeof snapshotStores>): boolean => JSON.stringify(before.rootAuth) === JSON.stringify(after.rootAuth) && JSON.stringify(before.rootEnv) === JSON.stringify(after.rootEnv);
++      const recordDashboardCase = (caseId: string, passed: boolean, facts: unknown, storeDigests: unknown): void => {
++        const details = isRecord(facts) ? facts : {};
++        dashboardChecks.push(check(passed ? "PASS" : "FAIL", passed ? `NATIVE_AUTH_FIXTURE_${caseId.toUpperCase().replaceAll("-", "_")}_OBSERVED` : `NATIVE_AUTH_FIXTURE_${caseId.toUpperCase().replaceAll("-", "_")}_FAILED`, { caseId, ...details, storeDigests, wholeATComplete: false }, artifacts));
++      };
++      const successBefore = snapshotStores();
++      const successFlow = await driveDashboard("dashboard-profile-success", "success");
++      const successAfter = snapshotStores();
++      const successIdentity = dashboardIdentity(successFlow);
++      const successLedgerMatches = successFlow.result !== null && JSON.stringify(successFlow.result.http_ledger) === JSON.stringify(expectedDashboardLedger);
++      const successPassed = successFlow.portObserved && successFlow.startStatus === 200 && successFlow.startSessionPresent && successFlow.pollStatus === 200 && successFlow.pollState === "approved" && successFlow.responseHygiene && successIdentity.matches && successFlow.result !== null && successFlow.result.observations.phase === "dashboard-profile-success" && successFlow.result.exit_code === 0 && successFlow.server?.status === 0 && successFlow.result.observations.network_denials.length === 0 && successFlow.result.observations.socket_origin === null && !successFlow.result.observations.storage_fault_triggered && successLedgerMatches && rootStable(successBefore, successAfter) && JSON.stringify(successBefore.toyAuth) === JSON.stringify(successAfter.toyAuth) && successAfter.successAuth.exists && successAfter.successAuth.digest !== successBefore.successAuth.digest;
++      recordDashboardCase("dashboard-profile-success", successPassed, { dashboardCommand: "hermes dashboard --host 127.0.0.1 --port 0 --no-open --isolated --skip-build", loopbackHost: "127.0.0.1", loopbackBoundPort: successFlow.boundPort, routes: "POST start?profile=success; GET poll/<session_id>?profile=success", portObserved: successFlow.portObserved, startStatus: successFlow.startStatus, startSessionPresent: successFlow.startSessionPresent, pollStatus: successFlow.pollStatus, pollState: successFlow.pollState, responseHygiene: successFlow.responseHygiene, serverPid: successFlow.result?.processIdentity.pid ?? null, serverPidMatches: successIdentity.pidMatches, serverParentPidMatches: successIdentity.parentPidMatches, serverUid: successFlow.result?.processIdentity.uid ?? null, serverUidMatches: successIdentity.uidMatches, serverGid: successFlow.result?.processIdentity.gid ?? null, serverGidMatches: successIdentity.gidMatches, httpLedger: successFlow.result?.http_ledger ?? null, denials: successFlow.result?.observations.network_denials.length ?? null, storageFaultTriggered: successFlow.result?.observations.storage_fault_triggered ?? null, serverExitCode: successFlow.result?.exit_code ?? null, serverSignal: successFlow.server?.signal ?? null, stdoutDigest: successFlow.server ? digest(successFlow.server.stdout) : null, stderrDigest: successFlow.server ? digest(successFlow.server.stderr) : null, commandDigest: successFlow.commandDigest }, { rootAuth: [successBefore.rootAuth.digest, successAfter.rootAuth.digest], rootEnvUnchanged: JSON.stringify(successBefore.rootEnv) === JSON.stringify(successAfter.rootEnv), toyAuth: [successBefore.toyAuth.digest, successAfter.toyAuth.digest], successAuth: [successBefore.successAuth.digest, successAfter.successAuth.digest] });
++      if (!successPassed) return dashboardChecks;
++      const listUse = launchFreshFixture("list", "success");
++      const chatUse = launchFreshFixture("chat", "success");
++      const successAfterUse = snapshotStores();
++      const listPassed = listUse !== null && listUse.pidMatches && listUse.result.operation === "list" && listUse.result.exit_code === 0 && listUse.result.markers.includes("AUTH_LIST_READBACK_OK") && typeof listUse.result.observations.credential_count === "number" && listUse.result.observations.credential_count > 0 && listUse.result.observations.token_hygiene && listUse.result.observations.network_denials.length === 0 && listUse.result.http_ledger.denied_http_requests === 0;
++      const chatPassed = chatUse !== null && chatUse.pidMatches && chatUse.result.operation === "chat" && chatUse.result.exit_code === 0 && chatUse.result.markers.includes("CHAT_RESPONSE_OK") && chatUse.result.observations.access_generation === "initial" && chatUse.result.observations.catalog_access_generation === "initial" && chatUse.result.observations.token_hygiene && !chatUse.result.observations.fallback_attempted && chatUse.result.observations.network_denials.length === 0 && chatUse.result.http_ledger.device_code_requests === 0 && chatUse.result.http_ledger.device_code_polls === 0 && chatUse.result.http_ledger.token_exchanges === 0 && chatUse.result.http_ledger.token_refreshes === 0 && chatUse.result.http_ledger.model_catalog_requests === 1 && chatUse.result.http_ledger.model_requests === 1 && chatUse.result.http_ledger.denied_http_requests === 0 && chatUse.result.http_ledger.blocked_socket_events === 0;
++      const useStoresStable = rootStable(successAfter, successAfterUse) && JSON.stringify(successAfter.toyAuth) === JSON.stringify(successAfterUse.toyAuth);
++      recordDashboardCase("dashboard-fresh-profile-use", listPassed && chatPassed && useStoresStable, { authListExit: listUse?.result.exit_code ?? null, authListCount: listUse?.result.observations.credential_count ?? null, authListPidMatches: listUse?.pidMatches ?? false, authListStdoutDigest: listUse?.stdoutDigest ?? null, chatExit: chatUse?.result.exit_code ?? null, chatGeneration: chatUse?.result.observations.access_generation ?? null, catalogGeneration: chatUse?.result.observations.catalog_access_generation ?? null, chatHttpLedger: chatUse?.result.http_ledger ?? null, chatPidMatches: chatUse?.pidMatches ?? false, chatStdoutDigest: chatUse?.stdoutDigest ?? null, rootStable: rootStable(successAfter, successAfterUse), toyAuthStable: JSON.stringify(successAfter.toyAuth) === JSON.stringify(successAfterUse.toyAuth) }, { rootAuth: [successAfter.rootAuth.digest, successAfterUse.rootAuth.digest], rootEnvUnchanged: JSON.stringify(successAfter.rootEnv) === JSON.stringify(successAfterUse.rootEnv), toyAuth: [successAfter.toyAuth.digest, successAfterUse.toyAuth.digest], successAuthAfter: successAfterUse.successAuth.digest });
++      if (!(listPassed && chatPassed && useStoresStable)) return dashboardChecks;
++      const failureBefore = snapshotStores();
++      const failureFlow = await driveDashboard("dashboard-save-failure-400", "toy");
++      const failureLedgerMatches = failureFlow.result !== null && JSON.stringify(failureFlow.result.http_ledger) === JSON.stringify(expectedDashboardLedger);
++      const listAfterFault = launchFreshFixture("list-after-fault", "toy");
++      const chatAfterFault = launchFreshFixture("chat-after-fault", "toy");
++      const failureAfterUse = snapshotStores();
++      const failureListPassed = listAfterFault !== null && listAfterFault.pidMatches && listAfterFault.result.operation === "list" && listAfterFault.result.exit_code === 0 && listAfterFault.result.markers.includes("AUTH_LIST_EMPTY") && listAfterFault.result.observations.credential_count === 0 && listAfterFault.result.observations.token_hygiene;
++      const failureChatPassed = chatAfterFault !== null && chatAfterFault.pidMatches && chatAfterFault.result.operation === "chat" && chatAfterFault.result.exit_code !== 0 && chatAfterFault.result.markers.includes("CHAT_GRANT_UNUSABLE") && chatAfterFault.result.observations.success_claim_absent && chatAfterFault.result.observations.token_hygiene && chatAfterFault.result.observations.network_denials.length === 0 && zeroLedger(chatAfterFault.result.http_ledger);
++      const failureStoresStable = rootStable(failureBefore, failureAfterUse) && JSON.stringify(failureBefore.successAuth) === JSON.stringify(failureAfterUse.successAuth) && JSON.stringify(failureBefore.toyAuth) === JSON.stringify(failureAfterUse.toyAuth);
++      const failureIdentity = dashboardIdentity(failureFlow);
++      const failurePassed = failureFlow.portObserved && failureFlow.startStatus === 200 && failureFlow.startSessionPresent && failureFlow.sanitizedFailure && failureIdentity.matches && failureFlow.result !== null && failureFlow.result.observations.phase === "dashboard-save-failure-400" && failureFlow.result.exit_code === 0 && failureFlow.server?.status === 0 && failureFlow.result.observations.network_denials.length === 0 && failureFlow.result.observations.socket_origin === null && failureFlow.result.observations.storage_fault_triggered && failureLedgerMatches && failureListPassed && failureChatPassed && failureStoresStable;
++      recordDashboardCase("dashboard-save-failure-400", failurePassed, { dashboardCommand: "hermes dashboard --host 127.0.0.1 --port 0 --no-open --isolated --skip-build", loopbackHost: "127.0.0.1", loopbackBoundPort: failureFlow.boundPort, routes: "POST start?profile=toy; GET poll/<session_id>?profile=toy", portObserved: failureFlow.portObserved, startStatus: failureFlow.startStatus, startSessionPresent: failureFlow.startSessionPresent, pollStatus: failureFlow.pollStatus, sanitizedFailure: failureFlow.sanitizedFailure, responseHygiene: failureFlow.responseHygiene, serverPid: failureFlow.result?.processIdentity.pid ?? null, serverPidMatches: failureIdentity.pidMatches, serverParentPidMatches: failureIdentity.parentPidMatches, serverUid: failureFlow.result?.processIdentity.uid ?? null, serverUidMatches: failureIdentity.uidMatches, serverGid: failureFlow.result?.processIdentity.gid ?? null, serverGidMatches: failureIdentity.gidMatches, osFaultId: "profile-auth-atomic-replace-eio", faultPhase: "dashboard-save-failure-400", storageFaultTriggered: failureFlow.result?.observations.storage_fault_triggered ?? null, httpLedger: failureFlow.result?.http_ledger ?? null, denials: failureFlow.result?.observations.network_denials.length ?? null, serverExitCode: failureFlow.result?.exit_code ?? null, serverSignal: failureFlow.server?.signal ?? null, stdoutDigest: failureFlow.server ? digest(failureFlow.server.stdout) : null, stderrDigest: failureFlow.server ? digest(failureFlow.server.stderr) : null, authListEmpty: failureListPassed, negativeChatNoAcceptedEffects: failureChatPassed, authListDigest: listAfterFault?.stdoutDigest ?? null, negativeChatDigest: chatAfterFault?.stdoutDigest ?? null, commandDigest: failureFlow.commandDigest }, { rootAuth: [failureBefore.rootAuth.digest, failureAfterUse.rootAuth.digest], rootEnvUnchanged: JSON.stringify(failureBefore.rootEnv) === JSON.stringify(failureAfterUse.rootEnv), successAuth: [failureBefore.successAuth.digest, failureAfterUse.successAuth.digest], toyAuth: [failureBefore.toyAuth.digest, failureAfterUse.toyAuth.digest] });
++      return dashboardChecks;
++    }
+     let profileAuthAfterAdd: { exists: boolean; digest: string | null } | null = null;
+     let previousRootAuth = storesBefore.rootAuth;
+     let profileSiblingRootBaseline: { rootAuth: FixtureStoreDigest; rootEnv: FixtureStoreDigest } | null = null;
+diff --git a/packages/hermes/src/auth-probe.ts b/packages/hermes/src/auth-probe.ts
+index b0b52b1..50b851e 100644
+--- a/packages/hermes/src/auth-probe.ts
++++ b/packages/hermes/src/auth-probe.ts
+@@ -16,8 +16,14 @@ export const HermesAuthProbe = {
+   async run(input: RegisteredProbeInputV1, context: OpsControlContextV1): Promise<Result<RegisteredProbeOperationV1>> {
+     const started = process.hrtime.bigint();
+     const invalid: Result<RegisteredProbeOperationV1> = { ok: false, error: { module: "ops", code: "INVALID_INPUT", message: opsErrorMessages.INVALID_INPUT, retryable: false } };
+-    const unfilteredAuth = ["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-86", "AT-hermes-config-87", "AT-hermes-config-88", "AT-hermes-config-89"].includes(input.probeId) && input.caseId === undefined;
+-    if (!registeredProbeInputSchema.safeParse(input).success || (!unfilteredAuth && input.caseId !== "native-auth-cli") || !["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-86", "AT-hermes-config-87", "AT-hermes-config-88", "AT-hermes-config-89", "AT-hermes-config-78", "AT-ops-55"].includes(input.probeId)) return Promise.resolve(invalid);
++    const unfilteredAuth = ["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-86", "AT-hermes-config-87", "AT-hermes-config-88", "AT-hermes-config-89", "AT-hermes-config-90"].includes(input.probeId) && input.caseId === undefined;
++    if (!registeredProbeInputSchema.safeParse(input).success || (!unfilteredAuth && input.caseId !== "native-auth-cli") || !["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-86", "AT-hermes-config-87", "AT-hermes-config-88", "AT-hermes-config-89", "AT-hermes-config-90", "AT-hermes-config-78", "AT-ops-55"].includes(input.probeId)) return Promise.resolve(invalid);
++    if (input.probeId === "AT-hermes-config-90") {
++      const manifest = registeredCliAcceptanceManifestInventory.find(entry => entry.id === input.probeId);
++      const mandatoryCases = ["dashboard-profile-success", "dashboard-fresh-profile-use", "dashboard-save-failure-400"].map(id => ({ id, publicOperation: "HermesAuthProbe.run", phase: id }));
++      const faultControls = [{ id: "profile-auth-atomic-replace-eio", seam: "os", affectedPhases: ["dashboard-save-failure-400"] }];
++      if (!manifest || manifest.owner !== "hermes" || manifest.scenarioId !== "auth.dashboard-scope" || manifest.kind !== "behavioral" || JSON.stringify(manifest.mandatoryCases) !== JSON.stringify(mandatoryCases) || JSON.stringify(manifest.faultControls) !== JSON.stringify(faultControls)) return Promise.resolve({ ok: false, error: { module: "ops", code: "ATTESTATION_INVALID", message: opsErrorMessages.ATTESTATION_INVALID, retryable: false } });
++    }
+     if (input.probeId === "AT-hermes-config-86") {
+       const manifest = registeredCliAcceptanceManifestInventory.find(entry => entry.id === input.probeId);
+       const cases = ["root-add-one", "root-add-two", "root-readback-one", "root-readback-two", "profile-add-one", "profile-add-two", "profile-add-new", "profile-readback-one", "profile-readback-two", "profile-readback-new", "profile-priority-one", "profile-use-one", "profile-priority-two", "profile-use-two", "profile-priority-new", "profile-use-new"];
+@@ -97,6 +103,7 @@ export const HermesAuthProbe = {
+       if (publicHelpObserved && fixtureBudgetMs > 0 && input.probeId === "AT-hermes-config-86") checks.push(...await runHermesAuthFixture(interpreter, home, hermesHome, fixtureBudgetMs, "add", "profile-siblings"));
+       if (publicHelpObserved && fixtureBudgetMs > 0 && input.probeId === "AT-hermes-config-88") checks.push(...await runHermesAuthFixture(interpreter, home, hermesHome, fixtureBudgetMs, "add", "borrowed-root"));
+       if (publicHelpObserved && fixtureBudgetMs > 0 && input.probeId === "AT-hermes-config-89") checks.push(...await runHermesAuthFixture(interpreter, home, hermesHome, fixtureBudgetMs, "add", "mixed-lineage"));
++      if (publicHelpObserved && fixtureBudgetMs > 0 && input.probeId === "AT-hermes-config-90") checks.push(...await runHermesAuthFixture(interpreter, home, hermesHome, fixtureBudgetMs, "add", "dashboard-scope"));
+       if (publicHelpObserved && fixtureBudgetMs > 0 && input.probeId === "AT-hermes-config-87") checks.push(...await runHermesAuthFixture(interpreter, home, hermesHome, fixtureBudgetMs, "concurrent-refresh-add"));
+       if (publicHelpObserved && fixtureBudgetMs > 0 && ["AT-hermes-config-78", "AT-ops-55"].includes(input.probeId)) checks.push(...await runHermesAuthFixture(interpreter, home, hermesHome, fixtureBudgetMs, "siwc-unbound"));
+       if (publicHelpObserved && input.probeId === "AT-hermes-config-84") {
+diff --git a/packages/hermes/src/model-route-probe.ts b/packages/hermes/src/model-route-probe.ts
+index 709b3d8..6721bc6 100644
+--- a/packages/hermes/src/model-route-probe.ts
++++ b/packages/hermes/src/model-route-probe.ts
+@@ -263,30 +263,51 @@ const attentionProbe = async (input: RegisteredProbeInputV1, context: OpsControl
+ };
+ 
+ const componentReceiptProbe = async (input: RegisteredProbeInputV1, context: OpsControlContextV1): Promise<Result<RegisteredProbeOperationV1>> => {
+-  const cases = ["missing-decision", "missing-primary-evidence", "unsupported-alternatives", "unsupported-selection", "missing-reliability", "missing-validation", "missing-acceptance-link", "unrelated-acceptance-link", "unresolved-selected-assumption", "ordinary-luna-receipt", "missing-route-observation", "wrong-observed-model", "wrong-observed-reasoning", "wrong-observed-tier", "missing-research-skill", "wrong-skill-hash", "complete-authority-decision"];
++  const authorityCases = ["missing-decision", "missing-primary-evidence", "unsupported-alternatives", "unsupported-selection", "missing-reliability", "missing-validation", "missing-acceptance-link", "unrelated-acceptance-link", "unresolved-selected-assumption", "ordinary-luna-receipt", "missing-route-observation", "wrong-observed-model", "wrong-observed-reasoning", "wrong-observed-tier", "missing-research-skill", "wrong-skill-hash", "complete-authority-decision"];
++  const opsCases = ["outside-selected-with-evidence", "outside-without-primary-support", "outside-route-mismatch", "mapped-requirement-removed"];
++  const isOps = input.probeId === "AT-ops-44";
++  const cases = isOps ? opsCases : authorityCases;
+   const manifest = registeredCliAcceptanceManifestInventory.find(entry => entry.id === input.probeId);
+-  if (input.probeId !== "AT-authority-60" || !manifest || manifest.scenarioId !== "research.component-receipts" || JSON.stringify(manifest.mandatoryCases.map(entry => entry.id)) !== JSON.stringify(cases)) return { ok: false, error: { module: "ops", code: "ATTESTATION_INVALID", message: opsErrorMessages.ATTESTATION_INVALID, retryable: false } };
++  if ((!isOps && input.probeId !== "AT-authority-60") || !manifest || manifest.owner !== "hermes" || manifest.scenarioId !== "research.component-receipts" || JSON.stringify(manifest.mandatoryCases.map(entry => entry.id)) !== JSON.stringify(cases)) return { ok: false, error: { module: "ops", code: "ATTESTATION_INVALID", message: opsErrorMessages.ATTESTATION_INVALID, retryable: false } };
+   const baseline = EngineeringControl.checkResearch({ release: "R0" }, context);
+   if (!baseline.ok) return baseline;
+-  const component = baseline.data.components.find(entry => entry.id === "M03");
+-  const archive = baseline.data.reports.find(entry => entry.key === "CJ" && entry.originalDigest !== null);
+-  const required = baseline.data.componentDecisions.find(entry => entry.componentId === "M03");
+-  if (!component || !archive?.originalDigest || !required || required.comparisonDigest !== null || !component.reportKeys.includes(archive.key)) return { ok: false, error: { module: "ops", code: "ARTIFACT_MISMATCH", message: opsErrorMessages.ARTIFACT_MISMATCH, retryable: false } };
+-  const routeFaults: Readonly<Record<string, string>> = { "missing-route-observation": "research-route-missing", "wrong-observed-model": "research-route-luna", "wrong-observed-reasoning": "research-route-wrong-effort", "wrong-observed-tier": "research-route-wrong-tier", "missing-research-skill": "research-skill-missing", "wrong-skill-hash": "research-skill-wrong-bytes" };
++  const componentId = isOps ? "A14" : "M03";
++  const component = baseline.data.components.find(entry => entry.id === componentId);
++  const archive = baseline.data.reports.find(entry => (isOps ? component?.reportKeys.includes(entry.key) === true : entry.key === "CJ") && entry.originalDigest !== null);
++  const required = baseline.data.componentDecisions.find(entry => entry.componentId === componentId);
++  const removedRequirementId = isOps ? required?.missingRequirementIds[0] : undefined;
++  if (!component || !archive?.originalDigest || !required || required.comparisonDigest !== null || !component.reportKeys.includes(archive.key) || isOps && !removedRequirementId) return { ok: false, error: { module: "ops", code: "ARTIFACT_MISMATCH", message: opsErrorMessages.ARTIFACT_MISMATCH, retryable: false } };
++  const opsPin = isOps ? researchSkillPinSchema.parse(JSON.parse(readFileSync(join(trustedCheckoutRoot(), "behavior/research-skill.json"), "utf8"))) : null;
++  const routeFaults: Readonly<Record<string, string>> = isOps
++    ? { "outside-route-mismatch": "research-route-luna" }
++    : { "missing-route-observation": "research-route-missing", "wrong-observed-model": "research-route-luna", "wrong-observed-reasoning": "research-route-wrong-effort", "wrong-observed-tier": "research-route-wrong-tier", "missing-research-skill": "research-skill-missing", "wrong-skill-hash": "research-skill-wrong-bytes" };
+   const expectedCodes: Readonly<Record<string, string>> = { "missing-decision": "DECISION_MISSING", "missing-primary-evidence": "PRIMARY_EVIDENCE_MISSING", "unsupported-alternatives": "REQUIRED_OPTIONS_MISSING", "unsupported-selection": "CHOICE_UNSUPPORTED", "missing-reliability": "TRADEOFFS_MISSING", "missing-validation": "VALIDATION_ID_MISSING", "missing-acceptance-link": "ACCEPTANCE_LINK_MISSING", "unrelated-acceptance-link": "ACCEPTANCE_LINK_MISSING", "unresolved-selected-assumption": "SELECTED_FACT_UNRESOLVED", "ordinary-luna-receipt": "VALIDATION_ID_MISSING", "missing-route-observation": "VALIDATION_ID_MISSING", "wrong-observed-model": "VALIDATION_ID_MISSING", "wrong-observed-reasoning": "VALIDATION_ID_MISSING", "wrong-observed-tier": "VALIDATION_ID_MISSING", "missing-research-skill": "VALIDATION_ID_MISSING", "wrong-skill-hash": "VALIDATION_ID_MISSING" };
++  const opsExpectedCodes: Readonly<Record<string, string>> = { "outside-without-primary-support": "OUTSIDE_OPTION_MISSING", "outside-route-mismatch": "VALIDATION_ID_MISSING", "mapped-requirement-removed": "MAPPED_REQUIREMENTS_MISSING" };
++  const objective = isOps
++    ? "Compare only the seeded A14 backup-tool options and primary evidence; preserve the Mac as authoritative application host and produce no live research or adoption."
++    : "Compare only seeded M03 Authority adapter options and primary evidence; preserve protected admission and perform no live effects.";
++  const opsToolNames: Readonly<Record<string, string>> = { "backblaze-b2": "Backblaze B2", "external-disk": "External disk", outside: "Seeded outside backup option" };
++  const opsResources = "Selected fixture tool runs on the existing Mac; the Mac remains the authoritative application host; this option does not add an application host.";
+   const checks: CheckViewV1[] = [];
+   for (const caseId of cases) {
+-    const purpose = caseId === "ordinary-luna-receipt" ? "implementation" : "research";
+-    const fixture = await delegationFixture(routeFaults[caseId] ?? "research-route-observed", purpose, context, "Compare only seeded M03 Authority adapter options and primary evidence; preserve protected admission and perform no live effects.");
++    const purpose = !isOps && caseId === "ordinary-luna-receipt" ? "implementation" : "research";
++    const fixture = await delegationFixture(routeFaults[caseId] ?? "research-route-observed", purpose, context, objective);
+     if (!fixture.result.ok) return fixture.result;
+-    const ids = ["protected-adapter", "supported-vendor-sdk", "outside"];
++    const ids = isOps ? ["backblaze-b2", "external-disk", "outside"] : ["protected-adapter", "supported-vendor-sdk", "outside"];
++    const acceptanceId = input.probeId;
+     const report = researchComponentComparisonV3Schema.parse({ scope: "required-research-component", componentId: component.id, executionReceipt: fixture.result.data,
+       mappedRequirements: required.missingRequirementIds,
+-      options: ids.map(id => ({ id, tool: id, example: id === "outside" ? null : id, viable: true, support: "proven", primaryEvidenceIds: component.reportKeys, reliability: "Seeded primary report distinguishes safe read retries from uncertain writes and readback.", maintenance: "Pin and maintain the typed adapter before live admission.", resources: "Use the shared local store and measured protected process budget." })),
+-      evidence: component.reportKeys.map(id => ({ id, url: "https://primary.example.test/authority/" + id, publisher: "Seeded primary Authority report", kind: "primary", supportedOptionIds: ids })),
+-      selectedOptionId: "protected-adapter", unresolvedFacts: [], acceptanceIds: ["AT-authority-60"], validationPlan: "Validate positive, refusal and recovery cases in the owned fixture before dependent live admission.", releaseGate: component.releaseGate,
+-      validations: [{ id: "G0:R0:" + component.id, support: "proven", sourceIds: component.reportKeys, testIds: ["AT-authority-60"] }]
++      options: ids.map(id => ({ id, tool: isOps ? opsToolNames[id] ?? id : id, example: id === "outside" ? null : id, viable: true, support: "proven", primaryEvidenceIds: component.reportKeys, reliability: isOps ? id === "outside" ? "Seeded A14 evidence makes this suitable option the strongest of the compared choices for the fixture's retention and restore conditions." : "Seeded A14 evidence records the named option's reliability and its specific limits for the fixture's retention and restore conditions." : "Seeded primary report distinguishes safe read retries from uncertain writes and readback.", maintenance: isOps ? "Preserve the existing Mac data authority, current cost constraint and tested restore boundary." : "Pin and maintain the typed adapter before live admission.", resources: isOps ? opsResources : "Use the shared local store and measured protected process budget." })),
++      evidence: component.reportKeys.map(id => ({ id, url: "https://primary.example.test/" + (isOps ? "ops/" : "authority/") + id, publisher: isOps ? "Seeded primary Ops report fixture" : "Seeded primary Authority report", kind: "primary", supportedOptionIds: ids })),
++      selectedOptionId: isOps ? "outside" : "protected-adapter", unresolvedFacts: [], acceptanceIds: [acceptanceId], validationPlan: isOps ? "Compare the seeded named and outside A14 options under the current requirement and host constraints; verify evidence, route and restore rationale before any real research or adoption." : "Validate positive, refusal and recovery cases in the owned fixture before dependent live admission.", releaseGate: component.releaseGate,
++      validations: [{ id: "G0:R0:" + component.id, support: "proven", sourceIds: component.reportKeys, testIds: [acceptanceId] }]
+     });
++    if (isOps && caseId === "outside-without-primary-support") {
++      const outside = report.options.find(option => option.id === "outside");
++      if (!outside) return { ok: false, error: { module: "ops", code: "ARTIFACT_MISMATCH", message: opsErrorMessages.ARTIFACT_MISMATCH, retryable: false } };
++      outside.primaryEvidenceIds = [];
++    }
++    if (isOps && caseId === "mapped-requirement-removed" && removedRequirementId) report.mappedRequirements = report.mappedRequirements.filter(id => id !== removedRequirementId);
+     if (caseId === "missing-primary-evidence") report.evidence = [];
+     if (caseId === "unsupported-alternatives") for (const option of report.options) if (option.id !== report.selectedOptionId) option.support = "unsupported";
+     if (caseId === "unsupported-selection") report.selectedOptionId = "uncompared";
+@@ -295,20 +316,34 @@ const componentReceiptProbe = async (input: RegisteredProbeInputV1, context: Ops
+     if (caseId === "missing-acceptance-link") report.acceptanceIds = [];
+     if (caseId === "unrelated-acceptance-link") { report.acceptanceIds = ["AT-attention-66"]; for (const validation of report.validations) validation.testIds = report.acceptanceIds; }
+     if (caseId === "unresolved-selected-assumption") report.unresolvedFacts = [{ optionId: report.selectedOptionId, fact: "Selected capability has not been established." }];
+-    const markdown = "# Seeded external Authority decision\n\n" + (caseId === "missing-decision" ? "No decision supplied.\n" : "```ResearchComponentComparisonV3\n" + JSON.stringify(report) + "\n```\n");
++    const markdown = "# Seeded external " + (isOps ? "Ops" : "Authority") + " decision\n\n" + (caseId === "missing-decision" ? "No decision supplied.\n" : "```ResearchComponentComparisonV3\n" + JSON.stringify(report) + "\n```\n");
+     const inspection = EngineeringControl.checkResearch({ release: "R0" }, context, [{ reportKey: archive.key, originalDigest: archive.originalDigest, contentDigest: digest(markdown), markdown }]);
+     if (!inspection.ok) return inspection;
+     const result = inspection.data.componentDecisions.find(entry => entry.componentId === component.id);
+     const bound = inspection.data.reports.find(entry => entry.key === archive.key);
+     if (!result || !bound) return { ok: false, error: { module: "ops", code: "ARTIFACT_MISMATCH", message: opsErrorMessages.ARTIFACT_MISMATCH, retryable: false } };
+-    const code = expectedCodes[caseId];
+-    const missingId = caseId.includes("skill") ? "SKILL:R0:M03" : caseId === "ordinary-luna-receipt" || caseId.includes("route") || caseId.startsWith("wrong-observed-") ? "ROUTE:R0:M03" : null;
++    const code = isOps ? opsExpectedCodes[caseId] : expectedCodes[caseId];
++    const missingId = isOps ? caseId === "outside-route-mismatch" ? "ROUTE:R0:A14" : null : caseId.includes("skill") ? "SKILL:R0:M03" : caseId === "ordinary-luna-receipt" || caseId.includes("route") || caseId.startsWith("wrong-observed-") ? "ROUTE:R0:M03" : null;
+     const exported = fixture.sends === 0 || fixture.exportReadback && fixture.nativeArgumentsMatched;
+-    const passed = exported && bound.path === archive.path && bound.originalDigest === archive.originalDigest && bound.digest === digest(markdown) && bound.origin === "seeded_document" && result.comparisonDigest === (caseId === "missing-decision" ? null : digest(JSON.stringify(report))) && (code === undefined
++    const outside = report.options.find(option => option.id === "outside");
++    const routeReceipt = report.executionReceipt;
++    const requirementExact = JSON.stringify([...report.mappedRequirements].sort()) === JSON.stringify([...required.missingRequirementIds].sort());
++    const requirementRemoved = removedRequirementId !== undefined && !report.mappedRequirements.includes(removedRequirementId) && result.missingRequirementIds.length === 1 && result.missingRequirementIds[0] === removedRequirementId;
++    const routeObserved = isOps && opsPin !== null && routeReceipt?.state === "observed" && routeReceipt?.purpose === "research" && routeReceipt.invocation?.requested.role === "research" && routeReceipt.invocation?.requested.arm === "original" && routeReceipt.invocation?.requested.settings.model === "gpt-6.1-sol" && routeReceipt.invocation?.requested.settings.effort === "medium" && routeReceipt.invocation?.requested.settings.serviceTier === "priority" && routeReceipt.invocation?.observed?.model === "gpt-6.1-sol" && routeReceipt.invocation?.observed?.effort === "medium" && routeReceipt.invocation?.observed?.serviceTier === "priority" && routeReceipt.skill?.repository === opsPin.repository && routeReceipt.skill?.sourcePath === opsPin.sourcePath && routeReceipt.skill?.sourceCommit === opsPin.sourceCommit && routeReceipt.skill?.contentDigest === opsPin.contentDigest && routeReceipt.skill?.loadedDigest === opsPin.contentDigest && routeReceipt.skill?.semanticVersion === opsPin.semanticVersion && routeReceipt.skill?.resources.length === opsPin.resources.length && opsPin.resources.every(resource => routeReceipt.skill?.resources.some(loaded => loaded.path === resource.path && loaded.digest === resource.digest));
++    const validationLinksMatch = report.validations.some(validation => validation.id === "G0:R0:A14" && validation.support === "proven" && JSON.stringify([...validation.sourceIds].sort()) === JSON.stringify([...component.reportKeys].sort()) && JSON.stringify([...validation.testIds].sort()) === JSON.stringify(["AT-ops-44"]));
++    const opsExpected = caseId === "outside-selected-with-evidence"
++      ? result.state === "PASS" && result.findings.length === 0 && result.selectedOptionId === "outside" && outside !== undefined && outside.example === null && outside.viable && outside.support === "proven" && outside.primaryEvidenceIds.length > 0 && ids.filter(id => id !== "outside").every(id => report.options.some(option => option.id === id && option.example !== null)) && requirementExact && routeObserved && outside.resources === opsResources && report.releaseGate === component.releaseGate && report.acceptanceIds.includes("AT-ops-44") && validationLinksMatch
++      : result.state === "BLOCKED" && result.findings.some(finding => finding === (code ?? "OUTSIDE_OPTION_MISSING")) && (caseId !== "outside-without-primary-support" || result.findings.includes("PRIMARY_EVIDENCE_MISSING")) && (missingId === null || result.missingValidationIds.includes(missingId)) && (caseId !== "mapped-requirement-removed" || requirementRemoved) && (caseId !== "outside-route-mismatch" || routeReceipt?.state === "refused");
++    const authorityExpected = result.comparisonDigest === (caseId === "missing-decision" ? null : digest(JSON.stringify(report))) && (code === undefined
+       ? result.state === "PASS" && result.findings.length === 0 && result.selectedOptionId === report.selectedOptionId
+       : result.state === "BLOCKED" && result.findings.some(finding => finding === code) && (missingId === null || result.missingValidationIds.includes(missingId)));
+-    checks.push(checkViewSchema.parse({ id: "research.component-comparison", owner: "self-improvement", state: passed ? "PASS" : "FAIL", checkedAt: new Date().toISOString(), reasonCode: passed ? "AUTHORITY_RESEARCH_DIAGNOSTIC_PASS" : "AUTHORITY_RESEARCH_DIAGNOSTIC_FAIL", nextCommandId: "probe.show",
+-      prerequisite: JSON.stringify({ caseId, actualUid: process.getuid?.() ?? null, archive: { key: bound.key, originalDigest: bound.originalDigest, contentDigest: bound.digest, origin: bound.origin }, result, execution: { ownerReceiptProduced: true, externalCliSends: fixture.sends, exportsVerified: exported, receiptDigest: digest(JSON.stringify(report.executionReceipt)), observed: report.executionReceipt?.invocation?.observed ?? null, loadedDigest: report.executionReceipt?.skill?.loadedDigest ?? null, sourceCommit: report.executionReceipt?.skill?.sourceCommit ?? null, nativeExecutionVerified: false }, registerAdmission: inspection.data.admission, liveProviderSends: 0, wholeATComplete: false }),
++    const passed = exported && bound.path === archive.path && bound.originalDigest === archive.originalDigest && bound.digest === digest(markdown) && bound.origin === "seeded_document" && result.comparisonDigest === (caseId === "missing-decision" ? null : digest(JSON.stringify(report))) && (isOps ? opsExpected : authorityExpected);
++    const execution = { ownerReceiptProduced: true, externalCliSends: fixture.sends, exportsVerified: exported, receiptDigest: digest(JSON.stringify(report.executionReceipt)), observed: report.executionReceipt?.invocation?.observed ?? null, loadedDigest: report.executionReceipt?.skill?.loadedDigest ?? null, sourceCommit: report.executionReceipt?.skill?.sourceCommit ?? null, nativeExecutionVerified: false };
++    const details = isOps
++      ? { caseId, fixtureOnly: true, actualUid: process.getuid?.() ?? null, archive: { key: bound.key, originalDigest: bound.originalDigest, contentDigest: bound.digest, origin: bound.origin }, result, execution, hostClaimIsFixtureTextOnly: true, registerAdmission: inspection.data.admission, liveProviderSends: 0, acceptanceComplete: false, wholeATComplete: false }
++      : { caseId, actualUid: process.getuid?.() ?? null, archive: { key: bound.key, originalDigest: bound.originalDigest, contentDigest: bound.digest, origin: bound.origin }, result, execution, registerAdmission: inspection.data.admission, liveProviderSends: 0, wholeATComplete: false };
++    checks.push(checkViewSchema.parse({ id: "research.component-comparison", owner: "self-improvement", state: passed ? "PASS" : "FAIL", checkedAt: new Date().toISOString(), reasonCode: passed ? isOps ? "OPS_OUTSIDE_RESEARCH_DIAGNOSTIC_PASS" : "AUTHORITY_RESEARCH_DIAGNOSTIC_PASS" : isOps ? "OPS_OUTSIDE_RESEARCH_DIAGNOSTIC_FAIL" : "AUTHORITY_RESEARCH_DIAGNOSTIC_FAIL", nextCommandId: "probe.show",
++      prerequisite: JSON.stringify(details),
+       links: { recordRefs: [], observations: [], artifactDigests: [digest(markdown), digest(readFileSync(new URL("./model-route-probe.js", import.meta.url))), digest(readFileSync(new URL("./model-route.js", import.meta.url)))] }
+     }));
+   }
+diff --git a/patches/hermes-auth-fixture.patch b/patches/hermes-auth-fixture.patch
+index 1b6764f..00e0421 100644
+--- a/patches/hermes-auth-fixture.patch
++++ b/patches/hermes-auth-fixture.patch
+@@ -1,6 +1,6 @@
+ --- /dev/null
+ +++ b/tests/fixtures/toy_auth_httpx_fixture.py
+-@@ -0,0 +1,767 @@
++@@ -0,0 +1,800 @@
+ +from __future__ import annotations
+ +
+ +import base64
+@@ -26,7 +26,7 @@
+ +_TOKEN_RESPONSE_ISSUED = False
+ +_CONCURRENCY_BARRIER_STATE = "not-used"
+ +_REFRESH_EFFECTS: list[dict[str, str]] = []
+-+_ADD_PHASES = {"add", "add-enospc", "add-replace-fault"}
+++_ADD_PHASES = {"add", "add-enospc", "add-replace-fault", "dashboard-profile-success", "dashboard-save-failure-400"}
+ +_DENIALS: list[str] = []
+ +_COUNTS = {
+ +    "device_code_requests": 0,
+@@ -467,7 +467,16 @@
+ +
+ +def _storage_replace_target(destination: object) -> bool:
+ +    home = os.environ.get("HERMES_HOME")
+-+    return _PHASE == "add" and _TOKEN_RESPONSE_ISSUED and isinstance(home, str) and bool(home) and os.path.abspath(os.fsdecode(os.fspath(destination))) == os.path.abspath(os.path.join(home, "auth.json"))
+++    if not isinstance(home, str) or not home or not _TOKEN_RESPONSE_ISSUED:
+++        return False
+++    if _PHASE == "add":
+++        target = os.path.join(home, "auth.json")
+++    elif _PHASE == "dashboard-save-failure-400":
+++        profile = os.environ.get("TOY_AUTH_DASHBOARD_PROFILE", "")
+++        target = os.path.join(home, "profiles", profile, "auth.json")
+++    else:
+++        return False
+++    return os.path.abspath(os.fsdecode(os.fspath(destination))) == os.path.abspath(target)
+ +
+ +
+ +def _hold_storage_cut(cut: str) -> None:
+@@ -498,15 +507,18 @@
+ +    global _SOCKET_ORIGIN, _STORAGE_FAULT_TRIGGERED
+ +    if event == "os.rename" and os.environ.get("TOY_AUTH_STORAGE_CUT") == "before-replace" and len(args) > 1 and _storage_replace_target(args[1]):
+ +        _hold_storage_cut("before-replace")
+-+    if event == "os.rename" and _PHASE in {"add-enospc", "add-replace-fault"} and _TOKEN_RESPONSE_ISSUED and not _STORAGE_FAULT_TRIGGERED and len(args) > 1:
+++    if event == "os.rename" and _PHASE in {"add-enospc", "add-replace-fault", "dashboard-save-failure-400"} and _TOKEN_RESPONSE_ISSUED and not _STORAGE_FAULT_TRIGGERED and len(args) > 1:
+ +        home = os.environ.get("HERMES_HOME")
+ +        if isinstance(home, str) and home:
+ +            destination = os.path.abspath(os.fsdecode(os.fspath(args[1])))
+-+            auth_path = os.path.abspath(os.path.join(home, "auth.json"))
+++            profile = os.environ.get("TOY_AUTH_DASHBOARD_PROFILE", "")
+++            auth_path = os.path.abspath(os.path.join(home, "profiles", profile, "auth.json")) if _PHASE == "dashboard-save-failure-400" else os.path.abspath(os.path.join(home, "auth.json"))
+ +            if destination == auth_path:
+ +                _STORAGE_FAULT_TRIGGERED = True
+ +                code = errno.ENOSPC if _PHASE == "add-enospc" else errno.EIO
+ +                raise OSError(code, "fixture storage fault")
+++    if event == "socket.getaddrinfo" and _PHASE in {"dashboard-profile-success", "dashboard-save-failure-400"} and args[:2] == ("127.0.0.1", 0):
+++        return
+ +    if event in {"socket.connect", "socket.getaddrinfo", "socket.gethostbyname"}:
+ +        _COUNTS["blocked_socket_events"] += 1
+ +        frame = sys._getframe(1)
+@@ -536,7 +548,8 @@
+ +
+ +
+ +def _public_argv(operation: str) -> list[str]:
+-+    prefix = ["hermes"] if os.environ.get("TOY_AUTH_STORE_SCOPE") == "root" else ["hermes", "--profile", "toy"]
+++    profile = os.environ.get("TOY_AUTH_PROFILE", "toy")
+++    prefix = ["hermes"] if os.environ.get("TOY_AUTH_STORE_SCOPE") == "root" else ["hermes", "--profile", profile]
+ +    if operation == "add":
+ +        actor = os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR", "")
+ +        label = ["--label", _fixture_label()] if actor == "auth-add" or actor.startswith("sibling-") or actor in _MIXED_LINEAGE_LABELS else []
+@@ -711,7 +724,7 @@
+ +
+ +def main() -> int:
+ +    global _OPERATION, _PHASE, _CONCURRENCY_BARRIER_STATE
+-+    if len(sys.argv) != 2 or sys.argv[1] not in {"add", "list", "chat", "chat-expired", "chat-reloaded", "add-enospc", "add-replace-fault", "list-after-fault", "chat-after-fault", "siwc-unbound", "priority-added", "priority-restored"}:
+++    if len(sys.argv) != 2 or sys.argv[1] not in {"add", "list", "chat", "chat-expired", "chat-reloaded", "add-enospc", "add-replace-fault", "list-after-fault", "chat-after-fault", "siwc-unbound", "priority-added", "priority-restored", "dashboard-server"}:
+ +        print(
+ +            json.dumps(
+ +                {
+@@ -724,7 +737,8 @@
+ +            )
+ +        )
+ +        return 2
+-+    _PHASE = sys.argv[1]
+++    _PHASE = os.environ.get("TOY_AUTH_DASHBOARD_PHASE", "") if sys.argv[1] == "dashboard-server" else sys.argv[1]
+++    dashboard_server = sys.argv[1] == "dashboard-server"
+ +    _OPERATION = {
+ +        "add-enospc": "add",
+ +        "add-replace-fault": "add",
+@@ -734,6 +748,8 @@
+ +        "priority-added": "priority",
+ +        "priority-restored": "priority",
+ +    }.get(_PHASE, "chat" if _PHASE.startswith("chat") else _PHASE)
+++    if dashboard_server:
+++        _OPERATION = "dashboard"
+ +    if _PHASE == "siwc-unbound":
+ +        os.environ["OPENAI_API_KEY"] = _PAID_KEY
+ +    if _PHASE == "chat-expired":
+@@ -745,6 +761,23 @@
+ +    httpx.AsyncClient.send = _async_send
+ +    sys.addaudithook(_deny_socket)
+ +    _install_storage_replace_cut()
+++    if dashboard_server:
+++        saved_argv = sys.argv
+++        server_exit = 0
+++        try:
+++            sys.argv = ["hermes", "dashboard", "--host", "127.0.0.1", "--port", "0", "--no-open", "--isolated", "--skip-build"]
+++            from hermes_cli.main import main as hermes_main
+++
+++            hermes_main()
+++        except SystemExit as exc:
+++            server_exit = exc.code if isinstance(exc.code, int) else 1
+++        except Exception:
+++            server_exit = 1
+++        finally:
+++            sys.argv = saved_argv
+++            result = {"schema": "toy.hermes-httpx-auth-fixture.v1", "operation": "dashboard", "public_argv": ["hermes", "dashboard", "--host", "127.0.0.1", "--port", "0", "--no-open", "--isolated", "--skip-build"], "exit_code": server_exit, "markers": [], "processIdentity": {"pid": os.getpid(), "parentPid": os.getppid(), "uid": os.getuid(), "gid": os.getgid()}, "observations": {"provider": "openai-codex", "phase": _PHASE, "access_generation": None, "catalog_access_generation": None, "storage_fault_triggered": _STORAGE_FAULT_TRIGGERED, "token_hygiene": True, "success_claim_absent": _PHASE == "dashboard-save-failure-400", "fallback_attempted": False, "network_denials": list(_DENIALS), "socket_origin": _SOCKET_ORIGIN}, "http_ledger": dict(_COUNTS), "network_audit": "socket-audit-hook-installed"}
+++            print(json.dumps(result, sort_keys=True), flush=True)
+++        return server_exit
+ +    _hold_refresh_lock()
+ +    exit_code, stdout, stderr, failure = _run_cli(argv)
+ +    if os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR") == "auth-add":
+diff --git a/tests/registry.yaml b/tests/registry.yaml
+index a4b19d3..66dbf05 100644
+--- a/tests/registry.yaml
++++ b/tests/registry.yaml
+@@ -2717,5 +2717,135 @@
+       }
+     ],
+     "simUnavailableReason": "SIM cannot seed or reload copied OAuth ownership lineage or administrative auth-add. CLI drives the pinned public entries with fake external OAuth/model/clock and the fixed synthetic OS copy."
++  },
++  {
++    "id": "AT-ops-44",
++    "rung": "CLI",
++    "sourceAssertionHash": "7a7100f87f1e08f4c6aaa35582495f2984c39ba058b27c14962f0157c8f14804",
++    "commandId": "probe.run",
++    "scenarioId": "research.component-receipts",
++    "owner": "hermes",
++    "firstRelease": "R0",
++    "kind": "static_gate",
++    "mandatoryCases": [
++      {
++        "id": "outside-selected-with-evidence",
++        "publicOperation": "ModelRoute.delegationReceipt + EngineeringControl.checkResearch",
++        "phase": "outside-selected-with-evidence"
++      },
++      {
++        "id": "outside-without-primary-support",
++        "publicOperation": "EngineeringControl.checkResearch",
++        "phase": "outside-without-primary-support"
++      },
++      {
++        "id": "outside-route-mismatch",
++        "publicOperation": "ModelRoute.delegationReceipt + EngineeringControl.checkResearch",
++        "phase": "outside-route-mismatch"
++      },
++      {
++        "id": "mapped-requirement-removed",
++        "publicOperation": "EngineeringControl.checkResearch",
++        "phase": "mapped-requirement-removed"
++      }
++    ],
++    "trigger": "Compare the indexed A14 seeded named backup options and primary-supported outside option through the public research receipt and component gate; retain source-derived requirements and fixture Mac-host constraints.",
++    "faultControls": [
++      {
++        "id": "external-ops-comparison-report-faults",
++        "seam": "provider",
++        "affectedPhases": [
++          "outside-without-primary-support",
++          "mapped-requirement-removed"
++        ]
++      },
++      {
++        "id": "external-cli-research-model-mismatch",
++        "seam": "provider",
++        "affectedPhases": [
++          "outside-route-mismatch"
++        ]
++      }
++    ],
++    "observations": [
++      {
++        "id": "indexed-ops-selection-and-requirements",
++        "independentReader": "EngineeringControl.checkResearch: indexed A14 coverage, primary evidence and selection readback",
++        "caseIds": [
++          "outside-selected-with-evidence",
++          "outside-without-primary-support",
++          "outside-route-mismatch",
++          "mapped-requirement-removed"
++        ]
++      },
++      {
++        "id": "public-research-receipt-and-readback",
++        "independentReader": "ModelRoute.delegationReceipt: fake executor route/skill readback; toy probe.show: stored source-bound cases",
++        "caseIds": [
++          "outside-selected-with-evidence",
++          "outside-without-primary-support",
++          "outside-route-mismatch",
++          "mapped-requirement-removed"
++        ]
++      }
++    ],
++    "simUnavailableReason": "SIM cannot choose administrative pre-build comparison records. CLI invokes existing public owners with fixed external report and Codex executor/resource-reader fakes; native protected route and whole acceptance stay pending."
++  },
++  {
++    "id": "AT-hermes-config-90",
++    "rung": "CLI",
++    "sourceAssertionHash": "451a0ff28c92fc95629eaafd849b62631a258ef632518d9132c64fa09384c07d",
++    "commandId": "probe.run",
++    "scenarioId": "auth.dashboard-scope",
++    "owner": "hermes",
++    "firstRelease": "R0",
++    "kind": "behavioral",
++    "mandatoryCases": [
++      {
++        "id": "dashboard-profile-success",
++        "publicOperation": "HermesAuthProbe.run",
++        "phase": "dashboard-profile-success"
++      },
++      {
++        "id": "dashboard-fresh-profile-use",
++        "publicOperation": "HermesAuthProbe.run",
++        "phase": "dashboard-fresh-profile-use"
++      },
++      {
++        "id": "dashboard-save-failure-400",
++        "publicOperation": "HermesAuthProbe.run",
++        "phase": "dashboard-save-failure-400"
++      }
++    ],
++    "trigger": "Drive two isolated public dashboard profile OAuth flows, then fresh public auth-list/chat readbacks; inject an external OS atomic-replace EIO for the failing profile.",
++    "faultControls": [
++      {
++        "id": "profile-auth-atomic-replace-eio",
++        "seam": "os",
++        "affectedPhases": [
++          "dashboard-save-failure-400"
++        ]
++      }
++    ],
++    "observations": [
++      {
++        "id": "dashboard-scoped-persistence",
++        "independentReader": "HermesAuthProbe.run: owned child identity, public HTTP facts, opposite-store readbacks and provider ledger",
++        "caseIds": [
++          "dashboard-profile-success",
++          "dashboard-fresh-profile-use",
++          "dashboard-save-failure-400"
++        ]
++      },
++      {
++        "id": "fresh-public-auth-usability",
++        "independentReader": "Fresh pinned public auth-list and tools-disabled chat process receipts; stored toy probe.show data",
++        "caseIds": [
++          "dashboard-fresh-profile-use",
++          "dashboard-save-failure-400"
++        ]
++      }
++    ],
++    "simUnavailableReason": "SIM cannot choose administrative dashboard OAuth profile scopes or inject profile-owned atomic-save failures. CLI drives real pinned dashboard/public auth subprocesses through fake external OAuth/model and OS seams."
+   }
+ ]

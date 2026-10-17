@@ -1,0 +1,15 @@
+# ADR 0029: bounded backup capacity admission
+
+Status: minimal policy, local read and assigned CLI diagnostic subsets verified; full R0.09 device/account and restore acceptance pending.
+
+The existing Ops module owns `BackupCapacity.inspect()` and `BackupCapacity.evaluate(input)`. Inspect reads only fixed macOS filesystem capacity and external physical-disk metadata. It returns measured local bytes and finite unavailable states through `toy doctor --deep`; it never opens user files, credentials or repositories. Finding zero connected external disks cannot prove that no independent remote destination exists.
+
+Evaluate consumes canonical measured inventory, source-growth/dump/version/staging/prune/restore requirements and destination evidence. It forecasts using the larger short/long retained-byte growth rate. Unknown, future or evidence-free measurements cannot establish usable capacity. Internal snapshots never count as independent recovery. Missing destinations, insufficient no-spend capacity, absent escrow or restore proof leave disaster coverage failed or incomplete; no purchase, upload or deployed-RPO permission is issued.
+
+Ops refuses new staging when free internal space is at or below 10,000,000,000 bytes or the next write would cross it. The stricter below-10-GiB noncritical-capture restriction also applies. The decision directs Sources to pause low-priority blobs/backfills with explicit gap reasons, retain permitted data and reuse sealed partial sets before new staging. Actual Sources scheduling, durable backup state, repositories and remote lifecycle execution stay at their assigned cards; the R0 policy decision is not evidence that those effects ran.
+
+The existing registered `probe run/show` adapter admits the fixed `backup-capacity` case only for AT-ops-62, AT-lifestore-63 and AT-sources-216 in an owned ready R0 fake stack. Fixed external inventory/growth observations cover missing independent storage with an exceeded B2 allowance, unproved off-site capacity, outage, staging equality/crossing, realistic forecast overhead and a qualified-capacity control. Public probe readbacks bind current compiled policy/probe digests and remain incomplete whole AT reports. Actual account/destination capacity, harmless independent restore, source policy eligibility and protected identities remain required by BUILD-PLAN.
+
+No new module, service, command, protocol, dependency or backup ledger is introduced. TypeScript and generated Python/JSON contracts use the sole generator; Swift stays deferred to R3. Stop this bounded unit after its checks, within the recorded two-hour target.
+
+The source unit passes 24 fixed CLI checks with three exact persisted readbacks and clean teardown. The current real local read measures data-volume capacity; external metadata and actual independent remote/account capacity remain unavailable. Browser security explicitly denied the B2 entry request after user-declined domain access; no alternate access followed. Evidence is build/evidence/R0.09/capacity-fixture-verification.json. Full assigned account/device, actual Sources effects, restore and release prerequisites remain pending.

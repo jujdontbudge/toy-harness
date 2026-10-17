@@ -1,6 +1,6 @@
 --- /dev/null
 +++ b/tests/fixtures/toy_auth_httpx_fixture.py
-@@ -0,0 +1,1292 @@
+@@ -0,0 +1,1302 @@
 +from __future__ import annotations
 +
 +import base64
@@ -920,6 +920,8 @@
 +    if actor in _LIFECYCLE_LABELS:
 +        return _LIFECYCLE_LABELS[actor]
 +    if actor in _MIXED_LINEAGE_LABELS:
++        if _first_add_source() == "anthropic-pkce" and actor in {"mixed-root-readback", "mixed-copy-readback"}:
++            return "hermes_pkce"
 +        return _MIXED_LINEAGE_LABELS[actor]
 +    if actor.startswith("sibling-"):
 +        return "toy-fixture-" + actor
@@ -1136,9 +1138,17 @@
 +                    break
 +        observations["credential_count"] = count
 +        actor = os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR", "")
++        anthropic_readback_actor = _first_add_source() == "anthropic-pkce" and actor in {"mixed-root-readback", "mixed-copy-readback"}
++        displayed_rows = [
++            (line, fields[1])
++            for line in stdout.splitlines()
++            if anthropic_readback_actor and line.startswith("  #")
++            for fields in [line.split(maxsplit=2)]
++            if len(fields) == 3 and fields[0][1:].isdecimal()
++        ]
 +        if os.environ.get("TOY_AUTH_STORAGE_CONTEXT") == "1" or actor.startswith("sibling-") or actor in _MIXED_LINEAGE_LABELS or actor in _LIFECYCLE_LABELS:
-+            observations["target_label_present"] = _fixture_label() in stdout
-+        target_line = next((line for line in stdout.splitlines() if _LIFECYCLE_LABELS.get(actor, _MIXED_LINEAGE_LABELS.get(actor, _fixture_label())) in line), "")
++            observations["target_label_present"] = any(label == _fixture_label() for _, label in displayed_rows) if anthropic_readback_actor else _fixture_label() in stdout
++        target_line = next((line for line, label in displayed_rows if label == _fixture_label()), "") if anthropic_readback_actor else next((line for line in stdout.splitlines() if _LIFECYCLE_LABELS.get(actor, _MIXED_LINEAGE_LABELS.get(actor, _fixture_label())) in line), "")
 +        sibling_line = next((line for line in stdout.splitlines() if "toy-fixture-lifecycle-sibling" in line), "")
 +        if "rate-limited" in target_line.casefold():
 +            markers.append("AUTH_LIST_TARGET_RATE_LIMITED")

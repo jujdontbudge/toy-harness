@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "const": "namespace"
+    },
+    "name": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]{1,100}(?![\\s\\S])"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 65536
+    },
+    "tools": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "function"
+          },
+          "name": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]{1,100}(?![\\s\\S])"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 65536
+          },
+          "parameters": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "strict": {
+            "type": "boolean",
+            "const": true
+          }
+        },
+        "required": [
+          "type",
+          "name",
+          "description",
+          "parameters",
+          "strict"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "type",
+    "name",
+    "description",
+    "tools"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:ModelRouteNamespaceToolV1"
+}

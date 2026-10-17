@@ -1,0 +1,224 @@
+{
+  "schemaVersion": "toy.bootstrap-gate.v1",
+  "card": "R0.K1",
+  "attemptId": "2026-10-07T06-39-06-657Z-57e70ec2-a984-4a13-894a-7da97b25ca2c",
+  "generatedAt": "2026-10-07T06:39:14.838Z",
+  "verdict": "PASS",
+  "acceptanceComplete": false,
+  "pendingATs": [
+    "AT-hermes-config-101"
+  ],
+  "limitation": "Bootstrap compiler/import proof only; full CLI/generator/map assertion and independently protected filesystem identities remain pending.",
+  "digests": {
+    "architecture/modules.json": "570e921735ed76778864746ef954875cbac9431bf3862f70d38bf69533190b93",
+    "tsconfig.base.json": "b943304f54927c227fe1722743af742e7296e7e3af63b29c2d8dbe6fa065b1b8",
+    ".dependency-cruiser.cjs": "d62bbe60ae0f503e83734c938c4068077288cdf5ef39a44481bc0748345f7ed4",
+    "pyrightconfig.json": "b028b4bcd890bca1db4ba3fa1f2458e5a5780a64de0a221d6d7f9b8ca5610c57",
+    "pyproject.toml": "42ab3303f1125548926ec06f6b2b1ef0aa17574be4ab7735a8c7de88281758d4",
+    "package-lock.json": "cbac70e21ed9e9af625d57199aad9b4c33dd57a6c327676c4a1a8e0d697048e2",
+    "scripts/check-foundations.mjs": "4a16beef012d3ef85a83005c3b802385ce4b655321585c05797fd0168d5e8f99"
+  },
+  "results": [
+    {
+      "id": "valid-types",
+      "executable": "/Users/johansardar/.local/share/node/node-v24.21.0-darwin-arm64/bin/node",
+      "argv": [
+        "node_modules/typescript/bin/tsc",
+        "-b",
+        "--pretty",
+        "false"
+      ],
+      "exitCode": 0,
+      "passed": true,
+      "output": ""
+    },
+    {
+      "id": "valid-boundaries",
+      "executable": "/Users/johansardar/.local/share/node/node-v24.21.0-darwin-arm64/bin/node",
+      "argv": [
+        "node_modules/dependency-cruiser/bin/dependency-cruiser.mjs",
+        "--config",
+        ".dependency-cruiser.cjs",
+        "packages",
+        "cli",
+        "control"
+      ],
+      "exitCode": 0,
+      "passed": true,
+      "output": "\n✔ no dependency violations found (278 modules, 945 dependencies cruised)\n\n"
+    },
+    {
+      "id": "valid-pyright",
+      "executable": "/Users/johansardar/.local/share/node/node-v24.21.0-darwin-arm64/bin/node",
+      "argv": [
+        "node_modules/pyright/index.js"
+      ],
+      "exitCode": 0,
+      "passed": true,
+      "output": "0 errors, 0 warnings, 0 informations\n"
+    },
+    {
+      "id": "valid-ruff",
+      "executable": ".venv/bin/ruff",
+      "argv": [
+        "check",
+        "python"
+      ],
+      "exitCode": 0,
+      "passed": true,
+      "output": "All checks passed!\n"
+    },
+    {
+      "id": "valid-python-boundaries",
+      "executable": ".venv/bin/lint-imports",
+      "argv": [
+        "--no-cache"
+      ],
+      "exitCode": 0,
+      "passed": true,
+      "output": "\u001b[1m=============\u001b[0m\n\u001b[1mImport Linter\u001b[0m\n\u001b[1m=============\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[1m---------\u001b[0m\n\u001b[1mContracts\u001b[0m\n\u001b[1m---------\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[1mAnalyzed 16 files, 11 dependencies.\u001b[0m\n\u001b[1m-----------------------------------\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[22mHermes adapter cannot import protected controls \u001b[0m\u001b[32m\u001b[22mKEPT\u001b[0m\u001b[33m\u001b[22m\u001b[0m\u001b[22m\u001b[0m\n\u001b[22mProtected controls cannot depend on agent implementation \u001b[0m\u001b[32m\u001b[22mKEPT\u001b[0m\u001b[33m\u001b[22m\u001b[0m\u001b[22m\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[22mContracts: 2 kept, 0 broken.\u001b[0m\n"
+    },
+    {
+      "id": "private-import-denied",
+      "executable": "/Users/johansardar/.local/share/node/node-v24.21.0-darwin-arm64/bin/node",
+      "argv": [
+        "node_modules/dependency-cruiser/bin/dependency-cruiser.mjs",
+        "--config",
+        ".dependency-cruiser.cjs",
+        "packages",
+        "cli"
+      ],
+      "exitCode": 1,
+      "passed": true,
+      "output": "\n  error obligations-public-boundaries: packages/obligations/src/denial-fixture.ts → packages/sources/src/denial-fixture.ts\n\nx 1 dependency violations (1 errors, 0 warnings). 258 modules, 887 dependencies cruised.\n\n"
+    },
+    {
+      "id": "compiled-public-import-allowed",
+      "executable": "/Users/johansardar/.local/share/node/node-v24.21.0-darwin-arm64/bin/node",
+      "argv": [
+        "node_modules/dependency-cruiser/bin/dependency-cruiser.mjs",
+        "--config",
+        ".dependency-cruiser.cjs",
+        "packages",
+        "cli"
+      ],
+      "exitCode": 0,
+      "passed": true,
+      "output": "\n✔ no dependency violations found (257 modules, 888 dependencies cruised)\n\n"
+    },
+    {
+      "id": "contracts-private-import-denied",
+      "executable": "/Users/johansardar/.local/share/node/node-v24.21.0-darwin-arm64/bin/node",
+      "argv": [
+        "node_modules/dependency-cruiser/bin/dependency-cruiser.mjs",
+        "--config",
+        ".dependency-cruiser.cjs",
+        "packages",
+        "cli"
+      ],
+      "exitCode": 1,
+      "passed": true,
+      "output": "\n  error obligations-public-boundaries: packages/obligations/src/denial-fixture.ts → packages/contracts/src/denial-fixture.ts\n\nx 1 dependency violations (1 errors, 0 warnings). 258 modules, 887 dependencies cruised.\n\n"
+    },
+    {
+      "id": "tests-private-import-denied",
+      "executable": "/Users/johansardar/.local/share/node/node-v24.21.0-darwin-arm64/bin/node",
+      "argv": [
+        "node_modules/dependency-cruiser/bin/dependency-cruiser.mjs",
+        "--config",
+        ".dependency-cruiser.cjs",
+        "packages",
+        "cli",
+        "tests"
+      ],
+      "exitCode": 1,
+      "passed": true,
+      "output": "\n  error tests-public-only: tests/fixtures/denial-fixture.ts → packages/contracts/src/denial-fixture.ts\n\nx 1 dependency violations (1 errors, 0 warnings). 266 modules, 932 dependencies cruised.\n\n"
+    },
+    {
+      "id": "protected-import-denied",
+      "executable": "/Users/johansardar/.local/share/node/node-v24.21.0-darwin-arm64/bin/node",
+      "argv": [
+        "node_modules/dependency-cruiser/bin/dependency-cruiser.mjs",
+        "--config",
+        ".dependency-cruiser.cjs",
+        "packages",
+        "cli"
+      ],
+      "exitCode": 1,
+      "passed": true,
+      "output": "\n  error protected-controls: cli/src/denial-fixture.ts → control/evaluator/denial-fixture.ts\n\nx 1 dependency violations (1 errors, 0 warnings). 258 modules, 887 dependencies cruised.\n\n"
+    },
+    {
+      "id": "protected-agent-dependency-denied",
+      "executable": "/Users/johansardar/.local/share/node/node-v24.21.0-darwin-arm64/bin/node",
+      "argv": [
+        "node_modules/dependency-cruiser/bin/dependency-cruiser.mjs",
+        "--config",
+        ".dependency-cruiser.cjs",
+        "packages",
+        "cli",
+        "control"
+      ],
+      "exitCode": 1,
+      "passed": true,
+      "output": "\n  error protected-controls-contracts-only: control/secrets/denial-fixture.ts → packages/hermes/src/public.ts\n\nx 1 dependency violations (1 errors, 0 warnings). 279 modules, 946 dependencies cruised.\n\n"
+    },
+    {
+      "id": "unchecked-index-denied",
+      "executable": "/Users/johansardar/.local/share/node/node-v24.21.0-darwin-arm64/bin/node",
+      "argv": [
+        "node_modules/typescript/bin/tsc",
+        "-b",
+        "--pretty",
+        "false"
+      ],
+      "exitCode": 1,
+      "passed": true,
+      "output": "cli/src/denial-fixture.ts(1,14): error TS2322: Type 'string | undefined' is not assignable to type 'string'.\n  Type 'undefined' is not assignable to type 'string'.\n"
+    },
+    {
+      "id": "python-unsafe-type-denied",
+      "executable": "/Users/johansardar/.local/share/node/node-v24.21.0-darwin-arm64/bin/node",
+      "argv": [
+        "node_modules/pyright/index.js"
+      ],
+      "exitCode": 1,
+      "passed": true,
+      "output": "/Users/johansardar/Documents/Codex/toy-harness/python/toy_adapter/denial_fixture.py\n  /Users/johansardar/Documents/Codex/toy-harness/python/toy_adapter/denial_fixture.py:2:12 - error: Type \"Literal[42]\" is not assignable to return type \"str\"\n    \"Literal[42]\" is not assignable to \"str\" (reportReturnType)\n1 error, 0 warnings, 0 informations\n"
+    },
+    {
+      "id": "python-protected-import-denied",
+      "executable": ".venv/bin/lint-imports",
+      "argv": [
+        "--no-cache"
+      ],
+      "exitCode": 1,
+      "passed": true,
+      "output": "\u001b[1m=============\u001b[0m\n\u001b[1mImport Linter\u001b[0m\n\u001b[1m=============\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[1m---------\u001b[0m\n\u001b[1mContracts\u001b[0m\n\u001b[1m---------\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[1mAnalyzed 17 files, 12 dependencies.\u001b[0m\n\u001b[1m-----------------------------------\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[22mHermes adapter cannot import protected controls \u001b[0m\u001b[31m\u001b[22mBROKEN\u001b[0m\u001b[33m\u001b[22m\u001b[0m\u001b[22m\u001b[0m\n\u001b[22mProtected controls cannot depend on agent implementation \u001b[0m\u001b[32m\u001b[22mKEPT\u001b[0m\u001b[33m\u001b[22m\u001b[0m\u001b[22m\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[22mContracts: 1 kept, 1 broken.\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[31m\u001b[1m----------------\u001b[0m\n\u001b[31m\u001b[1mBroken contracts\u001b[0m\n\u001b[31m\u001b[1m----------------\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[31m\u001b[1mHermes adapter cannot import protected controls\u001b[0m\n\u001b[31m\u001b[1m-----------------------------------------------\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[31m\u001b[1mtoy_adapter is not allowed to import toy_control:\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[31m\u001b[22m-   toy_adapter.denial_fixture -> toy_control.public (l.1)\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[22m\u001b[0m\n"
+    },
+    {
+      "id": "python-protected-agent-dependency-denied",
+      "executable": ".venv/bin/lint-imports",
+      "argv": [
+        "--no-cache"
+      ],
+      "exitCode": 1,
+      "passed": true,
+      "output": "\u001b[1m=============\u001b[0m\n\u001b[1mImport Linter\u001b[0m\n\u001b[1m=============\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[1m---------\u001b[0m\n\u001b[1mContracts\u001b[0m\n\u001b[1m---------\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[1mAnalyzed 17 files, 12 dependencies.\u001b[0m\n\u001b[1m-----------------------------------\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[22mHermes adapter cannot import protected controls \u001b[0m\u001b[32m\u001b[22mKEPT\u001b[0m\u001b[33m\u001b[22m\u001b[0m\u001b[22m\u001b[0m\n\u001b[22mProtected controls cannot depend on agent implementation \u001b[0m\u001b[31m\u001b[22mBROKEN\u001b[0m\u001b[33m\u001b[22m\u001b[0m\u001b[22m\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[22mContracts: 1 kept, 1 broken.\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[31m\u001b[1m----------------\u001b[0m\n\u001b[31m\u001b[1mBroken contracts\u001b[0m\n\u001b[31m\u001b[1m----------------\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[31m\u001b[1mProtected controls cannot depend on agent implementation\u001b[0m\n\u001b[31m\u001b[1m--------------------------------------------------------\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[31m\u001b[1mtoy_control is not allowed to import toy_adapter:\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[31m\u001b[22m-   toy_control.denial_fixture -> toy_adapter.public (l.1)\u001b[0m\n\u001b[22m\u001b[0m\n\u001b[22m\u001b[0m\n"
+    },
+    {
+      "id": "clean-after-fixtures",
+      "executable": "/Users/johansardar/.local/share/node/node-v24.21.0-darwin-arm64/bin/node",
+      "argv": [
+        "node_modules/typescript/bin/tsc",
+        "-b",
+        "--pretty",
+        "false"
+      ],
+      "exitCode": 0,
+      "passed": true,
+      "output": ""
+    }
+  ]
+}

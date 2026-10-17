@@ -1,0 +1,492 @@
+--- /dev/null
++++ b/tests/fixtures/toy_auth_httpx_fixture.py
+@@ -0,0 +1,489 @@
++from __future__ import annotations
++
++import base64
++import errno
++import io
++import json
++import os
++import sys
++import time
++import traceback
++from pathlib import Path
++from urllib.parse import parse_qs
++
++import httpx
++
++_OPERATION = ""
++_PHASE = ""
++_ACCEPTED_ACCESS_GENERATION: str | None = None
++_SOCKET_ORIGIN: str | None = None
++_STORAGE_FAULT_TRIGGERED = False
++_TOKEN_RESPONSE_ISSUED = False
++_ADD_PHASES = {"add", "add-enospc", "add-replace-fault"}
++_DENIALS: list[str] = []
++_COUNTS = {
++    "device_code_requests": 0,
++    "device_code_polls": 0,
++    "token_exchanges": 0,
++    "token_refreshes": 0,
++    "model_catalog_requests": 0,
++    "model_requests": 0,
++    "denied_http_requests": 0,
++    "blocked_socket_events": 0,
++}
++_CHAT_MARKER = "TOY_FIXTURE_CHAT_OK"
++_EXPECTED_MODEL = "gpt-6.1-sol"
++_PROMPT = "Return the fixed fixture marker."
++_PAID_KEY = "toy-fixture-paid-key"
++
++
++class _FixtureAsyncStream(httpx.AsyncByteStream):
++    def __init__(self, content: bytes) -> None:
++        self._content = content
++
++    async def __aiter__(self):
++        yield self._content
++
++    async def aclose(self) -> None:
++        return None
++
++
++def _access_token(expiration: int) -> str:
++    header = base64.urlsafe_b64encode(b'{"alg":"none","typ":"JWT"}').rstrip(b"=").decode()
++    claims = {
++        "exp": expiration,
++        "sub": "toy-fixture-subject",
++        "https://api.openai.com/auth": {"chatgpt_account_id": "toy-fixture-account"},
++    }
++    payload = base64.urlsafe_b64encode(
++        json.dumps(claims, separators=(",", ":")).encode()
++    ).rstrip(b"=").decode()
++    return f"{header}.{payload}.fixture"
++
++
++def _response(
++    request: httpx.Request,
++    content: bytes,
++    content_type: str,
++    asynchronous: bool,
++    status_code: int = 200,
++) -> httpx.Response:
++    headers = {"content-type": content_type}
++    if asynchronous:
++        return httpx.Response(
++            status_code,
++            headers=headers,
++            stream=_FixtureAsyncStream(content),
++            request=request,
++        )
++    return httpx.Response(status_code, headers=headers, content=content, request=request)
++
++
++def _json_response(
++    request: httpx.Request,
++    value: dict[str, object],
++    asynchronous: bool,
++) -> httpx.Response:
++    content = json.dumps(value, separators=(",", ":")).encode()
++    return _response(request, content, "application/json", asynchronous)
++
++
++def _event_stream_response(request: httpx.Request, asynchronous: bool) -> httpx.Response:
++    events = (
++        (
++            "response.output_text.delta",
++            {"type": "response.output_text.delta", "delta": _CHAT_MARKER},
++        ),
++        (
++            "response.completed",
++            {
++                "type": "response.completed",
++                "response": {
++                    "id": "resp_toy_fixture",
++                    "status": "completed",
++                    "usage": {
++                        "input_tokens": 1,
++                        "output_tokens": 1,
++                        "total_tokens": 2,
++                    },
++                },
++            },
++        ),
++    )
++    body = "".join(
++        f"event: {name}\ndata: {json.dumps(value, separators=(',', ':'))}\n\n"
++        for name, value in events
++    ).encode()
++    return _response(request, body, "text/event-stream", asynchronous)
++
++
++def _model_response(request: httpx.Request, asynchronous: bool) -> httpx.Response:
++    global _ACCEPTED_ACCESS_GENERATION
++    try:
++        payload = json.loads(request.read())
++    except Exception:
++        payload = {}
++    if not isinstance(payload, dict) or payload.get("model") != _EXPECTED_MODEL:
++        return _deny_request("model-mismatch")
++    expected_generation = "initial" if _PHASE == "chat" else "rotated"
++    expected_expiration = 1893456000 if expected_generation == "initial" else 4102444800
++    if request.headers.get("authorization") != "Bearer " + _access_token(expected_expiration):
++        return _deny_request("authorization-mismatch")
++    _ACCEPTED_ACCESS_GENERATION = expected_generation
++    if payload.get("stream") is not False:
++        return _event_stream_response(request, asynchronous)
++    return _json_response(
++        request,
++        {
++            "id": "resp_toy_fixture",
++            "object": "response",
++            "created_at": 0,
++            "model": _EXPECTED_MODEL,
++            "status": "completed",
++            "output": [
++                {
++                    "id": "msg_toy_fixture",
++                    "type": "message",
++                    "status": "completed",
++                    "role": "assistant",
++                    "content": [{"type": "output_text", "text": _CHAT_MARKER}],
++                }
++            ],
++            "usage": {"input_tokens": 1, "output_tokens": 1, "total_tokens": 2},
++        },
++        asynchronous,
++    )
++
++
++def _deny_request(reason: str = "unregistered-http") -> None:
++    _COUNTS["denied_http_requests"] += 1
++    _DENIALS.append(reason)
++    raise RuntimeError("fixture denied an unregistered HTTPX request")
++
++
++def _route(request: httpx.Request, asynchronous: bool = False) -> httpx.Response:
++    if request.url.scheme != "https":
++        return _deny_request()
++    host = request.url.host.lower()
++    path = request.url.path
++    method = request.method.upper()
++    if _PHASE == "siwc-unbound":
++        _COUNTS["denied_http_requests"] += 1
++        if host == "api.openai.com" and path in {"/v1/responses", "/v1/chat/completions"}:
++            _COUNTS["model_requests"] += 1
++            _DENIALS.append("paid-model-fallback" if request.headers.get("authorization") == "Bearer " + _PAID_KEY else "authorization-mismatch")
++        elif host == "api.openai.com" and path == "/v1/models":
++            _COUNTS["model_catalog_requests"] += 1
++            _DENIALS.append("openai-model-discovery")
++        elif host == "chatgpt.com" and path == "/backend-api/codex/models":
++            _COUNTS["model_catalog_requests"] += 1
++            _DENIALS.append("codex-model-discovery")
++        else:
++            _DENIALS.append("unregistered-http")
++        content = b'{"error":{"message":"fixture denied request","type":"invalid_request_error","code":"toy_fixture"}}'
++        return _response(request, content, "application/json", asynchronous, 400)
++    if host == "auth.openai.com" and method == "POST" and path == "/api/accounts/deviceauth/usercode":
++        _COUNTS["device_code_requests"] += 1
++        if _PHASE not in _ADD_PHASES:
++            return _deny_request("device-grant-outside-add")
++        return _json_response(
++            request,
++            {
++                "device_auth_id": "toy-fixture-device-auth-id",
++                "user_code": "TOY-FIXTURE-CODE",
++                "interval": 3,
++                "expires_in": 300,
++            },
++            asynchronous,
++        )
++    if host == "auth.openai.com" and method == "POST" and path == "/api/accounts/deviceauth/token":
++        _COUNTS["device_code_polls"] += 1
++        if _PHASE not in _ADD_PHASES:
++            return _deny_request("device-poll-outside-add")
++        return _json_response(
++            request,
++            {
++                "authorization_code": "toy-fixture-authorization-code",
++                "code_verifier": "toy-fixture-code-verifier",
++            },
++            asynchronous,
++        )
++    if host == "auth.openai.com" and method == "POST" and path == "/oauth/token":
++        global _TOKEN_RESPONSE_ISSUED
++        if _PHASE in _ADD_PHASES:
++            _COUNTS["token_exchanges"] += 1
++            response = _json_response(
++                request,
++                {
++                    "access_token": _access_token(1893456000),
++                    "refresh_token": "toy-fixture-refresh-initial",
++                    "expires_in": 3600,
++                    "token_type": "Bearer",
++                },
++                asynchronous,
++            )
++            _TOKEN_RESPONSE_ISSUED = True
++            return response
++        if _PHASE.startswith("chat"):
++            _COUNTS["token_refreshes"] += 1
++        if _PHASE == "chat-expired":
++            try:
++                grant = parse_qs(request.read().decode(), strict_parsing=True)
++            except Exception:
++                grant = {}
++            if grant.get("grant_type") != ["refresh_token"] or grant.get("refresh_token") != ["toy-fixture-refresh-initial"]:
++                return _deny_request("grant-mismatch")
++            return _json_response(
++                request,
++                {
++                    "access_token": _access_token(4102444800),
++                    "refresh_token": "toy-fixture-refresh-rotated",
++                    "expires_in": 3600,
++                    "token_type": "Bearer",
++                },
++                asynchronous,
++            )
++        return _deny_request()
++    if (
++        _OPERATION == "chat"
++        and host == "chatgpt.com"
++        and method == "POST"
++        and path == "/backend-api/codex/responses"
++    ):
++        _COUNTS["model_requests"] += 1
++        if _PHASE not in {"chat", "chat-expired", "chat-reloaded"}:
++            return _deny_request("model-request-outside-chat")
++        return _model_response(request, asynchronous)
++    if _OPERATION == "chat" and host == "chatgpt.com" and method == "GET" and path == "/backend-api/codex/models":
++        _COUNTS["model_catalog_requests"] += 1
++        if _PHASE not in {"chat", "chat-expired", "chat-reloaded"}:
++            return _deny_request("model-catalog-outside-chat")
++        expiration = 1893456000 if _PHASE == "chat" else 4102444800
++        if request.headers.get("authorization") != "Bearer " + _access_token(expiration):
++            return _deny_request("authorization-mismatch")
++        return _json_response(request, {"models": [{"slug": _EXPECTED_MODEL, "visibility": "list", "priority": 0}]}, asynchronous)
++    if host == "api.openai.com" and path == "/v1/models":
++        return _deny_request("openai-model-discovery")
++    return _deny_request()
++
++
++def _sync_send(self, request, *args, **kwargs):
++    return _route(request)
++
++
++async def _async_send(self, request, *args, **kwargs):
++    return _route(request, asynchronous=True)
++
++
++def _deny_socket(event: str, args: tuple[object, ...]) -> None:
++    global _SOCKET_ORIGIN, _STORAGE_FAULT_TRIGGERED
++    if event == "os.rename" and _PHASE in {"add-enospc", "add-replace-fault"} and _TOKEN_RESPONSE_ISSUED and not _STORAGE_FAULT_TRIGGERED and len(args) > 1:
++        home = os.environ.get("HERMES_HOME")
++        if isinstance(home, str) and home:
++            destination = os.path.abspath(os.fsdecode(os.fspath(args[1])))
++            auth_path = os.path.abspath(os.path.join(home, "auth.json"))
++            if destination == auth_path:
++                _STORAGE_FAULT_TRIGGERED = True
++                code = errno.ENOSPC if _PHASE == "add-enospc" else errno.EIO
++                raise OSError(code, "fixture storage fault")
++    if event in {"socket.connect", "socket.getaddrinfo", "socket.gethostbyname"}:
++        _COUNTS["blocked_socket_events"] += 1
++        frame = sys._getframe(1)
++        purpose = "unregistered-socket"
++        while frame is not None:
++            module = frame.f_globals.get("__name__", "")
++            if _SOCKET_ORIGIN is None and isinstance(module, str) and module.startswith(("hermes_cli.", "agent.", "tools.", "plugins.")):
++                _SOCKET_ORIGIN = module
++            if frame.f_globals.get("__name__") == "tiktoken.load":
++                purpose = "tokenizer-download"
++                break
++            frame = frame.f_back
++        _SOCKET_ORIGIN = _SOCKET_ORIGIN or "external"
++        _DENIALS.append(purpose)
++        raise RuntimeError("fixture socket access is disabled")
++
++
++def _public_argv(operation: str) -> list[str]:
++    prefix = ["hermes", "--profile", "toy"]
++    if operation == "add":
++        return [*prefix, "auth", "add", "openai-codex", "--type", "oauth", "--no-browser"]
++    if operation == "list":
++        return [*prefix, "auth", "list", "openai-codex"]
++    provider = "siwc_responses" if _PHASE == "siwc-unbound" else "openai-codex"
++    return [*prefix, "chat", "--provider", provider, "--model", _EXPECTED_MODEL, "--toolsets", "none", "-q", _PROMPT]
++
++
++def _run_cli(argv: list[str]) -> tuple[int, str, str, str]:
++    saved_argv = sys.argv
++    saved_stdout, saved_stderr = sys.stdout, sys.stderr
++    captured_stdout, captured_stderr = io.StringIO(), io.StringIO()
++    result = 0
++    failure = ""
++    try:
++        sys.argv = argv[:]
++        sys.stdout, sys.stderr = captured_stdout, captured_stderr
++        from hermes_cli.main import main as hermes_main
++
++        hermes_main()
++    except SystemExit as exc:
++        result = exc.code if isinstance(exc.code, int) else 1
++        if exc.code is not None and not isinstance(exc.code, int):
++            print(exc.code, file=captured_stderr)
++        if result:
++            failure = "CLI_EXIT_NONZERO"
++    except Exception:
++        traceback.print_exc(file=captured_stderr)
++        result = 1
++        failure = "CLI_EXCEPTION"
++    finally:
++        sys.argv = saved_argv
++        sys.stdout, sys.stderr = saved_stdout, saved_stderr
++    return result, captured_stdout.getvalue(), captured_stderr.getvalue(), failure
++
++
++def _safe_result(
++    operation: str,
++    argv: list[str],
++    exit_code: int,
++    stdout: str,
++    stderr: str,
++    failure: str,
++) -> dict[str, object]:
++    markers: list[str] = []
++    combined_output = stdout + "\n" + stderr
++    tokens = (
++        _access_token(1893456000),
++        _access_token(4102444800),
++        "toy-fixture-refresh-initial",
++        "toy-fixture-refresh-rotated",
++        _PAID_KEY,
++    )
++    token_hygiene = not any(token in combined_output for token in tokens)
++    lower_output = combined_output.casefold()
++    fallback_attempted = any(
++        claim in lower_output
++        for claim in ("falling through to fallback:", "switching to fallback", "falling back to ")
++    )
++    success_claim_absent = not any(
++        claim in lower_output
++        for claim in (
++            "added openai-codex oauth credential",
++            "login successful",
++            "authentication successful",
++            "authenticated successfully",
++            "oauth credential added",
++        )
++    )
++    observations: dict[str, object] = {
++        "provider": "openai-chatgpt" if _PHASE == "siwc-unbound" else "openai-codex",
++        "phase": _PHASE,
++        "access_generation": _ACCEPTED_ACCESS_GENERATION,
++        "network_denials": list(_DENIALS),
++        "socket_origin": _SOCKET_ORIGIN,
++        "storage_fault_triggered": _STORAGE_FAULT_TRIGGERED,
++        "token_hygiene": token_hygiene,
++        "success_claim_absent": success_claim_absent,
++        "fallback_attempted": fallback_attempted,
++    }
++    if operation == "add":
++        if _PHASE in {"add-enospc", "add-replace-fault"}:
++            save_denied = exit_code != 0 and _STORAGE_FAULT_TRIGGERED and token_hygiene and success_claim_absent
++            markers.append("AUTH_SAVE_DENIED" if save_denied else "AUTH_SAVE_FAULT_NOT_CONFIRMED")
++        else:
++            added = exit_code == 0 and "Added openai-codex OAuth credential #" in combined_output
++            markers.append("AUTH_ADD_OK" if added else "AUTH_ADD_NOT_CONFIRMED")
++    elif operation == "list":
++        count = 0
++        for line in stdout.splitlines():
++            if line.startswith("openai-codex (") and line.endswith(" credentials):"):
++                raw = line[len("openai-codex (") : -len(" credentials):")]
++                if raw.isdecimal():
++                    count = int(raw)
++                    break
++        observations["credential_count"] = count
++        markers.append("AUTH_LIST_READBACK_OK" if count > 0 else "AUTH_LIST_EMPTY")
++    else:
++        if _PHASE == "siwc-unbound":
++            refused = (
++                exit_code != 0
++                and "Independent ChatGPT plan authorization is required." in combined_output
++                and _CHAT_MARKER not in combined_output
++                and all(count == 0 for count in _COUNTS.values())
++                and token_hygiene
++                and success_claim_absent
++                and not fallback_attempted
++            )
++            markers.append("SIWC_AUTHORIZATION_REQUIRED" if refused else "SIWC_AUTHORIZATION_NOT_CONFIRMED")
++        elif _PHASE == "chat-after-fault":
++            request_total = sum(
++                _COUNTS[key]
++                for key in (
++                    "device_code_requests",
++                    "device_code_polls",
++                    "token_exchanges",
++                    "token_refreshes",
++                    "model_catalog_requests",
++                    "model_requests",
++                )
++            )
++            unusable = exit_code != 0 and _CHAT_MARKER not in combined_output and request_total == 0
++            markers.append("CHAT_GRANT_UNUSABLE" if unusable else "CHAT_GRANT_USABILITY_NOT_CONFIRMED")
++        else:
++            replied = exit_code == 0 and _CHAT_MARKER in combined_output
++            markers.append("CHAT_RESPONSE_OK" if replied else "CHAT_RESPONSE_NOT_CONFIRMED")
++    if failure:
++        markers.append(failure)
++    return {
++        "schema": "toy.hermes-httpx-auth-fixture.v1",
++        "operation": operation,
++        "public_argv": argv,
++        "exit_code": exit_code,
++        "markers": markers,
++        "processIdentity": {"pid": os.getpid(), "parentPid": os.getppid(), "uid": os.getuid(), "gid": os.getgid()},
++        "observations": observations,
++        "http_ledger": dict(_COUNTS),
++        "network_audit": "socket-audit-hook-installed",
++    }
++
++
++def main() -> int:
++    global _OPERATION, _PHASE
++    if len(sys.argv) != 2 or sys.argv[1] not in {"add", "list", "chat", "chat-expired", "chat-reloaded", "add-enospc", "add-replace-fault", "list-after-fault", "chat-after-fault", "siwc-unbound"}:
++        print(
++            json.dumps(
++                {
++                    "schema": "toy.hermes-httpx-auth-fixture.v1",
++                    "operation": "invalid",
++                    "exit_code": 2,
++                    "markers": ["INVALID_FIXTURE_OPERATION"],
++                },
++                sort_keys=True,
++            )
++        )
++        return 2
++    _PHASE = sys.argv[1]
++    _OPERATION = {
++        "add-enospc": "add",
++        "add-replace-fault": "add",
++        "list-after-fault": "list",
++        "chat-after-fault": "chat",
++        "siwc-unbound": "chat",
++    }.get(_PHASE, "chat" if _PHASE.startswith("chat") else _PHASE)
++    if _PHASE == "siwc-unbound":
++        os.environ["OPENAI_API_KEY"] = _PAID_KEY
++    if _PHASE == "chat-expired":
++        time.time = lambda: 1893463200.0
++    argv = _public_argv(_OPERATION)
++    httpx.Client.send = _sync_send
++    httpx.AsyncClient.send = _async_send
++    sys.addaudithook(_deny_socket)
++    exit_code, stdout, stderr, failure = _run_cli(argv)
++    result = _safe_result(_OPERATION, argv, exit_code, stdout, stderr, failure)
++    print(json.dumps(result, sort_keys=True))
++    return exit_code
++
++
++if __name__ == "__main__":
++    source_root = Path(__file__).resolve().parents[2]
++    sys.path.insert(0, str(source_root))
++    raise SystemExit(main())

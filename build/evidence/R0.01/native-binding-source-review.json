@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "toy.r001-native-binding-source-review.v1",
+  "generatedAt": "2026-10-06T07:39:47.892Z",
+  "worker": "r001_luna_binding_review",
+  "model": "gpt-6-luna",
+  "reasoning": "max",
+  "readOnly": true,
+  "runtimeVerified": false,
+  "wholeATsPassed": [],
+  "findings": [
+    {
+      "file": "build/patches/hermes-siwc/src/plugins/model-providers/openai-chatgpt/__init__.py",
+      "line": 105,
+      "finding": "Native provider registers without its grant reader; fail-closed authorization remains unbound."
+    },
+    {
+      "file": "packages/hermes/src/responses.ts",
+      "line": 50,
+      "finding": "Supported transport requires the protected access reader and actual zero-credit proof; no live provider binding exists."
+    },
+    {
+      "file": "packages/hermes/src/model-route-probe.ts",
+      "line": 68,
+      "finding": "Existing fixed policy/stream fixtures do not exercise supported-route compatibility, auth refresh or restart ATs."
+    }
+  ],
+  "nextAction": "Use the existing grant-reader seam after protected runtime and real authorization/zero-credit prerequisites, and drive required compatibility ATs through the public CLI. Do not promote fixed provider fixtures into account compatibility."
+}

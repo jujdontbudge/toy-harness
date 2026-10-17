@@ -1,0 +1,112 @@
+diff --git a/architecture/features.json b/architecture/features.json
+index a34359a..f33f71d 100644
+--- a/architecture/features.json
++++ b/architecture/features.json
+@@ -3261,7 +3261,7 @@
+     },
+     {
+       "id": "control.research.check",
+-      "description": "Read the research-register inventory and every flat spec digest, explicit component reference and requirement-mapping row; crosswalk every Sources catalog section and named provider to D01\u2013D66 with explicit route and supersession states while certification and build admission remain unverified; check archived Obligations scheduling comparisons for primary evidence, supported selection, acceptance links and a viable independent alternative; check every required component for exact missing requirement/source/validation IDs, registered release gate and test links, including a proven outside-selected option; require Sources account/region validation plans and0.9 mapping before dependent implementation; validate connector research receipts against central observed route, exact loaded skill pin and proven outside alternatives; require four distinct Attention comparisons with their named alternatives, justified selection, AT IDs and canonical public model-route receipts; validate versioned required-component research receipts and Authority proven alternatives, reliability, validation links and unresolved assumptions; derive direct Ops2.4/5.10 coverage from README and register groups while retaining global checks for every register component",
++      "description": "Read the research-register inventory and every flat spec digest, explicit component reference and requirement-mapping row; crosswalk every Sources catalog section and named provider to D01–D66 with explicit route and supersession states while certification and build admission remain unverified; check archived Obligations scheduling comparisons for primary evidence, supported selection, acceptance links and a viable independent alternative; check every required component for exact missing requirement/source/validation IDs, registered release gate and test links, including a proven outside-selected option; require Sources account/region validation plans and0.9 mapping before dependent implementation; validate connector research receipts against central observed route, exact loaded skill pin and proven outside alternatives; require four distinct Attention comparisons with their named alternatives, justified selection, AT IDs and canonical public model-route receipts; validate versioned required-component research receipts and Authority proven alternatives, reliability, validation links and unresolved assumptions; derive direct Ops2.4/5.10 coverage from README and register groups while retaining global checks for every register component; compare a seeded A14 outside backup choice through the public research receipt while retaining source-derived requirements and the fixture Mac-host claim",
+       "implementation": "built",
+       "requirementIds": [
+         "0.17",
+@@ -3288,7 +3288,8 @@
+         "packages/hermes/src/model-route-probe.ts",
+         "docs/adr/0038-attention-research-decisions.md",
+         "docs/adr/0039-required-component-research-receipts.md",
+-        "docs/adr/0043-ops-research-scope.md"
++        "docs/adr/0043-ops-research-scope.md",
++        "docs/adr/0047-ops-outside-research-probe.md"
+       ],
+       "firstRelease": "R0",
+       "commands": [
+@@ -3309,7 +3310,8 @@
+         "AT-sources-188",
+         "AT-sources-190",
+         "AT-attention-66",
+-        "AT-authority-60"
++        "AT-authority-60",
++        "AT-ops-44"
+       ]
+     },
+     {
+@@ -3581,7 +3583,7 @@
+     },
+     {
+       "id": "hermes.native-auth-probe",
+-      "description": "Run source-bound unfiltered native auth save-fault, fresh-process, profile-sibling preservation, mixed-lineage healing, borrowed-root refresh and concurrent persistence probes in owned fake worlds with isolated homes, synthetic external providers and sanitized readbacks; retain protected native-role and whole acceptance gaps",
++      "description": "Run source-bound unfiltered native auth save-fault, fresh-process, profile-sibling preservation, mixed-lineage healing, dashboard profile-scoped OAuth and sanitized save failures, borrowed-root refresh and concurrent persistence probes in owned fake worlds with isolated homes, synthetic external providers and sanitized readbacks; retain protected native-role and whole acceptance gaps",
+       "implementation": "built",
+       "requirementIds": [
+         "spec:hermes-config"
+@@ -3603,7 +3605,9 @@
+         "docs/adr/0021-supported-model-route.md",
+         "docs/adr/0042-borrowed-root-auth-probe.md",
+         "docs/adr/0044-profile-sibling-auth-probe.md",
+-        "docs/adr/0045-mixed-auth-lineage-probe.md"
++        "docs/adr/0045-mixed-auth-lineage-probe.md",
++        "docs/adr/0046-dashboard-auth-scope-probe.md",
++        "patches/hermes-auth-dashboard.patch"
+       ],
+       "firstRelease": "R0",
+       "commands": [
+@@ -3618,7 +3622,8 @@
+         "AT-ops-55",
+         "AT-hermes-config-88",
+         "AT-hermes-config-86",
+-        "AT-hermes-config-89"
++        "AT-hermes-config-89",
++        "AT-hermes-config-90"
+       ]
+     },
+     {
+diff --git a/cli/src/main.ts b/cli/src/main.ts
+index 3938069..8c66cef 100644
+--- a/cli/src/main.ts
++++ b/cli/src/main.ts
+@@ -238,7 +238,7 @@ const run = async (): Promise<CliResult> => {
+       if (probeInput?.caseId === "control-filesystem-denial" || (probeInput?.probeId === "AT-authority-35" && probeInput.caseId === undefined)) result = RoleControlProbe.run(probeInput, context);
+       else if (probeInput !== null && (probeInput.caseId === "backup-capacity" || (probeInput.caseId === undefined && registeredCliAcceptanceManifestInventory.some(entry => entry.id === probeInput.probeId && entry.owner === "ops" && entry.scenarioId === "backup-capacity")))) result = BackupCapacityProbe.run(probeInput, context);
+       else if (probeInput !== null && (probeInput.caseId === "native-release-eligibility" || (probeInput.caseId === undefined && registeredCliAcceptanceManifestInventory.some(entry => entry.id === probeInput.probeId && entry.owner === "ops" && entry.scenarioId === "native-release-eligibility")))) result = NativeReleaseEligibilityProbe.run(probeInput, context);
+-      else if (probeInput !== null && (probeInput.caseId === "native-auth-cli" || (["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-86", "AT-hermes-config-87", "AT-hermes-config-88", "AT-hermes-config-89"].includes(probeInput.probeId) && probeInput.caseId === undefined))) result = await HermesAuthProbe.run(probeInput, context);
++      else if (probeInput !== null && (probeInput.caseId === "native-auth-cli" || (["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-86", "AT-hermes-config-87", "AT-hermes-config-88", "AT-hermes-config-89", "AT-hermes-config-90"].includes(probeInput.probeId) && probeInput.caseId === undefined))) result = await HermesAuthProbe.run(probeInput, context);
+       else if (probeInput !== null && probeInput.caseId === undefined && registeredCliAcceptanceManifestInventory.some(entry => entry.id === probeInput.probeId && entry.owner === "hermes" && ["profile.gateway-consumers", "profile.mcp-http"].includes(entry.scenarioId))) result = await HermesProfileProbe.run(probeInput, context);
+       else if (probeInput !== null && (probeInput.caseId === "model-route-policy" || probeInput.caseId === "model-route-stream" || (probeInput.caseId === undefined && registeredCliAcceptanceManifestInventory.some(entry => entry.id === probeInput.probeId && entry.owner === "hermes" && ["delegation.route-skill", "research.attention-decisions", "research.component-receipts"].includes(entry.scenarioId))))) result = await ModelRouteProbe.run(probeInput, context);
+       else if (probeInput) result = await ReplayEnvironment.runRegisteredProbe(probeInput, context);
+diff --git a/packages/contracts/src/hermes-runtime.ts b/packages/contracts/src/hermes-runtime.ts
+index ddc9077..9a74646 100644
+--- a/packages/contracts/src/hermes-runtime.ts
++++ b/packages/contracts/src/hermes-runtime.ts
+@@ -73,11 +73,11 @@ export const hermesAuthConcurrencyObservationSchema = z.strictObject({
+   refreshEffects: z.array(hermesAuthRefreshEffectSchema).max(16)
+ });
+ export const hermesAuthFixtureResultSchema = z.strictObject({
+-  schema: z.literal("toy.hermes-httpx-auth-fixture.v1"), operation: z.enum(["add", "list", "chat", "priority"]),
++  schema: z.literal("toy.hermes-httpx-auth-fixture.v1"), operation: z.enum(["add", "list", "chat", "priority", "dashboard"]),
+   public_argv: z.array(z.string().min(1).max(200)).min(2).max(16), exit_code: z.int().min(0).max(255),
+   markers: z.array(z.enum(["AUTH_ADD_OK", "AUTH_ADD_NOT_CONFIRMED", "AUTH_SAVE_DENIED", "AUTH_SAVE_FAULT_NOT_CONFIRMED", "AUTH_LIST_READBACK_OK", "AUTH_LIST_EMPTY", "AUTH_LIST_NOT_CONFIRMED", "AUTH_PRIORITY_OK", "AUTH_PRIORITY_NOT_CONFIRMED", "CHAT_RESPONSE_OK", "CHAT_RESPONSE_NOT_CONFIRMED", "CHAT_GRANT_UNUSABLE", "CHAT_GRANT_USABILITY_NOT_CONFIRMED", "SIWC_AUTHORIZATION_REQUIRED", "SIWC_AUTHORIZATION_NOT_CONFIRMED", "CLI_EXIT_NONZERO", "CLI_EXCEPTION"])).max(8),
+   processIdentity: z.strictObject({ pid: z.int().positive(), parentPid: z.int().positive(), uid: z.int().nonnegative(), gid: z.int().nonnegative() }),
+-  observations: z.strictObject({ provider: z.enum(["openai-codex", "openai-chatgpt"]), phase: z.enum(["add", "list", "chat", "chat-expired", "chat-reloaded", "add-enospc", "add-replace-fault", "list-after-fault", "chat-after-fault", "siwc-unbound", "concurrent-refresh-add", "priority-added", "priority-restored"]), credential_count: fixtureCounter.optional(), target_label_present: z.boolean().optional(), access_generation: z.enum(["initial", "rotated", "added", "added-rotated", "stale"]).nullable(), catalog_access_generation: z.enum(["initial", "rotated", "added", "added-rotated", "stale"]).nullable(), storage_fault_triggered: z.boolean(), token_hygiene: z.boolean(), success_claim_absent: z.boolean(), fallback_attempted: z.boolean(), network_denials: z.array(z.enum(["model-mismatch", "authorization-mismatch", "grant-mismatch", "paid-model-fallback", "device-grant-outside-add", "device-poll-outside-add", "model-request-outside-chat", "model-catalog-outside-chat", "codex-model-discovery", "openai-model-discovery", "unregistered-http", "tokenizer-download", "unregistered-socket"])).max(16), socket_origin: z.string().max(120).regex(/^[a-z_][a-z0-9_]*(?:\.[a-z_][a-z0-9_]*)*$/i).nullable() }),
++  observations: z.strictObject({ provider: z.enum(["openai-codex", "openai-chatgpt"]), phase: z.enum(["add", "list", "chat", "chat-expired", "chat-reloaded", "add-enospc", "add-replace-fault", "list-after-fault", "chat-after-fault", "siwc-unbound", "concurrent-refresh-add", "priority-added", "priority-restored", "dashboard-profile-success", "dashboard-save-failure-400"]), credential_count: fixtureCounter.optional(), target_label_present: z.boolean().optional(), access_generation: z.enum(["initial", "rotated", "added", "added-rotated", "stale"]).nullable(), catalog_access_generation: z.enum(["initial", "rotated", "added", "added-rotated", "stale"]).nullable(), storage_fault_triggered: z.boolean(), token_hygiene: z.boolean(), success_claim_absent: z.boolean(), fallback_attempted: z.boolean(), network_denials: z.array(z.enum(["model-mismatch", "authorization-mismatch", "grant-mismatch", "paid-model-fallback", "device-grant-outside-add", "device-poll-outside-add", "model-request-outside-chat", "model-catalog-outside-chat", "codex-model-discovery", "openai-model-discovery", "unregistered-http", "tokenizer-download", "unregistered-socket"])).max(16), socket_origin: z.string().max(120).regex(/^[a-z_][a-z0-9_]*(?:\.[a-z_][a-z0-9_]*)*$/i).nullable() }),
+   concurrency: hermesAuthConcurrencyObservationSchema.optional(),
+   http_ledger: z.strictObject({
+     device_code_requests: fixtureCounter, device_code_polls: fixtureCounter, token_exchanges: fixtureCounter,
+diff --git a/packages/ops/src/fixture-stack.ts b/packages/ops/src/fixture-stack.ts
+index 4b622be..be1f3aa 100644
+--- a/packages/ops/src/fixture-stack.ts
++++ b/packages/ops/src/fixture-stack.ts
+@@ -312,11 +312,11 @@ export const FixtureProbe = {
+       const profileConsumers = input.caseId === undefined && sourceRegistration?.owner === "hermes" && sourceRegistration.scenarioId === "profile.gateway-consumers";
+       const mcpHttp = input.caseId === undefined && sourceRegistration?.owner === "hermes" && sourceRegistration.scenarioId === "profile.mcp-http";
+       const accounting = (input.caseId === undefined || input.caseId === "model-admission") && ["AT-ops-49", "AT-ops-51", "AT-ops-52"].includes(input.probeId);
+-      const componentComparison = ["AT-authority-60", "AT-attention-66", "AT-obligations-74", "AT-self-improvement-54", "AT-sources-188", "AT-sources-190"].includes(input.probeId) && input.caseId === undefined;
++      const componentComparison = ["AT-authority-60", "AT-attention-66", "AT-obligations-74", "AT-self-improvement-54", "AT-sources-188", "AT-sources-190", "AT-ops-44"].includes(input.probeId) && input.caseId === undefined;
+       const dtoRoundtrip = input.probeId === "AT-hermes-config-50" && input.caseId === undefined && sourceRegistration?.owner === "contracts" && sourceRegistration.scenarioId === "contracts.dto-roundtrip";
+       const capacityTrial = (input.caseId === undefined || input.caseId === "capacity-trial") && ["AT-ops-47", "AT-self-improvement-59", "AT-self-improvement-60", "AT-RESEARCH-REGISTER-6"].includes(input.probeId);
+       const nativeEligibility = ["AT-ops-81", "AT-client-apps-49", "AT-activity-focus-64"].includes(input.probeId) && (input.caseId === "native-release-eligibility" || (input.caseId === undefined && sourceRegistration?.owner === "ops" && sourceRegistration.scenarioId === "native-release-eligibility"));
+-      const nativeAuth = (["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-86", "AT-hermes-config-87", "AT-hermes-config-88", "AT-hermes-config-89"].includes(input.probeId) && input.caseId === undefined) || (input.caseId === "native-auth-cli" && ["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-86", "AT-hermes-config-87", "AT-hermes-config-88", "AT-hermes-config-89", "AT-hermes-config-78", "AT-ops-55"].includes(input.probeId));
++      const nativeAuth = (["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-86", "AT-hermes-config-87", "AT-hermes-config-88", "AT-hermes-config-89", "AT-hermes-config-90"].includes(input.probeId) && input.caseId === undefined) || (input.caseId === "native-auth-cli" && ["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-86", "AT-hermes-config-87", "AT-hermes-config-88", "AT-hermes-config-89", "AT-hermes-config-90", "AT-hermes-config-78", "AT-ops-55"].includes(input.probeId));
+       const roleDenials = (input.caseId === undefined || input.caseId === "control-filesystem-denial") && input.probeId === "AT-authority-35";
+       const queueFaults = input.probeId === "AT-obligations-76" && (input.caseId === undefined || input.caseId === "queue-transaction-faults");
+       const backupCapacity = ["AT-ops-62", "AT-lifestore-63", "AT-sources-216"].includes(input.probeId) && (input.caseId === "backup-capacity" || (input.caseId === undefined && sourceRegistration?.owner === "ops" && sourceRegistration.scenarioId === "backup-capacity"));

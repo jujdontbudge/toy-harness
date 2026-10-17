@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "referencesVerified": {
+      "type": "boolean",
+      "const": true
+    },
+    "sourceHashes": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "string",
+        "minLength": 64,
+        "maxLength": 64,
+        "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+      }
+    },
+    "references": {
+      "minItems": 4,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "pattern": {
+            "type": "string",
+            "enum": [
+              "connector",
+              "tool",
+              "skill",
+              "migration"
+            ]
+          },
+          "observation": {
+            "type": "object",
+            "properties": {
+              "state": {
+                "type": "string",
+                "const": "PASS"
+              }
+            },
+            "required": [
+              "state"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "pattern",
+          "observation"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "referencesVerified",
+    "sourceHashes",
+    "references"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:ReferenceAdmissionEvidenceV1"
+}

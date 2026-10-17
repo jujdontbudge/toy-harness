@@ -1,0 +1,611 @@
+diff --git a/architecture/features.json b/architecture/features.json
+index 931cee6..cbfa712 100644
+--- a/architecture/features.json
++++ b/architecture/features.json
+@@ -3261,13 +3261,15 @@
+     },
+     {
+       "id": "control.research.check",
+-      "description": "Read the research-register inventory and every flat spec digest, explicit component reference and requirement-mapping row; crosswalk every Sources catalog section and named provider to D01\u2013D66 with explicit route and supersession states while certification and build admission remain unverified; check archived Obligations scheduling comparisons for primary evidence, supported selection, acceptance links and a viable independent alternative; check every required component for exact missing requirement/source/validation IDs, registered release gate and test links, including a proven outside-selected option; require Sources account/region validation plans and0.9 mapping before dependent implementation; validate connector research receipts against central observed route, exact loaded skill pin and proven outside alternatives; require four distinct Attention comparisons with their named alternatives, justified selection, AT IDs and canonical public model-route receipts; validate versioned required-component research receipts and Authority proven alternatives, reliability, validation links and unresolved assumptions",
++      "description": "Read the research-register inventory and every flat spec digest, explicit component reference and requirement-mapping row; crosswalk every Sources catalog section and named provider to D01\u2013D66 with explicit route and supersession states while certification and build admission remain unverified; check archived Obligations scheduling comparisons for primary evidence, supported selection, acceptance links and a viable independent alternative; check every required component for exact missing requirement/source/validation IDs, registered release gate and test links, including a proven outside-selected option; require Sources account/region validation plans and0.9 mapping before dependent implementation; validate connector research receipts against central observed route, exact loaded skill pin and proven outside alternatives; require four distinct Attention comparisons with their named alternatives, justified selection, AT IDs and canonical public model-route receipts; validate versioned required-component research receipts and Authority proven alternatives, reliability, validation links and unresolved assumptions; derive direct Ops2.4/5.10 coverage from README and register groups while retaining global checks for every register component",
+       "implementation": "built",
+       "requirementIds": [
+         "0.17",
+         "0.1",
+         "0.2",
+-        "0.10"
++        "0.10",
++        "2.4",
++        "5.10"
+       ],
+       "entry": "cli/src/main.ts",
+       "owner": "self-improvement",
+@@ -3285,7 +3287,8 @@
+         "behavior/research-skill.json",
+         "packages/hermes/src/model-route-probe.ts",
+         "docs/adr/0038-attention-research-decisions.md",
+-        "docs/adr/0039-required-component-research-receipts.md"
++        "docs/adr/0039-required-component-research-receipts.md",
++        "docs/adr/0043-ops-research-scope.md"
+       ],
+       "firstRelease": "R0",
+       "commands": [
+@@ -4032,6 +4035,14 @@
+     {
+       "id": "0.10",
+       "path": "REQUIREMENTS.md"
++    },
++    {
++      "id": "2.4",
++      "path": "REQUIREMENTS.md"
++    },
++    {
++      "id": "5.10",
++      "path": "REQUIREMENTS.md"
+     }
+   ],
+   "interfaces": [
+diff --git a/packages/hermes/src/auth-fixture.ts b/packages/hermes/src/auth-fixture.ts
+index 4b6ff5d..3268e2a 100644
+--- a/packages/hermes/src/auth-fixture.ts
++++ b/packages/hermes/src/auth-fixture.ts
+@@ -12,9 +12,9 @@ const maxArchiveBytes = 268435456;
+ const maxChildBytes = 65536;
+ const fixtureModule = "tests.fixtures.toy_auth_httpx_fixture";
+ type FixtureOperation = HermesAuthFixtureResultV1["observations"]["phase"];
+-type AuthFixtureMode = "standard" | "borrowed-root" | "profile-siblings";
++type AuthFixtureMode = "standard" | "borrowed-root" | "profile-siblings" | "mixed-lineage";
+ type FixtureStoreDigest = { exists: boolean; digest: string | null };
+-type ProfileSiblingStep = {
++type AuthFixtureStep = {
+   caseId: string;
+   operation: FixtureOperation;
+   scope: "root" | "profile";
+@@ -25,7 +25,7 @@ type ProfileSiblingStep = {
+   expectedGeneration?: Exclude<HermesAuthFixtureResultV1["observations"]["access_generation"], null>;
+ };
+ 
+-const profileSiblingSteps: readonly ProfileSiblingStep[] = [
++const profileSiblingSteps: readonly AuthFixtureStep[] = [
+   { caseId: "root-add-one", operation: "add", scope: "root", actor: "sibling-root-one", label: "toy-fixture-sibling-root-one" },
+   { caseId: "root-add-two", operation: "add", scope: "root", actor: "sibling-root-two", label: "toy-fixture-sibling-root-two" },
+   { caseId: "root-readback-one", operation: "list", scope: "root", actor: "sibling-root-one", label: "toy-fixture-sibling-root-one", expectedCount: 2, expectedLabelPresent: true },
+@@ -44,6 +44,19 @@ const profileSiblingSteps: readonly ProfileSiblingStep[] = [
+   { caseId: "profile-use-new", operation: "chat", scope: "profile", actor: "sibling-profile-new", label: "toy-fixture-sibling-profile-new", expectedGeneration: "added-rotated" }
+ ];
+ 
++const mixedLineageSteps: readonly AuthFixtureStep[] = [
++  { caseId: "root-add", operation: "add", scope: "root", actor: "mixed-root-add", label: "toy-fixture-mixed-root" },
++  { caseId: "copied-lineage-heal", operation: "list", scope: "profile", actor: "mixed-root-readback", label: "toy-fixture-mixed-root", expectedCount: 1, expectedLabelPresent: true },
++  { caseId: "copied-lineage-use", operation: "chat", scope: "profile", actor: "mixed-root-use", label: "toy-fixture-mixed-root", expectedGeneration: "initial" },
++  { caseId: "copied-lineage-refresh", operation: "chat-expired", scope: "profile", actor: "mixed-root-refresh", label: "toy-fixture-mixed-root", expectedGeneration: "rotated" },
++  { caseId: "copied-lineage-reload", operation: "chat-reloaded", scope: "profile", actor: "mixed-root-reload", label: "toy-fixture-mixed-root", expectedGeneration: "rotated" },
++  { caseId: "independent-manual-add", operation: "add", scope: "profile", actor: "mixed-profile-add", label: "toy-fixture-mixed-independent" },
++  { caseId: "independent-profile-readback", operation: "list", scope: "profile", actor: "mixed-profile-readback", label: "toy-fixture-mixed-independent", expectedCount: 1, expectedLabelPresent: true },
++  { caseId: "independent-profile-use", operation: "chat", scope: "profile", actor: "mixed-profile-use", label: "toy-fixture-mixed-independent", expectedGeneration: "added" },
++  { caseId: "independent-profile-refresh", operation: "chat-expired", scope: "profile", actor: "mixed-profile-refresh", label: "toy-fixture-mixed-independent", expectedGeneration: "added-rotated" },
++  { caseId: "independent-profile-reload", operation: "chat-reloaded", scope: "profile", actor: "mixed-profile-reload", label: "toy-fixture-mixed-independent", expectedGeneration: "added-rotated" }
++];
++
+ const digest = (value: string | Buffer): string => createHash("sha256").update(value).digest("hex");
+ const isWithin = (base: string, target: string): boolean => {
+   const path = relative(base, target);
+@@ -184,9 +197,11 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
+     const deniedGrant = saveFault || siwcUnbound;
+     const borrowedRoot = mode === "borrowed-root";
+     const profileSiblings = mode === "profile-siblings";
++    const mixedLineage = mode === "mixed-lineage";
+     if (borrowedRoot && firstOperation !== "add") return fail("BLOCKED", "NATIVE_AUTH_FIXTURE_OPERATION_INVALID");
+     if (profileSiblings && firstOperation !== "add") return fail("BLOCKED", "NATIVE_AUTH_FIXTURE_OPERATION_INVALID");
+-    const operations: readonly FixtureOperation[] = borrowedRoot ? ["add", "list", "chat", "chat-expired", "chat-reloaded", "chat-reloaded"] : profileSiblings ? profileSiblingSteps.map(step => step.operation) : siwcUnbound ? [firstOperation] : saveFault ? [firstOperation, "list-after-fault", "chat-after-fault"] : concurrentRun ? ["add", "list"] : ["add", "list", "chat", "chat-expired", "chat-reloaded"];
++    if (mixedLineage && firstOperation !== "add") return fail("BLOCKED", "NATIVE_AUTH_FIXTURE_OPERATION_INVALID");
++    const operations: readonly FixtureOperation[] = borrowedRoot ? ["add", "list", "chat", "chat-expired", "chat-reloaded", "chat-reloaded"] : profileSiblings ? profileSiblingSteps.map(step => step.operation) : mixedLineage ? mixedLineageSteps.map(step => step.operation) : siwcUnbound ? [firstOperation] : saveFault ? [firstOperation, "list-after-fault", "chat-after-fault"] : concurrentRun ? ["add", "list"] : ["add", "list", "chat", "chat-expired", "chat-reloaded"];
+     if (!Number.isInteger(timeoutMs) || timeoutMs < 1 || timeoutMs > 120000) return fail("BLOCKED", "NATIVE_AUTH_FIXTURE_TIMEOUT_INVALID");
+     const homeRoot = realpathSync(home);
+     const hermesRoot = realpathSync(hermesHome);
+@@ -273,7 +288,7 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
+     const fallback = [{ provider: "openai", model: "gpt-6.1-sol" }];
+     const profileConfigCommands = [["--profile", "toy", "config", "set", "auxiliary.title_generation.enabled", "false"]];
+     if (borrowedRoot) profileConfigCommands.push(["config", "set", "auxiliary.title_generation.enabled", "false"]);
+-    if (borrowedRoot || profileSiblings) profileConfigCommands.push(["--profile", "toy", "config", "set", "model.provider", "openai-codex"]);
++    if (borrowedRoot || profileSiblings || mixedLineage) profileConfigCommands.push(["--profile", "toy", "config", "set", "model.provider", "openai-codex"]);
+     if (siwcUnbound) profileConfigCommands.push(["--profile", "toy", "config", "set", "fallback_model", JSON.stringify(fallback)], ["--profile", "toy", "config", "get", "fallback_model", "--json"]);
+     for (const profileConfigArgs of profileConfigCommands) {
+       const profileConfigRequest = bounded(interpreter, ["-B", "-I", candidateStore, "--print-runtime-command", "--module", "hermes_cli.main", "--", ...profileConfigArgs], maxChildBytes, 5000);
+@@ -299,11 +314,38 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
+     let profileAuthAfterAdd: { exists: boolean; digest: string | null } | null = null;
+     let previousRootAuth = storesBefore.rootAuth;
+     let profileSiblingRootBaseline: { rootAuth: FixtureStoreDigest; rootEnv: FixtureStoreDigest } | null = null;
++    let mixedCopySeed: { rootAuth: FixtureStoreDigest; profileAuth: FixtureStoreDigest; equal: boolean } | null = null;
++    let mixedHealedProfileAuth: FixtureStoreDigest | null = null;
+     const childPids = new Set<number>();
+     for (const [operationIndex, operation] of operations.entries()) {
+       const siblingStep = profileSiblings ? profileSiblingSteps[operationIndex] : undefined;
++      const mixedStep = mixedLineage ? mixedLineageSteps[operationIndex] : undefined;
+       if (profileSiblings && !siblingStep) return fail("FAIL", "NATIVE_AUTH_FIXTURE_SIBLING_STEP_MISSING", { operationIndex });
+-      const rootScope = siblingStep ? siblingStep.scope === "root" : borrowedRoot && (operationIndex === 0 || operationIndex === 5);
++      if (mixedLineage && !mixedStep) return fail("FAIL", "NATIVE_AUTH_FIXTURE_MIXED_LINEAGE_STEP_MISSING", { operationIndex });
++      const fixtureStep = siblingStep ?? mixedStep;
++      if (mixedStep?.caseId === "copied-lineage-heal") {
++        const storesBeforeCopy = privateStoreDigests(hermesRoot);
++        const rootAuthPath = join(hermesRoot, "auth.json");
++        const profilePath = join(hermesRoot, "profiles", "toy");
++        const profileAuthPath = join(profilePath, "auth.json");
++        const profileDirectory = lstatSync(profilePath);
++        if (!storesBeforeCopy.rootAuth.exists
++          || storesBeforeCopy.rootAuth.digest === null
++          || storesBeforeCopy.profileAuth.exists
++          || !profileDirectory.isDirectory()
++          || profileDirectory.isSymbolicLink()
++          || !isWithin(hermesRoot, realpathSync(profilePath))) return fail("FAIL", "NATIVE_AUTH_FIXTURE_MIXED_LINEAGE_COPY_PRECONDITION_FAILED");
++        const rootStat = lstatSync(rootAuthPath);
++        if (!rootStat.isFile() || rootStat.isSymbolicLink() || !isWithin(hermesRoot, realpathSync(rootAuthPath))) return fail("FAIL", "NATIVE_AUTH_FIXTURE_MIXED_LINEAGE_ROOT_STORE_INVALID");
++        const rootAuthBytes = readFileSync(rootAuthPath);
++        const rootAuthDigest = digest(rootAuthBytes);
++        if (rootAuthDigest !== storesBeforeCopy.rootAuth.digest) return fail("FAIL", "NATIVE_AUTH_FIXTURE_MIXED_LINEAGE_ROOT_DIGEST_CHANGED");
++        writeFileSync(profileAuthPath, rootAuthBytes, { flag: "wx", mode: 0o600 });
++        const storesAfterCopy = privateStoreDigests(hermesRoot);
++        if (!storesAfterCopy.profileAuth.exists || storesAfterCopy.profileAuth.digest !== rootAuthDigest || storesAfterCopy.rootAuth.digest !== rootAuthDigest) return fail("FAIL", "NATIVE_AUTH_FIXTURE_MIXED_LINEAGE_COPY_NOT_EXACT");
++        mixedCopySeed = { rootAuth: storesAfterCopy.rootAuth, profileAuth: storesAfterCopy.profileAuth, equal: true };
++      }
++      const rootScope = fixtureStep ? fixtureStep.scope === "root" : borrowedRoot && (operationIndex === 0 || operationIndex === 5);
+       const borrowedCase = ["root-add", "borrowed-list", "borrowed-use", "borrowed-refresh", "profile-reload", "root-reload"][operationIndex];
+       const storesBeforeOperation = privateStoreDigests(hermesRoot);
+       const commandRequest = bounded(interpreter, ["-B", "-I", candidateStore, "--print-runtime-command", "--module", fixtureModule, "--", operation], maxChildBytes, 5000);
+@@ -319,9 +361,9 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
+       const scopedEnvironment = {
+         ...environment,
+         TOY_AUTH_STORE_SCOPE: rootScope ? "root" : "profile",
+-        ...(siblingStep ? { TOY_AUTH_CONCURRENCY_ACTOR: siblingStep.actor } : {})
++        ...(fixtureStep ? { TOY_AUTH_CONCURRENCY_ACTOR: fixtureStep.actor } : {})
+       };
+-      const child = bounded(interpreter, ["-B", ...publicCommand.slice(1)], maxChildBytes, 30000, undefined, homeRoot, borrowedRoot || profileSiblings ? scopedEnvironment : environment);
++      const child = bounded(interpreter, ["-B", ...publicCommand.slice(1)], maxChildBytes, 30000, undefined, homeRoot, borrowedRoot || profileSiblings || mixedLineage ? scopedEnvironment : environment);
+       if (child.timedOut || !child.result || child.result.error || child.result.status === null) return fail("BLOCKED", "NATIVE_AUTH_FIXTURE_CHILD_UNAVAILABLE", { installedCommit, archiveDigest, operation, commandDigest, childExitCode: child.result?.status ?? null, childSignal: child.result?.signal ?? null, childError: child.result?.error?.message.includes("ETIMEDOUT") ? "TIMEOUT" : child.result?.error ? "EXECUTION_UNAVAILABLE" : null, stdoutDigest: digest(child.result?.stdout ?? ""), stderrDigest: digest(child.result?.stderr ?? "") });
+       const stdout = child.result.stdout.toString("utf8");
+       const stderrDigest = digest(child.result.stderr);
+@@ -334,7 +376,7 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
+       const parsedResult = hermesAuthFixtureResultSchema.safeParse(rawResult);
+       if (!parsedResult.success) return fail("FAIL", "NATIVE_AUTH_FIXTURE_RESULT_INVALID", { installedCommit, archiveDigest, operation, commandDigest, stdoutDigest: digest(child.result.stdout), stderrDigest });
+       const result: HermesAuthFixtureResultV1 = parsedResult.data;
+-      const expectedArgv = publicArgv(operation, undefined, false, rootScope, siblingStep?.label);
++      const expectedArgv = publicArgv(operation, undefined, false, rootScope, fixtureStep?.label);
+       const addOperation = operation.startsWith("add");
+       const listOperation = operation.startsWith("list");
+       const priorityOperation = operation === "priority-added" || operation === "priority-restored";
+@@ -354,11 +396,12 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
+         && typeof process.getuid === "function" && identity.uid === process.getuid()
+         && typeof process.getgid === "function" && identity.gid === process.getgid();
+       const markerMatches = deniedGrant ? result.markers.includes(resultMarker) && !result.markers.includes("AUTH_ADD_OK") && !result.markers.includes("CHAT_RESPONSE_OK") : result.markers.length === 1 && result.markers[0] === resultMarker;
+-      const countMatches = !listOperation || result.observations.credential_count === (siblingStep?.expectedCount ?? (saveFault ? 0 : 1));
++      const countMatches = !listOperation || result.observations.credential_count === (fixtureStep?.expectedCount ?? (saveFault ? 0 : 1));
+       const ledgerMatches = result.http_ledger.model_catalog_requests <= 1 && JSON.stringify(result.http_ledger) === JSON.stringify(expectedLedger);
+       const storesAfterOperation = privateStoreDigests(hermesRoot);
+       const rootStoreUnchanged = JSON.stringify(storesBefore.rootAuth) === JSON.stringify(storesAfterOperation.rootAuth)
+         && JSON.stringify(storesBefore.rootEnv) === JSON.stringify(storesAfterOperation.rootEnv);
++      const mixedRootEnvUnchanged = JSON.stringify(storesBeforeOperation.rootEnv) === JSON.stringify(storesAfterOperation.rootEnv);
+       const siblingRootStoreUnchanged = profileSiblingRootBaseline !== null
+         && JSON.stringify(profileSiblingRootBaseline.rootAuth) === JSON.stringify(storesAfterOperation.rootAuth)
+         && JSON.stringify(profileSiblingRootBaseline.rootEnv) === JSON.stringify(storesAfterOperation.rootEnv);
+@@ -370,7 +413,41 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
+       const siblingProfileAddPersisted = siblingStep?.scope === "profile" && addOperation
+         && storesAfterOperation.profileAuth.exists
+         && storesAfterOperation.profileAuth.digest !== storesBeforeOperation.profileAuth.digest;
+-      const profileStoreVerified = siblingStep
++      const mixedLineageProfileStoreVerified = mixedStep
++        ? mixedStep.caseId === "root-add"
++          ? JSON.stringify(storesBeforeOperation.profileAuth) === JSON.stringify(storesAfterOperation.profileAuth)
++          : mixedStep.caseId === "copied-lineage-heal"
++            ? mixedCopySeed !== null
++              && JSON.stringify(storesBeforeOperation.profileAuth) === JSON.stringify(mixedCopySeed.profileAuth)
++              && storesAfterOperation.profileAuth.digest !== mixedCopySeed.profileAuth.digest
++            : mixedStep.caseId === "copied-lineage-use" || mixedStep.caseId === "copied-lineage-refresh" || mixedStep.caseId === "copied-lineage-reload"
++              ? mixedHealedProfileAuth !== null && JSON.stringify(storesAfterOperation.profileAuth) === JSON.stringify(mixedHealedProfileAuth)
++              : mixedStep.caseId === "independent-manual-add"
++                ? mixedHealedProfileAuth !== null
++                  && JSON.stringify(storesBeforeOperation.profileAuth) === JSON.stringify(mixedHealedProfileAuth)
++                  && storesAfterOperation.profileAuth.exists
++                  && storesAfterOperation.profileAuth.digest !== storesBeforeOperation.profileAuth.digest
++                : mixedStep.caseId === "independent-profile-readback" || mixedStep.caseId === "independent-profile-use" || mixedStep.caseId === "independent-profile-reload"
++                  ? storesAfterOperation.profileAuth.exists
++                  : mixedStep.caseId === "independent-profile-refresh"
++                    ? storesBeforeOperation.profileAuth.exists
++                      && storesAfterOperation.profileAuth.exists
++                      && storesAfterOperation.profileAuth.digest !== storesBeforeOperation.profileAuth.digest
++                      : false
++        : false;
++      const mixedLineageRootStoreVerified = mixedStep !== undefined
++        && storesAfterOperation.rootAuth.exists
++        && mixedRootEnvUnchanged
++        && (mixedStep.caseId === "root-add"
++          ? storesBeforeOperation.rootAuth.digest !== storesAfterOperation.rootAuth.digest
++          : mixedStep.caseId === "copied-lineage-refresh"
++            ? previousRootAuth.digest !== storesAfterOperation.rootAuth.digest
++            : mixedStep.caseId === "copied-lineage-use" || mixedStep.caseId === "copied-lineage-reload"
++              ? true
++              : JSON.stringify(storesBeforeOperation.rootAuth) === JSON.stringify(storesAfterOperation.rootAuth));
++      const profileStoreVerified = mixedLineage
++        ? mixedLineageProfileStoreVerified
++        : siblingStep
+         ? siblingStep.scope === "root" ? siblingProfileStoreUnchanged : storesAfterOperation.profileAuth.exists
+         : borrowedRoot ? !profileAuthAfterCreate.exists && !storesAfterOperation.profileAuth.exists : deniedGrant ? !storesAfterOperation.profileAuth.exists : storesAfterOperation.profileAuth.exists
+           && (operation !== "add" || storesAfterOperation.profileAuth.digest !== profileAuthAfterCreate.digest)
+@@ -380,13 +457,13 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
+         && (operation === "add" || operation === "chat-expired"
+           ? storesAfterOperation.rootAuth.digest !== previousRootAuth.digest
+           : storesAfterOperation.rootAuth.digest === previousRootAuth.digest);
+-      const expectedGeneration = deniedGrant ? null : chatOperation ? siblingStep?.expectedGeneration ?? (operation === "chat" ? "initial" : "rotated") : null;
++      const expectedGeneration = deniedGrant ? null : chatOperation ? fixtureStep?.expectedGeneration ?? (operation === "chat" ? "initial" : "rotated") : null;
+       const exitMatches = result.exit_code === child.result.status && (deniedGrant && (addOperation || chatOperation) ? result.exit_code !== 0 : result.exit_code === 0);
+       const operationPassed = result.operation === (chatOperation ? "chat" : addOperation ? "add" : priorityOperation ? "priority" : "list")
+         && result.observations.phase === operation
+         && result.observations.provider === (siwcUnbound ? "openai-chatgpt" : "openai-codex")
+         && result.observations.access_generation === expectedGeneration
+-        && (!siblingStep || result.observations.catalog_access_generation === (chatOperation ? siblingStep.expectedGeneration : null))
++        && (!fixtureStep || result.observations.catalog_access_generation === (chatOperation ? fixtureStep.expectedGeneration : null))
+         && result.observations.network_denials.length === 0
+         && result.observations.socket_origin === null
+         && result.observations.token_hygiene
+@@ -398,11 +475,11 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
+         && exitMatches
+         && markerMatches
+         && countMatches
+-        && (!siblingStep || priorityOperation || !listOperation || result.observations.target_label_present === siblingStep.expectedLabelPresent)
++        && (!fixtureStep || priorityOperation || !listOperation || result.observations.target_label_present === fixtureStep.expectedLabelPresent)
+         && result.network_audit === "socket-audit-hook-installed"
+         && ledgerMatches
+         && profileStoreVerified
+-        && (borrowedRoot ? borrowedRootStoreVerified : profileSiblings ? true : rootStoreUnchanged)
++        && (borrowedRoot ? borrowedRootStoreVerified : mixedLineage ? mixedLineageRootStoreVerified : profileSiblings ? true : rootStoreUnchanged)
+         && (!siblingStep || (rootScope ? siblingRootAddPersisted || siblingRootStoreUnchanged : siblingRootStoreUnchanged))
+         && (!siblingStep || (rootScope ? siblingProfileStoreUnchanged : !addOperation || siblingProfileAddPersisted))
+         && identityMatches;
+@@ -416,7 +493,7 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
+         operationPassed ? "PASS" : "FAIL",
+         operationPassed ? `NATIVE_AUTH_FIXTURE_${operation.toUpperCase().replaceAll("-", "_")}_OBSERVED` : "NATIVE_AUTH_FIXTURE_OPERATION_FAILED",
+         {
+-          ...(operation === firstOperation && !profileSiblings ? { profileCreate: {
++          ...(operation === firstOperation && !profileSiblings && !mixedLineage ? { profileCreate: {
+             publicArgv: ["hermes", ...profileCreateArgs],
+             exitCode: profileCreate.result.status,
+             profileCreated: true,
+@@ -433,15 +510,17 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
+           gidMatches: typeof process.getgid === "function" && identity.gid === process.getgid(),
+           childStdoutDigest: digest(child.result.stdout),
+           childStderrDigest: stderrDigest,
+-          ...(!profileSiblings ? storeEvidence : {}),
++          ...(!profileSiblings && !mixedLineage ? storeEvidence : {}),
+           ...(borrowedRoot ? { caseId: borrowedCase, storeScope: rootScope ? "root" : "profile", borrowedRootStoreVerified, profileCopyAbsent: profileStoreVerified } : {}),
+           ...(siblingStep ? { caseId: siblingStep.caseId, storeScope: siblingStep.scope, label: siblingStep.label, expectedCount: siblingStep.expectedCount ?? null, expectedGeneration: siblingStep.expectedGeneration ?? null, rootAuth: storesAfterOperation.rootAuth, rootEnv: storesAfterOperation.rootEnv, profileAuth: storesAfterOperation.profileAuth, rootStoreUnchanged: siblingRootStoreUnchanged, rootAddPersisted: siblingRootAddPersisted, profileStoreUnchanged: siblingProfileStoreUnchanged, profileAddPersisted: siblingProfileAddPersisted } : {}),
++          ...(mixedStep ? { caseId: mixedStep.caseId, storeScope: mixedStep.scope, label: mixedStep.label, expectedCount: mixedStep.expectedCount ?? null, expectedGeneration: mixedStep.expectedGeneration ?? null, rootAuthBefore: storesBeforeOperation.rootAuth.digest, rootAuthAfter: storesAfterOperation.rootAuth.digest, rootEnvAfter: storesAfterOperation.rootEnv.digest, rootEnvUnchanged: mixedRootEnvUnchanged, profileAuthBefore: storesBeforeOperation.profileAuth.digest, profileAuthAfter: storesAfterOperation.profileAuth.digest, rootStoreVerified: mixedLineageRootStoreVerified, profileStoreVerified: mixedLineageProfileStoreVerified, ...(mixedStep.caseId === "copied-lineage-heal" ? { copyDigestsEqual: mixedCopySeed?.equal ?? false } : {}) } : {}),
+           wholeATComplete: false
+         },
+         [...artifacts, archiveDigest, profileCreateDigest, commandDigest]
+       );
+       operationChecks.push(operationCheck);
+       if (!operationPassed) return operationChecks;
++      if (mixedStep?.caseId === "copied-lineage-heal") mixedHealedProfileAuth = storesAfterOperation.profileAuth;
+       previousRootAuth = storesAfterOperation.rootAuth;
+       if (siblingStep?.scope === "root" && addOperation && operationIndex === 1) profileSiblingRootBaseline = { rootAuth: storesAfterOperation.rootAuth, rootEnv: storesAfterOperation.rootEnv };
+     }
+diff --git a/packages/hermes/src/auth-probe.ts b/packages/hermes/src/auth-probe.ts
+index 29157d6..accde1b 100644
+--- a/packages/hermes/src/auth-probe.ts
++++ b/packages/hermes/src/auth-probe.ts
+@@ -16,8 +16,8 @@ export const HermesAuthProbe = {
+   async run(input: RegisteredProbeInputV1, context: OpsControlContextV1): Promise<Result<RegisteredProbeOperationV1>> {
+     const started = process.hrtime.bigint();
+     const invalid: Result<RegisteredProbeOperationV1> = { ok: false, error: { module: "ops", code: "INVALID_INPUT", message: opsErrorMessages.INVALID_INPUT, retryable: false } };
+-    const unfilteredAuth = ["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-86", "AT-hermes-config-87", "AT-hermes-config-88"].includes(input.probeId) && input.caseId === undefined;
+-    if (!registeredProbeInputSchema.safeParse(input).success || (!unfilteredAuth && input.caseId !== "native-auth-cli") || !["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-86", "AT-hermes-config-87", "AT-hermes-config-88", "AT-hermes-config-78", "AT-ops-55"].includes(input.probeId)) return Promise.resolve(invalid);
++    const unfilteredAuth = ["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-86", "AT-hermes-config-87", "AT-hermes-config-88", "AT-hermes-config-89"].includes(input.probeId) && input.caseId === undefined;
++    if (!registeredProbeInputSchema.safeParse(input).success || (!unfilteredAuth && input.caseId !== "native-auth-cli") || !["AT-hermes-config-84", "AT-hermes-config-85", "AT-hermes-config-86", "AT-hermes-config-87", "AT-hermes-config-88", "AT-hermes-config-89", "AT-hermes-config-78", "AT-ops-55"].includes(input.probeId)) return Promise.resolve(invalid);
+     if (input.probeId === "AT-hermes-config-86") {
+       const manifest = registeredCliAcceptanceManifestInventory.find(entry => entry.id === input.probeId);
+       const cases = ["root-add-one", "root-add-two", "root-readback-one", "root-readback-two", "profile-add-one", "profile-add-two", "profile-add-new", "profile-readback-one", "profile-readback-two", "profile-readback-new", "profile-priority-one", "profile-use-one", "profile-priority-two", "profile-use-two", "profile-priority-new", "profile-use-new"];
+@@ -29,6 +29,12 @@ export const HermesAuthProbe = {
+       const mandatoryCases = ["root-add", "borrowed-list", "borrowed-use", "borrowed-refresh", "profile-reload", "root-reload"].map(id => ({ id, publicOperation: "HermesAuthProbe.run", phase: id }));
+       if (!manifest || manifest.owner !== "hermes" || manifest.scenarioId !== "auth.borrowed-refresh" || manifest.kind !== "behavioral" || JSON.stringify(manifest.mandatoryCases) !== JSON.stringify(mandatoryCases)) return Promise.resolve({ ok: false, error: { module: "ops", code: "ATTESTATION_INVALID", message: opsErrorMessages.ATTESTATION_INVALID, retryable: false } });
+     }
++    if (input.probeId === "AT-hermes-config-89") {
++      const manifest = registeredCliAcceptanceManifestInventory.find(entry => entry.id === input.probeId);
++      const mandatoryCases = ["root-add", "copied-lineage-heal", "copied-lineage-use", "copied-lineage-refresh", "copied-lineage-reload", "independent-manual-add", "independent-profile-readback", "independent-profile-use", "independent-profile-refresh", "independent-profile-reload"].map(id => ({ id, publicOperation: "HermesAuthProbe.run", phase: id }));
++      const faultControls = [{ id: "mixed-root-auth-store-copy", seam: "os", affectedPhases: ["copied-lineage-heal"] }];
++      if (!manifest || manifest.owner !== "hermes" || manifest.scenarioId !== "auth.mixed-lineage" || manifest.kind !== "behavioral" || JSON.stringify(manifest.mandatoryCases) !== JSON.stringify(mandatoryCases) || JSON.stringify(manifest.faultControls) !== JSON.stringify(faultControls)) return Promise.resolve({ ok: false, error: { module: "ops", code: "ATTESTATION_INVALID", message: opsErrorMessages.ATTESTATION_INVALID, retryable: false } });
++    }
+     if (input.probeId === "AT-hermes-config-87") {
+       const manifest = registeredCliAcceptanceManifestInventory.find(entry => entry.id === input.probeId);
+       const mandatoryCases = ["add-first", "refresh-first", "before-replace", "after-replace"].map(id => ({ id, publicOperation: "HermesAuthProbe.run", phase: id }));
+@@ -90,6 +96,7 @@ export const HermesAuthProbe = {
+       if (publicHelpObserved && fixtureBudgetMs > 0 && input.probeId === "AT-hermes-config-85") checks.push(...await runHermesAuthFixture(interpreter, home, hermesHome, fixtureBudgetMs));
+       if (publicHelpObserved && fixtureBudgetMs > 0 && input.probeId === "AT-hermes-config-86") checks.push(...await runHermesAuthFixture(interpreter, home, hermesHome, fixtureBudgetMs, "add", "profile-siblings"));
+       if (publicHelpObserved && fixtureBudgetMs > 0 && input.probeId === "AT-hermes-config-88") checks.push(...await runHermesAuthFixture(interpreter, home, hermesHome, fixtureBudgetMs, "add", "borrowed-root"));
++      if (publicHelpObserved && fixtureBudgetMs > 0 && input.probeId === "AT-hermes-config-89") checks.push(...await runHermesAuthFixture(interpreter, home, hermesHome, fixtureBudgetMs, "add", "mixed-lineage"));
+       if (publicHelpObserved && fixtureBudgetMs > 0 && input.probeId === "AT-hermes-config-87") checks.push(...await runHermesAuthFixture(interpreter, home, hermesHome, fixtureBudgetMs, "concurrent-refresh-add"));
+       if (publicHelpObserved && fixtureBudgetMs > 0 && ["AT-hermes-config-78", "AT-ops-55"].includes(input.probeId)) checks.push(...await runHermesAuthFixture(interpreter, home, hermesHome, fixtureBudgetMs, "siwc-unbound"));
+       if (publicHelpObserved && input.probeId === "AT-hermes-config-84") {
+diff --git a/packages/self-improvement/src/engineering-control.ts b/packages/self-improvement/src/engineering-control.ts
+index 794af79..cff8bb2 100644
+--- a/packages/self-improvement/src/engineering-control.ts
++++ b/packages/self-improvement/src/engineering-control.ts
+@@ -481,7 +481,129 @@ const inspectComponentComparisons = (reports: ResearchRegisterInspectionV1["repo
+   }
+   return [...comparisons.values()];
+ };
+-const inspectComponentDecisions = (reports: ResearchRegisterInspectionV1["reports"], components: ResearchRegisterInspectionV1["components"], findings: ResearchInspectionFindingV1[], documents: ReadonlyMap<string, ResearchDocumentOverlayV1>, requirementIds: readonly string[], release: string): ResearchComponentComparisonCheckV2[] => {
++const normalizedResearchHeader = (cell: string): string => cell.replace(/[*_~`]/g, "").toLowerCase().replace(/[^a-z]/g, "");
++const requirementIdsInCell = (cell: string): string[] => {
++  const ids = new Set<string>();
++  for (const match of cell.matchAll(/\b([0-9]+\.[0-9]+)\b/g)) {
++    const id = match[1];
++    if (id) ids.add(id);
++  }
++  return [...ids];
++};
++const opsMappedRequirementGroups = (registerRaw: string, readmeRaw: string, components: ResearchRegisterInspectionV1["components"], globalRequirementIds: readonly string[]): ReadonlyMap<string, ReadonlySet<string>> => {
++  const readmeLines = readmeRaw.split(/\r?\n/);
++  let readmeTable: { index: number; cells: string[]; reqIndex: number; specsIndex: number } | undefined;
++  for (let index = 0; index < readmeLines.length; index += 1) {
++    const cells = markdownTableCells(readmeLines[index] ?? "");
++    const separator = markdownTableCells(readmeLines[index + 1] ?? "");
++    if (!cells || !separator || cells.length !== separator.length || !isMarkdownTableSeparator(separator)) continue;
++    const headers = cells.map(normalizedResearchHeader);
++    const reqIndex = headers.findIndex(header => header === "req" || header === "requirement");
++    const specsIndex = headers.findIndex(header => header === "specs");
++    if (reqIndex < 0 || specsIndex < 0) continue;
++    if (readmeTable) throw new Error("README_REQUIREMENT_TABLE_DUPLICATE");
++    readmeTable = { index, cells, reqIndex, specsIndex };
++  }
++  if (!readmeTable) throw new Error("README_REQUIREMENT_TABLE_MISSING");
++  const readmeRows = new Map<string, { specs: Set<string>; count: number }>();
++  for (let index = readmeTable.index + 2; index < readmeLines.length; index += 1) {
++    const cells = markdownTableCells(readmeLines[index] ?? "");
++    if (!cells) break;
++    if (isMarkdownTableSeparator(cells)) continue;
++    if (cells.length !== readmeTable.cells.length) throw new Error("README_REQUIREMENT_ROW_INVALID");
++    const reqCell = cells[readmeTable.reqIndex];
++    const specsCell = cells[readmeTable.specsIndex];
++    if (reqCell === undefined || specsCell === undefined) throw new Error("README_REQUIREMENT_ROW_INVALID");
++    const ids = requirementIdsInCell(reqCell);
++    if (ids.length === 0) throw new Error("README_REQUIREMENT_ID_MISSING");
++    const specs = new Set(specsCell.split(",").map(normalizedResearchHeader).filter(Boolean));
++    for (const id of ids) {
++      const existing = readmeRows.get(id);
++      if (existing) {
++        existing.count += 1;
++        for (const spec of specs) existing.specs.add(spec);
++      } else readmeRows.set(id, { specs: new Set(specs), count: 1 });
++    }
++  }
++  for (const id of globalRequirementIds) {
++    const row = readmeRows.get(id);
++    if (!row || row.count !== 1 || !row.specs.has("all")) throw new Error("README_GLOBAL_REQUIREMENT_MAPPING_INVALID");
++  }
++  const directOpsRequirements = [...readmeRows.entries()].filter(([, row]) => row.specs.has("ops")).map(([id]) => id);
++  for (const id of ["2.4", "5.10"]) {
++    const row = readmeRows.get(id);
++    if (!row || row.count !== 1 || !row.specs.has("ops") || globalRequirementIds.includes(id)) throw new Error("README_OPS_REQUIREMENT_MAPPING_INVALID");
++  }
++  const additionalOpsRequirements = new Set(directOpsRequirements.filter(id => !globalRequirementIds.includes(id)));
++  const registerLines = registerRaw.split(/\r?\n/);
++  let coverageTable: { index: number; cells: string[]; requirementIndex: number; coverageIndex: number } | undefined;
++  for (let index = 0; index < registerLines.length; index += 1) {
++    const cells = markdownTableCells(registerLines[index] ?? "");
++    const separator = markdownTableCells(registerLines[index + 1] ?? "");
++    if (!cells || !separator || cells.length !== separator.length || !isMarkdownTableSeparator(separator)) continue;
++    const headers = cells.map(normalizedResearchHeader);
++    const requirementIndex = headers.findIndex(header => header.includes("requirement") && header.includes("originaldecision"));
++    const coverageIndex = headers.findIndex(header => header.includes("components") && header.includes("acceptance"));
++    if (requirementIndex < 0 || coverageIndex < 0) continue;
++    if (coverageTable) throw new Error("REGISTER_REQUIREMENT_TABLE_DUPLICATE");
++    coverageTable = { index, cells, requirementIndex, coverageIndex };
++  }
++  if (!coverageTable) throw new Error("REGISTER_REQUIREMENT_TABLE_MISSING");
++  const inventoryIds = new Set(components.map(component => component.id));
++  const coverageCounts = new Map<string, number>();
++  const requirementComponents = new Map<string, Set<string>>();
++  for (let index = coverageTable.index + 2; index < registerLines.length; index += 1) {
++    const cells = markdownTableCells(registerLines[index] ?? "");
++    if (!cells) break;
++    if (isMarkdownTableSeparator(cells)) continue;
++    if (cells.length !== coverageTable.cells.length) throw new Error("REGISTER_REQUIREMENT_ROW_INVALID");
++    const reqCell = cells[coverageTable.requirementIndex];
++    const coverageCell = cells[coverageTable.coverageIndex];
++    if (reqCell === undefined || coverageCell === undefined) throw new Error("REGISTER_REQUIREMENT_ROW_INVALID");
++    const relevantIds = requirementIdsInCell(reqCell).filter(id => additionalOpsRequirements.has(id));
++    if (relevantIds.length === 0) continue;
++    const groupExpression = coverageCell.split(";")[0]?.trim();
++    if (!groupExpression) throw new Error("REGISTER_OPS_COMPONENT_GROUP_MISSING");
++    const groupTokens = groupExpression.split(/[\/,]/).map(token => token.trim());
++    if (groupTokens.length === 0 || groupTokens.some(token => token.length === 0)) throw new Error("REGISTER_OPS_COMPONENT_GROUP_INVALID");
++    const mappedComponents = new Set<string>();
++    for (const token of groupTokens) {
++      const match = /^([A-Z][0-9]{2})(?:\s*[-–—]\s*([A-Z][0-9]{2}))?$/.exec(token);
++      const first = match?.[1];
++      const last = match?.[2] ?? first;
++      if (!first || !last || first.slice(0, -2) !== last.slice(0, -2)) throw new Error("REGISTER_OPS_COMPONENT_GROUP_INVALID");
++      const start = Number(first.slice(-2));
++      const end = Number(last.slice(-2));
++      if (end < start || end - start + 1 > components.length) throw new Error("REGISTER_OPS_COMPONENT_RANGE_INVALID");
++      const prefix = first.slice(0, -2);
++      for (let value = start; value <= end; value += 1) {
++        const componentId = prefix + String(value).padStart(2, "0");
++        if (!inventoryIds.has(componentId)) throw new Error("REGISTER_OPS_COMPONENT_UNMAPPED");
++        mappedComponents.add(componentId);
++      }
++    }
++    if (mappedComponents.size === 0) throw new Error("REGISTER_OPS_COMPONENT_GROUP_EMPTY");
++    for (const requirementId of relevantIds) {
++      const count = (coverageCounts.get(requirementId) ?? 0) + 1;
++      if (count !== 1) throw new Error("REGISTER_OPS_REQUIREMENT_MAPPING_DUPLICATE");
++      coverageCounts.set(requirementId, count);
++      requirementComponents.set(requirementId, new Set(mappedComponents));
++    }
++  }
++  for (const requirementId of additionalOpsRequirements) {
++    if (coverageCounts.get(requirementId) !== 1 || !requirementComponents.get(requirementId)?.size) throw new Error("REGISTER_OPS_REQUIREMENT_MAPPING_MISSING");
++  }
++  const byComponent = new Map<string, Set<string>>();
++  for (const [requirementId, componentIds] of requirementComponents) {
++    for (const componentId of componentIds) {
++      const requirements = byComponent.get(componentId) ?? new Set<string>();
++      requirements.add(requirementId);
++      byComponent.set(componentId, requirements);
++    }
++  }
++  return byComponent;
++};
++const inspectComponentDecisions = (reports: ResearchRegisterInspectionV1["reports"], components: ResearchRegisterInspectionV1["components"], findings: ResearchInspectionFindingV1[], documents: ReadonlyMap<string, ResearchDocumentOverlayV1>, requirementIds: readonly string[], release: string, opsRequirementIdsByComponent: ReadonlyMap<string, ReadonlySet<string>>): ResearchComponentComparisonCheckV2[] => {
+   const decisions = new Map<string, ResearchComponentComparisonV2 | ResearchComponentComparisonV3 | ResearchSourcesComponentComparisonV1 | ResearchSourcesComponentComparisonV2>();
+   for (const report of reports) {
+     if (report.digest === null) continue;
+@@ -499,9 +621,9 @@ const inspectComponentDecisions = (reports: ResearchRegisterInspectionV1["report
+     }
+   }
+   const acceptanceIds = new Set(acceptanceIndexSchema.parse(JSON.parse(read("tests/acceptance-index.json"))).acceptance.map(entry => entry.id));
+-  return components.map(component => compareDecision(decisions.get(component.id), component, findings, requirementIds, release, acceptanceIds));
++  return components.map(component => compareDecision(decisions.get(component.id), component, findings, requirementIds, release, acceptanceIds, opsRequirementIdsByComponent));
+ };
+-const compareDecision = (record: ResearchComponentComparisonV2 | ResearchComponentComparisonV3 | ResearchSourcesComponentComparisonV1 | ResearchSourcesComponentComparisonV2 | ResearchAttentionDecisionV1 | undefined, component: ResearchRegisterInspectionV1["components"][number], findings: ResearchInspectionFindingV1[], requirementIds: readonly string[], release: string, acceptanceIds: ReadonlySet<string>): ResearchComponentComparisonCheckV2 => {
++const compareDecision = (record: ResearchComponentComparisonV2 | ResearchComponentComparisonV3 | ResearchSourcesComponentComparisonV1 | ResearchSourcesComponentComparisonV2 | ResearchAttentionDecisionV1 | undefined, component: ResearchRegisterInspectionV1["components"][number], findings: ResearchInspectionFindingV1[], requirementIds: readonly string[], release: string, acceptanceIds: ReadonlySet<string>, opsRequirementIdsByComponent: ReadonlyMap<string, ReadonlySet<string>> = new Map()): ResearchComponentComparisonCheckV2 => {
+   const codes: ResearchComponentComparisonCheckV2["findings"] = [];
+   const add = (code: ResearchComponentComparisonCheckV2["findings"][number]): void => { if (!codes.includes(code)) codes.push(code); };
+   const validationId = "G0:" + release + ":" + component.id + (record?.scope === "attention-research-decision" ? ":" + record.decisionId : "");
+@@ -513,7 +635,7 @@ const compareDecision = (record: ResearchComponentComparisonV2 | ResearchCompone
+     return source?.kind === "primary" && source.supportedOptionIds.includes(optionId);
+   };
+   const sourcesComponent = component.id.startsWith("D");
+-  const expectedRequirements = sourcesComponent ? [...new Set([...requirementIds, "0.9"])] : requirementIds;
++  const expectedRequirements = [...new Set([...(sourcesComponent ? [...requirementIds, "0.9"] : requirementIds), ...(opsRequirementIdsByComponent.get(component.id) ?? [])])];
+   const missingRequirementIds = expectedRequirements.filter(id => !record?.mappedRequirements.includes(id));
+   const missingSourceIds = new Set(component.reportKeys.filter(id => !selected || !sourceSupports(id, selected.id)));
+   if (component.reportKeys.length === 0) missingSourceIds.add("REGISTER:" + component.id);
+@@ -669,7 +791,8 @@ const inspectResearch = (input: MapCheckInputV1, testDocuments: readonly Researc
+   const globalMapping = /README maps ([^\n]+?) to all specs/.exec(raw)?.[1];
+   const requirementIds = [...new Set(globalMapping?.match(/\b[0-9]+\.[0-9]+\b/g) ?? [])];
+   if (requirementIds.length === 0) throw new Error("REGISTER_GLOBAL_REQUIREMENTS_MISSING");
+-  const componentDecisions = inspectComponentDecisions(reports, components, findings, documents, requirementIds, input.release ?? "R0");
++  const opsRequirementIdsByComponent = opsMappedRequirementGroups(raw, readResearchFile("specs/README.md"), components, requirementIds);
++  const componentDecisions = inspectComponentDecisions(reports, components, findings, documents, requirementIds, input.release ?? "R0", opsRequirementIdsByComponent);
+   const attentionDecisions = inspectAttentionDecisions(reports, components, findings, documents, requirementIds, input.release ?? "R0");
+   return researchRegisterInspectionV3Schema.parse({ attentionDecisions, componentDecisions, requestedRelease: input.release, registerPath, registerDigest: hash(raw), components, componentComparisons, reports, specReferences, sourcesCatalogCoverage, dependencyClosureVerified: false, findings, wholeATsPassed: [], scope: "register_inventory", admission: "BLOCKED", acceptanceComplete: false });
+ };
+diff --git a/patches/hermes-auth-fixture.patch b/patches/hermes-auth-fixture.patch
+index 5edd3fd..1b6764f 100644
+--- a/patches/hermes-auth-fixture.patch
++++ b/patches/hermes-auth-fixture.patch
+@@ -1,6 +1,6 @@
+ --- /dev/null
+ +++ b/tests/fixtures/toy_auth_httpx_fixture.py
+-@@ -0,0 +1,747 @@
++@@ -0,0 +1,767 @@
+ +from __future__ import annotations
+ +
+ +import base64
+@@ -44,6 +44,12 @@
+ +_PAID_KEY = "toy-fixture-paid-key"
+ +_GENERATION_EXPIRATIONS = {"initial": 1893456000, "rotated": 4102444800, "added": 1893456000, "added-rotated": 4102531200, "stale": 4102531200}
+ +_GENERATION_REFRESH_TOKENS = {"initial": "toy-fixture-refresh-initial", "rotated": "toy-fixture-refresh-rotated", "added": "toy-fixture-refresh-added", "added-rotated": "toy-fixture-refresh-added-rotated", "stale": "toy-fixture-refresh-stale"}
+++_MIXED_LINEAGE_LABELS = {
+++    "mixed-root-add": "toy-fixture-mixed-root",
+++    "mixed-root-readback": "toy-fixture-mixed-root",
+++    "mixed-profile-add": "toy-fixture-mixed-independent",
+++    "mixed-profile-readback": "toy-fixture-mixed-independent",
+++}
+ +
+ +
+ +class _FixtureAsyncStream(httpx.AsyncByteStream):
+@@ -72,6 +78,16 @@
+ +
+ +def _expected_access_generations() -> tuple[str, ...]:
+ +    actor = os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR", "")
+++    mixed_lineage_generations = {
+++        "mixed-root-use": "initial",
+++        "mixed-root-refresh": "rotated",
+++        "mixed-root-reload": "rotated",
+++        "mixed-profile-use": "added",
+++        "mixed-profile-refresh": "added-rotated",
+++        "mixed-profile-reload": "added-rotated",
+++    }
+++    if actor in mixed_lineage_generations:
+++        return (mixed_lineage_generations[actor],)
+ +    sibling_generations = {
+ +        "sibling-profile-one": "stale",
+ +        "sibling-profile-two": "added",
+@@ -337,6 +353,8 @@
+ +                "sibling-profile-one": "stale",
+ +                "sibling-profile-two": "added",
+ +                "sibling-profile-new": "added-rotated",
+++                "mixed-root-add": "initial",
+++                "mixed-profile-add": "added",
+ +            }
+ +            generation = sibling_generations.get(actor, "added" if actor == "auth-add" else "initial")
+ +            if actor == "auth-add":
+@@ -510,6 +528,8 @@
+ +    if os.environ.get("TOY_AUTH_STORAGE_CONTEXT") == "1":
+ +        return "toy-fixture-storage-cut"
+ +    actor = os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR", "")
+++    if actor in _MIXED_LINEAGE_LABELS:
+++        return _MIXED_LINEAGE_LABELS[actor]
+ +    if actor.startswith("sibling-"):
+ +        return "toy-fixture-" + actor
+ +    return "toy-fixture-added-" + os.environ.get("TOY_AUTH_CONCURRENCY_ORDER", "")
+@@ -519,7 +539,7 @@
+ +    prefix = ["hermes"] if os.environ.get("TOY_AUTH_STORE_SCOPE") == "root" else ["hermes", "--profile", "toy"]
+ +    if operation == "add":
+ +        actor = os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR", "")
+-+        label = ["--label", _fixture_label()] if actor == "auth-add" or actor.startswith("sibling-") else []
+++        label = ["--label", _fixture_label()] if actor == "auth-add" or actor.startswith("sibling-") or actor in _MIXED_LINEAGE_LABELS else []
+ +        return [*prefix, "auth", "add", "openai-codex", "--type", "oauth", "--no-browser", *label]
+ +    if operation == "list":
+ +        return [*prefix, "auth", "list", "openai-codex"]
+@@ -638,7 +658,7 @@
+ +                    count = int(raw)
+ +                    break
+ +        observations["credential_count"] = count
+-+        if os.environ.get("TOY_AUTH_STORAGE_CONTEXT") == "1" or os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR", "").startswith("sibling-"):
+++        if os.environ.get("TOY_AUTH_STORAGE_CONTEXT") == "1" or os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR", "").startswith("sibling-") or os.environ.get("TOY_AUTH_CONCURRENCY_ACTOR", "") in _MIXED_LINEAGE_LABELS:
+ +            observations["target_label_present"] = _fixture_label() in stdout
+ +        markers.append("AUTH_LIST_READBACK_OK" if count > 0 else "AUTH_LIST_EMPTY")
+ +    else:
+diff --git a/tests/cli/research.cli.test.ts b/tests/cli/research.cli.test.ts
+index 4626755..a02badf 100644
+--- a/tests/cli/research.cli.test.ts
++++ b/tests/cli/research.cli.test.ts
+@@ -77,3 +77,36 @@ await test("Sources named-member coverage remains visible through toy research c
+     result, wholeATsPassed: [], acceptanceComplete: false
+   }, null, 2) + "\n");
+ });
++
++await test("Ops requirement omissions reach every mapped component through toy research check", () => {
++  const child = spawnSync(process.execPath, [join(root, "cli/dist/main.js"), "research", "check", "--release", "R0", "--json"], {
++    cwd: root, encoding: "utf8", timeout: 30000, maxBuffer: 4 * 1024 * 1024,
++    env: { PATH: "/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin", LANG: "C", LC_ALL: "C" }
++  });
++  assert.equal(child.error, undefined);
++  assert.equal(child.status, 5);
++  assert.equal(child.stderr, "");
++  const result = cliResultSchema.parse(JSON.parse(child.stdout));
++  assert.ok(result.ok && result.commandId === "research.check");
++  assert.equal(result.data.admission, "BLOCKED");
++  assert.equal(result.data.acceptanceComplete, false);
++  assert.deepEqual(result.data.wholeATsPassed, []);
++  assert.equal(result.data.components.length, 165);
++  assert.equal(result.data.componentDecisions.length, 165);
++  const opsIds = new Set(["A03", "A04", "A05", "A06", "A11", "A12", "A13", "A14", "A15", "A16", "A17", "A18", "A19"]);
++  const addedRows = result.data.componentDecisions.filter(decision => decision.missingRequirementIds.includes("2.4") || decision.missingRequirementIds.includes("5.10"));
++  assert.deepEqual(addedRows.map(decision => decision.componentId).sort(), [...opsIds].sort());
++  for (const decision of result.data.componentDecisions) {
++    const expected = ["0.1", "0.2", "0.10", ...(decision.componentId.startsWith("D") ? ["0.9"] : []), ...(opsIds.has(decision.componentId) ? ["2.4", "5.10"] : [])];
++    assert.deepEqual(decision.missingRequirementIds, expected, decision.componentId);
++    assert.equal(decision.state, "BLOCKED");
++    assert.ok(decision.findings.includes("MAPPED_REQUIREMENTS_MISSING"));
++  }
++  const output = join(root, "build/evidence/R0.02");
++  mkdirSync(output, { recursive: true });
++  writeFileSync(join(output, "ops-scope-corrected-cli-test.json"), JSON.stringify({
++    command: "toy research check --release R0 --json", exitCode: child.status,
++    result, globalRequirementRows: 165, addedOpsRequirementRows: 13,
++    wholeATsPassed: [], acceptanceComplete: false
++  }, null, 2) + "\n");
++});

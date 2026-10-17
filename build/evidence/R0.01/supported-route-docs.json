@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "toy.r0-model-route-permission.v1",
+  "fetchedAt": "2026-10-06T03:34:05.936Z",
+  "method": "Official-domain search followed by actual page retrieval",
+  "candidate": "sign-in-with-chatgpt-direct-public-responses",
+  "officialClientClassDocumented": true,
+  "legacyBackendApiPermission": "UNCONFIRMED",
+  "accountSpecificCompatibility": "PENDING",
+  "independentToyAuthorization": "PENDING",
+  "paidFallbackPermitted": false,
+  "credentialMaterialCollected": false,
+  "sources": [
+    {
+      "url": "https://developers.openai.com/siwc/token-sharing-open-source",
+      "supports": "Open-source locally hosted apps may request ChatGPT plan usage; account-specific permission remains required."
+    },
+    {
+      "url": "https://developers.openai.com/siwc/token-sharing-open-source/codex-app-server",
+      "supports": "First-party app-server supports a configured ChatGPT plan OAuth Responses provider; catalog listing is not an entitlement proof."
+    },
+    {
+      "url": "https://developers.openai.com/siwc/token-sharing-open-source/sign-in",
+      "supports": "Fresh registration binds issued client, host, verified identity and plan-use scope."
+    },
+    {
+      "url": "https://developers.openai.com/siwc/token-sharing-open-source/preview-limitations",
+      "supports": "Output-token cap unsupported; store false and streaming true required; client app owns renewal."
+    },
+    {
+      "url": "https://developers.openai.com/siwc/token-sharing-open-source/models-and-inference",
+      "supports": "Public Responses endpoint and terminal completed inference distinguish success from streaming failures."
+    }
+  ],
+  "interface": "docs/adr/0021-supported-model-route.md",
+  "wholeATVerdicts": [],
+  "supersededCandidate": {
+    "candidate": "codex-app-server-chatgpt-plan-responses",
+    "reason": "Current R0 gate requires direct SIWC for Hermes; Codex is delegation only."
+  },
+  "currentGateDecision": "specs/gates/R0-research.md:42; specs/gates/R0-facts.md:19",
+  "latestPrimaryRetrievalAt": "2026-10-06T04:21:37.058300+00:00"
+}

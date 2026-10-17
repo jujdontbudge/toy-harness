@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "packages": {
+      "type": "object",
+      "properties": {
+        "venv": {
+          "type": "object",
+          "properties": {
+            "environment": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4096
+            }
+          },
+          "required": [
+            "environment"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "venv"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "packages"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:InstalledHermesDependencyRecordV1"
+}

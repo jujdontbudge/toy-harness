@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "role": {
+      "type": "string",
+      "enum": [
+        "foreground",
+        "background",
+        "cron",
+        "auxiliary",
+        "continuation",
+        "research",
+        "child"
+      ]
+    },
+    "arm": {
+      "type": "string",
+      "enum": [
+        "original",
+        "experimental-background-high-standard"
+      ]
+    },
+    "provider": {
+      "type": "string",
+      "const": "siwc_responses"
+    },
+    "settings": {
+      "type": "object",
+      "properties": {
+        "model": {
+          "type": "string",
+          "enum": [
+            "gpt-6.1-sol",
+            "gpt-6-luna"
+          ]
+        },
+        "effort": {
+          "type": "string",
+          "enum": [
+            "max",
+            "medium",
+            "high"
+          ]
+        },
+        "serviceTier": {
+          "type": "string",
+          "enum": [
+            "priority",
+            "default"
+          ]
+        }
+      },
+      "required": [
+        "model",
+        "effort",
+        "serviceTier"
+      ],
+      "additionalProperties": false
+    },
+    "policyDigest": {
+      "type": "string",
+      "minLength": 64,
+      "maxLength": 64,
+      "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+    },
+    "localOutputReservationTokens": {
+      "type": "number",
+      "const": 4096
+    },
+    "outputLimitKind": {
+      "type": "string",
+      "const": "estimate"
+    },
+    "providerOutputCap": {
+      "type": "null"
+    },
+    "paidFallbackPermitted": {
+      "type": "boolean",
+      "const": false
+    }
+  },
+  "required": [
+    "role",
+    "arm",
+    "provider",
+    "settings",
+    "policyDigest",
+    "localOutputReservationTokens",
+    "outputLimitKind",
+    "providerOutputCap",
+    "paidFallbackPermitted"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:ModelRouteSelectionV1"
+}

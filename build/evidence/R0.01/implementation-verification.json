@@ -1,0 +1,74 @@
+{
+  "schemaVersion": "toy.r001-implementation-verification.v1",
+  "generatedAt": "2026-10-06T04:07:21.925Z",
+  "card": "R0.01",
+  "wholeAssignedATsPassed": false,
+  "implementation": "Policy diagnostics verified; stream normalization and fixed registered cases compiled, stack execution pending; actual provider adapter and independent grant pending",
+  "verification": [
+    {
+      "command": "npm run check",
+      "exitCode": 0,
+      "artifacts": 265,
+      "swiftInvoked": false
+    },
+    {
+      "command": "npm run check:model-route",
+      "exitCode": 0,
+      "cliInvocations": 3
+    },
+    {
+      "command": "node --test --test-skip-pattern=<physical stack lifecycle case> tests/cli/bootstrap.cli.test.ts",
+      "exitCode": 0,
+      "checks": 8,
+      "cliInvocations": 102,
+      "excludedCase": "fixed fake R0 stack owns real process database clock and probe lifecycle",
+      "reason": "Pressure query denied; no new physical admission"
+    },
+    {
+      "command": "npm run check:engineering",
+      "exitCode": 0,
+      "cliInvocations": 42,
+      "staticChecks": 43
+    }
+  ],
+  "receipts": {
+    "policy": "build/evidence/R0.01/attempts/2026-10-06T04-07-21.692Z-5fb07598-a1d1-4136-bcb8-7cef68f6a11d/policy-receipts.json",
+    "packedCli": "build/evidence/R0.K3/attempts/2026-10-06T04-01-05.897Z-54e758b4-c376-46fc-90ad-238348e1c57b/receipts.json",
+    "engineering": "build/evidence/R0.K4/attempts/2026-10-06T04-04-19.006Z-651fdbf1-444a-41bc-88c6-220108693774/receipts.json",
+    "invalidCasePair": "build/evidence/R0.01/refused-case-pair.json",
+    "unattestedStack": "build/evidence/R0.01/unattested-stack.json"
+  },
+  "sourceHashes": {
+    "architecture/modules.json": "570e921735ed76778864746ef954875cbac9431bf3862f70d38bf69533190b93",
+    "architecture/features.json": "2b1ac833305360aa88d20e00e14b4e6464688235335b86a0185d18a9ad6889d1",
+    "behavior/models.yaml": "5274e65cb70c5db428afb047f693324acd2572141c6d342d678cc85255113db0",
+    "packages/contracts/src/model-route.ts": "1ddc1440d312c51af6cd4802c0ec26d79de686e467db9273c82d9e6f07f2d622",
+    "packages/contracts/src/test-control.ts": "0648b0a17073c8afe32a8ac73e7f3a4ea12afaba803134ae6c0bf31e97a0cfd9",
+    "packages/contracts/src/ops-registry.ts": "bd19c1c4ddee009b0f324f025718bad890b5ddc162c92994cbb02680fecf0ee2",
+    "packages/hermes/src/public.ts": "c6e478a90772b117b2546b7cfaa0e5e3cc8c751ea295eb085d7f0d4838c9ddc2",
+    "packages/hermes/src/model-route.ts": "81abbb3b87d44a3fcf4bf51aa55f62954cf982d7c8c238380ebbbe7054b7c8b1",
+    "packages/hermes/src/model-route-probe.ts": "4ec34eeb9a86fc54f3d7f8ff4336ed765a0e278a472492e7d7c24efbc780f7e4",
+    "packages/ops/src/public.ts": "f98d69d4ea3e6bac34fc7ec9ede6cbb51809b7879576a9a6f1ecd9730a7e38d2",
+    "packages/ops/src/codex-protocol.ts": "3d59506dceba6cc6e6905ac4cdb482ef38255e25d2fd1f08bbf618c26ef22c39",
+    "packages/ops/src/fixture-stack.ts": "999abeb00076043feb6eee8df13af377cf3ea537f9e1ec9ead7eb19951aceff5",
+    "cli/src/main.ts": "8712baed1d6ed97e7b47061eecac5fc0dc4edbb19d66b5b9eb139da9632afc9f",
+    "tests/cli/model-route.cli.test.ts": "a4c7161722b8451086024cf304621f0b0fdc3fe0f012755b7d6b687ee1438102",
+    "tests/cli/bootstrap.cli.test.ts": "504995d811430b41dd1a65785aa47e96fb1f1920fd384bbaaf1450dec3e1e14e",
+    "tests/cli/engineering.cli.test.ts": "de72a426fe7eea236496c5a4308e17ef5066a2909a6df1e1c3c78d6cd30f1f72",
+    "package.json": "1a1a46458ad791cba84ee7306b49c583c2271bd228342475d132999fd1aa3435",
+    "package-lock.json": "df9aaf44c7a95730510a2363b5919b4bf0ccdc5071ad9d95b4c9d44318f00909",
+    "skills/toy-control/FEATURE-MAP.md": "240386c6550e1060dc2a750e7ef54944a349629e34efef600ddb0b254752b837",
+    "docs/adr/0021-supported-model-route.md": "bd1bd8288f5bc11e972b2997c78669aaf8f60b950aaa2fd4a67ec2126948cdce"
+  },
+  "pending": [
+    "Whole assigned R0.01 CLI ATs",
+    "Actual subscription-provider adapter, exact request fields and no-spend recovery",
+    "Independent Toy grant, refresh/restart, tools/images/account-specific route attestation",
+    "Actual stream fixture execution and durable reservation readbacks"
+  ],
+  "constraints": [
+    "PRESSURE_QUERY_DENIED",
+    "GIT_METADATA_READ_ONLY"
+  ],
+  "goal": "active"
+}

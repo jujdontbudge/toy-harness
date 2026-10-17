@@ -1,0 +1,197 @@
+{
+  "generatedAt": "2026-10-06T08:15:04.043Z",
+  "rung": "CLI",
+  "status": "PASS_ASSIGNED_FIXTURE_SUBSETS",
+  "stackId": "0e322e0f-a547-411a-9204-0c3d2d3a9edd",
+  "schemaDigest": "73832fff7ca35a0918da1abbaf1e4ed9b787b4387ec247f44949e647abd1f29b",
+  "provider": "fixed external HTTP/SSE fixtures through real ModelRoute",
+  "policy": {
+    "checks": 9,
+    "roles": [
+      {
+        "role": "foreground",
+        "arm": "original",
+        "settings": {
+          "model": "gpt-6.1-sol",
+          "effort": "max",
+          "serviceTier": "priority"
+        }
+      },
+      {
+        "role": "background",
+        "arm": "original",
+        "settings": {
+          "model": "gpt-6.1-sol",
+          "effort": "max",
+          "serviceTier": "priority"
+        }
+      },
+      {
+        "role": "cron",
+        "arm": "original",
+        "settings": {
+          "model": "gpt-6.1-sol",
+          "effort": "max",
+          "serviceTier": "priority"
+        }
+      },
+      {
+        "role": "auxiliary",
+        "arm": "original",
+        "settings": {
+          "model": "gpt-6.1-sol",
+          "effort": "max",
+          "serviceTier": "priority"
+        }
+      },
+      {
+        "role": "continuation",
+        "arm": "original",
+        "settings": {
+          "model": "gpt-6.1-sol",
+          "effort": "max",
+          "serviceTier": "priority"
+        }
+      },
+      {
+        "role": "research",
+        "arm": "original",
+        "settings": {
+          "model": "gpt-6.1-sol",
+          "effort": "medium",
+          "serviceTier": "priority"
+        }
+      },
+      {
+        "role": "child",
+        "arm": "original",
+        "settings": {
+          "model": "gpt-6-luna",
+          "effort": "max",
+          "serviceTier": "priority"
+        }
+      },
+      {
+        "role": "background",
+        "arm": "experimental-background-high-standard",
+        "settings": {
+          "model": "gpt-6.1-sol",
+          "effort": "high",
+          "serviceTier": "default"
+        }
+      }
+    ],
+    "refusal": {
+      "invalidSelections": 5,
+      "refusalBoundaries": [
+        "contract",
+        "contract",
+        "contract",
+        "contract",
+        "current-policy"
+      ],
+      "refusedBeforeProviderRequest": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    }
+  },
+  "stream": {
+    "checks": 6,
+    "receipts": [
+      {
+        "terminal": "interrupted",
+        "reasonCode": "stream_interrupted",
+        "usageState": "uncertain",
+        "reservationTokens": 4096
+      },
+      {
+        "terminal": "failed",
+        "reasonCode": "quota_exhausted",
+        "usageState": "uncertain",
+        "reservationTokens": 4096
+      },
+      {
+        "terminal": "interrupted",
+        "reasonCode": "stream_interrupted",
+        "usageState": "uncertain",
+        "reservationTokens": 4096
+      },
+      {
+        "terminal": "interrupted",
+        "reasonCode": "stream_interrupted",
+        "usageState": "uncertain",
+        "reservationTokens": 4096
+      },
+      {
+        "terminal": "failed",
+        "reasonCode": "route_mismatch",
+        "usageState": "uncertain",
+        "reservationTokens": 4096
+      },
+      {
+        "terminal": "failed",
+        "reasonCode": "route_unobserved",
+        "usageState": "uncertain",
+        "reservationTokens": 4096
+      }
+    ]
+  },
+  "persistedReadbacksMatch": true,
+  "memory": {
+    "availableBytes": "4153720832",
+    "pressure": "normal",
+    "pressureSource": "operator-observation",
+    "headroomSatisfied": true,
+    "resourcePermitIssued": false
+  },
+  "pressureGuards": [
+    {
+      "id": "invalid-pressure",
+      "evidence": "build/evidence/R0.06-pressure-guard-invalid-pressure.json",
+      "code": "INVALID_INPUT",
+      "effectState": "none"
+    },
+    {
+      "id": "production",
+      "evidence": "build/evidence/R0.06-pressure-guard-production.json",
+      "code": "TEST_ONLY",
+      "effectState": "none"
+    },
+    {
+      "id": "later-release",
+      "evidence": "build/evidence/R0.06-pressure-guard-later-release.json",
+      "code": "INVALID_INPUT",
+      "effectState": "none"
+    },
+    {
+      "id": "supported-model",
+      "evidence": "build/evidence/R0.06-pressure-guard-supported-model.json",
+      "code": "INVALID_INPUT",
+      "effectState": "none"
+    },
+    {
+      "id": "real-clock",
+      "evidence": "build/evidence/R0.06-pressure-guard-real-clock.json",
+      "code": "INVALID_INPUT",
+      "effectState": "none"
+    }
+  ],
+  "teardownComplete": true,
+  "wholeATsPassed": [],
+  "liveProviderExecuted": false,
+  "liveAuthorizationExecuted": false,
+  "accountCompatibilityVerified": false,
+  "protectedIdentityVerified": false,
+  "evidence": [
+    "build/evidence/R0.01/model-policy-runtime-probe.json",
+    "build/evidence/R0.01/model-policy-runtime-readback.json",
+    "build/evidence/R0.01/model-stream-runtime-probe.json",
+    "build/evidence/R0.01/model-stream-runtime-readback.json",
+    "build/evidence/R0.06-stack-up-observed-pressure.json",
+    "build/evidence/R0.06-stack-down-current.json"
+  ]
+}

@@ -1,0 +1,126 @@
+{
+  "schemaVersion": "toy.r0.06.accounting-policy-preparation.v1",
+  "recordedAt": "2026-10-06T06:46:46.864Z",
+  "status": "INCOMPLETE",
+  "activeCriticalCard": "R0.01",
+  "ownerInterface": "docs/adr/0027-model-admission-accounting.md",
+  "implementedSource": [
+    "Canonical TypeScript/Python quota and ledger-projection contracts",
+    "Ops consumption policy without an Ops accounting ledger",
+    "Known five-hour/weekly equality veto independent of unavailable other windows",
+    "Missing/stale/invalid/unapproved source fixed eight-job fallback and repair/replay pause",
+    "Foreground class and model-route protection; no background count charge",
+    "Unreflected upper-bound checks, restored-history refusal and provider-lease refusal"
+  ],
+  "canonicalAccountingTables": [
+    "toy_si.model_call",
+    "toy_si.budget_group",
+    "toy_si.quota_snapshot"
+  ],
+  "verification": {
+    "fullCheck": {
+      "command": "npm run check",
+      "exitCode": 0,
+      "output": "build/evidence/R0.06-full-check-output.txt",
+      "artifacts": 305,
+      "contracts": 237,
+      "schemaDigest": "3f3a7d12619c9a2a79b3d02c21d46b4148eed330712dc4b178e6de25a5e4b623",
+      "featureCount": 85,
+      "commandCount": 55,
+      "ATCount": 1447,
+      "swiftInvoked": false,
+      "generatedAt": "2026-10-06T06:46:24.537Z"
+    },
+    "policyRuntimeExecuted": false,
+    "wholeATsPromoted": [],
+    "diffCheck": {
+      "command": "git diff --check",
+      "exitCode": 0
+    }
+  },
+  "currentAdmission": {
+    "availableBytes": "3387473920",
+    "headroomSatisfied": true,
+    "metric": "free + inactive + purgeable + speculative",
+    "stackNeedBytes": "1073741824",
+    "marginBytes": "536870912",
+    "machinePressure": "unknown",
+    "pressureQueryReasons": [
+      "MEASUREMENT_UNAVAILABLE",
+      "NORMAL_PRESSURE_REQUIRED",
+      "PRESSURE_QUERY_DENIED"
+    ],
+    "currentSessionPressureBasis": "Johan directly reported normal pressure; admitted one Luna helper and authorized the guarded stack attempt",
+    "helper": {
+      "card": "R0.K3",
+      "model": "gpt-6-luna",
+      "reasoning": "max",
+      "declaredNeedBytes": "268435456",
+      "completed": true
+    },
+    "stack": {
+      "command": "node cli/dist/main.js stack up --env test --release R0 --clock fake --model fake --request-id 4380f46c-2b55-41d4-8c41-f6f69dc3e6b8 --json",
+      "exitCode": 5,
+      "errorCode": "DEPENDENCY_UNAVAILABLE",
+      "effectState": "none",
+      "launched": false,
+      "evidence": "build/evidence/R0.K3/current-admission/stack-up.json"
+    },
+    "r5FloorApplied": false
+  },
+  "planningPull": {
+    "command": "git pull --ff-only",
+    "exitCode": 1,
+    "reason": "Operation not permitted opening .git/FETCH_HEAD",
+    "localMemoryAmendmentPresent": true
+  },
+  "dependencies": {
+    "installedPostgreSQL": "17.11 (Homebrew)",
+    "binaryRoot": "/opt/homebrew/opt/postgresql@17/bin",
+    "pgDriverLookup": {
+      "exitCode": 1,
+      "reason": "ENOTFOUND registry.npmjs.org"
+    },
+    "migrationPlan": {
+      "command": "toy new migration model-admission --module self-improvement --plan --json",
+      "exitCode": 5,
+      "reason": "Current generator supports only the disposable Ops SQLite reference",
+      "evidence": "build/evidence/R0.06-migration-plan.json"
+    }
+  },
+  "deferred": [
+    {
+      "owner": "R0.06",
+      "work": "Extend the sole migration generator for the canonical PostgreSQL accounting owner; implement real transactional reserve/settle/observe/inspect and durable deny/wake; execute assigned public CLI probes with the real database"
+    },
+    {
+      "owner": "R0.01",
+      "work": "Bind verified accounting to the supported native provider after actual protected identity/runtime, independent consent and zero-credit evidence"
+    },
+    {
+      "owner": "R1",
+      "work": "Assigned full global concurrency and restore campaigns"
+    },
+    {
+      "owner": "R3",
+      "work": "Swift contract generation and compilation"
+    }
+  ],
+  "permissionsUnchanged": true,
+  "providerSendPermitIssued": false,
+  "nativeBindingPermitted": false,
+  "realDatabaseAccountingImplemented": false,
+  "realDatabaseAccountingExecuted": false,
+  "independentGrantCreated": false,
+  "inferenceAttempted": false,
+  "protectedRuntimeChanged": false,
+  "sourceHashes": {
+    "packages/contracts/src/model-admission.ts": "90d5a42f2b004bc4e025a397656ced80665951e034140c7e1527f06fd9cad3e1",
+    "packages/contracts/src/public.ts": "4711c0a0a5940b7feeb0462b4b7cc9bb9c872c71cd9f3eab85446109a9b71435",
+    "packages/ops/src/model-admission-policy.ts": "553eb6805c9779c924d16c3bdb8eeac9a92727086b64a673d317f9dddcbc2c95",
+    "packages/ops/src/public.ts": "489b4e237920e9ee872a5b1c4db60008342bfb537696a10dc7c03d635040cc5d",
+    "docs/adr/0027-model-admission-accounting.md": "31a80fc310be5e4c854704908d41c2d649d2e81cc28460c03772aa5b63106344",
+    "architecture/features.json": "ae761d38b54baaa50a8a39d0d897d6462e13a307e1a6a292be209fd5f9713542",
+    "skills/toy-control/FEATURE-MAP.md": "3d9fee79eda3f23d0e7cb9da97e3cc75c3e6cc1714197c29271038511679b0cc"
+  }
+}

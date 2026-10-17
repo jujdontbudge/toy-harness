@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "componentId": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[A-Z][0-9]{2}(?![\\s\\S])"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "code": {
+      "type": "string",
+      "enum": [
+        "PIN_MISSING",
+        "CONSUMING_SPECS_MISSING",
+        "RESEARCH_CHOICE_OPEN",
+        "RESEARCH_REFERENCE_MISSING",
+        "REPORT_MISSING",
+        "DECISION_MISSING",
+        "GATE_MISSING",
+        "GATE_EVIDENCE_UNVERIFIED",
+        "RESEARCH_ATTESTATION_UNVERIFIED",
+        "DEPENDENCY_CLOSURE_UNVERIFIED"
+      ]
+    },
+    "sourceLine": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "componentId",
+    "code",
+    "sourceLine"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:ResearchInspectionFindingV1"
+}

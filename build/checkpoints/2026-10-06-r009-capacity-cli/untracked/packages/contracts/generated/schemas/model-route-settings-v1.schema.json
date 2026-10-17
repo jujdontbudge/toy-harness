@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "model": {
+      "type": "string",
+      "enum": [
+        "gpt-6.1-sol",
+        "gpt-6-luna"
+      ]
+    },
+    "effort": {
+      "type": "string",
+      "enum": [
+        "max",
+        "medium",
+        "high"
+      ]
+    },
+    "serviceTier": {
+      "type": "string",
+      "enum": [
+        "priority",
+        "default"
+      ]
+    }
+  },
+  "required": [
+    "model",
+    "effort",
+    "serviceTier"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:ModelRouteSettingsV1"
+}

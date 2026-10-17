@@ -1,0 +1,103 @@
+{
+  "schemaVersion": "toy.r001-selection-integrity-preparation.v1",
+  "observedAt": "2026-10-06T06:30:23.364676+00:00",
+  "verdict": "INCOMPLETE",
+  "source": [
+    {
+      "path": "packages/contracts/src/model-route.ts",
+      "sha256": "caff7c2441d61358d3bce04217b068ae1c5563cb5e2a8888957e4978eb6742ac"
+    },
+    {
+      "path": "packages/hermes/src/model-route.ts",
+      "sha256": "6f2cbfbcd41f158f27fb438f0777e14a41317f37fc230da40abf9f08e9d750d1"
+    },
+    {
+      "path": "packages/hermes/src/model-route-probe.ts",
+      "sha256": "cde1ee09c40d750ab70cbc3087f3e833ceda4f95702a6f656a99a77d9c012c50"
+    },
+    {
+      "path": "packages/contracts/generated/types.ts",
+      "sha256": "5b3bf5796285b6b07b9a07122c57eb9392d07ce9771c979583ed2861c47a9a6d"
+    },
+    {
+      "path": "python/toy_contracts/generated.py",
+      "sha256": "7c5712a80643efc188e8af097b3c7c874aac83b18121e9de896cf4c31661ad68"
+    },
+    {
+      "path": "docs/adr/0021-supported-model-route.md",
+      "sha256": "00a65623fb8c9de6bf3700ec1618f468407df62e925d4d9c332570086e509c49"
+    },
+    {
+      "path": "architecture/features.json",
+      "sha256": "04e4457f53cf78c34a15aaaa2bade11ad78e341a0ff704a66a9417984df46925"
+    }
+  ],
+  "interface": "docs/adr/0021-supported-model-route.md",
+  "change": "Closed canonical role/arm/settings union; public invoke checks current policy before creating a provider stream",
+  "declarationVariants": 9,
+  "declarationEvidence": "build/evidence/R0.01/selection-variants.json",
+  "preparedCliCases": {
+    "registeredCase": "model-route-policy",
+    "ATs": [
+      "AT-hermes-config-1",
+      "AT-hermes-config-76",
+      "AT-hermes-config-77"
+    ],
+    "cases": [
+      "Original foreground high refusal",
+      "Research max refusal",
+      "Ordinary child Sol refusal",
+      "Foreground experimental-arm refusal",
+      "Stale current-policy digest refusal"
+    ],
+    "count": 5,
+    "refusalBoundaries": [
+      "contract",
+      "contract",
+      "contract",
+      "contract",
+      "current-policy"
+    ],
+    "executed": false,
+    "fakes": "External HTTP only; no private-function entry or internal collaborator mock"
+  },
+  "static": {
+    "command": "npm run check",
+    "exitCode": 0,
+    "artifacts": 299,
+    "contracts": 231,
+    "featureCount": 84,
+    "commandCount": 55,
+    "ATCount": 1447,
+    "swiftInvoked": false,
+    "output": "build/evidence/R0.01/selection-full-check-output.txt"
+  },
+  "cliRegression": {
+    "command": "node --test tests/cli/model-route.cli.test.ts",
+    "exitCode": 0,
+    "policyCliInvocations": 3,
+    "originalModelsRestored": true,
+    "output": "build/evidence/R0.01/selection-policy-cli-output.txt"
+  },
+  "nativeBinding": {
+    "bound": false,
+    "reason": "ModelAdmission owner/canonical toy_si accounting is unimplemented; protected runtime/grant/actual identity prerequisites also pending",
+    "scope": "Do not create a parallel Ops entitlement ledger or bind direct native SDK sends before the one protected owner lane",
+    "sourceReferences": [
+      "specs/ops.md section 13",
+      "specs/self-improvement.md canonical model_call/budget_group/quota_snapshot ownership",
+      "build/state.json R0.06 NOT_IMPLEMENTED"
+    ]
+  },
+  "wholeAssignedATsPassed": [],
+  "providerRequestsExecuted": false,
+  "keychainOrBrowserExecuted": false,
+  "installedHermesChanged": false,
+  "newModuleOrDependency": false,
+  "limitations": [
+    "Five registered CLI refusal cases await an admitted real stack; invocation-send guard is not claimed runtime verified",
+    "No supported Toy login, zero-credit readback, native ModelAdmission or live account capability attestation",
+    "Current session lacks protected installation permissions; Directory Service plan and pressure-level access are unavailable",
+    "Git metadata read-only; source checkpoint replaces commit/push in this session"
+  ]
+}

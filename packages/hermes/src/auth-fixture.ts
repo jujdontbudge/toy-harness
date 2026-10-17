@@ -466,14 +466,30 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
     if (dashboardScope) artifacts.push(digest(readFileSync(join(candidateRoot, "hermes_cli", "web_routers", "oauth.py"))));
     const candidateStore = join(candidateRoot, "hermes_cli", "_launchers.py");
     if (!statSync(candidateStore).isFile()) return fail("FAIL", "NATIVE_AUTH_FIXTURE_PUBLIC_LAUNCHER_MISSING", { installedCommit, archiveDigest });
-    const runPublicAdmin = (args: string[]): { commandDigest: string; stdoutDigest: string; stderrDigest: string } | null => {
+    const runPublicAdmin = (args: string[], expectedJsonString?: string): { commandDigest: string; launcherExitCode: number; exitCode: number; stdoutDigest: string; stderrDigest: string; expectedJsonStringMatches?: boolean } | null => {
       const request = bounded(interpreter, ["-B", "-I", candidateStore, "--print-runtime-command", "--module", "hermes_cli.main", "--", ...args], maxChildBytes, 5000);
       if (request.timedOut || !request.result || request.result.error || request.result.status !== 0) return null;
       const command = hermesPublicRuntimeCommandSchema.parse(JSON.parse(request.result.stdout.toString("utf8")));
       if (command.length !== 4 + args.length || command[0] === undefined || realpathSync(command[0]) !== realpathSync(interpreter) || command[1] !== "-I" || command[2] !== "-c" || !command[3]?.includes("hermes_cli.main") || !command[3]?.includes(candidateRoot) || args.some((argument, index) => command[index + 4] !== argument)) return null;
       const execution = bounded(interpreter, ["-B", ...command.slice(1)], maxChildBytes, 30000);
       if (execution.timedOut || !execution.result || execution.result.error || execution.result.status !== 0) return null;
-      return { commandDigest: digest(JSON.stringify(command)), stdoutDigest: digest(execution.result.stdout), stderrDigest: digest(execution.result.stderr) };
+      let expectedJsonStringMatches: boolean | undefined;
+      if (expectedJsonString !== undefined) {
+        try {
+          const readback: unknown = JSON.parse(execution.result.stdout.toString("utf8").trim());
+          expectedJsonStringMatches = readback === expectedJsonString;
+        } catch {
+          expectedJsonStringMatches = false;
+        }
+      }
+      return {
+        commandDigest: digest(JSON.stringify(command)),
+        launcherExitCode: request.result.status,
+        exitCode: execution.result.status,
+        stdoutDigest: digest(execution.result.stdout),
+        stderrDigest: digest(execution.result.stderr),
+        ...(expectedJsonStringMatches === undefined ? {} : { expectedJsonStringMatches })
+      };
     };
     const createAnthropicProfile = (profile: string): { commandDigest: string; auth: FixtureStoreDigest; configDigests: string[] } | null => {
       const create = runPublicAdmin(["profile", "create", profile, "--no-skills"]);
@@ -766,6 +782,7 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
     let mixedAnthropicRootBaseline: { rootAuth: FixtureStoreDigest; rootEnv: FixtureStoreDigest; rootAnthropic: FixtureStoreDigest } | null = null;
     let anthropicSingletonSetup: { ready: boolean; reason: string; rootAuth: FixtureStoreDigest; rootAnthropic: FixtureStoreDigest } | null = null;
     let anthropicCopyProfileCreateDigest: string | null = null;
+    let anthropicRootDiscoveryEvidence: Record<string, unknown> | null = null;
     let lifecycleRootBaseline: { rootAuth: FixtureStoreDigest; rootEnv: FixtureStoreDigest } | null = null;
     const childPids = new Set<number>();
     for (const [operationIndex, operation] of operations.entries()) {
@@ -801,6 +818,31 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
       }
       const rootScope = fixtureStep ? fixtureStep.scope === "root" : borrowedRoot && (operationIndex === 0 || operationIndex === 5);
       const borrowedCase = ["root-add", "borrowed-list", "borrowed-use", "borrowed-refresh", "profile-reload", "root-reload"][operationIndex];
+      if (anthropicLineage && mixedStep?.caseId === "root-lineage-readback") {
+        const rootStoresBeforeConfiguration = privateStoreDigests(hermesRoot);
+        const configurationSet = runPublicAdmin(["config", "set", "model.provider", "anthropic"]);
+        const configurationReadback = configurationSet
+          ? runPublicAdmin(["config", "get", "model.provider", "--json"], "anthropic")
+          : null;
+        const rootStoresAfterConfiguration = privateStoreDigests(hermesRoot);
+        const credentialStoresUnchanged = JSON.stringify(rootStoresBeforeConfiguration.rootAuth) === JSON.stringify(rootStoresAfterConfiguration.rootAuth)
+          && JSON.stringify(rootStoresBeforeConfiguration.rootEnv) === JSON.stringify(rootStoresAfterConfiguration.rootEnv)
+          && JSON.stringify(rootStoresBeforeConfiguration.rootAnthropic) === JSON.stringify(rootStoresAfterConfiguration.rootAnthropic);
+        const readbackIsAnthropic = configurationReadback?.expectedJsonStringMatches === true;
+        anthropicRootDiscoveryEvidence = {
+          set: [configurationSet?.launcherExitCode ?? null, configurationSet?.exitCode ?? null],
+          get: [configurationReadback?.launcherExitCode ?? null, configurationReadback?.exitCode ?? null],
+          matchesAnthropic: readbackIsAnthropic,
+          commandDigests: [configurationSet?.commandDigest ?? null, configurationReadback?.commandDigest ?? null],
+          rootCredentialDigests: [rootStoresBeforeConfiguration.rootAuth.digest, rootStoresAfterConfiguration.rootAuth.digest,
+            rootStoresBeforeConfiguration.rootEnv.digest, rootStoresAfterConfiguration.rootEnv.digest,
+            rootStoresBeforeConfiguration.rootAnthropic.digest, rootStoresAfterConfiguration.rootAnthropic.digest],
+          credentialStoresUnchanged
+        };
+        if (configurationSet) artifacts.push(configurationSet.commandDigest, configurationSet.stdoutDigest, configurationSet.stderrDigest);
+        if (configurationReadback) artifacts.push(configurationReadback.commandDigest, configurationReadback.stdoutDigest, configurationReadback.stderrDigest);
+        if (configurationSet === null || configurationReadback === null || configurationSet.launcherExitCode !== 0 || configurationSet.exitCode !== 0 || configurationReadback.launcherExitCode !== 0 || configurationReadback.exitCode !== 0 || !readbackIsAnthropic || !credentialStoresUnchanged) return fail("FAIL", "NATIVE_AUTH_ANTHROPIC_ROOT_CONFIGURATION_FAILED", { caseId: mixedStep.caseId, rootConfiguration: anthropicRootDiscoveryEvidence, wholeATComplete: false });
+      }
       const storesBeforeOperation = privateStoreDigests(hermesRoot, mixedProfile);
       const commandRequest = bounded(interpreter, ["-B", "-I", candidateStore, "--print-runtime-command", "--module", fixtureModule, "--", operation], maxChildBytes, 5000);
       if (commandRequest.timedOut || !commandRequest.result || commandRequest.result.error || commandRequest.result.status !== 0) return fail("BLOCKED", "NATIVE_AUTH_FIXTURE_PUBLIC_COMMAND_UNAVAILABLE", { installedCommit, archiveDigest, operation });
@@ -831,12 +873,6 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
       const parsedResult = hermesAuthFixtureResultSchema.safeParse(rawResult);
       if (!parsedResult.success) return fail("FAIL", "NATIVE_AUTH_FIXTURE_RESULT_INVALID", { installedCommit, archiveDigest, operation, commandDigest, stdoutDigest: digest(child.result.stdout), stderrDigest });
       const result: HermesAuthFixtureResultV1 = parsedResult.data;
-      if (anthropicLineage && mixedStep?.caseId === "root-lineage-readback") {
-        const created = createAnthropicProfile("lineage-copy");
-        if (!created) return fail("FAIL", "NATIVE_AUTH_ANTHROPIC_COPY_PROFILE_CREATE_FAILED", { caseId: mixedStep.caseId, wholeATComplete: false });
-        anthropicCopyProfileCreateDigest = created.commandDigest;
-        artifacts.push(created.commandDigest, ...created.configDigests);
-      }
       const expectedArgv = publicArgv(operation, undefined, false, rootScope, fixtureStep?.label, false, firstAddCell, anthropicLineage, mixedProfile);
       const addOperation = operation.startsWith("add");
       const listOperation = operation.startsWith("list");
@@ -1075,6 +1111,7 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
           ...(siblingStep ? { caseId: siblingStep.caseId, storeScope: siblingStep.scope, label: siblingStep.label, expectedCount: siblingStep.expectedCount ?? null, expectedGeneration: siblingStep.expectedGeneration ?? null, rootAuth: storesAfterOperation.rootAuth, rootEnv: storesAfterOperation.rootEnv, profileAuth: storesAfterOperation.profileAuth, rootStoreUnchanged: siblingRootStoreUnchanged, rootAddPersisted: siblingRootAddPersisted, profileStoreUnchanged: siblingProfileStoreUnchanged, profileAddPersisted: siblingProfileAddPersisted } : {}),
           ...(mixedStep && !anthropicLineage ? { caseId: mixedStep.caseId, storeScope: mixedStep.scope, label: mixedStep.label, expectedCount: mixedStep.expectedCount ?? null, expectedGeneration: mixedStep.expectedGeneration ?? null, rootAuthBefore: storesBeforeOperation.rootAuth.digest, rootAuthAfter: storesAfterOperation.rootAuth.digest, rootEnvAfter: storesAfterOperation.rootEnv.digest, rootEnvUnchanged: mixedRootEnvUnchanged, profileAuthBefore: storesBeforeOperation.profileAuth.digest, profileAuthAfter: storesAfterOperation.profileAuth.digest, rootStoreVerified: mixedLineageRootStoreVerified, profileStoreVerified: mixedLineageProfileStoreVerified, ...(mixedStep.caseId === "copied-lineage-heal" ? { copyDigestsEqual: mixedCopySeed?.equal ?? false } : {}) } : {}),
           ...(anthropicLineage && mixedStep ? { caseId: mixedStep.caseId } : {}),
+          ...(anthropicLineage && mixedStep?.caseId === "root-lineage-readback" ? { rootConfiguration: anthropicRootDiscoveryEvidence } : {}),
           ...(lifecycleStep ? { caseId: lifecycleStep.caseId, storeScope: lifecycleStep.scope, label: lifecycleStep.label, expectedCount: lifecycleStep.expectedCount ?? null, expectedLabelPresent: lifecycleStep.expectedLabelPresent ?? null, expectedGeneration: lifecycleStep.expectedGeneration ?? null, rootAuthBefore: storesBeforeOperation.rootAuth, rootAuthAfter: storesAfterOperation.rootAuth, rootEnvBefore: storesBeforeOperation.rootEnv, rootEnvAfter: storesAfterOperation.rootEnv, profileAuthBefore: storesBeforeOperation.profileAuth, profileAuthAfter: storesAfterOperation.profileAuth, rootStoreVerified: lifecycleRootStoreVerified, profileStoreVerified: lifecycleProfileStoreVerified } : {}),
           wholeATComplete: false
         },
@@ -1092,6 +1129,12 @@ export const runHermesAuthFixture = async (interpreter: string, home: string, he
       if (mixedStep?.caseId === "copied-lineage-heal") mixedHealedProfileAuth = storesAfterOperation.profileAuth;
       previousRootAuth = storesAfterOperation.rootAuth;
       if (anthropicLineage && (mixedStep?.caseId === "root-lineage-readback" || mixedStep?.caseId === "copied-lineage-refresh")) mixedAnthropicRootBaseline = { rootAuth: storesAfterOperation.rootAuth, rootEnv: storesAfterOperation.rootEnv, rootAnthropic: storesAfterOperation.rootAnthropic };
+      if (anthropicLineage && mixedStep?.caseId === "root-lineage-readback") {
+        const created = createAnthropicProfile("lineage-copy");
+        if (!created) return fail("FAIL", "NATIVE_AUTH_ANTHROPIC_COPY_PROFILE_CREATE_FAILED", { caseId: mixedStep.caseId, wholeATComplete: false });
+        anthropicCopyProfileCreateDigest = created.commandDigest;
+        artifacts.push(created.commandDigest, ...created.configDigests);
+      }
       if (anthropicLineage && mixedStep?.caseId === "root-add") {
         const created = createAnthropicProfile("toy");
         if (!created) return fail("FAIL", "NATIVE_AUTH_ANTHROPIC_MANUAL_PROFILE_CREATE_FAILED", { caseId: mixedStep.caseId, wholeATComplete: false });

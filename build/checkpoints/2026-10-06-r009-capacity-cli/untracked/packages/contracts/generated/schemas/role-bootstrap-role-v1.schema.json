@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "observation": {
+      "type": "object",
+      "properties": {
+        "role": {
+          "type": "string",
+          "enum": [
+            "_toy_agent",
+            "_toy_control",
+            "_toy_review",
+            "_toy_repair",
+            "_toy_evaluator",
+            "_toy_pg",
+            "_toy_app",
+            "_toy_ops"
+          ]
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "observed",
+            "missing",
+            "unknown"
+          ]
+        },
+        "uid": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4294967295
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "gid": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4294967295
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "adminGroupObserved": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "role",
+        "state",
+        "uid",
+        "gid",
+        "adminGroupObserved"
+      ],
+      "additionalProperties": false
+    },
+    "candidateUid": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 300,
+          "maximum": 499
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "candidateGid": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 300,
+          "maximum": 499
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "observation",
+    "candidateUid",
+    "candidateGid"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:RoleBootstrapRoleV1"
+}

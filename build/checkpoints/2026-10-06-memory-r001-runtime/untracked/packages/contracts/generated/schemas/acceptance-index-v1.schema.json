@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "sourceDigest": {
+      "type": "string",
+      "minLength": 64,
+      "maxLength": 64,
+      "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+    },
+    "acceptance": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 240,
+            "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._/-]*(?![\\s\\S])"
+          },
+          "sourceLine": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "firstRelease": {
+            "type": "string",
+            "enum": [
+              "R0",
+              "R1",
+              "R2",
+              "R3",
+              "R4",
+              "R5"
+            ]
+          },
+          "sourceAssertion": {
+            "type": "string"
+          },
+          "sourceAssertionHash": {
+            "type": "string",
+            "minLength": 64,
+            "maxLength": 64,
+            "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+          },
+          "sourceDigest": {
+            "type": "string",
+            "minLength": 64,
+            "maxLength": 64,
+            "pattern": "^[a-f0-9]{64}(?![\\s\\S])"
+          },
+          "indexedSourceLine": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "rung": {
+            "type": "string",
+            "enum": [
+              "SIM",
+              "CLI",
+              "MOD",
+              "INT"
+            ]
+          },
+          "requiredEvidence": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "source",
+          "sourceLine",
+          "firstRelease",
+          "sourceAssertion",
+          "sourceAssertionHash",
+          "sourceDigest",
+          "indexedSourceLine",
+          "rung",
+          "requiredEvidence"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "sourceDigest",
+    "acceptance"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:AcceptanceIndexV1"
+}

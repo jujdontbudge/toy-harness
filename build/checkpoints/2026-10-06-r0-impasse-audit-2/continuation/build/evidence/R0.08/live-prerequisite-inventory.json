@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "toy.r0.08.live-prerequisite-inventory.v1",
+  "capturedAt": "2026-10-06T09:59:32Z",
+  "purpose": "Read-only attempt to find existing non-secret Apple Developer membership and Cold Turkey Pro status for R0.08.",
+  "inventory": {
+    "appleDeveloperMembership": {
+      "status": "PENDING",
+      "currentEligibilityEvidence": null,
+      "observations": [
+        "System Settings AX view showed an Apple Account row, but no Apple Developer Program membership status.",
+        "A Chrome New Tab was visible in the UI inventory and was left untouched under the instruction not to use the parent UI tab.",
+        "Safari UI selection was not approved by the computer-use surface."
+      ],
+      "limitations": [
+        "The presence of an Apple Account row does not establish developer membership.",
+        "No membership page, account agreement, team status, signing identity, entitlement eligibility, or provisioning record was inspected.",
+        "No login, consent, credential, Keychain, or secure-box action was performed."
+      ]
+    },
+    "coldTurkeyPro": {
+      "status": "PENDING",
+      "currentEligibilityEvidence": null,
+      "observations": [
+        "No Cold Turkey status command was found in the inspected Toy CLI/Ops/contracts surfaces.",
+        "No Cold Turkey UI appeared in the current/recent app inventory.",
+        "App Store UI selection was not approved by the computer-use surface."
+      ],
+      "limitations": [
+        "The available UI inventory does not establish whether Cold Turkey is installed or whether a Pro licence is owned.",
+        "No account, product key, licence store, credential, Keychain, or secure-box data was inspected."
+      ]
+    }
+  },
+  "actions": {
+    "performed": [
+      "Searched the existing Toy CLI, Ops, Contracts and CLI specification for Apple membership and Cold Turkey inventory commands.",
+      "Read the current UI surface inventory.",
+      "Read the System Settings accessibility tree without changing settings."
+    ],
+    "attemptedButNotApproved": [
+      "Selecting Safari through the computer-use surface returned: Computer Use was not approved to use Safari.",
+      "Selecting App Store through the computer-use surface returned: Computer Use was not approved to use App Store."
+    ],
+    "notPerformed": [
+      "No purchase, trial, provisioning, login, consent, install, app setting change, or permission action.",
+      "No native compilation, account/licence/device query, Keychain/secure-box inspection, or secret screenshot.",
+      "No parent UI tab or Toy stack was used."
+    ]
+  },
+  "acceptanceDisposition": {
+    "AT-activity-focus-64": "PENDING; current account, device, entitlement, permission, licence and hardware inventory is incomplete.",
+    "AT-client-apps-49": "PENDING; Apple membership and entitlement eligibility are not verified.",
+    "AT-ops-81": "PENDING; current Apple membership and Cold Turkey Pro status are not verified."
+  },
+  "overall": "No positive or negative membership/licence status is asserted. Native eligibility and app-blocking status remain pending; no capability or whole acceptance test is promoted."
+}

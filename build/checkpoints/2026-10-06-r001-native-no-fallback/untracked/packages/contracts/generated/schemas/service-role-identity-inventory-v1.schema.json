@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "toy.service-role-identity-inventory.v1"
+    },
+    "observedAt": {
+      "type": "string",
+      "minLength": 24,
+      "maxLength": 24,
+      "format": "date-time",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d\\.\\d{3}(?:Z))$"
+    },
+    "roles": {
+      "minItems": 8,
+      "maxItems": 8,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "_toy_agent",
+              "_toy_control",
+              "_toy_review",
+              "_toy_repair",
+              "_toy_evaluator",
+              "_toy_pg",
+              "_toy_app",
+              "_toy_ops"
+            ]
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "observed",
+              "missing",
+              "unknown"
+            ]
+          },
+          "uid": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 4294967295
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "gid": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 4294967295
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "adminGroupObserved": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "role",
+          "state",
+          "uid",
+          "gid",
+          "adminGroupObserved"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "allExpectedIdentitiesObserved": {
+      "type": "boolean"
+    },
+    "identityGateVerified": {
+      "type": "boolean",
+      "const": false
+    },
+    "maintenanceIdentityVerified": {
+      "type": "boolean",
+      "const": false
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "observedAt",
+    "roles",
+    "allExpectedIdentitiesObserved",
+    "identityGateVerified",
+    "maintenanceIdentityVerified"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:ServiceRoleIdentityInventoryV1"
+}

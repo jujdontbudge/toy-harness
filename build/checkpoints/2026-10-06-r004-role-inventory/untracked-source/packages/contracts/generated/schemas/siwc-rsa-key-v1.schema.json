@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "kty": {
+      "type": "string",
+      "const": "RSA"
+    },
+    "kid": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "n": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 8192
+    },
+    "e": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 32
+    },
+    "use": {
+      "type": "string",
+      "const": "sig"
+    },
+    "alg": {
+      "type": "string",
+      "const": "RS256"
+    }
+  },
+  "required": [
+    "kty",
+    "kid",
+    "n",
+    "e"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:SiwcRsaKeyV1"
+}

@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "toy.r001-native-refusal-replan.v1",
+  "generatedAt": "2026-10-06T10:10:46.832379+00:00",
+  "attempts": [
+    {
+      "run": "build/evidence/R0.01-native-refusal-probe-1.json",
+      "result": "NATIVE_AUTH_FIXTURE_CHILD_UNAVAILABLE",
+      "interpretation": "Timeout; no refusal proof."
+    },
+    {
+      "run": "build/evidence/R0.01-native-refusal-probe-2.json",
+      "result": "FAIL_UNREGISTERED_HTTP",
+      "interpretation": "Unexpected HTTP effect requires a fixed classification."
+    },
+    {
+      "run": "build/evidence/R0.01-native-refusal-probe-3.json",
+      "result": "FAIL_PAID_MODEL_FALLBACK",
+      "interpretation": "Public fallback claim and one api.openai.com model request with the exact synthetic paid key after unbound SIWC authorization."
+    }
+  ],
+  "realProviderOrSpend": false,
+  "installedHermesChanged": false,
+  "replan": "Stop diagnostic-only changes. Add provider-level allows_fallback=false for SIWC and enforce it at existing native fallback boundaries; rerun the same real public CLI assertion. Preserve full protected/account/aux/exhaustion matrices as pending.",
+  "newProtocolOrInfrastructure": false,
+  "wholeATsPassed": []
+}

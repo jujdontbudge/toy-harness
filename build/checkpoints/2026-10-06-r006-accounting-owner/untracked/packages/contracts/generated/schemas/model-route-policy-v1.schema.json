@@ -1,0 +1,226 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "toy.models.v1"
+    },
+    "provider": {
+      "type": "string",
+      "const": "siwc_responses"
+    },
+    "paidFallbackPermitted": {
+      "type": "boolean",
+      "const": false
+    },
+    "original": {
+      "type": "object",
+      "properties": {
+        "foreground": {
+          "type": "object",
+          "properties": {
+            "model": {
+              "type": "string",
+              "const": "gpt-6.1-sol"
+            },
+            "effort": {
+              "type": "string",
+              "const": "max"
+            },
+            "serviceTier": {
+              "type": "string",
+              "const": "priority"
+            }
+          },
+          "required": [
+            "model",
+            "effort",
+            "serviceTier"
+          ],
+          "additionalProperties": false
+        },
+        "background": {
+          "type": "object",
+          "properties": {
+            "model": {
+              "type": "string",
+              "const": "gpt-6.1-sol"
+            },
+            "effort": {
+              "type": "string",
+              "const": "max"
+            },
+            "serviceTier": {
+              "type": "string",
+              "const": "priority"
+            }
+          },
+          "required": [
+            "model",
+            "effort",
+            "serviceTier"
+          ],
+          "additionalProperties": false
+        },
+        "cron": {
+          "type": "object",
+          "properties": {
+            "model": {
+              "type": "string",
+              "const": "gpt-6.1-sol"
+            },
+            "effort": {
+              "type": "string",
+              "const": "max"
+            },
+            "serviceTier": {
+              "type": "string",
+              "const": "priority"
+            }
+          },
+          "required": [
+            "model",
+            "effort",
+            "serviceTier"
+          ],
+          "additionalProperties": false
+        },
+        "auxiliary": {
+          "type": "object",
+          "properties": {
+            "model": {
+              "type": "string",
+              "const": "gpt-6.1-sol"
+            },
+            "effort": {
+              "type": "string",
+              "const": "max"
+            },
+            "serviceTier": {
+              "type": "string",
+              "const": "priority"
+            }
+          },
+          "required": [
+            "model",
+            "effort",
+            "serviceTier"
+          ],
+          "additionalProperties": false
+        },
+        "continuation": {
+          "type": "object",
+          "properties": {
+            "model": {
+              "type": "string",
+              "const": "gpt-6.1-sol"
+            },
+            "effort": {
+              "type": "string",
+              "const": "max"
+            },
+            "serviceTier": {
+              "type": "string",
+              "const": "priority"
+            }
+          },
+          "required": [
+            "model",
+            "effort",
+            "serviceTier"
+          ],
+          "additionalProperties": false
+        },
+        "research": {
+          "type": "object",
+          "properties": {
+            "model": {
+              "type": "string",
+              "const": "gpt-6.1-sol"
+            },
+            "effort": {
+              "type": "string",
+              "const": "medium"
+            },
+            "serviceTier": {
+              "type": "string",
+              "const": "priority"
+            }
+          },
+          "required": [
+            "model",
+            "effort",
+            "serviceTier"
+          ],
+          "additionalProperties": false
+        },
+        "child": {
+          "type": "object",
+          "properties": {
+            "model": {
+              "type": "string",
+              "const": "gpt-6-luna"
+            },
+            "effort": {
+              "type": "string",
+              "const": "max"
+            },
+            "serviceTier": {
+              "type": "string",
+              "const": "priority"
+            }
+          },
+          "required": [
+            "model",
+            "effort",
+            "serviceTier"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "foreground",
+        "background",
+        "cron",
+        "auxiliary",
+        "continuation",
+        "research",
+        "child"
+      ],
+      "additionalProperties": false
+    },
+    "experimentalBackgroundHighStandard": {
+      "type": "object",
+      "properties": {
+        "model": {
+          "type": "string",
+          "const": "gpt-6.1-sol"
+        },
+        "effort": {
+          "type": "string",
+          "const": "high"
+        },
+        "serviceTier": {
+          "type": "string",
+          "const": "default"
+        }
+      },
+      "required": [
+        "model",
+        "effort",
+        "serviceTier"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "provider",
+    "paidFallbackPermitted",
+    "original",
+    "experimentalBackgroundHighStandard"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:ModelRoutePolicyV1"
+}

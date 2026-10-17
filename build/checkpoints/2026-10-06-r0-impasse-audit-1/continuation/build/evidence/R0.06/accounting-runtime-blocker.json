@@ -1,0 +1,64 @@
+{
+  "generatedAt": "2026-10-06T08:15:51.467Z",
+  "rung": "CLI",
+  "state": "BLOCKED",
+  "reasonCode": "ACCOUNTING_FIXTURE_INITIALIZATION_DENIED",
+  "attempts": 3,
+  "stackId": "0e322e0f-a547-411a-9204-0c3d2d3a9edd",
+  "stackWasReady": true,
+  "publicProbe": "AT-ops-49 / model-admission",
+  "evidence": [
+    "build/evidence/R0.06-postgres-threshold-probe.json",
+    "build/evidence/R0.06-postgres-threshold-probe-diagnostic.json",
+    "build/evidence/R0.06-postgres-threshold-probe-diagnostic-v2.json"
+  ],
+  "finalReport": {
+    "probeId": "AT-ops-49",
+    "caseManifestDigest": "c445b29862609835d680a89755b90a4a631f42d55d80f81208dd1d439427f279",
+    "cases": [
+      {
+        "id": "accounting.model-admission",
+        "owner": "self-improvement",
+        "state": "BLOCKED",
+        "checkedAt": "2026-10-06T08:08:29.778Z",
+        "reasonCode": "ACCOUNTING_FIXTURE_INITIALIZATION_DENIED",
+        "prerequisite": null,
+        "nextCommandId": "probe.show",
+        "links": {
+          "recordRefs": [],
+          "observations": [],
+          "artifactDigests": []
+        }
+      },
+      {
+        "id": "accounting.model-admission",
+        "owner": "self-improvement",
+        "state": "FAIL",
+        "checkedAt": "2026-10-06T08:08:29.778Z",
+        "reasonCode": "REAL_ACCOUNTING_FIXTURE_FAIL",
+        "prerequisite": "{\"name\":\"public-accounting-interface-refused\",\"evidence\":{\"errorCode\":\"DEPENDENCY_UNAVAILABLE\",\"effectState\":\"unknown\"}}",
+        "nextCommandId": "probe.show",
+        "links": {
+          "recordRefs": [],
+          "observations": [],
+          "artifactDigests": [
+            "664f6967d18475db467364085c5d8672bc30ac899c0ae13dea8b6c68ffea5b63"
+          ]
+        }
+      }
+    ],
+    "state": "NOT_IMPLEMENTED",
+    "complete": false,
+    "links": {
+      "recordRefs": [],
+      "observations": [],
+      "artifactDigests": []
+    }
+  },
+  "engineReadinessVerified": false,
+  "canonicalSchemaExecuted": false,
+  "accountingTransactionsExecuted": false,
+  "exactDeniedOsOperationVerified": false,
+  "nextAction": "Resume assigned real PostgreSQL CLI probes in a permitted runtime; no fourth initializer attempt or alternate-access workaround in this sandbox.",
+  "wholeATsPassed": []
+}

@@ -1,0 +1,93 @@
+{
+  "schemaVersion": "toy.r006-accounting-owner-preparation.v1",
+  "generatedAt": "2026-10-06T07:39:47.892Z",
+  "status": "SOURCE_PREPARED_RUNTIME_INCOMPLETE",
+  "publicInterface": "ModelAdmission.reserve/claimSend/settle/observe/inspect",
+  "canonicalAccountingTables": [
+    "toy_si.budget_group",
+    "toy_si.model_call",
+    "toy_si.quota_snapshot"
+  ],
+  "sourceSha256": {
+    "packages/contracts/src/model-admission.ts": "13482e15d4ad97b3bd73ec76c2aeeb040c28fbafd46c57b99f6e993d0c7da794",
+    "packages/self-improvement/src/model-admission.ts": "d183ed8d76da74012c00859f888b6859a5a31387d426c4edba4ed8e7420a07a7",
+    "packages/self-improvement/src/accounting-postgres.ts": "7349a4ab6be6cd7c037b252fbc0bc54bf1670297221e842dc650dc74e536ca70",
+    "packages/self-improvement/src/model-admission-migration.ts": "c517c58e822f5aad03928a460a457d8a9c847c608bbc549ee6950b564bb3aaee",
+    "packages/self-improvement/migrations/model-admission.sql": "aeda7e6b9c5a9cf3c5a97ae5d547fb38dda95b4587303dc730787d349d2c3bbc",
+    "packages/self-improvement/migrations/model-admission.json": "ba1eff5de3f20d230004cf9ec34a9e53d655003bc6f1605ab64d375ad9645e66",
+    "packages/self-improvement/src/public.ts": "4bccb4e9dc726f595f8163feaef67ef4e0f5c8db4b5f76f12dd633b2eaa5e5bf",
+    "packages/self-improvement/src/engineering-control.ts": "e432cdef0aeaa2defb67f19ea14eda00fa6d320057befcf8a51f766f4111f3bf",
+    "docs/adr/0027-model-admission-accounting.md": "9048236b2dcbf5301a42e4c36f5f1d9b7406a28969d1bc78be0168d237638159",
+    "architecture/features.json": "adc6e8564d9dd2c7aa9ec5dc09cfef8c43989a61c3eba9ead5d01d159a72e761",
+    "skills/toy-control/FEATURE-MAP.md": "a87d2289b3353f616ae871fb6b72c03edaeb6fb2ad388b5c48071f09dabbdc06"
+  },
+  "static": {
+    "command": "npm run check",
+    "exitCode": 0,
+    "output": "build/evidence/R0.06-owner-check-output.txt",
+    "artifacts": 312,
+    "contracts": 244,
+    "schemaDigest": "f10bcc9632821e977d13d0e153b49c278fac485b4a8516545fa85a717d22ed2f",
+    "featureCount": 87,
+    "commandCount": 55,
+    "ATCount": 1447,
+    "swiftInvoked": false,
+    "generatedAt": "2026-10-06T07:36:49.974Z"
+  },
+  "sourceGenerator": {
+    "plan": "build/evidence/R0.06-migration-plan-v2.json",
+    "apply": "build/evidence/R0.06-migration-source-apply.json",
+    "artifactReadback": "build/evidence/R0.06/migration-artifact-readback.json",
+    "applyExecutesDatabase": false,
+    "regressionOutput": "build/evidence/R0.06-generator-regression-final-output.txt",
+    "regressionExitCode": 0,
+    "publicCliReceipts": "build/evidence/R0.K4/attempts/2026-10-06T07-38-31.947Z-f931ec03-6e0b-4350-aaab-583a2ddffac3/receipts.json",
+    "publicCliInvocations": 42,
+    "gardenerStaticChecks": 45,
+    "collisionRefusal": "build/evidence/R0.06-migration-existing-refusal.json",
+    "unsupportedRefusal": "build/evidence/R0.06-migration-unsupported-refusal.json"
+  },
+  "runtime": {
+    "postgresqlExecuted": false,
+    "schemaExecuted": false,
+    "accountingTransactionsExecuted": false,
+    "physicalTestStackLaunched": false,
+    "nativeProviderBound": false,
+    "providerSendPermitIssued": false,
+    "actualRoleGrantsInstalled": false,
+    "productionAllowed": false
+  },
+  "wholeR006ATsPassed": [],
+  "deferred": [
+    {
+      "owner": "R0.06",
+      "work": "Owned disposable PostgreSQL lifecycle and assigned public CLI transaction/threshold/fallback/uncertainty probes; implement required durable deferred slot/wake state."
+    },
+    {
+      "owner": "R0.05",
+      "work": "Actual canonical run/contract references before production foreign keys."
+    },
+    {
+      "owner": "R0.04",
+      "work": "Actual role and protected runtime installation before production database grants."
+    },
+    {
+      "owner": "R0.01",
+      "work": "Bind verified accounting plus native grant reader; supported auth/refresh/restart compatibility after independent consent and per-app zero-credit readback."
+    },
+    {
+      "owner": "R1",
+      "work": "Assigned full concurrency and restore campaigns."
+    },
+    {
+      "owner": "R3",
+      "work": "Swift contract generation and compilation."
+    }
+  ],
+  "verificationRecovery": {
+    "initialGeneratorRegression": "build/evidence/R0.06-generator-regression-output.txt",
+    "failedCheck": "scripts/check-foundations.mjs:valid-types",
+    "condition": "Source edits and a tsc invocation overlapped a generator test that temporarily mutates source fixtures.",
+    "resolution": "Awaited fixture cleanup, then full check and generator regression sequentially with source frozen; both exit 0."
+  }
+}

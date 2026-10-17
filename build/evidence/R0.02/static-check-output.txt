@@ -1,0 +1,57 @@
+
+> toy-harness@1.0.0 check
+> npm run typecheck && node scripts/typecheck-tests.mjs && npm run boundaries && npm run python:check && npm run lint && npm run contracts:check && node cli/dist/main.js feature-map check --json
+
+
+> toy-harness@1.0.0 typecheck
+> tsc -b --pretty false && tsc -p scripts/tsconfig.json --pretty false
+
+
+> toy-harness@1.0.0 boundaries
+> depcruise --config .dependency-cruiser.cjs packages cli tests
+
+
+✔ no dependency violations found (146 modules, 419 dependencies cruised)
+
+
+> toy-harness@1.0.0 python:check
+> pyright && .venv/bin/ruff check python && PYTHONPATH=python .venv/bin/lint-imports
+
+0 errors, 0 warnings, 0 informations
+All checks passed!
+[1m=============[0m
+[1mImport Linter[0m
+[1m=============[0m
+[22m[0m
+[1m---------[0m
+[1mContracts[0m
+[1m---------[0m
+[22m[0m
+[1mAnalyzed 4 files, 0 dependencies.[0m
+[1m---------------------------------[0m
+[22m[0m
+[22mHermes adapter cannot import protected controls [0m[32m[22mKEPT[0m[33m[22m[0m[22m[0m
+[22mProtected controls cannot depend on agent implementation [0m[32m[22mKEPT[0m[33m[22m[0m[22m[0m
+[22m[0m
+[22mContracts: 2 kept, 0 broken.[0m
+
+> toy-harness@1.0.0 lint
+> node scripts/run-eslint.mjs && node scripts/check-source-policy.mjs && .venv/bin/python scripts/check-python-policy.py && node scripts/check-contract-ownership.mjs && node scripts/check-contract-pin.mjs && node scripts/check-int-registry.mjs
+
+67 source files passed comment and debt policy
+7 Python source files passed comment and type policy
+47 TypeScript source files passed schema-inventory ownership policy for 218 contracts
+The sole Zod runtime pin is @toy/contracts 4.6.5.
+0 registry-only INT entries match 0 internal test files; 3 total test files declare a rung
+
+> toy-harness@1.0.0 contracts:check
+> tsc -b packages/contracts --pretty false && node scripts/generate-contracts.mjs --check && tsc --ignoreConfig --noEmit --strict --noUncheckedIndexedAccess --target ES2024 --module NodeNext --moduleResolution NodeNext packages/contracts/generated/types.ts
+
+file:///Users/johansardar/Documents/Codex/toy-harness/scripts/generate-contracts.mjs:20
+if (await readFile(resolve(root, registryPath), "utf8").catch(() => null) !== registryContent) throw new Error("generated artifact drift: source-bound CLI probe registry; run npm run contracts:generate");
+                                                                                                     ^
+
+Error: generated artifact drift: source-bound CLI probe registry; run npm run contracts:generate
+    at file:///Users/johansardar/Documents/Codex/toy-harness/scripts/generate-contracts.mjs:20:102
+
+Node.js v24.21.0

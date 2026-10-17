@@ -1,0 +1,370 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "model": {
+      "type": "string",
+      "enum": [
+        "gpt-6.1-sol",
+        "gpt-6-luna"
+      ]
+    },
+    "reasoning": {
+      "type": "object",
+      "properties": {
+        "effort": {
+          "type": "string",
+          "enum": [
+            "max",
+            "medium",
+            "high"
+          ]
+        }
+      },
+      "required": [
+        "effort"
+      ],
+      "additionalProperties": false
+    },
+    "service_tier": {
+      "type": "string",
+      "enum": [
+        "priority",
+        "default"
+      ]
+    },
+    "input": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "const": "message"
+              },
+              "role": {
+                "type": "string",
+                "enum": [
+                  "developer",
+                  "user",
+                  "assistant"
+                ]
+              },
+              "content": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 1048576
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "const": "input_text"
+                            },
+                            "text": {
+                              "type": "string",
+                              "maxLength": 1048576
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "text"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "const": "output_text"
+                            },
+                            "text": {
+                              "type": "string",
+                              "maxLength": 1048576
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "text"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "const": "input_image"
+                            },
+                            "image_url": {
+                              "type": "string",
+                              "maxLength": 8388608,
+                              "pattern": "^(?:https:\\/\\/|data:image\\/(?:png|jpeg|webp|gif);base64,)"
+                            },
+                            "detail": {
+                              "type": "string",
+                              "enum": [
+                                "auto",
+                                "low",
+                                "high",
+                                "original"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "image_url",
+                            "detail"
+                          ],
+                          "additionalProperties": false
+                        }
+                      ]
+                    }
+                  }
+                ]
+              },
+              "phase": {
+                "type": "string",
+                "enum": [
+                  "commentary",
+                  "final_answer"
+                ]
+              },
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "in_progress",
+                  "completed",
+                  "incomplete"
+                ]
+              }
+            },
+            "required": [
+              "type",
+              "role",
+              "content"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "const": "function_call"
+              },
+              "call_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "name": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_-]{1,100}(?![\\s\\S])"
+              },
+              "namespace": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_-]{1,100}(?![\\s\\S])"
+              },
+              "arguments": {
+                "type": "string",
+                "maxLength": 65536
+              }
+            },
+            "required": [
+              "type",
+              "call_id",
+              "name",
+              "arguments"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "const": "function_call_output"
+              },
+              "call_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "output": {
+                "type": "string",
+                "maxLength": 1048576
+              }
+            },
+            "required": [
+              "type",
+              "call_id",
+              "output"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "const": "reasoning"
+              },
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "encrypted_content": {
+                "type": "string",
+                "maxLength": 1048576
+              },
+              "summary": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "summary_text"
+                    },
+                    "text": {
+                      "type": "string",
+                      "maxLength": 65536
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "text"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "type",
+              "encrypted_content",
+              "summary"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    "instructions": {
+      "type": "string",
+      "maxLength": 1048576
+    },
+    "tools": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "namespace"
+          },
+          "name": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]{1,100}(?![\\s\\S])"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 65536
+          },
+          "tools": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "const": "function"
+                },
+                "name": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9_-]{1,100}(?![\\s\\S])"
+                },
+                "description": {
+                  "type": "string",
+                  "maxLength": 65536
+                },
+                "parameters": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                },
+                "strict": {
+                  "type": "boolean",
+                  "const": true
+                }
+              },
+              "required": [
+                "type",
+                "name",
+                "description",
+                "parameters",
+                "strict"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "type",
+          "name",
+          "description",
+          "tools"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "store": {
+      "type": "boolean",
+      "const": false
+    },
+    "stream": {
+      "type": "boolean",
+      "const": true
+    },
+    "include": {
+      "minItems": 1,
+      "maxItems": 1,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "const": "reasoning.encrypted_content"
+      }
+    }
+  },
+  "required": [
+    "model",
+    "reasoning",
+    "service_tier",
+    "input",
+    "tools",
+    "store",
+    "stream",
+    "include"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:ModelRouteResponsesRequestV1"
+}

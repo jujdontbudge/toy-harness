@@ -1,0 +1,94 @@
+--- a/hermes_cli/web_routers/ops.py
++++ b/hermes_cli/web_routers/ops.py
+@@ -422,8 +422,11 @@
+         except HTTPException:
+             raise
+         except Exception as exc:
+-            _log.exception("POST /api/credentials/pool failed")
+-            raise HTTPException(status_code=400, detail=str(exc)) from exc
++            _log.warning("POST /api/credentials/pool failed (%s)", type(exc).__name__)
++            raise HTTPException(
++                status_code=400,
++                detail="Credential persistence could not be verified. Check this profile's credentials before trying again.",
++            ) from None
+ 
+     return await config_scoped_to_thread(profile, _run)
+ 
+--- a/hermes_cli/web_routers/oauth.py
++++ b/hermes_cli/web_routers/oauth.py
+@@ -331,12 +331,15 @@
+             sess["status"] = "approved"
+         _log.info("oauth/device: openai-codex login completed (session=%s)", session_id)
+     except Exception as e:
+-        _log.warning("codex device-code worker failed (session=%s): %s", session_id, e)
++        from hermes_cli.auth_constants import AuthError
++
++        _log.warning("codex device-code worker failed (session=%s, %s)", session_id, type(e).__name__)
+         with _oauth_sessions_lock:
+             s = _oauth_sessions.get(session_id)
+             if s:
+                 s["status"] = "error"
+-                s["error_message"] = str(e)
++                s["error_status"] = 400 if isinstance(e, (AuthError, OSError)) else 500
++                s["error_message"] = "Sign-in failed. Check this profile's credentials before starting another login."
+ 
+ 
+ _OMIT: Any = object()
+@@ -515,7 +518,10 @@
+     with _oauth_sessions_lock:
+         s = _oauth_sessions.get(sid, {})
+     if s.get("status") == "error":
+-        raise HTTPException(status_code=500, detail=s.get("error_message") or "device-auth failed")
++        raise HTTPException(
++            status_code=400 if s.get("error_status") == 400 else 500,
++            detail=s.get("error_message") or "Sign-in failed.",
++        )
+     if not s.get("user_code"):
+         raise HTTPException(status_code=504, detail="device-auth timed out before returning a user code")
+     return {
+@@ -809,8 +815,13 @@
+         await _end_oauth_setup_metric(flow, e)
+         if isinstance(e, HTTPException):
+             raise
+-        _log.exception("oauth/start %s failed", provider_id)
+-        raise HTTPException(status_code=500, detail=str(e))
++        from hermes_cli.auth_constants import AuthError
++
++        _log.warning("oauth/start %s failed (%s)", provider_id, type(e).__name__)
++        raise HTTPException(
++            status_code=400 if isinstance(e, (AuthError, OSError)) else 500,
++            detail="Sign-in failed. Check this profile's credentials before starting another login.",
++        ) from None
+     if flow is not None:
+         await asyncio.get_running_loop().run_in_executor(None, _track_oauth_setup, flow, body["session_id"])
+     return body
+@@ -863,6 +874,11 @@
+         raise HTTPException(status_code=400, detail="Provider mismatch for session")
+     if sess.get("profile") != requested_profile:
+         raise HTTPException(status_code=400, detail="OAuth session profile mismatch")
++    if sess["status"] == "error" and sess.get("error_status") == 400:
++        raise HTTPException(
++            status_code=400,
++            detail="Sign-in failed. Check this profile's credentials before starting another login.",
++        )
+     return {
+         "session_id": session_id, "status": sess["status"],
+         "error_message": sess.get("error_message"), "expires_at": sess.get("expires_at"),
+--- a/hermes_cli/web_server_oauth.py
++++ b/hermes_cli/web_server_oauth.py
+@@ -208,10 +208,13 @@
+                 else:
+                     _log.info("oauth/device: %s login completed (session=%s)", label, session_id)
+             except Exception as e:
+-                _log.warning("%s device-code poll failed (session=%s): %s", label, session_id, e)
++                from hermes_cli.auth_constants import AuthError
++
++                _log.warning("%s device-code poll failed (session=%s, %s)", label, session_id, type(e).__name__)
+                 with _oauth_sessions_lock:
+                     sess["status"] = "error"
+-                    sess["error_message"] = str(e)
++                    sess["error_status"] = 400 if isinstance(e, (AuthError, OSError)) else 500
++                    sess["error_message"] = "Sign-in failed. Check this profile's credentials before starting another login."
+         return poller
+     return deco
+ 

@@ -1,0 +1,88 @@
+{
+  "generatedAt": "2026-10-06T08:40:00.235891+00:00",
+  "card": "R0.08",
+  "status": "ASSIGNED_CLI_POLICY_SUBSETS_VERIFIED",
+  "stackId": "d2622823-c3d3-4126-9d60-4223e4bfb54e",
+  "rung": "CLI",
+  "probes": [
+    {
+      "probeId": "AT-ops-81",
+      "operationId": "8aa4d107-33a6-4559-abde-0d32ac874855",
+      "checksPassed": 8,
+      "readbackMatches": true,
+      "absentMembershipOrLicenceBranchVerified": true,
+      "maximumPrerequisiteCharacters": 1783,
+      "run": "build/evidence/R0.08/at-ops-81-verified.json",
+      "show": "build/evidence/R0.08/at-ops-81-verified-show.json",
+      "runSha256": "961facd2a24dd7b0a8cdc21c7946f797827893398a120fd04b9f18487371c20f",
+      "showSha256": "c0c387c53f68e27ebf66e7e59770e4826e8808eaf9d5fb952affb6350b281d19"
+    },
+    {
+      "probeId": "AT-client-apps-49",
+      "operationId": "9688137b-c04c-42b3-a270-8b1dfcf13830",
+      "checksPassed": 8,
+      "readbackMatches": true,
+      "absentMembershipOrLicenceBranchVerified": true,
+      "maximumPrerequisiteCharacters": 1783,
+      "run": "build/evidence/R0.08/at-client-apps-49-verified.json",
+      "show": "build/evidence/R0.08/at-client-apps-49-verified-show.json",
+      "runSha256": "dc5e6039177a5ea2a4511e6509d02270ec7a05ad80177d602512b28c49c8d828",
+      "showSha256": "8615a70f5732928a40c12749e8eb09e36549fc5c3e2070ffa1c7bd5aa8e6f3a0"
+    },
+    {
+      "probeId": "AT-activity-focus-64",
+      "operationId": "d071c9d0-2124-468e-9c61-3a8a84dc5c76",
+      "checksPassed": 8,
+      "readbackMatches": true,
+      "absentMembershipOrLicenceBranchVerified": true,
+      "maximumPrerequisiteCharacters": 1783,
+      "run": "build/evidence/R0.08/at-activity-focus-64-verified.json",
+      "show": "build/evidence/R0.08/at-activity-focus-64-verified-show.json",
+      "runSha256": "a74553c551a82ad27a1b7331e909e6060ed9b74de1a916dfc9cf6ad3d181d984",
+      "showSha256": "650d5e5ece7ca7ed10bf1f925f3c014bedefb692c532c83c3c1955b1d4cc1bf0"
+    }
+  ],
+  "wholeATsPassed": [],
+  "acceptanceComplete": false,
+  "realAccountDeviceInventoryVerified": false,
+  "liveActivationAdmitted": false,
+  "static": {
+    "command": "npm run check",
+    "exitCode": 0,
+    "output": "build/evidence/R0.08-eligibility-check-final.txt",
+    "artifacts": 317,
+    "contracts": 249,
+    "featureCount": 88,
+    "commandCount": 55,
+    "ATCount": 1447,
+    "schemaDigest": "5779747e40b8a044022b591ef607b5691559ac20894d3e073b022610180b88fe",
+    "swiftInvoked": false
+  },
+  "modelRouteDispatchRegression": {
+    "command": "npm run check:model-route",
+    "exitCode": 0,
+    "output": "build/evidence/R0.08-model-route-dispatch-regression.txt"
+  },
+  "corrections": [
+    {
+      "issue": "absent-licences narrow predicate missed broader AT-ops-81 branch",
+      "fix": "Shared native branch requires Cold Turkey Pro; complete branch assertion exercised through new CLI operation IDs"
+    },
+    {
+      "issue": "Canonical CheckView prerequisite limit reached after stronger gate",
+      "evidence": "build/evidence/R0.08/at-ops-81-corrected.json",
+      "fix": "Retained input states and complete decision; replaced redundant empty-evidence ID list with count"
+    }
+  ],
+  "teardown": {
+    "complete": true,
+    "unresolvedResourceRefs": [],
+    "evidence": "build/evidence/R0.08-eligibility-stack-down.json"
+  },
+  "remaining": [
+    "Actual OS/hardware, signing/account/licence/entitlement inventory",
+    "R0.02 prerequisite closure",
+    "Whole assigned R0.08 AT assertions"
+  ],
+  "nextCriticalCard": "R0.01"
+}

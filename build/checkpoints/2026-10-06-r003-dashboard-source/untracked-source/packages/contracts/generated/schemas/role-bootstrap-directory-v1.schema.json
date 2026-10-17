@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "path": {
+      "type": "string",
+      "enum": [
+        "/Library/Application Support/Toy",
+        "/Library/Application Support/Toy/control",
+        "/Library/Application Support/Toy/state",
+        "/Library/Application Support/Toy/state/homes",
+        "/Library/Application Support/Toy/run",
+        "/Library/Application Support/Toy/state/homes/_toy_agent",
+        "/Library/Application Support/Toy/state/homes/_toy_control",
+        "/Library/Application Support/Toy/state/homes/_toy_review",
+        "/Library/Application Support/Toy/state/homes/_toy_repair",
+        "/Library/Application Support/Toy/state/homes/_toy_evaluator",
+        "/Library/Application Support/Toy/state/homes/_toy_pg",
+        "/Library/Application Support/Toy/state/homes/_toy_app",
+        "/Library/Application Support/Toy/state/homes/_toy_ops"
+      ]
+    },
+    "owner": {
+      "type": "string",
+      "enum": [
+        "root",
+        "_toy_agent",
+        "_toy_control",
+        "_toy_review",
+        "_toy_repair",
+        "_toy_evaluator",
+        "_toy_pg",
+        "_toy_app",
+        "_toy_ops"
+      ]
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "0700",
+        "0711",
+        "0755"
+      ]
+    }
+  },
+  "required": [
+    "path",
+    "owner",
+    "mode"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:RoleBootstrapDirectoryV1"
+}

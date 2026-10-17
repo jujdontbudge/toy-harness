@@ -1,0 +1,220 @@
+{
+  "schemaVersion": "toy.r003-discovery-source-admission.v1",
+  "recordedAt": "2026-10-07T15:14:57.696Z",
+  "state": "SOLE_LUNA_SOURCE_ADMITTED",
+  "worker": "/root/r004_next_minimum_readonly",
+  "card": "R0.03",
+  "AT": "AT-hermes-config-35",
+  "acceptedPlan": {
+    "path": "build/evidence/R0.03/manual-lineage35-root-discovery-replan-20261007.json",
+    "sha256": "1f03a82de5008bb4e69020e8e72dbc70446b91b348d3524f364b993804ff8f96"
+  },
+  "baseline": {
+    "baseline": {
+      "path": "/Users/johansardar/Documents/Codex/toy-harness/build/evidence/R0.03/manual-lineage35-catalog-stopped-verification.json",
+      "sha256": "7463f34b0a3abb2b198a4930bd0b09a42b2f60281e04468717ec525c64322b94"
+    },
+    "run": {
+      "path": "/Users/johansardar/Documents/Codex/toy-harness/build/evidence/R0.03/manual-lineage35-catalog-cli/AT-hermes-config-35-run.json",
+      "sha256": "ebaa2e2a55096a3a0df5e090924bc9acb963185f54344a68ae128331406e8f49"
+    },
+    "show": {
+      "path": "/Users/johansardar/Documents/Codex/toy-harness/build/evidence/R0.03/manual-lineage35-catalog-cli/AT-hermes-config-35-show.json",
+      "sha256": "6b4a1ee087e9032bc5ce523e70383da59978067d8f775d53c6817fc04512cb03"
+    },
+    "runShowDataExact": true,
+    "operationId": "7519ff84-4116-4fd1-94e8-5923ff80c7f9",
+    "cliExitCode": 1,
+    "state": "NOT_IMPLEMENTED",
+    "complete": false,
+    "checksPassed": 15,
+    "checksFailed": 2,
+    "independentManualCasesAllPassed": [
+      "independent-manual-add",
+      "independent-profile-readback",
+      "independent-profile-use",
+      "independent-profile-reload-before-expiry",
+      "independent-profile-refresh",
+      "independent-profile-reload"
+    ],
+    "independentManualResult": "Actual public profile login, list, two fresh uses, expiry refresh to added-rotated and fresh reload passed. Root auth/.env/singleton digests stayed unchanged during these phases.",
+    "rootDiscovery": {
+      "caseId": "root-lineage-readback",
+      "publicArgv": [
+        "hermes",
+        "auth",
+        "list",
+        "anthropic"
+      ],
+      "exitCode": 0,
+      "markers": [
+        "AUTH_LIST_EMPTY"
+      ],
+      "credentialCount": 0,
+      "targetLabelPresent": false,
+      "httpCallsAllZero": true,
+      "tokenHygiene": true,
+      "fallbackAttempted": false,
+      "rootAuthDigestUnchanged": true,
+      "rootSingletonDigestUnchanged": true,
+      "singletonSetupReady": true,
+      "singletonSetupReason": "PUBLIC_ROOT_ANTHROPIC_GRANT_PROJECTED"
+    },
+    "copiedCasesExecuted": 0,
+    "copiedCases": [
+      "copied-lineage-heal",
+      "copied-lineage-use",
+      "copied-lineage-refresh",
+      "copied-lineage-reload"
+    ],
+    "genuineCopiedLineageVerified": false,
+    "worldDownComplete": true,
+    "zeroUnresolvedResources": true,
+    "historicalAssignedAttempts": 5,
+    "catalogueUnitAssignedAttempts": 1,
+    "priorUnitState": "STOPPED"
+  },
+  "ownedPaths": [
+    "packages/hermes/src/auth-fixture.ts",
+    "patches/hermes-auth-fixture.patch",
+    "docs/adr/0045-mixed-auth-lineage-probe.md"
+  ],
+  "sourceDeadline": "2026-10-07T15:29:57.703Z",
+  "wholeUnitDeadline": "2026-10-07T15:44:57.703Z",
+  "maximumChangedDiagnosticRuns": 1,
+  "historicalAssignedAttemptsBefore": 5,
+  "firstImplementedPassThenStop": true,
+  "anyNewFailureThenStop": true,
+  "unchangedSixthBaselineForbidden": true,
+  "productPatchChangesAllowed": false,
+  "publicConsentGatePreserved": true,
+  "actualNativePublicRowsRequired": true,
+  "sourceRuntimeVerificationPending": true,
+  "memory": {
+    "path": "build/evidence/R0.03/manual-lineage35-discovery-source-memory.json",
+    "sha256": "3712465beba55af12f3259edb12024a81989993fb8949b34549a4d810f1eb3be",
+    "measuredAt": "2026-10-07T15:14:34.542Z",
+    "availableBytes": "2274459648",
+    "pressureNormal": true,
+    "ownNeedBytes": "268435456",
+    "marginBytes": "536870912"
+  },
+  "allReviewedPinsExact": true,
+  "frozen": [
+    {
+      "path": "patches/hermes-profile-auth.patch",
+      "sha256": "814f13752d5132dbc175fb1864229dead2988f9eaa8f76af1481457f2b406b30"
+    },
+    {
+      "path": "packages/hermes/src/auth-probe.ts",
+      "sha256": "b26c56b0841953b9b071db8940f7efdbbce6ee44be3a922b940e2b235e151226"
+    },
+    {
+      "path": "packages/self-improvement/src/model-admission.ts",
+      "sha256": "e938ae2c18bbf34af9c863283dd853c2aff109c3eac0fc08962979458c39a630"
+    },
+    {
+      "path": "packages/self-improvement/src/accounting-probe.ts",
+      "sha256": "559ad8006265c63b87d7e9dd2e8f7fdfaaaf4b0d8d06f1433e7f1e6ec3f57a71"
+    },
+    {
+      "path": "packages/hermes/src/model-route-probe.ts",
+      "sha256": "820862303d2471517e4474440d697dc0bf3f043a4960dff680ea0fee6b605489"
+    },
+    {
+      "path": "packages/hermes/src/model-route.ts",
+      "sha256": "7c56f64981df351db6b8cd72237334369a86ffe9cb6d721c37c9dd2e2be945dc"
+    },
+    {
+      "path": "tests/registry.yaml",
+      "sha256": "2952c2a7bc3b66752de58360f3525957aa18fe6701d900427cf8f5df643f4004"
+    },
+    {
+      "path": "cli/src/main.ts",
+      "sha256": "2186840498e12e39156877da9e3e3431d86045af87108cbf2fd236105a1f2db5"
+    },
+    {
+      "path": "packages/ops/src/fixture-stack.ts",
+      "sha256": "4311ee0309bfa3dbc2a9c6eff3c07b55bdaca4e1e2ad41ff1e2334595560dda6"
+    },
+    {
+      "path": "scripts/probe-siwc-control-runtime.mts",
+      "sha256": "96e1fd2d98469772c3d0d203386c3f7aa56af57db025c420fa93f1f4ecd7e70d",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/stage-siwc-control-runtime.mts",
+      "sha256": "13ff53e341ab7670dbed967ce810d5aa2834df7a47ffe1620f037ff1da3ee0d4",
+      "unchanged": true
+    },
+    {
+      "path": "control/dist/bootstrap/siwc-runtime-probe.js",
+      "sha256": "06870b8dd41d2ffc093cc04680ba56c4570f07b4aa0a27a9ab70796cdd8204bd",
+      "unchanged": true
+    },
+    {
+      "path": "scripts/probe-unfiltered-control-denials.mts",
+      "sha256": "1cb93d375df931a482d946170e31549450d8efb71d6a251f5d2bcea8c5b92529",
+      "unchanged": true
+    },
+    {
+      "path": "packages/ops/dist/role-control-probe.js",
+      "sha256": "1764a98e5ae45694118007c242320711a7bd9e0d021b7c6d6ee0cbb8cff73ec2",
+      "unchanged": true
+    },
+    {
+      "path": "control/dist/bootstrap/denial-probe.js",
+      "sha256": "7fda1824ec7bc308cac97d07c7c92cadd5527e87e89d79b410d33d95d1b30672",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/toy-harness/packages/hermes/src/auth-fixture.ts",
+      "sha256": "fbb8df8494ae9ac8410a68a4d7b3f03ae5392f9e70b994fc78d44f196ed1c7c2"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/toy-harness/patches/hermes-profile-auth.patch",
+      "sha256": "814f13752d5132dbc175fb1864229dead2988f9eaa8f76af1481457f2b406b30"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/toy-harness/patches/hermes-auth-fixture.patch",
+      "sha256": "f17bd5386e5f12028217bb2f093fc48e04ad313159af4268156b2cf738ea0dfd"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/toy-harness/docs/adr/0045-mixed-auth-lineage-probe.md",
+      "sha256": "5d3872846121a2b97e341fc7989a15deccc8168587d9f2f48de7d69d8a0ab42c"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/toy-harness/tests/acceptance-index.json",
+      "sha256": "c9b645eab7f55b2ebf35d7db769a534a4837de23ad3dc3d913f3189e781d44fa"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/hermes-config.md",
+      "sha256": "d3548fde13180bc750660f306caa0041101832e398ccdabd6cfdac0b3de8f4af"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/personal-assistant-harness/specs/TEST-PLAN.md",
+      "sha256": "366cb6b2a902a2180ddc1350ad05f0d851c8ba98e93bca8b932d3fa7c0e0acf2"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/toy-harness/build/evidence/R0.03/manual-lineage35-catalog-stopped-verification.json",
+      "sha256": "7463f34b0a3abb2b198a4930bd0b09a42b2f60281e04468717ec525c64322b94"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/toy-harness/build/evidence/R0.03/manual-lineage35-root-discovery-readonly-memory.json",
+      "sha256": "29c8e8dd3dae97d4b43c7ed4d6366a61c6fdc31e40c4f49ee9312233c76a3100"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/toy-harness/build/evidence/R0.03/manual-lineage35-catalog-cli/AT-hermes-config-35-run.json",
+      "sha256": "ebaa2e2a55096a3a0df5e090924bc9acb963185f54344a68ae128331406e8f49"
+    },
+    {
+      "path": "/Users/johansardar/Documents/Codex/toy-harness/build/evidence/R0.03/manual-lineage35-catalog-cli/AT-hermes-config-35-show.json",
+      "sha256": "6b4a1ee087e9032bc5ce523e70383da59978067d8f775d53c6817fc04512cb03"
+    }
+  ],
+  "wholeATAcceptance": false,
+  "wholeCardAcceptance": false,
+  "rootPendingBlocksGoal": false,
+  "maximumElapsedMinutes": 30,
+  "timeboxReason": "One minimal corrective fixture unit after the stopped card timebox; no broad restart or additional failure iteration."
+}

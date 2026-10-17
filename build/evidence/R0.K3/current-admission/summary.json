@@ -1,0 +1,103 @@
+{
+  "schemaVersion": "toy.r0-k3-current-admission.v1",
+  "recordedAt": "2026-10-06",
+  "scope": "Read-only CLI observations and one guarded stack-start request; no physical stack launched",
+  "entrypoint": {
+    "command": "toy doctor --deep --json",
+    "exitCode": 127,
+    "result": "`toy` is not on this shell's PATH; the packed CLI was invoked directly with node thereafter"
+  },
+  "commands": [
+    {
+      "command": "node cli/dist/main.js doctor --deep --json",
+      "exitCode": 5,
+      "evidence": "build/evidence/R0.K3/current-admission/doctor.json",
+      "result": {
+        "effectState": "none",
+        "physicalBytes": "8589934592",
+        "availableBytes": "3387473920",
+        "availableMetric": "free + inactive + purgeable + speculative",
+        "jobNeedBytes": "1073741824",
+        "marginBytes": "536870912",
+        "headroomSatisfied": true,
+        "pressure": "unknown",
+        "resourcePermitIssued": false,
+        "admissionState": "blocked",
+        "reasons": [
+          "MEASUREMENT_UNAVAILABLE",
+          "NORMAL_PRESSURE_REQUIRED",
+          "PRESSURE_QUERY_DENIED"
+        ]
+      }
+    },
+    {
+      "command": "node cli/dist/main.js status --json",
+      "exitCode": 5,
+      "evidence": "build/evidence/R0.K3/current-admission/status.json",
+      "result": {
+        "environment": "prod",
+        "complete": false,
+        "probes": 27,
+        "probeState": "NOT_IMPLEMENTED",
+        "effectState": "none"
+      }
+    },
+    {
+      "command": "node cli/dist/main.js help --json",
+      "exitCode": 0,
+      "evidence": "build/evidence/R0.K3/current-admission/help.json",
+      "result": {
+        "commandCount": 55,
+        "environment": "prod"
+      }
+    },
+    {
+      "command": "node cli/dist/main.js version --json",
+      "exitCode": 0,
+      "evidence": "build/evidence/R0.K3/current-admission/version.json",
+      "result": {
+        "cliVersion": "1.0.0",
+        "contractsVersion": "1.0.0",
+        "nodeVersion": "24.21.0"
+      }
+    },
+    {
+      "command": "node cli/dist/main.js __invalid_command__ --json",
+      "exitCode": 2,
+      "evidence": "build/evidence/R0.K3/current-admission/invalid-command.json",
+      "result": {
+        "errorCode": "INVALID_INPUT",
+        "effectState": "none",
+        "payloadEchoed": false
+      }
+    },
+    {
+      "command": "node cli/dist/main.js stack up --env test --release R0 --clock fake --model fake --request-id 4380f46c-2b55-41d4-8c41-f6f69dc3e6b8 --json",
+      "exitCode": 5,
+      "evidence": "build/evidence/R0.K3/current-admission/stack-up.json",
+      "result": {
+        "errorCode": "DEPENDENCY_UNAVAILABLE",
+        "effectState": "none",
+        "stackLaunched": false
+      }
+    }
+  ],
+  "admission": {
+    "helperNeedBytes": "268435456",
+    "helper": "admitted under the parent-provided direct Johan observation; this is not a CLI stack permit",
+    "physicalStack": "Memory admitted for the current user-directed attempt using Johan normal-pressure observation and fresh measured headroom; actual guarded CLI start returned DEPENDENCY_UNAVAILABLE and launched no stack",
+    "ramHeadroom": "passes the current measured CLI stack requirement (1 GiB need + 512 MiB margin)",
+    "pressure": "not verified by the current CLI; do not report a RAM shortage",
+    "diagnosticPermitMeaning": "resourcePermitIssued:false is a diagnostic no-capability flag, not another memory threshold; admissionState and reasons describe the automatic query result"
+  },
+  "priorFixtureEvidence": {
+    "path": "build/evidence/R0.K3/fixture-stack-verification.json",
+    "generatedAt": "2026-10-05T18:30:31.128Z",
+    "implementationAvailable": true,
+    "acceptanceComplete": false,
+    "priorCheck": "npm run check:cli-bootstrap exited 0 with 10 checks and 124 packed invocations",
+    "limitation": "historical preparation only; does not prove current stack admission or whole assigned ATs"
+  },
+  "assignedATConclusion": "No whole assigned AT is claimed passed. Fresh observations cover read-only/status/help/version and one safe invalid-command path. Stack/probe assertions remain unexecuted because current doctor denies admission.",
+  "nextStep": "Continue R0.01 accounting-owner prerequisite. Automatic CLI pressure measurement remains sandbox-denied; do not reintroduce a free-page floor or pursue kernel/ABI research. Recheck before future physical work. No whole assigned AT is promoted."
+}

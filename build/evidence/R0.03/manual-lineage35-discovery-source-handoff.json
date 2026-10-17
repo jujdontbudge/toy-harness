@@ -1,0 +1,149 @@
+{
+  "schemaVersion": "toy.r003-discovery-source-handoff.v1",
+  "recordedAt": "2026-10-07T15:22:11Z",
+  "sourceStoppedAt": "2026-10-07T15:21:39Z",
+  "sourceDeadline": "2026-10-07T15:29:57.703Z",
+  "wholeUnitDeadline": "2026-10-07T15:44:57Z",
+  "card": "R0.03",
+  "assignedAT": "AT-hermes-config-35",
+  "rung": "CLI",
+  "sourceOwner": "/root/r004_next_minimum_readonly",
+  "phase": "root-anthropic-discovery-and-copied-lineage",
+  "phaseState": "SOURCE_STOP",
+  "sourceAdmission": {
+    "path": "build/evidence/R0.03/manual-lineage35-discovery-source-admission.json",
+    "sha256": "5df5e7841209a714f483dc02314cca47e7c3c79bfa16d3a67aebf09ac5c7b018",
+    "state": "SOLE_LUNA_SOURCE_ADMITTED",
+    "model": "gpt-6-luna",
+    "effort": "max",
+    "normalPressure": true,
+    "availableBytes": 2274459648,
+    "ownNeedBytes": 268435456,
+    "ownMarginBytes": 536870912,
+    "ownRequiredBytes": 805306368
+  },
+  "acceptedPlan": {
+    "path": "build/evidence/R0.03/manual-lineage35-root-discovery-replan-20261007.json",
+    "sha256": "1f03a82de5008bb4e69020e8e72dbc70446b91b348d3524f364b993804ff8f96",
+    "sourceAssertionHash": "7e69a039d367ed6ffa27c762c76cad43ad78a65c3ca5c91552a1f7adef47c2aa",
+    "sourceAdmitted": true,
+    "runtimeAdmitted": false
+  },
+  "reusedBaseline": {
+    "stoppedVerification": {
+      "path": "build/evidence/R0.03/manual-lineage35-catalog-stopped-verification.json",
+      "sha256": "7463f34b0a3abb2b198a4930bd0b09a42b2f60281e04468717ec525c64322b94"
+    },
+    "run": {
+      "path": "build/evidence/R0.03/manual-lineage35-catalog-cli/AT-hermes-config-35-run.json",
+      "sha256": "ebaa2e2a55096a3a0df5e090924bc9acb963185f54344a68ae128331406e8f49"
+    },
+    "show": {
+      "path": "build/evidence/R0.03/manual-lineage35-catalog-cli/AT-hermes-config-35-show.json",
+      "sha256": "6b4a1ee087e9032bc5ce523e70383da59978067d8f775d53c6817fc04512cb03"
+    },
+    "runShowDataExact": true,
+    "state": "NOT_IMPLEMENTED",
+    "cliExitCode": 1,
+    "independentManualCasesAlreadyPassed": [
+      "independent-manual-add",
+      "independent-profile-readback",
+      "independent-profile-use",
+      "independent-profile-reload-before-expiry",
+      "independent-profile-refresh",
+      "independent-profile-reload"
+    ],
+    "copiedCasesExecuted": 0,
+    "unchangedSixthBaselineExecuted": false,
+    "worldDownComplete": true
+  },
+  "ownedPaths": [
+    "packages/hermes/src/auth-fixture.ts",
+    "patches/hermes-auth-fixture.patch",
+    "docs/adr/0045-mixed-auth-lineage-probe.md"
+  ],
+  "sourcePins": {
+    "before": [
+      {
+        "path": "packages/hermes/src/auth-fixture.ts",
+        "sha256": "fbb8df8494ae9ac8410a68a4d7b3f03ae5392f9e70b994fc78d44f196ed1c7c2"
+      },
+      {
+        "path": "patches/hermes-auth-fixture.patch",
+        "sha256": "f17bd5386e5f12028217bb2f093fc48e04ad313159af4268156b2cf738ea0dfd"
+      },
+      {
+        "path": "docs/adr/0045-mixed-auth-lineage-probe.md",
+        "sha256": "5d3872846121a2b97e341fc7989a15deccc8168587d9f2f48de7d69d8a0ab42c"
+      }
+    ],
+    "after": [
+      {
+        "path": "packages/hermes/src/auth-fixture.ts",
+        "sha256": "7d382f6caa63e797ac5f7695118dee3afcbabea7270688708f1c2080b2bf14a6"
+      },
+      {
+        "path": "patches/hermes-auth-fixture.patch",
+        "sha256": "3a009dfa6cc32d662b42c3184c0a805a99c4bf20bf8f3ba1ad8b953e9e98b7b0"
+      },
+      {
+        "path": "docs/adr/0045-mixed-auth-lineage-probe.md",
+        "sha256": "cdd35d842ee886637706c7b68231b09dc60f7a5c7c149098afd732faa124363e"
+      }
+    ],
+    "publicListFormatPin": {
+      "repository": "/Users/johansardar/.hermes/hermes-agent",
+      "commit": "8d5e3e412138342e8bf30443e72bd4e6a9abd057",
+      "path": "hermes_cli/auth_commands.py",
+      "sha256": "16c18f21402ac9940815450a41854cfeaadad6a34bffeb98d27de648df749d1a",
+      "format": "numbered row: #index, displayed label column, auth type, id/priority/source"
+    },
+    "frozenPins": {
+      "admissionPath": "build/evidence/R0.03/manual-lineage35-discovery-source-admission.json",
+      "admissionSha256": "5df5e7841209a714f483dc02314cca47e7c3c79bfa16d3a67aebf09ac5c7b018",
+      "allUpstreamSourceSpecEvidenceAT40R006AndRootPinsRemainEnumeratedThere": true
+    }
+  },
+  "changes": [
+    "The ADR specifies the public root configuration/readback gate, credential-store preservation, bounded evidence, and the displayed-label requirement before source edits.",
+    "Immediately before root-lineage-readback, the existing candidate public-admin launcher runs root config set model.provider anthropic and config get model.provider --json. The readback is parsed in memory only as a fixed JSON string and compared with anthropic. Both launcher and actual command exits must be zero; only booleans, exit codes, output/command digests, and root auth/.env/singleton digests are retained. Any failure stops before root auth-list and copied-profile creation.",
+    "The existing lineage-copy profile creation now occurs only after the public root list result passes its count, positive label, and root/singleton store assertions.",
+    "The external fake expects hermes_pkce only for Anthropic mixed-root-readback and mixed-copy-readback actors. It parses the numbered public row's displayed label field separately from the source field; other actors/providers retain their previous expectation. Added-file patch hunk count is 1302 and matches the added lines.",
+    "The original twelve cases, six already-passed independent manual phases and root digest checks, exact public root materialization, byte-for-byte copy, and four copied heal/use/refresh/reload cases remain otherwise unchanged."
+  ],
+  "preserved": {
+    "productProfileAuthPatchChanged": false,
+    "DTOsSchemasEnumsManifestAndCLIChanged": false,
+    "fakeResponsesAndNetworkDenialsChanged": false,
+    "allOtherActorsAndProvidersChanged": false,
+    "auth87AT40R006OrRootInputsTouched": false,
+    "productRowsIdsSourcesTokensOrCopiedReceiptsWrittenOrRelabeled": false,
+    "realCredentialStoresRead": false,
+    "rawStreamsOrConfigOutputRetained": false,
+    "allTwelveOriginalCasesPreserved": true,
+    "sixIndependentManualPhasesReplayed": false,
+    "fourCopiedPhasesChanged": false
+  },
+  "zeroActions": {
+    "cli": 0,
+    "build": 0,
+    "generator": 0,
+    "staticChecks": 0,
+    "tests": 0,
+    "runtime": 0,
+    "nativeOSBrowserProviderOrRootActions": 0,
+    "helpers": 0,
+    "commits": 0,
+    "changedDiagnosticRuns": 0
+  },
+  "acceptance": {
+    "sourceRuntimeVerificationPending": true,
+    "genuineCopiedLineageVerified": false,
+    "actualProtectedNativeAccountAcceptance": false,
+    "wholeATComplete": false,
+    "wholeCardAcceptance": false,
+    "goalBlockedByRootPending": false
+  },
+  "nextOwner": "Parent owns source checks and the single changed unfiltered AT-hermes-config-35 run after SOURCE_STOP. Save exact public run/show and complete teardown; stop on any new failure or the first complete twelve-phase PASS.",
+  "stop": true
+}

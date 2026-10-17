@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "registration": {
+      "type": "object",
+      "properties": {
+        "clientId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "subject": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        }
+      },
+      "required": [
+        "clientId",
+        "subject"
+      ],
+      "additionalProperties": false
+    },
+    "hostId": {
+      "type": "string",
+      "pattern": "^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}(?![\\s\\S])"
+    },
+    "issuer": {
+      "type": "string",
+      "const": "https://auth.openai.com"
+    },
+    "audience": {
+      "type": "string",
+      "const": "https://api.openai.com/v1"
+    },
+    "accessToken": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 32768
+    },
+    "refreshToken": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 32768
+    },
+    "idToken": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 65536
+    },
+    "expiresAt": {
+      "type": "integer",
+      "exclusiveMinimum": 0,
+      "maximum": 9007199254740991
+    },
+    "scopes": {
+      "maxItems": 100,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 256
+      }
+    },
+    "identityVerified": {
+      "type": "boolean",
+      "const": true
+    },
+    "zeroCreditVerified": {
+      "type": "boolean",
+      "const": false
+    }
+  },
+  "required": [
+    "registration",
+    "hostId",
+    "issuer",
+    "audience",
+    "accessToken",
+    "refreshToken",
+    "idToken",
+    "expiresAt",
+    "scopes",
+    "identityVerified",
+    "zeroCreditVerified"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:SiwcStoredGrant"
+}

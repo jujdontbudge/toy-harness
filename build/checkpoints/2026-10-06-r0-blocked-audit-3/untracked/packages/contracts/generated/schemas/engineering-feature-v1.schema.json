@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000
+    },
+    "implementation": {
+      "type": "string",
+      "enum": [
+        "specified",
+        "built"
+      ]
+    },
+    "requirementIds": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "entry": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 240,
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._/-]*(?![\\s\\S])"
+    },
+    "owner": {
+      "type": "string",
+      "enum": [
+        "contracts",
+        "obligations",
+        "attention",
+        "authority",
+        "sources",
+        "lifestore",
+        "hermes",
+        "client",
+        "hands",
+        "self-improvement",
+        "adhd",
+        "ops"
+      ]
+    },
+    "publicInterface": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "paths": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 240,
+        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._/-]*(?![\\s\\S])"
+      }
+    },
+    "firstRelease": {
+      "type": "string",
+      "enum": [
+        "R0",
+        "R1",
+        "R2",
+        "R3",
+        "R4",
+        "R5"
+      ]
+    },
+    "commands": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "atIds": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "id",
+    "description",
+    "implementation",
+    "requirementIds",
+    "entry",
+    "owner",
+    "publicInterface",
+    "paths",
+    "firstRelease",
+    "commands",
+    "atIds"
+  ],
+  "additionalProperties": false,
+  "$id": "urn:toy:contracts:v1:EngineeringFeatureV1"
+}
